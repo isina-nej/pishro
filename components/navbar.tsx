@@ -1,5 +1,5 @@
 import { Input } from "@/components/ui/input";
-import Image from "next/image";
+import { SearchNormalIcon, FilterIcon } from "@/public/svgr-icons";
 
 const Navbar = () => {
   return (
@@ -10,30 +10,20 @@ const Navbar = () => {
           <div className="h-10 w-[100px] text-green-600 text-[32px] font-bold ltr">
             logo
           </div>
-          <div className="relative w-full max-w-[400px]">
+          <div className="relative h-8 w-full max-w-[400px]">
             {/* آیکون جستجو */}
-            <button className="absolute right-3 top-1/2 transform -translate-y-1/2">
-              <Image
-                src="/icons/search-normal.svg"
-                alt="search logo"
-                width={20}
-                height={20}
-              />
+            <button className="absolute top-1/2 transform -translate-y-1/2 h-8 px-4">
+              <SearchNormalIcon width={12} height={12} />
             </button>
             {/* اینپوت */}
             <Input
               type="text"
               placeholder="جستجو"
-              className="pl-12 pr-12 w-full"
+              className="pl-12 pr-12 w-full h-8"
             />
             {/* آیکون فیلتر */}
-            <button className="absolute left-3 top-1/2 transform -translate-y-1/2">
-              <Image
-                src="/icons/Filter.svg"
-                alt="filter logo"
-                width={20}
-                height={20}
-              />
+            <button className="absolute left-0 top-1/2 transform -translate-y-1/2 h-8 size-7 bg-[#EDF4F8]">
+              <FilterIcon width={20} height={20} />
             </button>
           </div>
         </div>
