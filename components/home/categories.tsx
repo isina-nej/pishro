@@ -5,7 +5,7 @@ import { categories } from "@/public/data";
 
 const Categories = () => {
   return (
-    <div className="mt-10 px-[200px]">
+    <div className="mt-10 container">
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-[72px]">
         {categories.map((item, idx) => (
           <div key={idx} className="text-center">

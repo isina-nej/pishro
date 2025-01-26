@@ -2,7 +2,7 @@ import Heading from "../heading";
 
 const AboutUs: React.FC = () => {
   return (
-    <div className="mt-16 px-[200px]">
+    <div className="mt-16 container">
       <Heading>درباره ما</Heading>
       <p className="mt-8">
         ما در &ldquo;پیشرو&rdquo; به شما کمک می‌کنیم تا در دنیای پیچیده و پر
