@@ -52,6 +52,7 @@ export default {
           "5": "hsl(var(--chart-5))",
         },
         myPrimary: "#D52A16",
+        mySecondary: "#214254",
       },
       borderRadius: {
         lg: "var(--radius)",
