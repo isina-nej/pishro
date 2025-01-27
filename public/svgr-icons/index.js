@@ -1,5 +1,11 @@
 export { default as ArrowCircleLeftIcon } from "./ArrowCircleLeftIcon";
 export { default as BuyIcon } from "./BuyIcon";
 export { default as FilterIcon } from "./FilterIcon";
+export { default as InstagramIcon } from "./InstagramIcon";
+export { default as LinkedInIcon } from "./LinkedInIcon";
 export { default as SearchNormalIcon } from "./SearchNormalIcon";
+export { default as TelegramIcon } from "./TelegramIcon";
 export { default as UserIcon } from "./UserIcon";
+export { default as WhatsappIcon } from "./WhatsappIcon";
+export { default as XIcon } from "./XIcon";
+export { default as YoutubeIcon } from "./YoutubeIcon";
