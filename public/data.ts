@@ -82,42 +82,66 @@ export const categoriesData = [
 export const coursesData = [
   {
     title: "آموزش ترید",
-    price: 250000,
+    price: 2500000,
     img: "/images/courses/trade.jpg",
   },
   {
     title: "آموزش ارزهای دیجیتال",
-    price: 350000,
+    price: 3500000,
     img: "/images/courses/cryptocurrency.jpg",
   },
   {
     title: "آموزش بورس",
-    price: 200000,
+    price: 2000000,
     img: "/images/courses/stock-market.jpg",
   },
   {
     title: "آموزش NFT",
-    price: 150000,
+    price: 1500000,
     img: "/images/courses/nft.jpg",
   },
   {
     title: "آموزش متاورس",
-    price: 400000,
+    price: 4000000,
     img: "/images/courses/metaverse.jpg",
   },
   {
     title: "آموزش ترید",
-    price: 250000,
+    price: 2500000,
     img: "/images/courses/trade.jpg",
   },
   {
     title: "آموزش ارزهای دیجیتال",
-    price: 350000,
+    price: 3500000,
     img: "/images/courses/cryptocurrency.jpg",
   },
   {
     title: "آموزش بورس",
-    price: 200000,
+    price: 2000000,
     img: "/images/courses/stock-market.jpg",
+  },
+];
+
+export const blogData = [
+  {
+    img: "/images/blog/trade.jpg",
+    date: "1403/10/25",
+    title: "آموزش ترید",
+    description: "آموزش ترید برای مبتدیان و حرفه‌ایان",
+    link: "/blog",
+  },
+  {
+    img: "/images/blog/cryptocurrency.jpg",
+    date: "1403/11/25",
+    title: "آموزش ارزهای دیجیتال",
+    description: "آموزش ارزهای دیجیتال برای مبتدیان و حرفه‌ایان",
+    link: "/blog",
+  },
+  {
+    img: "/images/blog/stock-market.jpg",
+    date: "1403/12/02",
+    title: "آموزش بورس",
+    description: "آموزش بورس برای مبتدیان و حرفه‌ایان",
+    link: "/blog",
   },
 ];
