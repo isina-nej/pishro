@@ -15,10 +15,10 @@ const Slider = () => {
       <Swiper
         modules={[Autoplay]}
         autoplay={{
-          delay: 3000,
+          delay: 0,
           disableOnInteraction: false,
         }}
-        speed={800}
+        speed={3000}
         loop={true}
         slidesPerView={4}
         spaceBetween={30}
