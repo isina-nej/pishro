@@ -1,4 +1,4 @@
-import AirdropPageContent from "@/components/airdrop/airdropPageContent";
+import AirdropPageContent from "@/components/airdrop/pageContent";
 
 const AirdropPage = () => {
   return <AirdropPageContent />;

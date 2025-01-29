@@ -1,4 +1,4 @@
-import CryptocurrencyPageContent from "@/components/cryptocurrency/cryptocurrencyPageContent";
+import CryptocurrencyPageContent from "@/components/cryptocurrency/pageContent";
 
 const CryptocurrencyPage = () => {
   return <CryptocurrencyPageContent />;
