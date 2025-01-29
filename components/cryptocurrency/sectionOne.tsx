@@ -1,74 +1,66 @@
+import Image from "next/image";
+
 const SectionOne = () => {
-  const cryptoData = [
+  const airdropData = [
     {
-      title: "در اینجا یک شعار یا جمله به عنوان تایتل بنویسید",
+      logo: "/images/airdrop/airdrop1.png",
       description:
-        "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز، و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد، کتابهای زیادی در شصت و ",
+        "راهی برای بدست اوردن توکن های پروژه کریپتویی قبل از عرضه به بازار به صورت رایگان است ",
     },
     {
-      title: "در اینجا یک شعار یا جمله به عنوان تایتل بنویسید",
+      logo: "/images/airdrop/airdrop2.png",
       description:
-        "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز، و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد، کتابهای زیادی در شصت و ",
+        " شاید باورتان نشود ولی بیشتر ایردراپ ها را میتوان به صورت رایگان هم دریافت کرد و تنها کافیست گام هایی را که برای دریافت آن تعریف شده طی نمود .",
     },
     {
-      title: "در اینجا یک شعار یا جمله به عنوان تایتل بنویسید",
+      logo: "/images/airdrop/airdrop3.png",
       description:
-        "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز، و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد، کتابهای زیادی در شصت و ",
+        "حضور در بازار NFT ها تقریبا بدون ریسک است و تنها کافیست برای این کار اندکی زمان بگذارید ",
     },
     {
-      title: "در اینجا یک شعار یا جمله به عنوان تایتل بنویسید",
-      description:
-        "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز، و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد، کتابهای زیادی در شصت و ",
+      logo: "/images/airdrop/airdrop4.png",
+      description: "لیست شدن هر رمز ارز به طور معمول چند ماه زمان میبرد",
     },
   ];
 
   return (
-    <div className="container mt-[286px]">
-      <h1 className="text-xl font-bold mb-9 text-center">کریپتو کارنسی</h1>
-      <div className="space-y-12 relative">
-        <div className="absolute border border-black rounded-full w-[2%] h-full top-0 right-[49%]"></div>
-        {cryptoData.map((item, index) => (
-          <div
-            key={index}
-            className="flex items-center justify-between"
-            dir="rtl" // برای پشتیبانی از زبان فارسی
-          >
-            {/* جملات فرد در سمت راست */}
-            {index % 2 === 0 && (
-              <div className="w-[40%] text-right bg-[#fafafa] p-5">
-                <div className="flex items-center">
-                  <span className="block size-2 rounded-full bg-black mb-3 ml-2"></span>
-                  <h2 className="text-sm font-bold mb-2">{item.title}</h2>
-                </div>
-                <p className="text-xs font-medium leading-7">
-                  {item.description}
-                </p>
-              </div>
-            )}
-            {index % 2 !== 0 && <div className="w-[40%] text-right"></div>}
+    <div className="container mt-40 relative flex flex-col items-center">
+      {/* عنوان ایردراپ */}
+      <h1 className="text-2xl border-2 border-[#0FAE96] font-bold px-9 py-2 mb-12 relative rounded-[25px]">
+        ایردراپ
+        {/* خط عمودی از عنوان تا وسط کارت‌ها */}
+      </h1>
+      <div className="absolute left-1/2 top-[51px] h-12 w-[2px] bg-black"></div>
 
-            {/* شماره جمله در وسط */}
-            <div className="w-[15%] flex items-center justify-center">
-              <span className="text-4xl font-medium border border-black rounded-full size-16 flex justify-center items-center bg-white z-10 ">
-                {index + 1}
-              </span>
+      {/* باکس کارت‌ها */}
+      <div className="relative w-full flex justify-center">
+        {/* خطوط اتصال بین عنوان و کارت‌ها */}
+        <div className="absolute top-0 left-1/2 w-[77%] h-16 border-t-2 border-black -translate-x-1/2"></div>
+
+        {/* کارت‌های ایردراپ */}
+        <div className="w-full grid grid-cols-4 gap-6 mt-16">
+          {airdropData.map((item, index) => (
+            <div
+              key={index}
+              className="relative flex flex-col items-center h-full"
+            >
+              {/* خط اتصال بین باکس مرکزی و هر کارت */}
+              <div className="absolute top-[-64px] h-16 w-[2px] bg-black"></div>
+
+              {/* کارت ایردراپ */}
+              <div className="bg-[#FDFDFD] p-6 rounded-[18px] w-full h-full max-w-[300px] border border-[#eaeaea]">
+                <Image
+                  src={item.logo}
+                  alt="Airdrop"
+                  className="w-16 h-16 mx-auto mb-4"
+                  width={64}
+                  height={64}
+                />
+                <p className="text-gray-600 text-sm">{item.description}</p>
+              </div>
             </div>
-
-            {/* جملات زوج در سمت چپ */}
-            {index % 2 !== 0 && (
-              <div className="w-[40%] text-right bg-[#fafafa] p-5">
-                <div className="flex items-center">
-                  <span className="block size-2 rounded-full bg-black mb-3 ml-2"></span>
-                  <h2 className="text-sm font-bold mb-2">{item.title}</h2>
-                </div>
-                <p className="text-xs font-medium leading-7">
-                  {item.description}
-                </p>
-              </div>
-            )}
-            {index % 2 === 0 && <div className="w-[40%] text-right"></div>}
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
