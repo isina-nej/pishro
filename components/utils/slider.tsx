@@ -4,12 +4,18 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 
-import { stockMarketData } from "@/public/data";
-import SliderCard from "@/components/stockMarket/sliderCard";
+import SliderCard from "@/components/utils/sliderCard";
 
-const Slider = () => {
-  const items = stockMarketData; // لیست آیتم‌ها
+interface SliderProps {
+  items: {
+    name: string;
+    logo: string;
+    changes: string;
+    link: string;
+  }[];
+}
 
+const Slider = ({ items }: SliderProps) => {
   return (
     <div className="h-[300px] my-8 relative">
       <Swiper
