@@ -235,7 +235,7 @@ export const cryptoCursesData = [
   },
 ];
 
-export const stockMarketData = [
+export const stockMarketSliderData = [
   {
     name: "SFCL",
     logo: "/images/stock/sfcl.png",
@@ -271,5 +271,161 @@ export const stockMarketData = [
     logo: "/images/stock/jgk.png",
     changes: "+3.5%",
     link: "/stock-market/jgk",
+  },
+];
+
+export const cryptoSliderData = [
+  {
+    name: "Bitcoin",
+    logo: "/images/crypto/bitcoin.png",
+    changes: "+4.2%",
+    link: "/crypto/bitcoin",
+  },
+  {
+    name: "Ethereum",
+    logo: "/images/crypto/ethereum.png",
+    changes: "-2.1%",
+    link: "/crypto/ethereum",
+  },
+  {
+    name: "Solana",
+    logo: "/images/crypto/solana.png",
+    changes: "+5.8%",
+    link: "/crypto/solana",
+  },
+  {
+    name: "BNB",
+    logo: "/images/crypto/bnb.png",
+    changes: "-1.3%",
+    link: "/crypto/bnb",
+  },
+  {
+    name: "Cardano",
+    logo: "/images/crypto/cardano.png",
+    changes: "+3.0%",
+    link: "/crypto/cardano",
+  },
+  {
+    name: "XRP",
+    logo: "/images/crypto/xrp.png",
+    changes: "+1.5%",
+    link: "/crypto/xrp",
+  },
+];
+
+export const nftSliderData = [
+  {
+    name: "Bored Ape Yacht Club",
+    logo: "/images/nft/bayc.png",
+    changes: "+6.1%",
+    link: "/nft/bayc",
+  },
+  {
+    name: "CryptoPunks",
+    logo: "/images/nft/cryptopunks.png",
+    changes: "-3.4%",
+    link: "/nft/cryptopunks",
+  },
+  {
+    name: "Azuki",
+    logo: "/images/nft/azuki.png",
+    changes: "+2.9%",
+    link: "/nft/azuki",
+  },
+  {
+    name: "CloneX",
+    logo: "/images/nft/clonex.png",
+    changes: "-0.8%",
+    link: "/nft/clonex",
+  },
+  {
+    name: "Moonbirds",
+    logo: "/images/nft/moonbirds.png",
+    changes: "+4.5%",
+    link: "/nft/moonbirds",
+  },
+  {
+    name: "Doodles",
+    logo: "/images/nft/doodles.png",
+    changes: "+1.2%",
+    link: "/nft/doodles",
+  },
+];
+
+export const metaverseSliderData = [
+  {
+    name: "Decentraland",
+    logo: "/images/metaverse/decentraland.png",
+    changes: "+5.4%",
+    link: "/metaverse/decentraland",
+  },
+  {
+    name: "The Sandbox",
+    logo: "/images/metaverse/sandbox.png",
+    changes: "-2.0%",
+    link: "/metaverse/sandbox",
+  },
+  {
+    name: "Axie Infinity",
+    logo: "/images/metaverse/axie.png",
+    changes: "+3.7%",
+    link: "/metaverse/axie",
+  },
+  {
+    name: "Illuvium",
+    logo: "/images/metaverse/illuvium.png",
+    changes: "-1.1%",
+    link: "/metaverse/illuvium",
+  },
+  {
+    name: "Somnium Space",
+    logo: "/images/metaverse/somnium.png",
+    changes: "+4.8%",
+    link: "/metaverse/somnium",
+  },
+  {
+    name: "Star Atlas",
+    logo: "/images/metaverse/staratlas.png",
+    changes: "+2.6%",
+    link: "/metaverse/staratlas",
+  },
+];
+
+export const airdropSliderData = [
+  {
+    name: "Arbitrum Airdrop",
+    logo: "/images/airdrop/arbitrum.png",
+    changes: "+10.0%",
+    link: "/airdrop/arbitrum",
+  },
+  {
+    name: "Optimism Airdrop",
+    logo: "/images/airdrop/optimism.png",
+    changes: "-4.2%",
+    link: "/airdrop/optimism",
+  },
+  {
+    name: "StarkNet Airdrop",
+    logo: "/images/airdrop/starknet.png",
+    changes: "+7.5%",
+    link: "/airdrop/starknet",
+  },
+  {
+    name: "Aptos Airdrop",
+    logo: "/images/airdrop/aptos.png",
+    changes: "-2.7%",
+    link: "/airdrop/aptos",
+  },
+  {
+    name: "Sei Airdrop",
+    logo: "/images/airdrop/sei.png",
+    changes: "+5.9%",
+    link: "/airdrop/sei",
+  },
+  {
+    name: "Sui Airdrop",
+    logo: "/images/airdrop/sui.png",
+    changes: "+3.3%",
+    link: "/airdrop/sui",
   },
 ];
