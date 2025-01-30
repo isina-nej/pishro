@@ -17,7 +17,7 @@ interface SliderProps {
 
 const Slider = ({ items }: SliderProps) => {
   return (
-    <div className="h-[300px] my-8 relative">
+    <div className="my-8 relative">
       <Swiper
         modules={[Autoplay]}
         autoplay={{
