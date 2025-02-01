@@ -6,8 +6,8 @@ import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 
 export const metadata: Metadata = {
-  title: "مونت",
-  description: "مونت",
+  title: "پیشرو",
+  description: "پیشرو",
 };
 
 export default function RootLayout({

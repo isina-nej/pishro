@@ -149,21 +149,21 @@ export const blogData = [
 export const landingData = {
   "/": {
     backgroundImage: "/images/landing.jpg",
-    title: "مونت در مسیر موفقیت مالی",
+    title: "پیشرو در مسیر موفقیت مالی",
     description:
-      "یادگیری ترید، سرمایه‌گذاری هوشمندانه و کشف فرصت‌های کریپتوکارنسی، همه در کنار شما با مونت.",
+      "یادگیری ترید، سرمایه‌گذاری هوشمندانه و کشف فرصت‌های کریپتوکارنسی، همه در کنار شما با پیشرو.",
   },
   "/cryptocurrency": {
     backgroundImage: "/images/landing-crypto.jpg",
     title: "کریپتوکارنسی",
     description:
-      "مونت با ارائه خدمات حرفه‌ای در زمینه آموزش مالی و سرمایه‌گذاری در کنار شماست.",
+      "پیشرو با ارائه خدمات حرفه‌ای در زمینه آموزش مالی و سرمایه‌گذاری در کنار شماست.",
   },
   "/stock-market": {
     backgroundImage: "/images/landing-stock-market.jpg",
     title: "بورس",
     description:
-      "مونت با ارائه خدمات حرفه‌ای در زمینه آموزش مالی و سرمایه‌گذاری در کنار شماست.",
+      "پیشرو با ارائه خدمات حرفه‌ای در زمینه آموزش مالی و سرمایه‌گذاری در کنار شماست.",
   },
   "/airdrop": {
     backgroundImage: "/images/landing-airdrop.jpg",

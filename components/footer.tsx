@@ -62,7 +62,7 @@ const Footer = () => {
               ))}
             </div>
             <div className="mt-8">
-              <p className="text-xs text-[#495157] mb-4">از مونت بروز باشید</p>
+              <p className="text-xs text-[#495157] mb-4">از پیشرو بروز باشید</p>
               <div className="mt-2 relative w-80 h-9">
                 <Input
                   type="text"
@@ -122,7 +122,7 @@ const Footer = () => {
         </div>
         <div className="flex-1 flex flex-col justify-start items-end gap-8 h-full">
           <div className="max-w-[340px]">
-            <h5 className="text-sm text-[#214254] mb-6">درباره مونت</h5>
+            <h5 className="text-sm text-[#214254] mb-6">درباره پیشرو</h5>
             <p className="text-xs text-[#80878C]">
               لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با
               استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در
