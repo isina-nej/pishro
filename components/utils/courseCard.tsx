@@ -17,7 +17,7 @@ const CourseCard = ({ title, description, img, link }: CourseCardProps) => {
   return (
     <Link
       href={link}
-      className="w-full flex border rounded-[10px] overflow-hidden hover:shadow-lg hover:scale-[101%] transition-all"
+      className="w-full flex border rounded-[10px] overflow-hidden hover:shadow-lg transition-all"
     >
       <div>
         {imageError ? (
