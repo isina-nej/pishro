@@ -1,53 +1,42 @@
-import { cryptoData } from "@/public/data";
+import Image from "next/image";
+
+import { nftData } from "@/public/data";
 
 const SectionOne = () => {
   return (
-    <div className="container">
-      <h1 className="text-xl font-bold mb-9 text-center">NFT</h1>
-      <div className="space-y-12 relative">
-        <div className="absolute border border-black rounded-full w-[2%] h-full top-0 right-[49%]"></div>
-        {cryptoData.map((item, index) => (
-          <div
-            key={index}
-            className="flex items-center justify-between"
-            dir="rtl" // برای پشتیبانی از زبان فارسی
-          >
-            {/* جملات فرد در سمت راست */}
-            {index % 2 === 0 && (
-              <div className="w-[40%] text-right bg-[#fafafa] p-5">
-                <div className="flex items-center">
-                  <span className="block size-2 rounded-full bg-black mb-3 ml-2"></span>
-                  <h2 className="text-sm font-bold mb-2">{item.title}</h2>
-                </div>
-                <p className="text-xs font-medium leading-7">
-                  {item.description}
-                </p>
+    <div className="container-xl py-16 bg-[#fafafa] flex justify-between">
+      {/* texts div */}
+      <div className="flex-1 flex">
+        <div className="h-full flex flex-col gap-[57px]">
+          {nftData.map((item, idx) => (
+            <div className="flex gap-2 items-center" key={idx}>
+              <div className="flex justify-center items-center p-4 w-full h-[90px] border border-black rounded-[20px]">
+                <p className="font-bold text-base text-[#222222]">{item}</p>
               </div>
-            )}
-            {index % 2 !== 0 && <div className="w-[40%] text-right"></div>}
-
-            {/* شماره جمله در وسط */}
-            <div className="w-[15%] flex items-center justify-center">
-              <span className="text-4xl font-medium border border-black rounded-full size-16 flex justify-center items-center bg-white z-10 ">
-                {index + 1}
-              </span>
+              <div className="w-10 h-0.5 bg-black"></div>
             </div>
-
-            {/* جملات زوج در سمت چپ */}
-            {index % 2 !== 0 && (
-              <div className="w-[40%] text-right bg-[#fafafa] p-5">
-                <div className="flex items-center">
-                  <span className="block size-2 rounded-full bg-black mb-3 ml-2"></span>
-                  <h2 className="text-sm font-bold mb-2">{item.title}</h2>
-                </div>
-                <p className="text-xs font-medium leading-7">
-                  {item.description}
-                </p>
-              </div>
-            )}
-            {index % 2 === 0 && <div className="w-[40%] text-right"></div>}
-          </div>
-        ))}
+          ))}
+        </div>
+        <div className="h-full w-0.5 py-[44px]">
+          <div className="h-full w-0.5 bg-black"></div>
+        </div>
+      </div>
+      {/* images div */}
+      <div className="w-full h-auto flex-1 px-[70px] relative">
+        <Image
+          alt="nft"
+          src={"/images/nft/nft.png"}
+          width={322}
+          height={488}
+          className="absolute bottom-20 z-10"
+        />
+        <Image
+          alt="nft"
+          src={"/images/nft/chart.png"}
+          width={275}
+          height={607}
+          className="absolute bottom-10 right-[220px]"
+        />
       </div>
     </div>
   );
