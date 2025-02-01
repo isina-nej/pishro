@@ -1,10 +1,11 @@
 import Filter from "./filter";
+import NewsList from "./NewsList";
 
 const NewsSection = () => {
   return (
     <div>
       <Filter />
-      news section
+      <NewsList />
     </div>
   );
 };
