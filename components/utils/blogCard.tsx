@@ -19,7 +19,7 @@ const BlogCard = ({ title, date, description, img, link }: BlogCardProps) => {
   return (
     <Link
       href={link}
-      className="block w-full sm:w-[48%] lg:w-[31%] rounded-sm border-2 border-[#f5f5f5] overflow-hidden"
+      className="block w-full sm:w-[48%] lg:w-[31%] rounded-sm border-2 border-[#f5f5f5] overflow-hidden hover:shadow-md transition-shadow"
     >
       <div className="relative w-full h-[168px] bg-[#e5e5e5] ">
         {imageError ? (
