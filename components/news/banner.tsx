@@ -6,9 +6,8 @@ const Banner = () => {
       <Image
         src={"/images/news/header.jpg"}
         alt="news-banner"
-        width={1356}
-        height={220}
-        className="-mt-[80px]"
+        fill
+        className="object-cover"
       />
     </div>
   );
