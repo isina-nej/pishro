@@ -2,6 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+/* تنظیم فونت پیشفرض برای بدنه (متون فارسی) */
+body {
+  font-family: var(--font-iransans-xv);
+}
+
+/* استفاده از فونت CharismaTF برای تمامی تگ‌های تیتر (h1 تا h6) */
+h1,
+h2,
+h3 {
+  font-family: var(--font-charisma-extra-bold);
+  font-weight: 800; /* ExtraBold */
+}
+
+h4,
+h5,
+h6 {
+  font-family: var(--font-charisma-regular);
+  font-weight: 400; /* ExtraBold */
+}
+
+/* استفاده از فونت Montserrat برای متون انگلیسی یا بخش‌های مورد نظر */
+.english-text {
+  font-family: var(--font-montserrat);
+}
+
 body {
   font-family: "IrSansX", Arial, Helvetica, sans-serif;
   box-sizing: border-box;

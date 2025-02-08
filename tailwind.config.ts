@@ -13,6 +13,10 @@ export default {
       fontFamily: {
         sans: ["IrSansX", "Inter", "sans-serif"],
         irsans: ["IrSansX", "sans-serif"],
+        "charisma-extra": ["var(--font-charisma-extra-bold)", "sans-serif"],
+        "charisma-regular": ["var(--font-charisma-regular)", "sans-serif"],
+        iransans: ["var(--font-iransans-xv)", "sans-serif"],
+        montserrat: ["var(--font-montserrat)", "sans-serif"],
       },
       colors: {
         background: "hsl(var(--background))",
