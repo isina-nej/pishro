@@ -16,7 +16,7 @@ export default {
         "charisma-extra": ["var(--font-charisma-extra-bold)", "sans-serif"],
         "charisma-regular": ["var(--font-charisma-regular)", "sans-serif"],
         iransans: ["var(--font-iransans-xv)", "sans-serif"],
-        montserrat: ["var(--font-montserrat)", "sans-serif"],
+        montserrat: ["var(--font-montserrat)", "sans-serif"], 
       },
       colors: {
         background: "hsl(var(--background))",
