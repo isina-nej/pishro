@@ -16,7 +16,7 @@ const WhyUs = () => {
   const [index, setIndex] = useState(0);
 
   return (
-    <div className="my-32 container-xl">
+    <div className="my-32 container">
       <h2 className="text-4xl text-center">چرا پیشرو</h2>
       <div>
         {/* لیست لیبل‌ها */}
