@@ -667,3 +667,30 @@ export const faqData = [
       "پاسخ سوال در اینجا قرار میگیره و به مقدار هر چند خطی که باشه باید در اینجا لحاظ بشه و به کاربر نمایش پیدا کنه، نکته مهم در اینه که طول این تکست باکس به صورت تمام عرض نیست و باید به نحوی باشه که فضای سفید (تنفس) ما حفظ بشه.",
   },
 ];
+
+export const homeSliderData = [
+  {
+    image: "/images/landing.jpg",
+    text: "پیشرو در مسیر موفقیت مالی",
+    linkText: "برو به خانه",
+    linkUrl: "/",
+  },
+  {
+    image: "/images/landing-crypto.jpg",
+    text: "کریپتوکارنسی",
+    linkText: "برو به صفحه کریپتو",
+    linkUrl: "/cryptocurrency",
+  },
+  {
+    image: "/images/landing-stock-market.jpg",
+    text: "بورس",
+    linkText: "برو به صفحه بورس",
+    linkUrl: "/stock-market",
+  },
+  {
+    image: "/images/landing-airdrop.jpg",
+    text: "ایردراپ! از این فرصت غافل نشوید",
+    linkText: "برو به صفحه ایردراپ",
+    linkUrl: "/airdrop",
+  },
+];

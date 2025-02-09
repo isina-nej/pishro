@@ -1,0 +1,26 @@
+.custom-nav-button {
+  width: 2rem !important;
+  height: 2rem !important;
+  background-color: white !important;
+  color: black !important;
+  border-radius: 9999px !important;
+  position: static !important;
+}
+/* حذف استایل پیشفرض ::after */
+.custom-nav-button::after {
+  display: none !important;
+}
+
+.swiper-pagination-bullet {
+  width: 4px !important;
+  height: 4px !important;
+  background: #606060 !important;
+  border-radius: 4px !important;
+  transition: all 0.2s ease-in-out !important;
+  opacity: 0.8;
+}
+.swiper-pagination-bullet-active {
+  width: 16px !important;
+  height: 6px !important;
+  background: #fff !important;
+}
