@@ -10,6 +10,7 @@
     "svgr": "svgr ./public/icons --out-dir ./public/svgr-icons --icon"
   },
   "dependencies": {
+    "@radix-ui/react-hover-card": "^1.1.6",
     "@radix-ui/react-select": "^2.1.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
