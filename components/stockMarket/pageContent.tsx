@@ -1,18 +1,12 @@
-import Landing from "@/components/utils/landing";
-// import Slider from "@/components/utils/slider";
-// import SectionOne from "@/components/stockMarket/sectionOne";
+import LandingVideo from "@/components/utils/landingVideo";
 import Courses from "@/components/utils/courses";
 import Banner from "@/components/utils/Banner";
 import Blog from "@/components/utils/blog";
 
-// import { stockMarketSliderData } from "@/public/data";
-
 const StockMarketPageContent = () => {
   return (
     <div>
-      <Landing />
-      {/* <Slider items={stockMarketSliderData} />
-      <SectionOne /> */}
+      <LandingVideo vidSrc="/videos/stock.webm" />
       <Courses />
       <Banner />
       <Blog />
