@@ -45,6 +45,10 @@ export const navbarData = [
         label: "دوره های آموزشی",
         link: "/courses/cryptocurrency",
       },
+      {
+        label: "اخبار",
+        link: "/news/cryptocurrency",
+      },
     ],
   },
   {
@@ -54,6 +58,10 @@ export const navbarData = [
       {
         label: "دوره های آموزشی",
         link: "/courses/stock-market",
+      },
+      {
+        label: "اخبار",
+        link: "/news/stock-market",
       },
     ],
   },
@@ -65,6 +73,10 @@ export const navbarData = [
         label: "دوره های آموزشی",
         link: "/courses/metaverse",
       },
+      {
+        label: "اخبار",
+        link: "/news/metaverse",
+      },
     ],
   },
   {
@@ -75,6 +87,10 @@ export const navbarData = [
         label: "دوره های آموزشی",
         link: "/courses/nft",
       },
+      {
+        label: "اخبار",
+        link: "/news/nft",
+      },
     ],
   },
   {
@@ -84,6 +100,10 @@ export const navbarData = [
       {
         label: "دوره های آموزشی",
         link: "/courses/airdrop",
+      },
+      {
+        label: "اخبار",
+        link: "/news/airdrop",
       },
     ],
   },
