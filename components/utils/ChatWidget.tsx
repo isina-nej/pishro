@@ -2,9 +2,10 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { X } from "lucide-react"; // آیکون بستن از lucide-react
+import { IoChatbubblesOutline } from "react-icons/io5";
 import { Button } from "@/components/ui/button"; // مسیر مناسب کامپوننت Button shadcn
 import { Input } from "@/components/ui/input"; // مسیر مناسب کامپوننت Input shadcn
-import { X } from "lucide-react"; // آیکون بستن از lucide-react
 
 const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -62,6 +63,7 @@ const ChatWidget = () => {
         className="fixed bottom-4 right-4 bg-blue-600 text-white rounded-full p-4 shadow-lg hover:bg-blue-700 z-50"
       >
         چت آنلاین
+        <IoChatbubblesOutline style={{ width: "20px", height: "20px" }} />
       </Button>
     </>
   );
