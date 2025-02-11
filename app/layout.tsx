@@ -5,6 +5,7 @@ import "@/app/styles/fonts.css";
 import "@/app/styles/globals.css";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
+import ChatWidget from "@/components/utils/ChatWidget";
 
 const charismaExtraBold = localFont({
   src: "../public/font/CharismaTF-ExtraBold.woff2",
@@ -52,6 +53,7 @@ export default function RootLayout({
         <Navbar />
         {children}
         <Footer />
+        <ChatWidget />
       </body>
     </html>
   );
