@@ -47,10 +47,12 @@ const Navbar = () => {
         </div>
         {/* بخش سمت چپ */}
         <div className="flex items-center gap-7">
-          <button className="flex items-center gap-1">
-            <UserIcon width={18} height={18} />
-            <span className="font-medium text-xs"> ورود یا ثبت نام</span>
-          </button>
+          <Link href={"/login"}>
+            <button className="flex items-center gap-1">
+              <UserIcon width={18} height={18} />
+              <span className="font-medium text-xs"> ورود یا ثبت نام</span>
+            </button>
+          </Link>
           <button className="flex items-center gap-1">
             <BuyIcon width={18} height={18} />
             <span className="text-white bg-myPrimary size-4 rounded-[2px] text-xs font-bold text-center">
