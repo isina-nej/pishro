@@ -6,37 +6,33 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Image from "next/image";
 import Link from "next/link";
+import { LuSquareChevronRight } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { LuSquareChevronRight } from "react-icons/lu";
 import { cn } from "@/lib/utils";
+import { Mail } from "lucide-react";
 
 // تعریف اسکیمای ورود
 const loginSchema = z.object({
-  email: z
-    .string({ required_error: "ایمیل الزامی است." })
-    .nonempty("ایمیل الزامی است.")
-    .email("ایمیل نامعتبر است."),
+  username: z
+    .string({ required_error: "نام کاربری الزامی است." })
+    .nonempty("نام کاربری الزامی است."),
   password: z
     .string({ required_error: "رمز عبور الزامی است." })
     .nonempty("رمز عبور الزامی است.")
-    .min(6, "رمز عبور باید حداقل ۶ کاراکتر باشد."),
+    .min(8, "رمز عبور باید حداقل 8 کاراکتر باشد."),
 });
 
 // تعریف اسکیمای ثبت‌نام
 const signupSchema = z
   .object({
-    fullName: z
-      .string({ required_error: "نام کامل الزامی است." })
-      .nonempty("نام کامل الزامی است."),
-    email: z
-      .string({ required_error: "ایمیل الزامی است." })
-      .nonempty("ایمیل الزامی است.")
-      .email("ایمیل نامعتبر است."),
+    username: z
+      .string({ required_error: "نام کاربری الزامی است." })
+      .nonempty("نام کاربری الزامی است."),
     password: z
       .string({ required_error: "رمز عبور الزامی است." })
       .nonempty("رمز عبور الزامی است.")
-      .min(6, "رمز عبور باید حداقل ۶ کاراکتر باشد."),
+      .min(8, "رمز عبور باید حداقل 8 کاراکتر باشد."),
     confirmPassword: z
       .string({ required_error: "تکرار رمز عبور الزامی است." })
       .nonempty("تکرار رمز عبور الزامی است."),
@@ -66,13 +62,12 @@ const LoginPage = () => {
     defaultValues:
       variant === "signup"
         ? {
-            fullName: "",
-            email: "",
+            username: "",
             password: "",
             confirmPassword: "",
           }
         : {
-            email: "",
+            username: "",
             password: "",
           },
   });
@@ -82,13 +77,12 @@ const LoginPage = () => {
     reset(
       variant === "signup"
         ? {
-            fullName: "",
-            email: "",
+            username: "",
             password: "",
             confirmPassword: "",
           }
         : {
-            email: "",
+            username: "",
             password: "",
           }
     );
@@ -160,77 +154,52 @@ const LoginPage = () => {
               onSubmit={handleSubmit(onSubmit)}
               className="flex flex-col gap-4"
             >
-              {/* فیلد نام کامل (فقط در حالت ثبت‌نام) */}
-              {variant === "signup" && (
-                <div>
-                  <label
-                    htmlFor="fullName"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    نام کامل
-                  </label>
+              <div className="mt-5">
+                <label
+                  htmlFor="username"
+                  className="block text-xs font-bold mb-4"
+                >
+                  نام کاربری
+                </label>
+                <div className="relative">
                   <Input
-                    id="fullName"
-                    {...register("fullName")}
-                    type="text"
-                    placeholder="نام کامل"
+                    id="username"
+                    {...register("username")}
+                    type="email"
+                    placeholder="نام کاربری"
                     className={cn(
-                      "mt-1 block w-full",
-                      (errors as FieldErrors<SignupFormValues>).fullName
-                        ? "border-red-500"
-                        : ""
+                      "mt-1 pr-8 block w-full rounded-none border-0 border-b border-black focus-visible:ring-0 focus-visible:bg-gray-100",
+                      errors.username ? "border-red-500" : ""
                     )}
                   />
-                  {(errors as FieldErrors<SignupFormValues>).fullName && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {
-                        (errors as FieldErrors<SignupFormValues>).fullName
-                          ?.message as string
-                      }
-                    </p>
-                  )}
+                  <Mail className="absolute bottom-2 size-5" />
                 </div>
-              )}
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  ایمیل
-                </label>
-                <Input
-                  id="email"
-                  {...register("email")}
-                  type="email"
-                  placeholder="ایمیل"
-                  className={cn(
-                    "mt-1 block w-full",
-                    errors.email ? "border-red-500" : ""
-                  )}
-                />
-                {errors.email && (
+                {errors.username && (
                   <p className="text-red-500 text-sm mt-1">
-                    {errors.email.message as string}
+                    {errors.username.message as string}
                   </p>
                 )}
               </div>
-              <div>
+              <div className="mt-5">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-xs font-bold mb-4"
                 >
                   رمز عبور
                 </label>
-                <Input
-                  id="password"
-                  {...register("password")}
-                  type="password"
-                  placeholder="رمز عبور"
-                  className={cn(
-                    "mt-1 block w-full",
-                    errors.password ? "border-red-500" : ""
-                  )}
-                />
+                <div className="relative">
+                  <Input
+                    id="password"
+                    {...register("password")}
+                    type="password"
+                    placeholder="رمز عبور خود را وارد کنید"
+                    className={cn(
+                      "mt-1 pr-8 block w-full rounded-none border-0 border-b border-black focus-visible:ring-0 focus-visible:bg-gray-100",
+                      errors.password ? "border-red-500" : ""
+                    )}
+                  />
+                  <Mail className="absolute bottom-2 size-5" />
+                </div>
                 {errors.password && (
                   <p className="text-red-500 text-sm mt-1">
                     {errors.password.message as string}
@@ -239,25 +208,29 @@ const LoginPage = () => {
               </div>
               {/* فیلد تکرار رمز عبور (فقط در حالت ثبت‌نام) */}
               {variant === "signup" && (
-                <div>
+                <div className="mt-5">
                   <label
                     htmlFor="confirmPassword"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-xs font-bold mb-4"
                   >
                     تکرار رمز عبور
                   </label>
-                  <Input
-                    id="confirmPassword"
-                    {...register("confirmPassword")}
-                    type="password"
-                    placeholder="تکرار رمز عبور"
-                    className={cn(
-                      "mt-1 block w-full",
-                      (errors as FieldErrors<SignupFormValues>).confirmPassword
-                        ? "border-red-500"
-                        : ""
-                    )}
-                  />
+                  <div className="relative">
+                    <Input
+                      id="confirmPassword"
+                      {...register("confirmPassword")}
+                      type="password"
+                      placeholder="رمز عبور خود را وارد کنید"
+                      className={cn(
+                        "mt-1 pr-8 block w-full rounded none border-0 border-b border-black",
+                        (errors as FieldErrors<SignupFormValues>)
+                          .confirmPassword
+                          ? "border-red-500"
+                          : ""
+                      )}
+                    />
+                    <Mail className="absolute bottom-2 size-5" />
+                  </div>
                   {(errors as FieldErrors<SignupFormValues>)
                     .confirmPassword && (
                     <p className="text-red-500 text-sm mt-1">
