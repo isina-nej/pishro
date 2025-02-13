@@ -53,12 +53,14 @@ const Navbar = () => {
               <span className="font-medium text-xs"> ورود یا ثبت نام</span>
             </button>
           </Link>
-          <button className="flex items-center gap-1">
-            <BuyIcon width={18} height={18} />
-            <span className="text-white bg-myPrimary size-4 rounded-[2px] text-xs font-bold text-center">
-              6
-            </span>
-          </button>
+          <Link href={"/checkout"}>
+            <button className="flex items-center gap-1">
+              <BuyIcon width={18} height={18} />
+              <span className="text-white bg-myPrimary size-4 rounded-[2px] text-xs font-bold text-center">
+                6
+              </span>
+            </button>
+          </Link>
         </div>
       </div>
 
