@@ -94,6 +94,11 @@ const LoginPage = () => {
     // منطق ارسال فرم (مثلاً فراخوانی API) در اینجا نوشته می‌شود
   };
 
+  const handleButtons = (e: any, type: string) => {
+    e.preventDefault();
+    console.log(type);
+  };
+
   // تغییر حالت فرم (ورود / ثبت‌نام)
   const switchVariant = (newVariant: Variant) => {
     setVariant(newVariant);
@@ -249,6 +254,41 @@ const LoginPage = () => {
               >
                 {variant === "login" ? "ورود" : "ثبت نام"}
               </Button>
+              <div className="mt-5 flex gap-5 justify-center">
+                <button
+                  onClick={(e: any) => handleButtons(e, "google")}
+                  className="relative size-10"
+                >
+                  <Image
+                    src={"/images/login/google.png"}
+                    alt="google"
+                    fill
+                    className="object-cover"
+                  />
+                </button>
+                <button
+                  onClick={(e: any) => handleButtons(e, "apple")}
+                  className="relative size-10"
+                >
+                  <Image
+                    src={"/images/login/apple.png"}
+                    alt="apple"
+                    fill
+                    className="object-cover"
+                  />
+                </button>
+                <button
+                  onClick={(e: any) => handleButtons(e, "facebook")}
+                  className="relative size-10"
+                >
+                  <Image
+                    src={"/images/login/facebook.png"}
+                    alt="facebook"
+                    fill
+                    className="object-cover"
+                  />
+                </button>
+              </div>
             </form>
           </div>
         </div>
