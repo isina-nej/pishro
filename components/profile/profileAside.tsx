@@ -8,7 +8,7 @@ const user = {
 
 const ProfileAside = () => {
   return (
-    <aside className="rounded-sm bg-[#131B22] text-white w-[286px]">
+    <aside className="rounded-md bg-[#131B22] text-white w-[286px]">
       {/* profile */}
       <div className="w-full flex flex-col justify-center items-center pt-8 pb-16">
         <div className="relative rounded-full overflow-hidden size-[75px] mb-2">
