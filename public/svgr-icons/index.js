@@ -9,3 +9,4 @@ export { default as UserIcon } from "./UserIcon";
 export { default as WhatsappIcon } from "./WhatsappIcon";
 export { default as XIcon } from "./XIcon";
 export { default as YoutubeIcon } from "./YoutubeIcon";
+export { default as ProfileIcon } from "./ProfileIcon";
