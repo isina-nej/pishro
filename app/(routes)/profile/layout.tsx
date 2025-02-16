@@ -18,7 +18,7 @@ export default function ProfileLayout({
         <ProfileHeader />
         <div className="container-xl w-full flex gap-5 mt-4">
           <ProfileAside />
-          {children}
+          <main className="w-full max-w-[990px]">{children}</main>
         </div>
       </div>
     </>

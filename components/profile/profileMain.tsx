@@ -1,5 +1,5 @@
 const ProfileMain = () => {
-  return <main>main</main>;
+  return <div className="bg-white w-full max-w-[990px]">main</div>;
 };
 
 export default ProfileMain;
