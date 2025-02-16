@@ -154,7 +154,7 @@ body {
 }
 
 .container-xl {
-  max-width: 1520px;
+  max-width: 1440px;
   width: 100%;
   padding-right: 1rem;
   padding-left: 1rem;
@@ -164,7 +164,7 @@ body {
 
 @media only screen and (min-width: 640px) {
   .container-xl {
-    max-width: 1520px;
+    max-width: 1440px;
     width: 100%;
     padding-right: 1rem;
     padding-left: 1rem;
@@ -174,7 +174,7 @@ body {
 }
 @media only screen and (min-width: 768px) {
   .container-xl {
-    max-width: 1520px;
+    max-width: 1440px;
     width: 100%;
     padding-right: 40px;
     padding-left: 40px;
@@ -184,7 +184,7 @@ body {
 }
 @media only screen and (min-width: 1024px) {
   .container-xl {
-    max-width: 1520px;
+    max-width: 1440px;
     width: 100%;
     padding-right: 72px;
     padding-left: 72px;
