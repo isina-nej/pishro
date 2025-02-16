@@ -3,17 +3,19 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Button } from "../ui/button";
 
-// آیکون‌های outline
-import { GoHome } from "react-icons/go";
-import { FiShoppingCart } from "react-icons/fi";
-import { HiOutlineClipboardList } from "react-icons/hi";
-import { FaRegUser } from "react-icons/fa6";
-
-// آیکون‌های filled
-import { AiFillHome } from "react-icons/ai";
-import { FaShoppingCart, FaUser } from "react-icons/fa";
-import { HiClipboardList } from "react-icons/hi";
+// استفاده از آیکون‌های Heroicons برای یکدست بودن
+import {
+  HiOutlineHome,
+  HiHome,
+  HiOutlineShoppingCart,
+  HiShoppingCart,
+  HiOutlineClipboardList,
+  HiClipboardList,
+  HiOutlineUser,
+  HiUser,
+} from "react-icons/hi";
 
 const user = {
   name: "نام کاربر",
@@ -27,14 +29,14 @@ const ProfileAside = () => {
   const sidebarLinks = [
     {
       label: "اکانت شما",
-      outlinedIcon: <GoHome />,
-      filledIcon: <AiFillHome />,
+      outlinedIcon: <HiOutlineHome />,
+      filledIcon: <HiHome />,
       link: "/profile",
     },
     {
       label: "سفارش ها",
-      outlinedIcon: <FiShoppingCart />,
-      filledIcon: <FaShoppingCart />,
+      outlinedIcon: <HiOutlineShoppingCart />,
+      filledIcon: <HiShoppingCart />,
       link: "/profile/orders",
     },
     {
@@ -45,8 +47,8 @@ const ProfileAside = () => {
     },
     {
       label: "تنظیمات پروفایل",
-      outlinedIcon: <FaRegUser />,
-      filledIcon: <FaUser />,
+      outlinedIcon: <HiOutlineUser />,
+      filledIcon: <HiUser />,
       link: "/profile/settings",
     },
   ];
@@ -67,7 +69,7 @@ const ProfileAside = () => {
         <p className="font-medium text-sm">{user.name}</p>
       </div>
       {/* لینک‌های ناوبری */}
-      <div className="py-8 pr-2 flex flex-col items-start gap-4">
+      <div className="pt-8 pb-80 pr-2 flex flex-col items-start gap-4 border-b border-dashed border-[#495157]">
         {sidebarLinks.map((item, idx) => {
           // بررسی می‌کنیم که آیا مسیر فعلی برابر با لینک مورد نظر است
           const isActive = pathname === item.link;
@@ -98,6 +100,11 @@ const ProfileAside = () => {
             </button>
           );
         })}
+      </div>
+      <div className="flex justify-center items-center w-full py-8">
+        <Button variant={"destructive"} className="text-xs py-1.5 px-8">
+          خروج از حساب
+        </Button>
       </div>
     </aside>
   );
