@@ -823,3 +823,24 @@ export const profileAvatars = [
     img: "/images/profile/profile-1.png",
   },
 ];
+
+export const profileOrdersData = [
+  {
+    name: "دوره اول",
+    date: "1403/12/5",
+    price: 2400000,
+    isPayed: true,
+  },
+  {
+    name: "دوره دوم",
+    date: "1403/12/6",
+    price: 2000000,
+    isPayed: true,
+  },
+  {
+    name: "دوره سوم",
+    date: "1403/12/8",
+    price: 1700000,
+    isPayed: false,
+  },
+];
