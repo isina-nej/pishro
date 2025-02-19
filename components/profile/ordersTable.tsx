@@ -1,5 +1,6 @@
 import ProfileHeader from "./header";
 import { profileOrdersData } from "@/public/data";
+import Link from "next/link";
 import { LuSquareChevronLeft } from "react-icons/lu";
 const OrdersTable = () => {
   return (
@@ -61,7 +62,9 @@ const OrdersTable = () => {
                 </td>
                 <td className="px-5 py-4 whitespace-nowrap text-xs flex justify-end">
                   <button>
-                    <LuSquareChevronLeft className="text-[#214254] size-5" />
+                    <Link href={`/profile/orders/${item.details.payId}`}>
+                      <LuSquareChevronLeft className="text-[#214254] size-5" />
+                    </Link>
                   </button>
                 </td>
               </tr>

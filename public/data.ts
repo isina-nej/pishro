@@ -830,17 +830,29 @@ export const profileOrdersData = [
     date: "1403/12/5",
     price: 2400000,
     isPayed: true,
+    details: {
+      payId: "12342",
+      phoneNumber: "09123457789",
+    },
   },
   {
     name: "دوره دوم",
     date: "1403/12/6",
     price: 2000000,
     isPayed: true,
+    details: {
+      payId: "12341",
+      phoneNumber: "09123456689",
+    },
   },
   {
     name: "دوره سوم",
     date: "1403/12/8",
     price: 1700000,
     isPayed: false,
+    details: {
+      payId: "123453",
+      phoneNumber: "09123411789",
+    },
   },
 ];
