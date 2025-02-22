@@ -325,7 +325,7 @@ const LoginPage = () => {
         </div>
       </div>
       {/* تصویر پس‌زمینه */}
-      <div className="flex-1 relative">
+      <div className="flex-1 relative h-lvh">
         <Image
           src={"/images/login/background.jpg"}
           alt="background"
