@@ -1,9 +1,15 @@
+"use client";
+
+import { useState } from "react";
+
 import { SearchNormalIcon } from "@/public/svgr-icons";
 import ProfileHeader from "./header";
 
 import AllForms from "./allForms";
 
 const ProfileSettings = () => {
+  const [formType, setFormType] = useState<"personal" | "pay">("personal");
+
   return (
     <div className="bg-white w-full max-w-[990px] rounded-md">
       <ProfileHeader>
@@ -16,12 +22,24 @@ const ProfileSettings = () => {
           </h5>
         </div>
         <div className="text-xs font-medium flex items-center justify-between gap-8">
-          <button className="text-[#d52a16]">اطلاعات شخصی</button>
-          <button className="text-[#666]">اطلاعات پرداخت</button>
+          <button
+            className={
+              formType === "personal" ? "text-[#d52a16]" : "text-[#666]"
+            }
+            onClick={() => setFormType("personal")}
+          >
+            اطلاعات شخصی
+          </button>
+          <button
+            className={formType === "pay" ? "text-[#d52a16]" : "text-[#666]"}
+            onClick={() => setFormType("pay")}
+          >
+            اطلاعات پرداخت
+          </button>
         </div>
       </ProfileHeader>
       {/* body */}
-      <AllForms />
+      <AllForms formType={formType} />
     </div>
   );
 };

@@ -856,3 +856,16 @@ export const profileOrdersData = [
     },
   },
 ];
+
+export const bankCardsInfo = [
+  {
+    label: "کارت بانک ملی",
+    cardNumber: "6037991234567890",
+    cardShaba: "870570028180010653892101",
+  },
+  {
+    label: "کارت بانک تجارت",
+    cardNumber: "6037993234567890",
+    cardShaba: "870570038180010653892101",
+  },
+];
