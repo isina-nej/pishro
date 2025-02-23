@@ -67,8 +67,8 @@ const VideoSection: React.FC<VideoSectionProps> = ({ videoUrl, label }) => {
 
   return (
     // تنظیم جهت نمایش به صورت راست به چپ
-    <div className="container mx-auto py-8" dir="rtl">
-      <div className="w-full max-w-3xl mx-auto">
+    <div className="container py-8" dir="rtl">
+      <div className="w-full max-w-4xl mx-auto">
         <video ref={videoRef} className="plyr__video-embed" controls>
           <source src={videoUrl} type="video/mp4" />
         </video>
