@@ -18,6 +18,27 @@ const charismaRegular = localFont({
   variable: "--font-charisma-regular",
 });
 
+const irSansXRegular = localFont({
+  src: "../public/font/woff2/IRSansXFaNum-Regular.woff2",
+  weight: "400",
+  style: "normal",
+  variable: "--font-irsansx-regular",
+});
+
+const irSansXMedium = localFont({
+  src: "../public/font/woff2/IRSansXFaNum-Medium.woff2",
+  weight: "500",
+  style: "normal",
+  variable: "--font-irsansx-medium",
+});
+
+const irSansXBold = localFont({
+  src: "../public/font/woff2/IRSansXFaNum-Bold.woff2",
+  weight: "700",
+  style: "normal",
+  variable: "--font-irsansx-bold",
+});
+
 const iransansXV = localFont({
   src: "../public/font/IRANSansXV.woff2",
   weight: "400",
@@ -45,7 +66,7 @@ export default function RootLayout({
   return (
     <html lang="fa">
       <body
-        className={`${iransansXV.variable} ${charismaExtraBold.variable} ${charismaRegular.variable} ${montserrat.variable} rtl font-irsans`}
+        className={`${iransansXV.variable} ${charismaExtraBold.variable} ${charismaRegular.variable} ${montserrat.variable} ${irSansXRegular.variable} ${irSansXMedium.variable} ${irSansXBold.variable} rtl`}
       >
         {children}
       </body>
