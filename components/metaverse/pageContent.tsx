@@ -4,7 +4,6 @@ import LandingVideo from "@/components/utils/landingVideo";
 import Courses from "@/components/utils/courses";
 import Banner from "@/components/utils/Banner";
 import Blog from "@/components/utils/blog";
-import VideoSection from "../utils/videoSection";
 
 const MetaversePageContent = () => {
   return (
@@ -12,7 +11,6 @@ const MetaversePageContent = () => {
       <LandingVideo vidSrc="/videos/metaverse.webm" />
       <SectionOne />
       <MetaverseBanner />
-      <VideoSection videoUrl="/videos/metaverse.webm" label="متاورس" />
       <Courses />
       <Banner />
       <Blog />
