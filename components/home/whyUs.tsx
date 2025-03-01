@@ -35,7 +35,7 @@ const WhyUs = () => {
               {idx === index && (
                 <motion.div
                   layoutId="underline"
-                  className="absolute -bottom-1 left-0 right-0 h-1 bg-yellow-500 rounded"
+                  className="absolute -bottom-1 left-0 right-0 h-1 bg-red-500 rounded"
                 />
               )}
             </h4>
