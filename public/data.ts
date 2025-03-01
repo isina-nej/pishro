@@ -9,23 +9,23 @@ export const navbarData = [
     data: [
       {
         label: "کریپتوکارنسی",
-        link: "/courses/cryptocurrency", // Cryptocurrency section
+        link: "/cryptocurrency?section=courses", // اضافه کردن به Query Parameters
       },
       {
         label: "بورس",
-        link: "/courses/stock-market", // Stock market section
+        link: "/stock-market?section=courses",
       },
       {
         label: "متاورس",
-        link: "/courses/metaverse", // Metaverse section
+        link: "/metaverse?section=courses",
       },
       {
         label: "NFT",
-        link: "/courses/nft", // NFT section
+        link: "/nft?section=courses",
       },
       {
         label: "ایردراپ",
-        link: "/courses/airdrop", // Airdrop section
+        link: "/airdrop?section=courses",
       },
     ],
   },

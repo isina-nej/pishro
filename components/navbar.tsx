@@ -116,18 +116,20 @@ const Navbar = () => {
                       align="start"
                       className="bg-white text-gray-800 min-w-[80px] w-fit shadow-lg rounded-sm z-50 mt-2 p-3"
                     >
-                      {item.data.map((subItem, subIdx) => (
-                        <Link
-                          key={subIdx}
-                          href={subItem.link}
-                          className={cn(
-                            "block p-1 hover:bg-gray-100 text-xs",
-                            subIdx !== item.data.length - 1 ? "border-b" : ""
-                          )}
-                        >
-                          {subItem.label}
-                        </Link>
-                      ))}
+                      {item.data.map((subItem, subIdx) => {
+                        return (
+                          <Link
+                            key={subIdx}
+                            href={subItem.link}
+                            className={cn(
+                              "block p-1 hover:bg-gray-100 text-xs",
+                              subIdx !== item.data.length - 1 ? "border-b" : ""
+                            )}
+                          >
+                            {subItem.label}
+                          </Link>
+                        );
+                      })}
                     </PopoverContent>
                   </Popover>
                 )}
