@@ -5,7 +5,7 @@ const SectionOne = () => {
     <div className="container my-40 relative flex flex-col items-center ">
       {/* section one */}
       <div className="flex justify-between items-center gap-20">
-        <div className="flex-1">
+        <div className="flex-[2]">
           <p className="font-sm text-gray-900 leading-7">
             راهی برای بدست اوردن توکن های پروژه کریپتویی قبل از عرضه به بازار به
             صورت رایگان است   شاید باورتان نشود ولی بیشتر ایردراپ ها را میتوان
@@ -14,7 +14,7 @@ const SectionOne = () => {
             است و تنها کافیست برای این کار اندکی زمان بگذارید
           </p>
         </div>
-        <div className="flex-1 h-[300px]">
+        <div className="flex-[3] h-[300px]">
           <div className="size-full relative rounded-lg overflow-hidden">
             <Image
               src={"/images/landing-stock-market.jpg"}
@@ -26,8 +26,8 @@ const SectionOne = () => {
         </div>
       </div>
       {/* section two */}
-      <div className="flex justify-between items-center gap-20 mt-20">
-        <div className="flex-1 h-[300px]">
+      <div className="flex justify-between items-center gap-20 mt-32">
+        <div className="flex-[3] h-[300px]">
           <div className="size-full relative rounded-lg overflow-hidden">
             <Image
               src={"/images/landing-stock-market.jpg"}
@@ -37,7 +37,7 @@ const SectionOne = () => {
             />
           </div>
         </div>
-        <div className="flex-1">
+        <div className="flex-[2]">
           <p className="font-sm text-gray-900 leading-7">
             راهی برای بدست اوردن توکن های پروژه کریپتویی قبل از عرضه به بازار به
             صورت رایگان است   شاید باورتان نشود ولی بیشتر ایردراپ ها را میتوان
