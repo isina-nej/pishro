@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { navbarData } from "@/public/data";
-import NavbarTop from "./navbarTop";
+import NavbarTop from "../navbarTop";
 import NavbarItems from "./navbarItems";
 
 const Navbar = () => {

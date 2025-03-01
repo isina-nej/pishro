@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import Navbar from "@/components/navbar";
+import Navbar from "@/components/navbar/navbar";
 import Footer from "@/components/footer";
 import ChatWidget from "@/components/utils/ChatWidget";
 
