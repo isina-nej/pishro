@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
@@ -19,33 +21,36 @@ import {
 import { cn } from "@/lib/utils";
 
 const Navbar = () => {
+  // State to hold the indicator's position and width
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
+
   return (
     <nav className="h-[115px] w-full flex flex-col z-30">
-      {/* قسمت بالایی */}
+      {/* Upper Section */}
       <div className="px-[72px] py-5 h-20 flex justify-between items-center">
-        {/* بخش سمت راست */}
+        {/* Left Section */}
         <div className="w-full max-w-[650px] flex items-center gap-6">
           <div className="h-10 w-[100px] flex items-center">
             <Image src={"/icons/Logo.png"} alt="logo" width={90} height={32} />
           </div>
           <div className="relative h-8 w-full max-w-[526px]">
-            {/* آیکون جستجو */}
+            {/* Search Icon */}
             <button className="absolute top-1/2 transform -translate-y-1/2 h-8 px-4">
               <SearchNormalIcon width={12} height={12} />
             </button>
-            {/* اینپوت */}
+            {/* Input Field */}
             <Input
               type="text"
               placeholder="جستجو"
               className="pl-12 pr-12 w-full h-8"
             />
-            {/* آیکون فیلتر */}
+            {/* Filter Icon */}
             <button className="absolute left-0 top-1/2 transform -translate-y-1/2 h-full w-7 bg-[#EDF4F8] border-transparent flex justify-center items-center rounded-l-sm">
               <FilterIcon width={20} height={20} />
             </button>
           </div>
         </div>
-        {/* بخش سمت چپ */}
+        {/* Right Section */}
         <div className="flex items-center gap-7">
           <Link href={"/login"}>
             <button className="flex items-center gap-1">
@@ -64,43 +69,61 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* قسمت پایین و منوها */}
-      <div className="bg-mySecondary h-9 text-white text-xs px-[60px] relative">
-        <ul className="h-9 flex items-center gap-5">
+      {/* Bottom Section with Navbar Items */}
+      <div
+        className="bg-mySecondary h-9 text-white text-xs px-[60px] relative"
+        // When mouse leaves the container, hide the indicator
+        onMouseLeave={() => setIndicatorStyle({ left: 0, width: 0 })}
+      >
+        <ul className="h-9 flex items-center gap-5 relative">
           {navbarData.map((item, idx) => (
             <React.Fragment key={idx}>
-              <li className="group relative h-full flex items-center">
+              <li
+                className="group relative h-full flex items-center"
+                // Update indicator position and width on mouse enter
+                onMouseEnter={(e) => {
+                  const target = e.currentTarget;
+                  setIndicatorStyle({
+                    left: target.offsetLeft,
+                    width: target.clientWidth,
+                  });
+                }}
+              >
+                {/* If item has no dropdown */}
                 {!item.data && (
-                  <Link href={item.link} className="hover:text-gray-200">
+                  <Link
+                    href={item.link}
+                    className="hover:text-gray-200 relative inline-block"
+                  >
                     {item.label}
                   </Link>
                 )}
-                {/* برای منوهای کشویی، HoverCard استفاده می‌شود */}
+                {/* If item has dropdown data, use HoverCard */}
                 {item.data && (
                   <HoverCard>
                     <HoverCardTrigger asChild>
-                      <Link href={item.link} className="hover:text-gray-200">
+                      <Link
+                        href={item.link}
+                        className="hover:text-gray-200 relative inline-block"
+                      >
                         {item.label}
                       </Link>
                     </HoverCardTrigger>
-
-                    {/* Dropdown Menu با HoverCardContent */}
-                    {item.data && (
-                      <HoverCardContent className="bg-white text-gray-800 min-w-[80px] shadow-lg rounded-sm z-50 mt-2">
-                        {item.data.map((subItem, subIdx) => (
-                          <Link
-                            key={subIdx}
-                            href={subItem.link}
-                            className={cn(
-                              "block p-1 hover:bg-gray-100 text-xs",
-                              subIdx !== item.data.length ? "border-b" : ""
-                            )}
-                          >
-                            {subItem.label}
-                          </Link>
-                        ))}
-                      </HoverCardContent>
-                    )}
+                    {/* Dropdown Menu */}
+                    <HoverCardContent className="bg-white text-gray-800 min-w-[80px] shadow-lg rounded-sm z-50 mt-2">
+                      {item.data.map((subItem, subIdx) => (
+                        <Link
+                          key={subIdx}
+                          href={subItem.link}
+                          className={cn(
+                            "block p-1 hover:bg-gray-100 text-xs",
+                            subIdx !== item.data.length ? "border-b" : ""
+                          )}
+                        >
+                          {subItem.label}
+                        </Link>
+                      ))}
+                    </HoverCardContent>
                   </HoverCard>
                 )}
               </li>
@@ -109,6 +132,11 @@ const Navbar = () => {
               )}
             </React.Fragment>
           ))}
+          {/* Animated Red Underline Indicator */}
+          <div
+            className="absolute bottom-0 h-[2px] bg-red-500 transition-all duration-300"
+            style={{ left: indicatorStyle.left, width: indicatorStyle.width }}
+          ></div>
         </ul>
       </div>
     </nav>
