@@ -6,32 +6,6 @@ export const navbarData = [
   {
     label: "دوره های آموزشی",
     link: "/courses", // Courses listing
-    data: [
-      {
-        label: "طرح های سرمایه گذاری",
-        link: "/courses/investment-plans", // Courses listing
-      },
-      {
-        label: "کریپتوکارنسی",
-        link: "/courses/cryptocurrency", // Cryptocurrency section
-      },
-      {
-        label: "بورس",
-        link: "/courses/stock-market", // Stock market section
-      },
-      {
-        label: "متاورس",
-        link: "/courses/metaverse", // Metaverse section
-      },
-      {
-        label: "NFT",
-        link: "/courses/nft", // NFT section
-      },
-      {
-        label: "ایردراپ",
-        link: "/courses/airdrop", // Airdrop section
-      },
-    ],
   },
   {
     label: "طرح های سرمایه گذاری",
@@ -40,72 +14,22 @@ export const navbarData = [
   {
     label: "کریپتوکارنسی",
     link: "/cryptocurrency", // Cryptocurrency section
-    data: [
-      {
-        label: "دوره های آموزشی",
-        link: "/courses/cryptocurrency",
-      },
-      {
-        label: "اخبار",
-        link: "/news/cryptocurrency",
-      },
-    ],
   },
   {
     label: "بورس",
     link: "/stock-market", // Stock market section
-    data: [
-      {
-        label: "دوره های آموزشی",
-        link: "/courses/stock-market",
-      },
-      {
-        label: "اخبار",
-        link: "/news/stock-market",
-      },
-    ],
   },
   {
     label: "متاورس",
     link: "/metaverse", // Metaverse section
-    data: [
-      {
-        label: "دوره های آموزشی",
-        link: "/courses/metaverse",
-      },
-      {
-        label: "اخبار",
-        link: "/news/metaverse",
-      },
-    ],
   },
   {
     label: "NFT",
     link: "/nft", // NFT section
-    data: [
-      {
-        label: "دوره های آموزشی",
-        link: "/courses/nft",
-      },
-      {
-        label: "اخبار",
-        link: "/news/nft",
-      },
-    ],
   },
   {
     label: "ایردراپ",
     link: "/airdrop", // Airdrop section
-    data: [
-      {
-        label: "دوره های آموزشی",
-        link: "/courses/airdrop",
-      },
-      {
-        label: "اخبار",
-        link: "/news/airdrop",
-      },
-    ],
   },
   {
     label: "مشاوره کسب و کار",
