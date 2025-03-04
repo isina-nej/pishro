@@ -6,7 +6,7 @@ const SectionOne = () => {
       {/* section one */}
       <div className="flex justify-between items-center gap-20">
         <div className="flex-[2]">
-          <p className="font-sm text-gray-900 leading-7">
+          <p className="text-lg text-[#707177] leading-9">
             راهی برای بدست اوردن توکن های پروژه کریپتویی قبل از عرضه به بازار به
             صورت رایگان است   شاید باورتان نشود ولی بیشتر ایردراپ ها را میتوان
             به صورت رایگان هم دریافت کرد و تنها کافیست گام هایی را که برای
@@ -38,7 +38,7 @@ const SectionOne = () => {
           </div>
         </div>
         <div className="flex-[2]">
-          <p className="font-sm text-gray-900 leading-7">
+          <p className="text-lg text-[#707177] leading-9">
             راهی برای بدست اوردن توکن های پروژه کریپتویی قبل از عرضه به بازار به
             صورت رایگان است   شاید باورتان نشود ولی بیشتر ایردراپ ها را میتوان
             به صورت رایگان هم دریافت کرد و تنها کافیست گام هایی را که برای
