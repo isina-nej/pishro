@@ -24,7 +24,7 @@ export const categoriesData = [
     link: "/nft",
   },
   {
-    src: "/images/home/c/airdrop.webp",
+    src: "/images/home/c/airdrop.jpg",
     label: "ایردراپ",
     link: "/airdrop",
   },
