@@ -4,8 +4,8 @@ import BlogCard from "@/components/utils/blogCard";
 
 const Blog = () => {
   return (
-    <div className="container mt-20 mb-6">
-      <Heading link="مطالعه بیشتر" href="/blog">
+    <div className="container mt-20 mb-6" id="news">
+      <Heading link="مطالعه بیشتر" href="/news">
         مجله خبری و مقالات
       </Heading>
       <div className="mt-8 flex flex-wrap gap-5 justify-between">

@@ -62,28 +62,28 @@ export const navbarData = [
     link: "#news", // Airdrop section
     data: [
       {
-        label: "طرح های سرمایه گذاری",
-        link: "/news/investment-plans", // Courses listing
+        label: "همگی اخبار",
+        link: "/news", // Courses listing
       },
       {
         label: "کریپتوکارنسی",
-        link: "/news/cryptocurrency", // Cryptocurrency section
+        link: "/cryptocurrency?section=news", // Cryptocurrency section
       },
       {
         label: "بورس",
-        link: "/news/stock-market", // Stock market section
+        link: "/stock-market?section=news", // Stock market section
       },
       {
         label: "متاورس",
-        link: "/news/metaverse", // Metaverse section
+        link: "/metaverse?section=news", // Metaverse section
       },
       {
         label: "NFT",
-        link: "/news/nft", // NFT section
+        link: "/nft?section=news", // NFT section
       },
       {
         label: "ایردراپ",
-        link: "/news/airdrop", // Airdrop section
+        link: "/airdrop?section=news", // Airdrop section
       },
     ],
   },
