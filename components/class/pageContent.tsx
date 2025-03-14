@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { MdVideoLibrary } from "react-icons/md"; // یا می‌توان از BiVideo هم استفاده کرد
 import VideoPlayer from "./videoPlayer";
 import { videoList } from "@/public/data";
-import Link from "next/link";
 
 interface Video {
   id: string;
@@ -48,13 +49,18 @@ const ClassPageContent: React.FC<ClassPageContentProps> = ({ classData }) => {
         </div>
 
         {/* سایدبار لیست ویدیوها */}
-        <div className="w-96 bg-[#fafafa] dark:bg-gray-900 p-4 rounded-lg shadow-md mt-8">
-          <h3 className="text-lg font-semibold mb-4">ویدیو سایر جلسات</h3>
+        <div className="w-96 p-4 rounded-lg mt-8">
+          <h3 className="text-sm font-semibold pb-3 border-b mb-4 flex items-center gap-3">
+            <MdVideoLibrary className="text-gray-600 dark:text-gray-300 text-lg" />
+            ویدیو سایر جلسات
+          </h3>
           <ul className="space-y-4 max-h-[500px] overflow-y-auto">
             {videoList.map((video) => (
               <li
                 key={video.id}
-                className={`cursor-pointer rounded-md transition-all duration-200 ${"hover:bg-gray-200 dark:hover:bg-gray-800"}`}
+                className={`cursor-pointer rounded-md transition-all duration-200 ${
+                  video.id === selectedVideo?.id && "bg-gray-100"
+                } ${"hover:bg-gray-200 dark:hover:bg-gray-800"}`}
                 onClick={() => setSelectedVideo(video)}
               >
                 <Link

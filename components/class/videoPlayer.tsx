@@ -85,7 +85,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, label }) => {
           <source src={videoUrl} type="video/mp4" />
         </video>
       </div>
-      <div className="w-full max-w-3xl">
+      <div className="w-full max-w-4xl">
         <p className="mt-8 text-2xl font-bold">{label}</p>
         <div className="flex justify-between gap-4 flex-wrap items-center mt-2">
           <p>دسته بندی</p>
