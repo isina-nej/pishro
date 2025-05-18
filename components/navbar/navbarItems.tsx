@@ -78,7 +78,7 @@ const NavbarItems = ({
         {/* Animated Underline Indicator */}
         <div
           className={`absolute bottom-0 h-[4px] rounded transition-all duration-300 ${
-            isIndicatorActive ? "bg-red-500" : "bg-red-500 opacity-30"
+            isIndicatorActive ? "bg-red-500" : "bg-red-500 opacity-0"
           }`}
           style={{ left: indicatorStyle.left, width: indicatorStyle.width }}
         ></div>
