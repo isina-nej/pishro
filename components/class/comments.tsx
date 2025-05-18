@@ -1,12 +1,10 @@
 import clsx from "clsx";
-import { Reply, ChevronUp } from "lucide-react";
 import Image from "next/image";
+import { Reply, ChevronUp } from "lucide-react";
 import { useState } from "react";
 import { MdOutlineComment } from "react-icons/md";
 import { motion, AnimatePresence } from "framer-motion";
 import { Comment, commentsData } from "@/public/data";
-
-// Define Comment interface with nested replies support
 
 const CommentsSection = () => {
   const [comments, setComments] = useState<Comment[]>(commentsData);
