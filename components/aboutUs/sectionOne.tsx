@@ -13,7 +13,7 @@ const SectionOne = () => {
           {aboutPishro.description}
         </p>
       </div>
-      <div className="relative h-[366px] w-full max-w-[780px] rounded-[10px] overflow-hidden">
+      <div className="relative h-[396px] w-full max-w-[780px] rounded-[10px] overflow-hidden">
         <Image
           src={aboutPishro.image}
           alt="business"
