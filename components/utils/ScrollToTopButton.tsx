@@ -2,18 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { ArrowUp } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const ScrollToTopButton = () => {
   const [isVisible, setIsVisible] = useState(false);
 
-  // نمایش دکمه وقتی که از یک مقدار مشخص پایین‌تر رفتیم
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 200) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
+      setIsVisible(window.scrollY > 200);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -21,21 +17,25 @@ const ScrollToTopButton = () => {
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  if (!isVisible) return null;
-
   return (
-    <button
-      onClick={scrollToTop}
-      className="fixed bottom-4 right-4 z-50 bg-[#173046] text-white rounded-full p-3 shadow-lg hover:bg-[#173046]/90 transition-all"
-    >
-      <ArrowUp className="size-10" />
-    </button>
+    <AnimatePresence>
+      {isVisible && (
+        <motion.button
+          onClick={scrollToTop}
+          key="scroll-to-top"
+          initial={{ opacity: 0, scale: 0.7 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.7 }}
+          transition={{ duration: 0.3 }}
+          className="fixed bottom-4 right-4 z-50 bg-[#173046] text-white rounded-full p-3 shadow-lg hover:bg-[#173046]/90 transition-colors"
+        >
+          <ArrowUp className="size-10" />
+        </motion.button>
+      )}
+    </AnimatePresence>
   );
 };
 
