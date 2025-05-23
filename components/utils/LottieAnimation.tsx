@@ -25,6 +25,7 @@ const LottieRemote = ({
       .then((res) => res.json())
       .then((data) => {
         if (container.current) {
+          container.current.innerHTML = ""; // Clear previous animation
           anim = lottie.loadAnimation({
             container: container.current,
             renderer: "svg",
