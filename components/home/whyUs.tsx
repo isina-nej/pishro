@@ -66,6 +66,9 @@ const WhyUs = () => {
               <p className="text-xl text-[#707177] leading-9 whitespace-pre-line">
                 {whyUsData[index].text}
               </p>
+              <button className="rounded-full text-[#344052] hover:text-white hover:bg-[#344052] transition-all duration-300 font-bold px-4 py-2.5 border-2 border-[#344052] flex items-center justify-center w-fit mt-4">
+                اطلاعات بیشتر
+              </button>
             </motion.div>
           </AnimatePresence>
         </div>
