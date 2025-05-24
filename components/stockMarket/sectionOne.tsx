@@ -1,4 +1,3 @@
-import Image from "next/image";
 import LottieRemote from "../utils/LottieAnimation";
 
 const SectionOne = () => {
