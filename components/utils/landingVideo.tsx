@@ -1,13 +1,21 @@
 "use client";
 
+import { cn } from "@/lib/utils";
+
 interface LandingVideoProps {
   vidSrc: string;
   title?: string;
+  main?: boolean;
 }
 
-const LandingVideo = ({ vidSrc, title }: LandingVideoProps) => {
+const LandingVideo = ({ vidSrc, title, main }: LandingVideoProps) => {
   return (
-    <div className="relative w-full h-[624px] overflow-hidden">
+    <div
+      className={cn(
+        "relative w-full overflow-hidden",
+        main ? "h-[480px]" : "h-[624px]"
+      )}
+    >
       {/* Video Background */}
       <video
         className="absolute top-0 left-0 w-full h-full object-cover"
