@@ -231,9 +231,8 @@ export const blogData = [
 export const landingData = {
   "/": {
     backgroundImage: "/images/landing.jpg",
-    title: "پیشرو در مسیر موفقیت مالی",
-    description:
-      "یادگیری ترید، سرمایه‌گذاری هوشمندانه و کشف فرصت‌های کریپتوکارنسی، همه در کنار شما با پیشرو.",
+    title: "",
+    description: "",
   },
   "/cryptocurrency": {
     backgroundImage: "/images/landing-crypto.jpg",
