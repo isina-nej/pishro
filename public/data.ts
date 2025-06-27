@@ -230,34 +230,34 @@ export const blogData = [
 
 export const landingData = {
   "/": {
-    backgroundImage: "/images/landing.jpg",
+    backgroundImage: ["/images/landing.webp", "/images/landing-2.webp"],
     title: "",
     description: "",
   },
-  "/cryptocurrency": {
-    backgroundImage: "/images/landing-crypto.jpg",
-    title: "کریپتوکارنسی",
-    description:
-      "پیشرو با ارائه خدمات حرفه‌ای در زمینه آموزش مالی و سرمایه‌گذاری در کنار شماست.",
-  },
-  "/stock-market": {
-    backgroundImage: "/images/landing-stock-market.jpg",
-    title: "بورس",
-    description:
-      "پیشرو با ارائه خدمات حرفه‌ای در زمینه آموزش مالی و سرمایه‌گذاری در کنار شماست.",
-  },
-  "/airdrop": {
-    backgroundImage: "/images/landing-airdrop.jpg",
-    title: "ایردراپ! از این فرصت غافل نشوید",
-    description:
-      "ارائه تحلیل‌های تخصصی بازار و دوره‌های جامع برای ارتقاء دانش مالی شما.",
-  },
-  "/contact": {
-    backgroundImage: "/images/contact.jpg",
-    title: "تماس با ما",
-    description:
-      "برای مشاوره و ارتباط با تیم پشتیبانی ما، همین حالا با ما در تماس باشید.",
-  },
+  // "/cryptocurrency": {
+  //   backgroundImage: "/images/landing-crypto.jpg",
+  //   title: "کریپتوکارنسی",
+  //   description:
+  //     "پیشرو با ارائه خدمات حرفه‌ای در زمینه آموزش مالی و سرمایه‌گذاری در کنار شماست.",
+  // },
+  // "/stock-market": {
+  //   backgroundImage: "/images/landing-stock-market.jpg",
+  //   title: "بورس",
+  //   description:
+  //     "پیشرو با ارائه خدمات حرفه‌ای در زمینه آموزش مالی و سرمایه‌گذاری در کنار شماست.",
+  // },
+  // "/airdrop": {
+  //   backgroundImage: "/images/landing-airdrop.jpg",
+  //   title: "ایردراپ! از این فرصت غافل نشوید",
+  //   description:
+  //     "ارائه تحلیل‌های تخصصی بازار و دوره‌های جامع برای ارتقاء دانش مالی شما.",
+  // },
+  // "/contact": {
+  //   backgroundImage: "/images/contact.jpg",
+  //   title: "تماس با ما",
+  //   description:
+  //     "برای مشاوره و ارتباط با تیم پشتیبانی ما، همین حالا با ما در تماس باشید.",
+  // },
 };
 
 export const cryptoData = [
