@@ -24,7 +24,6 @@ const Landing = ({ size = "normal", darker }: LandingProps) => {
     landingData[pathname as keyof typeof landingData] || landingData["/"];
 
   const height = size === "small" ? 360 : 474;
-  const width = 1521; // طبق طراحی
 
   return (
     <div
