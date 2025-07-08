@@ -17,7 +17,7 @@ const HoverableLink = ({ label, href }: HoverableLinkProps) => {
       href={href}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="relative px-2 py-1 text-sm text-[#110a3b] transition duration-300 hover:bg-gray-100"
+      className="relative px-2 py-1 text-sm text-[#fff] transition duration-300"
     >
       {/* Make the label span relative and inline-block */}
       <span className="relative inline-block z-10">
@@ -27,7 +27,7 @@ const HoverableLink = ({ label, href }: HoverableLinkProps) => {
         <AnimatePresence>
           {isHovered && (
             <motion.span
-              className="absolute right-0 -bottom-1 h-[2px] bg-[rgba(26,10,59,0.4)]"
+              className="absolute right-0 -bottom-1 h-[2px] bg-[rgba(240,240,240,0.4)]"
               initial={{ scaleX: 0, opacity: 0 }}
               animate={{ scaleX: 1, opacity: 1 }}
               exit={{ opacity: 0 }}

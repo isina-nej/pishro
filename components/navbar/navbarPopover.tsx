@@ -34,7 +34,7 @@ const NavbarPopover = ({ item }: NavbarPopoverProps) => {
       <HoverCardContent
         align="start"
         className={cn(
-          "flex flex-col gap-3 bg-[#f3f4f6] text-gray-800",
+          "flex flex-col gap-3 bg-mySecondary text-gray-100 border-none",
           "py-5 pr-3 pl-7 mt-2 min-w-[80px] w-fit",
           "shadow-lg rounded-lg z-50"
         )}
