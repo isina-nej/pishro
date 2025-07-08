@@ -731,7 +731,7 @@ export const faqData = [
 
 export const homeSliderData = [
   {
-    image: "/images/landing.jpg",
+    image: "/images/landing-stock-market.jpg",
     text: "پیشرو در مسیر موفقیت مالی",
     linkText: "برو به خانه",
     linkUrl: "/",
