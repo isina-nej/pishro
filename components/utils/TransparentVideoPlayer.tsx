@@ -24,8 +24,8 @@ const TransparentVideoPlayer: React.FC<TransparentVideoPlayerProps> = ({
   return (
     <div className="relative w-full overflow-hidden isolate">
       {/* Transparent gradient overlays */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-[40%] bg-[linear-gradient(to_right,_#ffe8c7_70%,_transparent_100%)] z-10" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-[40%] bg-[linear-gradient(to_left,_#ffe8c7_70%,_transparent_100%)] z-10" />
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-[40%] bg-[linear-gradient(to_right,_#fefefe_70%,_transparent_100%)] z-10" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-[40%] bg-[linear-gradient(to_left,_#fefefe_70%,_transparent_100%)] z-10" />
 
       {/* Video centered */}
       <div className="flex justify-center items-center">
