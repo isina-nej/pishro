@@ -6,7 +6,7 @@ const Logo = () => {
   return (
     <div
       className={cn(
-        "h-8 w-[90px] flex items-center justify-center gap-1",
+        "w-[90px] flex flex-col items-start justify-center ",
         "p-1 -mb-1 ltr",
         "text-gray-800 text-sm font-semibold tracking-tight",
         "hover:text-gray-900",
@@ -17,7 +17,8 @@ const Logo = () => {
         <span className="text-red-600">p</span>
         ishro
       </div>
-      <div className="text-sm font-medium text-gray-600">
+      <div className="text-sm font-medium text-gray-500">
+        <span className="text-red-600">F</span>inancial{" "}
         <span className="text-red-600">Gp</span>
       </div>
     </div>
