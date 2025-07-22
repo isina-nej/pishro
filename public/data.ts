@@ -907,3 +907,41 @@ export const commentsData: Comment[] = [
     ],
   },
 ];
+
+export const homeCommentsData = [
+  {
+    id: 1,
+    avatar: "/images/profile/profile-1.png",
+    name: "علی رضایی",
+    position: "تحلیل‌گر بازار",
+    comment: "تجربه بسیار خوبی داشتم. پشتیبانی حرفه‌ای و مطالب کامل بود.",
+  },
+  {
+    id: 2,
+    avatar: "/images/profile/profile-2.png",
+    name: "سمیرا محمدی",
+    position: "سرمایه‌گذار",
+    comment: "این دوره‌ها کمک زیادی به تصمیم‌گیری‌های سرمایه‌گذاری من کرد.",
+  },
+  {
+    id: 3,
+    avatar: "/images/profile/profile-3.png",
+    name: "مهدی کاظمی",
+    position: "معامله‌گر بورس",
+    comment: "اساتید بسیار مسلط و نکات کاربردی زیادی ارائه شد.",
+  },
+  {
+    id: 4,
+    avatar: "/images/profile/profile-4.png",
+    name: "زهرا کریمی",
+    position: "مشاور مالی",
+    comment: "کیفیت محتوای آموزشی فوق‌العاده و پاسخگویی سریع.",
+  },
+  {
+    id: 5,
+    avatar: "/images/profile/profile-1.png",
+    name: "رضا کریمی",
+    position: "مشاور مالی",
+    comment: "کیفیت محتوای آموزشی فوق‌العاده و پاسخگویی سریع.",
+  },
+];
