@@ -5,6 +5,7 @@ import Courses from "@/components/home/courses";
 import Blog from "@/components/utils/blog";
 import Landing from "@/components/utils/landing";
 import TransparentVideoPlayer from "@/components/utils/TransparentVideoPlayer";
+import CommentsSlider from "@/components/utils/CommentsSlider";
 
 const HomePageContent = () => {
   return (
@@ -14,6 +15,7 @@ const HomePageContent = () => {
       <WhyUs />
       <TransparentVideoPlayer src="/videos/landing-vid.webm" />
       <BusinessConsulting />
+      <CommentsSlider />
       <Courses />
       <Blog />
     </div>
