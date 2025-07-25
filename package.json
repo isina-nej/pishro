@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^4.0.0",
+    "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-hover-card": "^1.1.6",
     "@radix-ui/react-popover": "^1.1.6",
     "@radix-ui/react-select": "^2.1.5",
@@ -33,6 +34,7 @@
     "swiper": "^11.2.1",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
+    "vaul": "^1.1.2",
     "zod": "^3.24.2"
   },
   "devDependencies": {
