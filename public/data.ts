@@ -54,8 +54,8 @@ export const navbarData = [
     link: "/airdrop", // Airdrop section
   },
   {
-    label: "مشاوره کسب و کار",
-    link: "/business-consulting", // Airdrop section
+    label: "مشاوره سرمایه گذاری",
+    link: "/investment-consulting", // Airdrop section
   },
   {
     label: "اخبار سایت",
