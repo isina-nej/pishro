@@ -17,7 +17,7 @@ import { PhoneCall, Send } from "lucide-react";
 
 const InvestmentLanding = () => {
   return (
-    <div className="container flex flex-col lg:flex-row justify-between gap-8 py-1">
+    <div className="container flex flex-col lg:flex-row justify-between gap-8 py-1 mb-20">
       {/* Text & Actions */}
       <div className="flex-1 flex flex-col gap-y-10 text-center justify-center">
         <h3 className="text-4xl font-bold text-gray-900 leading-tight">
