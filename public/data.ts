@@ -158,7 +158,7 @@ export const whyUsData = [
 عضویت در پیشرو یعنی دسترسی به جامعه‌ای فعال و متخصص که توش همیشه یاد می‌گیری.
 با انتخاب پیشرو، امنیت، شفافیت و آینده‌ای بهتر رو برای خودت می‌سازی.`,
     btnLabel: "اطلاعات بیشتر",
-    btnHref: "/business-consulting",
+    btnHref: "/investment-consulting",
     animationPath: "/animations/transaction-in-cryptocurrency.json",
     imagePath: "/images/landing/img-3.jpg",
   },

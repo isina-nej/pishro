@@ -61,7 +61,7 @@ const BusinessConsulting = () => {
         </p>
 
         {/* ✅ دکمه انیمیشنی اصلی */}
-        <Link href="/business-consulting" className="mt-8">
+        <Link href="/investment-consulting" className="mt-8">
           <motion.button
             variants={buttonVariants}
             initial="idle"
