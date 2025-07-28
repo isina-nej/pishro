@@ -15,7 +15,7 @@ const Questions = () => {
   };
 
   return (
-    <div className="mt-16 container">
+    <div className="mt-16 mb-20 container">
       {faqData.map((item, idx) => (
         <div
           key={idx}
