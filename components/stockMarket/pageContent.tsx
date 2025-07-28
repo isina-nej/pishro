@@ -1,14 +1,15 @@
-import LandingVideo from "@/components/utils/landingVideo";
 import Courses from "@/components/utils/courses";
 import Blog from "@/components/utils/blog";
-import VideoSection from "../utils/videoSection";
-import SectionOne from "./sectionOne";
+import VideoSection from "@/components/utils/videoSection";
+import Landing from "@/components/utils/Landing";
+import AboutIt from "./aboutIt";
 
 const StockMarketPageContent = () => {
   return (
     <div>
-      <LandingVideo vidSrc="/videos/stock.webm" />
-      <SectionOne />
+      <Landing imageUrl="/images/stock/stock-landing.jpg" title="بورس" />
+
+      <AboutIt />
       <VideoSection videoUrl="/videos/stock.webm" label="معرفی بورس" />
       <Courses />
       <Blog />
