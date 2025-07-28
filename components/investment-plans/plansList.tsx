@@ -3,7 +3,9 @@
 import { useState } from "react";
 import Image from "next/image";
 import clsx from "clsx";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+
 import {
   Drawer,
   DrawerContent,
@@ -15,17 +17,20 @@ import {
 } from "@/components/ui/drawer";
 import { Slider } from "@/components/ui/slider";
 import LottieRemote from "@/components/utils/LottieAnimation";
+import { useInvestmentStore } from "@/stores/investmentStore"; // ✅ import store
 
 export const PlansListData = [
   { src: "/images/home/c/crypto.jpg", label: "ارز دیجیتال" },
   { src: "/images/home/c/stock.jpg", label: "بورس" },
   { src: "/images/home/c/metaverse.webp", label: "ترکیبی" },
 ];
+
 const animationVariants = {
   initial: { opacity: 0, x: -50 },
   animate: { opacity: 1, x: 0 },
   exit: { opacity: 0, x: 0 },
 };
+
 const riskLevels = ["کم ریسک", "ریسک متوسط", "ریسک بالا"];
 const durations = ["۱ ماه", "۳ ماه", "۶ ماه", "۱۲ ماه", "۲ سال", "۳ سال"];
 const animationPath = "/animations/investment-education.json";
@@ -44,6 +49,20 @@ const PlansList = () => {
   const [amount, setAmount] = useState<number>(1000);
   const [risk, setRisk] = useState<number>(1);
   const [duration, setDuration] = useState<number>(3);
+
+  const router = useRouter();
+  const setInvestmentData = useInvestmentStore((state) => state.setData); // ✅ store setter
+
+  const handleCreatePortfolio = (selectedType: string) => {
+    setInvestmentData({
+      type: selectedType,
+      amount,
+      risk,
+      duration,
+    });
+
+    router.push("/investment-plans/custom");
+  };
 
   return (
     <div className="mt-24 mb-20 container">
@@ -78,15 +97,15 @@ const PlansList = () => {
                   لطفاً اطلاعات زیر را وارد کنید:
                 </DrawerDescription>
               </DrawerHeader>
+
               <div className="flex gap-6 justify-center items-center">
                 {/* sliders */}
                 <div className="space-y-8 mt-6 w-full max-w-xl">
-                  {/* Amount Slider */}
+                  {/* Amount */}
                   <div className="w-full">
                     <label className="block mb-2 text-sm font-medium text-gray-700">
                       میزان سرمایه (میلیون تومان)
                     </label>
-
                     <Slider
                       min={10}
                       max={10000}
@@ -98,19 +117,16 @@ const PlansList = () => {
                       rangeClassName="bg-green-600"
                       thumbClassName="border-green-600"
                     />
-
-                    {/* لیبل‌های بازه مقدار */}
                     <div className="ltr flex justify-between text-xs text-gray-500 mt-1 font-medium">
                       <span>۱۰ میلیون</span>
                       <span>۱۰ میلیارد</span>
                     </div>
-
                     <div className="text-center mt-2 text-lg font-semibold text-green-700">
                       {formatAmount(amount)}
                     </div>
                   </div>
 
-                  {/* Risk Slider */}
+                  {/* Risk */}
                   <div>
                     <label className="block mb-2 text-sm font-medium text-gray-700">
                       میزان ریسک
@@ -138,7 +154,6 @@ const PlansList = () => {
                           : "border-red-600"
                       )}
                     />
-
                     <div className="flex ltr justify-between text-xs px-1 mt-2 font-medium">
                       {riskLevels.map((level, index) => (
                         <span
@@ -159,7 +174,7 @@ const PlansList = () => {
                     </div>
                   </div>
 
-                  {/* Duration Slider */}
+                  {/* Duration */}
                   <div>
                     <label className="block mb-2 text-sm font-medium text-gray-700">
                       مدت سرمایه‌گذاری
@@ -190,7 +205,8 @@ const PlansList = () => {
                     </div>
                   </div>
                 </div>
-                {/* animation */}
+
+                {/* Animation */}
                 <div className="w-[400px] h-[300px] relative">
                   <AnimatePresence mode="wait">
                     <motion.div
@@ -207,8 +223,12 @@ const PlansList = () => {
                   </AnimatePresence>
                 </div>
               </div>
+
               <div className="mt-10 flex flex-col items-center gap-4">
-                <button className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-xl shadow-lg hover:brightness-110 transition-all">
+                <button
+                  onClick={() => handleCreatePortfolio(item.label)}
+                  className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-xl shadow-lg hover:brightness-110 transition-all"
+                >
                   سبد شخصی من را بساز
                 </button>
 
