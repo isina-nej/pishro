@@ -1,9 +1,9 @@
 import Courses from "@/components/utils/courses";
 import Blog from "@/components/utils/blog";
 import VideoSection from "@/components/utils/videoSection";
-import Landing from "@/components/utils/Landing";
 import AboutIt from "./aboutIt";
 import Questions from "../faq/questions";
+import Landing from "../utils/Landing";
 
 const StockMarketPageContent = () => {
   return (
