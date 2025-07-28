@@ -1,64 +1,38 @@
 "use client";
 
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination } from "swiper/modules";
 import Image from "next/image";
-
-import { usePathname } from "next/navigation";
-import { landingData } from "@/public/data";
 import { cn } from "@/lib/utils";
 
-import "swiper/css";
-import "swiper/css/pagination";
-
 interface LandingProps {
-  size?: "small" | "normal";
-  darker?: boolean;
+  imageUrl: string;
+  title: string;
 }
 
-const Landing = ({ size = "normal", darker }: LandingProps) => {
-  const pathname = usePathname();
-
-  // دریافت داده مرتبط با مسیر جاری
-  const data =
-    landingData[pathname as keyof typeof landingData] || landingData["/"];
-
-  const height = size === "small" ? 360 : 474;
-
+const Landing = ({ imageUrl, title }: LandingProps) => {
   return (
-    <div
-      className={cn("relative w-full", `h-[${height}px]`)}
-      style={{ height: `${height}px` }}
-    >
-      <Swiper
-        modules={[Autoplay, Pagination]}
-        autoplay={{ delay: 4000, disableOnInteraction: false }}
-        pagination={{ clickable: true }}
-        loop
-        className="w-full h-full"
-      >
-        {data.backgroundImage.map((imageUrl, index) => (
-          <SwiperSlide key={index}>
-            <div className="relative w-full h-full">
-              {/* Background image as Next.js <Image /> */}
-              <Image
-                src={imageUrl}
-                alt={`landing slide ${index + 1}`}
-                fill
-                sizes="100vw"
-                priority={index === 0} // Only the first image loads eagerly
-                className="object-cover"
-                placeholder="blur" // Optional: use blurDataURL if available
-                blurDataURL="/images/placeholder.jpg" // Optional blur image
-              />
-              {/* Optional dark overlay */}
-              {darker && (
-                <div className="absolute inset-0 bg-black/30 z-10"></div>
-              )}
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+    <div className={cn("relative w-full h-[calc(100vh-115px)]")}>
+      {/* Background image */}
+      <Image
+        src={imageUrl}
+        alt="landing"
+        fill
+        sizes="100vw"
+        className="object-cover"
+        priority
+      />
+
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-black/60 z-10" />
+
+      {/* White bottom gradient overlay */}
+      <div className="absolute inset-x-0 bottom-0 h-[320px] bg-gradient-to-t from-white via-white/60 to-transparent z-20 pointer-events-none" />
+
+      {/* Title */}
+      <div className="absolute inset-0 z-30 flex items-start justify-center px-4 text-center">
+        <h1 className="text-white text-3xl md:text-5xl font-bold drop-shadow-md mt-32">
+          {title}
+        </h1>
+      </div>
     </div>
   );
 };
