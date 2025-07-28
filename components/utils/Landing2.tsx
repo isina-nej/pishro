@@ -8,7 +8,7 @@ interface LandingProps {
   title: string;
 }
 
-const Landing = ({ imageUrl, title }: LandingProps) => {
+const Landing2 = ({ imageUrl, title }: LandingProps) => {
   return (
     <div className={cn("relative w-full h-[calc(100vh-115px)]")}>
       {/* Background image */}
@@ -37,4 +37,4 @@ const Landing = ({ imageUrl, title }: LandingProps) => {
   );
 };
 
-export default Landing;
+export default Landing2;
