@@ -7,7 +7,7 @@ const InvestmentCustomPageContent = () => {
       <InvestmentCustomLanding />
       <VideoSection
         videoUrl="/videos/crypto.webm"
-        label="برنامه های سرمایه گذاری پیشرو"
+        label="سبد سرمایه گذاری شخصی"
       />
     </div>
   );

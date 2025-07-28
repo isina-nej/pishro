@@ -11,7 +11,7 @@ const InvestmentCustomLanding = () => {
   return (
     <>
       {/* Landing Section */}
-      <div className="relative h-[90vh] w-full">
+      <div className="relative h-screen-minus-navbar w-full">
         {/* Background Image */}
         <Image
           alt="landing"
@@ -21,15 +21,15 @@ const InvestmentCustomLanding = () => {
         />
 
         {/* Dark overlay for better text readability */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
 
         {/* Top Arc Shape */}
-        <div className="absolute bottom-0 left-0 right-0 z-10 h-[250px]">
+        <div className="absolute bottom-0 left-0 right-0 z-10 h-[200px]">
           <TopArc />
         </div>
 
         {/* Text on top */}
-        <div className="absolute bottom-0 left-0 right-0 z-20 px-6 sm:px-0 flex justify-center items-center w-full h-[200px]">
+        <div className="absolute bottom-0 left-0 right-0 z-20 px-6 sm:px-0 flex justify-center items-center w-full h-[150px]">
           <div className="text-center w-full">
             <h1 className="text-2xl sm:text-4xl font-bold text-white drop-shadow-md">
               سبد سرمایه‌گذاری سفارشی شما آماده است

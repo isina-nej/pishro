@@ -4,7 +4,7 @@ const TopArc = () => {
     <div className="relative z-10">
       <svg
         viewBox="0 0 1440 100"
-        className="w-full h-[250px]"
+        className="w-full h-[200px]"
         preserveAspectRatio="none"
       >
         <path
