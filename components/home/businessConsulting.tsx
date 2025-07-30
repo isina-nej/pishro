@@ -56,7 +56,7 @@ const BusinessConsulting = () => {
         <h3 className="text-4xl leading-[3.5rem] font-extrabold mb-4">
           {businessConsultingData.title}
         </h3>
-        <p className="text-xl leading-9 text-[#707177]">
+        <p className="text-xl leading-9 text-[#707177] text-center">
           {businessConsultingData.text}
         </p>
 
