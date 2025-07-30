@@ -112,7 +112,7 @@ const LoginPage = () => {
 
   return (
     <div className="flex min-h-lvh overflow-x-hidden">
-      <div className="w-full max-w-[570px] p-16 bg-white">
+      <div className="w-full max-w-[570px] px-16 py-8 bg-white">
         {/* Back Button */}
         <div>
           <Link href={"/"}>
@@ -126,7 +126,7 @@ const LoginPage = () => {
           </Link>
         </div>
         {/* Logo */}
-        <div className="mt-[72px]">
+        <div className="mt-8">
           <p className="text-xs mt-2">سلام اوقاتتون بخیر</p>
         </div>
         {/* Form */}
