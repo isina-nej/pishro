@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/drawer";
 import { Slider } from "@/components/ui/slider";
 import { useInvestmentStore } from "@/stores/investmentStore"; // ✅ import store
-import Icon from "react-multi-date-picker/components/icon";
 
 export const PlansListData = [
   { label: "ارز دیجیتال", Icon: Bitcoin },
