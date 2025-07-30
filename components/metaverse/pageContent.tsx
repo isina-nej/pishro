@@ -1,7 +1,7 @@
 import Courses from "@/components/utils/courses";
 import Blog from "@/components/utils/blog";
 import Landing2 from "../utils/Landing2";
-import AboutIt from "./aboutIt";
+import AboutIt from "@/components/utils/AboutIt";
 import Questions from "../faq/questions";
 
 const MetaversePageContent = () => {

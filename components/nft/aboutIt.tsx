@@ -8,47 +8,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-
-// Fake data
-const cards = [
-  {
-    title: "مدیریت سرمایه",
-    description: "تقسیم سرمایه، ریسک به ریوارد، و جلوگیری از ضررهای بزرگ",
-    gradient: "from-[#1D976Cee] to-[#93F9B9ee]", // سبز اقتصادی حرفه‌ای
-  },
-  {
-    title: "تحلیل بنیادی",
-    description: "بررسی صورت‌های مالی شرکت‌ها و تحلیل ارزش ذاتی سهام",
-    gradient: "from-[#283E51ee] to-[#485563ee]", // آبی نفتی جدی و قابل اعتماد
-  },
-  {
-    title: "استراتژی ورود و خروج",
-    description: "تعیین نقاط مناسب برای خرید و فروش با ابزارهای ترکیبی",
-    gradient: "from-[#0F2027ee] to-[#203A43ee]", // خاکستری تیره جدی با حس عمق
-  },
-  {
-    title: "تحلیل تکنیکال حرفه‌ای",
-    description:
-      "یادگیری الگوها، کندل‌ها، و سطوح مهم در بازار بورس با مثال‌های عملی",
-    gradient: "from-[#4b6cb7ee] to-[#182848ee]", // آبی تحلیل‌محور تکنیکال
-  },
-  {
-    title: "روانشناسی معامله‌گری",
-    description: "شناخت رفتار بازار، کنترل احساسات و تصمیم‌گیری هوشمند",
-    gradient: "from-[#614385ee] to-[#516395ee]", // بنفش عمیق آرام‌بخش
-  },
-  {
-    title: "تحلیل تکنیکال حرفه‌ای",
-    description:
-      "یادگیری الگوها، کندل‌ها، و سطوح مهم در بازار بورس با مثال‌های عملی",
-    gradient: "from-[#4b6cb7ee] to-[#182848ee]", // آبی تحلیل‌محور تکنیکال
-  },
-  {
-    title: "روانشناسی معامله‌گری",
-    description: "شناخت رفتار بازار، کنترل احساسات و تصمیم‌گیری هوشمند",
-    gradient: "from-[#614385ee] to-[#516395ee]", // بنفش عمیق آرام‌بخش
-  },
-];
+import { aboutItCardsData } from "@/public/data";
 
 const AboutIt = () => {
   return (
@@ -74,7 +34,7 @@ const AboutIt = () => {
         pagination={{ clickable: true }}
         className="!pb-8"
       >
-        {cards.map((card, index) => (
+        {aboutItCardsData.map((card, index) => (
           <SwiperSlide key={index}>
             <HoverCard {...card} />
           </SwiperSlide>
@@ -90,17 +50,16 @@ export default AboutIt;
 interface HoverCardProps {
   title: string;
   description: string;
-  gradient: string;
 }
 
-const HoverCard = ({ title, description, gradient }: HoverCardProps) => {
+const HoverCard = ({ title, description }: HoverCardProps) => {
   const [hovered, setHovered] = useState(false);
 
   return (
     <motion.div
       className={cn(
         "rounded-xl p-6 h-[300px] text-white transition-all duration-300 ease-in-out shadow-lg cursor-pointer group relative overflow-hidden",
-        `bg-gradient-to-br ${gradient}`
+        `bg-gradient-to-br from-[#214254] to-[#3a6073]`
       )}
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
