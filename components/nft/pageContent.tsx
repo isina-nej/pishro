@@ -3,7 +3,7 @@ import Blog from "@/components/utils/blog";
 import VideoSection from "../utils/videoSection";
 import Landing2 from "../utils/Landing2";
 import AboutIt from "@/components/utils/AboutIt";
-import Questions from "../faq/questions";
+import QuestionsSection from "../utils/QuestionsSection";
 
 const NftPageContent = () => {
   return (
@@ -14,7 +14,7 @@ const NftPageContent = () => {
         titleColor="#F4D03F"
       />
       <AboutIt />
-      <Questions />
+      <QuestionsSection />
       <VideoSection videoUrl="/videos/nft.webm" label="معرفی NFT" />
       <Courses />
       <Blog />

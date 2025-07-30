@@ -3,7 +3,7 @@ import Blog from "@/components/utils/blog";
 import VideoSection from "../utils/videoSection";
 import Landing2 from "../utils/Landing2";
 import AboutIt from "@/components/utils/AboutIt";
-import Questions from "../faq/questions";
+import QuestionsSection from "../utils/QuestionsSection";
 
 const AirdropPageContent = () => {
   return (
@@ -14,7 +14,7 @@ const AirdropPageContent = () => {
         titleColor="#5DADE2"
       />
       <AboutIt />
-      <Questions />
+      <QuestionsSection />
       <VideoSection videoUrl="/videos/crypto.webm" label="معرفی ایردراپ" />
       <Courses />
       <Blog />
