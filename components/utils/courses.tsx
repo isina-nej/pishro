@@ -6,7 +6,7 @@ import CourseCard from "@/components/utils/courseCard";
 
 const Courses = () => {
   return (
-    <div className="container mt-8" id="courses">
+    <div className="container-xl mt-8" id="courses">
       <Heading className="mb-6">دوره های آموزشی</Heading>
       <div className="flex flex-col gap-2">
         {cryptoCursesData.map((data, idx) => (
