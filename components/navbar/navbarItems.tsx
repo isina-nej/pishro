@@ -87,16 +87,19 @@ const NavbarItems = ({
       </ul>
       <div className="flex items-center gap-7">
         <div className="bg-white w-[1px] h-[24px]"></div>
-        <Link href={"/login"} className="hover:underline">
+        <Link
+          href={"/login"}
+          className="hover:bg-red-700 bg-myPrimary transition-colors pr-2 pl-3 py-1 rounded-lg"
+        >
           <button className="flex items-center gap-1">
             <UserIcon width={18} height={18} />
             <span className="font-medium text-xs"> ورود یا ثبت نام</span>
           </button>
         </Link>
-        <Link href={"/checkout"} className="hover:underline">
+        <Link href={"/checkout"} className="group">
           <button className="flex items-center gap-1">
             <BuyIcon className="text-white" width={18} height={18} />
-            <span className="text-white bg-myPrimary size-4 rounded-[2px] text-xs font-bold text-center">
+            <span className="text-white bg-myPrimary group-hover:bg-red-700 transition-colors size-4 rounded-[2px] text-xs font-bold text-center">
               2
             </span>
           </button>

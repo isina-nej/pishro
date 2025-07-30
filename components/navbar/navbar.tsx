@@ -10,9 +10,6 @@ const Navbar = () => {
 
   return (
     <nav className="w-full flex flex-col z-30">
-      {/* بخش بالایی */}
-      {/* <NavbarTop /> */}
-
       {/* بخش آیتم‌های منو */}
       <NavbarItems
         navbarData={navbarData}
