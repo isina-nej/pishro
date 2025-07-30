@@ -35,7 +35,7 @@ const NavbarPopover = ({ item }: NavbarPopoverProps) => {
         align="start"
         className={cn(
           "flex flex-col gap-3 bg-mySecondary text-gray-100 border-none",
-          "py-5 pr-3 pl-7 mt-4 min-w-[80px] w-fit",
+          "py-5 pr-3 pl-7 mt-4 min-w-[80px] w-fit -mr-4",
           "shadow-lg rounded-lg z-50"
         )}
       >
