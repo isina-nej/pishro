@@ -201,6 +201,11 @@ export const coursesData = [
     img: "/images/courses/cryptocurrency.jpg",
   },
   {
+    title: "آموزش کریپتوکارنسی",
+    price: 1600000,
+    img: "/images/courses/nft.jpg",
+  },
+  {
     title: "آموزش بورس",
     price: 2000000,
     img: "/images/courses/stock-market.jpg",
