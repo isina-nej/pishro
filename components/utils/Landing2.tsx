@@ -28,8 +28,8 @@ const Landing2 = ({ imageUrl, title }: LandingProps) => {
       <div className="absolute inset-x-0 bottom-0 h-[160px] bg-gradient-to-t from-black/80 via-black/30 to-transparent z-20 pointer-events-none" />
 
       {/* Title */}
-      <div className="absolute inset-0 z-30 flex items-start justify-center px-4 text-center">
-        <h1 className="text-white text-3xl md:text-5xl font-bold drop-shadow-md mt-44">
+      <div className="absolute inset-0 z-30 flex items-center justify-center px-4 text-center">
+        <h1 className="text-white text-3xl md:text-5xl font-bold drop-shadow-md mb-12">
           {title}
         </h1>
       </div>
