@@ -10,7 +10,8 @@ const AirdropPageContent = () => {
     <div>
       <Landing2
         imageUrl="/images/airdrop/landing-img.jpg"
-        title="به دنیای ایردراپ خوش آمدید"
+        title="ایردراپ"
+        titleColor="#5DADE2"
       />
       <AboutIt />
       <Questions />

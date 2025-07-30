@@ -9,7 +9,8 @@ const MetaversePageContent = () => {
     <div>
       <Landing2
         imageUrl="/images/metaverse/banner.jpg"
-        title="به دنیای متاورس خوش آمدید"
+        title="متاورس"
+        titleColor="#AF7AC5"
       />
       <AboutIt />
       <Questions />

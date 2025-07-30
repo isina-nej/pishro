@@ -10,7 +10,8 @@ const CryptocurrencyPageContent = () => {
     <div>
       <Landing2
         imageUrl="/images/crypto/landing-img.png"
-        title="به دنیای کریپتوکارنسی خوش آمدید"
+        title="کریپتوکارنسی"
+        titleColor="#EC7063"
       />
       <AboutIt />
       <Questions />

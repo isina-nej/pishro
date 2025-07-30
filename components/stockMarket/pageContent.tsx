@@ -10,7 +10,8 @@ const StockMarketPageContent = () => {
     <div>
       <Landing
         imageUrl="/images/stock/stock-landing.jpg"
-        title="به دنیای بورس خوش آمدید"
+        title="بورس"
+        titleColor="#58D68D"
       />
       <AboutIt />
       <Questions />

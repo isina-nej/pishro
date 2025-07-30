@@ -10,7 +10,8 @@ const NftPageContent = () => {
     <div>
       <Landing2
         imageUrl="/images/nft/landing-img.png"
-        title="به دنیای NFT خوش آمدید"
+        title="NFT"
+        titleColor="#F4D03F"
       />
       <AboutIt />
       <Questions />
