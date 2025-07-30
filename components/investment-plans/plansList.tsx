@@ -3,6 +3,7 @@
 import { useState } from "react";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
+import { Bitcoin, LineChart, PieChart } from "lucide-react";
 
 import {
   Drawer,
@@ -15,11 +16,12 @@ import {
 } from "@/components/ui/drawer";
 import { Slider } from "@/components/ui/slider";
 import { useInvestmentStore } from "@/stores/investmentStore"; // ✅ import store
+import Icon from "react-multi-date-picker/components/icon";
 
 export const PlansListData = [
-  { src: "/images/home/c/crypto.jpg", label: "ارز دیجیتال" },
-  { src: "/images/home/c/stock.jpg", label: "بورس" },
-  { src: "/images/home/c/metaverse.webp", label: "ترکیبی" },
+  { label: "ارز دیجیتال", Icon: Bitcoin },
+  { label: "بورس", Icon: LineChart },
+  { label: "ترکیبی", Icon: PieChart },
 ];
 
 const riskLevels = ["کم ریسک", "ریسک متوسط", "ریسک بالا"];
@@ -60,9 +62,9 @@ const PlansList = () => {
         {PlansListData.map((item, idx) => (
           <Drawer key={idx}>
             <DrawerTrigger asChild>
-              <button className="relative text-white text-xl font-medium transition-all duration-300 group px-0 py-4 rounded-md bg-white/5 hover:bg-white/70 backdrop-blur-sm border border-white/10 shadow-sm hover:shadow-md hover:text-black">
+              <button className="group relative w-full sm:w-auto px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium backdrop-blur-sm shadow-lg transition-all flex items-center justify-center gap-2">
+                <item.Icon className="h-5 w-5 text-white/80 group-hover:scale-110 transition-transform" />
                 {item.label}
-                <span className="absolute -bottom-1 left-1/2 w-0 h-[1px] bg-red-400 transition-all duration-300 group-hover:w-full group-hover:left-0" />
               </button>
             </DrawerTrigger>
 
