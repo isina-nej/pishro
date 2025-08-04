@@ -3,7 +3,7 @@
 import { useState } from "react";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
-import { Bitcoin, LineChart, PieChart } from "lucide-react";
+import { Bitcoin, LineChart, PieChart, XIcon } from "lucide-react";
 
 import {
   Drawer,
@@ -194,8 +194,8 @@ const PlansList = () => {
                   سبد شخصی من را بساز
                 </button>
 
-                <DrawerClose className="text-sm text-gray-500 underline mt-2 hover:text-gray-700 transition-colors">
-                  بستن
+                <DrawerClose className="text-sm text-gray-400 underline mt-2 hover:text-gray-600 transition-colors">
+                  <XIcon />
                 </DrawerClose>
               </div>
             </DrawerContent>
