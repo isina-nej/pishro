@@ -1016,3 +1016,39 @@ export const investmentTagsData: string[] = [
   "مدیریت ریسک",
   "تنوع سبد سرمایه‌گذاری",
 ];
+
+export const alibabaData = {
+  topImages: [
+    "/images/investment1.jpg",
+    "/images/investment2.jpg",
+    "/images/investment3.jpg",
+    "/images/investment1.jpg",
+    "/images/investment2.jpg",
+    "/images/investment3.jpg",
+    "/images/investment1.jpg",
+    "/images/investment2.jpg",
+    "/images/investment3.jpg",
+  ],
+  middleImages: [
+    "/images/investment1.jpg",
+    "/images/investment2.jpg",
+    "/images/investment1.jpg",
+    "/images/investment2.jpg",
+    "/images/investment3.jpg",
+    "/images/investment1.jpg",
+    "/images/investment2.jpg",
+    "/images/investment3.jpg",
+    "/images/investment3.jpg",
+  ],
+  bottomImages: [
+    "/images/investment1.jpg",
+    "/images/investment2.jpg",
+    "/images/investment3.jpg",
+    "/images/investment1.jpg",
+    "/images/investment2.jpg",
+    "/images/investment3.jpg",
+    "/images/investment1.jpg",
+    "/images/investment2.jpg",
+    "/images/investment3.jpg",
+  ],
+};
