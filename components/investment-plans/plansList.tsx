@@ -189,7 +189,7 @@ const PlansList = () => {
               <div className="mt-10 flex flex-col items-center gap-4">
                 <button
                   onClick={() => handleCreatePortfolio(item.label)}
-                  className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-xl shadow-lg hover:brightness-110 transition-all"
+                  className="px-6 py-3 bg-gradient-to-r from-[#214254] to-emerald-800 text-white font-semibold rounded-xl shadow-lg hover:brightness-110 transition-all"
                 >
                   سبد شخصی من را بساز
                 </button>
