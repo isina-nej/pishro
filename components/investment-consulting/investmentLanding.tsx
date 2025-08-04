@@ -13,7 +13,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { investmentConsultingData } from "@/public/data";
-import { PhoneCall, Send, GraduationCap } from "lucide-react"; // 🧠 اضافه شده
+import { PhoneCall, Send, GraduationCap, XIcon } from "lucide-react"; // 🧠 اضافه شده
 
 const InvestmentLanding = () => {
   return (
@@ -73,8 +73,8 @@ const InvestmentLanding = () => {
                 </a>
               </div>
               <DrawerFooter>
-                <DrawerClose className="block mt-6 text-sm text-gray-500 underline text-center">
-                  بستن
+                <DrawerClose className="block mt-6 text-sm text-gray-400 hover:text-gray-600 underline text-center">
+                  <XIcon className="inline-block" />
                 </DrawerClose>
               </DrawerFooter>
             </DrawerContent>
@@ -113,8 +113,8 @@ const InvestmentLanding = () => {
                 </Link>
               </div>
               <DrawerFooter>
-                <DrawerClose className="block mt-6 text-sm text-gray-500 underline text-center">
-                  بستن
+                <DrawerClose className="block mt-6 text-sm text-gray-400 hover:text-gray-600 underline text-center">
+                  <XIcon className="inline-block" />
                 </DrawerClose>
               </DrawerFooter>
             </DrawerContent>
@@ -153,8 +153,8 @@ const InvestmentLanding = () => {
                 </Link>
               </div>
               <DrawerFooter>
-                <DrawerClose className="block mt-6 text-sm text-gray-500 underline text-center">
-                  بستن
+                <DrawerClose className="block mt-6 text-sm text-gray-400 hover:text-gray-600 underline text-center">
+                  <XIcon className="inline-block" />
                 </DrawerClose>
               </DrawerFooter>
             </DrawerContent>
