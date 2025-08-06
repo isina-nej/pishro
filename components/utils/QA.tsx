@@ -42,7 +42,7 @@ const QAModal = () => {
     <Dialog>
       <DialogTrigger asChild>
         <Button className="bg-[#214254] hover:bg-green-900 text-white text-lg px-12 py-8 rounded-lg shadow-lg">
-          شروع ثبت‌نام
+          مشاوره سرمایه گذاری
         </Button>
       </DialogTrigger>
 
