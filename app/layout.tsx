@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Toaster } from "react-hot-toast";
 
 import "@/app/styles/globals.css";
 
@@ -67,6 +68,16 @@ export default function RootLayout({
         className={`${iransansXV.variable} ${charismaExtraBold.variable} ${charismaRegular.variable} ${montserrat.variable} ${irSansXRegular.variable} ${irSansXMedium.variable} ${irSansXBold.variable} rtl`}
       >
         {children}
+        <Toaster
+          position="top-center" // می‌تونی تغییر بدی
+          toastOptions={{
+            duration: 3000,
+            style: {
+              fontSize: "14px",
+              direction: "rtl",
+            },
+          }}
+        />
       </body>
     </html>
   );
