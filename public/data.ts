@@ -1052,3 +1052,32 @@ export const alibabaData = {
     "/images/investment3.jpg",
   ],
 };
+
+export const fakeQuestions = [
+  {
+    id: 1,
+    question: "نام و نام خانوادگی خود را وارد کنید:",
+    type: "text",
+  },
+  {
+    id: 2,
+    question: "ایمیل خود را وارد کنید:",
+    type: "text",
+  },
+  {
+    id: 3,
+    question: "شماره موبایل جهت تایید هویت:",
+    type: "text",
+  },
+  {
+    id: 4,
+    question: "نوع سرمایه‌گذاری مورد علاقه شما چیست؟",
+    type: "select",
+    options: ["ارز دیجیتال", "بورس", "طلا", "سپرده بانکی"],
+  },
+  {
+    id: 5,
+    question: "توضیحات اضافی (اختیاری):",
+    type: "textarea",
+  },
+];
