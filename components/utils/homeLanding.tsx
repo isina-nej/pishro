@@ -49,8 +49,6 @@ const HomeLanding = ({ size = "normal", darker }: LandingProps) => {
                 sizes="100vw"
                 priority={index === 0}
                 className="object-cover object-center"
-                placeholder="blur"
-                blurDataURL="/images/placeholder.jpg"
               />
               {/* Dark overlay */}
               {darker && (
