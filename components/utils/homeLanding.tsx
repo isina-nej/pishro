@@ -27,8 +27,8 @@ const HomeLanding = ({ size = "normal", darker }: LandingProps) => {
       className={cn(
         "relative w-full",
         size === "small"
-          ? "h-[360px] sm:h-[280px] xs:h-[220px]"
-          : "h-[474px] sm:h-[360px] xs:h-[280px]"
+          ? "md:h-[360px] sm:h-[280px] xs:h-[220px]"
+          : "md:h-[474px] sm:h-[360px] xs:h-[280px]"
       )}
     >
       <Swiper
