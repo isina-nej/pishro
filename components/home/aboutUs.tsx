@@ -15,22 +15,22 @@ const AboutUs: React.FC = () => {
 
   const clientCount = useCounter(
     isInView ? aboutUsData.stats[0].value : 0,
-    500
+    1000
   );
   const employeeCount = useCounter(
     isInView ? aboutUsData.stats[1].value : 0,
-    500
+    1000
   );
   const projectCount = useCounter(
     isInView ? aboutUsData.stats[2].value : 0,
-    500
+    1000
   );
 
   return (
     <div className="mt-20 py-20 container flex items-center justify-between gap-8 relative">
       {/* Right section */}
       <div className="flex-1">
-        <h3 className="text-3xl mb-4 mt-16">{aboutUsData.title}</h3>
+        <h3 className="text-4xl mb-4 mt-16">{aboutUsData.title}</h3>
         <p className="leading-relaxed text-gray-800">
           {aboutUsData.description}
         </p>
