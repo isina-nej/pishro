@@ -7,6 +7,7 @@ import HomeLanding from "@/components/utils/homeLanding";
 // import TransparentVideoPlayer from "@/components/utils/TransparentVideoPlayer";
 import CommentsSlider from "@/components/utils/CommentsSlider";
 import AboutUs from "./aboutUs";
+import NewsClub from "./newsClub";
 
 const HomePageContent = () => {
   return (
@@ -19,6 +20,7 @@ const HomePageContent = () => {
       <AboutUs />
       <Courses />
       <CommentsSlider />
+      <NewsClub />
       {/* <Blog /> */}
     </div>
   );

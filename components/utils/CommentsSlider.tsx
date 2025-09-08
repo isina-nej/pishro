@@ -12,7 +12,7 @@ import RatingStars from "./RatingStars";
 
 const CommentsSlider = () => {
   return (
-    <section className="container-xl my-28 relative">
+    <section className="container-xl mt-28 mb-8 relative">
       <h2 className="text-5xl font-bold mb-8 text-center">نظرات دوره آموزان</h2>
       <div className="relative">
         <Swiper
