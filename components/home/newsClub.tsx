@@ -72,7 +72,7 @@ const NewsClub = () => {
                 />
                 <Button
                   type="submit"
-                  className="bg-mySecondary hover:bg-mySecondary/95 transition-colors py-3 px-12 rounded-full text-white font-medium"
+                  className="bg-mySecondary hover:bg-mySecondary/95 transition-colors h-12 px-12 rounded-full text-white font-medium"
                 >
                   عضویت
                 </Button>

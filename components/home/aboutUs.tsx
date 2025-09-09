@@ -27,7 +27,7 @@ const AboutUs: React.FC = () => {
   );
 
   return (
-    <div className="mt-20 py-20 container flex items-center justify-between gap-8 relative">
+    <div className="z-10 py-20 container flex items-center justify-between gap-8 relative">
       {/* Right section */}
       <div className="flex-1">
         <h3 className="text-4xl mb-4 mt-16">{aboutUsData.title}</h3>
