@@ -82,7 +82,7 @@ export default function MobileScrollSection() {
           </p>
         </div>
         {/* body */}
-        <div className="w-full h-[650px] overflow-hidden flex flex-col justify-end">
+        <div className="w-full h-[700px] overflow-hidden flex flex-col justify-end mb-10">
           <div className="w-full h-[550px] bg-mySecondary rounded-[40px] relative">
             {/* bg colors */}
             <div className="absolute size-full rounded-[36px] flex overflow-hidden">
@@ -97,8 +97,8 @@ export default function MobileScrollSection() {
               {/* Text and content */}
               <div className="flex-1 flex flex-col justify-between h-full pt-32 pb-20 pr-12 pl-8 z-10">
                 <div>
-                  <h4 className="text-4xl font-bold text-white mb-12">
-                    مزایای <span className="text-[#48e4c7]">پیشرو</span> بودن
+                  <h4 className="text-[40px] font-bold text-white mb-10">
+                    از مزایای <span className="text-[#48e4c7]">پیشرو</span> بودن
                   </h4>
 
                   <ul className="space-y-4">
@@ -110,7 +110,7 @@ export default function MobileScrollSection() {
                         {/* بولت سفارشی */}
                         <span
                           className={clsx(
-                            "size-2 rounded-full border transition-all duration-300",
+                            "size-2 rounded-full border transition-all",
                             i === index
                               ? "bg-white border-white" // حالت فعال
                               : "bg-gray-600 border-gray-500" // حالت غیرفعال
@@ -120,7 +120,7 @@ export default function MobileScrollSection() {
                         {/* متن */}
                         <span
                           className={clsx(
-                            "text-base transition-all duration-300",
+                            "text-base transition-all",
                             i === index
                               ? "text-white font-semibold"
                               : "text-gray-400"
