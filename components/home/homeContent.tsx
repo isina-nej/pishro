@@ -19,8 +19,10 @@ const HomePageContent = () => {
       {/* Steps Section */}
       <StepsSection
         steps={stepsData}
+        sectionQuote="مسیر یادگیری خود را با پیشرو آغاز کنید"
         sectionTitle="مراحل یادگیری در پیشرو"
-        sectionSubtitle="با طی کردن این مراحل به صورت قدم‌به‌قدم، می‌توانید مسیر یادگیری خود را کامل کنید."
+        sectionSubtitle="با طی کردن این مراحل به صورت قدم‌به‌قدم، می‌توانید مسیر یادگیری خود را کامل کنید. صورت قدم‌به‌قدم، پیشرو باشید و می‌توانید مسیر یادگیری خود را کامل کنید"
+        sectionCta="شروع مسیر یادگیری"
       />
 
       <CommentsSlider />
