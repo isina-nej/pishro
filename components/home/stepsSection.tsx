@@ -151,7 +151,7 @@ const StepsSection = ({
       <div className="sticky top-0 h-screen container-xl">
         {/* Background Decorations */}
         <StepsDecorations />
-        <div className="w-full h-20"></div>
+        <div className="w-full h-24"></div>
         {/* steps section */}
         <div className="relative flex w-[78%] [aspect-ratio:1071/449]">
           {/* Header */}
