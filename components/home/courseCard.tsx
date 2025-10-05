@@ -36,7 +36,7 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
       className="
         group w-full 
         h-[40vh] sm:h-[38vh] md:h-[100%]
-        shadow-md hover:shadow-lg transition-shadow rounded-xl
+        shadow-md transition-shadow rounded-xl
         p-3 bg-white flex flex-col overflow-hidden relative
       "
     >
@@ -44,6 +44,7 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
       <motion.div
         animate={{
           height: isHovered ? "55%" : "60%",
+          y: isHovered ? -5 : 0,
         }}
         transition={{ duration: 0.3, ease: "easeOut" }}
         className="relative w-full overflow-hidden rounded-lg"
@@ -108,10 +109,10 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
 
       {/* Buy button (absolute) */}
       <motion.button
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: 40 }}
         animate={{
           opacity: isHovered ? 1 : 0,
-          y: isHovered ? 0 : 10,
+          y: isHovered ? 0 : 40,
         }}
         transition={{ duration: 0.35, ease: "easeOut" }}
         className="
