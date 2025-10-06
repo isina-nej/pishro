@@ -42,7 +42,7 @@ const NewsClub = () => {
   };
 
   return (
-    <section className="relative w-full h-lvh pb-16 pt-8">
+    <section className="relative w-full h-screen pb-16 pt-8">
       <div className="container-xl h-full flex items-center gap-8">
         <div className="flex-1 flex items-end h-full">
           {/* wrapper با نسبت درست */}

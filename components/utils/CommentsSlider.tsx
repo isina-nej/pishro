@@ -12,83 +12,89 @@ import RatingStars from "./RatingStars";
 
 const CommentsSlider = () => {
   return (
-    <section className="container-xl mt-8 mb-8 relative">
-      <h2 className="text-5xl font-bold mb-8 text-center">نظرات دوره آموزان</h2>
-      <div className="relative">
-        <Swiper
-          modules={[Autoplay, Pagination]}
-          className="!px-2"
-          centeredSlides={true}
-          slidesPerView={3}
-          spaceBetween={0}
-          loop={true}
-          autoplay={{
-            delay: 5000,
-            disableOnInteraction: false,
-          }}
-          pagination={{
-            clickable: true,
-            el: ".custom-pagination-opinion", // ✅ مکان دلخواه
-          }}
-          breakpoints={{
-            320: { slidesPerView: 1 },
-            640: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 },
-          }}
-        >
-          {homeCommentsData.map((comment) => (
-            <SwiperSlide
-              key={comment.id}
-              className="px-2.5 py-6 !overflow-visible"
-            >
-              <div className="bg-white rounded-3xl shadow-sm border border-gray-200 py-8 px-5 flex flex-col items-center justify-between text-center h-[255px]">
-                <p className="text-[#8E8E8E] text-xs leading-5 font-bold mb-4">
-                  {comment.comment}
-                </p>
-                <div className="flex items-center justify-between w-full">
-                  <div className="flex items-center justify-start w-full">
-                    <Image
-                      src={comment.avatar}
-                      alt={comment.name}
-                      width={48}
-                      height={48}
-                      className="rounded-full ml-2"
-                    />
+    <section className="container-xl my-8 h-screen flex items-center justify-center">
+      <div className="relative w-full">
+        <h2 className="text-5xl font-bold mb-8 text-center">
+          نظرات دوره آموزان
+        </h2>
+        <div className="relative">
+          <Swiper
+            modules={[Autoplay, Pagination]}
+            className="!px-2"
+            centeredSlides={true}
+            slidesPerView={3}
+            spaceBetween={0}
+            loop={true}
+            autoplay={{
+              delay: 5000,
+              disableOnInteraction: false,
+            }}
+            pagination={{
+              clickable: true,
+              el: ".custom-pagination-opinion", // ✅ مکان دلخواه
+            }}
+            breakpoints={{
+              320: { slidesPerView: 1 },
+              640: { slidesPerView: 2 },
+              1024: { slidesPerView: 3 },
+            }}
+          >
+            {homeCommentsData.map((comment) => (
+              <SwiperSlide
+                key={comment.id}
+                className="px-2.5 py-6 !overflow-visible"
+              >
+                <div className="bg-white rounded-3xl shadow-sm border border-gray-200 py-8 px-5 flex flex-col items-center justify-between text-center h-[255px]">
+                  <p className="text-[#8E8E8E] text-xs leading-5 font-bold mb-4">
+                    {comment.comment}
+                  </p>
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center justify-start w-full">
+                      <Image
+                        src={comment.avatar}
+                        alt={comment.name}
+                        width={48}
+                        height={48}
+                        className="rounded-full ml-2"
+                      />
+                      <div>
+                        <p className="font-bold text-[#353535]">
+                          {comment.name}
+                        </p>
+                        <p className="text-xs font-bold text-[#8e8e8e]">
+                          {comment.position}
+                        </p>
+                      </div>
+                    </div>
                     <div>
-                      <p className="font-bold text-[#353535]">{comment.name}</p>
-                      <p className="text-xs font-bold text-[#8e8e8e]">
-                        {comment.position}
-                      </p>
+                      <RatingStars rating={4} />
                     </div>
                   </div>
-                  <div>
-                    <RatingStars rating={4} />
-                  </div>
                 </div>
-              </div>
-            </SwiperSlide>
-          ))}
-          <div className="custom-pagination-opinion h-3 flex justify-center gap-1.5 mt-6"></div>
-        </Swiper>
-      </div>
-      <div className="absolute top-0 right-8">
-        <div className="relative w-[180px] h-[100px]">
-          <Image
-            src={"/icons/circle-arrow-left.svg"}
-            alt="پیکان"
-            fill
-            className="object-cover"
-          />
+              </SwiperSlide>
+            ))}
+            <div className="custom-pagination-opinion h-3 flex justify-center gap-1.5 mt-6"></div>
+          </Swiper>
         </div>
-      </div>
-      <div className="absolute -bottom-10 left-8">
-        <div className="relative w-[180px] h-[100px]">
-          <Image
-            src={"/icons/circle-arrow-right.svg"}
-            alt="پیکان"
-            fill
-            className="object-cover"
-          />
+        <div className="absolute top-0 right-8">
+          <div className="relative w-[180px] h-[100px]">
+            <Image
+              src={"/icons/circle-arrow-left.svg"}
+              alt="پیکان"
+              fill
+              className="object-cover"
+            />
+          </div>
+        </div>
+        <div className="absolute -bottom-10 left-8">
+          <div className="relative w-[180px] h-[100px]">
+            <Image
+              src={"/icons/circle-arrow-right.svg"}
+              alt="پیکان"
+              fill
+              className="object-cover"
+            />
+          </div>
         </div>
       </div>
     </section>
