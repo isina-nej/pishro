@@ -57,7 +57,7 @@ const BikeSection = () => {
 
   return (
     <section
-      className="container-xl mb-20 pt-20 cursor-default relative overflow-hidden h-screen"
+      className="container-xl pt-20 cursor-default relative overflow-hidden h-screen"
       onMouseMove={handleMouseMove}
     >
       {/* محتوای اصلی */}

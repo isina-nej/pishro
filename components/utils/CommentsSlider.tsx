@@ -12,7 +12,7 @@ import RatingStars from "./RatingStars";
 
 const CommentsSlider = () => {
   return (
-    <section className="container-xl my-8 h-screen flex items-center justify-center">
+    <section className="container-xl h-screen flex items-center justify-center">
       <div className="relative w-full">
         <h2 className="text-5xl font-bold mb-8 text-center">
           نظرات دوره آموزان

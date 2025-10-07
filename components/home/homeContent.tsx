@@ -1,24 +1,38 @@
+"use client";
+
 import LandingOverlay from "./landingOverlay";
 import BikeSection from "./bikeSection";
 import MobileScrollSection from "./mobileScrollSection";
 import Courses from "./courses";
 import CommentsSlider from "@/components/utils/CommentsSlider";
 import StepsSection from "./stepsSection";
-import NewsClub from "./newsClub";
 import { stepsData } from "@/public/data";
+import NewsClub from "./newsClub";
+import SnapSingleSection from "../utils/SnapSingleSection";
 
 const HomePageContent = () => {
   return (
-    <div>
+    <div className="w-full">
       <LandingOverlay />
-      <div className="w-full bg-white">
+
+      <SnapSingleSection>
         <BikeSection />
+      </SnapSingleSection>
+      <SnapSingleSection>
         <MobileScrollSection />
+      </SnapSingleSection>
+      <SnapSingleSection>
         <Courses />
+      </SnapSingleSection>
+      <SnapSingleSection>
         <StepsSection {...stepsData} />
+      </SnapSingleSection>
+      <SnapSingleSection>
         <CommentsSlider />
+      </SnapSingleSection>
+      <SnapSingleSection>
         <NewsClub />
-      </div>
+      </SnapSingleSection>
     </div>
   );
 };
