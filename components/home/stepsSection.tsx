@@ -146,7 +146,7 @@ const StepsSection = ({
     <section
       ref={sectionRef}
       style={{ height: `calc(${steps.length} * 100vh + 300px)` }}
-      className="relative w-full mt-20"
+      className="relative w-full"
     >
       <div className="sticky top-0 h-screen container-xl">
         {/* Background Decorations */}
