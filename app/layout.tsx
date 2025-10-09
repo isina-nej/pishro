@@ -18,32 +18,32 @@ const charismaRegular = localFont({
   variable: "--font-charisma-regular",
 });
 
-const iransansXV = localFont({
-  src: "../public/font/IRANSansXV.woff2",
-  weight: "400",
-  style: "normal",
-  variable: "--font-iransans-xv",
-});
-const irSansXRegular = localFont({
-  src: "../public/font/Woff2/IRSansXFaNum-Regular.woff2",
-  weight: "400",
-  style: "normal",
-  variable: "--font-irsansx-regular",
-});
+// const iransansXV = localFont({
+//   src: "../public/font/IRANSansXV.woff2",
+//   weight: "400",
+//   style: "normal",
+//   variable: "--font-iransans-xv",
+// });
+// const irSansXRegular = localFont({
+//   src: "../public/font/Woff2/IRSansXFaNum-Regular.woff2",
+//   weight: "400",
+//   style: "normal",
+//   variable: "--font-irsansx-regular",
+// });
 
-const irSansXMedium = localFont({
-  src: "../public/font/Woff2/IRSansXFaNum-Medium.woff2",
-  weight: "500",
-  style: "normal",
-  variable: "--font-irsansx-medium",
-});
+// const irSansXMedium = localFont({
+//   src: "../public/font/Woff2/IRSansXFaNum-Medium.woff2",
+//   weight: "500",
+//   style: "normal",
+//   variable: "--font-irsansx-medium",
+// });
 
-const irSansXBold = localFont({
-  src: "../public/font/Woff2/IRSansXFaNum-Bold.woff2",
-  weight: "700",
-  style: "normal",
-  variable: "--font-irsansx-bold",
-});
+// const irSansXBold = localFont({
+//   src: "../public/font/Woff2/IRSansXFaNum-Bold.woff2",
+//   weight: "700",
+//   style: "normal",
+//   variable: "--font-irsansx-bold",
+// });
 
 const montserrat = localFont({
   src: "../public/font/Montserrat-VariableFont.woff2",
