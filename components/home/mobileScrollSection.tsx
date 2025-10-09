@@ -98,7 +98,7 @@ export default function MobileScrollSection() {
               <div className="flex-1 flex flex-col justify-between h-full pt-32 pb-20 pr-12 pl-8 z-10">
                 <div>
                   <h4 className="text-[40px] font-bold text-white mb-10">
-                    از مزایای <span className="text-[#8E8E8E]">پیشرو</span> بودن
+                    از مزایای <span className="text-myPrimary">پیشرو</span> بودن
                   </h4>
 
                   <ul className="space-y-4">
