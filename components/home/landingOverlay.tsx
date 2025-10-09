@@ -15,7 +15,6 @@ const LandingOverlay = () => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(true);
 
   const [hideMainText, setHideMainText] = useState(false);
-  console.log(hideMainText);
 
   // مقدار اسکرول نسبت به سکشن اصلی
   const { scrollYProgress } = useScroll({
