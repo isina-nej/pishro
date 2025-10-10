@@ -9,6 +9,7 @@ import StepsSection from "./stepsSection";
 import { stepsData } from "@/public/data";
 import NewsClub from "./newsClub";
 import SnapSingleSection from "../utils/SnapSingleSection";
+import CalculatorSection from "./calculatorSection";
 
 const HomePageContent = () => {
   return (
@@ -29,6 +30,9 @@ const HomePageContent = () => {
       </SnapSingleSection>
       <SnapSingleSection>
         <NewsClub />
+      </SnapSingleSection>
+      <SnapSingleSection>
+        <CalculatorSection />
       </SnapSingleSection>
       <SnapSingleSection>
         <MobileScrollSection />
