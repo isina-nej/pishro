@@ -10,6 +10,7 @@ import "swiper/css/pagination";
 
 import { homeCommentsData } from "@/public/data";
 import RatingStars from "./RatingStars";
+import LikeDislike from "./LikeDislike";
 
 const CommentsSlider = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -30,7 +31,7 @@ const CommentsSlider = () => {
             spaceBetween={0}
             loop={true}
             autoplay={{
-              delay: 5000,
+              delay: 50000,
               disableOnInteraction: false,
             }}
             pagination={{
@@ -77,6 +78,7 @@ const CommentsSlider = () => {
                       </div>
                       <div>
                         <RatingStars rating={4} />
+                        <LikeDislike />
                       </div>
                     </div>
                   </div>
