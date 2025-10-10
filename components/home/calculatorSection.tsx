@@ -5,6 +5,7 @@ import Link from "next/link";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import CountUp from "react-countup";
+import { Wallet, Clock } from "lucide-react"; // 🎯 آیکون‌ها اضافه شدند
 
 const CalculatorSection = () => {
   // 🧩 مقادیر اصلی
@@ -70,7 +71,8 @@ const CalculatorSection = () => {
           <div className="flex flex-col w-full lg:w-7/12 gap-6">
             {/* مبلغ سرمایه‌گذاری */}
             <div className="rounded-2xl border border-[#8B9BB4] bg-white text-[#1A0A3B] p-6">
-              <p className="text-center text-lg font-semibold mb-8">
+              <p className="text-center text-lg font-semibold mb-8 flex items-center justify-center gap-2">
+                <Wallet size={22} className="text-[#1A0A3B]" />
                 مبلغ سرمایه‌گذاری
               </p>
 
@@ -135,7 +137,8 @@ const CalculatorSection = () => {
 
             {/* مدت سرمایه‌گذاری */}
             <div className="rounded-2xl border border-[#8B9BB4] bg-white text-[#1A0A3B] p-6">
-              <p className="text-center text-lg font-semibold mb-8">
+              <p className="text-center text-lg font-semibold mb-8 flex items-center justify-center gap-2">
+                <Clock size={22} className="text-[#1A0A3B]" />
                 مدت سرمایه‌گذاری
               </p>
 
@@ -199,7 +202,7 @@ const CalculatorSection = () => {
           </div>
 
           {/* بخش نتیجه */}
-          <div className="w-full lg:w-5/12 flex flex-col items-center justify-center bg-[#1a0a3b]/50 rounded-2xl p-10">
+          <div className="w-full h-[-webkit-fill-available] lg:w-5/12 flex flex-col items-center justify-center bg-[#1a0a3b]/50 rounded-2xl p-10">
             <p className="text-center text-2xl font-ch mb-8">
               نتیجه سرمایه‌گذاریت
             </p>
@@ -216,8 +219,8 @@ const CalculatorSection = () => {
             </div>
 
             <Link
-              href="/investment-plans"
-              className="mt-10 w-full bg-mySecondary text-white rounded-full py-3 font-bold text-center hover:bg-[#ffd6b6] transition-colors"
+              href="/plans/gold#plan-banner"
+              className="mt-10 px-16 bg-mySecondary border border-mySecondary text-white rounded-full py-3 font-bold text-center hover:bg-mySecondary/30 hover:border-white transition-colors"
             >
               سرمایه‌گذاری
             </Link>
