@@ -2,40 +2,36 @@
 
 import LandingOverlay from "./landingOverlay";
 import BikeSection from "./bikeSection";
-import MobileScrollSection from "./mobileScrollSection";
 import Courses from "./courses";
 import CommentsSlider from "@/components/utils/CommentsSlider";
-import StepsSection from "./stepsSection";
-import { stepsData } from "@/public/data";
 import NewsClub from "./newsClub";
 import SnapSingleSection from "../utils/SnapSingleSection";
 import CalculatorSection from "./calculatorSection";
+import MobileScrollSection from "./mobileScrollSection";
 
 const HomePageContent = () => {
   return (
     <div className="w-full">
       <LandingOverlay />
 
-      <SnapSingleSection>
-        <BikeSection />
+      <SnapSingleSection id="mobile-section">
+        <MobileScrollSection />
       </SnapSingleSection>
-      <SnapSingleSection>
-        <Courses />
-      </SnapSingleSection>
-      <SnapSingleSection>
-        <StepsSection {...stepsData} />
-      </SnapSingleSection>
-      <SnapSingleSection>
-        <CommentsSlider />
-      </SnapSingleSection>
-      <SnapSingleSection>
-        <NewsClub />
-      </SnapSingleSection>
-      <SnapSingleSection>
+      <SnapSingleSection id="calculator-section">
         <CalculatorSection />
       </SnapSingleSection>
-      <SnapSingleSection>
-        <MobileScrollSection />
+      <SnapSingleSection id="bike-section">
+        <BikeSection />
+      </SnapSingleSection>
+      <SnapSingleSection id="courses-section">
+        <Courses />
+      </SnapSingleSection>
+
+      <SnapSingleSection id="comments-section">
+        <CommentsSlider />
+      </SnapSingleSection>
+      <SnapSingleSection id="newsClub-section">
+        <NewsClub />
       </SnapSingleSection>
     </div>
   );
