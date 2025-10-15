@@ -8,6 +8,7 @@ type Props = {
   duration?: number;
   offset?: number;
   threshold?: number;
+  id?: string;
 };
 
 const SnapSingleSection = ({
