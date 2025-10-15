@@ -26,7 +26,6 @@ const HomePageContent = () => {
       <SnapSingleSection id="courses-section">
         <Courses />
       </SnapSingleSection>
-
       <SnapSingleSection id="comments-section">
         <CommentsSlider />
       </SnapSingleSection>
