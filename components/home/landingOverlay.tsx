@@ -33,53 +33,61 @@ const LandingOverlay = () => {
     [0, 0.1, 0.15],
     [0, 0.8, 1]
   );
+  const BgColor = useTransform(
+    scrollYProgress,
+    [0, 0.7, 0.71],
+    ["transparent", "transparent", "black"]
+  );
 
   return (
-    <section ref={ref} className="relative w-full">
-      {/* بخش چسبیده به بالای صفحه */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
-        {/* ویدیو پس‌زمینه */}
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover -z-50"
-        >
-          <source src="/videos/aboutUs.webm" type="video/webm" />
-        </video>
-        <div className="absolute inset-0 bg-black/25 transition-none" />
-        {/* اورلی سیاه که با اسکرول تاریک‌تر میشه */}
-        <motion.div
-          style={{ opacity: overlayOpacity }}
-          className="absolute inset-0 bg-black transition-none"
-        />
-      </div>
-      {/* محتوای متن */}
-      <AnimatePresence mode="wait">
-        {!hideMainText && (
-          <motion.div
-            initial={{ opacity: 0, y: -60 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -60 }}
-            transition={{ duration: 0.5, ease: "easeInOut" }}
-            className="absolute top-0 z-10"
+    <>
+      <section ref={ref} className="relative w-full">
+        {/* بخش چسبیده به بالای صفحه */}
+        <div className="sticky top-0 h-screen w-full overflow-hidden">
+          {/* ویدیو پس‌زمینه */}
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover -z-50"
           >
-            <OverlayMainText />
+            <source src="/videos/aboutUs.webm" type="video/webm" />
+          </video>
+          <div className="absolute inset-0 bg-black/25 transition-none" />
+          {/* اورلی سیاه که با اسکرول تاریک‌تر میشه */}
+          <motion.div
+            style={{ opacity: overlayOpacity }}
+            className="absolute inset-0 bg-black transition-none"
+          />
+        </div>
+        {/* محتوای متن */}
+        <AnimatePresence mode="wait">
+          {!hideMainText && (
+            <motion.div
+              initial={{ opacity: 0, y: -60 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -60 }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+              className="absolute top-0 z-10"
+            >
+              <OverlayMainText />
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <div className="relative z-10 flex flex-col justify-start items-center">
+          {/* وقتی اسکرول می‌کنی، متن بالا می‌ره طبیعی */}
+          <motion.div
+            style={{ opacity: TextOpacity, backgroundColor: BgColor }}
+            className="flex items-center justify-center w-full"
+          >
+            <OverlayText onEnter={(bol: boolean) => setHideMainText(bol)} />
           </motion.div>
-        )}
-      </AnimatePresence>
-      <div className="relative z-10 flex flex-col justify-start items-center">
-        {/* وقتی اسکرول می‌کنی، متن بالا می‌ره طبیعی */}
-        <motion.div
-          style={{ opacity: TextOpacity }}
-          className="flex items-center justify-center"
-        >
-          <OverlayText onEnter={(bol: boolean) => setHideMainText(bol)} />
-        </motion.div>
-      </div>
-    </section>
+        </div>
+      </section>
+      <ImageZoomSection parentRef={ref} />
+    </>
   );
 };
 
@@ -157,6 +165,39 @@ const OverlayMainText = () => {
       >
         شروع مسیر موفقیت
       </motion.a>
+    </div>
+  );
+};
+
+const ImageZoomSection = ({
+  parentRef,
+}: {
+  parentRef: React.RefObject<HTMLElement | null>;
+}) => {
+  // از ref سکشن اصلی (LandingOverlay) استفاده می‌کنیم
+  const { scrollYProgress } = useScroll({
+    target: parentRef,
+    offset: ["end end", "end start"],
+    // یعنی از لحظه‌ای که پایین سکشن متن به بالای صفحه نزدیک میشه تا وقتی کامل از صفحه خارج میشه
+  });
+
+  // از 1.5 تا 1 (زوم کامل در زمان خروج متن‌ها)
+  const scale = useTransform(scrollYProgress, [0, 1], [1.5, 1]);
+
+  // ظاهر شدن تدریجی
+  const opacity = useTransform(scrollYProgress, [0, 0.001], [0, 1]);
+
+  return (
+    <div className="relative h-[200vh] -mt-[100vh]">
+      <div className="sticky top-0 h-screen overflow-hidden">
+        <motion.img
+          src="/images/home/c/metaverse.webp"
+          alt="Zoom Background"
+          style={{ scale, opacity }}
+          className="absolute inset-0 w-full h-full object-cover will-change-transform"
+        />
+        <div className="absolute inset-0 bg-black/10" />
+      </div>
     </div>
   );
 };
