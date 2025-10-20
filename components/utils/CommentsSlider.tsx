@@ -24,6 +24,7 @@ const CommentsSlider = () => {
 
         <div className="relative">
           <Swiper
+            id="comments-slider"
             modules={[Autoplay, Pagination]}
             className="!px-2"
             centeredSlides={true}
