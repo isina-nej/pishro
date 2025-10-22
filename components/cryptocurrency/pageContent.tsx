@@ -18,7 +18,7 @@ const CryptocurrencyPageContent = () => {
       <StepsSection {...stepsData} />
       <Courses />
       <CommentsSlider />
-      <TagsList tags={investmentTagsData} />
+      <TagsList tags={investmentTagsData} title="کلید واژه های کریپتوکارنسی" />
     </div>
   );
 };
