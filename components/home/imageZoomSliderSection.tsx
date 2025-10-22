@@ -51,7 +51,7 @@ const useImageZoomScroll = (
   );
 
   // Derivative transforms
-  const otherSlidesOpacity = useTransform(bgScale, [1.7, 1.2, 1], [0, 0, 1]);
+  const otherSlidesOpacity = useTransform(bgScale, [1.7, 1.2, 1], [0, 0, 0.6]);
   const otherSlidesScale = useTransform(bgScale, [1.2, 1], [1 / 1.2, 1]);
   const sectionOpacity = useTransform(parentScroll, [0, 0.01], [0, 1]);
   const btnOpacity = useTransform(bgScale, [1.2, 1.1], [0, 1]);
