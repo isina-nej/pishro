@@ -48,26 +48,6 @@ const ImageZoomSliderSection = ({
   const revealSlides = useTransform(parentScroll, [0, 0.4, 1], [0, 0, 1]);
   const slides = [...IMAGES, ...IMAGES];
 
-  // 🧠 کنترل autoplay با توجه به هر دو scrollYProgress
-  useMotionValueEvent(parentScroll, "change", (latestParent) => {
-    const swiper = swiperRef.current;
-    if (!swiper) return;
-
-    const latestSection = sectionScroll.get();
-
-    // شرط‌ها:
-    const textsAreGone = latestParent > 0.98; // متن‌ها از دید رفتن
-    const sliderInView = latestSection > 0 && latestSection < 1; // اسلایدر توی ویوپورت
-
-    if (textsAreGone && sliderInView) {
-      swiper.autoplay.start();
-      console.log("▶️ autoplay started");
-    } else {
-      swiper.autoplay.stop();
-      console.log("⏸ autoplay stopped");
-    }
-  });
-
   // 👇 همین کار برای اسکرول خود سکشن هم (درصورتی که فقط بالا/پایین بری)
   useMotionValueEvent(sectionScroll, "change", (latestSection) => {
     const swiper = swiperRef.current;
@@ -79,10 +59,10 @@ const ImageZoomSliderSection = ({
 
     if (textsAreGone && sliderInView) {
       swiper.autoplay.start();
-      console.log("▶️ autoplay started (section)");
+      // console.log("▶️ autoplay started (section) ", latestSection);
     } else {
       swiper.autoplay.stop();
-      console.log("⏸ autoplay stopped (section)");
+      // console.log("⏸ autoplay stopped (section) ", latestSection);
     }
   });
 
