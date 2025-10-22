@@ -13,6 +13,7 @@ import { Swiper as SwiperType } from "swiper/types";
 
 import "swiper/css";
 import "swiper/css/navigation";
+import clsx from "clsx";
 
 const IMAGES = [
   "/images/home/c/metaverse.webp",
@@ -42,13 +43,14 @@ const ImageZoomSliderSection = ({
   });
 
   // 🔹 انیمیشن‌ها
-  const scale = useTransform(parentScroll, [0, 1], [1.2, 1]);
-  const bgScale = useTransform(parentScroll, [0, 1], [1.2, 0.66]);
-  const opacity = useTransform(parentScroll, [0, 0.01], [0, 1]);
-  const revealSlides = useTransform(parentScroll, [0, 0.4, 1], [0, 0, 1]);
+  const bgScale = useTransform(parentScroll, [0, 0.99, 1], [1.8, 1.7, 1]);
+  const bgOpacity = useTransform(parentScroll, [0, 0.99, 1], [1, 1, 0]);
+  const secOpacity = useTransform(parentScroll, [0, 0.01], [0, 1]);
+  const btnOpacity = useTransform(parentScroll, [0, 0.98, 1], [0, 0, 1]);
+  const revealSlides = useTransform(parentScroll, [0, 0.05, 0.1], [0, 0, 1]);
   const slides = [...IMAGES, ...IMAGES];
 
-  // 👇 همین کار برای اسکرول خود سکشن هم (درصورتی که فقط بالا/پایین بری)
+  // 👇 کنترل autoplay
   useMotionValueEvent(sectionScroll, "change", (latestSection) => {
     const swiper = swiperRef.current;
     if (!swiper) return;
@@ -57,28 +59,23 @@ const ImageZoomSliderSection = ({
     const textsAreGone = latestParent > 0.98;
     const sliderInView = latestSection > 0 && latestSection < 1;
 
-    if (textsAreGone && sliderInView) {
-      swiper.autoplay.start();
-      // console.log("▶️ autoplay started (section) ", latestSection);
-    } else {
-      swiper.autoplay.stop();
-      // console.log("⏸ autoplay stopped (section) ", latestSection);
-    }
+    if (textsAreGone && sliderInView) swiper.autoplay.start();
+    else swiper.autoplay.stop();
   });
 
   return (
     <motion.div
       ref={sectionRef}
-      style={{ opacity }}
+      style={{ opacity: secOpacity }}
       className="relative h-[205vh] -mt-[100vh]"
     >
       <div className="sticky top-0 h-screen flex items-center justify-center bg-black overflow-hidden">
         {/* اسلایدر */}
-        <motion.div
-          style={{ scale, opacity }}
-          className="relative w-full flex items-center justify-center"
-        >
-          <motion.div style={{ opacity: revealSlides }} className="w-full">
+        <motion.div className="relative w-full flex items-center justify-center">
+          <motion.div
+            style={{ opacity: revealSlides }}
+            className="w-full relative"
+          >
             <Swiper
               modules={[Autoplay]}
               onSwiper={(swiper) => (swiperRef.current = swiper)}
@@ -93,18 +90,43 @@ const ImageZoomSliderSection = ({
                 disableOnInteraction: false,
                 pauseOnMouseEnter: true,
               }}
-              className="w-full flex items-center justify-center"
+              className="w-full flex items-center justify-center !overflow-visible"
             >
+              {/* سایر اسلایدها */}
               {slides.map((src, index) => (
-                <SwiperSlide key={index}>
+                <SwiperSlide
+                  key={index}
+                  className={clsx(
+                    "relative",
+                    activeIndex === index ? "z-20" : "z-0"
+                  )}
+                >
+                  {/* تصویر اصلی */}
                   <motion.div
                     animate={{ opacity: activeIndex === index ? 1 : 0.6 }}
                     transition={{ duration: 0.4 }}
-                    className="relative w-full aspect-[16/9] rounded-3xl overflow-hidden shadow-2xl"
+                    className="relative w-full aspect-[16/9] rounded-3xl overflow-hidden shadow-2xl z-0"
                   >
                     <Image
                       src={src}
                       alt={`slide-${index}`}
+                      fill
+                      className="object-cover"
+                      priority
+                    />
+                  </motion.div>
+                  {/* تصویر زوم */}
+                  <motion.div
+                    style={{
+                      scale: bgScale,
+                      opacity: bgOpacity,
+                      display: activeIndex === index ? "block" : "none",
+                    }}
+                    className="absolute inset-0 z-10 rounded-3xl overflow-hidden"
+                  >
+                    <Image
+                      src={src}
+                      alt="Zoom Background"
                       fill
                       className="object-cover"
                       priority
@@ -115,7 +137,12 @@ const ImageZoomSliderSection = ({
             </Swiper>
 
             {/* دکمه‌های ناوبری */}
-            <div className="absolute inset-0 flex items-center justify-between px-[5vw]">
+            <motion.div
+              style={{ opacity: btnOpacity }}
+              className={clsx(
+                "absolute inset-0 items-center flex justify-between px-[5vw]"
+              )}
+            >
               <button
                 onClick={() => swiperRef.current?.slidePrev()}
                 className="text-white/80 hover:text-white transition-colors z-50"
@@ -128,20 +155,8 @@ const ImageZoomSliderSection = ({
               >
                 <HiChevronLeft size={60} />
               </button>
-            </div>
+            </motion.div>
           </motion.div>
-
-          {/* تصویر پس‌زمینه قبل از ورود اسلایدر */}
-          <motion.img
-            src={IMAGES[activeIndex]}
-            alt="Zoom Background"
-            style={{
-              scale: bgScale,
-              opacity: useTransform(parentScroll, [0, 0.99, 1], [1, 1, 0]),
-              position: "absolute",
-            }}
-            className="w-full aspect-[16/9] object-cover rounded-3xl"
-          />
         </motion.div>
       </div>
     </motion.div>
