@@ -1182,7 +1182,6 @@ export const mobileScrollerSteps = [
   },
 ];
 
-// data.ts
 export const stepsData = {
   sectionQuote: "مسیر یادگیری خود را با پیشرو آغاز کنید",
   sectionTitle: "مراحل یادگیری در پیشرو",
@@ -1211,3 +1210,19 @@ export const stepsData = {
     },
   ],
 };
+
+export const miniSliderData1 = [
+  "/images/home/c/metaverse.webp",
+  "/images/home/c/airdrop.jpg",
+  "/images/home/c/nft.jpg",
+  "/images/home/c/metaverse.webp",
+  "/images/home/c/airdrop.jpg",
+];
+
+export const miniSliderData2 = [
+  "/images/home/c/metaverse.webp",
+  "/images/home/c/nft.jpg",
+  "/images/home/c/crypto.jpg",
+  "/images/home/c/metaverse.webp",
+  "/images/home/c/airdrop.jpg",
+];

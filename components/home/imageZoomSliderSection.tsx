@@ -16,6 +16,7 @@ import { Swiper as SwiperType } from "swiper/types";
 import clsx from "clsx";
 import "swiper/css";
 import MiniMovingSlider from "./miniMovingSlider";
+import { miniSliderData1, miniSliderData2 } from "@/public/data";
 
 /* ------------------------- 🖼️ Image Data ------------------------- */
 const SLIDES = [
@@ -268,7 +269,13 @@ const ImageZoomSliderSection = ({
         </div>
       </motion.section>
       <motion.div className="relative w-full py-4 bg-black -mt-20">
-        <MiniMovingSlider isVisible={showMiniSlider} />
+        <MiniMovingSlider isVisible={showMiniSlider} data={miniSliderData1} />
+        <div className="h-5"></div>
+        <MiniMovingSlider
+          isVisible={showMiniSlider}
+          data={miniSliderData2}
+          baseSpeed={6000}
+        />
       </motion.div>
     </>
   );

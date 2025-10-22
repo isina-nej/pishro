@@ -8,23 +8,17 @@ import Image from "next/image";
 import "swiper/css";
 import { Swiper as SwiperType } from "swiper/types";
 
-// ثابت‌ها
-const MINI_SLIDES = [
-  "/images/home/c/metaverse.webp",
-  "/images/home/c/airdrop.jpg",
-  "/images/home/c/nft.jpg",
-  "/images/home/c/metaverse.webp",
-  "/images/home/c/airdrop.jpg",
-] as const;
-
-const BASE_SPEED = 8000; // سرعت اصلی (در میلی‌ثانیه)
-// const HOVER_SPEED = BASE_SPEED * 2; // سرعت هنگام هاور (نصف سرعت اصلی)
-
 interface MiniMovingSliderProps {
   isVisible: boolean;
+  data: string[];
+  baseSpeed?: number;
 }
 
-const MiniMovingSlider = ({ isVisible }: MiniMovingSliderProps) => {
+const MiniMovingSlider = ({
+  isVisible,
+  data,
+  baseSpeed = 8000,
+}: MiniMovingSliderProps) => {
   const swiperRef = useRef<SwiperType | null>(null);
   const [isHovered, setIsHovered] = useState<number | null>(null); // نگه‌داری اندیس اسلاید هاور شده
 
@@ -76,7 +70,7 @@ const MiniMovingSlider = ({ isVisible }: MiniMovingSliderProps) => {
         allowTouchMove={false}
         spaceBetween={20}
         centeredSlides={false}
-        speed={BASE_SPEED} // سرعت اولیه
+        speed={baseSpeed} // سرعت اولیه
         autoplay={{
           delay: 0, // بدون تأخیر برای حرکت پیوسته
           disableOnInteraction: false,
@@ -86,7 +80,7 @@ const MiniMovingSlider = ({ isVisible }: MiniMovingSliderProps) => {
         className="w-full h-full"
         wrapperClass="swiper-wrapper !ease-linear" // اطمینان از حرکت خطی
       >
-        {[...MINI_SLIDES, ...MINI_SLIDES].map((src, i) => (
+        {[...data, ...data].map((src, i) => (
           <SwiperSlide key={i} className="relative w-full h-full">
             <div
               className="relative w-full h-full rounded-2xl overflow-hidden shadow-lg"
