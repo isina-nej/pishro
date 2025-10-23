@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const AboutOtherPages = () => {
   return (
-    <div className="h-[1010px] relative my-40">
+    <div className="h-[1010px] relative mt-20">
       {/* 🌄 پس‌زمینه */}
       <div className="absolute bottom-0 left-0 w-full aspect-[1440/847] pointer-events-none !-z-10">
         <div className="size-full relative">
