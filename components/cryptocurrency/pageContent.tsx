@@ -5,6 +5,7 @@ import TagsList from "../utils/TagsList";
 import Courses from "../home/courses";
 import CommentsSlider from "../utils/CommentsSlider";
 import StepsSection from "../home/stepsSection";
+import AboutOtherPages from "../utils/AboutOtherPages";
 
 const CryptocurrencyPageContent = () => {
   return (
@@ -15,6 +16,7 @@ const CryptocurrencyPageContent = () => {
         titleColor="#EC7063"
       />
       <AboutIt />
+      <AboutOtherPages />
       <StepsSection {...stepsData} />
       <Courses />
       <CommentsSlider />
