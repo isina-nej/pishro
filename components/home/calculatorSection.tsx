@@ -1,50 +1,59 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import Link from "next/link";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import CountUp from "react-countup";
-import { Wallet, Clock } from "lucide-react"; // 🎯 آیکون‌ها اضافه شدند
+import { Wallet, Clock, BarChart3 } from "lucide-react"; // 🎯 آیکون جدید اضافه شد
 
 const CalculatorSection = () => {
-  // 🧩 مقادیر اصلی
-  const [amount, setAmount] = useState(10_000_000); // مبلغ سرمایه‌گذاری (تومان)
-  const [duration, setDuration] = useState(6); // مدت سرمایه‌گذاری (ماه)
-  const [result, setResult] = useState(0); // نتیجه نهایی
+  // 🧩 stateها
+  const [amount, setAmount] = useState(10_000_000);
+  const [duration, setDuration] = useState(6);
+  const [portfolio, setPortfolio] = useState<"low" | "medium" | "high">(
+    "medium"
+  );
+  const [result, setResult] = useState(0);
 
   const prevResultRef = useRef(result);
 
-  // 💰 نرخ سود سالانه
-  const rate = 0.25;
+  // 💰 نرخ‌های سود بر اساس نوع سبد
+  const rates = useMemo(
+    () => ({
+      low: 0.18, // کم‌ریسک
+      medium: 0.25, // متوسط
+      high: 0.39, // پر‌ریسک
+    }),
+    []
+  );
 
-  // 📊 مقادیر مجاز برای اسلایدرها
+  // 📊 مقادیر اسلایدرها
   const amountSteps = [
     1_000_000, 10_000_000, 20_000_000, 30_000_000, 40_000_000, 50_000_000,
     60_000_000, 70_000_000, 80_000_000, 90_000_000, 100_000_000,
   ];
   const durationSteps = [1, 3, 6, 9, 12];
 
-  // ⏳ محاسبه خودکار نتیجه
+  // 🧮 محاسبه سود بر اساس نوع سبد
   useEffect(() => {
+    const rate = rates[portfolio];
     const profit = amount * rate * (duration / 12);
     const newResult = amount + profit;
     prevResultRef.current = result;
     setResult(newResult);
-  }, [amount, duration, result]);
+  }, [amount, duration, portfolio, rates, result]);
 
-  // 🔢 فرمت نمایش عدد به فارسی
+  // 🔢 فرمت فارسی عدد
   const formatNumber = (num: number) =>
     new Intl.NumberFormat("fa-IR").format(Math.round(num));
 
-  // 🧮 پیدا کردن نزدیک‌ترین مقدار مجاز برای اسلایدر
-  const getClosestValue = (val: number, arr: number[]) => {
-    return arr.reduce((prev, curr) =>
+  // 📍 کمکی برای اسلایدر و دکمه‌ها
+  const getClosestValue = (val: number, arr: number[]) =>
+    arr.reduce((prev, curr) =>
       Math.abs(curr - val) < Math.abs(prev - val) ? curr : prev
     );
-  };
 
-  // 📍 برای دکمه‌ها
   const getNext = (current: number, arr: number[]) =>
     arr[arr.indexOf(current) + 1] ?? current;
   const getPrev = (current: number, arr: number[]) =>
@@ -52,7 +61,7 @@ const CalculatorSection = () => {
 
   return (
     <section className="relative w-full min-h-screen bg-[#152c44] text-white overflow-hidden">
-      {/* پس‌زمینه پترن */}
+      {/* pattern background */}
       <div className="absolute inset-0 bg-[url('/images/utiles/pattern1.svg')] opacity-10 z-0" />
 
       <div className="container-xl relative z-10 py-10 flex flex-col justify-center">
@@ -60,20 +69,50 @@ const CalculatorSection = () => {
         <div className="text-center mb-10">
           <h2 className="font-ch text-4xl lg:text-5xl mb-4">ماشین حساب</h2>
           <p className="font-ir text-lg lg:text-xl text-gray-200 max-w-2xl mx-auto bg-[#152c44]/70">
-            ماشین حساب زیر نشون می‌ده که اگر در این طرح سرمایه‌گذاری می‌کردی،
-            چقدر بازده بدست می‌آوردی.
+            با انتخاب نوع سبد سرمایه‌گذاری، مبلغ و مدت، میزان بازده خود را
+            مشاهده کنید.
           </p>
         </div>
 
         {/* Body */}
         <div className="flex flex-col lg:flex-row items-center justify-center gap-10">
-          {/* بخش تنظیمات */}
-          <div className="flex flex-col w-full lg:w-7/12 gap-6">
+          {/* Controls */}
+          <div className="flex flex-col w-full lg:w-7/12 gap-4">
+            {/* سبد سرمایه‌گذاری */}
+            <div className="rounded-2xl border border-[#8B9BB4] bg-white text-[#1A0A3B] px-6 py-4">
+              <p className="text-center text-lg font-semibold mb-4 flex items-center justify-center gap-2">
+                نوع سبد سرمایه‌گذاری
+                <BarChart3 size={22} className="text-[#1A0A3B]" />
+              </p>
+
+              <div className="flex items-center justify-center gap-4">
+                {[
+                  { key: "low", label: "کم‌ریسک" },
+                  { key: "medium", label: "متوسط" },
+                  { key: "high", label: "پر‌ریسک" },
+                ].map((item) => (
+                  <button
+                    key={item.key}
+                    onClick={() =>
+                      setPortfolio(item.key as "low" | "medium" | "high")
+                    }
+                    className={`px-5 py-2 rounded-full border transition-all font-ir ${
+                      portfolio === item.key
+                        ? "bg-mySecondary text-white border-mySecondary"
+                        : "bg-gray-100 text-mySecondary border-gray-300 hover:bg-gray-200"
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* مبلغ سرمایه‌گذاری */}
-            <div className="rounded-2xl border border-[#8B9BB4] bg-white text-[#1A0A3B] p-6">
+            <div className="rounded-2xl border border-[#8B9BB4] bg-white text-[#1A0A3B] px-6 py-4">
               <p className="text-center text-lg font-semibold mb-8 flex items-center justify-center gap-2">
-                <Wallet size={22} className="text-[#1A0A3B]" />
                 مبلغ سرمایه‌گذاری
+                <Wallet size={22} className="text-[#1A0A3B]" />
               </p>
 
               <div className="flex items-center justify-between gap-4">
@@ -100,10 +139,7 @@ const CalculatorSection = () => {
                         "linear-gradient(90deg, rgb(244,184,150) 0%, rgb(218,222,241) 100%)",
                       height: 6,
                     }}
-                    railStyle={{
-                      backgroundColor: "#DADEF1",
-                      height: 6,
-                    }}
+                    railStyle={{ backgroundColor: "#DADEF1", height: 6 }}
                     handleStyle={{
                       borderColor: "#aaa",
                       backgroundColor: "#fff",
@@ -112,6 +148,11 @@ const CalculatorSection = () => {
                       marginTop: -9,
                     }}
                   />
+                  {/* ⬇️ Label range below slider */}
+                  <div className="mx-2 mt-3 flex flex-row-reverse justify-between text-sm text-[#6b5ea0]">
+                    <p>۱ میلیون تومان</p>
+                    <p>۱۰۰ میلیون تومان</p>
+                  </div>
                 </div>
 
                 <button
@@ -128,18 +169,13 @@ const CalculatorSection = () => {
                 {formatNumber(amount)}{" "}
                 <span className="font-normal">تومان</span>
               </p>
-
-              <div className="mx-2 mt-3 flex flex-row-reverse justify-between text-sm text-[#6b5ea0]">
-                <p>۱ میلیون تومان</p>
-                <p>۱۰۰ میلیون تومان</p>
-              </div>
             </div>
 
             {/* مدت سرمایه‌گذاری */}
-            <div className="rounded-2xl border border-[#8B9BB4] bg-white text-[#1A0A3B] p-6">
+            <div className="rounded-2xl border border-[#8B9BB4] bg-white text-[#1A0A3B] px-6 py-4">
               <p className="text-center text-lg font-semibold mb-8 flex items-center justify-center gap-2">
-                <Clock size={22} className="text-[#1A0A3B]" />
                 مدت سرمایه‌گذاری
+                <Clock size={22} className="text-[#1A0A3B]" />
               </p>
 
               <div className="flex items-center justify-between gap-4">
@@ -166,10 +202,7 @@ const CalculatorSection = () => {
                         "linear-gradient(90deg, rgb(244,184,150) 0%, rgb(218,222,241) 100%)",
                       height: 6,
                     }}
-                    railStyle={{
-                      backgroundColor: "#DADEF1",
-                      height: 6,
-                    }}
+                    railStyle={{ backgroundColor: "#DADEF1", height: 6 }}
                     handleStyle={{
                       borderColor: "#aaa",
                       backgroundColor: "#fff",
@@ -178,6 +211,11 @@ const CalculatorSection = () => {
                       marginTop: -9,
                     }}
                   />
+                  {/* ⬇️ Label range below slider */}
+                  <div className="mx-2 mt-3 flex flex-row-reverse justify-between text-sm text-[#6b5ea0]">
+                    <p>۱ ماه</p>
+                    <p>۱۲ ماه</p>
+                  </div>
                 </div>
 
                 <button
@@ -193,15 +231,10 @@ const CalculatorSection = () => {
               <p className="mt-6 text-center font-ir font-bold text-[#1A0A3B]">
                 {duration} ماهه
               </p>
-
-              <div className="mx-2 mt-3 flex flex-row-reverse justify-between text-sm text-[#6b5ea0]">
-                <p>۱ ماه</p>
-                <p>۱۲ ماه</p>
-              </div>
             </div>
           </div>
 
-          {/* بخش نتیجه */}
+          {/* Result */}
           <div className="w-full h-[-webkit-fill-available] lg:w-5/12 flex flex-col items-center justify-center bg-[#1a0a3b]/50 rounded-2xl p-10">
             <p className="text-center text-2xl font-ch mb-8">
               نتیجه سرمایه‌گذاریت
