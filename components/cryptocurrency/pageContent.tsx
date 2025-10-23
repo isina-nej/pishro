@@ -2,7 +2,7 @@ import Landing2 from "../utils/Landing2";
 import AboutIt from "@/components/utils/AboutIt";
 import { investmentTagsData, stepsData } from "@/public/data";
 import TagsList from "../utils/TagsList";
-import Courses from "../home/courses";
+import Courses from "../utils/Courses2";
 import CommentsSlider from "../utils/CommentsSlider";
 import StepsSection from "../home/stepsSection";
 import AboutOtherPages from "../utils/AboutOtherPages";
