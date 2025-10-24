@@ -16,7 +16,7 @@ const SnapSingleSection = ({
   children,
   duration = 0.8,
   offset = 0,
-  threshold = 0.1,
+  threshold = 0.05,
   id,
 }: Props) => {
   const sectionRef = useRef<HTMLElement | null>(null);
