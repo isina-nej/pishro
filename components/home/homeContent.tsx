@@ -8,7 +8,6 @@ import Courses from "./courses";
 import CommentsSlider from "@/components/utils/CommentsSlider";
 import NewsClub from "./newsClub";
 import SnapSingleSection from "@/components/utils/SnapSingleSection";
-import ScrollStatus from "../debug/ScrollStatus";
 
 const HomePageContent = () => {
   return (
@@ -33,7 +32,6 @@ const HomePageContent = () => {
       <SnapSingleSection id="newsClub-section">
         <NewsClub />
       </SnapSingleSection>
-      <ScrollStatus />
     </div>
   );
 };
