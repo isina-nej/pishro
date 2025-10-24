@@ -7,118 +7,122 @@ import { motion } from "framer-motion";
 import clsx from "clsx";
 import { LuTarget, LuBookOpen, LuUsers } from "react-icons/lu";
 
-// ✅ Load CountUp dynamically (no SSR)
 const CountUp = dynamic(() => import("react-countup"), { ssr: false });
 
-// 🟩 Box Data
-const boxes = [
-  {
-    text: "محتوای کاربردی",
-    number: "1K+",
-    imgSrc: "/images/utiles/ring.svg",
-    top: "5%",
-    left: "-2%",
-    align: "center",
-    col: true,
-  },
-  {
-    text: "ویدئوهای آموزشی",
-    number: "250+",
-    imgSrc: "/images/utiles/icon1.svg",
-    top: "80%",
-    left: "9%",
-    align: "right",
-    col: false,
-  },
-  {
-    text: "دانشجویان راضی",
-    number: "3K+",
-    imgSrc: "/images/utiles/icon2.svg",
-    top: "30%",
-    left: "78%",
-    align: "right",
-    col: false,
-  },
-];
+interface BoxData {
+  text: string;
+  number: string;
+  imgSrc: string;
+  top?: string;
+  left?: string;
+  align?: "left" | "right" | "center";
+  col?: boolean;
+}
 
-// 🟦 Stats Data
-const stats = [
-  { number: 1000, suffix: "+", label: "دانشجو" },
-  { number: 250, suffix: "+", label: "دوره آموزشی" },
-  { number: 95, suffix: "%", label: "رضایت کاربران" },
-  { number: 5, suffix: "سال", label: "تجربه آموزشی" },
-];
+interface StatData {
+  number: number;
+  suffix?: string;
+  label: string;
+}
 
-const features = [
-  {
-    icon: <LuTarget className="text-myPrimary text-3xl" />,
-    text: "نقشه راه کامل از صفر",
-  },
-  {
-    icon: <LuBookOpen className="text-myPrimary text-3xl" />,
-    text: "کامل‌ترین محتوا",
-  },
-  {
-    icon: <LuUsers className="text-myPrimary text-3xl" />,
-    text: "اجتماع بزرگ دانش‌آموزان",
-  },
-];
+interface Landing3Props {
+  data: {
+    title: string;
+    description: string;
+    button1: string;
+    button2: string;
+    image: string;
+    boxes?: BoxData[];
+    stats?: StatData[];
+    features?: { icon?: React.ReactNode; text: string }[];
+  };
+}
 
-const Landing3 = () => {
+const Landing3 = ({ data }: Landing3Props) => {
   const [isClient, setIsClient] = useState(false);
 
-  // ✅ Prevent hydration mismatch (CountUp only runs after mount)
   useEffect(() => {
     setIsClient(true);
   }, []);
 
+  // ✅ fallback برای داده‌های اختیاری
+  const {
+    title,
+    description,
+    button1,
+    button2,
+    image,
+    boxes = [],
+    stats = [],
+    features = [
+      {
+        icon: <LuTarget className="text-myPrimary text-3xl" />,
+        text: "نقشه راه کامل از صفر",
+      },
+      {
+        icon: <LuBookOpen className="text-myPrimary text-3xl" />,
+        text: "کامل‌ترین محتوا",
+      },
+      {
+        icon: <LuUsers className="text-myPrimary text-3xl" />,
+        text: "اجتماع بزرگ دانش‌آموزان",
+      },
+    ],
+  } = data;
+
   return (
     <section className="h-screen relative overflow-hidden flex flex-col justify-between">
-      {/* 🔹 Top Section */}
+      {/* 🔹 بخش بالا */}
       <div className="container-xl flex items-center justify-between mt-28">
-        {/* 🟢 Right Side */}
+        {/* 🟢 سمت راست */}
         <div className="w-1/2 space-y-6 z-10">
           <h4 className="text-6xl font-extrabold text-mySecondary leading-tight">
-            مسیر یادگیریتو از همین امروز با{" "}
-            <span className="text-myPrimary">پیشرو</span> شروع کن
+            {title.includes("پیشرو") ? (
+              title
+            ) : (
+              <>
+                {title} <span className="text-myPrimary">پیشرو</span>
+              </>
+            )}
           </h4>
           <p className="text-gray-600 text-lg leading-relaxed max-w-md">
-            با آموزش‌های جامع و مسیر مشخص از پایه تا حرفه‌ای شدن، به جمع هزاران
-            دانش‌آموز موفق ما بپیوند.
+            {description}
           </p>
 
-          {/* 🔘 Buttons */}
+          {/* 🔘 دکمه‌ها */}
           <div className="flex gap-4 pt-4">
             <button className="px-6 py-3 bg-mySecondary text-white font-semibold rounded-xl shadow-md hover:bg-blue-950 transition">
-              از کجا شروع کنم؟
+              {button1}
             </button>
             <button className="px-6 py-3 border border-mySecondary text-mySecondary font-semibold rounded-xl hover:bg-[#DCFCE7] transition">
-              توضیحات دوره‌ها
+              {button2}
             </button>
           </div>
 
-          {/* 🌟 Features */}
-          <div className="flex gap-8 pt-8">
-            {features.map((item, i) => (
-              <div key={i} className="flex items-center gap-3">
-                {item.icon}
-                <p className="text-gray-700 font-medium">{item.text}</p>
-              </div>
-            ))}
-          </div>
+          {/* 🌟 ویژگی‌ها */}
+          {features.length > 0 && (
+            <div className="flex gap-8 pt-8 flex-wrap">
+              {features.map((item, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  {item.icon}
+                  <p className="text-gray-700 font-medium">{item.text}</p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* 🟣 Left Side */}
+        {/* 🟣 سمت چپ */}
         <div className="w-1/2 flex justify-end items-center relative">
           <div className="size-[495px] rounded-full bg-emerald-500 flex items-center justify-center relative shadow-lg">
             <Image
-              src="/images/utiles/student.svg"
-              alt="دانش‌آموز"
+              src={image}
+              alt={title}
               fill
               className="object-contain rounded-full"
             />
 
-            {/* 🟩 Floating Boxes */}
+            {/* 🟩 باکس‌های شناور */}
             {boxes.map((box, i) => (
               <motion.div
                 key={i}
@@ -132,14 +136,14 @@ const Landing3 = () => {
                   ease: "easeInOut",
                 }}
                 className={clsx(
-                  "absolute bg-white/95 backdrop-blur-sm p-5 rounded-xl shadow-xl border border-gray-100 flex items-center gap-2 cursor-default transition-transform duration-300",
+                  "absolute bg-white/95 backdrop-blur-sm p-5 rounded-xl shadow-xl border border-gray-100 flex items-center gap-2 cursor-default",
                   box.align === "left" && "!items-end text-left",
                   box.align === "right" && "!items-start text-right",
                   box.col ? "flex-col justify-center" : "flex-row"
                 )}
                 style={{
-                  top: box.top,
-                  left: box.left,
+                  top: box.top || "50%",
+                  left: box.left || "50%",
                   transform: "translate(-50%, -50%)",
                 }}
               >
@@ -171,31 +175,33 @@ const Landing3 = () => {
         </div>
       </div>
 
-      {/* 🔻 Bottom Stats */}
-      <div className="container-xl flex justify-around items-center py-8 border-t border-gray-100">
-        {stats.map((item, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.2, duration: 0.6 }}
-            viewport={{ once: true }}
-            className="flex flex-col items-center"
-          >
-            <span className="text-5xl font-extrabold text-mySecondary">
-              {isClient ? (
-                <CountUp start={0} end={item.number} duration={2.5} />
-              ) : (
-                0
-              )}
-              {item.suffix}
-            </span>
-            <p className="text-gray-600 mt-2 font-medium text-lg">
-              {item.label}
-            </p>
-          </motion.div>
-        ))}
-      </div>
+      {/* 🔻 آمار پایین */}
+      {stats.length > 0 && (
+        <div className="container-xl flex justify-around items-center py-8 border-t border-gray-100">
+          {stats.map((item, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.2, duration: 0.6 }}
+              viewport={{ once: true }}
+              className="flex flex-col items-center"
+            >
+              <span className="text-5xl font-extrabold text-mySecondary">
+                {isClient ? (
+                  <CountUp start={0} end={item.number} duration={2.5} />
+                ) : (
+                  0
+                )}
+                {item.suffix}
+              </span>
+              <p className="text-gray-600 mt-2 font-medium text-lg">
+                {item.label}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+      )}
     </section>
   );
 };
