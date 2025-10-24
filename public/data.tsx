@@ -1311,5 +1311,301 @@ export const cryptoAboutData = {
     "در دنیای کریپتو، ما به دنبال آموزش مفاهیم واقعی سرمایه‌گذاری و تحلیل بازار رمزارزها هستیم. هدف ما این است که با یادگیری اصولی، تصمیم‌های آگاهانه بگیرید و از فرصت‌های دنیای دیجیتال بهترین استفاده را ببرید.",
   button1: "شروع مسیر کریپتو",
   button2: "بیشتر بدانید",
-  image: "/images/utiles/font-iran-section.svg", // تصویر اختصاصی در صورت نیاز
+  image: "/images/utiles/font-iran-section.svg",
+};
+
+export const airdropLandingData = {
+  title: "سرمایه‌گذاری هوشمند در دنیای ایردراپ با پیشرو",
+  description:
+    "با آموزش‌های دقیق و کاربردی دنیای رمزارزها، از مفاهیم پایه تا تحلیل تکنیکال و فاندامنتال، مسیر خودت رو برای موفقیت در بازار ایردراپ بساز.",
+  button1: "شروع مسیر ایردراپ",
+  button2: "مشاهده دوره‌ها",
+  image: "/images/utiles/student.svg",
+
+  // 🟩 Box Data
+  boxes: [
+    {
+      text: "محتوای کاربردی",
+      number: "1K+",
+      imgSrc: "/images/utiles/ring.svg",
+      top: "5%",
+      left: "-2%",
+      align: "center" as const,
+      col: true,
+    },
+    {
+      text: "ویدئوهای آموزشی",
+      number: "250+",
+      imgSrc: "/images/utiles/icon1.svg",
+      top: "80%",
+      left: "9%",
+      align: "right" as const,
+      col: false,
+    },
+    {
+      text: "دانشجویان راضی",
+      number: "3K+",
+      imgSrc: "/images/utiles/icon2.svg",
+      top: "30%",
+      left: "78%",
+      align: "right" as const,
+      col: false,
+    },
+  ],
+
+  // 🟦 Stats Data
+  stats: [
+    { number: 1000, suffix: "+", label: "دانشجو" },
+    { number: 250, suffix: "+", label: "دوره آموزشی" },
+    { number: 95, suffix: "%", label: "رضایت کاربران" },
+    { number: 5, suffix: "سال", label: "تجربه آموزشی" },
+  ],
+
+  // 🌟 Features
+  features: [
+    {
+      icon: <LuTarget className="text-myPrimary text-3xl" />,
+      text: "نقشه راه کامل از صفر",
+    },
+    {
+      icon: <LuBookOpen className="text-myPrimary text-3xl" />,
+      text: "کامل‌ترین محتوا",
+    },
+    {
+      icon: <LuUsers className="text-myPrimary text-3xl" />,
+      text: "اجتماع بزرگ دانش‌آموزان",
+    },
+  ],
+};
+
+export const airdropAboutData = {
+  title1: "دنیای",
+  title2: "ایردراپ",
+  description:
+    "در دنیای ایردراپ، ما به دنبال آموزش مفاهیم واقعی سرمایه‌گذاری و تحلیل بازار رمزارزها هستیم. هدف ما این است که با یادگیری اصولی، تصمیم‌های آگاهانه بگیرید و از فرصت‌های دنیای دیجیتال بهترین استفاده را ببرید.",
+  button1: "شروع مسیر ایردراپ",
+  button2: "بیشتر بدانید",
+  image: "/images/utiles/font-iran-section.svg",
+};
+
+export const metaverseLandingData = {
+  title: "سرمایه‌گذاری هوشمند در دنیای متاورس با پیشرو",
+  description:
+    "با آموزش‌های دقیق و کاربردی دنیای رمزارزها، از مفاهیم پایه تا تحلیل تکنیکال و فاندامنتال، مسیر خودت رو برای موفقیت در بازار متاورس بساز.",
+  button1: "شروع مسیر متاورس",
+  button2: "مشاهده دوره‌ها",
+  image: "/images/utiles/student.svg",
+
+  // 🟩 Box Data
+  boxes: [
+    {
+      text: "محتوای کاربردی",
+      number: "1K+",
+      imgSrc: "/images/utiles/ring.svg",
+      top: "5%",
+      left: "-2%",
+      align: "center" as const,
+      col: true,
+    },
+    {
+      text: "ویدئوهای آموزشی",
+      number: "250+",
+      imgSrc: "/images/utiles/icon1.svg",
+      top: "80%",
+      left: "9%",
+      align: "right" as const,
+      col: false,
+    },
+    {
+      text: "دانشجویان راضی",
+      number: "3K+",
+      imgSrc: "/images/utiles/icon2.svg",
+      top: "30%",
+      left: "78%",
+      align: "right" as const,
+      col: false,
+    },
+  ],
+
+  // 🟦 Stats Data
+  stats: [
+    { number: 1000, suffix: "+", label: "دانشجو" },
+    { number: 250, suffix: "+", label: "دوره آموزشی" },
+    { number: 95, suffix: "%", label: "رضایت کاربران" },
+    { number: 5, suffix: "سال", label: "تجربه آموزشی" },
+  ],
+
+  // 🌟 Features
+  features: [
+    {
+      icon: <LuTarget className="text-myPrimary text-3xl" />,
+      text: "نقشه راه کامل از صفر",
+    },
+    {
+      icon: <LuBookOpen className="text-myPrimary text-3xl" />,
+      text: "کامل‌ترین محتوا",
+    },
+    {
+      icon: <LuUsers className="text-myPrimary text-3xl" />,
+      text: "اجتماع بزرگ دانش‌آموزان",
+    },
+  ],
+};
+
+export const metaverseAboutData = {
+  title1: "دنیای",
+  title2: "متاورس",
+  description:
+    "در دنیای متاورس، ما به دنبال آموزش مفاهیم واقعی سرمایه‌گذاری و تحلیل بازار رمزارزها هستیم. هدف ما این است که با یادگیری اصولی، تصمیم‌های آگاهانه بگیرید و از فرصت‌های دنیای دیجیتال بهترین استفاده را ببرید.",
+  button1: "شروع مسیر متاورس",
+  button2: "بیشتر بدانید",
+  image: "/images/utiles/font-iran-section.svg",
+};
+
+export const nftLandingData = {
+  title: "سرمایه‌گذاری هوشمند در دنیای NFT با پیشرو",
+  description:
+    "با آموزش‌های دقیق و کاربردی دنیای رمزارزها، از مفاهیم پایه تا تحلیل تکنیکال و فاندامنتال، مسیر خودت رو برای موفقیت در بازار NFT بساز.",
+  button1: "شروع مسیر NFT",
+  button2: "مشاهده دوره‌ها",
+  image: "/images/utiles/student.svg",
+
+  // 🟩 Box Data
+  boxes: [
+    {
+      text: "محتوای کاربردی",
+      number: "1K+",
+      imgSrc: "/images/utiles/ring.svg",
+      top: "5%",
+      left: "-2%",
+      align: "center" as const,
+      col: true,
+    },
+    {
+      text: "ویدئوهای آموزشی",
+      number: "250+",
+      imgSrc: "/images/utiles/icon1.svg",
+      top: "80%",
+      left: "9%",
+      align: "right" as const,
+      col: false,
+    },
+    {
+      text: "دانشجویان راضی",
+      number: "3K+",
+      imgSrc: "/images/utiles/icon2.svg",
+      top: "30%",
+      left: "78%",
+      align: "right" as const,
+      col: false,
+    },
+  ],
+
+  // 🟦 Stats Data
+  stats: [
+    { number: 1000, suffix: "+", label: "دانشجو" },
+    { number: 250, suffix: "+", label: "دوره آموزشی" },
+    { number: 95, suffix: "%", label: "رضایت کاربران" },
+    { number: 5, suffix: "سال", label: "تجربه آموزشی" },
+  ],
+
+  // 🌟 Features
+  features: [
+    {
+      icon: <LuTarget className="text-myPrimary text-3xl" />,
+      text: "نقشه راه کامل از صفر",
+    },
+    {
+      icon: <LuBookOpen className="text-myPrimary text-3xl" />,
+      text: "کامل‌ترین محتوا",
+    },
+    {
+      icon: <LuUsers className="text-myPrimary text-3xl" />,
+      text: "اجتماع بزرگ دانش‌آموزان",
+    },
+  ],
+};
+
+export const nftAboutData = {
+  title1: "دنیای",
+  title2: "NFT",
+  description:
+    "در دنیای NFT، ما به دنبال آموزش مفاهیم واقعی سرمایه‌گذاری و تحلیل بازار رمزارزها هستیم. هدف ما این است که با یادگیری اصولی، تصمیم‌های آگاهانه بگیرید و از فرصت‌های دنیای دیجیتال بهترین استفاده را ببرید.",
+  button1: "شروع مسیر NFT",
+  button2: "بیشتر بدانید",
+  image: "/images/utiles/font-iran-section.svg",
+};
+
+export const stockMarketLandingData = {
+  title: "سرمایه‌گذاری هوشمند در دنیای بورس با پیشرو",
+  description:
+    "با آموزش‌های دقیق و کاربردی دنیای رمزارزها، از مفاهیم پایه تا تحلیل تکنیکال و فاندامنتال، مسیر خودت رو برای موفقیت در بازار بورس بساز.",
+  button1: "شروع مسیر بورس",
+  button2: "مشاهده دوره‌ها",
+  image: "/images/utiles/student.svg",
+
+  // 🟩 Box Data
+  boxes: [
+    {
+      text: "محتوای کاربردی",
+      number: "1K+",
+      imgSrc: "/images/utiles/ring.svg",
+      top: "5%",
+      left: "-2%",
+      align: "center" as const,
+      col: true,
+    },
+    {
+      text: "ویدئوهای آموزشی",
+      number: "250+",
+      imgSrc: "/images/utiles/icon1.svg",
+      top: "80%",
+      left: "9%",
+      align: "right" as const,
+      col: false,
+    },
+    {
+      text: "دانشجویان راضی",
+      number: "3K+",
+      imgSrc: "/images/utiles/icon2.svg",
+      top: "30%",
+      left: "78%",
+      align: "right" as const,
+      col: false,
+    },
+  ],
+
+  // 🟦 Stats Data
+  stats: [
+    { number: 1000, suffix: "+", label: "دانشجو" },
+    { number: 250, suffix: "+", label: "دوره آموزشی" },
+    { number: 95, suffix: "%", label: "رضایت کاربران" },
+    { number: 5, suffix: "سال", label: "تجربه آموزشی" },
+  ],
+
+  // 🌟 Features
+  features: [
+    {
+      icon: <LuTarget className="text-myPrimary text-3xl" />,
+      text: "نقشه راه کامل از صفر",
+    },
+    {
+      icon: <LuBookOpen className="text-myPrimary text-3xl" />,
+      text: "کامل‌ترین محتوا",
+    },
+    {
+      icon: <LuUsers className="text-myPrimary text-3xl" />,
+      text: "اجتماع بزرگ دانش‌آموزان",
+    },
+  ],
+};
+
+export const stockMarketAboutData = {
+  title1: "دنیای",
+  title2: "بورس",
+  description:
+    "در دنیای بورس، ما به دنبال آموزش مفاهیم واقعی سرمایه‌گذاری و تحلیل بازار رمزارزها هستیم. هدف ما این است که با یادگیری اصولی، تصمیم‌های آگاهانه بگیرید و از فرصت‌های دنیای دیجیتال بهترین استفاده را ببرید.",
+  button1: "شروع مسیر بورس",
+  button2: "بیشتر بدانید",
+  image: "/images/utiles/font-iran-section.svg",
 };
