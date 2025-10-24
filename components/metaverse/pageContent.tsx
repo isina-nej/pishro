@@ -1,27 +1,27 @@
-import Courses from "@/components/utils/courses";
-import Blog from "@/components/utils/blog";
-import Landing2 from "../utils/Landing2";
-import AboutIt from "@/components/utils/AboutIt";
-import VideoSection from "../utils/videoSection";
-import QuestionsSection from "../utils/QuestionsSection";
-import { investmentTagsData } from "@/public/data";
-import TagsList from "../utils/TagsList";
+import Landing3 from "@/components/utils/Landing3";
+import AboutOtherPages from "@/components/utils/AboutOtherPages";
+import UserLevelSection from "@/components/utils/UserLevelSelection";
+import StepsSection from "@/components/utils/stepsSection";
+import Courses from "@/components/utils/Courses2";
+import CommentsSlider from "@/components/utils/CommentsSlider";
+import TagsList from "@/components/utils/TagsList";
+import {
+  metaverseAboutData,
+  metaverseLandingData,
+  investmentTagsData,
+  stepsData,
+} from "@/public/data";
 
 const MetaversePageContent = () => {
   return (
     <div>
-      <Landing2
-        imageUrl="/images/metaverse/banner.jpg"
-        title="متاورس"
-        titleColor="#AF7AC5"
-      />
-      <AboutIt />
-      <TagsList tags={investmentTagsData} />
-      <QuestionsSection />
-      <VideoSection videoUrl="/videos/metaverse.webm" label="معرفی متاورس" />
-
+      <Landing3 data={metaverseLandingData} />
+      <AboutOtherPages data={metaverseAboutData} />
+      <UserLevelSection />
+      <StepsSection {...stepsData} />
       <Courses />
-      <Blog />
+      <CommentsSlider />
+      <TagsList tags={investmentTagsData} title="کلید واژه های متاورس" />
     </div>
   );
 };

@@ -1,26 +1,27 @@
-import Courses from "@/components/utils/courses";
-import Blog from "@/components/utils/blog";
-import VideoSection from "@/components/utils/videoSection";
-import AboutIt from "@/components/utils/AboutIt";
-import Landing from "@/components/utils/Landing2";
-import QuestionsSection from "../utils/QuestionsSection";
-import { investmentTagsData } from "@/public/data";
-import TagsList from "../utils/TagsList";
+import Landing3 from "@/components/utils/Landing3";
+import AboutOtherPages from "@/components/utils/AboutOtherPages";
+import UserLevelSection from "@/components/utils/UserLevelSelection";
+import StepsSection from "@/components/utils/stepsSection";
+import Courses from "@/components/utils/Courses2";
+import CommentsSlider from "@/components/utils/CommentsSlider";
+import TagsList from "@/components/utils/TagsList";
+import {
+  stockMarketAboutData,
+  stockMarketLandingData,
+  investmentTagsData,
+  stepsData,
+} from "@/public/data";
 
 const StockMarketPageContent = () => {
   return (
     <div>
-      <Landing
-        imageUrl="/images/stock/stock-landing.jpg"
-        title="بورس"
-        titleColor="#58D68D"
-      />
-      <AboutIt />
-      <TagsList tags={investmentTagsData} />
-      <QuestionsSection />
-      <VideoSection videoUrl="/videos/stock.webm" label="معرفی بورس" />
+      <Landing3 data={stockMarketLandingData} />
+      <AboutOtherPages data={stockMarketAboutData} />
+      <UserLevelSection />
+      <StepsSection {...stepsData} />
       <Courses />
-      <Blog />
+      <CommentsSlider />
+      <TagsList tags={investmentTagsData} title="کلید واژه های بورس" />
     </div>
   );
 };
