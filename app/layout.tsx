@@ -6,9 +6,9 @@ import "@/app/styles/globals.css";
 
 const charismaExtraBold = localFont({
   src: "../public/font/CharismaTF-ExtraBold.woff2",
-  weight: "800", // یا مقدار مناسب بر اساس فونت شما
+  weight: "800",
   style: "normal",
-  variable: "--font-charisma-extra-bold", // متغیر CSS اختیاری برای استفاده در Tailwind CSS یا استایل‌های سفارشی
+  variable: "--font-charisma-extra-bold",
 });
 
 const charismaRegular = localFont({
@@ -17,33 +17,6 @@ const charismaRegular = localFont({
   style: "normal",
   variable: "--font-charisma-regular",
 });
-
-// const iransansXV = localFont({
-//   src: "../public/font/IRANSansXV.woff2",
-//   weight: "400",
-//   style: "normal",
-//   variable: "--font-iransans-xv",
-// });
-// const irSansXRegular = localFont({
-//   src: "../public/font/Woff2/IRSansXFaNum-Regular.woff2",
-//   weight: "400",
-//   style: "normal",
-//   variable: "--font-irsansx-regular",
-// });
-
-// const irSansXMedium = localFont({
-//   src: "../public/font/Woff2/IRSansXFaNum-Medium.woff2",
-//   weight: "500",
-//   style: "normal",
-//   variable: "--font-irsansx-medium",
-// });
-
-// const irSansXBold = localFont({
-//   src: "../public/font/Woff2/IRSansXFaNum-Bold.woff2",
-//   weight: "700",
-//   style: "normal",
-//   variable: "--font-irsansx-bold",
-// });
 
 const montserrat = localFont({
   src: "../public/font/Montserrat-VariableFont.woff2",
