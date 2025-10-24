@@ -1237,3 +1237,69 @@ export const miniSliderData2 = [
   "/images/home/c/metaverse.webp",
   "/images/home/c/airdrop.jpg",
 ];
+
+import { LuTarget, LuBookOpen, LuUsers } from "react-icons/lu";
+
+export const cryptoLandingData = {
+  title: "سرمایه‌گذاری هوشمند در دنیای کریپتو با پیشرو",
+  description:
+    "با آموزش‌های دقیق و کاربردی دنیای رمزارزها، از مفاهیم پایه تا تحلیل تکنیکال و فاندامنتال، مسیر خودت رو برای موفقیت در بازار کریپتو بساز.",
+  button1: "شروع مسیر کریپتو",
+  button2: "مشاهده دوره‌ها",
+  image: "/images/utiles/student.svg",
+
+  // 🟩 Box Data
+  boxes: [
+    {
+      text: "محتوای کاربردی",
+      number: "1K+",
+      imgSrc: "/images/utiles/ring.svg",
+      top: "5%",
+      left: "-2%",
+      align: "center" as const,
+      col: true,
+    },
+    {
+      text: "ویدئوهای آموزشی",
+      number: "250+",
+      imgSrc: "/images/utiles/icon1.svg",
+      top: "80%",
+      left: "9%",
+      align: "right" as const,
+      col: false,
+    },
+    {
+      text: "دانشجویان راضی",
+      number: "3K+",
+      imgSrc: "/images/utiles/icon2.svg",
+      top: "30%",
+      left: "78%",
+      align: "right" as const,
+      col: false,
+    },
+  ],
+
+  // 🟦 Stats Data
+  stats: [
+    { number: 1000, suffix: "+", label: "دانشجو" },
+    { number: 250, suffix: "+", label: "دوره آموزشی" },
+    { number: 95, suffix: "%", label: "رضایت کاربران" },
+    { number: 5, suffix: "سال", label: "تجربه آموزشی" },
+  ],
+
+  // 🌟 Features
+  features: [
+    {
+      icon: <LuTarget className="text-myPrimary text-3xl" />,
+      text: "نقشه راه کامل از صفر",
+    },
+    {
+      icon: <LuBookOpen className="text-myPrimary text-3xl" />,
+      text: "کامل‌ترین محتوا",
+    },
+    {
+      icon: <LuUsers className="text-myPrimary text-3xl" />,
+      text: "اجتماع بزرگ دانش‌آموزان",
+    },
+  ],
+};
