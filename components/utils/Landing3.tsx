@@ -177,7 +177,7 @@ const Landing3 = ({ data }: Landing3Props) => {
 
       {/* 🔻 آمار پایین */}
       {stats.length > 0 && (
-        <div className="container-xl flex justify-around items-center py-8 border-t border-gray-100">
+        <div className="container-xl flex justify-around items-center py-8">
           {stats.map((item, i) => (
             <motion.div
               key={i}
