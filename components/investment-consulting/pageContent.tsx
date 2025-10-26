@@ -1,4 +1,4 @@
-import Courses from "@/components/utils/Courses";
+import Courses from "@/components/utils/CoursesSec";
 import Blog from "@/components/utils/blog";
 import VideoSection from "../utils/videoSection";
 import InvestmentLanding from "./investmentLanding";
