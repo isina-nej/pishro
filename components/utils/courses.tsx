@@ -1,33 +1,35 @@
-import Link from "next/link";
-
-import Heading from "@/components/utils/heading";
-import { cryptoCursesData } from "@/public/data";
-import CourseCard from "@/components/utils/courseCard";
+import { coursesData } from "@/public/data";
+import CourseCard from "@/components/home/courseCard";
+import Image from "next/image";
 
 const Courses = () => {
   return (
-    <div className="container-xl mt-8" id="courses">
-      <Heading className="mb-6">دوره های آموزشی</Heading>
-      <div className="flex flex-col gap-2">
-        {cryptoCursesData.map((data, idx) => (
-          <CourseCard
-            img={data.img}
-            link={"/courses"}
-            title={data.title}
-            description={data.description}
-            key={idx}
-          />
-        ))}
-        <div className="flex justify-center mt-6">
-          <Link
-            href={"/courses"}
-            className="flex justify-center items-center w-[244px] h-10 bg-[#f5f5f5] rounded-sm hover:bg-[#e5e5e5] hover:shadow-lg hover:scale-[105%] transition-all"
-          >
-            مشاهده بیشتر
-          </Link>
-        </div>
+    <section className="relative overflow-hidden flex flex-col justify-center container-xl mt-20">
+      {/* Header */}
+      <div className="text-center w-full">
+        <h2 className="font-bold text-5xl flex items-center justify-center gap-3">
+          <span>دوره‌ها</span>
+          <div className="relative w-16 h-8">
+            <Image
+              src={"/icons/smile.svg"}
+              alt="smile"
+              fill
+              className="object-fill"
+            />
+          </div>
+        </h2>
+        <p className="text-[#8A8A8A] mt-2 font-bold">
+          این دوره‌ها منتخب بهترین دوره‌های مجموعه ماست
+        </p>
       </div>
-    </div>
+
+      {/* Course grid */}
+      <div className="mt-16 flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-8 gap-x-8 place-items-center pb-12">
+        {coursesData.map((data, idx) => (
+          <CourseCard key={idx} data={data} link="/courses" />
+        ))}
+      </div>
+    </section>
   );
 };
 
