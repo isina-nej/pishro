@@ -153,7 +153,7 @@ const Landing3 = ({ data }: Landing3Props) => {
               >
                 <div
                   className={clsx(
-                    "flex items-center justify-center rounded-xl",
+                    "flex items-center justify-center rounded-xl relative",
                     box.col ? "size-20" : "bg-mySecondary p-2 size-12"
                   )}
                 >
@@ -175,6 +175,72 @@ const Landing3 = ({ data }: Landing3Props) => {
                 </div>
               </motion.div>
             ))}
+            {/* decors */}
+            <>
+              {/* line */}
+              <div
+                className={clsx("absolute flex items-center z-50")}
+                style={{
+                  top: "-50px",
+                  right: "-70px",
+                }}
+              >
+                <div
+                  className={clsx(
+                    "flex items-center justify-center rounded-xl relative w-[220px] aspect-[200/140]"
+                  )}
+                >
+                  <Image
+                    src={"/images/utiles/decor1.svg"}
+                    alt={"decor"}
+                    fill
+                    className="object-cover scale-x-[-1]"
+                  />
+                </div>
+              </div>
+              {/* small circle */}
+              <div
+                className={clsx("absolute flex items-center z-50")}
+                style={{
+                  bottom: "50px",
+                  right: "10px",
+                }}
+              >
+                <div
+                  className={clsx(
+                    "flex items-center justify-center rounded-xl relative size-[42px]"
+                  )}
+                >
+                  <Image
+                    src={"/images/utiles/ring3.svg"}
+                    alt={"decor"}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+              {/* big circle */}
+              <div
+                className={clsx("absolute flex items-center z-50")}
+                style={{
+                  bottom: "120px",
+                  left: "-80px",
+                }}
+              >
+                <div
+                  className={clsx(
+                    "flex items-center justify-center rounded-xl relative size-[82px]"
+                  )}
+                >
+                  <Image
+                    src={"/images/utiles/ring2.svg"}
+                    alt={"decor"}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+            </>
           </div>
         </div>
       </div>
