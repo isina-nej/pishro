@@ -52,7 +52,7 @@ const CommentsSlider = () => {
                 <SwiperSlide
                   key={comment.id}
                   className={`px-2.5 py-6 !overflow-visible transition-transform duration-500 ease-in-out ${
-                    isActive ? "scale-110 z-10" : "scale-90 opacity-90"
+                    isActive ? "!scale-110 z-10" : "!scale-90 opacity-90"
                   }`}
                 >
                   <div className="bg-white rounded-3xl shadow-sm border border-gray-200 py-8 px-5 flex flex-col items-center justify-between text-center h-[255px]">
