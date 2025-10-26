@@ -58,6 +58,10 @@ export default {
         },
         myPrimary: "#D52A16",
         mySecondary: "#214254",
+        myGolden: "#F5A623",
+        myBlue: "#3FC1C9",
+        myGray: "#E0E0E0",
+        myLightGray: "#F5F5F5",
       },
       borderRadius: {
         lg: "var(--radius)",
