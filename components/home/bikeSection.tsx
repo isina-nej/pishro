@@ -59,7 +59,7 @@ const BikeSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="container-xl pt-20 cursor-default relative overflow-hidden h-screen"
+      className="container-xl cursor-default relative overflow-hidden h-screen mt-20"
       onMouseMove={handleMouseMove}
     >
       <motion.div

@@ -70,7 +70,7 @@ export default function MobileScrollSection() {
     <section
       ref={sectionRef}
       style={{ height: `calc(${mobileScrollerSteps.length * 501}px + 100vh)` }}
-      className="relative w-full"
+      className="relative w-full mt-20"
     >
       {/* Sticky content */}
       <div className="sticky top-0 h-screen flex items-center justify-center container-xl py-8">

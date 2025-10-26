@@ -16,7 +16,7 @@ const CommentsSlider = () => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <section className="container-xl h-screen flex items-center justify-center">
+    <section className="container-xl flex items-center justify-center mt-32">
       <div className="relative w-full">
         <h2 className="text-5xl font-bold mb-8 text-center">
           نظرات دوره‌آموزان
