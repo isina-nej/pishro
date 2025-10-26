@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import clsx from "clsx";
-// import { mobileScrollerSteps } from "@/public/data";
+
 const mobileScrollerSteps = [
   {
     id: 1,
@@ -76,9 +76,10 @@ export default function MobileScrollSection() {
       <div className="sticky top-0 h-screen flex items-center justify-center container-xl py-8">
         {/* header */}
         <div className="w-full px-40 flex flex-col items-start justify-start absolute top-10">
-          <h2 className="text-5xl mb-2">سامانه پیشرو</h2>
+          <h4 className="text-6xl font-bold mb-2">سامانه پیشرو</h4>
           <p className="text-base text-gray-500">
-            مشاور و همراه مالی شما در مسیر پیشرفت
+            سامانه <span className="text-myPrimary">پیشرو</span>، مشاور و همراه
+            مالی شما در مسیر پیشرفت
           </p>
         </div>
         {/* body */}
@@ -88,17 +89,17 @@ export default function MobileScrollSection() {
             <div className="absolute size-full rounded-[36px] flex overflow-hidden">
               <div className="relative size-full rounded-[36px] flex">
                 <div className="w-[63%] h-full"></div>
-                <div className="w-[37%] h-full bg-[#8E8E8E]"></div>
-                <div className="absolute rotate-12 h-[900px] w-[10%] bg-[#8E8E8E] left-[30%] -top-10"></div>
+                <div className="w-[37%] h-full bg-myGray"></div>
+                <div className="absolute rotate-12 h-[900px] w-[10%] bg-myGray left-[30%] -top-10"></div>
               </div>
             </div>
 
             <div className="w-full h-full flex items-center justify-center">
               {/* Text and content */}
-              <div className="flex-1 flex flex-col justify-between h-full pt-32 pb-20 pr-12 pl-8 z-10">
+              <div className="flex-1 flex flex-col justify-between h-full pt-28 pb-20 pr-12 pl-8 z-10">
                 <div>
-                  <h4 className="text-[40px] font-bold text-white mb-10">
-                    از مزایای <span className="text-myPrimary">پیشرو</span> بودن
+                  <h4 className="text-6xl font-semibold text-white mb-12">
+                    از مزایای <span className="">پیشرو</span> بودن
                   </h4>
 
                   <ul className="space-y-4">
