@@ -32,16 +32,15 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
       href={link}
       className="
         group w-full 
-        h-[40vh] sm:h-[38vh] md:h-[100%]
         shadow-md transition-shadow rounded-xl
-        p-3 bg-white flex flex-col overflow-hidden relative
+        p-3 pb-8 bg-white flex flex-col relative
         hover:shadow-lg
       "
     >
       {/* Image section */}
       <motion.div
         transition={{ duration: 0.3, ease: "easeOut" }}
-        className="relative w-full h-full overflow-hidden rounded-lg"
+        className="relative w-full aspect-[464/238] overflow-hidden rounded-lg"
       >
         {imageError ? (
           <div className="w-full h-full bg-[#e5e5e5] flex items-center justify-center">
@@ -63,7 +62,7 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
         transition={{ duration: 0.3, ease: "easeOut" }}
         className="flex-1 flex flex-col justify-between mt-2"
       >
-        <div className="flex justify-between items-center border-b border-dashed border-[#acacac] pb-1.5">
+        <div className="flex justify-between items-center">
           <h4 className="text-xs sm:text-sm text-[#ACACAC] font-bold">
             {data.subject}
           </h4>
@@ -74,34 +73,34 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
           <p className="font-bold text-sm sm:text-sm line-clamp-2">
             {data.description}
           </p>
-          <div className="flex justify-end mt-0">
+          <div className="flex justify-end">
             <Price price={data.price} discount={data.discountPercent} />
           </div>
         </div>
 
         <motion.div
           initial={{ opacity: 1 }}
-          className="mt-1 flex justify-between text-[#ACACAC] font-bold text-xs sm:text-sm"
+          className="mt-1 pt-3 flex justify-between text-[#ACACAC] font-bold text-xs sm:text-sm border-t border-dashed border-[#acacac]"
         >
           <span className="flex items-center gap-1">
             <Users size={16} className="text-gray-900" />
-            {data.students} دانشجو
+            {data.students} دوره آموز
           </span>
           <span className="flex items-center gap-1">
             <Video size={16} className="text-gray-900" />
-            {data.videosCount} ویدئو
+            {data.videosCount} ویدئو تخصصی
           </span>
           <FormatTime time={data.time} />
         </motion.div>
       </motion.div>
 
       {/* به جای دکمه absolute پایین کارت */}
-      <div className="mt-2">
+      <div className="absolute -bottom-5 w-full flex justify-center pl-6">
         <button
           className="
-      w-full bg-mySecondary text-white font-bold text-sm sm:text-base
-      py-2 rounded-full shadow-md hover:opacity-90 transition
-    "
+            w-40 bg-mySecondary text-white font-bold text-sm sm:text-base
+            py-2 rounded-full shadow-md hover:opacity-90 transition
+          "
         >
           خرید دوره
         </button>

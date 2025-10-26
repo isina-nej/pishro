@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const Courses = () => {
   return (
-    <section className="relative h-[115vh] overflow-hidden flex flex-col justify-center container-xl mt-20">
+    <section className="relative overflow-hidden flex flex-col justify-center container-xl mt-20">
       {/* Header */}
       <div className="text-center w-full">
         <h2 className="font-bold text-5xl flex items-center justify-center gap-3">
@@ -24,7 +24,7 @@ const Courses = () => {
       </div>
 
       {/* Course grid */}
-      <div className="mt-6 flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-4 gap-x-8 place-items-center pb-4">
+      <div className="mt-16 flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-8 gap-x-8 place-items-center pb-12">
         {coursesData.map((data, idx) => (
           <CourseCard key={idx} data={data} link="/courses" />
         ))}
