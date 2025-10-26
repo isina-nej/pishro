@@ -4,7 +4,7 @@ import LandingOverlay from "./landingOverlay";
 import MobileScrollSection from "./mobileScrollSection";
 import CalculatorSection from "./calculatorSection";
 import BikeSection from "./bikeSection";
-import Courses from "./courses";
+import Courses from "@/components/utils/Courses";
 import CommentsSlider from "@/components/utils/CommentsSlider";
 import NewsClub from "./newsClub";
 
