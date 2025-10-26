@@ -5,7 +5,7 @@ import Link from "next/link";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import CountUp from "react-countup";
-import { Wallet, Clock, BarChart3 } from "lucide-react"; // 🎯 آیکون جدید اضافه شد
+import { Wallet, Clock, BarChart3 } from "lucide-react";
 
 const CalculatorSection = () => {
   // 🧩 stateها
@@ -31,7 +31,9 @@ const CalculatorSection = () => {
   // 📊 مقادیر اسلایدرها
   const amountSteps = [
     1_000_000, 10_000_000, 20_000_000, 30_000_000, 40_000_000, 50_000_000,
-    60_000_000, 70_000_000, 80_000_000, 90_000_000, 100_000_000,
+    60_000_000, 70_000_000, 80_000_000, 90_000_000, 100_000_000, 200_000_000,
+    300_000_000, 500_000_000, 1_000_000_000, 2_000_000_000, 3_000_000_000,
+    5_000_000_000,
   ];
   const durationSteps = [1, 3, 6, 9, 12];
 
@@ -60,14 +62,14 @@ const CalculatorSection = () => {
     arr[arr.indexOf(current) - 1] ?? current;
 
   return (
-    <section className="relative w-full min-h-screen bg-[#152c44] text-white overflow-hidden">
+    <section className="relative w-full min-h-screen bg-[#152c44] text-white overflow-hidden mt-20">
       {/* pattern background */}
       <div className="absolute inset-0 bg-[url('/images/utiles/pattern1.svg')] opacity-10 z-0" />
 
       <div className="container-xl relative z-10 py-10 flex flex-col justify-center">
         {/* Header */}
         <div className="text-center mb-10">
-          <h2 className="font-ch text-4xl lg:text-5xl mb-4">ماشین حساب</h2>
+          <h4 className="font-bold text-4xl lg:text-5xl mb-4">ماشین حساب</h4>
           <p className="font-ir text-lg lg:text-xl text-gray-200 max-w-2xl mx-auto bg-[#152c44]/70">
             با انتخاب نوع سبد سرمایه‌گذاری، مبلغ و مدت، میزان بازده خود را
             مشاهده کنید.
@@ -128,7 +130,7 @@ const CalculatorSection = () => {
                 <div className="flex-1 mx-2">
                   <Slider
                     min={1_000_000}
-                    max={100_000_000}
+                    max={5_000_000_000}
                     step={1_000_000}
                     value={amount}
                     onChange={(val) =>
@@ -151,7 +153,7 @@ const CalculatorSection = () => {
                   {/* ⬇️ Label range below slider */}
                   <div className="mx-2 mt-3 flex flex-row-reverse justify-between text-sm text-[#6b5ea0]">
                     <p>۱ میلیون تومان</p>
-                    <p>۱۰۰ میلیون تومان</p>
+                    <p>5 میلیارد تومان</p>
                   </div>
                 </div>
 
