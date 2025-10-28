@@ -60,12 +60,18 @@ const NewsClub = () => {
         <div className="flex-1 flex flex-col h-full justify-end gap-10 items-center">
           <div className="w-full aspect-[661/504] flex flex-col justify-between">
             <div>
-              <h4 className="text-8xl leading-none font-semibold text-mySecondary mt-8">
-                باشگاه <span className="text-[#8E8E8E]">پیشرو</span>
+              <h4 className="text-8xl leading-none font-semibold text-mySecondary mt-16 flex gap-3">
+                <span className="inline-block">باشگاه</span>
+                <span className="inline-block text-[#8E8E8E] -translate-y-3">
+                  پیشرو
+                </span>
               </h4>
-              <p className="mt-6 text-lg text-gray-400 leading-relaxed pl-12">
-                با عضویت در باشگاه خبری پیشرو، جدیدترین اخبار و مقالات آموزشی را
-                مستقیماً در تلفن همراه خود دریافت کنید.
+
+              <p className="mt-6 text-lg text-gray-400 leading-relaxed pl-[128px] pr-1">
+                با عضویت در باشگاه خبری پیشرو، از تازه‌ترین مقالات آموزشی، نکات
+                تخصصی و تحلیل‌های روز دنیای دیجیتال باخبر شوید و همیشه یک گام
+                جلوتر از رقبا بمانید. جدیدترین مطالب مستقیماً در تلفن همراه شما
+                ارسال خواهد شد.
               </p>
             </div>
 
