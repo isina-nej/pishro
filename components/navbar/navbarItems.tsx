@@ -6,8 +6,9 @@ import { usePathname } from "next/navigation";
 import { HiMiniArrowLeftEndOnRectangle } from "react-icons/hi2";
 import { FaInstagram, FaXTwitter } from "react-icons/fa6";
 import { RiTelegram2Fill } from "react-icons/ri";
+import { FiShoppingCart } from "react-icons/fi";
 import NavbarPopover from "./navbarPopover";
-import { BuyIcon } from "@/public/svgr-icons";
+import clsx from "clsx";
 
 interface NavbarItemsProps {
   navbarData: (
@@ -110,10 +111,11 @@ const NavbarItems = ({
 
           <Link href={"/checkout"} className="group">
             <button className="flex items-center gap-1">
-              <BuyIcon
-                className={isDark ? "text-white" : "text-mySecondary"}
-                width={20}
-                height={20}
+              <FiShoppingCart
+                className={clsx(
+                  "size-6 ",
+                  isDark ? "text-white" : "text-mySecondary "
+                )}
               />
             </button>
           </Link>
