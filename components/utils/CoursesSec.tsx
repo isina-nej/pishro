@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const Courses = () => {
   return (
-    <section className="relative overflow-hidden flex flex-col justify-center container-xl mt-20">
+    <section className="relative overflow-hidden flex flex-col justify-center container-xl mt-0">
       {/* Header */}
       <div className="text-center w-full">
         <h2 className="font-bold text-5xl flex items-center justify-center gap-3">

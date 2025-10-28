@@ -80,7 +80,7 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
 
         <motion.div
           initial={{ opacity: 1 }}
-          className="mt-1 pt-3 flex justify-between text-[#ACACAC] font-bold text-xs sm:text-sm border-t border-dashed border-[#acacac]"
+          className="mt-1 pt-1.5 flex justify-between text-[#ACACAC] font-bold text-xs sm:text-sm border-t border-dashed border-[#acacac]"
         >
           <span className="flex items-center gap-1">
             <Users size={16} className="text-gray-900" />
