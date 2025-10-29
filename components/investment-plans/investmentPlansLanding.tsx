@@ -6,7 +6,7 @@ import PlansList from "./plansList";
 
 const InvestmentPlansLanding = () => {
   return (
-    <div className="relative w-full h-screen lg:h-screen overflow-hidden isolate flex items-center justify-start text-center px-4 mb-32">
+    <div className="relative w-full h-screen lg:h-screen overflow-hidden isolate flex items-center justify-start text-center px-4 -mb-28">
       {/* Image behind everything */}
       <Image
         src={investmentPlansData.image}
@@ -20,7 +20,7 @@ const InvestmentPlansLanding = () => {
       <div className="absolute inset-0 bg-gradient-to-l from-black/95 via-black/60 to-black/5 z-10 pointer-events-none" />
 
       {/* Text content over image */}
-      <div className="relative z-20 max-w-2xl text-white flex flex-col items-center gap-y-8 px-4">
+      <div className="relative z-20 max-w-2xl text-white flex flex-col items-center rtl gap-y-8 px-8">
         <h1 className="text-4xl lg:text-5xl font-bold leading-tight">
           {investmentPlansData.title}
         </h1>

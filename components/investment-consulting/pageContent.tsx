@@ -1,16 +1,10 @@
-import Courses from "@/components/utils/CoursesSec";
-import Blog from "@/components/utils/blog";
-import VideoSection from "../utils/videoSection";
 import InvestmentLanding from "./investmentLanding";
-import AlibabaSlider from "../utils/AlibabaSlider";
-import { alibabaData } from "@/public/data";
-import QAModal from "../utils/QA";
 
 const InvestmentPageContent = () => {
   return (
     <div>
       <InvestmentLanding />
-      <AlibabaSlider
+      {/* <AlibabaSlider
         topImages={alibabaData.topImages}
         middleImages={alibabaData.middleImages}
         bottomImages={alibabaData.bottomImages}
@@ -21,7 +15,7 @@ const InvestmentPageContent = () => {
         <QAModal />
       </div>
       <Courses />
-      <Blog />
+      <Blog /> */}
     </div>
   );
 };

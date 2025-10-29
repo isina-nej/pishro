@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { PhoneCall, Send, GraduationCap, XIcon } from "lucide-react"; // 🧠 اضافه شده
 import {
   Drawer,
   DrawerClose,
@@ -13,11 +14,10 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { investmentConsultingData } from "@/public/data";
-import { PhoneCall, Send, GraduationCap, XIcon } from "lucide-react"; // 🧠 اضافه شده
 
 const InvestmentLanding = () => {
   return (
-    <div className="relative w-full h-screen overflow-hidden isolate flex items-center justify-start text-center px-4 mb-32">
+    <div className="relative w-full h-screen overflow-hidden isolate flex items-center justify-start text-center px-4 -mb-32">
       {/* 📷 Background Image */}
       <Image
         src={investmentConsultingData.image}
@@ -31,8 +31,8 @@ const InvestmentLanding = () => {
       <div className="absolute inset-0 bg-gradient-to-l from-black/90 via-black/50 to-black/5 z-10 pointer-events-none" />
 
       {/* 📝 Main Content */}
-      <div className="relative z-20 max-w-2xl text-white flex flex-col items-center gap-y-8 px-4">
-        <h3 className="text-4xl font-bold leading-tight">
+      <div className="relative z-20 max-w-2xl text-white flex flex-col items-center rtl gap-y-8 px-8">
+        <h3 className="text-4xl lg:text-5xl font-bold leading-tight">
           {investmentConsultingData.title}
         </h3>
         <p className="text-white/90 text-lg max-w-xl mx-auto leading-relaxed">
