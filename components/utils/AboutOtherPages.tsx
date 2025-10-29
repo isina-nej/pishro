@@ -42,7 +42,7 @@ const AboutOtherPages = ({ data }: AboutOtherPagesProps) => {
 
       {/* ✍️ متن اصلی */}
       <div className="container-xl flex pt-40 justify-end h-full z-[999]">
-        <div className="max-w-[550px] text-right space-y-6">
+        <div className="max-w-[750px] text-right space-y-6">
           {/* 🔹 تیتر اصلی با دو رنگ */}
           <h2 className="text-[120px] leading-[1.1] font-extrabold">
             <span className="text-[#214254]">{title1}</span>{" "}
@@ -50,7 +50,7 @@ const AboutOtherPages = ({ data }: AboutOtherPagesProps) => {
           </h2>
 
           {/* 🔸 متن توضیحی */}
-          <p className="text-[#8E8E8E] leading-8 text-lg font-medium !z-[10000]">
+          <p className="text-[#8E8E8E] leading-8 text-lg font-medium !z-[10000] max-w-[650px]">
             {description}
           </p>
 
