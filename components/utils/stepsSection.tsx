@@ -157,7 +157,7 @@ const StepsSection = ({
           {/* Header */}
           <div className="absolute flex flex-col justify-start py-6 px-4 w-[65%] right-0 -top-12 z-10">
             <p className="text-myPrimary font-bold mb-4">{sectionQuote}</p>
-            <h2 className="text-5xl font-bold text-gray-800 max-w-[500px]">
+            <h2 className="text-5xl font-extrabold text-gray-800 max-w-[500px]">
               {sectionTitle}
             </h2>
             <p className="mt-4 max-w-[440px] text-gray-600 leading-7">
