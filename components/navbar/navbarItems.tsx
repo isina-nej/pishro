@@ -29,7 +29,10 @@ const NavbarItems = ({
   const [isIndicatorActive, setIsIndicatorActive] = useState(true);
   const pathname = usePathname(); // 👈 get current route
 
-  const isDark = pathname === "/"; // 👈 check if we are on homepage
+  const isDark =
+    pathname === "/" ||
+    pathname === "/investment-consulting" ||
+    pathname === "/investment-plans"; // 👈 check if we are on homepage
 
   return (
     <div
