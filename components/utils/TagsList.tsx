@@ -15,7 +15,7 @@ const TagsList: React.FC<TagsListProps> = ({
   className,
 }) => {
   return (
-    <section>
+    <section className="mt-20">
       <h3 className="text-center mb-12 font-bold text-5xl">{title}</h3>
       <div
         className={clsx(
