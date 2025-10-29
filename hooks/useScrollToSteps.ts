@@ -4,13 +4,14 @@ import { useEffect } from "react";
 import { useUserLevelStore } from "@/stores/user-level-store";
 
 /**
- * وقتی سطح کاربر تغییر کند، بعد از ۰.۵ ثانیه به سکشن StepsSection اسکرول می‌کند.
+ * بعد از تعیین سطح، فقط یک‌بار اسکرول انجام می‌دهد (در همان صفحه).
  */
 export const useScrollToSteps = () => {
-  const { level } = useUserLevelStore();
+  const { level, hasScrolled, setHasScrolled } = useUserLevelStore();
 
   useEffect(() => {
-    if (!level) return;
+    // اگر هنوز سطح تعیین نشده یا قبلاً اسکرول شده، کاری نکن
+    if (!level || hasScrolled) return;
 
     const timeout = setTimeout(() => {
       const section = document.getElementById("stepsSection");
@@ -19,10 +20,10 @@ export const useScrollToSteps = () => {
           behavior: "smooth",
           block: "start",
         });
+        setHasScrolled(true); // ✅ فقط یک بار اسکرول کن
       }
-    }, 500); // ⏳ تاخیر نیم‌ثانیه‌ای
+    }, 500);
 
-    // 🧹 پاک کردن تایمر در زمان unmount یا تغییر سطح مجدد
     return () => clearTimeout(timeout);
-  }, [level]);
+  }, [level, hasScrolled, setHasScrolled]);
 };
