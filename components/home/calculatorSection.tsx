@@ -21,9 +21,9 @@ const CalculatorSection = () => {
   // 💰 نرخ‌های سود بر اساس نوع سبد
   const rates = useMemo(
     () => ({
-      low: 0.18, // کم‌ریسک
-      medium: 0.25, // متوسط
-      high: 0.39, // پر‌ریسک
+      low: 0.07, // 7 درصد ماهیانه
+      medium: 0.08, // 8 درصد ماهیانه
+      high: 0.09, // 9 درصد ماهیانه
     }),
     []
   );
@@ -37,15 +37,14 @@ const CalculatorSection = () => {
   ];
   const durationSteps = [1, 3, 6, 9, 12];
 
-  // 🧮 محاسبه سود بر اساس نوع سبد
+  // 🧮 محاسبه سود مرکب بر اساس نوع سبد
   useEffect(() => {
     const rate = rates[portfolio];
-    const profit = amount * rate * (duration / 12);
-    const newResult = amount + profit;
+    // فرمول سود مرکب
+    const newResult = amount * Math.pow(1 + rate, duration);
     prevResultRef.current = result;
     setResult(newResult);
   }, [amount, duration, portfolio, rates, result]);
-
   // 🔢 فرمت فارسی عدد
   const formatNumber = (num: number) =>
     new Intl.NumberFormat("fa-IR").format(Math.round(num));
