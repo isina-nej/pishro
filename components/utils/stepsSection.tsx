@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import clsx from "clsx";
-import StepsDecorations from "@/components/home/stepsDecorations";
+// import StepsDecorations from "@/components/home/stepsDecorations";
 
 // Types for steps
 interface Step {
