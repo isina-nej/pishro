@@ -62,7 +62,7 @@ const NewsClub = () => {
             <div>
               <h4 className="text-8xl leading-none font-semibold text-mySecondary mt-16 flex gap-3">
                 <span className="inline-block">باشگاه</span>
-                <span className="inline-block text-[#8E8E8E] -translate-y-3">
+                <span className="inline-block text-[#8E8E8E] -translate-y-1">
                   پیشرو
                 </span>
               </h4>
