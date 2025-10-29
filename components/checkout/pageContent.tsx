@@ -31,9 +31,9 @@ const CheckoutPageContent = () => {
     "shoppingCart"
   );
   return (
-    <div className="container-xl">
+    <div className="container-xl pt-12">
       {/* header */}
-      <div className="flex justify-between shadow-sm pb-1 mt-12">
+      <div className="flex justify-between pb-1 mt-12">
         <h4 className="font-iransans font-semibold text-lg text-[#333333]">
           {step === "shoppingCart" && "سبد خرید"}
           {step === "pay" && "پرداخت"}
