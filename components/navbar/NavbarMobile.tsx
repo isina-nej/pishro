@@ -122,7 +122,7 @@ const NavbarMobile = ({
               onClick={closeMenu}
               className="flex flex-col items-start gap-6 px-4 text-lg text-white"
             />
-            <div className="flex flex-col items-center mt-10 pb-12 gap-4">
+            <div className="flex flex-col items-center mt-10 pb-10 gap-4">
               <NavbarActions isDark={isDark} />
             </div>
           </div>
