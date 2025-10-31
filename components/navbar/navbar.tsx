@@ -43,7 +43,7 @@ const Navbar = () => {
         )}
       >
         <div className="flex justify-between items-center w-full relative">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             {mobileMenuOpen ? (
               <button
                 aria-label="بستن منو"
@@ -61,14 +61,14 @@ const Navbar = () => {
                 <FiMenu />
               </button>
             )}
-            <span className="font-bold text-lg">پیشرو</span>
+            <span className="font-bold text-lg -mt-0.5">پیشرو</span>
           </div>
           <div>
             <div className="flex items-center gap-4">
               <Link
                 href={"/login"}
                 className={clsx(
-                  "border transition-colors pr-2 pl-2 py-1.5 rounded-lg text-sm",
+                  "border transition-colors pr-2 pl-2 py-1.5 rounded-lg text-sm ml-2",
                   !isDark
                     ? "border-white hover:bg-black/20 text-white"
                     : "border-mySecondary hover:bg-mySecondary/10",
