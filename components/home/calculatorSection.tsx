@@ -68,10 +68,10 @@ const CalculatorSection = () => {
       <div className="container-xl relative z-10 py-6 md:py-10 flex flex-col justify-center">
         {/* Header */}
         <div className="text-center mb-6 md:mb-10 px-2">
-          <h4 className="font-bold text-2xl sm:text-3xl md:text-5xl mb-2 md:mb-4">
+          <h4 className="font-bold text-3xl sm:text-4xl md:text-5xl mb-2 md:mb-4 mt-10 md:mt-0">
             ماشین حساب
           </h4>
-          <p className="font-ir text-sm sm:text-base md:text-lg lg:text-xl text-gray-200 max-w-2xl mx-auto bg-[#152c44]/70">
+          <p className="text-base md:text-lg lg:text-xl leading-relaxed text-gray-200 max-w-2xl mx-auto bg-[#152c44]/70">
             با انتخاب نوع سبد سرمایه‌گذاری، مبلغ و مدت، میزان بازده خود را
             مشاهده کنید.
           </p>
@@ -82,10 +82,10 @@ const CalculatorSection = () => {
           {/* Controls */}
           <div className="flex flex-col w-full lg:w-7/12 gap-4 px-1 md:px-0">
             {/* سبد سرمایه‌گذاری */}
-            <div className="rounded-2xl border border-[#8B9BB4] bg-white text-[#1A0A3B] px-6 py-4">
+            <div className="rounded-2xl border border-[#8B9BB4] bg-white text-[#1A0A3B] px-4 sm:px-6 py-4">
               <p className="text-center text-lg font-semibold mb-4 flex items-center justify-center gap-2">
-                نوع سبد سرمایه‌گذاری
                 <BarChart3 size={22} className="text-[#1A0A3B]" />
+                نوع سبد سرمایه‌گذاری
               </p>
 
               <div className="flex items-center justify-center gap-4">
@@ -99,7 +99,7 @@ const CalculatorSection = () => {
                     onClick={() =>
                       setPortfolio(item.key as "low" | "medium" | "high")
                     }
-                    className={`px-5 py-2 rounded-full border transition-all font-ir ${
+                    className={`px-5 py-2 rounded-full border transition-all  ${
                       portfolio === item.key
                         ? "bg-mySecondary text-white border-mySecondary"
                         : "bg-gray-100 text-mySecondary border-gray-300 hover:bg-gray-200"
@@ -112,20 +112,20 @@ const CalculatorSection = () => {
             </div>
 
             {/* مبلغ سرمایه‌گذاری */}
-            <div className="rounded-2xl border border-[#8B9BB4] bg-white text-[#1A0A3B] px-6 py-4">
-              <p className="text-center text-lg font-semibold mb-8 flex items-center justify-center gap-2">
+            <div className="rounded-2xl border border-[#8B9BB4] bg-white text-[#1A0A3B] px-4 sm:px-6 py-4">
+              <p className="text-center text-lg font-bold mb-8 flex items-center justify-center gap-2">
+                <Wallet size={24} className="text-[#1A0A3B]" />
                 مبلغ سرمایه‌گذاری
-                <Wallet size={22} className="text-[#1A0A3B]" />
               </p>
 
-              <div className="flex items-center justify-between gap-4">
+              <div className="flex items-start justify-between gap-4">
                 <button
                   onClick={() =>
                     setAmount((prev) => getNext(prev, amountSteps))
                   }
-                  className="w-10 h-10 rounded-full bg-gray-200 text-2xl font-bold flex items-center justify-center active:scale-95"
+                  className="size-6 md:size-10 rounded-full bg-gray-200 text-2xl font-bold flex items-center justify-center active:scale-95"
                 >
-                  +
+                  <span className="mt-1">+</span>
                 </button>
 
                 <div className="flex-1 mx-2">
@@ -152,7 +152,7 @@ const CalculatorSection = () => {
                     }}
                   />
                   {/* ⬇️ Label range below slider */}
-                  <div className="mx-2 mt-3 flex flex-row-reverse justify-between text-sm text-[#6b5ea0]">
+                  <div className="md:mx-2 mt-3 flex flex-row-reverse justify-between text-sm text-gray-900">
                     <p>۱ میلیون تومان</p>
                     <p>5 میلیارد تومان</p>
                   </div>
@@ -162,23 +162,23 @@ const CalculatorSection = () => {
                   onClick={() =>
                     setAmount((prev) => getPrev(prev, amountSteps))
                   }
-                  className="w-10 h-10 rounded-full bg-gray-200 text-2xl font-bold flex items-center justify-center active:scale-95"
+                  className="size-6 md:size-10 rounded-full bg-gray-200 text-2xl font-bold flex items-center justify-center active:scale-95"
                 >
-                  −
+                  <span className="mt-1">−</span>
                 </button>
               </div>
 
-              <p className="mt-6 text-center font-ir font-bold text-[#1A0A3B]">
+              <p className="mt-6 text-center  font-bold text-[#1A0A3B]">
                 {formatNumber(amount)}{" "}
                 <span className="font-normal">تومان</span>
               </p>
             </div>
 
             {/* مدت سرمایه‌گذاری */}
-            <div className="rounded-2xl border border-[#8B9BB4] bg-white text-[#1A0A3B] px-6 py-4">
-              <p className="text-center text-lg font-semibold mb-8 flex items-center justify-center gap-2">
+            <div className="rounded-2xl border border-[#8B9BB4] bg-white text-[#1A0A3B] px-4 sm:px-6 py-4">
+              <p className="text-center text-lg font-bold mb-8 flex items-center justify-center gap-2">
+                <Clock size={24} className="text-[#1A0A3B]" />
                 مدت سرمایه‌گذاری
-                <Clock size={22} className="text-[#1A0A3B]" />
               </p>
 
               <div className="flex items-center justify-between gap-4">
@@ -186,9 +186,9 @@ const CalculatorSection = () => {
                   onClick={() =>
                     setDuration((prev) => getNext(prev, durationSteps))
                   }
-                  className="w-10 h-10 rounded-full bg-gray-200 text-2xl font-bold flex items-center justify-center active:scale-95"
+                  className="size-6 md:size-10 rounded-full bg-gray-200 text-2xl font-bold flex items-center justify-center active:scale-95"
                 >
-                  +
+                  <span className="mt-1">+</span>
                 </button>
 
                 <div className="flex-1 mx-2">
@@ -215,7 +215,7 @@ const CalculatorSection = () => {
                     }}
                   />
                   {/* ⬇️ Label range below slider */}
-                  <div className="mx-2 mt-3 flex flex-row-reverse justify-between text-sm text-[#6b5ea0]">
+                  <div className="sm:mx-2 mt-3 flex flex-row-reverse justify-between text-sm text-gray-900">
                     <p>۱ ماه</p>
                     <p>۱۲ ماه</p>
                   </div>
@@ -225,25 +225,25 @@ const CalculatorSection = () => {
                   onClick={() =>
                     setDuration((prev) => getPrev(prev, durationSteps))
                   }
-                  className="w-10 h-10 rounded-full bg-gray-200 text-2xl font-bold flex items-center justify-center active:scale-95"
+                  className="size-6 md:size-10 rounded-full bg-gray-200 text-2xl font-bold flex items-center justify-center active:scale-95"
                 >
-                  −
+                  <span className="mt-1">−</span>
                 </button>
               </div>
 
-              <p className="mt-6 text-center font-ir font-bold text-[#1A0A3B]">
+              <p className="mt-6 text-center  font-bold text-[#1A0A3B]">
                 {duration} ماهه
               </p>
             </div>
           </div>
 
           {/* Result */}
-          <div className="w-full h-[-webkit-fill-available] lg:w-5/12 flex flex-col items-center justify-center bg-[#1a0a3b]/50 rounded-2xl p-4 md:p-10 mt-6 md:mt-0">
-            <p className="text-center text-2xl font-ch mb-8">
+          <div className="w-full h-[-webkit-fill-available] lg:w-5/12 flex flex-col items-center justify-center bg-[#1a0a3b]/50 rounded-2xl p-4 md:p-10 mt-6 md:mt-0 mb-10 md:mb-0">
+            <p className="text-center text-2xl font-bold mb-8">
               نتیجه سرمایه‌گذاریت
             </p>
 
-            <div className="bg-white text-[#1A0A3B] rounded-2xl py-8 px-12 flex items-center justify-center text-3xl font-ms">
+            <div className="bg-white text-[#1A0A3B] rounded-2xl py-8 px-12 flex items-center justify-center text-3xl font-medium">
               <CountUp
                 start={prevResultRef.current}
                 end={result}
@@ -251,12 +251,14 @@ const CalculatorSection = () => {
                 separator=","
                 formattingFn={(n) => formatNumber(n)}
               />
-              <span className="ml-2 text-lg font-ir">تومان</span>
+              <span className="mr-1 text-lg font-bold text-gray-400">
+                تومان
+              </span>
             </div>
 
             <Link
               href="/plans/gold#plan-banner"
-              className="mt-10 px-16 bg-mySecondary border border-mySecondary text-white rounded-full py-3 font-bold text-center hover:bg-mySecondary/30 hover:border-white transition-colors"
+              className="mt-10 px-16 w-full sm:w-fit bg-mySecondary border border-mySecondary text-white rounded-full py-4 font-bold text-center hover:bg-mySecondary/30 hover:border-white transition-colors"
             >
               سرمایه‌گذاری
             </Link>
