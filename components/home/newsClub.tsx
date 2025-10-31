@@ -42,9 +42,9 @@ const NewsClub = () => {
   };
 
   return (
-    <section className="relative w-full min-h-[480px] h-[90vh] md:h-screen pb-8 md:pb-16 pt-4 md:pt-8 mt-0">
+    <section className="relative w-full min-h-[480px] h-[90vh] md:h-screen pb-8 md:pb-16 pt-4 md:pt-8 mt-20 md:mt-0">
       <div className="container-xl h-full flex flex-col md:flex-row items-center md:items-center md:gap-8 gap-3">
-        <div className="flex-1 w-full flex items-end md:h-full justify-center md:justify-start order-2 md:order-1 mt-2 md:mt-0">
+        <div className="md:flex-1 w-full flex items-end md:h-full justify-center md:justify-start order-2 md:order-1 mt-2 md:mt-0">
           {/* wrapper با نسبت درست */}
           <div className="relative w-full max-w-[400px] md:max-w-full aspect-[1.3] md:aspect-[661/504]">
             <Image
@@ -60,12 +60,17 @@ const NewsClub = () => {
         <div className="flex-1 w-full flex flex-col md:h-full justify-end gap-6 md:gap-10 items-center order-1 md:order-2">
           <div className="w-full aspect-[1.1] md:aspect-[661/504] flex flex-col justify-between">
             <div>
-              <h4 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl leading-none font-semibold text-mySecondary mt-2 md:mt-16 flex gap-2 md:gap-3">
+              <h4 className="text-6xl sm:text-7xl lg:text-8xl leading-none font-semibold text-mySecondary mt-2 md:mt-16 flex gap-2 md:gap-3">
                 <span className="inline-block">باشگاه</span>
-                <span className="inline-block text-[#8E8E8E] -translate-y-1">پیشرو</span>
+                <span className="inline-block text-[#8E8E8E] -translate-y-1">
+                  پیشرو
+                </span>
               </h4>
-              <p className="mt-4 md:mt-6 text-base md:text-lg text-gray-400 leading-relaxed md:pl-[128px] pr-1">
-                با عضویت در باشگاه خبری پیشرو، از تازه‌ترین مقالات آموزشی، نکات تخصصی و تحلیل‌های روز دنیای دیجیتال باخبر شوید و همیشه یک گام جلوتر از رقبا بمانید. جدیدترین مطالب مستقیماً در تلفن همراه شما ارسال خواهد شد.
+              <p className="mt-4 md:mt-6 text-sm sm:text-base md:text-lg text-gray-400 leading-relaxed md:pl-[60px] xl:pl-[128px] pr-1">
+                با عضویت در باشگاه خبری پیشرو، از تازه‌ترین مقالات آموزشی، نکات
+                تخصصی و تحلیل‌های روز دنیای دیجیتال باخبر شوید و همیشه یک گام
+                جلوتر از رقبا بمانید. جدیدترین مطالب مستقیماً در تلفن همراه شما
+                ارسال خواهد شد.
               </p>
             </div>
             <form
@@ -80,7 +85,7 @@ const NewsClub = () => {
                 />
                 <Button
                   type="submit"
-                  className="bg-mySecondary hover:bg-mySecondary/95 transition-colors h-10 sm:h-12 px-8 sm:px-16 rounded-full text-white text-base sm:text-lg font-medium"
+                  className="w-full md:w-fit bg-mySecondary hover:bg-mySecondary/95 transition-colors h-10 sm:h-12 px-8 sm:px-16 rounded-full text-white text-base sm:text-lg font-medium"
                 >
                   عضویت
                 </Button>

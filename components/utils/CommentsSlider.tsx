@@ -16,9 +16,9 @@ const CommentsSlider = () => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <section className="container-xl flex items-center justify-center mt-16 md:mt-32 px-1 sm:px-6 md:px-10 lg:px-24">
+    <section className="container-xl flex items-center justify-center mt-40 md:mt-32 px-1 sm:px-6 md:px-10 lg:px-24">
       <div className="relative w-full">
-        <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-4 md:mb-8 text-center">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-20 -mt-16 sm:mt-0 sm:mb-8 text-center">
           نظرات دوره‌آموزان
         </h2>
 
@@ -52,11 +52,13 @@ const CommentsSlider = () => {
                 <SwiperSlide
                   key={comment.id}
                   className={`px-1.5 sm:px-2.5 py-4 sm:py-6 !overflow-visible transition-transform duration-500 ease-in-out ${
-                    isActive ? "!scale-105 sm:!scale-110 z-10" : "!scale-95 sm:!scale-90 opacity-90"
+                    isActive
+                      ? "!scale-105 sm:!scale-110 z-10"
+                      : "!scale-95 sm:!scale-90 opacity-90"
                   }`}
                 >
-                  <div className="bg-white rounded-2xl md:rounded-3xl shadow-sm border border-gray-200 py-5 md:py-8 px-3 md:px-5 flex flex-col items-center justify-between text-center h-[180px] sm:h-[230px] md:h-[255px]">
-                    <p className="text-[#8E8E8E] text-[11px] sm:text-xs leading-5 font-bold mb-2 md:mb-4">
+                  <div className="bg-white rounded-2xl md:rounded-3xl shadow-sm border border-gray-200 py-5 md:py-8 px-3 md:px-5 flex flex-col items-center justify-between text-center h-[220px] sm:h-[230px] md:h-[255px]">
+                    <p className="text-[#8E8E8E] text-right text-[11px] sm:text-xs leading-5 font-bold mb-2 md:mb-4">
                       {comment.comment}
                     </p>
                     <div className="flex items-center justify-between w-full">
