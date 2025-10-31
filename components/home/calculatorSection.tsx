@@ -68,7 +68,9 @@ const CalculatorSection = () => {
       <div className="container-xl relative z-10 py-6 md:py-10 flex flex-col justify-center">
         {/* Header */}
         <div className="text-center mb-6 md:mb-10 px-2">
-          <h4 className="font-bold text-2xl sm:text-3xl md:text-5xl mb-2 md:mb-4">ماشین حساب</h4>
+          <h4 className="font-bold text-2xl sm:text-3xl md:text-5xl mb-2 md:mb-4">
+            ماشین حساب
+          </h4>
           <p className="font-ir text-sm sm:text-base md:text-lg lg:text-xl text-gray-200 max-w-2xl mx-auto bg-[#152c44]/70">
             با انتخاب نوع سبد سرمایه‌گذاری، مبلغ و مدت، میزان بازده خود را
             مشاهده کنید.
