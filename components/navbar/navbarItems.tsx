@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { usePathname } from "next/navigation";
 import NavbarLinks from "./NavbarLinks";
 import NavbarActions from "./NavbarActions";
 
 interface NavbarItemsProps {
+  isDark: boolean;
   navbarData: (
     | { label: string; link: string; data?: undefined }
     | { label: string; link: string; data: { label: string; link: string }[] }
@@ -17,18 +17,12 @@ interface NavbarItemsProps {
 }
 
 const NavbarItems = ({
+  isDark,
   navbarData,
   indicatorStyle,
   setIndicatorStyle,
 }: NavbarItemsProps) => {
   const [isIndicatorActive, setIsIndicatorActive] = useState(true);
-  const pathname = usePathname();
-
-  const isDark =
-    pathname === "/" ||
-    pathname === "/investment-consulting" ||
-    pathname === "/investment-plans" ||
-    pathname === "/investment-plans/custom";
 
   return (
     <div
