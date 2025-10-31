@@ -4,25 +4,17 @@ import React, { useState } from "react";
 import NavbarLinks from "./NavbarLinks";
 import NavbarActions from "./NavbarActions";
 
-interface NavbarItemsProps {
+interface NavbarDesktopProps {
   isDark: boolean;
   navbarData: (
     | { label: string; link: string; data?: undefined }
     | { label: string; link: string; data: { label: string; link: string }[] }
   )[];
-  indicatorStyle: { left: number; width: number };
-  setIndicatorStyle: React.Dispatch<
-    React.SetStateAction<{ left: number; width: number }>
-  >;
 }
 
-const NavbarItems = ({
-  isDark,
-  navbarData,
-  indicatorStyle,
-  setIndicatorStyle,
-}: NavbarItemsProps) => {
+const NavbarDesktop = ({ isDark, navbarData }: NavbarDesktopProps) => {
   const [isIndicatorActive, setIsIndicatorActive] = useState(true);
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
 
   return (
     <div
@@ -73,4 +65,4 @@ const NavbarItems = ({
   );
 };
 
-export default NavbarItems;
+export default NavbarDesktop;
