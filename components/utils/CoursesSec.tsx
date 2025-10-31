@@ -24,7 +24,7 @@ const Courses = () => {
       </div>
 
       {/* Course grid */}
-      <div className="mt-8 md:mt-16 flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-6 md:gap-y-8 gap-x-4 md:gap-x-8 place-items-center pb-8 md:pb-12 w-full">
+      <div className="mt-8 md:mt-16 flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-8 md:gap-y-8 gap-x-4 md:gap-x-8 place-items-center pb-8 md:pb-12 w-full">
         {coursesData.map((data, idx) => (
           <CourseCard key={idx} data={data} link="/courses" />
         ))}
