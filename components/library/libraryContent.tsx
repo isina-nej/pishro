@@ -134,7 +134,7 @@ const LibraryHero = ({
             خلاقانه همراهی کنند.
           </p>
 
-          <div className="flex flex-col gap-4 sm:flex-row">
+          {/* <div className="flex flex-col gap-4 sm:flex-row">
             <div className="relative flex-1">
               <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-300" />
               <Input
@@ -150,7 +150,7 @@ const LibraryHero = ({
             >
               کاوش هوشمند کتابخانه
             </Button>
-          </div>
+          </div> */}
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
