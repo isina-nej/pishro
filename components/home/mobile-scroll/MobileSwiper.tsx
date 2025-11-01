@@ -23,7 +23,7 @@ export function MobileSwiper() {
   return (
     <section className="relative w-full h-screen overflow-hidden mt-10">
       <div className="container px-6 mx-auto h-full flex flex-col justify-between py-8">
-        <div className="flex flex-col gap-3 text-right mb-6">
+        <div className="flex flex-col gap-3 text-center md:text-right mb-6">
           <h4 className="text-4xl font-extrabold sm:text-5xl">سامانه پیشرو</h4>
           <p className="text-sm text-gray-500 leading-6">
             سامانه <span className="text-myPrimary">پیشرو</span>، مشاور و همراه

@@ -59,14 +59,14 @@ const NewsClub = () => {
         {/* form section */}
         <div className="flex-1 w-full flex flex-col md:h-full justify-end gap-6 md:gap-10 items-center order-1 md:order-2">
           <div className="w-full aspect-[1.1] md:aspect-[661/504] flex flex-col justify-between">
-            <div>
-              <h4 className="text-6xl sm:text-7xl lg:text-8xl leading-none font-semibold text-mySecondary mt-2 md:mt-16 flex gap-2 md:gap-3">
+            <div className="">
+              <h4 className="flex justify-center md:justify-start md:text-start text-6xl sm:text-7xl lg:text-8xl leading-none font-semibold text-mySecondary mt-2 md:mt-16 gap-2 md:gap-3">
                 <span className="inline-block">باشگاه</span>
                 <span className="inline-block text-[#8E8E8E] -translate-y-1">
                   پیشرو
                 </span>
               </h4>
-              <p className="mt-4 md:mt-6 text-sm sm:text-base md:text-lg text-gray-400 leading-relaxed md:pl-[60px] xl:pl-[128px] pr-1">
+              <p className="mt-4 md:mt-6 text-center md:text-right text-sm sm:text-base md:text-lg text-gray-400 leading-relaxed md:pl-[60px] xl:pl-[128px] pr-1">
                 با عضویت در باشگاه خبری پیشرو، از تازه‌ترین مقالات آموزشی، نکات
                 تخصصی و تحلیل‌های روز دنیای دیجیتال باخبر شوید و همیشه یک گام
                 جلوتر از رقبا بمانید. جدیدترین مطالب مستقیماً در تلفن همراه شما
