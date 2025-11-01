@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { Bookmark, BookOpen, Clock, Search, Star } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -101,8 +100,6 @@ export default LibraryPageContent;
 // -------------------------------------------------
 
 const LibraryHero = ({
-  query,
-  onQueryChange,
   stats,
 }: {
   query: string;
