@@ -125,7 +125,7 @@ const LibraryHero = ({
           <span className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-4 py-1 text-sm font-medium text-slate-100">
             کتابخانه الهام‌بخش پیشرو
           </span>
-          <h1 className="text-4xl font-extrabold leading-tight md:text-5xl">
+          <h1 className="text-4xl font-extrabold !leading-tight md:text-5xl">
             دنیای کتاب‌هایی که ذهنیت سرمایه‌گذاران آینده را می‌سازند
           </h1>
           <p className="text-base text-slate-200 md:text-lg">
