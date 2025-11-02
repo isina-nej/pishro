@@ -60,11 +60,11 @@ const Footer = () => {
   return (
     <footer className="w-full bg-white mt-8 border-t border-gray-200">
       {/* Main Footer Content */}
-      <div className="container-md">
-        <div className="pt-12 md:pt-16 pb-8 md:pb-12">
-          <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
+      <div className="container-xl">
+        <div className="pt-12 md:pt-16 pb-8 md:pb-12 xl:px-10">
+          <div className="flex flex-col md:grid md:grid-cols-4 lg:grid-cols-10 gap-8 md:gap-12">
             {/* بخش سمت چپ - Logo & Contact */}
-            <div className="space-y-6">
+            <div className="md:col-span-2 lg:col-span-3 space-y-6">
               <div className="flex flex-row md:flex-col-reverse">
                 <div className="flex-1">
                   <p className="text-sm font-medium text-[#214254] mb-2 md:mt-6">
@@ -136,9 +136,9 @@ const Footer = () => {
             </div>
 
             {/* بخش وسط و راست - در موبایل کنار هم */}
-            <div className="grid grid-cols-2 md:contents gap-6 md:gap-0">
+            <div className="md:col-span-2 lg:col-span-4 grid grid-cols-2 md:contents gap-6 md:gap-0">
               {/* بخش وسط - Categories */}
-              <div className="space-y-6">
+              <div className="md:col-span-1 lg:col-span-2 space-y-6">
                 <div>
                   <h6 className="text-sm font-semibold text-[#214254] mb-4">
                     دسته بندی ها
@@ -159,7 +159,7 @@ const Footer = () => {
               </div>
 
               {/* بخش راست - Services & Guide */}
-              <div className="space-y-6">
+              <div className="md:col-span-1 lg:col-span-2 space-y-6">
                 <div>
                   <h6 className="text-sm font-semibold text-[#214254] mb-4">
                     خدمات مشتریان
@@ -199,12 +199,12 @@ const Footer = () => {
             </div>
 
             {/* بخش آخر - About */}
-            <div className="space-y-6">
+            <div className="md:col-span-4 lg:col-span-3 space-y-6">
               <div>
                 <h5 className="text-sm font-semibold text-[#214254] mb-4">
                   درباره پیشرو
                 </h5>
-                <p className="text-xs text-[#80878C] leading-6">
+                <p className="text-xs text-[#80878C] leading-6 max-w-lg">
                   پیشرو ارائه‌دهنده خدمات حرفه‌ای در زمینه آموزش مالی و
                   سرمایه‌گذاری است. با ارائه منابع آموزشی، مشاوره‌های حرفه‌ای و
                   ابزارهای کارآمد، هدف ما ارتقاء دانش مالی شما و دستیابی به
@@ -213,7 +213,7 @@ const Footer = () => {
               </div>
 
               {/* Certificates */}
-              <div className="flex flex-wrap w-full justify-evenly md:justify-start gap-2">
+              <div className="flex flex-wrap w-full justify-evenly sm:justify-start gap-2">
                 <div className="flex justify-center items-center rounded-md border border-[#BAC9CF] px-3 py-2 hover:border-myPrimary transition-colors cursor-pointer">
                   <Image
                     src={"/images/e-namad.png"}
@@ -247,7 +247,7 @@ const Footer = () => {
         </div>
 
         {/* Footer Bottom */}
-        <div className="border-t border-gray-200 py-4 md:py-6">
+        <div className="border-t border-gray-200 py-4 md:py-6 xl:px-10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-[#80878C]">
             <p className="text-center md:text-right">
               © {new Date().getFullYear()} پیشرو سرمایه. تمامی حقوق محفوظ است.
