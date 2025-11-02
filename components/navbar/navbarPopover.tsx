@@ -25,7 +25,6 @@ interface NavbarPopoverProps {
 
 const NavbarPopover = ({ item }: NavbarPopoverProps) => {
   const isDark = useIsDarkNavbar();
-  console.log(isDark);
   return (
     <HoverCard openDelay={100} closeDelay={100}>
       <HoverCardTrigger asChild>
