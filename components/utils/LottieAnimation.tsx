@@ -16,7 +16,7 @@ const LottieRemote = ({
   autoplay = true,
   className,
 }: Props) => {
-  const container-md = useRef<HTMLDivElement>(null);
+  const container = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let anim: ReturnType<typeof lottie.loadAnimation>;
