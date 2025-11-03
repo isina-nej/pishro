@@ -3,7 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"; // مسیر ممکنه با ساختار پروژه‌ت فرق داشته باشه
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"; // مسیر ممکنه با ساختار پروژه‌ت فرق داشته باشه
 
 interface AboutOtherPagesProps {
   data: {
@@ -79,6 +84,9 @@ const AboutOtherPages = ({ data }: AboutOtherPagesProps) => {
 
               {/* 🎥 محتوای مدال */}
               <DialogContent className="max-w-[90vw] md:max-w-3xl bg-transparent border-none shadow-none p-0">
+                <div className="sr-only">
+                  <DialogTitle>فیلم توضیحات</DialogTitle>
+                </div>
                 <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-black">
                   <video
                     src="/videos/landing-vid.webm" // مسیر ویدیوی خودت رو اینجا بزار
