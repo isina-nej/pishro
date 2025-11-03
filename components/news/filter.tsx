@@ -24,7 +24,7 @@ const Filter = () => {
   const [dataType, setDataType] = useState(newsDataType[0]);
 
   return (
-    <div className="h-[55px] w-full flex justify-between items-start shadow-md">
+    <div className="h-[40px] w-full flex justify-between items-start shadow-md">
       <div className="flex gap-8">
         {/* select time range */}
         <Select
