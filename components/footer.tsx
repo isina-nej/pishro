@@ -3,14 +3,18 @@
 import Link from "next/link";
 import React from "react";
 import Image from "next/image";
-
 import { PiInstagramLogoThin, PiWhatsappLogoThin } from "react-icons/pi";
 import { CiLinkedin } from "react-icons/ci";
 import { LiaTelegram } from "react-icons/lia";
 import { SlSocialTwitter } from "react-icons/sl";
 import Logo from "./utils/Logo";
+import { useFooter } from "@/hooks/useFooter";
 
 const Footer = () => {
+  const { showFooter } = useFooter();
+
+  if (!showFooter) return null;
+
   const socials = [
     {
       icon: <PiInstagramLogoThin />,
