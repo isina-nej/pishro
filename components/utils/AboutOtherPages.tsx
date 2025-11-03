@@ -25,7 +25,7 @@ const AboutOtherPages = ({ data }: AboutOtherPagesProps) => {
   } = data;
 
   return (
-    <div className="min-h-[400px] sm:min-h-[500px] md:min-h-[650px] lg:min-h-[800px] xl:h-[1010px] relative mt-8 sm:mt-12 md:mt-16 lg:mt-20">
+    <div className="min-h-[400px] sm:min-h-[500px] md:min-h-[650px] lg:min-h-[800px] relative mt-8 sm:mt-12 md:mt-16 lg:mt-20">
       {/* 🌄 پس‌زمینه */}
       <div className="absolute bottom-0 left-0 w-full aspect-[1440/847] pointer-events-none !-z-10">
         <div className="size-full relative">

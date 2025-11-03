@@ -94,11 +94,22 @@ const Landing3 = ({ data }: Landing3Props) => {
           </p>
 
           {/* 🔘 دکمه‌ها */}
+          {/* 🔘 دکمه‌ها */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 sm:pt-5">
-            <button className="px-5 sm:px-6 py-2.5 sm:py-3 bg-mySecondary text-white border border-mySecondary hover:bg-white hover:text-mySecondary font-semibold rounded-xl shadow-md transition text-sm sm:text-base">
+            <button
+              className="px-5 sm:px-6 py-2.5 sm:py-3 bg-mySecondary text-white border border-mySecondary 
+                font-semibold rounded-xl shadow-md transition-transform duration-300 ease-in-out 
+                text-sm sm:text-base hover:scale-105 hover:-rotate-1 active:scale-95
+              "
+            >
               {button1}
             </button>
-            <button className="px-5 sm:px-6 py-2.5 sm:py-3 border border-mySecondary text-mySecondary font-semibold rounded-xl hover:bg-mySecondary hover:text-white transition text-sm sm:text-base">
+
+            <button
+              className="px-5 sm:px-6 py-2.5 sm:py-3 border border-mySecondary text-mySecondary 
+    font-semibold rounded-xl transition-transform duration-300 ease-in-out 
+    text-sm sm:text-base hover:scale-105 hover:rotate-1 active:scale-95"
+            >
               {button2}
             </button>
           </div>
