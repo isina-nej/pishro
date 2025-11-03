@@ -98,11 +98,11 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
       <div className="absolute -bottom-5 w-full flex justify-center pl-6">
         <button
           className="
-            w-40 bg-mySecondary text-white font-bold text-sm sm:text-base
+            w-48 bg-mySecondary text-white font-bold text-sm sm:text-base
             py-2 rounded-full shadow-md hover:opacity-90 transition
           "
         >
-          خرید دوره
+          افزودن به سبد خرید
         </button>
       </div>
     </Link>
