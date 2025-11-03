@@ -2,15 +2,17 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"; // مسیر ممکنه با ساختار پروژه‌ت فرق داشته باشه
 
 interface AboutOtherPagesProps {
   data: {
-    title1: string; // بخش اول تیتر (مثلاً مسیر)
-    title2: string; // بخش دوم تیتر (مثلاً پیشرو)
+    title1: string;
+    title2: string;
     description: string;
     button1: string;
     button2: string;
-    image?: string; // تصویر پس‌زمینه سفارشی (اختیاری)
+    image?: string;
   };
 }
 
@@ -23,6 +25,8 @@ const AboutOtherPages = ({ data }: AboutOtherPagesProps) => {
     button2 = "بیشتر بدانید",
     image = "/images/utiles/font-iran-section.svg",
   } = data;
+
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="min-h-[400px] sm:min-h-[500px] md:min-h-[650px] lg:min-h-[800px] relative mt-8 sm:mt-12 md:mt-16 lg:mt-20">
@@ -44,18 +48,15 @@ const AboutOtherPages = ({ data }: AboutOtherPagesProps) => {
       {/* ✍️ متن اصلی */}
       <div className="container-xl flex pt-16 sm:pt-24 md:pt-32 lg:pt-40 justify-end h-full z-[999] px-4 sm:px-6 md:px-8">
         <div className="max-w-full sm:max-w-[550px] md:max-w-[650px] lg:max-w-[750px] text-right space-y-4 sm:space-y-5 md:space-y-6">
-          {/* 🔹 تیتر اصلی با دو رنگ */}
           <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[120px] leading-[1.1] font-extrabold">
             <span className="text-[#214254]">{title1}</span>{" "}
             <span className="text-[#FFA135] ml-1 sm:ml-2">{title2}</span>
           </h2>
 
-          {/* 🔸 متن توضیحی */}
-          <p className="text-[#8E8E8E] leading-6 sm:leading-7 md:leading-8 text-sm sm:text-base md:text-lg font-medium !z-[10000] max-w-full sm:max-w-[500px] md:max-w-[650px]">
+          <p className="text-[#8E8E8E] leading-6 sm:leading-7 md:leading-8 text-sm sm:text-base md:text-lg font-medium max-w-full sm:max-w-[500px] md:max-w-[650px]">
             {description}
           </p>
 
-          {/* 🔘 دکمه‌ها */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4">
             <Link
               href="#"
@@ -64,13 +65,30 @@ const AboutOtherPages = ({ data }: AboutOtherPagesProps) => {
             >
               {button1}
             </Link>
-            <Link
-              href="#"
-              className="px-6 sm:px-8 py-2.5 sm:py-3 w-full sm:w-1/2 flex justify-center items-center rounded-full text-sm sm:text-base md:text-lg font-bold border-2 border-[#FFA135] hover:text-[#FFA135] hover:bg-transparent bg-[#FFA135] text-white transition-all"
-              aria-label={button2}
-            >
-              {button2}
-            </Link>
+
+            {/* 🎬 دکمه‌ای که مدال را باز می‌کند */}
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                <button
+                  className="px-6 sm:px-8 py-2.5 sm:py-3 w-full sm:w-1/2 flex justify-center items-center rounded-full text-sm sm:text-base md:text-lg font-bold border-2 border-[#FFA135] bg-[#FFA135] text-white hover:text-[#FFA135] hover:bg-transparent transition-all"
+                  aria-label={button2}
+                >
+                  {button2}
+                </button>
+              </DialogTrigger>
+
+              {/* 🎥 محتوای مدال */}
+              <DialogContent className="max-w-[90vw] md:max-w-3xl bg-transparent border-none shadow-none p-0">
+                <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-black">
+                  <video
+                    src="/videos/landing-vid.webm" // مسیر ویدیوی خودت رو اینجا بزار
+                    controls
+                    autoPlay
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </div>
