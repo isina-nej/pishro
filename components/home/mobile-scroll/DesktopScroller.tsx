@@ -60,6 +60,7 @@ export function DesktopScroller() {
 
         <div className="w-full h-[700px] overflow-hidden flex flex-col justify-end mb-10">
           <div className="w-full h-[550px] bg-mySecondary rounded-[40px] relative">
+            {/* background colors */}
             <div className="absolute size-full rounded-[36px] flex overflow-hidden">
               <div className="relative size-full rounded-[36px] flex">
                 <div className="w-[63%] h-full" />
@@ -69,6 +70,7 @@ export function DesktopScroller() {
             </div>
 
             <div className="w-full h-full flex items-center justify-center">
+              {/* right section */}
               <div className="flex-1 flex flex-col justify-between h-full pt-28 pb-20 pr-12 pl-8 z-10">
                 <div>
                   <h4 className="text-6xl font-semibold text-white mb-12">
@@ -111,6 +113,7 @@ export function DesktopScroller() {
                 </div>
               </div>
 
+              {/* left section */}
               <div className="relative w-[500px] flex justify-center pl-12">
                 <AnimatePresence mode="popLayout" custom={direction}>
                   <motion.div
@@ -122,56 +125,69 @@ export function DesktopScroller() {
                     exit="exit"
                     className="relative w-[435px] aspect-[500/980] -mb-[80px]"
                   >
+                    {/* mobile bg */}
                     <Image
                       src={mobileScrollerSteps[index].img}
                       alt="mobile screen"
                       fill
                       className="object-cover rounded-2xl"
                     />
-
-                    <div className="absolute inset-0">
-                      {mobileScrollerSteps[index].cards.map((card, i) => {
-                        const Icon = card.icon;
-                        return (
-                          <motion.div
-                            key={card.id}
-                            initial={{ opacity: 0.7, scale: 0.9 }}
-                            animate={{
-                              opacity: 1,
-                              scale: [1, 1.08, 1],
-                              y: [0, -6, 0],
-                            }}
-                            transition={{
-                              duration: 3,
-                              delay: i * 0.3,
-                              repeat: Infinity,
-                              repeatType: "mirror",
-                              ease: "easeInOut",
-                            }}
-                            style={{
-                              top: card.top,
-                              left: card.left,
-                              right: card.right,
-                              transform: "translate(-50%, -50%)",
-                            }}
-                            className={clsx(
-                              "absolute w-[120px] h-[120px] p-3 rounded-2xl border backdrop-blur-xl",
-                              "shadow-[0_0_20px_-5px_rgba(255,255,255,0.25)] transition-all",
-                              "bg-gradient-to-br",
-                              mobileScrollerSteps[index].gradient,
-                              "hover:scale-105 hover:shadow-[0_0_25px_-5px_rgba(255,255,255,0.4)] flex flex-col items-center justify-center text-center"
-                            )}
-                          >
-                            <Icon className="w-6 h-6 mb-2 text-black/90" />
-                            <h5 className="text-lg font-bold text-black">
-                              {card.title}
-                            </h5>
-                            <p className="text- text-gray-900/90 mt-1">
-                              {card.desc}
-                            </p>
-                          </motion.div>
-                        );
-                      })}
+                    {/* flying cards */}
+                    <div className="absolute inset-0 flex flex-col justify-end">
+                      <div className="flex flex-col items-center gap-3 mb-[210px]">
+                        {mobileScrollerSteps[index].cards.map((card, i) => {
+                          const Icon = card.icon;
+                          return (
+                            <motion.div
+                              key={card.id}
+                              initial={{ opacity: 0, y: 60 * (4 - i) }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{
+                                duration: 0.5,
+                                delay: (i + 1) * 0.3, // هر کارت با تاخیر وارد میشه
+                                ease: "easeOut",
+                              }}
+                              className={clsx(
+                                "relative p-2 rounded-xl border backdrop-blur-xl",
+                                "shadow-[0_0_10px_-3px_rgba(255,255,255,0.25)]",
+                                "bg-gradient-to-br",
+                                mobileScrollerSteps[index].gradient,
+                                "flex items-center justify-start text-center",
+                                i === 0
+                                  ? "w-[100%] h-[87px] px-3"
+                                  : "w-[80%] h-[70px]"
+                              )}
+                            >
+                              <Icon
+                                className={clsx(
+                                  "text-black/80",
+                                  i === 0 ? "size-9 ml-4" : "size-8 ml-3"
+                                )}
+                              />
+                              <div className="flex flex-col items-start text-black/90">
+                                <h5
+                                  className={clsx(
+                                    "text-base font-semibold",
+                                    i === 0 ? "text-lg" : "text-base"
+                                  )}
+                                >
+                                  {card.title}
+                                </h5>
+                                {card.desc && (
+                                  <p
+                                    className={clsx(
+                                      "text-sm text-black/70 leading-none mt-0.5",
+                                      i === 0 ? "text-base" : "text-sm"
+                                    )}
+                                  >
+                                    {card.desc}
+                                  </p>
+                                )}
+                              </div>
+                            </motion.div>
+                          );
+                        })}
+                      </div>
                     </div>
                   </motion.div>
                 </AnimatePresence>
