@@ -2,7 +2,8 @@ import React from "react";
 import Link from "next/link";
 import { HiMiniArrowLeftEndOnRectangle } from "react-icons/hi2";
 import { FiShoppingCart } from "react-icons/fi";
-import { FaInstagram } from "react-icons/fa6";
+import { FaInstagram, FaXTwitter } from "react-icons/fa6";
+import { RiTelegram2Fill } from "react-icons/ri";
 import clsx from "clsx";
 import { contactInfo } from "@/lib/constants/contact";
 
@@ -45,13 +46,13 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ isDark }) => (
         isDark ? "text-white" : "text-mySecondary"
       )}
     >
-      {/* <Link
-        href="https://x.com/YourXAccount"
+      <Link
+        href={contactInfo.socials.linkedin}
         target="_blank"
         className="hover:opacity-80 transition-colors p-1"
       >
         <FaXTwitter className="size-5" />
-      </Link> */}
+      </Link>
       <Link
         href={contactInfo.socials.instagram}
         target="_blank"
@@ -59,13 +60,13 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ isDark }) => (
       >
         <FaInstagram className="size-6" />
       </Link>
-      {/* <Link
-        href="https://t.me/YourTelegram"
+      <Link
+        href={contactInfo.socials.telegram}
         target="_blank"
         className="hover:text-[#229ED9] transition-colors p-1"
       >
         <RiTelegram2Fill className="size-5" />
-      </Link> */}
+      </Link>
     </div>
   </div>
 );
