@@ -1,3 +1,4 @@
+// app/api/auth/signup/route.ts
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
@@ -13,47 +14,62 @@ export async function POST(req: Request) {
   try {
     const body: { phone?: string; password?: string } = await req.json();
     const phone = body.phone;
-
-    if (!phone) {
-      return NextResponse.json({ error: "phone required" }, { status: 400 });
-    }
-
     const password = body.password;
 
-    if (!phone || !password)
+    if (!phone || !password) {
       return NextResponse.json(
         { error: "phone and password required" },
         { status: 400 }
       );
+    }
 
     // بررسی: آیا کاربر تاییدشده وجود دارد؟
     const existingUser = await prisma.user.findUnique({ where: { phone } });
-    if (existingUser?.phoneVerified)
+    if (existingUser?.phoneVerified) {
       return NextResponse.json(
         { error: "این شماره قبلاً ثبت شده است." },
         { status: 400 }
       );
+    }
 
     // هش کردن رمز و ذخیره موقت در جدول temp
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // OTP جدید بساز و ذخیره کن
+    // OTP جدید بساز
     const code = generateOtpDigits(4);
     const expiresAt = new Date(Date.now() + 2 * 60 * 1000); // دو دقیقه
     console.log("code: ", code);
 
-    await prisma.otp.upsert({
-      where: { phone: phone! },
-      update: { code, expiresAt, createdAt: new Date() },
-      create: { phone, code, expiresAt },
-    });
+    // ❌ استفاده از phone در where مجاز نیست، باید ابتدا id بگیریم
+    const existingOtp = await prisma.otp.findUnique({ where: { phone } });
+
+    if (existingOtp) {
+      // اگر OTP وجود داشت، بروزرسانی کن
+      await prisma.otp.update({
+        where: { id: existingOtp.id },
+        data: { code, expiresAt, createdAt: new Date() },
+      });
+    } else {
+      // اگر OTP وجود نداشت، ایجاد کن
+      await prisma.otp.create({
+        data: { phone, code, expiresAt },
+      });
+    }
 
     // ذخیره موقت کاربر (اگر نبود)
-    await prisma.tempUser.upsert({
+    const existingTempUser = await prisma.tempUser.findUnique({
       where: { phone },
-      update: { passwordHash: hashedPassword, createdAt: new Date() },
-      create: { phone, passwordHash: hashedPassword },
     });
+    if (existingTempUser) {
+      await prisma.tempUser.update({
+        where: { id: existingTempUser.id },
+        data: { passwordHash: hashedPassword, createdAt: new Date() },
+      });
+    } else {
+      await prisma.tempUser.create({
+        data: { phone, passwordHash: hashedPassword },
+      });
+    }
     // TODO add meliPayamak
 
     // ارسال پیامک
