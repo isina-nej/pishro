@@ -1,0 +1,76 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @map("_id") @db.ObjectId
+  phone         String    @unique
+  passwordHash  String
+  name          String?
+  phoneVerified Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  // relations
+  comments      Comment[] @relation("UserComments")
+  orders        Order[]   @relation("UserOrders")
+}
+
+model Course {
+  id            String    @id @map("_id") @db.ObjectId
+  subject       String
+  price         Int
+  img           String?
+  rating        Float?
+  description   String?
+  discountPercent Int?
+  time          String?
+  students      Int?
+  videosCount   Int?
+  createdAt     DateTime  @default(now())
+  // relations
+  comments      Comment[] @relation("CourseComments")
+}
+
+model Comment {
+  id        String   @id @map("_id") @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id], name: "UserComments")
+  userId    String   @db.ObjectId
+  course    Course   @relation(fields: [courseId], references: [id], name: "CourseComments")
+  courseId  String   @db.ObjectId
+  text      String
+  rating    Int?     // optional rating
+  likes     String[] // store user ids who liked
+  dislikes  String[] // store user ids who disliked
+  createdAt DateTime @default(now())
+  updatedAt DateTime? 
+}
+
+model Order {
+  id         String   @id @map("_id") @db.ObjectId
+  user       User?    @relation(fields: [userId], references: [id], name: "UserOrders")
+  userId     String?  @db.ObjectId
+  items      Json     // store array of cart items { courseId, price, qty }
+  total      Int
+  status     String   @default("pending") // pending | paid | failed
+  paymentRef String?
+  createdAt  DateTime @default(now())
+}
+
+model Otp {
+  id        String   @id @map("_id") @db.ObjectId
+  phone     String
+  code      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model NewsletterSubscriber {
+  id        String   @id @map("_id") @db.ObjectId
+  phone     String   @unique
+  createdAt DateTime @default(now())
+}
