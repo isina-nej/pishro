@@ -1,38 +1,50 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FieldErrors, useForm } from "react-hook-form";
+import { useForm, FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Image from "next/image";
 import Link from "next/link";
-import { Lock, Mail, Eye, EyeOff } from "lucide-react"; // Import Eye icons
+import { Lock, Mail, Eye, EyeOff } from "lucide-react";
 import { LuSquareChevronRight } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { signIn } from "next-auth/react";
+import { signupUser } from "@/lib/auth";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
-// Login schema
+// =======================
+// Login Schema
+// =======================
 const loginSchema = z.object({
   username: z
     .string({ required_error: "شماره تلفن الزامی است." })
-    .nonempty("شماره تلفن الزامی است."),
+    .nonempty("شماره تلفن الزامی است.")
+    .regex(/^09\d{9}$/, "شماره تلفن وارد شده معتبر نیست."),
   password: z
     .string({ required_error: "رمز عبور الزامی است." })
-    .nonempty("رمز عبور الزامی است.")
-    .min(8, "رمز عبور باید حداقل 8 کاراکتر باشد."),
+    .min(8, "رمز عبور باید حداقل 8 کاراکتر باشد.")
+    .regex(/[A-Za-z]/, "رمز عبور باید شامل حروف باشد.")
+    .regex(/[0-9]/, "رمز عبور باید شامل اعداد باشد."),
 });
 
-// Signup schema
+// =======================
+// Signup Schema
+// =======================
 const signupSchema = z
   .object({
     username: z
       .string({ required_error: "شماره تلفن الزامی است." })
-      .nonempty("شماره تلفن الزامی است."),
+      .nonempty("شماره تلفن الزامی است.")
+      .regex(/^09\d{9}$/, "شماره تلفن وارد شده معتبر نیست."),
     password: z
       .string({ required_error: "رمز عبور الزامی است." })
-      .nonempty("رمز عبور الزامی است.")
-      .min(8, "رمز عبور باید حداقل 8 کاراکتر باشد."),
+      .min(8, "رمز عبور باید حداقل 8 کاراکتر باشد.")
+      .regex(/[A-Za-z]/, "رمز عبور باید شامل حروف باشد.")
+      .regex(/[0-9]/, "رمز عبور باید شامل اعداد باشد."),
     confirmPassword: z
       .string({ required_error: "تکرار رمز عبور الزامی است." })
       .nonempty("تکرار رمز عبور الزامی است."),
@@ -43,17 +55,101 @@ const signupSchema = z
   });
 
 type Variant = "login" | "signup";
-
 type LoginFormValues = z.infer<typeof loginSchema>;
 type SignupFormValues = z.infer<typeof signupSchema>;
 
-const LoginPage = () => {
-  const [variant, setVariant] = useState<Variant>("login");
-  // State for toggling password visibility
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+// =====================
+// Reusable Input Components
+// =====================
+const TextInput = ({
+  id,
+  label,
+  placeholder,
+  error,
+  icon,
+  ...props
+}: React.ComponentProps<typeof Input> & {
+  label: string;
+  error?: string;
+  icon?: React.ReactNode;
+}) => (
+  <div className="mt-5">
+    <label htmlFor={id} className="block text-xs font-bold mb-4">
+      {label}
+    </label>
+    <div className="relative">
+      <Input
+        id={id}
+        placeholder={placeholder}
+        className={cn(
+          "mt-1 pr-10 block w-full rounded-none border-0 border-b border-black focus-visible:ring-0 focus-visible:bg-gray-100",
+          error ? "border-red-500" : ""
+        )}
+        {...props}
+      />
+      {icon && <div className="absolute bottom-2 right-2">{icon}</div>}
+    </div>
+    {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+  </div>
+);
 
-  // Using react-hook-form with zodResolver
+const PasswordInput = ({
+  id,
+  label,
+  placeholder,
+  error,
+  ...props
+}: React.ComponentProps<typeof Input> & { label: string; error?: string }) => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  return (
+    <div className="mt-5">
+      <label htmlFor={id} className="block text-xs font-bold mb-4">
+        {label}
+      </label>
+      <div className="relative">
+        <Input
+          id={id}
+          type={showPassword ? "text" : "password"}
+          placeholder={placeholder}
+          className={cn(
+            "mt-1 pr-10 pl-8 block w-full rounded-none border-0 border-b border-black focus-visible:ring-0 focus-visible:bg-gray-100",
+            error ? "border-red-500" : ""
+          )}
+          {...props}
+        />
+        <Lock
+          className={cn(
+            "absolute bottom-2 right-2 size-5",
+            error ? "text-red-500" : ""
+          )}
+        />
+        {showPassword ? (
+          <Eye
+            onClick={() => setShowPassword(false)}
+            className="absolute bottom-2 left-2 size-5 cursor-pointer"
+          />
+        ) : (
+          <EyeOff
+            onClick={() => setShowPassword(true)}
+            className="absolute bottom-2 left-2 size-5 cursor-pointer"
+          />
+        )}
+      </div>
+      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+    </div>
+  );
+};
+
+// =====================
+// AuthForm Component
+// =====================
+interface AuthFormProps {
+  variant: Variant;
+  onSubmit: (data: LoginFormValues | SignupFormValues) => void;
+}
+
+const AuthForm = ({ variant, onSubmit }: AuthFormProps) => {
   const {
     register,
     handleSubmit,
@@ -64,50 +160,115 @@ const LoginPage = () => {
     resolver: zodResolver(variant === "signup" ? signupSchema : loginSchema),
     defaultValues:
       variant === "signup"
-        ? {
-            username: "",
-            password: "",
-            confirmPassword: "",
-          }
-        : {
-            username: "",
-            password: "",
-          },
+        ? { username: "", password: "", confirmPassword: "" }
+        : { username: "", password: "" },
   });
 
-  // Reset form on variant change
   useEffect(() => {
     reset(
       variant === "signup"
-        ? {
-            username: "",
-            password: "",
-            confirmPassword: "",
-          }
-        : {
-            username: "",
-            password: "",
-          }
+        ? { username: "", password: "", confirmPassword: "" }
+        : { username: "", password: "" }
     );
   }, [variant, reset]);
 
-  // Form submission handler
-  const onSubmit = (data: LoginFormValues | SignupFormValues) => {
-    console.log("Submitting form with values:", data);
-    // API call or form submission logic here
-  };
+  return (
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col gap-4 mt-8"
+    >
+      <TextInput
+        id="username"
+        label="شماره تلفن"
+        placeholder="شماره تلفن"
+        icon={<Mail className={cn(errors.username ? "text-red-500" : "")} />}
+        {...register("username")}
+        error={errors.username?.message as string}
+      />
+      <PasswordInput
+        id="password"
+        label="رمز عبور"
+        placeholder="رمز عبور خود را وارد کنید"
+        {...register("password")}
+        error={errors.password?.message as string}
+      />
+      {variant === "signup" && (
+        <PasswordInput
+          id="confirmPassword"
+          label="تکرار رمز عبور"
+          placeholder="رمز عبور خود را وارد کنید"
+          {...register("confirmPassword")}
+          error={
+            (errors as FieldErrors<SignupFormValues>).confirmPassword
+              ?.message as string
+          }
+        />
+      )}
+      <Button
+        type="submit"
+        variant="default"
+        className="mt-6 w-full h-10 max-w-[306px] bg-[#d52a16] text-white font-bold text-xl mx-auto"
+      >
+        {variant === "login" ? "ورود" : "ثبت نام"}
+      </Button>
+    </form>
+  );
+};
 
-  const handleButtons = (
-    e: React.MouseEvent<HTMLButtonElement>,
-    type: string
-  ) => {
-    e.preventDefault();
-    console.log(type);
-  };
+// =====================
+// Main Page Component
+// =====================
+const LoginPage = () => {
+  const [variant, setVariant] = useState<Variant>("login");
+  const router = useRouter();
 
-  // Switch form variant (login/signup)
-  const switchVariant = (newVariant: Variant) => {
-    setVariant(newVariant);
+  const switchVariant = (newVariant: Variant) => setVariant(newVariant);
+
+  const onSubmit = async (data: LoginFormValues | SignupFormValues) => {
+    try {
+      if (variant === "signup") {
+        const res = await signupUser({
+          username: data.username,
+          password: data.password,
+        });
+
+        if (res?.success) {
+          toast.success("ثبت‌نام با موفقیت انجام شد!");
+
+          // ✅ ورود خودکار بعد از ثبت‌نام
+          const loginResult = await signIn("credentials", {
+            phone: data.username,
+            password: data.password,
+            redirect: false,
+          });
+
+          if (loginResult?.ok) {
+            router.push("/profile/acc"); // ✅ انتقال به پروفایل
+          } else {
+            toast.error("ورود خودکار پس از ثبت‌نام با مشکل مواجه شد!");
+          }
+        } else {
+          toast.error(res?.message || "خطا در ثبت‌نام!");
+        }
+      } else {
+        // ✅ ورود معمولی
+        const result = await signIn("credentials", {
+          phone: data.username,
+          password: data.password,
+          redirect: false,
+        });
+
+        if (result?.error) {
+          toast.error("نام کاربری یا رمز عبور اشتباه است!");
+        } else {
+          toast.success("ورود موفقیت‌آمیز بود!");
+          router.push("/profile/acc"); // ✅ انتقال بعد از ورود موفق
+        }
+      }
+    } catch (error) {
+      toast.error("خطایی رخ داد، لطفاً مجدد تلاش کنید.");
+      console.error(error);
+    }
   };
 
   return (
@@ -117,7 +278,7 @@ const LoginPage = () => {
         <div>
           <Link href={"/"}>
             <Button
-              variant={"costume"}
+              variant="costume"
               className="text-xs font-medium text-[#214254] group transition-all flex items-center gap-2 pb-0 h-7 px-1"
             >
               <LuSquareChevronRight className="group-hover:fill-gray-100 transition-all" />
@@ -125,221 +286,37 @@ const LoginPage = () => {
             </Button>
           </Link>
         </div>
-        {/* Logo */}
+        {/* Logo / Greeting */}
         <div className="mt-8">
           <p className="text-xs mt-2">سلام اوقاتتون بخیر</p>
         </div>
-        {/* Form */}
-        <div className="mt-10">
-          {/* Variant Selection (Login/Signup) */}
-          <div className="flex border-b">
-            <Button
-              variant={"costume"}
-              className={cn(
-                "flex-1 font-bold text-xl py-4 pb-6 hover:border-b-[#1a7545]",
-                variant === "login" &&
-                  "text-[#3dc37b] border-b-2 border-[#3dc37b]"
-              )}
-              onClick={() => switchVariant("login")}
-            >
-              ورود
-            </Button>
-            <Button
-              variant={"costume"}
-              className={cn(
-                "flex-1 font-bold text-xl py-4 pb-6 hover:border-b-[#1a7545]",
-                variant === "signup" &&
-                  "text-[#3dc37b] border-b-2 border-[#3dc37b]"
-              )}
-              onClick={() => switchVariant("signup")}
-            >
-              ثبت نام
-            </Button>
-          </div>
-          {/* Form Body */}
-          <div className="mt-8">
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="flex flex-col gap-4"
-            >
-              {/* Username Field */}
-              <div className="mt-5">
-                <label
-                  htmlFor="username"
-                  className="block text-xs font-bold mb-4"
-                >
-                  شماره تلفن
-                </label>
-                <div className="relative">
-                  <Input
-                    id="username"
-                    {...register("username")}
-                    type="email"
-                    placeholder="شماره تلفن"
-                    className={cn(
-                      "mt-1 pr-10 block w-full rounded-none border-0 border-b border-black focus-visible:ring-0 focus-visible:bg-gray-100",
-                      errors.username ? "border-red-500" : ""
-                    )}
-                  />
-                  <Mail
-                    className={cn(
-                      "absolute bottom-2 right-2 size-5",
-                      (errors as FieldErrors<SignupFormValues>).username
-                        ? "text-red-500"
-                        : ""
-                    )}
-                  />
-                </div>
-                {errors.username && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.username.message as string}
-                  </p>
-                )}
-              </div>
-              {/* Password Field */}
-              <div className="mt-5">
-                <label
-                  htmlFor="password"
-                  className="block text-xs font-bold mb-4"
-                >
-                  رمز عبور
-                </label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    {...register("password")}
-                    // Toggle input type based on showPassword state
-                    type={showPassword ? "text" : "password"}
-                    placeholder="رمز عبور خود را وارد کنید"
-                    className={cn(
-                      "mt-1 pr-10 pl-8 block w-full rounded-none border-0 border-b border-black focus-visible:ring-0 focus-visible:bg-gray-100",
-                      errors.password ? "border-red-500" : ""
-                    )}
-                  />
-                  {/* Lock icon on the left */}
-                  <Lock
-                    className={cn(
-                      "absolute bottom-2 right-2 size-5",
-                      (errors as FieldErrors<SignupFormValues>).password
-                        ? "text-red-500"
-                        : ""
-                    )}
-                  />
-                  {/* Eye icon on the right to toggle visibility */}
-                  {showPassword ? (
-                    <Eye
-                      onClick={() => setShowPassword(false)}
-                      className="absolute bottom-2 left-2 size-5 cursor-pointer"
-                    />
-                  ) : (
-                    <EyeOff
-                      onClick={() => setShowPassword(true)}
-                      className="absolute bottom-2 left-2 size-5 cursor-pointer"
-                    />
-                  )}
-                </div>
-                {errors.password && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.password.message as string}
-                  </p>
-                )}
-              </div>
-              {/* Confirm Password Field (only for signup) */}
-              {variant === "signup" && (
-                <div className="mt-5">
-                  <label
-                    htmlFor="confirmPassword"
-                    className="block text-xs font-bold mb-4"
-                  >
-                    تکرار رمز عبور
-                  </label>
-                  <div className="relative">
-                    <Input
-                      id="confirmPassword"
-                      {...register("confirmPassword")}
-                      // Toggle input type based on showConfirmPassword state
-                      type={showConfirmPassword ? "text" : "password"}
-                      placeholder="رمز عبور خود را وارد کنید"
-                      className={cn(
-                        "mt-1 pr-10 pl-8 block w-full rounded-none border-0 border-b border-black focus-visible:ring-0 focus-visible:bg-gray-100",
-                        (errors as FieldErrors<SignupFormValues>)
-                          .confirmPassword
-                          ? "border-red-500"
-                          : ""
-                      )}
-                    />
-                    {/* Lock icon on the left */}
-                    <Lock
-                      className={cn(
-                        "absolute bottom-2 right-2 size-5",
-                        (errors as FieldErrors<SignupFormValues>)
-                          .confirmPassword
-                          ? "text-red-500"
-                          : ""
-                      )}
-                    />
-                    {/* Eye icon on the right to toggle visibility */}
-                    {showConfirmPassword ? (
-                      <Eye
-                        onClick={() => setShowConfirmPassword(false)}
-                        className="absolute bottom-2 left-2 size-5 cursor-pointer"
-                      />
-                    ) : (
-                      <EyeOff
-                        onClick={() => setShowConfirmPassword(true)}
-                        className="absolute bottom-2 left-2 size-5 cursor-pointer"
-                      />
-                    )}
-                  </div>
-                  {(errors as FieldErrors<SignupFormValues>)
-                    .confirmPassword && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {
-                        (errors as FieldErrors<SignupFormValues>)
-                          .confirmPassword?.message as string
-                      }
-                    </p>
-                  )}
-                </div>
-              )}
-              <Button
-                type="submit"
-                variant="default"
-                className="mt-6 w-full h-10 max-w-[306px] bg-[#d52a16] text-white font-bold text-xl mx-auto"
-              >
-                {variant === "login" ? "ورود" : "ثبت نام"}
-              </Button>
-              <div className="mt-5 flex gap-5 justify-center">
-                <button
-                  onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
-                    handleButtons(e, "google")
-                  }
-                  className="relative size-10"
-                >
-                  <Image
-                    src={"/images/login/google.png"}
-                    alt="google"
-                    fill
-                    className="object-cover"
-                  />
-                </button>
-                <button
-                  onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
-                    handleButtons(e, "apple")
-                  }
-                  className="relative size-10"
-                >
-                  <Image
-                    src={"/images/login/apple.png"}
-                    alt="apple"
-                    fill
-                    className="object-cover"
-                  />
-                </button>
-              </div>
-            </form>
-          </div>
+        {/* Variant Tabs */}
+        <div className="mt-10 flex border-b">
+          <Button
+            variant="costume"
+            className={cn(
+              "flex-1 font-bold text-xl py-4 pb-6 hover:border-b-[#1a7545]",
+              variant === "login" &&
+                "text-[#3dc37b] border-b-2 border-[#3dc37b]"
+            )}
+            onClick={() => switchVariant("login")}
+          >
+            ورود
+          </Button>
+          <Button
+            variant="costume"
+            className={cn(
+              "flex-1 font-bold text-xl py-4 pb-6 hover:border-b-[#1a7545]",
+              variant === "signup" &&
+                "text-[#3dc37b] border-b-2 border-[#3dc37b]"
+            )}
+            onClick={() => switchVariant("signup")}
+          >
+            ثبت نام
+          </Button>
         </div>
+        {/* Auth Form */}
+        <AuthForm variant={variant} onSubmit={onSubmit} />
       </div>
       {/* Background Image */}
       <div className="flex-1 relative">
