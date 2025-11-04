@@ -20,7 +20,7 @@ export function useAuthForm() {
     try {
       if (variant === "signup") {
         const res = await signupUser({
-          username: data.username,
+          phone: data.username,
           password: data.password,
         });
         if (res?.message) {
