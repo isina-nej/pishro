@@ -4,6 +4,7 @@ import { HiMiniArrowLeftEndOnRectangle } from "react-icons/hi2";
 import { FiShoppingCart } from "react-icons/fi";
 import { FaInstagram } from "react-icons/fa6";
 import clsx from "clsx";
+import { contactInfo } from "@/lib/constants/contact";
 
 interface NavbarActionsProps {
   isDark?: boolean;
@@ -52,7 +53,7 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ isDark }) => (
         <FaXTwitter className="size-5" />
       </Link> */}
       <Link
-        href="https://instagram.com/academi_maali_jahani"
+        href={contactInfo.socials.instagram}
         target="_blank"
         className="hover:text-[#E1306C] transition-colors p-1"
       >

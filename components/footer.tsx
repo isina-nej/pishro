@@ -3,12 +3,11 @@
 import Link from "next/link";
 import React from "react";
 import Image from "next/image";
-import { PiInstagramLogoThin, PiWhatsappLogoThin } from "react-icons/pi";
-import { CiLinkedin } from "react-icons/ci";
-import { LiaTelegram } from "react-icons/lia";
-import { SlSocialTwitter } from "react-icons/sl";
+import { PiInstagramLogoThin } from "react-icons/pi";
+
 import Logo from "./utils/Logo";
 import { useFooter } from "@/hooks/useFooter";
+import { contactInfo } from "@/lib/constants/contact";
 
 const Footer = () => {
   const { showFooter } = useFooter();
@@ -18,29 +17,29 @@ const Footer = () => {
   const socials = [
     {
       icon: <PiInstagramLogoThin />,
-      link: "https://instagram.com/pishro_financial",
+      link: contactInfo.socials.instagram,
       name: "اینستاگرام",
     },
-    {
-      icon: <CiLinkedin />,
-      link: "https://linkedin.com/company/pishro-financial",
-      name: "لینکدین",
-    },
-    {
-      icon: <SlSocialTwitter />,
-      link: "https://x.com/pishro_financial",
-      name: "توییتر",
-    },
-    {
-      icon: <PiWhatsappLogoThin />,
-      link: "https://wa.me/989121234567",
-      name: "واتساپ",
-    },
-    {
-      icon: <LiaTelegram />,
-      link: "https://t.me/pishro_financial",
-      name: "تلگرام",
-    },
+    // {
+    //   icon: <CiLinkedin />,
+    //   link: "https://linkedin.com/company/pishro-financial",
+    //   name: "لینکدین",
+    // },
+    // {
+    //   icon: <SlSocialTwitter />,
+    //   link: "https://x.com/pishro_financial",
+    //   name: "توییتر",
+    // },
+    // {
+    //   icon: <PiWhatsappLogoThin />,
+    //   link: "https://wa.me/989121234567",
+    //   name: "واتساپ",
+    // },
+    // {
+    //   icon: <LiaTelegram />,
+    //   link: "https://t.me/pishro_financial",
+    //   name: "تلگرام",
+    // },
   ];
 
   const categories = [
@@ -75,16 +74,16 @@ const Footer = () => {
                     پشتیبانی و تماس
                   </p>
                   <Link
-                    href="tel:02123456789"
+                    href={`tel:${contactInfo.phone}`}
                     className="text-xs text-[#495157] hover:text-myPrimary transition-colors block mb-1"
                   >
-                    تلفن: 021-23456789
+                    تلفن: {contactInfo.phone}
                   </Link>
                   <Link
-                    href="tel:09121234567"
+                    href={`tel:${contactInfo.mobile}`}
                     className="text-xs text-[#495157] hover:text-myPrimary transition-colors block"
                   >
-                    موبایل: 0912-123-4567
+                    موبایل: {contactInfo.mobile}
                   </Link>
                 </div>
                 <div className="flex-1 md:ml-auto">
