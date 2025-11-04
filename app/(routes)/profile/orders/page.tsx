@@ -1,5 +1,11 @@
+import OrdersTable from "@/components/profile/ordersTable";
+
 const ProfileOrdersPage = () => {
-  return <div>orders</div>;
+  return (
+    <div>
+      <OrdersTable />
+    </div>
+  );
 };
 
 export default ProfileOrdersPage;
