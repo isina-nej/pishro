@@ -15,8 +15,8 @@ import { cn } from "@/lib/utils";
 // Login schema
 const loginSchema = z.object({
   username: z
-    .string({ required_error: "نام کاربری الزامی است." })
-    .nonempty("نام کاربری الزامی است."),
+    .string({ required_error: "شماره تلفن الزامی است." })
+    .nonempty("شماره تلفن الزامی است."),
   password: z
     .string({ required_error: "رمز عبور الزامی است." })
     .nonempty("رمز عبور الزامی است.")
@@ -27,8 +27,8 @@ const loginSchema = z.object({
 const signupSchema = z
   .object({
     username: z
-      .string({ required_error: "نام کاربری الزامی است." })
-      .nonempty("نام کاربری الزامی است."),
+      .string({ required_error: "شماره تلفن الزامی است." })
+      .nonempty("شماره تلفن الزامی است."),
     password: z
       .string({ required_error: "رمز عبور الزامی است." })
       .nonempty("رمز عبور الزامی است.")
@@ -168,14 +168,14 @@ const LoginPage = () => {
                   htmlFor="username"
                   className="block text-xs font-bold mb-4"
                 >
-                  نام کاربری
+                  شماره تلفن
                 </label>
                 <div className="relative">
                   <Input
                     id="username"
                     {...register("username")}
                     type="email"
-                    placeholder="نام کاربری"
+                    placeholder="شماره تلفن"
                     className={cn(
                       "mt-1 pr-10 block w-full rounded-none border-0 border-b border-black focus-visible:ring-0 focus-visible:bg-gray-100",
                       errors.username ? "border-red-500" : ""
