@@ -41,23 +41,21 @@ export async function POST(req: Request) {
     console.log("code: ", code);
 
     // ❌ استفاده از phone در where مجاز نیست، باید ابتدا id بگیریم
-    const existingOtp = await prisma.otp.findUnique({ where: { phone } });
+    const existingOtp = await prisma.otp.findFirst({ where: { phone } });
 
     if (existingOtp) {
-      // اگر OTP وجود داشت، بروزرسانی کن
       await prisma.otp.update({
-        where: { id: existingOtp.id },
+        where: { id: existingOtp.id }, // حتما id برای update استفاده می‌کنیم
         data: { code, expiresAt, createdAt: new Date() },
       });
     } else {
-      // اگر OTP وجود نداشت، ایجاد کن
       await prisma.otp.create({
         data: { phone, code, expiresAt },
       });
     }
 
     // ذخیره موقت کاربر (اگر نبود)
-    const existingTempUser = await prisma.tempUser.findUnique({
+    const existingTempUser = await prisma.tempUser.findFirst({
       where: { phone },
     });
     if (existingTempUser) {
@@ -70,6 +68,7 @@ export async function POST(req: Request) {
         data: { phone, passwordHash: hashedPassword },
       });
     }
+
     // TODO add meliPayamak
 
     // ارسال پیامک
