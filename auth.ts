@@ -51,6 +51,26 @@ export const authConfig: NextAuthConfig = {
       },
     }),
   ],
+
+  /** 🧩 Add callbacks to include custom user fields in session */
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.phone = user.phone;
+        token.name = user.name;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.id as string;
+        session.user.phone = token.phone as string;
+        session.user.name = token.name as string;
+      }
+      return session;
+    },
+  },
 };
 
 // ✅ Export main handler (for /api/auth/[...nextauth])
