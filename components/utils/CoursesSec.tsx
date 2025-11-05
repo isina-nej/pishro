@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -11,9 +11,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-import { coursesData } from "@/public/data";
 import CourseCard from "@/components/utils/courseCard";
+import { getCourses } from "@/lib/services/course-service";
+import { Course } from "@prisma/client";
 
 const categories = [
   { label: "همه", href: "/" },
@@ -26,11 +26,29 @@ const categories = [
 
 const CoursesSec = () => {
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getCourses()
+      .then((data) => {
+        setCourses(data);
+      })
+      .catch((err) => console.error(err))
+      .finally(() => setLoading(false));
+  }, []);
 
   const filteredCourses =
     selectedCategory.label === "همه"
-      ? coursesData
-      : coursesData.filter((c) => c.subject.includes(selectedCategory.label));
+      ? courses
+      : courses.filter((c) => c.subject.includes(selectedCategory.label));
+
+  if (loading)
+    return (
+      <section className="flex justify-center items-center h-64">
+        <p className="text-gray-500">در حال بارگذاری...</p>
+      </section>
+    );
 
   return (
     <section
@@ -49,11 +67,9 @@ const CoursesSec = () => {
                 alt="ایموجی خوشحالی"
                 fill
                 className="object-fill"
-                sizes="(max-width: 640px) 48px, (max-width: 768px) 56px, 64px"
               />
             </div>
           </h2>
-
           <p className="text-[#8A8A8A] mt-1 sm:mt-1.5 md:mt-2 font-bold text-xs sm:text-sm md:text-base max-w-xl">
             این دوره‌ها منتخب بهترین دوره‌های مجموعه ماست
           </p>
@@ -61,46 +77,41 @@ const CoursesSec = () => {
 
         {/* Buttons Section */}
         <div className="relative flex items-center justify-end gap-3 mt-2 w-[260px]">
-          {/* Dropdown button */}
-          <div className="relative flex items-center justify-end gap-3 mt-2 w-[260px]">
-            {/* Dropdown button (shadcn version) */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-1 bg-white border border-gray-300 px-3 py-1.5 rounded-lg shadow-sm hover:shadow-md transition text-sm font-bold">
-                  <ChevronDown size={16} />
-                  <span>{selectedCategory.label}</span>
-                </button>
-              </DropdownMenuTrigger>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="flex items-center gap-1 bg-white border border-gray-300 px-3 py-1.5 rounded-lg shadow-sm hover:shadow-md transition text-sm font-bold">
+                <ChevronDown size={16} />
+                <span>{selectedCategory.label}</span>
+              </button>
+            </DropdownMenuTrigger>
 
-              <DropdownMenuContent
-                align="end"
-                className="w-40 bg-white border border-gray-200 rounded-lg shadow-lg"
-              >
-                {categories.map((cat) => (
-                  <DropdownMenuItem
-                    key={cat.href}
-                    onClick={() => setSelectedCategory(cat)}
-                    className={`cursor-pointer rtl text-right text-sm px-4 py-2 hover:bg-gray-100 ${
-                      cat.label === selectedCategory.label
-                        ? "font-bold text-mySecondary"
-                        : ""
-                    }`}
-                  >
-                    {cat.label}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Go to category page */}
-            <Link
-              href={selectedCategory.href}
-              className="flex items-center gap-1 bg-mySecondary text-white px-4 py-1.5 rounded-lg text-sm font-bold hover:opacity-90 transition"
+            <DropdownMenuContent
+              align="end"
+              className="w-40 bg-white border border-gray-200 rounded-lg shadow-lg"
             >
-              <Folder size={16} />
-              <span>صفحه {selectedCategory.label}</span>
-            </Link>
-          </div>
+              {categories.map((cat) => (
+                <DropdownMenuItem
+                  key={cat.href}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`cursor-pointer rtl text-right text-sm px-4 py-2 hover:bg-gray-100 ${
+                    cat.label === selectedCategory.label
+                      ? "font-bold text-mySecondary"
+                      : ""
+                  }`}
+                >
+                  {cat.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <Link
+            href={selectedCategory.href}
+            className="flex items-center gap-1 bg-mySecondary text-white px-4 py-1.5 rounded-lg text-sm font-bold hover:opacity-90 transition"
+          >
+            <Folder size={16} />
+            <span>صفحه {selectedCategory.label}</span>
+          </Link>
         </div>
       </div>
 

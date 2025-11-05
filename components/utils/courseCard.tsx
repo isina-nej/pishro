@@ -13,13 +13,13 @@ interface CourseCardProps {
   data: {
     subject: string;
     price: number;
-    img: string;
-    rating: number;
-    description: string;
-    discountPercent: number;
-    time: string;
-    students: number;
-    videosCount: number;
+    img?: string | null;
+    rating?: number | null;
+    description?: string | null;
+    discountPercent?: number | null;
+    time?: string | null;
+    students?: number | null;
+    videosCount?: number | null;
   };
   link: string;
 }
@@ -48,7 +48,7 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
           </div>
         ) : (
           <Image
-            src={data.img}
+            src={data.img || "/images/default-course.jpg"}
             alt={data.subject}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -66,15 +66,16 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
           <h4 className="text-xs sm:text-sm text-[#ACACAC] font-bold">
             {data.subject}
           </h4>
-          <RatingStars rating={data.rating} />
+          <RatingStars rating={data.rating || 2.5} />
         </div>
 
         <div className="mt-1 flex flex-col">
-          <p className="font-bold text-sm sm:text-sm line-clamp-2">
-            {data.description}
+          <p className="font-bold text-sm sm:text-sm text-gray-800 line-clamp-2">
+            {data.description || "بدون توضیح"}
           </p>
+
           <div className="flex justify-end">
-            <Price price={data.price} discount={data.discountPercent} />
+            <Price price={data.price} discount={data.discountPercent || 0} />
           </div>
         </div>
 
@@ -84,13 +85,13 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
         >
           <span className="flex items-center gap-1">
             <Users size={16} className="text-gray-900" />
-            {data.students} دوره آموز
+            {data.students ?? 1} دوره آموز
           </span>
           <span className="flex items-center gap-1">
             <Video size={16} className="text-gray-900" />
-            {data.videosCount} ویدئو تخصصی
+            {data.videosCount ?? 1} ویدئو تخصصی
           </span>
-          <FormatTime time={data.time} />
+          <FormatTime time={data.time || "0:00"} />
         </motion.div>
       </motion.div>
 
