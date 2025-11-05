@@ -50,7 +50,7 @@ export function DesktopScroller() {
       className="relative w-full mt-20"
     >
       <div className="sticky top-0 h-screen flex items-center justify-center container-xl py-8">
-        <div className="w-full px-40 flex flex-col items-start justify-start absolute top-10">
+        <div className="w-full px-40 flex flex-col items-start justify-start absolute top-[6%] z-10">
           <h4 className="text-6xl font-bold mb-2">سامانه پیشرو</h4>
           <p className="text-base text-gray-500">
             سامانه <span className="text-myPrimary">پیشرو</span>، مشاور و همراه
@@ -59,7 +59,7 @@ export function DesktopScroller() {
         </div>
 
         <div className="w-full h-[700px] overflow-hidden flex flex-col justify-end mb-10">
-          <div className="w-full h-[550px] bg-mySecondary rounded-[40px] relative">
+          <div className="w-full h-[74vh] bg-mySecondary rounded-[40px] relative">
             {/* background colors */}
             <div className="absolute size-full rounded-[36px] flex overflow-hidden">
               <div className="relative size-full rounded-[36px] flex">
