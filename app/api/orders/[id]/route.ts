@@ -4,12 +4,12 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(
   _req: Request,
-  context: Promise<{ params: { id: string } }>
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { params } = await context;
+    const { id } = await params;
     const order = await prisma.order.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         user: {
           select: {
