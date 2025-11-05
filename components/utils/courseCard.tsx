@@ -8,9 +8,12 @@ import { Users, Video } from "lucide-react";
 import Price from "./price";
 import { FormatTime } from "./FormatTime";
 import RatingStars from "./RatingStars";
+import { useCartStore } from "@/stores/cart-store";
+import toast from "react-hot-toast";
 
 interface CourseCardProps {
   data: {
+    id?: string;
     subject: string;
     price: number;
     img?: string | null;
@@ -26,16 +29,24 @@ interface CourseCardProps {
 
 const CourseCard = ({ data, link }: CourseCardProps) => {
   const [imageError, setImageError] = useState(false);
+  const addToCart = useCartStore((state) => state.addToCart);
+
+  const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault(); // جلوگیری از ریدایرکت Link
+    addToCart({
+      id: data.id,
+      subject: data.subject,
+      price: data.price,
+      img: data.img,
+      discountPercent: data.discountPercent,
+    });
+    toast.success(`«${data.subject}» به سبد خرید اضافه شد 🛒`);
+  };
 
   return (
     <Link
       href={link}
-      className="
-        group w-full 
-        shadow-md transition-shadow rounded-xl
-        p-3 pb-8 bg-white flex flex-col relative
-        hover:shadow-lg
-      "
+      className="group w-full shadow-md transition-shadow rounded-xl p-3 pb-8 bg-white flex flex-col relative hover:shadow-lg"
     >
       {/* Image section */}
       <motion.div
@@ -95,13 +106,11 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
         </motion.div>
       </motion.div>
 
-      {/* به جای دکمه absolute پایین کارت */}
+      {/* دکمه افزودن به سبد خرید */}
       <div className="absolute -bottom-5 w-full flex justify-center pl-6">
         <button
-          className="
-            w-48 bg-mySecondary text-white font-bold text-sm sm:text-base
-            py-2 rounded-full shadow-md hover:opacity-90 transition
-          "
+          onClick={handleAddToCart}
+          className="w-48 bg-mySecondary text-white font-bold text-sm sm:text-base py-2 rounded-full shadow-md hover:opacity-90 transition"
         >
           افزودن به سبد خرید
         </button>

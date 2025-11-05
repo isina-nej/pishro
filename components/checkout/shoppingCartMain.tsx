@@ -1,11 +1,8 @@
+import { Course } from "@prisma/client";
 import ItemCard from "./itemCard";
 
 interface CheckoutMainProps {
-  data: {
-    title: string;
-    image: string;
-    price: number;
-  }[];
+  data: Course[];
 }
 
 const ShoppingCartMain = ({ data }: CheckoutMainProps) => {

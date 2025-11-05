@@ -2,13 +2,10 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { Course } from "@prisma/client";
 
 interface ItemCardProps {
-  data: {
-    title: string;
-    image: string;
-    price: number;
-  };
+  data: Course;
 }
 
 const ItemCard = ({ data }: ItemCardProps) => {
@@ -17,21 +14,21 @@ const ItemCard = ({ data }: ItemCardProps) => {
     <div className="w-full h-fit max-w-[410px] bg-[#fafafa]">
       {/* header */}
       <div className="p-4 border-b">
-        <h6>{data.title}</h6>
+        <h6>{data.subject}</h6>
       </div>
       {/* image */}
-      <div className="w-full h-[150px] p-4 border-b">
-        <div className="relative size-full">
+      <div className="w-full aspect-[16/9] p-4 border-b">
+        <div className="relative size-full rounded-lg overflow-hidden">
           {imageError ? (
             <div className="size-full bg-[#e5e5e5] flex items-center justify-center">
               <span className="text-gray-400">تصویر در دسترس نیست</span>
             </div>
           ) : (
             <Image
-              src={data.image}
+              src={data.img || ""}
               alt="product-image"
               fill
-              className="object-cover border border-black"
+              className="object-cover"
               onError={() => setImageError(true)}
             />
           )}
