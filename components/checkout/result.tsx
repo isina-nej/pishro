@@ -48,10 +48,10 @@ const Result = () => {
   if (loading) {
     return (
       <main className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="w-6 h-6 animate-spin text-gray-500" />
         <span className="ml-2 text-gray-600 text-sm">
           در حال بارگذاری سفارش...
         </span>
+        <Loader2 className="w-6 h-6 animate-spin text-gray-500" />
       </main>
     );
   }
