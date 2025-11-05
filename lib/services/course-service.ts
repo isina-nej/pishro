@@ -1,5 +1,6 @@
 import axios from "axios";
 import type { Course } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 
 export async function getCourses(): Promise<Course[]> {
   try {
@@ -15,4 +16,8 @@ export async function getCourses(): Promise<Course[]> {
     console.error("Error fetching courses:", error);
     throw new Error("Failed to fetch courses");
   }
+}
+
+export async function getCoursesByPrisma() {
+  return prisma.course.findMany({ orderBy: { createdAt: "desc" } });
 }
