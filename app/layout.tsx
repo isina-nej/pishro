@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { Toaster } from "react-hot-toast";
 
 import "@/app/styles/globals.css";
+import ReactQueryProvider from "@/lib/providers/ReactQueryProvider";
 
 const charismaExtraBold = localFont({
   src: "../public/font/CharismaTF-ExtraBold.woff2",
@@ -40,17 +41,19 @@ export default function RootLayout({
       <body
         className={`font-yekan ${charismaExtraBold.variable} ${charismaRegular.variable} ${montserrat.variable} rtl`}
       >
-        {children}
-        <Toaster
-          position="top-center" // می‌تونی تغییر بدی
-          toastOptions={{
-            duration: 3000,
-            style: {
-              fontSize: "14px",
-              direction: "rtl",
-            },
-          }}
-        />
+        <ReactQueryProvider>
+          {children}
+          <Toaster
+            position="top-center" // می‌تونی تغییر بدی
+            toastOptions={{
+              duration: 3000,
+              style: {
+                fontSize: "14px",
+                direction: "rtl",
+              },
+            }}
+          />
+        </ReactQueryProvider>
       </body>
     </html>
   );
