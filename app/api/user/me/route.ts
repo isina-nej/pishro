@@ -1,14 +1,20 @@
 // @/app/api/user/me/route.ts
-import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import {
+  successResponse,
+  unauthorizedResponse,
+  notFoundResponse,
+  errorResponse,
+  ErrorCodes,
+} from "@/lib/api-response";
 
 // ✅ Get complete user information
 export async function GET() {
   try {
     const session = await auth();
     if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return unauthorizedResponse("لطفاً وارد حساب کاربری خود شوید");
     }
 
     const user = await prisma.user.findUnique({
@@ -38,25 +44,22 @@ export async function GET() {
     });
 
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return notFoundResponse("User", "کاربر یافت نشد");
     }
 
-    return NextResponse.json({
-      ok: true,
-      user: {
-        ...user,
-        stats: {
-          totalOrders: user._count.orders,
-          totalEnrollments: user._count.enrollments,
-          totalComments: user._count.comments,
-        },
+    return successResponse({
+      ...user,
+      stats: {
+        totalOrders: user._count.orders,
+        totalEnrollments: user._count.enrollments,
+        totalComments: user._count.comments,
       },
     });
   } catch (error) {
     console.error("[GET /api/user/me] error:", error);
-    return NextResponse.json(
-      { ok: false, error: "خطایی در دریافت اطلاعات کاربر رخ داد" },
-      { status: 500 }
+    return errorResponse(
+      "خطایی در دریافت اطلاعات کاربر رخ داد",
+      ErrorCodes.DATABASE_ERROR
     );
   }
 }

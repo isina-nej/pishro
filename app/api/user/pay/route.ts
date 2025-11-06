@@ -1,14 +1,19 @@
 // api/user/pay
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
+import {
+  successResponse,
+  unauthorizedResponse,
+  errorResponse,
+  ErrorCodes,
+} from "@/lib/api-response";
 
 // ✅ Update pay info
 export async function PUT(req: Request) {
   try {
     const session = await auth();
     if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return unauthorizedResponse("لطفاً وارد حساب کاربری خود شوید");
     }
 
     const { cardNumber, shebaNumber, accountOwner } = await req.json();
@@ -22,12 +27,12 @@ export async function PUT(req: Request) {
       },
     });
 
-    return NextResponse.json({ user });
+    return successResponse(user, "اطلاعات پرداخت با موفقیت بروزرسانی شد");
   } catch (error) {
     console.error("Pay info update error:", error);
-    return NextResponse.json(
-      { error: "Failed to update payment info" },
-      { status: 500 }
+    return errorResponse(
+      "خطایی در بروزرسانی اطلاعات پرداخت رخ داد",
+      ErrorCodes.DATABASE_ERROR
     );
   }
 }

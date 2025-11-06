@@ -1,6 +1,11 @@
 // @/app/api/orders/[id]/route.ts
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import {
+  successResponse,
+  notFoundResponse,
+  errorResponse,
+  ErrorCodes,
+} from "@/lib/api-response";
 
 export async function GET(
   _req: Request,
@@ -21,10 +26,7 @@ export async function GET(
     });
 
     if (!order) {
-      return NextResponse.json(
-        { ok: false, error: "سفارش یافت نشد" },
-        { status: 404 }
-      );
+      return notFoundResponse("Order", "سفارش یافت نشد");
     }
 
     // ✅ Parse items and fetch related courses
@@ -49,23 +51,20 @@ export async function GET(
       discountPercent: course.discountPercent,
     }));
 
-    return NextResponse.json({
-      ok: true,
-      order: {
-        id: order.id,
-        total: order.total,
-        status: order.status,
-        paymentRef: order.paymentRef,
-        createdAt: order.createdAt,
-        user: order.user,
-        items,
-      },
+    return successResponse({
+      id: order.id,
+      total: order.total,
+      status: order.status,
+      paymentRef: order.paymentRef,
+      createdAt: order.createdAt,
+      user: order.user,
+      items,
     });
   } catch (err) {
     console.error("[GET /api/orders/:id] error:", err);
-    return NextResponse.json(
-      { ok: false, error: "خطایی در دریافت اطلاعات سفارش رخ داد" },
-      { status: 500 }
+    return errorResponse(
+      "خطایی در دریافت اطلاعات سفارش رخ داد",
+      ErrorCodes.DATABASE_ERROR
     );
   }
 }

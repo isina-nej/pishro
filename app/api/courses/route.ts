@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { successResponse, errorResponse, ErrorCodes } from "@/lib/api-response";
 
 export async function GET() {
   try {
@@ -7,12 +7,12 @@ export async function GET() {
       orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json(courses);
+    return successResponse(courses);
   } catch (error) {
     console.error("Error fetching courses:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch courses" },
-      { status: 500 }
+    return errorResponse(
+      "خطایی در دریافت دوره‌ها رخ داد",
+      ErrorCodes.DATABASE_ERROR
     );
   }
 }

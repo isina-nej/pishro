@@ -1,6 +1,11 @@
 // app/api/checkout/route.ts
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import {
+  successResponse,
+  validationError,
+  errorResponse,
+  ErrorCodes,
+} from "@/lib/api-response";
 
 export async function POST(req: Request) {
   try {
@@ -9,9 +14,12 @@ export async function POST(req: Request) {
 
     // ✅ Validate input
     if (!userId || !items || items.length === 0) {
-      return NextResponse.json(
-        { error: "اطلاعات ارسالی ناقص است" },
-        { status: 400 }
+      return validationError(
+        {
+          userId: !userId ? "شناسه کاربر الزامی است" : [],
+          items: !items || items.length === 0 ? "آیتم‌های سفارش الزامی است" : [],
+        },
+        "اطلاعات ارسالی ناقص است"
       );
     }
 
@@ -25,9 +33,9 @@ export async function POST(req: Request) {
     });
 
     if (courses.length === 0) {
-      return NextResponse.json(
-        { error: "دوره‌ای با شناسه‌های ارسالی یافت نشد" },
-        { status: 400 }
+      return validationError(
+        { courses: "دوره‌ای با شناسه‌های ارسالی یافت نشد" },
+        "دوره‌ای یافت نشد"
       );
     }
 
@@ -51,17 +59,19 @@ export async function POST(req: Request) {
     // ⚠️ Fake payment URL (until Zarinpal integration)
     const fakePayUrl = `https://sandbox.zarinpal.com/pg/StartPay/fake-${order.id}`;
 
-    return NextResponse.json({
-      ok: true,
-      orderId: order.id,
-      payUrl: fakePayUrl,
-      total,
-    });
+    return successResponse(
+      {
+        orderId: order.id,
+        payUrl: fakePayUrl,
+        total,
+      },
+      "سفارش با موفقیت ایجاد شد"
+    );
   } catch (err) {
     console.error("[Checkout POST error]:", err);
-    return NextResponse.json(
-      { error: "خطایی در پردازش سفارش رخ داد" },
-      { status: 500 }
+    return errorResponse(
+      "خطایی در پردازش سفارش رخ داد",
+      ErrorCodes.DATABASE_ERROR
     );
   }
 }

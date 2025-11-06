@@ -1,14 +1,19 @@
 // api/user/personal
-import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import {
+  successResponse,
+  unauthorizedResponse,
+  errorResponse,
+  ErrorCodes,
+} from "@/lib/api-response";
 
 // ✅ Update personal information
 export async function PUT(req: Request) {
   try {
     const session = await auth();
     if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return unauthorizedResponse("لطفاً وارد حساب کاربری خود شوید");
     }
 
     const data = await req.json();
@@ -35,12 +40,12 @@ export async function PUT(req: Request) {
       },
     });
 
-    return NextResponse.json({ user: updatedUser });
+    return successResponse(updatedUser, "اطلاعات شخصی با موفقیت بروزرسانی شد");
   } catch (error) {
     console.error("Update personal info error:", error);
-    return NextResponse.json(
-      { error: "Failed to update personal info" },
-      { status: 500 }
+    return errorResponse(
+      "خطایی در بروزرسانی اطلاعات شخصی رخ داد",
+      ErrorCodes.DATABASE_ERROR
     );
   }
 }

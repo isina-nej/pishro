@@ -1,14 +1,20 @@
 // @/app/api/user/orders/route.ts
-import { NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import {
+  paginatedResponse,
+  unauthorizedResponse,
+  errorResponse,
+  ErrorCodes,
+} from "@/lib/api-response";
 
 // ✅ Get all user's orders
 export async function GET(req: Request) {
   try {
     const session = await auth();
     if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return unauthorizedResponse("لطفاً وارد حساب کاربری خود شوید");
     }
 
     const { searchParams } = new URL(req.url);
@@ -18,7 +24,7 @@ export async function GET(req: Request) {
     const skip = (page - 1) * limit;
 
     // Build where clause
-    const where: any = { userId: session.user.id };
+    const where: Prisma.OrderWhereInput = { userId: session.user.id };
     if (status) where.status = status;
 
     const [orders, total] = await Promise.all([
@@ -69,21 +75,12 @@ export async function GET(req: Request) {
       })
     );
 
-    return NextResponse.json({
-      ok: true,
-      orders: ordersWithDetails,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-      },
-    });
+    return paginatedResponse(ordersWithDetails, page, limit, total);
   } catch (error) {
     console.error("[GET /api/user/orders] error:", error);
-    return NextResponse.json(
-      { ok: false, error: "خطایی در دریافت سفارشات رخ داد" },
-      { status: 500 }
+    return errorResponse(
+      "خطایی در دریافت سفارشات رخ داد",
+      ErrorCodes.DATABASE_ERROR
     );
   }
 }

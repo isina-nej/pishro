@@ -1,14 +1,20 @@
 // @/app/api/user/transactions/route.ts
-import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import {
+  paginatedResponse,
+  unauthorizedResponse,
+  errorResponse,
+  ErrorCodes,
+} from "@/lib/api-response";
+import { Prisma } from "@prisma/client";
 
 // ✅ Get user's transactions
 export async function GET(req: Request) {
   try {
     const session = await auth();
     if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return unauthorizedResponse("لطفاً وارد حساب کاربری خود شوید");
     }
 
     const { searchParams } = new URL(req.url);
@@ -19,7 +25,7 @@ export async function GET(req: Request) {
     const skip = (page - 1) * limit;
 
     // Build where clause
-    const where: any = { userId: session.user.id };
+    const where: Prisma.TransactionWhereInput = { userId: session.user.id };
     if (type) where.type = type;
     if (status) where.status = status;
 
@@ -54,21 +60,12 @@ export async function GET(req: Request) {
       order: transaction.order,
     }));
 
-    return NextResponse.json({
-      ok: true,
-      transactions: formattedTransactions,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-      },
-    });
+    return paginatedResponse(formattedTransactions, page, limit, total);
   } catch (error) {
     console.error("[GET /api/user/transactions] error:", error);
-    return NextResponse.json(
-      { ok: false, error: "خطایی در دریافت تراکنش‌ها رخ داد" },
-      { status: 500 }
+    return errorResponse(
+      "خطایی در دریافت تراکنش‌ها رخ داد",
+      ErrorCodes.DATABASE_ERROR
     );
   }
 }

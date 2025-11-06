@@ -1,7 +1,12 @@
 // app/api/otp/send/route.ts
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { sendSmsMelipayamak } from "@/lib/sms";
+import {
+  successResponse,
+  validationError,
+  errorResponse,
+  ErrorCodes,
+} from "@/lib/api-response";
 
 function generateOtpDigits(length = 4) {
   const min = 10 ** (length - 1);
@@ -12,8 +17,12 @@ function generateOtpDigits(length = 4) {
 export async function POST(req: Request) {
   try {
     const { phone } = await req.json();
+    
     if (!phone || !/^09\d{9}$/.test(phone)) {
-      return NextResponse.json({ error: "phone_invalid" }, { status: 400 });
+      return validationError(
+        { phone: "شماره تلفن معتبر نیست" },
+        "شماره تلفن باید با فرمت 09XXXXXXXXX باشد"
+      );
     }
 
     const code = generateOtpDigits(4);
@@ -33,12 +42,18 @@ export async function POST(req: Request) {
       console.log("SMS sent:", response);
     } catch (err) {
       console.error("SMS send failed:", err);
-      return NextResponse.json({ error: "sms_failed" }, { status: 500 });
+      return errorResponse(
+        "ارسال پیامک با خطا مواجه شد",
+        ErrorCodes.SMS_SEND_FAILED
+      );
     }
 
-    return NextResponse.json({ ok: true, expiresAt });
+    return successResponse({ expiresAt }, "کد تایید با موفقیت ارسال شد");
   } catch (err) {
     console.error("OTP send error:", err);
-    return NextResponse.json({ error: "internal" }, { status: 500 });
+    return errorResponse(
+      "خطایی در ارسال کد تایید رخ داد",
+      ErrorCodes.INTERNAL_ERROR
+    );
   }
 }

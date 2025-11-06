@@ -1,8 +1,14 @@
 // app/api/auth/signup/route.ts
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { sendSmsMelipayamak } from "@/lib/sms";
+import {
+  successResponse,
+  validationError,
+  conflictResponse,
+  errorResponse,
+  ErrorCodes,
+} from "@/lib/api-response";
 
 function generateOtpDigits(length = 4) {
   const min = 10 ** (length - 1);
@@ -17,19 +23,19 @@ export async function POST(req: Request) {
     const password = body.password;
 
     if (!phone || !password) {
-      return NextResponse.json(
-        { error: "phone and password required" },
-        { status: 400 }
+      return validationError(
+        {
+          phone: !phone ? ["شماره تلفن الزامی است"] : [],
+          password: !password ? ["رمز عبور الزامی است"] : [],
+        },
+        "اطلاعات ناقص است"
       );
     }
 
     // بررسی: آیا کاربر تاییدشده وجود دارد؟
     const existingUser = await prisma.user.findUnique({ where: { phone } });
     if (existingUser?.phoneVerified) {
-      return NextResponse.json(
-        { error: "این شماره قبلاً ثبت شده است." },
-        { status: 400 }
-      );
+      return conflictResponse("User", "این شماره قبلاً ثبت شده است");
     }
 
     // هش کردن رمز و ذخیره موقت در جدول temp
@@ -77,15 +83,18 @@ export async function POST(req: Request) {
       console.log("SMS sent:", response);
     } catch (err) {
       console.error("SMS send failed:", err);
-      return NextResponse.json({ error: "sms_failed" }, { status: 500 });
+      return errorResponse(
+        "ارسال پیامک با خطا مواجه شد",
+        ErrorCodes.SMS_SEND_FAILED
+      );
     }
 
-    return NextResponse.json({ message: "کد تایید ارسال شد." });
+    return successResponse({ sent: true }, "کد تایید ارسال شد");
   } catch (error) {
     console.error("Signup error:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
+    return errorResponse(
+      "خطایی در ثبت‌نام رخ داد",
+      ErrorCodes.INTERNAL_ERROR
     );
   }
 }

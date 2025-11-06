@@ -1,22 +1,29 @@
 // @/app/api/user/enrollment/route.ts
-import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import {
+  successResponse,
+  unauthorizedResponse,
+  validationError,
+  forbiddenResponse,
+  errorResponse,
+  ErrorCodes,
+} from "@/lib/api-response";
 
 // ✅ Update enrollment progress
 export async function PATCH(req: Request) {
   try {
     const session = await auth();
     if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return unauthorizedResponse("لطفاً وارد حساب کاربری خود شوید");
     }
 
     const { enrollmentId, progress, completed } = await req.json();
 
     if (!enrollmentId) {
-      return NextResponse.json(
-        { error: "enrollmentId is required" },
-        { status: 400 }
+      return validationError(
+        { enrollmentId: "شناسه ثبت‌نام الزامی است" },
+        "اطلاعات ناقص است"
       );
     }
 
@@ -25,11 +32,15 @@ export async function PATCH(req: Request) {
       where: { id: enrollmentId },
     });
 
-    if (!enrollment || enrollment.userId !== session.user.id) {
-      return NextResponse.json(
-        { error: "Enrollment not found or unauthorized" },
-        { status: 404 }
+    if (!enrollment) {
+      return validationError(
+        { enrollmentId: "ثبت‌نام یافت نشد" },
+        "ثبت‌نام یافت نشد"
       );
+    }
+
+    if (enrollment.userId !== session.user.id) {
+      return forbiddenResponse("شما مجاز به ویرایش این ثبت‌نام نیستید");
     }
 
     // Update enrollment
@@ -37,21 +48,23 @@ export async function PATCH(req: Request) {
       where: { id: enrollmentId },
       data: {
         progress:
-          progress !== undefined ? Math.min(Math.max(progress, 0), 100) : undefined,
+          progress !== undefined
+            ? Math.min(Math.max(progress, 0), 100)
+            : undefined,
         completedAt: completed ? new Date() : undefined,
         lastAccessAt: new Date(),
       },
     });
 
-    return NextResponse.json({
-      ok: true,
-      enrollment: updatedEnrollment,
-    });
+    return successResponse(
+      updatedEnrollment,
+      "پیشرفت دوره با موفقیت بروزرسانی شد"
+    );
   } catch (error) {
     console.error("[PATCH /api/user/enrollment] error:", error);
-    return NextResponse.json(
-      { ok: false, error: "خطایی در بروزرسانی پیشرفت دوره رخ داد" },
-      { status: 500 }
+    return errorResponse(
+      "خطایی در بروزرسانی پیشرفت دوره رخ داد",
+      ErrorCodes.DATABASE_ERROR
     );
   }
 }

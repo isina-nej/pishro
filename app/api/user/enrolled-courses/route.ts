@@ -1,14 +1,19 @@
 // @/app/api/user/enrolled-courses/route.ts
-import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import {
+  paginatedResponse,
+  unauthorizedResponse,
+  errorResponse,
+  ErrorCodes,
+} from "@/lib/api-response";
 
 // ✅ Get user's enrolled courses with progress
 export async function GET(req: Request) {
   try {
     const session = await auth();
     if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return unauthorizedResponse("لطفاً وارد حساب کاربری خود شوید");
     }
 
     const { searchParams } = new URL(req.url);
@@ -53,21 +58,12 @@ export async function GET(req: Request) {
       course: enrollment.course,
     }));
 
-    return NextResponse.json({
-      ok: true,
-      enrollments: formattedEnrollments,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-      },
-    });
+    return paginatedResponse(formattedEnrollments, page, limit, total);
   } catch (error) {
     console.error("[GET /api/user/enrolled-courses] error:", error);
-    return NextResponse.json(
-      { ok: false, error: "خطایی در دریافت دوره‌های ثبت‌نامی رخ داد" },
-      { status: 500 }
+    return errorResponse(
+      "خطایی در دریافت دوره‌های ثبت‌نامی رخ داد",
+      ErrorCodes.DATABASE_ERROR
     );
   }
 }
