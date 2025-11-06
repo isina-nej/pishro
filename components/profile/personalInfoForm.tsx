@@ -33,10 +33,13 @@ const personalInfoSchema = z.object({
 type PersonalInfoFormValues = z.infer<typeof personalInfoSchema>;
 
 const PersonalInfoForm = forwardRef((props, ref) => {
+  const [loading, setLoading] = React.useState(true);
+
   const {
     register,
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm<PersonalInfoFormValues>({
     resolver: zodResolver(personalInfoSchema),
@@ -49,6 +52,33 @@ const PersonalInfoForm = forwardRef((props, ref) => {
       birthDate: null,
     },
   });
+
+  // Fetch user data on mount
+  React.useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const { getCurrentUser } = await import("@/lib/services/user-service");
+        const response = await getCurrentUser();
+        const user = response.data;
+
+        setValue("firstName", user.firstName || "");
+        setValue("lastName", user.lastName || "");
+        setValue("phone", user.phone);
+        setValue("email", user.email || "");
+        setValue("nationalCode", user.nationalCode || "");
+
+        if (user.birthDate) {
+          setValue("birthDate", new DateObject(new Date(user.birthDate)));
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        toast.error("خطا در بارگذاری اطلاعات");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUserData();
+  }, [setValue]);
 
   const onSubmit = async (data: PersonalInfoFormValues) => {
     try {
@@ -79,8 +109,8 @@ const PersonalInfoForm = forwardRef((props, ref) => {
           </span>
         </h6>
       </div>
-      {/* form */}
 
+      {/* form */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-5">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-6">
           {/* نام */}
@@ -92,6 +122,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
               <input
                 type="text"
                 {...register("firstName")}
+                disabled={loading}
                 className="mt-1 block w-full border border-gray-300 rounded-md p-2"
               />
             </div>
@@ -101,6 +132,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
               </p>
             )}
           </div>
+
           {/* نام خانوادگی */}
           <div>
             <div className="flex items-center">
@@ -110,6 +142,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
               <input
                 type="text"
                 {...register("lastName")}
+                disabled={loading}
                 className="mt-1 block w-full border border-gray-300 rounded-md p-2"
               />
             </div>
@@ -119,6 +152,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
               </p>
             )}
           </div>
+
           {/* شماره تماس */}
           <div>
             <div className="flex items-center">
@@ -128,6 +162,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
               <input
                 type="tel"
                 {...register("phone")}
+                disabled={loading}
                 className="mt-1 block w-full border border-gray-300 rounded-md p-2"
               />
             </div>
@@ -137,6 +172,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
               </p>
             )}
           </div>
+
           {/* نشانی ایمیل */}
           <div>
             <div className="flex items-center">
@@ -146,6 +182,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
               <input
                 type="email"
                 {...register("email")}
+                disabled={loading}
                 className="mt-1 block w-full border border-gray-300 rounded-md p-2"
               />
             </div>
@@ -155,6 +192,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
               </p>
             )}
           </div>
+
           {/* کد ملی */}
           <div>
             <div className="flex items-center">
@@ -164,6 +202,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
               <input
                 type="text"
                 {...register("nationalCode")}
+                disabled={loading}
                 className="mt-1 block w-full border border-gray-300 rounded-md p-2"
               />
             </div>
@@ -173,6 +212,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
               </p>
             )}
           </div>
+
           {/* تاریخ تولد */}
           <div>
             <div className="flex items-center">
@@ -192,6 +232,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
                     placeholder="انتخاب تاریخ"
                     inputClass="mt-1 block w-full border border-gray-300 rounded-md p-2"
                     containerClassName="w-full"
+                    disabled={loading}
                   />
                 )}
               />

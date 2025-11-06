@@ -1,11 +1,11 @@
 import OrdersTable from "./ordersTable";
-import FavoritesList from "./favoritesList";
+import EnrolledCourses from "./enrolledCourses";
 
 const ProfileMainContent = () => {
   return (
     <div>
+      <EnrolledCourses />
       <OrdersTable />
-      <FavoritesList />
     </div>
   );
 };
