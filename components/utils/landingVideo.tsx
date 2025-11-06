@@ -13,7 +13,7 @@ const LandingVideo = ({ vidSrc, title, main }: LandingVideoProps) => {
     <div
       className={cn(
         "relative w-full overflow-hidden",
-        main ? "h-[480px]" : "h-[624px]"
+        main ? "h-[480px]" : "h-screen"
       )}
     >
       {/* Video Background */}
