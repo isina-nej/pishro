@@ -26,9 +26,11 @@ model User {
   shebaNumber   String?     // شماره شبا
   accountOwner  String?     // نام صاحب حساب
 
-  createdAt     DateTime  @default(now())
-  comments      Comment[] @relation("UserComments")
-  orders        Order[]   @relation("UserOrders")
+  createdAt     DateTime      @default(now())
+  comments      Comment[]     @relation("UserComments")
+  orders        Order[]       @relation("UserOrders")
+  enrollments   Enrollment[]  @relation("UserEnrollments")
+  transactions  Transaction[] @relation("UserTransactions")
 }
 
 model TempUser {
@@ -47,7 +49,7 @@ model Otp {
 }
 
 model Course {
-  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
   subject         String
   price           Int
   img             String?
@@ -57,8 +59,10 @@ model Course {
   time            String?
   students        Int?
   videosCount     Int?
-  createdAt       DateTime  @default(now())
-  comments        Comment[] @relation("CourseComments")
+  createdAt       DateTime     @default(now())
+  comments        Comment[]    @relation("CourseComments")
+  enrollments     Enrollment[] @relation("CourseEnrollments")
+  orderItems      OrderItem[]  @relation("CourseOrderItems")
 }
 
 model Comment {
@@ -76,18 +80,62 @@ model Comment {
 }
 
 model Order {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  user       User?    @relation(fields: [userId], references: [id], name: "UserOrders")
-  userId     String?  @db.ObjectId
-  items      Json
-  total      Int
-  status     String   @default("pending")
-  paymentRef String?
-  createdAt  DateTime @default(now())
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  user         User?         @relation(fields: [userId], references: [id], name: "UserOrders")
+  userId       String?       @db.ObjectId
+  items        Json          // نگه می‌داریم برای backward compatibility
+  total        Int
+  status       String        @default("pending")
+  paymentRef   String?
+  createdAt    DateTime      @default(now())
+  orderItems   OrderItem[]   @relation("OrderOrderItems")
+  transactions Transaction[] @relation("OrderTransactions")
 }
 
 model NewsletterSubscriber {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   phone     String   @unique
   createdAt DateTime @default(now())
+}
+
+// ✅ مدل ثبت‌نام در دوره
+model Enrollment {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  user         User      @relation(fields: [userId], references: [id], name: "UserEnrollments")
+  userId       String    @db.ObjectId
+  course       Course    @relation(fields: [courseId], references: [id], name: "CourseEnrollments")
+  courseId     String    @db.ObjectId
+  enrolledAt   DateTime  @default(now())
+  progress     Int       @default(0) // درصد پیشرفت 0-100
+  completedAt  DateTime? // زمان تکمیل دوره
+  lastAccessAt DateTime? // آخرین زمان دسترسی
+
+  @@unique([userId, courseId]) // هر یوزر فقط یکبار میتونه در یک دوره ثبت‌نام کنه
+}
+
+// ✅ مدل تراکنش‌ها
+model Transaction {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  user        User     @relation(fields: [userId], references: [id], name: "UserTransactions")
+  userId      String   @db.ObjectId
+  order       Order?   @relation(fields: [orderId], references: [id], name: "OrderTransactions")
+  orderId     String?  @db.ObjectId
+  amount      Int      // مبلغ
+  type        String   // "payment", "refund", "withdrawal"
+  status      String   // "pending", "success", "failed"
+  gateway     String?  // "zarinpal", "mellat", etc
+  refNumber   String?  // شماره پیگیری
+  description String?
+  createdAt   DateTime @default(now())
+}
+
+// ✅ مدل جزئیات آیتم‌های سفارش
+model OrderItem {
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  order           Order   @relation(fields: [orderId], references: [id], name: "OrderOrderItems")
+  orderId         String  @db.ObjectId
+  course          Course  @relation(fields: [courseId], references: [id], name: "CourseOrderItems")
+  courseId        String  @db.ObjectId
+  price           Int     // قیمت در زمان خرید
+  discountPercent Int?    // تخفیف در زمان خرید
 }

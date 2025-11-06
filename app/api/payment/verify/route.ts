@@ -1,6 +1,10 @@
 // @/app/api/payment/verify/route.ts
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import {
+  createTransaction,
+  createEnrollmentsFromOrder,
+} from "@/lib/helpers/transaction";
 // import Zarinpal from "zarinpal-nodejs"; // (در آینده فعال می‌شود)
 
 export async function GET(req: Request) {
@@ -59,19 +63,58 @@ export async function GET(req: Request) {
 
     // 🧪 حالت تستی (Fake response)
     if (status === "OK") {
+      const refNumber = `TEST-${authority}`;
+
+      // Update order status
       await prisma.order.update({
         where: { id: orderId },
-        data: { status: "paid", paymentRef: `TEST-${authority}` },
+        data: { status: "paid", paymentRef: refNumber },
       });
+
+      // Create transaction record
+      if (order.userId) {
+        await createTransaction({
+          userId: order.userId,
+          orderId: order.id,
+          amount: order.total,
+          type: "payment",
+          status: "success",
+          gateway: "zarinpal",
+          refNumber,
+          description: "پرداخت موفق سفارش",
+        });
+
+        // Create enrollments for purchased courses
+        try {
+          await createEnrollmentsFromOrder(order.userId, order.id);
+        } catch (error) {
+          console.error("Error creating enrollments:", error);
+          // Don't fail the payment if enrollment creation fails
+        }
+      }
 
       return NextResponse.redirect(
         `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/result?result=success&orderId=${orderId}`
       );
     } else {
+      // Update order status to failed
       await prisma.order.update({
         where: { id: orderId },
         data: { status: "failed" },
       });
+
+      // Create failed transaction record
+      if (order.userId) {
+        await createTransaction({
+          userId: order.userId,
+          orderId: order.id,
+          amount: order.total,
+          type: "payment",
+          status: "failed",
+          gateway: "zarinpal",
+          description: "پرداخت ناموفق",
+        });
+      }
 
       return NextResponse.redirect(
         `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/result?result=failed&orderId=${orderId}`
