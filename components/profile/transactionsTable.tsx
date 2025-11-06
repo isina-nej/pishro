@@ -10,24 +10,24 @@ const TransactionsTable = () => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
+  const [pageSize] = useState(10);
 
   useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        setLoading(true);
+        const response = await getUserTransactions(page, pageSize);
+        setTransactions(response.data.items);
+        setTotal(response.data.pagination.total);
+      } catch (error) {
+        console.error("Error fetching transactions:", error);
+        toast.error("خطا در دریافت تراکنش‌ها");
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchTransactions();
-  }, [page]);
-
-  const fetchTransactions = async () => {
-    try {
-      setLoading(true);
-      const response = await getUserTransactions(page, 10);
-      setTransactions(response.data.items);
-      setTotal(response.data.pagination.total);
-    } catch (error) {
-      console.error("Error fetching transactions:", error);
-      toast.error("خطا در دریافت تراکنش‌ها");
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [page, pageSize]);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -82,7 +82,9 @@ const TransactionsTable = () => {
     }).format(date);
   };
 
-  if (loading) {
+  const totalPages = Math.ceil(total / pageSize);
+
+  if (loading && transactions.length === 0) {
     return (
       <div className="bg-white rounded-md mb-8 shadow p-8">
         <div className="flex justify-center items-center">
@@ -96,7 +98,9 @@ const TransactionsTable = () => {
     return (
       <div className="bg-white rounded-md mb-8 shadow">
         <ProfileHeader>
-          <h4 className="font-medium text-sm text-[#131834]">تراکنش‌های اخیر</h4>
+          <h4 className="font-medium text-sm text-[#131834]">
+            تراکنش‌های اخیر
+          </h4>
         </ProfileHeader>
         <div className="p-8 text-center text-gray-500">
           هیچ تراکنشی ثبت نشده است
@@ -143,7 +147,11 @@ const TransactionsTable = () => {
                   {getTypeLabel(transaction.type)}
                 </td>
                 <td className="px-5 py-4 whitespace-nowrap text-xs text-gray-900">
-                  <span className={transaction.type === "refund" ? "text-green-600" : ""}>
+                  <span
+                    className={
+                      transaction.type === "refund" ? "text-green-600" : ""
+                    }
+                  >
                     {transaction.amount.toLocaleString("fa-IR")} تومان
                   </span>
                 </td>
@@ -164,6 +172,37 @@ const TransactionsTable = () => {
           </tbody>
         </table>
       </div>
+
+      {/* pagination */}
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-3 p-4 border-t border-[#f5f5f5]">
+          <button
+            className="px-3 py-1 text-xs border rounded disabled:opacity-50"
+            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+            disabled={loading || page === 1}
+          >
+            {loading ? (
+              <div className="w-3 h-3 border-b-2 border-gray-500 rounded-full animate-spin inline-block"></div>
+            ) : (
+              "قبلی"
+            )}
+          </button>
+          <span className="text-xs text-gray-600">
+            صفحه {page} از {totalPages}
+          </span>
+          <button
+            className="px-3 py-1 text-xs border rounded disabled:opacity-50"
+            onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+            disabled={loading || page === totalPages}
+          >
+            {loading ? (
+              <div className="w-3 h-3 border-b-2 border-gray-500 rounded-full animate-spin inline-block"></div>
+            ) : (
+              "بعدی"
+            )}
+          </button>
+        </div>
+      )}
     </div>
   );
 };
