@@ -21,22 +21,22 @@ import { miniSliderData1, miniSliderData2 } from "@/public/data";
 /* ------------------------- 🖼️ Image Data ------------------------- */
 const SLIDES = [
   {
-    src: "/images/home/c/main.webp",
+    src: "/images/home/landing-slider/p01.jpg",
     title: "پیشرو در فناوری",
     text: "کشف نوآوری‌های برتر در دنیای دیجیتال.",
   },
   {
-    src: "/images/home/c/metaverse.webp",
+    src: "/images/home/landing-slider/p02.jpg",
     title: "آینده متاورس",
     text: "کشف نسل بعدی از جهان‌های دیجیتال.",
   },
   {
-    src: "/images/home/c/airdrop.jpg",
+    src: "/images/home/landing-slider/p03.jpg",
     title: "انقلاب ایردراپ",
     text: "پاداش‌ها را فوراً دریافت کنید و درآمد کسب کنید.",
   },
   {
-    src: "/images/home/c/nft.jpg",
+    src: "/images/home/landing-slider/p04.jpg",
     title: "تکامل NFT",
     text: "هنر مالکیت دیجیتال را کشف کنید.",
   },
