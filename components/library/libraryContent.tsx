@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Bookmark, BookOpen, Clock, Search, Star } from "lucide-react";
@@ -37,12 +37,10 @@ type BooksQueryReturn = {
 
 const LibraryPageContent = () => {
   // Fetch books from API (با تایپ مشخص برای دسترسی به refetch)
-  const {
-    data: booksData,
-    isLoading,
-    error,
-    refetch,
-  } = useBooksList({ page: 1, limit: 100 }) as BooksQueryReturn;
+  const { data: booksData, isLoading } = useBooksList({
+    page: 1,
+    limit: 100,
+  }) as BooksQueryReturn;
 
   // اگر API داده داشت از اون استفاده کن، در غیر این صورت به mock (libraryBooks) برگرد
   const books = booksData?.items ?? libraryBooks;
@@ -83,27 +81,6 @@ const LibraryPageContent = () => {
         <LoadingPlaceholder />
       ) : (
         <>
-          {/* در صورت خطا، یک بنر نمایش بده ولی محتوای fallback (libraryBooks) هم قابل نمایش بمونه */}
-          {error && (
-            <div className="container-xl mb-6">
-              <ErrorBanner
-                message={error.message ?? "خطایی در بارگذاری داده رخ داد."}
-                onRetry={async () => {
-                  if (typeof refetch === "function") {
-                    try {
-                      await refetch();
-                    } catch {
-                      // اگر refetch هم خطا داد، اجازه بدیم بنر بمونه
-                    }
-                  } else {
-                    // fallback ساده: رفرش صفحه
-                    window.location.reload();
-                  }
-                }}
-              />
-            </div>
-          )}
-
           <LibraryHero stats={stats} />
 
           <section className="relative -mt-16 z-10">
@@ -254,52 +231,6 @@ const LoadingPlaceholder = () => {
           </div>
         </div>
       </section>
-    </div>
-  );
-};
-
-// -------------------------------------------------
-// Error banner
-// -------------------------------------------------
-const ErrorBanner = ({
-  message,
-  onRetry,
-}: {
-  message: string;
-  onRetry: () => Promise<unknown> | void;
-}) => {
-  const [isRetrying, setIsRetrying] = useState(false);
-
-  const handleRetry = useCallback(async () => {
-    setIsRetrying(true);
-    try {
-      await onRetry();
-    } finally {
-      setIsRetrying(false);
-    }
-  }, [onRetry]);
-
-  return (
-    <div className="rounded-2xl border border-rose-300 bg-rose-50 p-4 text-rose-700 flex items-center justify-between">
-      <div>
-        <p className="font-semibold">خطا در بارگذاری</p>
-        <p className="text-sm">{message}</p>
-      </div>
-
-      <div className="flex items-center gap-3">
-        <Button onClick={handleRetry} disabled={isRetrying}>
-          {isRetrying ? "در حال تلاش مجدد..." : "تلاش دوباره"}
-        </Button>
-        <Button
-          variant="ghost"
-          onClick={() => {
-            // امکان مشاهده fallback (mock) با refresh ساده (اختیاری)
-            window.location.reload();
-          }}
-        >
-          بارگذاری دوباره صفحه
-        </Button>
-      </div>
     </div>
   );
 };
