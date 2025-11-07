@@ -135,7 +135,7 @@ export default async function CategoryPage({
       getCategoryTags(categorySlug, 20),
       getCategoryCourses(categorySlug, {
         page,
-        limit: 12,
+        limit: 6,
         level,
       }),
     ]);

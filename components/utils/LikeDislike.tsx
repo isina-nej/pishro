@@ -8,36 +8,27 @@ interface LikeDislikeProps {
   likes?: number;
 }
 
-const LikeDislike = ({ likes: ls = 0 }: LikeDislikeProps) => {
-  const [liked, setLiked] = useState(false);
-  const [disliked, setDisliked] = useState(false);
-  const [likes, setLikes] = useState(ls);
-  const [dislikes, setDislikes] = useState(0);
+const LikeDislike = ({ likes: initialLikes = 0 }: LikeDislikeProps) => {
+  const [likes] = useState<number>(initialLikes);
+  const [liked, setLiked] = useState<boolean>(false);
+  const [disliked, setDisliked] = useState<boolean>(false);
 
   const handleLike = () => {
     if (liked) {
       setLiked(false);
-      setLikes(likes - 1);
     } else {
       setLiked(true);
-      setLikes(likes + 1);
-      if (disliked) {
-        setDisliked(false);
-        setDislikes(dislikes - 1);
-      }
+      if (disliked) setDisliked(false);
     }
   };
 
   const handleDislike = () => {
     if (disliked) {
       setDisliked(false);
-      setDislikes(dislikes - 1);
     } else {
       setDisliked(true);
-      setDislikes(dislikes + 1);
       if (liked) {
         setLiked(false);
-        setLikes(likes - 1);
       }
     }
   };
@@ -52,18 +43,20 @@ const LikeDislike = ({ likes: ls = 0 }: LikeDislikeProps) => {
         }`}
       >
         <AiFillLike size={20} />
-        <span className="text-sm font-bold">{likes}</span>
       </motion.button>
+
+      <span className="text-sm font-bold">
+        {likes + (liked ? 1 : 0) + (disliked ? -1 : 0)}
+      </span>
 
       <motion.button
         whileTap={{ scale: 0.9 }}
         onClick={handleDislike}
-        className={`flex items-center gap-0 transition-colors duration-200 ${
+        className={`flex items-center gap-1 transition-colors duration-200 ${
           disliked ? "text-red-500" : "text-gray-500 hover:text-red-500"
         }`}
       >
         <AiFillDislike size={20} />
-        <span className="text-sm font-bold">{dislikes}</span>
       </motion.button>
     </div>
   );

@@ -81,7 +81,7 @@ const CommentsSlider = ({
                 >
                   <div className="bg-white rounded-2xl md:rounded-3xl shadow-sm border border-gray-200 py-5 md:py-8 px-3 md:px-5 flex flex-col items-center justify-between text-center h-[220px] sm:h-[230px] md:h-[255px]">
                     <p className="text-[#8E8E8E] text-right text-[11px] sm:text-xs leading-5 font-bold mb-2 md:mb-4">
-                      {comment.userName}
+                      {comment.content}
                     </p>
                     <div className="flex items-center justify-between w-full">
                       <div className="flex items-center justify-start w-full">
