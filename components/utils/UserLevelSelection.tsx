@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -9,51 +9,11 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { FaUserGraduate, FaUser, FaCrown } from "react-icons/fa";
-import { useUserLevelStore } from "@/stores/user-level-store"; // ✅ اضافه شده
-
-const quizQuestions = [
-  {
-    question: "در سرمایه‌گذاری بلندمدت، کدام گزینه مناسب‌تر است؟",
-    options: [
-      "سهام پرنوسان",
-      "اوراق قرضه",
-      "خرید و فروش روزانه",
-      "ارز دیجیتال",
-    ],
-    correct: 1,
-  },
-  {
-    question: "تنوع در سبد سرمایه‌گذاری به چه معناست؟",
-    options: [
-      "خرید از یک نوع دارایی",
-      "پخش سرمایه در دارایی‌های مختلف",
-      "سرمایه‌گذاری در یک شرکت",
-      "خرید دارایی با بیشترین سود گذشته",
-    ],
-    correct: 1,
-  },
-  {
-    question: "کدام مورد ریسک بیشتری دارد؟",
-    options: ["سپرده بانکی", "اوراق دولتی", "ارز دیجیتال", "طلا"],
-    correct: 2,
-  },
-  {
-    question: "هدف اصلی تحلیل بنیادی چیست؟",
-    options: [
-      "پیش‌بینی تغییرات کوتاه‌مدت",
-      "تحلیل وضعیت مالی شرکت",
-      "محاسبه احساسات بازار",
-      "بررسی نوسانات روزانه",
-    ],
-    correct: 1,
-  },
-  {
-    question: "کدام عامل بیشترین تأثیر را بر بازده سرمایه‌گذاری دارد؟",
-    options: ["مدیریت ریسک", "شانس", "تعداد معاملات", "تبلیغات"],
-    correct: 0,
-  },
-];
+import { FaUserGraduate, FaUser, FaCrown, FaSpinner } from "react-icons/fa";
+import { useUserLevelStore } from "@/stores/user-level-store";
+import { useLevelAssessmentQuiz, useSubmitQuiz } from "@/lib/hooks/useQuiz";
+import { QuizAnswer } from "@/types/quiz";
+import { toast } from "react-hot-toast";
 
 const levels = [
   {
@@ -72,29 +32,75 @@ const levels = [
 
 const UserLevelSection = () => {
   const [open, setOpen] = useState(false);
-  const [answers, setAnswers] = useState<number[]>([]);
+  const [answers, setAnswers] = useState<Map<string, string>>(new Map());
   const [quizFinished, setQuizFinished] = useState(false);
-  const { level, setLevel, setHasScrolled } = useUserLevelStore(); // ✅ از Zustand
+  const [startTime, setStartTime] = useState<number>(0);
+  const { level, setLevel, setHasScrolled } = useUserLevelStore();
 
-  const handleAnswer = (index: number, value: number) => {
-    const updated = [...answers];
-    updated[index] = value;
-    setAnswers(updated);
+  // Fetch quiz data
+  const { data: quiz, isLoading, error } = useLevelAssessmentQuiz();
+  const submitQuizMutation = useSubmitQuiz();
+
+  useEffect(() => {
+    if (open && startTime === 0) {
+      setStartTime(Date.now());
+    }
+  }, [open, startTime]);
+
+  const handleAnswer = (questionId: string, value: string) => {
+    setAnswers((prev) => {
+      const updated = new Map(prev);
+      updated.set(questionId, value);
+      return updated;
+    });
   };
 
-  const handleSubmit = () => {
-    const score = answers.reduce(
-      (acc, curr, i) => acc + (curr === quizQuestions[i].correct ? 1 : 0),
-      0
+  const handleSubmit = async () => {
+    if (!quiz) return;
+
+    // Calculate time spent in seconds
+    const timeSpent = Math.floor((Date.now() - startTime) / 1000);
+
+    // Prepare submission data
+    const quizAnswers: QuizAnswer[] = Array.from(answers.entries()).map(
+      ([questionId, answer]) => ({
+        questionId,
+        answer,
+      })
     );
-    let userLevel = "مبتدی";
-    if (score >= 4) userLevel = "حرفه‌ای";
-    else if (score >= 2) userLevel = "متوسط";
-    setHasScrolled(false);
-    setLevel(userLevel); // ✅ ذخیره در Zustand
 
-    setQuizFinished(true);
+    try {
+      const result = await submitQuizMutation.mutateAsync({
+        quizId: quiz.id,
+        answers: quizAnswers,
+        timeSpent,
+      });
+
+      // Determine user level based on score
+      let userLevel = "مبتدی";
+      if (result.score >= 80) userLevel = "حرفه‌ای";
+      else if (result.score >= 50) userLevel = "متوسط";
+
+      setHasScrolled(false);
+      setLevel(userLevel);
+      setQuizFinished(true);
+
+      toast.success(`نمره شما: ${result.score.toFixed(0)}%`);
+    } catch (error) {
+      console.error("Error submitting quiz:", error);
+      toast.error("خطا در ثبت نتایج آزمون");
+    }
   };
+
+  const handleOpenDialog = () => {
+    setOpen(true);
+    setQuizFinished(false);
+    setAnswers(new Map());
+    setStartTime(0);
+  };
+
+  const allQuestionsAnswered =
+    quiz?.questions.every((q) => answers.has(q.id)) ?? false;
 
   return (
     <section className="py-8 sm:py-10 md:py-12 mt-8 sm:mt-10 md:mt-12">
@@ -117,11 +123,7 @@ const UserLevelSection = () => {
                 برای ارزیابی سطح خود، آزمون زیر را انجام دهید.
               </p>
               <button
-                onClick={() => {
-                  setOpen(true);
-                  setQuizFinished(false);
-                  setAnswers([]);
-                }}
+                onClick={handleOpenDialog}
                 className="mt-4 sm:mt-5 md:mt-6 px-8 sm:px-10 md:px-12 py-3 sm:py-3.5 md:py-4 bg-white text-mySecondary text-sm sm:text-base md:text-lg font-semibold rounded-full hover:scale-105 transition-all w-full sm:w-auto"
                 aria-label={`شروع آزمون ${levelItem.title}`}
               >
@@ -137,11 +139,23 @@ const UserLevelSection = () => {
         <DialogContent className="max-w-full sm:max-w-2xl md:max-w-3xl mx-4">
           <DialogHeader>
             <DialogTitle className="rtl text-lg sm:text-xl md:text-2xl">
-              آزمون تعیین سطح سرمایه‌گذاری
+              {quiz?.title || "آزمون تعیین سطح سرمایه‌گذاری"}
             </DialogTitle>
+            {quiz?.description && (
+              <p className="text-sm text-gray-600 mt-2">{quiz.description}</p>
+            )}
           </DialogHeader>
 
-          {quizFinished ? (
+          {isLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <FaSpinner className="animate-spin text-mySecondary text-3xl" />
+              <span className="mr-3 text-gray-600">در حال بارگذاری آزمون...</span>
+            </div>
+          ) : error ? (
+            <div className="text-center py-8 text-red-600">
+              خطا در بارگذاری آزمون. لطفاً دوباره تلاش کنید.
+            </div>
+          ) : quizFinished ? (
             <div className="text-center py-6 sm:py-8">
               <p className="text-base sm:text-lg md:text-xl font-semibold mb-4">
                 سطح شما: {level}
@@ -154,37 +168,102 @@ const UserLevelSection = () => {
                 بستن
               </Button>
             </div>
-          ) : (
+          ) : quiz ? (
             <>
+              {/* Time limit indicator */}
+              {quiz.timeLimit && (
+                <div className="text-sm text-gray-600 mb-2">
+                  زمان: {quiz.timeLimit} دقیقه
+                </div>
+              )}
+
               <div className="space-y-4 sm:space-y-5 md:space-y-6 max-h-[50vh] sm:max-h-[60vh] overflow-y-auto px-1">
-                {quizQuestions.map((q, i) => (
-                  <div key={i}>
+                {quiz.questions.map((q, i) => (
+                  <div key={q.id}>
                     <p className="font-semibold mb-2 sm:mb-3 text-sm sm:text-base md:text-lg">
                       {i + 1}. {q.question}
                     </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-                      {q.options.map((opt, j) => (
-                        <label
-                          key={j}
-                          className={`flex items-center gap-2 border rounded-lg p-2.5 sm:p-3 cursor-pointer transition-all duration-200 text-sm sm:text-base ${
-                            answers[i] === j
-                              ? "bg-mySecondary text-white border-mySecondary"
-                              : "bg-gray-50 hover:bg-gray-100"
-                          }`}
-                        >
-                          <input
-                            type="radio"
-                            name={`q${i}`}
-                            value={j}
-                            checked={answers[i] === j}
-                            onChange={() => handleAnswer(i, j)}
-                            className="hidden"
-                            aria-label={`گزینه ${j + 1}: ${opt}`}
-                          />
-                          <span>{opt}</span>
-                        </label>
-                      ))}
-                    </div>
+
+                    {/* Multiple Choice / True-False */}
+                    {(q.questionType === "MULTIPLE_CHOICE" ||
+                      q.questionType === "TRUE_FALSE") && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                        {q.options.map((opt, j) => (
+                          <label
+                            key={j}
+                            className={`flex items-center gap-2 border rounded-lg p-2.5 sm:p-3 cursor-pointer transition-all duration-200 text-sm sm:text-base ${
+                              answers.get(q.id) === opt.text
+                                ? "bg-mySecondary text-white border-mySecondary"
+                                : "bg-gray-50 hover:bg-gray-100"
+                            }`}
+                          >
+                            <input
+                              type="radio"
+                              name={`q${q.id}`}
+                              value={opt.text}
+                              checked={answers.get(q.id) === opt.text}
+                              onChange={() => handleAnswer(q.id, opt.text)}
+                              className="hidden"
+                              aria-label={`گزینه ${j + 1}: ${opt.text}`}
+                            />
+                            <span>{opt.text}</span>
+                          </label>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Multiple Select */}
+                    {q.questionType === "MULTIPLE_SELECT" && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                        {q.options.map((opt, j) => {
+                          const currentAnswers = answers.get(q.id)
+                            ? (answers.get(q.id) as string).split(",")
+                            : [];
+                          const isChecked = currentAnswers.includes(opt.text);
+
+                          return (
+                            <label
+                              key={j}
+                              className={`flex items-center gap-2 border rounded-lg p-2.5 sm:p-3 cursor-pointer transition-all duration-200 text-sm sm:text-base ${
+                                isChecked
+                                  ? "bg-mySecondary text-white border-mySecondary"
+                                  : "bg-gray-50 hover:bg-gray-100"
+                              }`}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={isChecked}
+                                onChange={() => {
+                                  let newAnswers = [...currentAnswers];
+                                  if (isChecked) {
+                                    newAnswers = newAnswers.filter(
+                                      (a) => a !== opt.text
+                                    );
+                                  } else {
+                                    newAnswers.push(opt.text);
+                                  }
+                                  handleAnswer(q.id, newAnswers.join(","));
+                                }}
+                                className="hidden"
+                                aria-label={`گزینه ${j + 1}: ${opt.text}`}
+                              />
+                              <span>{opt.text}</span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* Short Answer */}
+                    {q.questionType === "SHORT_ANSWER" && (
+                      <input
+                        type="text"
+                        value={answers.get(q.id) || ""}
+                        onChange={(e) => handleAnswer(q.id, e.target.value)}
+                        className="w-full border rounded-lg p-2.5 sm:p-3 text-sm sm:text-base"
+                        placeholder="پاسخ خود را وارد کنید"
+                      />
+                    )}
                   </div>
                 ))}
               </div>
@@ -192,15 +271,23 @@ const UserLevelSection = () => {
               <DialogFooter className="mt-4 sm:mt-6 !justify-center">
                 <Button
                   onClick={handleSubmit}
-                  size={"lg"}
-                  className="bg-mySecondary px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base"
+                  size="lg"
+                  disabled={!allQuestionsAnswered || submitQuizMutation.isPending}
+                  className="bg-mySecondary px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base disabled:opacity-50"
                   aria-label="تعیین سطح"
                 >
-                  تعیین سطح
+                  {submitQuizMutation.isPending ? (
+                    <>
+                      <FaSpinner className="animate-spin ml-2" />
+                      در حال ثبت...
+                    </>
+                  ) : (
+                    "تعیین سطح"
+                  )}
                 </Button>
               </DialogFooter>
             </>
-          )}
+          ) : null}
         </DialogContent>
       </Dialog>
     </section>
