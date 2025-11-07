@@ -5,15 +5,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-
-/**
- * API Response wrapper
- */
-interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  message?: string;
-}
+import { ApiSuccessResponse } from "@/lib/api-response";
 
 /**
  * Comment data type matching API response
@@ -84,15 +76,15 @@ export function useComments(options: CommentsOptions & { enabled?: boolean } = {
       if (filters.featured !== undefined) params.append("featured", String(filters.featured));
       if (filters.limit) params.append("limit", String(filters.limit));
 
-      const response = await axios.get<ApiResponse<Comment[]>>(
+      const response = await axios.get<ApiSuccessResponse<Comment[]>>(
         `/api/comments?${params.toString()}`
       );
 
-      if (response.data.success === false) {
+      if (response.data.status !== "success") {
         throw new Error(response.data.message || "خطا در دریافت نظرات");
       }
 
-      return response.data.data || [];
+      return response.data.data;
     },
     enabled,
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -150,11 +142,11 @@ export function useLikeComment() {
 
   return useMutation({
     mutationFn: async (commentId: string) => {
-      const response = await axios.post<ApiResponse<unknown>>(
+      const response = await axios.post<ApiSuccessResponse<unknown>>(
         `/api/comments/${commentId}/like`
       );
 
-      if (response.data.success === false) {
+      if (response.data.status !== "success") {
         throw new Error(response.data.message || "خطا در ثبت لایک");
       }
 
@@ -176,11 +168,11 @@ export function useDislikeComment() {
 
   return useMutation({
     mutationFn: async (commentId: string) => {
-      const response = await axios.post<ApiResponse<unknown>>(
+      const response = await axios.post<ApiSuccessResponse<unknown>>(
         `/api/comments/${commentId}/dislike`
       );
 
-      if (response.data.success === false) {
+      if (response.data.status !== "success") {
         throw new Error(response.data.message || "خطا در ثبت دیسلایک");
       }
 
@@ -214,11 +206,11 @@ export function usePrefetchComments() {
         if (options.featured !== undefined) params.append("featured", String(options.featured));
         if (options.limit) params.append("limit", String(options.limit));
 
-        const response = await axios.get<ApiResponse<Comment[]>>(
+        const response = await axios.get<ApiSuccessResponse<Comment[]>>(
           `/api/comments?${params.toString()}`
         );
 
-        return response.data.data || [];
+        return response.data.data;
       },
       staleTime: 5 * 60 * 1000,
     });

@@ -5,15 +5,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-
-/**
- * API Response wrapper
- */
-interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  message?: string;
-}
+import { ApiSuccessResponse } from "@/lib/api-response";
 
 /**
  * Category data type matching API response
@@ -165,15 +157,15 @@ export function useCategory(
         params.append("level", level);
       }
 
-      const response = await axios.get<ApiResponse<Category>>(
+      const response = await axios.get<ApiSuccessResponse<Category>>(
         `/api/categories/${slug}?${params.toString()}`
       );
 
-      if (response.data.success === false) {
+      if (response.data.status !== "success") {
         throw new Error(response.data.message || "Failed to fetch category");
       }
 
-      return response.data.data!;
+      return response.data.data;
     },
     enabled: enabled && !!slug,
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -190,15 +182,15 @@ export function useCategoryTags(slug: string, limit: number = 20) {
   return useQuery({
     queryKey: categoryKeys.tags(slug),
     queryFn: async () => {
-      const response = await axios.get<ApiResponse<{ tags: Tag[] }>>(
+      const response = await axios.get<ApiSuccessResponse<{ tags: Tag[] }>>(
         `/api/categories/${slug}?include=tags&limit=${limit}`
       );
 
-      if (response.data.success === false) {
+      if (response.data.status !== "success") {
         throw new Error(response.data.message || "Failed to fetch tags");
       }
 
-      return response.data.data?.tags || [];
+      return response.data.data.tags || [];
     },
     enabled: !!slug,
     staleTime: 10 * 60 * 1000, // 10 minutes
@@ -214,15 +206,15 @@ export function useCategoryFAQs(slug: string, limit: number = 10) {
   return useQuery({
     queryKey: categoryKeys.faqs(slug),
     queryFn: async () => {
-      const response = await axios.get<ApiResponse<{ faqs: FAQ[] }>>(
+      const response = await axios.get<ApiSuccessResponse<{ faqs: FAQ[] }>>(
         `/api/categories/${slug}?include=faqs&limit=${limit}`
       );
 
-      if (response.data.success === false) {
+      if (response.data.status !== "success") {
         throw new Error(response.data.message || "Failed to fetch FAQs");
       }
 
-      return response.data.data?.faqs || [];
+      return response.data.data.faqs || [];
     },
     enabled: !!slug,
     staleTime: 15 * 60 * 1000, // 15 minutes
@@ -258,7 +250,7 @@ export function useCategoryCourses(
       }
 
       const response = await axios.get<
-        ApiResponse<{
+        ApiSuccessResponse<{
           courses: Course[];
           pagination: {
             total: number;
@@ -269,11 +261,11 @@ export function useCategoryCourses(
         }>
       >(`/api/categories/${slug}?${params.toString()}`);
 
-      if (response.data.success === false) {
+      if (response.data.status !== "success") {
         throw new Error(response.data.message || "Failed to fetch courses");
       }
 
-      return response.data.data!;
+      return response.data.data;
     },
     enabled: !!slug,
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -294,9 +286,9 @@ export function useRevalidate() {
       tag?: string | string[];
       type?: "path" | "tag";
     }) => {
-      const response = await axios.post<ApiResponse<unknown>>("/api/admin/revalidate", data);
+      const response = await axios.post<ApiSuccessResponse<unknown>>("/api/admin/revalidate", data);
 
-      if (response.data.success === false) {
+      if (response.data.status !== "success") {
         throw new Error(response.data.message || "Failed to revalidate cache");
       }
 
@@ -351,10 +343,10 @@ export function usePrefetchCategory() {
     queryClient.prefetchQuery({
       queryKey: categoryKeys.detail(slug, "all"),
       queryFn: async () => {
-        const response = await axios.get<ApiResponse<Category>>(
+        const response = await axios.get<ApiSuccessResponse<Category>>(
           `/api/categories/${slug}?include=all`
         );
-        return response.data.data!;
+        return response.data.data;
       },
       staleTime: 5 * 60 * 1000,
     });

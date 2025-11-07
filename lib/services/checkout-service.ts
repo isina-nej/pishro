@@ -1,5 +1,6 @@
 // @/lib/services/checkout-service.ts
 import axios from "axios";
+import { ApiSuccessResponse } from "@/lib/api-response";
 
 export interface CheckoutItem {
   courseId: string;
@@ -8,6 +9,12 @@ export interface CheckoutItem {
 export interface CheckoutRequest {
   userId: string;
   items: CheckoutItem[];
+}
+
+export interface CheckoutData {
+  orderId: string;
+  payUrl: string;
+  total: number;
 }
 
 export interface CheckoutResponse {
@@ -32,13 +39,17 @@ export const checkoutService = {
           `${window.location.origin}/api/payment/verify`,
       };
 
-      const res = await axios.post<CheckoutResponse>("/api/checkout", payload);
+      const res = await axios.post<ApiSuccessResponse<CheckoutData>>("/api/checkout", payload);
 
-      if (res.data.ok && res.data.payUrl) {
-        return res.data;
+      if (res.data.status === "success") {
+        return {
+          ok: true,
+          payUrl: res.data.data.payUrl,
+          orderId: res.data.data.orderId,
+        };
       }
 
-      return { error: res.data.error || "پرداخت ناموفق بود" };
+      return { error: res.data.message || "پرداخت ناموفق بود" };
     } catch (err) {
       console.error("[checkoutService] createCheckoutSession error:", err);
       return { error: "خطایی در ارتباط با سرور رخ داد" };
