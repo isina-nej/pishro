@@ -18,7 +18,7 @@ export async function getBooks(
   try {
     const baseUrl =
       process.env.NODE_ENV === "production"
-        ? process.env.NEXT_PUBLIC_SITE_URL
+        ? process.env.NEXT_PUBLIC_BASE_URL || window.location.origin
         : "http://localhost:3000";
 
     const queryParams = new URLSearchParams();
@@ -31,7 +31,9 @@ export async function getBooks(
     if (params?.featured !== undefined)
       queryParams.set("featured", params.featured.toString());
 
-    const url = `${baseUrl}/api/library${queryParams.toString() ? `?${queryParams.toString()}` : ""}`;
+    const url = `${baseUrl}/api/library${
+      queryParams.toString() ? `?${queryParams.toString()}` : ""
+    }`;
 
     const { data } = await axios.get<ApiResponse<PaginatedData<DigitalBook>>>(
       url,
@@ -55,7 +57,7 @@ export async function getBookById(id: string): Promise<DigitalBook> {
   try {
     const baseUrl =
       process.env.NODE_ENV === "production"
-        ? process.env.NEXT_PUBLIC_SITE_URL
+        ? process.env.NEXT_PUBLIC_BASE_URL || window.location.origin
         : "http://localhost:3000";
 
     const { data } = await axios.get<ApiResponse<DigitalBook>>(
@@ -82,7 +84,7 @@ export async function createBook(
   try {
     const baseUrl =
       process.env.NODE_ENV === "production"
-        ? process.env.NEXT_PUBLIC_SITE_URL
+        ? process.env.NEXT_PUBLIC_BASE_URL || window.location.origin
         : "http://localhost:3000";
 
     const { data } = await axios.post<ApiResponse<DigitalBook>>(

@@ -16,7 +16,7 @@ export async function getNews(
   try {
     const baseUrl =
       process.env.NODE_ENV === "production"
-        ? process.env.NEXT_PUBLIC_SITE_URL
+        ? process.env.NEXT_PUBLIC_BASE_URL || window.location.origin
         : "http://localhost:3000";
 
     const queryParams = new URLSearchParams();
@@ -27,7 +27,9 @@ export async function getNews(
     if (params?.published !== undefined)
       queryParams.set("published", params.published.toString());
 
-    const url = `${baseUrl}/api/news${queryParams.toString() ? `?${queryParams.toString()}` : ""}`;
+    const url = `${baseUrl}/api/news${
+      queryParams.toString() ? `?${queryParams.toString()}` : ""
+    }`;
 
     const { data } = await axios.get<ApiResponse<PaginatedData<NewsArticle>>>(
       url,
@@ -51,7 +53,7 @@ export async function getNewsById(id: string): Promise<NewsArticle> {
   try {
     const baseUrl =
       process.env.NODE_ENV === "production"
-        ? process.env.NEXT_PUBLIC_SITE_URL
+        ? process.env.NEXT_PUBLIC_BASE_URL || window.location.origin
         : "http://localhost:3000";
 
     const { data } = await axios.get<ApiResponse<NewsArticle>>(
@@ -78,7 +80,7 @@ export async function createNewsArticle(
   try {
     const baseUrl =
       process.env.NODE_ENV === "production"
-        ? process.env.NEXT_PUBLIC_SITE_URL
+        ? process.env.NEXT_PUBLIC_BASE_URL || window.location.origin
         : "http://localhost:3000";
 
     const { data } = await axios.post<ApiResponse<NewsArticle>>(

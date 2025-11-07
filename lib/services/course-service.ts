@@ -6,7 +6,7 @@ export async function getCourses(): Promise<Course[]> {
   try {
     const baseUrl =
       process.env.NODE_ENV === "production"
-        ? process.env.NEXT_PUBLIC_SITE_URL
+        ? process.env.NEXT_PUBLIC_BASE_URL || window.location.origin
         : "http://localhost:3000";
     const { data } = await axios.get<Course[]>(`${baseUrl}/api/courses`, {
       headers: { "Cache-Control": "no-cache" },
