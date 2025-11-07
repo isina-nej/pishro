@@ -71,7 +71,7 @@ model Course {
 
   slug            String?      @unique
   level           CourseLevel?
-  language        String       @default("فارسی")
+  language        Language       @default(FA)
   prerequisites   String[]     @default([])
   learningGoals   String[]     @default([])
   instructor      String?
@@ -83,7 +83,6 @@ model Course {
   comments        Comment[]     @relation("CourseComments")
   enrollments     Enrollment[]  @relation("CourseEnrollments")
   orderItems      OrderItem[]   @relation("CourseOrderItems")
-  testimonials    Testimonial[] @relation("CourseTestimonials")
 
   @@index([categoryId])
   @@index([published, featured])
@@ -91,16 +90,45 @@ model Course {
 
 model Comment {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  user      User     @relation(fields: [userId], references: [id], name: "UserComments")
-  userId    String   @db.ObjectId
-  course    Course   @relation(fields: [courseId], references: [id], name: "CourseComments")
-  courseId  String   @db.ObjectId
+
+  // User relation (optional for testimonials from non-users)
+  user      User?    @relation(fields: [userId], references: [id], name: "UserComments", onDelete: SetNull)
+  userId    String?  @db.ObjectId
+
+  // For testimonials without user account
+  userName    String?
+  userAvatar  String?
+  userRole    UserRoleType?
+  userCompany String?
+
+  // Content
   text      String
   rating    Int?
-  likes     String[]
-  dislikes  String[]
+
+  // Relations
+  course      Course?   @relation(fields: [courseId], references: [id], name: "CourseComments", onDelete: Cascade)
+  courseId    String?   @db.ObjectId
+  category    Category? @relation("CategoryComments", fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId  String?   @db.ObjectId
+
+  // Engagement
+  likes     String[]  @default([])
+  dislikes  String[]  @default([])
+
+  // Status & Visibility
+  published   Boolean  @default(false)
+  verified    Boolean  @default(false)
+  featured    Boolean  @default(false)
+
+  // Analytics
+  views       Int      @default(0)
+
   createdAt DateTime @default(now())
-  updatedAt DateTime?
+  updatedAt DateTime @updatedAt
+
+  @@index([courseId, published])
+  @@index([categoryId, published])
+  @@index([featured])
 }
 
 model Order {
@@ -263,7 +291,7 @@ model Category {
   content     PageContent[] @relation("CategoryContent")
   news        NewsArticle[] @relation("CategoryNews")
   faqs        FAQ[]         @relation("CategoryFAQs")
-  testimonials Testimonial[] @relation("CategoryTestimonials")
+  comments    Comment[]     @relation("CategoryComments")
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -314,7 +342,7 @@ model PageContent {
   title       String?
   subtitle    String?
   content     Json
-  language    PageLanguage @default(FA)
+  language    Language @default(FA)
   order       Int      @default(0)
   published   Boolean  @default(true)
   publishAt   DateTime?
@@ -345,31 +373,6 @@ model FAQ {
 
   @@index([categoryId, published])
   @@index([faqCategory])
-}
-
-model Testimonial {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  userName    String
-  userAvatar  String?
-  userRole    UserRoleType?
-  userCompany String?
-  content     String
-  rating      Int      @default(5)
-  category    Category? @relation("CategoryTestimonials", fields: [categoryId], references: [id], onDelete: SetNull)
-  categoryId  String?   @db.ObjectId
-  course      Course?   @relation("CourseTestimonials", fields: [courseId], references: [id], onDelete: SetNull)
-  courseId    String?   @db.ObjectId
-  published   Boolean  @default(false)
-  verified    Boolean  @default(false)
-  featured    Boolean  @default(false)
-  likes       Int      @default(0)
-  views       Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@index([categoryId, published])
-  @@index([courseId, published])
-  @@index([featured])
 }
 
 //
@@ -420,7 +423,7 @@ enum PageContentType {
   STATS
 }
 
-enum PageLanguage {
+enum Language {
   FA
   EN
 }
