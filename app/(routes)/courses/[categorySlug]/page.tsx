@@ -10,6 +10,7 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
+import { LuTarget, LuBookOpen, LuUsers } from "react-icons/lu";
 import {
   getCategoryBySlug,
   getAllCategorySlugs,
@@ -146,7 +147,20 @@ export default async function CategoryPage({
         landingContentData?.image ||
         category.coverImage ||
         "/images/default-hero.jpg",
-      features: landingContentData?.features?.map((f) => ({ text: f })) || [],
+      features: landingContentData?.features?.map((f) => ({ text: f })) || [
+        {
+          icon: <LuTarget className="text-myPrimary text-3xl" />,
+          text: "نقشه راه کامل از صفر",
+        },
+        {
+          icon: <LuBookOpen className="text-myPrimary text-3xl" />,
+          text: "کامل‌ترین محتوا",
+        },
+        {
+          icon: <LuUsers className="text-myPrimary text-3xl" />,
+          text: "اجتماع بزرگ دانش‌آموزان",
+        },
+      ],
       // 🟩 Floating boxes around the image
       boxes: [
         {

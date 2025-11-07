@@ -94,7 +94,6 @@ const Landing3 = ({ data }: Landing3Props) => {
           </p>
 
           {/* 🔘 دکمه‌ها */}
-          {/* 🔘 دکمه‌ها */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 sm:pt-5">
             <button
               className="px-5 sm:px-6 py-2.5 sm:py-3 bg-mySecondary text-white border border-mySecondary 
@@ -137,7 +136,7 @@ const Landing3 = ({ data }: Landing3Props) => {
         {/* 🟣 سمت چپ */}
         <div className="w-full lg:w-1/2 flex justify-center lg:justify-end items-center relative order-1 lg:order-2">
           {/* container-md برای باکس‌های شناور - برای موبایل بزرگتر */}
-          <div className="relative size-[100%] sm:w-[380px] sm:h-[380px] md:w-[450px] md:h-[450px] lg:w-[550px] lg:h-[550px] flex items-center justify-center overflow-visible">
+          <div className="relative size-[100%] sm:size-[380px] md:size-[450px] lg:size-[520px] flex items-center justify-center overflow-visible">
             {/* تصویر اصلی */}
             <div className="size-[320px] sm:size-[350px] md:size-[420px] lg:size-[495px] rounded-full bg-emerald-500 flex items-center justify-center relative shadow-lg">
               <Image
