@@ -23,13 +23,23 @@ const ProfileHeader = () => {
     return user.phone;
   };
 
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour >= 5 && hour < 11) return "صبح";
+    if (hour >= 11 && hour < 16) return "ظهر";
+    if (hour >= 16 && hour < 20) return "عصر";
+    return "شب";
+  };
+
   return (
     <div className="container-xl flex justify-between items-center mb-4">
       <p className="font-semibold text-base text-[#333]">
         {loading ? (
           <span className="animate-pulse">در حال بارگذاری...</span>
         ) : (
-          <>صبح بخیر {getUserName()}</>
+          <>
+            {getGreeting()} بخیر {getUserName()}
+          </>
         )}
       </p>
       <div className="flex items-center gap-4">
