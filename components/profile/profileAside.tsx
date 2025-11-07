@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { signOut } from "next-auth/react"; // ← import signOut
+import { useCurrentUser } from "@/lib/hooks/useUser";
 
 // Heroicons
 import {
@@ -18,16 +19,20 @@ import {
   HiUser,
 } from "react-icons/hi";
 
-// Mock user data (در عمل، این داده از session گرفته می‌شود)
-const user = {
-  name: "خوش امدید",
-  phone: "09123456789",
-  image: "/images/profile/profile-1.png",
-};
-
 const ProfileAside = () => {
   const pathname = usePathname();
   const router = useRouter(); // برای ریدایرکت دستی بعد از signOut
+  const { data: userResponse, isLoading: loading } = useCurrentUser();
+  const user = userResponse?.data;
+
+  const getUserName = () => {
+    if (!user) return "کاربر گرامی";
+    if (user.firstName && user.lastName) {
+      return `${user.firstName} ${user.lastName}`;
+    }
+    if (user.firstName) return user.firstName;
+    return user.phone;
+  };
 
   const sidebarLinks = [
     {
@@ -68,16 +73,24 @@ const ProfileAside = () => {
     <aside className="rounded-md bg-[#131B22] text-white w-[286px]">
       {/* بخش پروفایل کاربر */}
       <div className="w-full flex flex-col justify-center items-center pt-8 pb-16 border-b border-dashed border-[#495157]">
-        <div className="relative rounded-full overflow-hidden w-20 h-20 mb-2">
+        <div className="relative rounded-full overflow-hidden w-20 h-20 mb-2 bg-gray-700">
           <Image
             alt="user-profile"
-            src={user.image}
+            src={user?.avatarUrl || "/images/profile/profile-1.png"}
             fill
             className="object-cover"
           />
         </div>
-        <p className="font-medium text-sm">{user.phone}</p>
-        <p className="font-medium text-sm">{user.name}</p>
+        {loading ? (
+          <p className="font-medium text-sm animate-pulse">
+            در حال بارگذاری...
+          </p>
+        ) : (
+          <>
+            <p className="font-medium text-sm">{user?.phone}</p>
+            <p className="font-medium text-sm">{getUserName()}</p>
+          </>
+        )}
       </div>
 
       {/* لینک‌های ناوبری */}
