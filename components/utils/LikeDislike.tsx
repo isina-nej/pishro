@@ -4,11 +4,15 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { AiFillLike, AiFillDislike } from "react-icons/ai";
 
-const LikeDislike = () => {
+interface LikeDislikeProps {
+  likes?: number;
+}
+
+const LikeDislike = ({ likes: ls = 0 }: LikeDislikeProps) => {
   const [liked, setLiked] = useState(false);
   const [disliked, setDisliked] = useState(false);
-  const [likes, setLikes] = useState(23);
-  const [dislikes, setDislikes] = useState(2);
+  const [likes, setLikes] = useState(ls);
+  const [dislikes, setDislikes] = useState(0);
 
   const handleLike = () => {
     if (liked) {

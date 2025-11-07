@@ -43,6 +43,7 @@ export const authConfig: NextAuthConfig = {
               user.firstName && user.lastName
                 ? `${user.firstName} ${user.lastName}`
                 : undefined,
+            role: user.role,
           };
         } catch (err) {
           console.error("[❌] authorize error:", err);
@@ -59,6 +60,7 @@ export const authConfig: NextAuthConfig = {
         token.id = user.id;
         token.phone = user.phone;
         token.name = user.name;
+        token.role = user.role;
       }
       return token;
     },
@@ -67,6 +69,7 @@ export const authConfig: NextAuthConfig = {
         session.user.id = token.id as string;
         session.user.phone = token.phone as string;
         session.user.name = token.name as string;
+        session.user.role = token.role as string;
       }
       return session;
     },

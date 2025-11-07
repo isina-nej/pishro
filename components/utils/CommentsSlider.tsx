@@ -8,11 +8,30 @@ import { useState } from "react";
 import "swiper/css";
 import "swiper/css/pagination";
 
-import { homeCommentsData } from "@/public/data";
 import RatingStars from "./RatingStars";
 import LikeDislike from "./LikeDislike";
 
-const CommentsSlider = () => {
+type Comment = {
+  id: string;
+  userName: string;
+  userAvatar: string;
+  userRole: string;
+  rating: number;
+  content: string;
+  date: string;
+  verified: boolean;
+  likes: number;
+};
+
+interface CommentSliderProps {
+  comments: Comment[];
+  title?: string;
+}
+
+const CommentsSlider = ({
+  comments,
+  title = "نظرات دوره آموزان",
+}: CommentSliderProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
@@ -22,7 +41,7 @@ const CommentsSlider = () => {
     >
       <div className="relative w-full">
         <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-8 sm:mb-12 md:mb-16 lg:mb-20 text-center">
-          نظرات دوره‌آموزان
+          {title}
         </h2>
 
         <div className="relative">
@@ -49,7 +68,7 @@ const CommentsSlider = () => {
             }}
             onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
           >
-            {homeCommentsData.map((comment, idx) => {
+            {comments.map((comment, idx) => {
               const isActive = idx === activeIndex;
               return (
                 <SwiperSlide
@@ -62,29 +81,29 @@ const CommentsSlider = () => {
                 >
                   <div className="bg-white rounded-2xl md:rounded-3xl shadow-sm border border-gray-200 py-5 md:py-8 px-3 md:px-5 flex flex-col items-center justify-between text-center h-[220px] sm:h-[230px] md:h-[255px]">
                     <p className="text-[#8E8E8E] text-right text-[11px] sm:text-xs leading-5 font-bold mb-2 md:mb-4">
-                      {comment.comment}
+                      {comment.userName}
                     </p>
                     <div className="flex items-center justify-between w-full">
                       <div className="flex items-center justify-start w-full">
                         <Image
-                          src={comment.avatar}
-                          alt={comment.name}
+                          src={comment.userAvatar}
+                          alt={comment.userName}
                           width={48}
                           height={48}
                           className="rounded-full ml-2"
                         />
                         <div>
                           <p className="font-bold text-[#353535] text-xs sm:text-base">
-                            {comment.name}
+                            {comment.userRole}
                           </p>
                           <p className="text-[11px] sm:text-xs font-bold text-[#8e8e8e]">
-                            {comment.position}
+                            {comment.date}
                           </p>
                         </div>
                       </div>
                       <div>
-                        <RatingStars rating={4} />
-                        <LikeDislike />
+                        <RatingStars rating={comment.rating || 3} />
+                        <LikeDislike likes={comment.likes} />
                       </div>
                     </div>
                   </div>
