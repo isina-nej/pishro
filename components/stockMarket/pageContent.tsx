@@ -40,7 +40,7 @@ const StockMarketPageContent = () => {
         className="w-full mt-12 sm:mt-16 md:mt-20 lg:mt-24"
         aria-label="نظرات کاربران"
       >
-        <CommentsSlider />
+        <CommentsSlider comments={[]} title="نظرات دوره آموزان بورس" />
       </section>
 
       <section

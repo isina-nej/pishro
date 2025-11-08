@@ -1,8 +1,6 @@
 // @/lib/helpers/transaction.ts
 import { prisma } from "@/lib/prisma";
-
-type TransactionType = "payment" | "refund" | "withdrawal";
-type TransactionStatus = "pending" | "success" | "failed";
+import { TransactionType, TransactionStatus } from "@prisma/client";
 
 interface CreateTransactionParams {
   userId: string;

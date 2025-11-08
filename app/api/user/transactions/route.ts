@@ -7,7 +7,7 @@ import {
   errorResponse,
   ErrorCodes,
 } from "@/lib/api-response";
-import { Prisma } from "@prisma/client";
+import { Prisma, TransactionType, TransactionStatus } from "@prisma/client";
 
 // ✅ Get user's transactions
 export async function GET(req: Request) {
@@ -26,8 +26,8 @@ export async function GET(req: Request) {
 
     // Build where clause
     const where: Prisma.TransactionWhereInput = { userId: session.user.id };
-    if (type) where.type = type;
-    if (status) where.status = status;
+    if (type) where.type = type as TransactionType;
+    if (status) where.status = status as TransactionStatus;
 
     const [transactions, total] = await Promise.all([
       prisma.transaction.findMany({

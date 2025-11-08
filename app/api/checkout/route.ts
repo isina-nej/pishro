@@ -50,7 +50,7 @@ export async function POST(req: Request) {
         userId,
         items: courses.map((c) => ({ courseId: c.id })), // stored as JSON
         total,
-        status: "pending",
+        status: "PENDING",
       },
     });
 

@@ -1,5 +1,5 @@
 // @/app/api/user/orders/route.ts
-import { Prisma } from "@prisma/client";
+import { Prisma, OrderStatus } from "@prisma/client";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
@@ -25,7 +25,7 @@ export async function GET(req: Request) {
 
     // Build where clause
     const where: Prisma.OrderWhereInput = { userId: session.user.id };
-    if (status) where.status = status;
+    if (status) where.status = status as OrderStatus;
 
     const [orders, total] = await Promise.all([
       prisma.order.findMany({

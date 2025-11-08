@@ -40,7 +40,7 @@ export async function GET(req: Request) {
       await prisma.order.update({
         where: { id: orderId },
         data: {
-          status: "paid",
+          status: "PAID",
           paymentRef: verifyRes.RefID?.toString(),
         },
       });
@@ -52,7 +52,7 @@ export async function GET(req: Request) {
       // ❌ ناموفق
       await prisma.order.update({
         where: { id: orderId },
-        data: { status: "failed" },
+        data: { status: "FAILED" },
       });
 
       return NextResponse.redirect(
@@ -68,7 +68,7 @@ export async function GET(req: Request) {
       // Update order status
       await prisma.order.update({
         where: { id: orderId },
-        data: { status: "paid", paymentRef: refNumber },
+        data: { status: "PAID", paymentRef: refNumber },
       });
 
       // Create transaction record
@@ -77,8 +77,8 @@ export async function GET(req: Request) {
           userId: order.userId,
           orderId: order.id,
           amount: order.total,
-          type: "payment",
-          status: "success",
+          type: "PAYMENT",
+          status: "SUCCESS",
           gateway: "zarinpal",
           refNumber,
           description: "پرداخت موفق سفارش",
@@ -100,7 +100,7 @@ export async function GET(req: Request) {
       // Update order status to failed
       await prisma.order.update({
         where: { id: orderId },
-        data: { status: "failed" },
+        data: { status: "FAILED" },
       });
 
       // Create failed transaction record
@@ -109,8 +109,8 @@ export async function GET(req: Request) {
           userId: order.userId,
           orderId: order.id,
           amount: order.total,
-          type: "payment",
-          status: "failed",
+          type: "PAYMENT",
+          status: "FAILED",
           gateway: "zarinpal",
           description: "پرداخت ناموفق",
         });

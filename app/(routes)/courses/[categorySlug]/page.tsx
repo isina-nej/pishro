@@ -8,6 +8,7 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { LuTarget, LuBookOpen, LuUsers } from "react-icons/lu";
+import { PageContent } from "@prisma/client";
 import {
   getCategoryBySlug,
   getAllCategorySlugs,
@@ -135,8 +136,8 @@ export default async function CategoryPage({
     }
 
     // Extract landing and about content from PageContent
-    const landingContent = category.content.find((c) => c.type === "LANDING");
-    const aboutContent = category.content.find((c) => c.type === "ABOUT");
+    const landingContent = category.content.find((c: PageContent) => c.type === "LANDING");
+    const aboutContent = category.content.find((c: PageContent) => c.type === "ABOUT");
 
     const landingContentData = landingContent
       ? parseContentData(landingContent.content)

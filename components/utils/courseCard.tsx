@@ -23,19 +23,7 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
 
   const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault(); // جلوگیری از ریدایرکت Link
-    addToCart({
-      id: data.id,
-      subject: data.subject,
-      price: data.price,
-      img: data.img || "/public/images/courses/placeholder.png",
-      discountPercent: data.discountPercent || 0,
-      createdAt: data.createdAt,
-      description: data.description,
-      rating: data.rating,
-      students: data.students,
-      time: data.time,
-      videosCount: data.videosCount,
-    });
+    addToCart(data);
     toast.success(`«${data.subject}» به سبد خرید اضافه شد 🛒`);
   };
 

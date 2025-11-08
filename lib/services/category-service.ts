@@ -15,14 +15,28 @@ export type CategoryWithRelations = Prisma.CategoryGetPayload<{
     tags: true;
     courses: {
       include: {
-        category: true;
+        category: {
+          select: {
+            id: true;
+            slug: true;
+            title: true;
+            color: true;
+          };
+        };
         relatedTags: true;
       };
     };
     faqs: true;
     comments: {
       include: {
-        user: true;
+        user: {
+          select: {
+            id: true;
+            firstName: true;
+            lastName: true;
+            avatarUrl: true;
+          };
+        };
       };
     };
   };
