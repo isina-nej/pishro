@@ -9,6 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "svgr": "svgr ./public/icons --out-dir ./public/svgr-icons --icon",
+    "seed": "ts-node prisma/seeds/seed-all.ts",
+    "seed:reset": "npx prisma db push --force-reset && npm run seed",
     "postinstall": "prisma generate"
   },
   "prisma": {
