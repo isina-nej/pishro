@@ -180,7 +180,8 @@ export async function getAllCategorySlugs(): Promise<string[]> {
     return categories.map((cat) => cat.slug);
   } catch (error) {
     console.error("Error fetching category slugs:", error);
-    throw error;
+    // Return empty array if database is not available (e.g., during build)
+    return [];
   }
 }
 
