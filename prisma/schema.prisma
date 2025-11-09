@@ -411,9 +411,9 @@ model Quiz {
   title       String
   description String?
 
-  // Course relation
-  course   Course @relation("CourseQuizzes", fields: [courseId], references: [id], onDelete: Cascade)
-  courseId String @db.ObjectId
+  // Course relation (optional for level assessment quizzes)
+  course   Course? @relation("CourseQuizzes", fields: [courseId], references: [id], onDelete: Cascade)
+  courseId String? @db.ObjectId
 
   // Quiz settings
   timeLimit          Int? // Time limit in minutes (null = no limit)
