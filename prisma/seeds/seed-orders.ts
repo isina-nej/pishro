@@ -10,6 +10,7 @@ import {
   TransactionStatus,
 } from "@prisma/client";
 import { PersianDataGenerator } from "./persian-data-generator";
+import { fileURLToPath } from 'url';
 
 const prisma = new PrismaClient();
 const generator = new PersianDataGenerator(12345);
@@ -145,7 +146,7 @@ export async function seedOrders() {
   }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   seedOrders()
     .catch((error) => {
       console.error(error);

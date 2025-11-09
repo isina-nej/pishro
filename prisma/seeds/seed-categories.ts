@@ -4,6 +4,7 @@
  */
 
 import { PrismaClient } from "@prisma/client";
+import { fileURLToPath } from 'url';
 
 const prisma = new PrismaClient();
 
@@ -204,7 +205,7 @@ export async function seedCategories() {
 }
 
 // Run directly if called as main module
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   seedCategories()
     .catch((error) => {
       console.error(error);
