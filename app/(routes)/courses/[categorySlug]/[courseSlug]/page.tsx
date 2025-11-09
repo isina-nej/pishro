@@ -321,10 +321,10 @@ export default async function CourseDetailPage({
           <div className="container-xl">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Main Content */}
-              <div className="lg:col-span-2 space-y-8">
+              <div className="lg:col-span-2 space-y-8 h-[-webkit-fill-available]!">
                 {/* What You'll Learn */}
                 {course.learningGoals && course.learningGoals.length > 0 && (
-                  <div className="bg-white rounded-2xl shadow-md p-6 sm:p-8">
+                  <div className="bg-white rounded-2xl shadow-md p-6 sm:p-8 h-full">
                     <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
                       <LuBookOpen className="text-myPrimary" size={28} />
                       چه چیزهایی یاد می‌گیرید؟
