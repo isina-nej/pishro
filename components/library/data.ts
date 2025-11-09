@@ -11,6 +11,7 @@ export type BookCategory =
 
 export interface LibraryBook {
   id: string;
+  slug: string;
   title: string;
   author: string;
   year: number;
@@ -30,6 +31,7 @@ export interface LibraryBook {
 export const libraryBooks: LibraryBook[] = [
   {
     id: "crypto-mindset",
+    slug: "crypto-mindset",
     title: "ذهن میلیونر کریپتو",
     author: "آرمان صفوی",
     year: 2025,
@@ -49,6 +51,7 @@ export const libraryBooks: LibraryBook[] = [
   },
   {
     id: "smart-investor-iran",
+    slug: "smart-investor-iran",
     title: "سرمایه‌گذار هوشمند ایرانی",
     author: "فرهاد رضایی",
     year: 2024,
@@ -68,6 +71,7 @@ export const libraryBooks: LibraryBook[] = [
   },
   {
     id: "trading-psychology",
+    slug: "trading-psychology",
     title: "روانشناسی معامله‌گری",
     author: "سحر فاضلی",
     year: 2023,
@@ -86,6 +90,7 @@ export const libraryBooks: LibraryBook[] = [
   },
   {
     id: "bitcoin-history",
+    slug: "bitcoin-history",
     title: "داستان بیت‌کوین",
     author: "پرهام نادری",
     year: 2022,
@@ -104,6 +109,7 @@ export const libraryBooks: LibraryBook[] = [
   },
   {
     id: "financial-freedom",
+    slug: "financial-freedom",
     title: "آزادی مالی در ایران",
     author: "نیلوفر احمدی",
     year: 2025,
@@ -123,6 +129,7 @@ export const libraryBooks: LibraryBook[] = [
   },
   {
     id: "market-cycles",
+    slug: "market-cycles",
     title: "چرخه‌های بازار",
     author: "دکتر کوروش صادقی",
     year: 2024,
@@ -141,6 +148,7 @@ export const libraryBooks: LibraryBook[] = [
   },
   {
     id: "technical-analysis-pro",
+    slug: "technical-analysis-pro",
     title: "تحلیل تکنیکال پیشرفته",
     author: "محمدحسین مرادی",
     year: 2023,
@@ -160,6 +168,7 @@ export const libraryBooks: LibraryBook[] = [
   },
   {
     id: "gold-vs-bitcoin",
+    slug: "gold-vs-bitcoin",
     title: "طلا یا بیت‌کوین؟",
     author: "علیرضا نیک‌نژاد",
     year: 2022,
@@ -177,6 +186,7 @@ export const libraryBooks: LibraryBook[] = [
   },
   {
     id: "startup-capital",
+    slug: "startup-capital",
     title: "سرمایه‌گذاری جسورانه",
     author: "شقایق کاظمی",
     year: 2021,
