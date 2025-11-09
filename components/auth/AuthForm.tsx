@@ -28,13 +28,31 @@ export function AuthForm({ variant, onSubmit }: AuthFormProps) {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    watch,
+    trigger,
+    formState: { errors, touchedFields },
   } = useForm<LoginFormValues | SignupFormValues>({
-    mode: "onChange",
+    mode: "onTouched",
+    reValidateMode: "onChange",
     resolver: zodResolver(variant === "signup" ? signupSchema : loginSchema),
   });
 
-  useEffect(() => reset(), [variant, reset]);
+  // Reset form when variant changes
+  useEffect(() => {
+    reset();
+  }, [variant, reset]);
+
+  // Watch password field and re-validate confirmPassword when it changes
+  const password = watch("password");
+  useEffect(() => {
+    if (variant === "signup" && password) {
+      // Type guard to check if confirmPassword field has been touched
+      const hasConfirmPassword = "confirmPassword" in touchedFields;
+      if (hasConfirmPassword && touchedFields.confirmPassword) {
+        void trigger("confirmPassword");
+      }
+    }
+  }, [password, variant, trigger, touchedFields]);
 
   const handleFormSubmit = async (data: LoginFormValues | SignupFormValues) => {
     if (isLoading) return; // جلوگیری از کلیک دوباره

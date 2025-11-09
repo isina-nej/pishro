@@ -16,6 +16,12 @@ export function useAuthForm() {
   const [passwordTemp, setPasswordTemp] = useState("");
   const router = useRouter();
 
+  const handleBackFromOtp = () => {
+    setOtpStep(false);
+    setOtpPhone("");
+    setPasswordTemp("");
+  };
+
   const onSubmit = async (data: LoginFormValues | SignupFormValues) => {
     try {
       if (variant === "signup") {
@@ -76,6 +82,7 @@ export function useAuthForm() {
     onSubmit,
     handleVerifyOtp,
     handleResendOtp,
+    handleBackFromOtp,
     otpPhone,
     passwordTemp,
   };
