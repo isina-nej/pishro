@@ -141,10 +141,11 @@ export async function getQuizzesByCourse(courseId: string) {
 // Special quiz for user level assessment (not tied to a course)
 export async function getLevelAssessmentQuiz(): Promise<QuizWithQuestions | null> {
   try {
-    // Find quiz with a special slug or title for level assessment
+    // Find quiz with a special title for level assessment and no course association
     const quiz = await prisma.quiz.findFirst({
       where: {
         title: "آزمون تعیین سطح",
+        courseId: null, // Ensure it's not tied to any course
         published: true,
       },
       include: {
