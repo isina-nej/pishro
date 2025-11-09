@@ -6,6 +6,7 @@
 import { PrismaClient, UserRole } from '@prisma/client';
 import { PersianDataGenerator } from './persian-data-generator';
 import bcrypt from 'bcryptjs';
+import { fileURLToPath } from 'url';
 
 const prisma = new PrismaClient();
 const generator = new PersianDataGenerator(12345);
@@ -98,7 +99,7 @@ export async function seedUsers() {
 }
 
 // Run directly if called as main module
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   seedUsers()
     .catch(error => {
       console.error(error);

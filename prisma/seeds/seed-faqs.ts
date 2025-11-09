@@ -5,6 +5,7 @@
 
 import { PrismaClient, FAQCategory } from "@prisma/client";
 import { PersianDataGenerator } from "./persian-data-generator";
+import { fileURLToPath } from 'url';
 
 const prisma = new PrismaClient();
 const generator = new PersianDataGenerator(12345);
@@ -60,7 +61,7 @@ export async function seedFAQs() {
   }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   seedFAQs()
     .catch((error) => {
       console.error(error);

@@ -4,6 +4,7 @@
  */
 
 import { PrismaClient } from '@prisma/client';
+import { fileURLToPath } from 'url';
 import { seedCategories } from './seed-categories';
 import { seedTags } from './seed-tags';
 import { seedUsers } from './seed-users';
@@ -172,7 +173,7 @@ async function seedAll() {
 }
 
 // Run if called directly
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   seedAll()
     .then(() => {
       process.exit(0);

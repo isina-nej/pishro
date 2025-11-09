@@ -5,6 +5,7 @@
 
 import { PrismaClient } from "@prisma/client";
 import { PersianDataGenerator } from "./persian-data-generator";
+import { fileURLToPath } from 'url';
 
 const prisma = new PrismaClient();
 const _generator = new PersianDataGenerator(12345);
@@ -240,7 +241,7 @@ export async function seedTags() {
 }
 
 // Run directly if called as main module
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   seedTags()
     .catch((error) => {
       console.error(error);
