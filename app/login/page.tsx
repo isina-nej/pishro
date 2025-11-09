@@ -19,6 +19,7 @@ const LoginPage = () => {
     onSubmit,
     handleVerifyOtp,
     handleResendOtp,
+    handleBackFromOtp,
     otpPhone,
   } = useAuthForm();
 
@@ -67,6 +68,7 @@ const LoginPage = () => {
             countdown={countdown}
             onVerify={handleVerifyOtp}
             onResend={handleResend}
+            onBack={handleBackFromOtp}
           />
         ) : (
           <AuthForm variant={variant} onSubmit={onSubmit} />
