@@ -77,7 +77,7 @@ export function ForgotPasswordForm({
 
     try {
       const res = await requestPasswordReset(data.phone);
-      if (res.ok) {
+      if (res.status === "success") {
         toast.success("کد بازیابی ارسال شد!");
         setPhone(data.phone);
         setStep("otp");
@@ -118,7 +118,7 @@ export function ForgotPasswordForm({
 
     try {
       const res = await resetPassword(phone, otpCode, data.newPassword);
-      if (res.ok) {
+      if (res.status === "success") {
         toast.success("رمز عبور با موفقیت تغییر یافت!");
         onSuccess?.();
       } else {

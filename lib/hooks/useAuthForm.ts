@@ -29,12 +29,14 @@ export function useAuthForm() {
           phone: data.username,
           password: data.password,
         });
-        if (res?.message) {
+        if (res.status === "success") {
           toast.success("کد تایید ارسال شد!");
           setOtpStep(true);
           setOtpPhone(data.username);
           setPasswordTemp(data.password);
-        } else toast.error("خطا در ثبت‌نام!");
+        } else {
+          toast.error(res.message || "خطا در ثبت‌نام!");
+        }
       } else {
         const result = await signIn("credentials", {
           phone: data.username,
@@ -55,7 +57,7 @@ export function useAuthForm() {
   const handleVerifyOtp = async (code: string) => {
     try {
       const res = await verifyOtp(otpPhone, code);
-      if (res.ok) {
+      if (res.status === "success") {
         toast.success("شماره شما با موفقیت تایید شد!");
         const loginRes = await signIn("credentials", {
           phone: otpPhone,
