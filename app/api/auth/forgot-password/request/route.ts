@@ -51,6 +51,7 @@ export async function POST(req: Request) {
         data: { phone, code, expiresAt },
       });
     }
+    console.log("code: ", code);
 
     // Prepare SMS text
     const text = `کد بازیابی رمز عبور: ${code}\nاین کد تا ۲ دقیقه معتبر است.`;
