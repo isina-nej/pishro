@@ -24,8 +24,18 @@ const categories = [
   { label: "NFT", href: "/nft" },
 ];
 
+type CourseWithCategory = Course & {
+  category?: {
+    id: string;
+    slug: string;
+    title: string;
+    color: string | null;
+    icon: string | null;
+  } | null;
+};
+
 interface Props {
-  courses: Course[];
+  courses: CourseWithCategory[];
 }
 
 export default function CoursesGridClient({ courses }: Props) {
@@ -117,8 +127,8 @@ export default function CoursesGridClient({ courses }: Props) {
         {filteredCourses.map((data, idx) => {
           // Build dynamic link if course has category and slug
           const courseLink =
-            data.slug && "category" in data && (data as any).category?.slug
-              ? `/courses/${(data as any).category.slug}/${data.slug}`
+            data.slug && data.category?.slug
+              ? `/courses/${data.category.slug}/${data.slug}`
               : "/courses";
 
           return (
@@ -134,6 +144,16 @@ export default function CoursesGridClient({ courses }: Props) {
             </motion.div>
           );
         })}
+      </div>
+
+      {/* View All Courses Button */}
+      <div className="w-full flex justify-center mt-8 sm:mt-10 md:mt-12">
+        <Link
+          href="/courses"
+          className="bg-gradient-to-r from-myPrimary to-mySecondary text-white font-bold text-base sm:text-lg px-8 sm:px-12 py-3 sm:py-4 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+        >
+          مشاهده همه دوره‌ها
+        </Link>
       </div>
     </section>
   );

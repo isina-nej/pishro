@@ -109,11 +109,8 @@ const CoursesSec = () => {
       {/* Course grid */}
       <div className="mt-6 sm:mt-8 md:mt-12 lg:mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-7 md:gap-8 place-items-center pb-8 sm:pb-10 md:pb-12 lg:pb-16 w-full">
         {filteredCourses.map((data, idx) => {
-          // Build dynamic link if course has category and slug
-          const courseLink =
-            data.slug && "category" in data && data.category?.slug
-              ? `/courses/${data.category.slug}/${data.slug}`
-              : "/courses";
+          // Build dynamic link - use /courses as fallback
+          const courseLink = data.slug ? `/courses/${data.slug}` : "/courses";
 
           return (
             <motion.div

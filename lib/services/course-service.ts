@@ -25,7 +25,21 @@ export async function getCourses(): Promise<Course[]> {
 }
 
 export async function getCoursesByPrisma() {
-  return prisma.course.findMany({ orderBy: { createdAt: "desc" } });
+  return prisma.course.findMany({
+    where: { published: true },
+    include: {
+      category: {
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+          color: true,
+          icon: true,
+        },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
 }
 
 /**
@@ -109,13 +123,12 @@ export async function getAllCourseSlugs() {
       where: {
         published: true,
         slug: {
-          not: null,
+          not: {
+            equals: null,
+          },
         },
         category: {
-          published: true,
-          slug: {
-            not: null,
-          },
+          isNot: null,
         },
       },
       select: {
@@ -123,13 +136,14 @@ export async function getAllCourseSlugs() {
         category: {
           select: {
             slug: true,
+            published: true,
           },
         },
       },
     });
 
     return courses
-      .filter((course) => course.slug && course.category?.slug)
+      .filter((course) => course.slug && course.category?.slug && course.category?.published)
       .map((course) => ({
         categorySlug: course.category!.slug,
         courseSlug: course.slug!,
