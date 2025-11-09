@@ -7,13 +7,19 @@ import {
 } from "@/lib/services/quiz-service";
 
 // ================== Fetch Level Assessment Quiz ==================
-export function useLevelAssessmentQuiz() {
+export function useLevelAssessmentQuiz(categorySlug?: string) {
   return useQuery<QuizWithQuestions>({
-    queryKey: ["quiz", "level-assessment"],
+    queryKey: ["quiz", "level-assessment", categorySlug],
     queryFn: async () => {
-      const { data } = await axios.get("/api/quiz/level-assessment");
+      const params = new URLSearchParams();
+      if (categorySlug) params.append("categorySlug", categorySlug);
+
+      const { data } = await axios.get(
+        `/api/quiz/level-assessment?${params.toString()}`
+      );
       return data.data;
     },
+    enabled: !!categorySlug, // Only fetch if categorySlug is provided
     staleTime: 1000 * 60 * 30, // 30 minutes
     retry: 2,
   });

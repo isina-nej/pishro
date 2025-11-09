@@ -301,7 +301,7 @@ export default async function CategoryPage({
             <Suspense
               fallback={<div className="h-96 animate-pulse bg-gray-50" />}
             >
-              <UserLevelSection />
+              <UserLevelSection categorySlug={categorySlug} />
             </Suspense>
           </section>
         )}

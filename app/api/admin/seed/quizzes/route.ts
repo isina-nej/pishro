@@ -1,24 +1,11 @@
-/**
- * Quiz Seed Script - Level Assessment Quizzes
- *
- * این اسکریپت آزمون‌های تعیین سطح را برای دسته‌بندی‌های مختلف ایجاد می‌کند.
- * هدف: پیشنهاد دوره‌های مناسب بر اساس سطح دانش کاربر
- *
- * نحوه اجرا:
- *   1. اطمینان حاصل کنید که فایل .env وجود دارد و DATABASE_URL در آن تنظیم شده است
- *   2. دستور زیر را اجرا کنید:
- *      node scripts/quiz-seed.mjs
- */
+import { NextRequest } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { successResponse, errorResponse } from "@/lib/api-response";
+import { QuestionType } from "@prisma/client";
 
-import { config } from "dotenv";
-import { PrismaClient } from "@prisma/client";
+export const dynamic = "force-dynamic";
 
-// بارگذاری متغیرهای محیطی از فایل .env
-config();
-
-const prisma = new PrismaClient();
-
-// تعریف آزمون‌های تعیین سطح برای هر دسته‌بندی
+// داده‌های آزمون‌های تعیین سطح
 const quizData = [
   {
     categorySlug: "airdrop",
@@ -28,12 +15,9 @@ const quizData = [
     questions: [
       {
         question: "ایردراپ (Airdrop) در دنیای کریپتو به چه معناست؟",
-        questionType: "MULTIPLE_CHOICE",
+        questionType: "MULTIPLE_CHOICE" as QuestionType,
         options: [
-          {
-            text: "توزیع رایگان توکن‌ها به کیف‌پول‌های کاربران",
-            isCorrect: true,
-          },
+          { text: "توزیع رایگان توکن‌ها به کیف‌پول‌های کاربران", isCorrect: true },
           { text: "خرید توکن با قیمت پایین", isCorrect: false },
           { text: "فروش توکن در صرافی", isCorrect: false },
           { text: "استخراج ارز دیجیتال", isCorrect: false },
@@ -46,7 +30,7 @@ const quizData = [
       {
         question:
           "برای شرکت در ایردراپ‌ها به چه چیزهایی نیاز دارید؟ (چند گزینه)",
-        questionType: "MULTIPLE_SELECT",
+        questionType: "MULTIPLE_SELECT" as QuestionType,
         options: [
           { text: "کیف پول غیرمتمرکز", isCorrect: true },
           { text: "آدرس ایمیل", isCorrect: true },
@@ -60,7 +44,7 @@ const quizData = [
       },
       {
         question: "Retroactive Airdrop چیست؟",
-        questionType: "MULTIPLE_CHOICE",
+        questionType: "MULTIPLE_CHOICE" as QuestionType,
         options: [
           {
             text: "ایردراپ برای کاربران قدیمی که قبلاً از پروژه استفاده کرده‌اند",
@@ -77,7 +61,7 @@ const quizData = [
       },
       {
         question: "کدام شبکه برای دریافت ایردراپ‌های DeFi محبوب‌تر است؟",
-        questionType: "MULTIPLE_CHOICE",
+        questionType: "MULTIPLE_CHOICE" as QuestionType,
         options: [
           { text: "Ethereum", isCorrect: true },
           { text: "Bitcoin", isCorrect: false },
@@ -92,7 +76,7 @@ const quizData = [
       {
         question:
           "برای افزایش شانس دریافت ایردراپ‌های بزرگ، کدام استراتژی بهتر است؟",
-        questionType: "MULTIPLE_CHOICE",
+        questionType: "MULTIPLE_CHOICE" as QuestionType,
         options: [
           {
             text: "استفاده فعال از پروژه‌های جدید و تعامل با قراردادهای هوشمند",
@@ -117,7 +101,7 @@ const quizData = [
     questions: [
       {
         question: "NFT مخفف چیست؟",
-        questionType: "MULTIPLE_CHOICE",
+        questionType: "MULTIPLE_CHOICE" as QuestionType,
         options: [
           { text: "Non-Fungible Token", isCorrect: true },
           { text: "New Financial Technology", isCorrect: false },
@@ -131,7 +115,7 @@ const quizData = [
       },
       {
         question: "تفاوت اصلی NFT با ارزهای دیجیتال معمولی چیست؟",
-        questionType: "MULTIPLE_CHOICE",
+        questionType: "MULTIPLE_CHOICE" as QuestionType,
         options: [
           { text: "NFT منحصر به فرد و غیرقابل تعویض است", isCorrect: true },
           { text: "NFT ارزان‌تر است", isCorrect: false },
@@ -145,7 +129,7 @@ const quizData = [
       },
       {
         question: "استاندارد ERC-721 مربوط به چیست؟",
-        questionType: "MULTIPLE_CHOICE",
+        questionType: "MULTIPLE_CHOICE" as QuestionType,
         options: [
           { text: "استاندارد NFT در شبکه Ethereum", isCorrect: true },
           { text: "استاندارد توکن‌های قابل تعویض", isCorrect: false },
@@ -157,8 +141,9 @@ const quizData = [
         order: 2,
       },
       {
-        question: "کدام‌یک از موارد زیر کاربردهای NFT است؟ (چند گزینه)",
-        questionType: "MULTIPLE_SELECT",
+        question:
+          "کدام‌یک از موارد زیر کاربردهای NFT است؟ (چند گزینه)",
+        questionType: "MULTIPLE_SELECT" as QuestionType,
         options: [
           { text: "آثار هنری دیجیتال", isCorrect: true },
           { text: "کلکسیون‌های دیجیتال", isCorrect: true },
@@ -172,7 +157,7 @@ const quizData = [
       },
       {
         question: "Gas Fee در خرید NFT چیست؟",
-        questionType: "MULTIPLE_CHOICE",
+        questionType: "MULTIPLE_CHOICE" as QuestionType,
         options: [
           { text: "کارمزد تراکنش در شبکه بلاکچین", isCorrect: true },
           { text: "قیمت NFT", isCorrect: false },
@@ -194,7 +179,7 @@ const quizData = [
     questions: [
       {
         question: "بلاکچین چیست؟",
-        questionType: "MULTIPLE_CHOICE",
+        questionType: "MULTIPLE_CHOICE" as QuestionType,
         options: [
           { text: "یک دفتر کل توزیع‌شده و غیرمتمرکز", isCorrect: true },
           { text: "یک نوع رمزارز", isCorrect: false },
@@ -208,7 +193,7 @@ const quizData = [
       },
       {
         question: "تفاوت اصلی Bitcoin و Ethereum چیست؟",
-        questionType: "MULTIPLE_CHOICE",
+        questionType: "MULTIPLE_CHOICE" as QuestionType,
         options: [
           {
             text: "Ethereum از قراردادهای هوشمند پشتیبانی می‌کند",
@@ -226,7 +211,7 @@ const quizData = [
       {
         question:
           "کدام‌یک از موارد زیر از انواع کیف پول ارزهای دیجیتال هستند؟ (چند گزینه)",
-        questionType: "MULTIPLE_SELECT",
+        questionType: "MULTIPLE_SELECT" as QuestionType,
         options: [
           { text: "کیف پول سخت‌افزاری (Hardware)", isCorrect: true },
           { text: "کیف پول نرم‌افزاری (Software)", isCorrect: true },
@@ -240,7 +225,7 @@ const quizData = [
       },
       {
         question: "DeFi مخفف چیست؟",
-        questionType: "MULTIPLE_CHOICE",
+        questionType: "MULTIPLE_CHOICE" as QuestionType,
         options: [
           { text: "Decentralized Finance", isCorrect: true },
           { text: "Digital Finance", isCorrect: false },
@@ -254,7 +239,7 @@ const quizData = [
       },
       {
         question: "استیکینگ (Staking) در ارزهای دیجیتال به چه معناست؟",
-        questionType: "MULTIPLE_CHOICE",
+        questionType: "MULTIPLE_CHOICE" as QuestionType,
         options: [
           {
             text: "قفل کردن رمزارز برای دریافت پاداش و تأیید تراکنش‌ها",
@@ -272,14 +257,14 @@ const quizData = [
     ],
   },
   {
-    categorySlug: "stock-market",
+    categorySlug: "defi",
     title: "آزمون تعیین سطح DeFi",
     description:
       "دانش خود را در زمینه امور مالی غیرمتمرکز (DeFi) ارزیابی کنید.",
     questions: [
       {
         question: "قرارداد هوشمند (Smart Contract) چیست؟",
-        questionType: "MULTIPLE_CHOICE",
+        questionType: "MULTIPLE_CHOICE" as QuestionType,
         options: [
           {
             text: "برنامه‌ای که به صورت خودکار روی بلاکچین اجرا می‌شود",
@@ -296,7 +281,7 @@ const quizData = [
       },
       {
         question: "AMM در DeFi به چه معناست؟",
-        questionType: "MULTIPLE_CHOICE",
+        questionType: "MULTIPLE_CHOICE" as QuestionType,
         options: [
           { text: "Automated Market Maker", isCorrect: true },
           { text: "Advanced Money Management", isCorrect: false },
@@ -310,7 +295,7 @@ const quizData = [
       },
       {
         question: "Liquidity Pool چیست؟",
-        questionType: "MULTIPLE_CHOICE",
+        questionType: "MULTIPLE_CHOICE" as QuestionType,
         options: [
           {
             text: "استخری از توکن‌ها برای تسهیل معاملات در DEX",
@@ -327,7 +312,7 @@ const quizData = [
       },
       {
         question: "Yield Farming به چه معناست؟",
-        questionType: "MULTIPLE_CHOICE",
+        questionType: "MULTIPLE_CHOICE" as QuestionType,
         options: [
           {
             text: "سرمایه‌گذاری در پروتکل‌های DeFi برای کسب سود",
@@ -343,8 +328,9 @@ const quizData = [
         order: 3,
       },
       {
-        question: "کدام‌یک از موارد زیر ریسک‌های DeFi هستند؟ (چند گزینه)",
-        questionType: "MULTIPLE_SELECT",
+        question:
+          "کدام‌یک از موارد زیر ریسک‌های DeFi هستند؟ (چند گزینه)",
+        questionType: "MULTIPLE_SELECT" as QuestionType,
         options: [
           { text: "آسیب‌پذیری قراردادهای هوشمند", isCorrect: true },
           { text: "Impermanent Loss", isCorrect: true },
@@ -359,14 +345,14 @@ const quizData = [
     ],
   },
   {
-    categorySlug: "metaverse",
+    categorySlug: "trading",
     title: "آزمون تعیین سطح معامله‌گری",
     description:
       "مهارت‌های معامله‌گری خود در بازار ارزهای دیجیتال را ارزیابی کنید.",
     questions: [
       {
         question: "تحلیل تکنیکال (Technical Analysis) چیست؟",
-        questionType: "MULTIPLE_CHOICE",
+        questionType: "MULTIPLE_CHOICE" as QuestionType,
         options: [
           {
             text: "تحلیل نمودارها و الگوهای قیمتی برای پیش‌بینی روند",
@@ -383,7 +369,7 @@ const quizData = [
       },
       {
         question: "Stop Loss چه کاربردی دارد؟",
-        questionType: "MULTIPLE_CHOICE",
+        questionType: "MULTIPLE_CHOICE" as QuestionType,
         options: [
           { text: "محدود کردن ضرر در معاملات", isCorrect: true },
           { text: "افزایش سود", isCorrect: false },
@@ -398,7 +384,7 @@ const quizData = [
       {
         question:
           "کدام‌یک از اندیکاتورهای رایج در تحلیل تکنیکال هستند؟ (چند گزینه)",
-        questionType: "MULTIPLE_SELECT",
+        questionType: "MULTIPLE_SELECT" as QuestionType,
         options: [
           { text: "RSI (Relative Strength Index)", isCorrect: true },
           { text: "MACD", isCorrect: true },
@@ -412,7 +398,7 @@ const quizData = [
       },
       {
         question: "معامله با اهرم (Leverage Trading) چیست؟",
-        questionType: "MULTIPLE_CHOICE",
+        questionType: "MULTIPLE_CHOICE" as QuestionType,
         options: [
           {
             text: "معامله با سرمایه قرض‌گرفته شده برای افزایش سود یا ضرر",
@@ -429,7 +415,7 @@ const quizData = [
       },
       {
         question: "FOMO در معامله‌گری به چه معناست؟",
-        questionType: "MULTIPLE_CHOICE",
+        questionType: "MULTIPLE_CHOICE" as QuestionType,
         options: [
           {
             text: "Fear Of Missing Out - ترس از دست دادن فرصت",
@@ -448,16 +434,20 @@ const quizData = [
   },
 ];
 
-async function seedQuizzes() {
-  console.log("🌱 شروع Seed کردن آزمون‌های تعیین سطح...\n");
-
+export async function POST(_req: NextRequest) {
   try {
-    // بررسی اتصال به دیتابیس
-    await prisma.$connect();
-    console.log("✅ اتصال به دیتابیس برقرار شد\n");
+    console.log("🌱 شروع Seed کردن آزمون‌های تعیین سطح...");
+
+    const results = {
+      created: [] as string[],
+      skipped: [] as string[],
+      errors: [] as string[],
+    };
 
     for (const quiz of quizData) {
-      console.log(`📝 در حال ایجاد آزمون برای دسته‌بندی: ${quiz.categorySlug}`);
+      console.log(
+        `📝 در حال ایجاد آزمون برای دسته‌بندی: ${quiz.categorySlug}`
+      );
 
       // بررسی وجود دسته‌بندی
       const category = await prisma.category.findUnique({
@@ -465,7 +455,10 @@ async function seedQuizzes() {
       });
 
       if (!category) {
-        console.log(`⚠️  دسته‌بندی ${quiz.categorySlug} یافت نشد - رد شد\n`);
+        console.log(
+          `⚠️  دسته‌بندی ${quiz.categorySlug} یافت نشد - رد شد`
+        );
+        results.skipped.push(quiz.categorySlug);
         continue;
       }
 
@@ -520,7 +513,8 @@ async function seedQuizzes() {
         });
       }
 
-      console.log(`   ✅ ${quiz.questions.length} سوال ایجاد شد\n`);
+      console.log(`   ✅ ${quiz.questions.length} سوال ایجاد شد`);
+      results.created.push(quiz.categorySlug);
     }
 
     // نمایش آمار نهایی
@@ -533,18 +527,24 @@ async function seedQuizzes() {
     console.log("✅ Seed کردن با موفقیت انجام شد!");
     console.log(`📊 تعداد کل آزمون‌های تعیین سطح: ${totalQuizzes}`);
     console.log(`📝 تعداد کل سوالات: ${totalQuestions}`);
-    console.log("═══════════════════════════════════════\n");
+    console.log("═══════════════════════════════════════");
+
+    return successResponse({
+      message: "آزمون‌ها با موفقیت ایجاد شدند",
+      stats: {
+        totalQuizzes,
+        totalQuestions,
+        created: results.created,
+        skipped: results.skipped,
+        errors: results.errors,
+      },
+    });
   } catch (error) {
     console.error("❌ خطا در Seed کردن:", error);
-    throw error;
-  } finally {
-    await prisma.$disconnect();
-    console.log("👋 اتصال دیتابیس بسته شد");
+    return errorResponse(
+      "خطا در ایجاد آزمون‌ها",
+      "SEED_ERROR",
+      500
+    );
   }
 }
-
-// اجرای اسکریپت
-seedQuizzes().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});

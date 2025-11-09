@@ -30,15 +30,19 @@ const levels = [
   },
 ];
 
-const UserLevelSection = () => {
+interface UserLevelSectionProps {
+  categorySlug: string;
+}
+
+const UserLevelSection = ({ categorySlug }: UserLevelSectionProps) => {
   const [open, setOpen] = useState(false);
   const [answers, setAnswers] = useState<Map<string, string>>(new Map());
   const [quizFinished, setQuizFinished] = useState(false);
   const [startTime, setStartTime] = useState<number>(0);
   const { level, setLevel, setHasScrolled } = useUserLevelStore();
 
-  // Fetch quiz data
-  const { data: quiz, isLoading, error } = useLevelAssessmentQuiz();
+  // Fetch quiz data for the specific category
+  const { data: quiz, isLoading, error } = useLevelAssessmentQuiz(categorySlug);
   const submitQuizMutation = useSubmitQuiz();
 
   useEffect(() => {

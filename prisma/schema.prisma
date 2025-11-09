@@ -323,6 +323,7 @@ model Category {
   news     NewsArticle[] @relation("CategoryNews")
   faqs     FAQ[]         @relation("CategoryFAQs")
   comments Comment[]     @relation("CategoryComments")
+  quizzes  Quiz[]        @relation("CategoryQuizzes")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -415,6 +416,10 @@ model Quiz {
   course   Course? @relation("CourseQuizzes", fields: [courseId], references: [id], onDelete: Cascade)
   courseId String? @db.ObjectId
 
+  // Category relation (optional for category-level assessment quizzes)
+  category   Category? @relation("CategoryQuizzes", fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId String?   @db.ObjectId
+
   // Quiz settings
   timeLimit          Int? // Time limit in minutes (null = no limit)
   passingScore       Int     @default(70) // Percentage needed to pass
@@ -436,6 +441,7 @@ model Quiz {
   updatedAt DateTime @updatedAt
 
   @@index([courseId, published])
+  @@index([categoryId, published])
   @@index([published, order])
 }
 

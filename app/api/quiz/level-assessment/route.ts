@@ -4,12 +4,24 @@ import { successResponse, errorResponse } from "@/lib/api-response";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(_req: NextRequest) {
+export async function GET(req: NextRequest) {
   try {
-    const quiz = await getLevelAssessmentQuiz();
+    // Get categorySlug from query parameters
+    const { searchParams } = new URL(req.url);
+    const categorySlug = searchParams.get("categorySlug");
+
+    console.log(`Fetching level assessment quiz for category: ${categorySlug || 'any'}`);
+
+    const quiz = await getLevelAssessmentQuiz(categorySlug || undefined);
 
     if (!quiz) {
-      return errorResponse("آزمون تعیین سطح یافت نشد", "QUIZ_NOT_FOUND", 404);
+      return errorResponse(
+        categorySlug
+          ? `آزمون تعیین سطح برای دسته‌بندی ${categorySlug} یافت نشد`
+          : "آزمون تعیین سطح یافت نشد",
+        "QUIZ_NOT_FOUND",
+        404
+      );
     }
 
     return successResponse(quiz);

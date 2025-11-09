@@ -137,15 +137,47 @@ export async function getQuizzesByCourse(courseId: string) {
   }
 }
 
-// ================== Get Level Assessment Quiz ==================
-// Special quiz for user level assessment (not tied to a course)
-export async function getLevelAssessmentQuiz(): Promise<QuizWithQuestions | null> {
+// ================== Get Level Assessment Quiz by Category ==================
+// Special quiz for user level assessment for a specific category
+export async function getLevelAssessmentQuiz(
+  categorySlug?: string
+): Promise<QuizWithQuestions | null> {
   try {
-    // Find quiz with a special title for level assessment and no course association
+    // If categorySlug is provided, find quiz for that specific category
+    if (categorySlug) {
+      // First, get the category
+      const category = await prisma.category.findUnique({
+        where: { slug: categorySlug },
+      });
+
+      if (!category) {
+        console.error(`Category not found: ${categorySlug}`);
+        return null;
+      }
+
+      // Find quiz for this category
+      const quiz = await prisma.quiz.findFirst({
+        where: {
+          categoryId: category.id,
+          courseId: null, // Ensure it's not tied to any course
+          published: true,
+        },
+        include: {
+          questions: {
+            orderBy: { order: "asc" },
+          },
+        },
+      });
+
+      if (!quiz) return null;
+
+      return getQuizById(quiz.id);
+    }
+
+    // Fallback: Find any level assessment quiz (for backwards compatibility)
     const quiz = await prisma.quiz.findFirst({
       where: {
-        title: "آزمون تعیین سطح",
-        courseId: null, // Ensure it's not tied to any course
+        courseId: null,
         published: true,
       },
       include: {
