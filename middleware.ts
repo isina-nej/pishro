@@ -1,37 +1,58 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// لیست originهای مجاز برای CORS
-const ALLOWED_ORIGINS = [
-  "https://pishro-admin.vercel.app",
-  "http://localhost:3000", // برای development
+/**
+ * لیست دامنه‌های مجاز برای CORS
+ * شامل محیط توسعه (localhost) و پروداکشن (vercel)
+ */
+const allowedOrigins = [
   "http://localhost:3001",
+  "http://localhost:3000",
+  "https://pishro-admin.vercel.app",
+  "https://pishro-0.vercel.app",
 ];
 
-// CORS headers مورد نیاز
-function getCorsHeaders(origin: string | null) {
-  // بررسی اینکه origin در لیست مجاز است
-  const isAllowedOrigin = origin && ALLOWED_ORIGINS.includes(origin);
+/**
+ * بررسی می‌کند که آیا origin درخواست در لیست مجاز است یا نه
+ */
+function isAllowedOrigin(origin: string | null): boolean {
+  if (!origin) return false;
+  return allowedOrigins.some((allowed) => origin === allowed || origin.startsWith(allowed));
+}
 
-  return {
-    "Access-Control-Allow-Origin": isAllowedOrigin ? origin : ALLOWED_ORIGINS[0],
-    "Access-Control-Allow-Credentials": "true",
-    "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization, Cookie, X-Requested-With, Accept, Origin",
-    "Access-Control-Max-Age": "86400", // 24 ساعت
-  };
+/**
+ * افزودن هدرهای CORS به response
+ */
+function addCorsHeaders(response: NextResponse, origin: string | null) {
+  if (origin && isAllowedOrigin(origin)) {
+    response.headers.set("Access-Control-Allow-Origin", origin);
+    response.headers.set("Access-Control-Allow-Credentials", "true");
+    response.headers.set(
+      "Access-Control-Allow-Methods",
+      "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+    );
+    response.headers.set(
+      "Access-Control-Allow-Headers",
+      "Content-Type, Authorization, X-Requested-With"
+    );
+  }
+  return response;
 }
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const origin = req.headers.get("origin");
 
-  // Handle کردن preflight requests (OPTIONS)
+  // Handle preflight requests (OPTIONS)
   if (req.method === "OPTIONS") {
-    return new NextResponse(null, {
-      status: 200,
-      headers: getCorsHeaders(origin),
-    });
+    const response = new NextResponse(null, { status: 204 });
+    return addCorsHeaders(response, origin);
+  }
+
+  // Handle API routes with CORS
+  if (pathname.startsWith("/api/")) {
+    const response = NextResponse.next();
+    return addCorsHeaders(response, origin);
   }
 
   // اگر مسیر دقیقا برابر /profile بود، به /profile/acc ریدایرکت کن
