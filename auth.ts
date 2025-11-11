@@ -17,6 +17,7 @@ export const authConfig: NextAuthConfig = {
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
   secret: process.env.NEXTAUTH_SECRET,
+  trustHost: true, // ✅ اجازه میدهد Auth.js در محیط‌های مختلف (Vercel, localhost) کار کند
   providers: [
     Credentials({
       name: "Phone + Password",
