@@ -78,4 +78,4 @@ export const authConfig: NextAuthConfig = {
 };
 
 // ✅ Export main handler (for /api/auth/[...nextauth])
-export const { handlers, auth } = NextAuth(authConfig);
+export const { handlers, auth, signIn, signOut } = NextAuth(authConfig);

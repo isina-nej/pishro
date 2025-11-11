@@ -59,13 +59,31 @@ export function middleware(req: NextRequest) {
   if (pathname === "/profile") {
     const url = req.nextUrl.clone();
     url.pathname = "/profile/acc";
-    return NextResponse.redirect(url);
+    const response = NextResponse.redirect(url);
+
+    // اضافه کردن CORS headers به redirect response
+    const corsHeaders = getCorsHeaders(origin);
+    Object.entries(corsHeaders).forEach(([key, value]) => {
+      response.headers.set(key, value);
+    });
+
+    return response;
   }
 
-  return NextResponse.next();
+  // برای بقیه requestها، CORS headers اضافه کن
+  const response = NextResponse.next();
+  const corsHeaders = getCorsHeaders(origin);
+  Object.entries(corsHeaders).forEach(([key, value]) => {
+    response.headers.set(key, value);
+  });
+
+  return response;
 }
 
 // مشخص کردن matcher برای اعمال middleware
 export const config = {
-  matcher: ["/profile", "/api/:path*"],
+  matcher: [
+    "/profile/:path*",
+    "/api/:path*", // تمام API routes
+  ],
 };

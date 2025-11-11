@@ -6,6 +6,42 @@ import { NextResponse } from "next/server";
  * Based on JSend specification: https://github.com/omniti-labs/jsend
  */
 
+/**
+ * CORS Configuration
+ * لیست originهای مجاز برای CORS
+ */
+export const ALLOWED_ORIGINS = [
+  "https://pishro-admin.vercel.app",
+  "http://localhost:3000", // برای development
+  "http://localhost:3001",
+];
+
+/**
+ * CORS Headers Helper
+ * اضافه کردن CORS headers به NextResponse
+ */
+export function addCorsHeaders(
+  response: NextResponse,
+  origin?: string | null
+): NextResponse {
+  const isAllowedOrigin = origin && ALLOWED_ORIGINS.includes(origin);
+  const allowedOrigin = isAllowedOrigin ? origin : ALLOWED_ORIGINS[0];
+
+  response.headers.set("Access-Control-Allow-Origin", allowedOrigin);
+  response.headers.set("Access-Control-Allow-Credentials", "true");
+  response.headers.set(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+  );
+  response.headers.set(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, Cookie, X-Requested-With, Accept, Origin"
+  );
+  response.headers.set("Access-Control-Max-Age", "86400");
+
+  return response;
+}
+
 export type ApiStatus = "success" | "fail" | "error";
 
 export interface ApiSuccessResponse<T = unknown> {
