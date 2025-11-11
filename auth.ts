@@ -18,6 +18,16 @@ export const authConfig: NextAuthConfig = {
   session: { strategy: "jwt" },
   secret: process.env.NEXTAUTH_SECRET,
   trustHost: true, // ✅ اجازه میدهد Auth.js در محیط‌های مختلف (Vercel, localhost) کار کند
+  cookies: {
+    sessionToken: {
+      name: "authjs.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "none", // ⬅️ برای Cross-Origin ضروری
+        secure: true, // ⬅️ چون دامنه‌هات HTTPS هستن
+      },
+    },
+  },
   providers: [
     Credentials({
       name: "Phone + Password",

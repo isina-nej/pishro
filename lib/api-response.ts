@@ -12,6 +12,7 @@ import { NextResponse } from "next/server";
  */
 export const ALLOWED_ORIGINS = [
   "https://pishro-admin.vercel.app",
+  "https://pishro-0.vercel.app",
   "http://localhost:3000", // برای development
   "http://localhost:3001",
 ];
