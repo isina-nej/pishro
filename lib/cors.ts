@@ -15,6 +15,8 @@ export function getCorsHeaders(origin?: string | null): HeadersInit {
     process.env.NEXT_PUBLIC_CMS_URL,
     "http://localhost:3001", // Local CMS development
     "http://localhost:3000", // Same origin
+    "https://pishro-admin.vercel.app", // Production CMS admin
+    "https://pishro-0.vercel.app", // Production main site
   ].filter(Boolean) as string[];
 
   // Check if origin is allowed
