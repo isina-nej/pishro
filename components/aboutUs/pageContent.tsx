@@ -1,15 +1,30 @@
-import LandingVideo from "@/components/utils/landingVideo";
-import SectionOne from "./sectionOne";
-import SectionTwo from "./sectionTwo";
+import HeroSection from "./heroSection";
+import ResumeSection from "./resumeSection";
+import TeamSection from "./teamSection";
+import CertificatesGallery from "./certificatesGallery";
+import CtaSection from "./ctaSection";
 import Journals from "./journals";
 
 const AboutUsContent = () => {
   return (
     <div>
-      <LandingVideo vidSrc="/videos/aboutUs.webm" />
-      <SectionOne />
-      <SectionTwo />
+      {/* Hero با دیزاین مدرن */}
+      <HeroSection />
+
+      {/* بخش رزومه نوشتاری: تاریخچه، ماموریت، چشم‌انداز، ارزش‌ها */}
+      <ResumeSection />
+
+      {/* بخش تیم و بانیان */}
+      <TeamSection />
+
+      {/* گالری تقدیرنامه‌ها و افتخارات */}
+      <CertificatesGallery />
+
+      {/* بخش اطلاعیه‌ها و مقالات */}
       <Journals />
+
+      {/* بخش CTA (Call to Action) */}
+      <CtaSection />
     </div>
   );
 };
