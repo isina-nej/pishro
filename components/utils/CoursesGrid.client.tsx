@@ -1,7 +1,7 @@
 // app/components/utils/CoursesGrid.client.tsx
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,15 +14,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import CourseCard from "./courseCard";
 import { Course } from "@prisma/client";
-
-const categories = [
-  { label: "همه", href: "/" },
-  { label: "کریپتو", href: "/cryptocurrency" },
-  { label: "بورس", href: "/stock-market" },
-  { label: "متاورس", href: "/metaverse" },
-  { label: "ایردراپ", href: "/airdrop" },
-  { label: "NFT", href: "/nft" },
-];
 
 type CourseWithCategory = Course & {
   category?: {
@@ -39,13 +30,41 @@ interface Props {
 }
 
 export default function CoursesGridClient({ courses }: Props) {
+  // Build dynamic categories from courses
+  const categories = useMemo(() => {
+    const uniqueCategories = new Map<string, { label: string; href: string }>();
+
+    // Add "همه" as first option
+    uniqueCategories.set("همه", { label: "همه", href: "/courses" });
+
+    // Extract unique categories from courses
+    courses.forEach((course) => {
+      if (course.category) {
+        uniqueCategories.set(course.category.title, {
+          label: course.category.title,
+          href: `/courses/${course.category.slug}`,
+        });
+      }
+    });
+
+    return Array.from(uniqueCategories.values());
+  }, [courses]);
+
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+
+  // Update selectedCategory when categories change
+  useEffect(() => {
+    if (categories.length > 0 && !categories.find(c => c.label === selectedCategory.label)) {
+      setSelectedCategory(categories[0]);
+    }
+  }, [categories, selectedCategory.label]);
 
   // Memoized filtered courses
   const filteredCourses = useMemo(() => {
-    return selectedCategory.label === "همه"
-      ? courses
-      : courses.filter((c) => c.subject.includes(selectedCategory.label));
+    if (selectedCategory.label === "همه") {
+      return courses;
+    }
+    return courses.filter((c) => c.category?.title === selectedCategory.label);
   }, [selectedCategory, courses]);
 
   return (
@@ -113,18 +132,40 @@ export default function CoursesGridClient({ courses }: Props) {
         </div>
       </div>
 
-      {/* Skeleton for empty or loading state */}
-      {filteredCourses.length === 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 animate-pulse">
-          {Array.from({ length: 6 }).map((_, idx) => (
-            <div key={idx} className="w-full h-60 bg-gray-200 rounded-lg" />
-          ))}
+      {/* Empty state message */}
+      {filteredCourses.length === 0 && courses.length > 0 && (
+        <div className="mt-6 sm:mt-8 md:mt-12 lg:mt-16 w-full flex flex-col items-center justify-center py-16 sm:py-20 md:py-24">
+          <div className="text-center">
+            <div className="text-6xl sm:text-7xl mb-4">📚</div>
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">
+              دوره‌ای در این دسته‌بندی یافت نشد
+            </h3>
+            <p className="text-gray-600 text-sm sm:text-base">
+              لطفاً دسته‌بندی دیگری را انتخاب کنید
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* No courses at all */}
+      {courses.length === 0 && (
+        <div className="mt-6 sm:mt-8 md:mt-12 lg:mt-16 w-full flex flex-col items-center justify-center py-16 sm:py-20 md:py-24">
+          <div className="text-center">
+            <div className="text-6xl sm:text-7xl mb-4">🎓</div>
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">
+              به زودی دوره‌های جدید اضافه می‌شود
+            </h3>
+            <p className="text-gray-600 text-sm sm:text-base">
+              در حال حاضر دوره‌ای برای نمایش وجود ندارد
+            </p>
+          </div>
         </div>
       )}
 
       {/* Course grid with Motion */}
-      <div className="mt-6 sm:mt-8 md:mt-12 lg:mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-7 md:gap-8 place-items-center pb-8 sm:pb-10 md:pb-12 lg:pb-16 w-full">
-        {filteredCourses.map((data, idx) => {
+      {filteredCourses.length > 0 && (
+        <div className="mt-6 sm:mt-8 md:mt-12 lg:mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-7 md:gap-8 place-items-center pb-8 sm:pb-10 md:pb-12 lg:pb-16 w-full">
+          {filteredCourses.map((data, idx) => {
           // Build dynamic link if course has category and slug
           const courseLink =
             data.slug && data.category?.slug
@@ -144,17 +185,20 @@ export default function CoursesGridClient({ courses }: Props) {
             </motion.div>
           );
         })}
-      </div>
+        </div>
+      )}
 
       {/* View All Courses Button */}
-      <div className="w-full flex justify-center mt-8 sm:mt-10 md:mt-12">
-        <Link
-          href="/courses"
-          className="bg-gradient-to-r from-myPrimary to-mySecondary text-white font-bold text-base sm:text-lg px-8 sm:px-12 py-3 sm:py-4 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-        >
-          مشاهده همه دوره‌ها
-        </Link>
-      </div>
+      {courses.length > 0 && (
+        <div className="w-full flex justify-center mt-8 sm:mt-10 md:mt-12">
+          <Link
+            href="/courses"
+            className="bg-gradient-to-r from-myPrimary to-mySecondary text-white font-bold text-base sm:text-lg px-8 sm:px-12 py-3 sm:py-4 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+          >
+            مشاهده همه دوره‌ها
+          </Link>
+        </div>
+      )}
     </section>
   );
 }
