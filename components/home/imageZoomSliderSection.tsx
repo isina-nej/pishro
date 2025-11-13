@@ -21,24 +21,24 @@ import { miniSliderData1, miniSliderData2 } from "@/public/data";
 /* ------------------------- 🖼️ Image Data ------------------------- */
 const SLIDES = [
   {
+    src: "/images/home/landing-slider/p03.jpg",
+    title: "گالری پروژه‌های پیشرو",
+    text: "مجموعه‌ای کامل از پروژه‌های موفق و خلاقانه ما در حوزه وب3 و بلاکچین را مشاهده کنید. هر پروژه داستان یک نوآوری است.",
+  },
+  {
     src: "/images/home/landing-slider/p01.jpg",
-    title: "پیشرو در فناوری",
-    text: "کشف نوآوری‌های برتر در دنیای دیجیتال.",
+    title: "نمونه کارهای برجسته",
+    text: "از پلتفرم‌های DeFi گرفته تا اپلیکیشن‌های NFT، نمونه کارهای ما نشان‌دهنده تخصص عمیق تیم در توسعه راهکارهای دیجیتال پیشرفته است.",
   },
   {
     src: "/images/home/landing-slider/p02.jpg",
-    title: "آینده متاورس",
-    text: "کشف نسل بعدی از جهان‌های دیجیتال.",
-  },
-  {
-    src: "/images/home/landing-slider/p03.jpg",
-    title: "انقلاب ایردراپ",
-    text: "پاداش‌ها را فوراً دریافت کنید و درآمد کسب کنید.",
+    title: "پروژه‌های متاورس و گیمینگ",
+    text: "تجربه‌های منحصربه‌فرد ما در ساخت دنیاهای مجازی تعاملی و پلتفرم‌های بازی مبتنی بر بلاکچین را در این گالری کشف کنید.",
   },
   {
     src: "/images/home/landing-slider/p04.jpg",
-    title: "تکامل NFT",
-    text: "هنر مالکیت دیجیتال را کشف کنید.",
+    title: "راهکارهای کسب‌وکار دیجیتال",
+    text: "از ایده تا اجرا، پروژه‌های ما شامل طراحی UI/UX پیشرفته، توسعه قراردادهای هوشمند و راه‌اندازی محصولات موفق در بازار است.",
   },
 ];
 
@@ -252,15 +252,12 @@ const ImageZoomSliderSection = ({
                           transition={{ duration: 0.6, ease: "easeOut" }}
                           className="absolute top-[33%] right-12 text-right text-white z-20"
                         >
-                          <h3 className="text-4xl font-semibold mb-3 drop-shadow-lg">
+                          <h3 className="text-5xl font-semibold mb-3 drop-shadow-lg">
                             {slide.title}
                           </h3>
-                          <p className="text-base text-white/80 max-w-[260px] leading-snug drop-shadow">
+                          <p className="text-lg text-white/80 max-w-[580px] leading-snug drop-shadow">
                             {slide.text}
                           </p>
-                          <button className="text-base bg-mySecondary/95 border border-mySecondary hover:bg-black/5 hover:border-mySecondary backdrop-blur-[4px] py-2 px-10 rounded-full mt-4 transition-all">
-                            اطلاعات بیشتر
-                          </button>
                         </motion.div>
                       </motion.div>
 
@@ -288,15 +285,12 @@ const ImageZoomSliderSection = ({
                                 transition={{ duration: 0.6, ease: "easeOut" }}
                                 className="absolute top-[33%] right-28 text-right text-white z-20"
                               >
-                                <h3 className="text-4xl font-semibold mb-3 drop-shadow-lg">
+                                <h3 className="text-5xl font-semibold mb-3 drop-shadow-lg">
                                   {slide.title}
                                 </h3>
-                                <p className="text-base text-white/80 max-w-[260px] leading-snug drop-shadow">
+                                <p className="text-lg text-white/80 max-w-[580px] leading-snug drop-shadow">
                                   {slide.text}
                                 </p>
-                                <button className="text-base bg-mySecondary/95 border border-mySecondary hover:bg-transparent hover:text-mySecondary hover:border-mySecondary backdrop-blur-[4px] py-2 px-10 rounded-full mt-4 transition-all">
-                                  اطلاعات بیشتر
-                                </button>
                               </motion.div>
                             </div>
                           </motion.div>
