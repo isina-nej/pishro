@@ -33,7 +33,17 @@ const CalculatorSection = () => {
     () => ({
       low: 0.07, // 7 درصد ماهیانه
       medium: 0.08, // 8 درصد ماهیانه
-      high: 0.09, // 9 درصد ماهیانه
+      high: 0.11, // 11 درصد ماهیانه
+    }),
+    []
+  );
+
+  // 📊 متن توضیح برای هر نوع سبد
+  const portfolioDescription = useMemo(
+    () => ({
+      low: "تضمین اصل سرمایه و سود بازدهی ثابت",
+      medium: "تضمین اصل سرمایه و سود بازدهی ثابت",
+      high: "تضمین اصل سرمایه با بازدهی بین ۵ تا ۵۰ درصد",
     }),
     []
   );
@@ -255,23 +265,37 @@ const CalculatorSection = () => {
 
             {/* Result box */}
             <div className="bg-white text-[#1A0A3B] rounded-2xl pt-8 pb-4 px-4 flex flex-col items-center justify-center text-3xl font-medium shadow-lg relative">
-              <div>
-                <CountUp
-                  start={prevResultRef.current}
-                  end={result}
-                  duration={0.8}
-                  separator=","
-                  formattingFn={(n) => formatNumber(n)}
-                />
-                <span className="mr-1 text-lg font-bold text-gray-400">
-                  تومان
-                </span>
+              {/* قیمت و درصد سود */}
+              <div className="flex items-center justify-between w-full gap-4 mb-4">
+                {/* مبلغ کل - سمت راست */}
+                <div className="flex flex-1 justify-center">
+                  <CountUp
+                    start={prevResultRef.current}
+                    end={result}
+                    duration={0.8}
+                    separator=","
+                    formattingFn={(n) => formatNumber(n)}
+                  />
+                  <span className="mr-2 mt-1 text-lg font-bold text-gray-400">
+                    تومان
+                  </span>
+                </div>
+                {/* درصد سود ماهیانه - سمت چپ */}
+                <div className="flex flex-col items-center bg-gradient-to-br from-orange-100 to-orange-50 rounded-xl px-4 py-3 shadow-sm border border-orange-200">
+                  <p className="text-xs text-orange-600 font-medium mb-1">
+                    سود ماهیانه
+                  </p>
+                  <p className="text-2xl font-bold text-orange-700">
+                    {(rates[portfolio] * 100).toFixed(0)}٪
+                  </p>
+                </div>
               </div>
+
               {/* 🛡 پیام تضمین سرمایه */}
-              <div className="mt-6 flex items-center gap-2 bg-green-100 border border-green-300 rounded-xl px-4 py-2 text-green-700 text-sm font-medium shadow-sm">
+              <div className="mt-4 flex items-start gap-2 bg-green-100 border border-green-300 rounded-xl px-4 py-3 text-green-700 text-sm font-medium shadow-sm">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="w-5 h-5 text-green-600"
+                  className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -280,10 +304,12 @@ const CalculatorSection = () => {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    d="M12 11c.667-2 2.333-2 3 0m-3 0c-.667 2-2.333 2-3 0m3 0v6m0 0c-3 0-6-2-6-6 0-4 3-6 6-6s6 2 6 6c0 4-3 6-6 6z"
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
                   />
                 </svg>
-                <p>این عدد حداقل سود، با تضمین حفظ سرمایه اولیه است</p>
+                <p className="leading-relaxed">
+                  {portfolioDescription[portfolio]}
+                </p>
               </div>
             </div>
 
