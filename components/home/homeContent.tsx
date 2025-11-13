@@ -6,6 +6,7 @@ import CalculatorSection from "./calculatorSection";
 import CoursesSec from "@/components/utils/CoursesSec.server";
 import HomeComments from "./homeComments";
 import NewsClub from "./newsClub";
+import FloatingNotificationManager from "@/components/utils/floatingNotificationManager";
 
 export default function HomePageContent() {
   return (
@@ -16,6 +17,7 @@ export default function HomePageContent() {
       <CoursesSec />
       <HomeComments />
       <NewsClub />
+      <FloatingNotificationManager />
     </div>
   );
 }

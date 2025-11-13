@@ -5,7 +5,7 @@ import { MobileSwiper } from "./mobile-scroll/MobileSwiper";
 
 export default function MobileScrollSection() {
   return (
-    <div>
+    <div id="mobile-scroll">
       <div className="hidden lg:block">
         <DesktopScroller />
       </div>

@@ -69,6 +69,7 @@ export default function CoursesGridClient({ courses }: Props) {
 
   return (
     <section
+      id="courses-section"
       className="relative flex flex-col justify-center container-xl mt-8 sm:mt-12 md:mt-16 lg:mt-28"
       aria-label="دوره‌های آموزشی"
     >
