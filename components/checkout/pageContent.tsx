@@ -3,10 +3,12 @@
 import { useState, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import { toast } from "react-hot-toast";
-import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion";
 import CheckoutSidebar from "./sidebar";
 import ShoppingCartMain from "./shoppingCartMain";
 import PayMain from "./payMain";
+import StepProgress from "./stepProgress";
+import EmptyCart from "./emptyCart";
 import { useCartStore } from "@/stores/cart-store";
 import { useCreateCheckout } from "@/lib/hooks/useCheckout";
 
@@ -21,8 +23,6 @@ const CheckoutPageContent = () => {
 
   // استفاده از React Query mutation
   const createCheckoutMutation = useCreateCheckout();
-
-  // 🔹 اگر پارامتر result در URL باشد، مستقیماً مرحله نتیجه را نمایش بده
 
   // 🧮 محاسبه مجموع قیمت‌ها
   const priceSummary = useMemo(() => {
@@ -77,52 +77,75 @@ const CheckoutPageContent = () => {
     );
   };
 
+  const isEmpty = items.length === 0;
+
   return (
-    <div className="container-xl pt-12">
-      <div className="flex justify-between pb-1 mt-12">
-        <h4 className="font-iransans font-semibold text-lg text-[#333333]">
-          {step === "shoppingCart" && "سبد خرید"}
-          {step === "pay" && "پرداخت"}
-          {step === "result" && "تکمیل فرایند خرید"}
-        </h4>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+      <div className="container-xl pt-8 pb-20">
+        {/* Page Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-8"
+        >
+          <h1 className="text-4xl font-black text-gray-900 mb-2">
+            {step === "shoppingCart" && "سبد خرید شما"}
+            {step === "pay" && "تکمیل خرید"}
+            {step === "result" && "نتیجه پرداخت"}
+          </h1>
+          <p className="text-gray-600">
+            {step === "shoppingCart" &&
+              "دوره‌های انتخابی خود را بررسی و خرید کنید"}
+            {step === "pay" && "روش پرداخت را انتخاب کنید"}
+            {step === "result" && "وضعیت پرداخت شما"}
+          </p>
+        </motion.div>
 
-        {step === "shoppingCart" && (
-          <Button
-            onClick={() => setStep("pay")}
-            className="px-16"
-            disabled={items.length === 0}
-          >
-            ادامه
-          </Button>
-        )}
+        {/* Step Progress Indicator */}
+        {!isEmpty && <StepProgress currentStep={step} />}
 
-        {step === "pay" && (
-          <div className="flex gap-3">
-            <Button onClick={() => setStep("shoppingCart")} variant="outline">
-              بازگشت
-            </Button>
-            <Button
-              onClick={handlePayment}
-              className="px-12"
-              disabled={createCheckoutMutation.isPending}
+        {/* Content */}
+        <AnimatePresence mode="wait">
+          {isEmpty && step === "shoppingCart" ? (
+            <motion.div
+              key="empty"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
             >
-              {createCheckoutMutation.isPending ? "در حال اتصال..." : "پرداخت"}
-            </Button>
-          </div>
-        )}
-      </div>
+              <EmptyCart />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="content"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex flex-col lg:flex-row justify-between gap-8 mt-8"
+            >
+              {/* Main Content Area */}
+              <motion.div
+                className="flex-1"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                {step === "shoppingCart" && <ShoppingCartMain data={items} />}
+                {step === "pay" && <PayMain />}
+              </motion.div>
 
-      <div className="flex justify-between gap-20 mt-8">
-        {step === "shoppingCart" && <ShoppingCartMain data={items} />}
-        {step === "pay" && <PayMain />}
-
-        <CheckoutSidebar
-          data={priceSummary}
-          step={step}
-          setStep={setStep}
-          handlePayment={handlePayment}
-          loading={createCheckoutMutation.isPending}
-        />
+              {/* Sidebar */}
+              <CheckoutSidebar
+                data={priceSummary}
+                step={step}
+                setStep={setStep}
+                handlePayment={handlePayment}
+                loading={createCheckoutMutation.isPending}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

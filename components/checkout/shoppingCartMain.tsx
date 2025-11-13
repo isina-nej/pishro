@@ -7,9 +7,9 @@ interface CheckoutMainProps {
 
 const ShoppingCartMain = ({ data }: CheckoutMainProps) => {
   return (
-    <main className="grid grid-cols-2 gap-4 w-full">
+    <main className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
       {data.map((item, idx) => (
-        <ItemCard key={idx} data={item} />
+        <ItemCard key={idx} data={item} index={idx} />
       ))}
     </main>
   );
