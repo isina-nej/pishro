@@ -252,10 +252,10 @@ const ImageZoomSliderSection = ({
                           transition={{ duration: 0.6, ease: "easeOut" }}
                           className="absolute top-[33%] right-12 text-right text-white z-20"
                         >
-                          <h3 className="text-5xl font-semibold mb-3 drop-shadow-lg">
+                          <h3 className="text-5xl font-semibold mb-5 drop-shadow-lg">
                             {slide.title}
                           </h3>
-                          <p className="text-lg text-white/80 max-w-[580px] leading-snug drop-shadow">
+                          <p className="text-lg text-white/80 max-w-[560px] leading-snug drop-shadow">
                             {slide.text}
                           </p>
                         </motion.div>
@@ -285,10 +285,10 @@ const ImageZoomSliderSection = ({
                                 transition={{ duration: 0.6, ease: "easeOut" }}
                                 className="absolute top-[33%] right-28 text-right text-white z-20"
                               >
-                                <h3 className="text-5xl font-semibold mb-3 drop-shadow-lg">
+                                <h3 className="text-5xl font-semibold mb-5 drop-shadow-lg">
                                   {slide.title}
                                 </h3>
-                                <p className="text-lg text-white/80 max-w-[580px] leading-snug drop-shadow">
+                                <p className="text-lg text-white/80 max-w-[560px] leading-snug drop-shadow">
                                   {slide.text}
                                 </p>
                               </motion.div>
