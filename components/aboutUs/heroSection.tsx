@@ -23,7 +23,9 @@ const HeroSection = () => {
             className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-2 mb-8"
           >
             <HiSparkles className="text-yellow-300 text-xl" />
-            <span className="text-sm font-medium">پیشرو در آموزش و سرمایه‌گذاری</span>
+            <span className="text-sm font-medium">
+              پیشرو در آموزش و سرمایه‌گذاری
+            </span>
           </motion.div>
 
           {/* Main Title */}
@@ -43,7 +45,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed mb-12 text-white/90 px-4"
+            className="text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed mb-8 text-white/90 px-4"
           >
             با تجربه‌ای بیش از ۵ سال در زمینه آموزش و مشاوره بازارهای مالی،
             همراه شما در مسیر موفقیت و ثروت‌آفرینی هستیم
@@ -64,7 +66,9 @@ const HeroSection = () => {
                 </div>
               </div>
               <div className="text-3xl md:text-4xl font-bold mb-2">+۳۰۰۰</div>
-              <div className="text-white/80 text-sm md:text-base">دانشجوی موفق</div>
+              <div className="text-white/80 text-sm md:text-base">
+                دانشجوی موفق
+              </div>
             </div>
 
             {/* Stat 2 */}
@@ -75,7 +79,9 @@ const HeroSection = () => {
                 </div>
               </div>
               <div className="text-3xl md:text-4xl font-bold mb-2">+۱۰۰</div>
-              <div className="text-white/80 text-sm md:text-base">دوره تخصصی</div>
+              <div className="text-white/80 text-sm md:text-base">
+                دوره تخصصی
+              </div>
             </div>
 
             {/* Stat 3 */}
@@ -86,17 +92,19 @@ const HeroSection = () => {
                 </div>
               </div>
               <div className="text-3xl md:text-4xl font-bold mb-2">%۹۵</div>
-              <div className="text-white/80 text-sm md:text-base">رضایت کاربران</div>
+              <div className="text-white/80 text-sm md:text-base">
+                رضایت کاربران
+              </div>
             </div>
           </motion.div>
         </div>
       </div>
 
       {/* Bottom Wave */}
-      <div className="absolute bottom-0 left-0 right-0">
+      <div className="absolute -bottom-10 left-0 right-0">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1440 320"
+          viewBox="0 0 1440 220"
           className="w-full"
         >
           <path
