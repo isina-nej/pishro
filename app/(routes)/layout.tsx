@@ -4,6 +4,7 @@ import Navbar from "@/components/navbar/navbar";
 import Footer from "@/components/footer";
 import ChatWidget from "@/components/utils/ChatWidget";
 import ScrollToTopButton from "@/components/utils/ScrollToTopButton";
+import FloatingCartButton from "@/components/utils/FloatingCartButton";
 import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {
@@ -22,6 +23,7 @@ export default function RootLayout({
       {children}
       <Footer />
       <ScrollToTopButton />
+      <FloatingCartButton />
       <ChatWidget />
     </SessionProvider>
   );
