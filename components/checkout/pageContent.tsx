@@ -80,7 +80,7 @@ const CheckoutPageContent = () => {
   const isEmpty = items.length === 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+    <div className="min-h-screen mt-16 bg-gradient-to-br from-gray-50 via-white to-gray-100">
       <div className="container-xl pt-8 pb-20">
         {/* Page Header */}
         <motion.div
