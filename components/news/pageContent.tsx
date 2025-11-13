@@ -1,11 +1,7 @@
-import NewsSection from "@/components/news/newsSection";
+import NewsPageContent from "@/components/news/newsPageContent";
 
 const NewsPageContents = () => {
-  return (
-    <div className="container-xl py-10 mt-20">
-      <NewsSection />
-    </div>
-  );
+  return <NewsPageContent />;
 };
 
 export default NewsPageContents;
