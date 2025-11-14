@@ -570,3 +570,312 @@ enum QuestionType {
   TRUE_FALSE // صحیح/غلط
   SHORT_ANSWER // پاسخ کوتاه
 }
+
+//
+// ===================== LANDING PAGE MODELS =====================
+//
+
+// مدل برای مدیریت محتوای صفحه اصلی (Home Landing)
+model HomeLanding {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // Hero Section
+  heroTitle       String
+  heroSubtitle    String?
+  heroDescription String?
+  heroVideoUrl    String? // لینک ویدیو پس‌زمینه
+  heroCta1Text    String?
+  heroCta1Link    String?
+
+  // Overlay Text Sections (متن‌های اسکرولی روی ویدیو)
+  overlayTexts String[] @default([])
+
+  // Stats (آمار و ارقام)
+  // مثال: [{"label": "دانشجوی موفق", "value": 3000, "suffix": "+"}, ...]
+  statsData Json @default("[]")
+
+  // Why Us Section
+  whyUsTitle       String?
+  whyUsDescription String?
+  // مثال: [{"label": "آموزش حرفه‌ای", "title": "...", "text": "...", "btnLabel": "...", "btnHref": "...", "imagePath": "..."}]
+  whyUsItems Json @default("[]")
+
+  // Newsletter/News Club Section
+  newsClubTitle       String?
+  newsClubDescription String?
+
+  // Meta tags
+  metaTitle       String?
+  metaDescription String?
+  metaKeywords    String[] @default([])
+
+  published Boolean @default(true)
+  order     Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// مدل برای مدیریت Mobile Scroller Steps
+model MobileScrollerStep {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  stepNumber  Int
+  title       String
+  description String
+  imageUrl    String?
+  gradient    String? // کلاس CSS برای gradient
+
+  // Cards داخل هر Step
+  // مثال: [{"title": "شروع", "desc": "ورود مطمئن", "icon": "LineChart", "top": "25%", "right": "-10%"}]
+  cards Json @default("[]")
+
+  order     Int     @default(0)
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published, order])
+}
+
+// مدل برای مدیریت محتوای صفحه درباره ما
+model AboutPage {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // Hero Section
+  heroTitle       String
+  heroSubtitle    String?
+  heroDescription String?
+  heroBadgeText   String?
+
+  // Hero Stats
+  // مثال: [{"label": "دانشجوی موفق", "value": 3000, "icon": "LuUsers"}]
+  heroStats Json @default("[]")
+
+  // Resume Section
+  resumeTitle       String?
+  resumeSubtitle    String?
+  // Resume Items (تاریخچه، ماموریت، چشم‌انداز، ارزش‌ها)
+  resumeItems       ResumeItem[] @relation("AboutResumeItems")
+
+  // Team Section
+  teamTitle    String?
+  teamSubtitle String?
+  teamMembers  TeamMember[] @relation("AboutTeamMembers")
+
+  // Certificates Section
+  certificatesTitle    String?
+  certificatesSubtitle String?
+  certificates         Certificate[] @relation("AboutCertificates")
+
+  // Journals Section
+  journalsTitle    String?
+  journalsSubtitle String?
+  journals         Journal[] @relation("AboutJournals")
+
+  // CTA Section
+  ctaTitle       String?
+  ctaDescription String?
+  ctaButtonText  String?
+  ctaButtonLink  String?
+
+  // Meta tags
+  metaTitle       String?
+  metaDescription String?
+  metaKeywords    String[] @default([])
+
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// مدل برای آیتم‌های Resume (تاریخچه، ماموریت، چشم‌انداز، ارزش‌ها)
+model ResumeItem {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  aboutPage AboutPage @relation("AboutResumeItems", fields: [aboutPageId], references: [id], onDelete: Cascade)
+  aboutPageId String  @db.ObjectId
+
+  icon        String? // نام آیکون (مثل "LuClock", "LuTarget", ...)
+  title       String
+  description String
+  color       String? // رنگ gradient (مثل "from-blue-500 to-purple-500")
+  bgColor     String? // رنگ پس‌زمینه (مثل "bg-blue-50")
+
+  order     Int     @default(0)
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([aboutPageId, order])
+}
+
+// مدل برای اعضای تیم
+model TeamMember {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  aboutPage   AboutPage @relation("AboutTeamMembers", fields: [aboutPageId], references: [id], onDelete: Cascade)
+  aboutPageId String    @db.ObjectId
+
+  name        String
+  role        String
+  image       String?
+  education   String?
+  description String?
+  specialties String[] @default([])
+
+  // Social Links
+  linkedinUrl String?
+  emailUrl    String?
+  twitterUrl  String?
+
+  order     Int     @default(0)
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([aboutPageId, order])
+}
+
+// مدل برای گواهینامه‌ها و افتخارات
+model Certificate {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  aboutPage   AboutPage @relation("AboutCertificates", fields: [aboutPageId], references: [id], onDelete: Cascade)
+  aboutPageId String    @db.ObjectId
+
+  title       String
+  description String?
+  image       String
+
+  order     Int     @default(0)
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([aboutPageId, order])
+}
+
+// مدل برای اطلاعیه‌ها و مقالات در صفحه About
+model Journal {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  aboutPage   AboutPage @relation("AboutJournals", fields: [aboutPageId], references: [id], onDelete: Cascade)
+  aboutPageId String    @db.ObjectId
+
+  title String
+  text  String
+  link  String?
+
+  order     Int     @default(0)
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([aboutPageId, order])
+}
+
+// مدل برای صفحه مشاوره سرمایه‌گذاری
+model InvestmentConsulting {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // Landing Content
+  title       String
+  description String
+  image       String?
+
+  // Contact Information
+  phoneNumber   String?
+  telegramId    String?
+  telegramLink  String?
+  coursesLink   String?
+
+  // Drawer Content
+  inPersonTitle       String?
+  inPersonDescription String?
+  onlineTitle         String?
+  onlineDescription   String?
+  coursesTitle        String?
+  coursesDescription  String?
+
+  // Meta tags
+  metaTitle       String?
+  metaDescription String?
+  metaKeywords    String[] @default([])
+
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// مدل برای صفحه سبدهای سرمایه‌گذاری
+model InvestmentPlans {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // Landing Content
+  title       String
+  description String
+  image       String?
+
+  // Investment Plan Types
+  plans InvestmentPlan[] @relation("InvestmentPlansPlans")
+
+  // Investment Tags
+  tags InvestmentTag[] @relation("InvestmentPlansTags")
+
+  // Settings for sliders
+  minAmount Int @default(10)
+  maxAmount Int @default(10000)
+  amountStep Int @default(10)
+
+  // Meta tags
+  metaTitle       String?
+  metaDescription String?
+  metaKeywords    String[] @default([])
+
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// مدل برای انواع سبدهای سرمایه‌گذاری (ارز دیجیتال، بورس، ترکیبی)
+model InvestmentPlan {
+  id              String           @id @default(auto()) @map("_id") @db.ObjectId
+  investmentPlans InvestmentPlans  @relation("InvestmentPlansPlans", fields: [investmentPlansId], references: [id], onDelete: Cascade)
+  investmentPlansId String         @db.ObjectId
+
+  label       String // مثل "ارز دیجیتال"، "بورس"، "ترکیبی"
+  icon        String? // نام آیکون (مثل "Bitcoin", "LineChart", "PieChart")
+  description String?
+
+  order     Int     @default(0)
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([investmentPlansId, order])
+}
+
+// مدل برای تگ‌های سرمایه‌گذاری
+model InvestmentTag {
+  id              String           @id @default(auto()) @map("_id") @db.ObjectId
+  investmentPlans InvestmentPlans  @relation("InvestmentPlansTags", fields: [investmentPlansId], references: [id], onDelete: Cascade)
+  investmentPlansId String         @db.ObjectId
+
+  title String
+  color String? // رنگ تگ
+  icon  String? // آیکون تگ
+
+  order     Int     @default(0)
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([investmentPlansId, order])
+}
