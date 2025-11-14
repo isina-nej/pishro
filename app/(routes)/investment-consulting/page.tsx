@@ -15,9 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const InvestmentPage = async () => {
-  const data = await getInvestmentConsultingData();
-
-  return <InvestmentPageContent initialData={data || undefined} />;
+  return <InvestmentPageContent />;
 };
 
 export default InvestmentPage;

@@ -1,9 +1,6 @@
 import HomePageContent from "@/components/home/homeContent";
 import { Metadata } from "next";
-import {
-  getHomeLandingData,
-  getMobileScrollerSteps,
-} from "@/lib/services/landing-service";
+import { getHomeLandingData } from "@/lib/services/landing-service";
 
 export async function generateMetadata(): Promise<Metadata> {
   const homeLanding = await getHomeLandingData();
@@ -20,18 +17,5 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const [homeLanding, mobileSteps] = await Promise.all([
-    getHomeLandingData(),
-    getMobileScrollerSteps(),
-  ]);
-
-  return (
-    <HomePageContent
-      initialData={
-        homeLanding && mobileSteps
-          ? { landing: homeLanding, mobileSteps }
-          : undefined
-      }
-    />
-  );
+  return <HomePageContent />;
 }
