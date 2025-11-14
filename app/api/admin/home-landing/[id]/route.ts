@@ -99,6 +99,21 @@ export async function PATCH(
     if (body.whyUsItems !== undefined) updateData.whyUsItems = body.whyUsItems;
     if (body.newsClubTitle !== undefined) updateData.newsClubTitle = body.newsClubTitle;
     if (body.newsClubDescription !== undefined) updateData.newsClubDescription = body.newsClubDescription;
+    // Calculator fields
+    if (body.calculatorTitle !== undefined) updateData.calculatorTitle = body.calculatorTitle;
+    if (body.calculatorDescription !== undefined) updateData.calculatorDescription = body.calculatorDescription;
+    if (body.calculatorRateLow !== undefined) updateData.calculatorRateLow = body.calculatorRateLow;
+    if (body.calculatorRateMedium !== undefined) updateData.calculatorRateMedium = body.calculatorRateMedium;
+    if (body.calculatorRateHigh !== undefined) updateData.calculatorRateHigh = body.calculatorRateHigh;
+    if (body.calculatorPortfolioLowDesc !== undefined) updateData.calculatorPortfolioLowDesc = body.calculatorPortfolioLowDesc;
+    if (body.calculatorPortfolioMediumDesc !== undefined) updateData.calculatorPortfolioMediumDesc = body.calculatorPortfolioMediumDesc;
+    if (body.calculatorPortfolioHighDesc !== undefined) updateData.calculatorPortfolioHighDesc = body.calculatorPortfolioHighDesc;
+    if (body.calculatorAmountSteps !== undefined) updateData.calculatorAmountSteps = body.calculatorAmountSteps;
+    if (body.calculatorDurationSteps !== undefined) updateData.calculatorDurationSteps = body.calculatorDurationSteps;
+    if (body.calculatorInPersonPhone !== undefined) updateData.calculatorInPersonPhone = body.calculatorInPersonPhone;
+    if (body.calculatorOnlineTelegram !== undefined) updateData.calculatorOnlineTelegram = body.calculatorOnlineTelegram;
+    if (body.calculatorOnlineTelegramLink !== undefined) updateData.calculatorOnlineTelegramLink = body.calculatorOnlineTelegramLink;
+    // Meta fields
     if (body.metaTitle !== undefined) updateData.metaTitle = body.metaTitle;
     if (body.metaDescription !== undefined) updateData.metaDescription = body.metaDescription;
     if (body.metaKeywords !== undefined) updateData.metaKeywords = body.metaKeywords;
