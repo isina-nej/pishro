@@ -33,3 +33,11 @@ export {
   commentKeys,
 } from "./useComments";
 export type { Comment, CommentsOptions } from "./useComments";
+
+// Landing pages hooks
+export {
+  useHomeLanding,
+  useAboutPage,
+  useInvestmentConsulting,
+  useInvestmentPlans,
+} from "./useLanding";
