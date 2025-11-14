@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-async function main(): Promise<void> {
+async function main() {
   console.log("⏳ Starting selective database cleanup...");
 
   /**
@@ -545,7 +545,7 @@ async function main(): Promise<void> {
 }
 
 main()
-  .catch((error: unknown) => {
+  .catch((error) => {
     console.error(error);
     process.exit(1);
   })
