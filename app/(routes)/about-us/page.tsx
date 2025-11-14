@@ -15,11 +15,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const AboutUsPage = async () => {
-  const aboutPage = await getAboutPageData();
-
   return (
     <>
-      <AboutUsContent initialData={aboutPage || undefined} />
+      <AboutUsContent />
     </>
   );
 };
