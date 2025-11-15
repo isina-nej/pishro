@@ -5,15 +5,19 @@
 ## هوک‌های موجود
 
 ### 1. useHomeLanding
+
 برای دریافت داده‌های صفحه اصلی (Home Landing) و مراحل اسکرولر موبایل
 
 ### 2. useAboutPage
+
 برای دریافت داده‌های صفحه درباره ما
 
-### 3. useInvestmentConsulting
+### 3. useBusinessConsulting
+
 برای دریافت داده‌های صفحه مشاوره سرمایه‌گذاری
 
 ### 4. useInvestmentPlans
+
 برای دریافت داده‌های صفحه سبدهای سرمایه‌گذاری
 
 ---
@@ -106,17 +110,17 @@ export default function HomePageContent({ initialData }: HomePageContentProps) {
 ```tsx
 "use client";
 
-import { useInvestmentConsulting } from "@/lib/hooks";
-import type { InvestmentConsultingData } from "@/types/landing";
+import { useBusinessConsulting } from "@/lib/hooks";
+import type { BusinessConsultingData } from "@/types/landing";
 
 interface InvestmentPageContentProps {
-  initialData?: InvestmentConsultingData;
+  initialData?: BusinessConsultingData;
 }
 
 export default function InvestmentPageContent({
-  initialData
+  initialData,
 }: InvestmentPageContentProps) {
-  const { data, isLoading } = useInvestmentConsulting();
+  const { data, isLoading } = useBusinessConsulting();
 
   const consultingData = data || initialData;
 
@@ -155,7 +159,7 @@ interface InvestmentPlansPageContentProps {
 }
 
 export default function InvestmentPlansPageContent({
-  initialData
+  initialData,
 }: InvestmentPlansPageContentProps) {
   const { data, isLoading } = useInvestmentPlans();
 

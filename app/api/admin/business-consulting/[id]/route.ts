@@ -34,13 +34,13 @@ export async function GET(
 
     const { id } = await params;
 
-    const item = await prisma.investmentConsulting.findUnique({
+    const item = await prisma.businessConsulting.findUnique({
       where: { id },
     });
 
     if (!item) {
       return notFoundResponse(
-        "InvestmentConsulting",
+        "BusinessConsulting",
         "صفحه مشاوره سرمایه‌گذاری یافت نشد"
       );
     }
@@ -73,13 +73,13 @@ export async function PATCH(
     const body = await req.json();
 
     // Check if item exists
-    const existingItem = await prisma.investmentConsulting.findUnique({
+    const existingItem = await prisma.businessConsulting.findUnique({
       where: { id },
     });
 
     if (!existingItem) {
       return notFoundResponse(
-        "InvestmentConsulting",
+        "BusinessConsulting",
         "صفحه مشاوره سرمایه‌گذاری یافت نشد"
       );
     }
@@ -118,7 +118,7 @@ export async function PATCH(
       updateData.metaKeywords = body.metaKeywords;
     if (body.published !== undefined) updateData.published = body.published;
 
-    const updatedItem = await prisma.investmentConsulting.update({
+    const updatedItem = await prisma.businessConsulting.update({
       where: { id },
       data: updateData,
     });
@@ -153,19 +153,19 @@ export async function DELETE(
     const { id } = await params;
 
     // Check if item exists
-    const existingItem = await prisma.investmentConsulting.findUnique({
+    const existingItem = await prisma.businessConsulting.findUnique({
       where: { id },
     });
 
     if (!existingItem) {
       return notFoundResponse(
-        "InvestmentConsulting",
+        "BusinessConsulting",
         "صفحه مشاوره سرمایه‌گذاری یافت نشد"
       );
     }
 
     // Delete item
-    await prisma.investmentConsulting.delete({
+    await prisma.businessConsulting.delete({
       where: { id },
     });
 

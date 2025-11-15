@@ -323,7 +323,7 @@ export async function seedLandingPages() {
   console.log("✅ About Page created:", aboutPage.id);
 
   // ==================== INVESTMENT CONSULTING ====================
-  const investmentConsulting = await prisma.investmentConsulting.upsert({
+  const businessConsulting = await prisma.businessConsulting.upsert({
     where: { id: "business-consulting-1" },
     update: {},
     create: {
@@ -357,7 +357,7 @@ export async function seedLandingPages() {
     },
   });
 
-  console.log("✅ Investment Consulting created:", investmentConsulting.id);
+  console.log("✅ Investment Consulting created:", businessConsulting.id);
 
   // ==================== INVESTMENT PLANS ====================
   const investmentPlans = await prisma.investmentPlans.upsert({

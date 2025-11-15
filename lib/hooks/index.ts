@@ -38,6 +38,6 @@ export type { Comment, CommentsOptions } from "./useComments";
 export {
   useHomeLanding,
   useAboutPage,
-  useInvestmentConsulting,
+  useBusinessConsulting,
   useInvestmentPlans,
 } from "./useLanding";

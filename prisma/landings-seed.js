@@ -16,7 +16,7 @@ async function main() {
   await prisma.teamMember.deleteMany();
   await prisma.resumeItem.deleteMany();
   await prisma.aboutPage.deleteMany();
-  await prisma.investmentConsulting.deleteMany();
+  await prisma.businessConsulting.deleteMany();
   await prisma.investmentTag.deleteMany();
   await prisma.investmentPlan.deleteMany();
   await prisma.investmentPlans.deleteMany();
@@ -410,7 +410,7 @@ async function main() {
    * -------------------------------------------------------
    */
   console.log("💼 Creating Investment Consulting data...");
-  await prisma.investmentConsulting.create({
+  await prisma.businessConsulting.create({
     data: {
       title: "مشاوره کسب وکار پیشرو",
       description:

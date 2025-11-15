@@ -1,9 +1,9 @@
 import InvestmentPageContent from "@/components/investment-consulting/pageContent";
 import { Metadata } from "next";
-import { getInvestmentConsultingData } from "@/lib/services/landing-service";
+import { getBusinessConsultingData } from "@/lib/services/landing-service";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const data = await getInvestmentConsultingData();
+  const data = await getBusinessConsultingData();
 
   return {
     title: data?.metaTitle || "مشاوره سرمایه‌گذاری | پیشرو",

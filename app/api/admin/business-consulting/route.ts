@@ -40,7 +40,7 @@ export async function GET(req: NextRequest) {
     const published = searchParams.get("published");
 
     // Build where clause
-    const where: Prisma.InvestmentConsultingWhereInput = {};
+    const where: Prisma.BusinessConsultingWhereInput = {};
 
     if (published === "true") {
       where.published = true;
@@ -50,13 +50,13 @@ export async function GET(req: NextRequest) {
 
     // Fetch investment consulting pages
     const [items, total] = await Promise.all([
-      prisma.investmentConsulting.findMany({
+      prisma.businessConsulting.findMany({
         where,
         skip,
         take: limit,
         orderBy: { createdAt: "desc" },
       }),
-      prisma.investmentConsulting.count({ where }),
+      prisma.businessConsulting.count({ where }),
     ]);
 
     return paginatedResponse(items, page, limit, total);
@@ -110,7 +110,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Create investment consulting page
-    const item = await prisma.investmentConsulting.create({
+    const item = await prisma.businessConsulting.create({
       data: {
         title,
         description,

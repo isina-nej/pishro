@@ -219,7 +219,7 @@ export interface NewsArticle {
 
 // ==================== INVESTMENT CONSULTING ====================
 
-export interface InvestmentConsultingData {
+export interface BusinessConsultingData {
   id: string;
 
   // Landing Content

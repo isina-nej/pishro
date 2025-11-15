@@ -292,7 +292,7 @@
 ### GET `/api/admin/business-consulting`
 
 **Input:** `?page=1&limit=20&published=true|false`
-**Output:** Paginated list of InvestmentConsulting
+**Output:** Paginated list of BusinessConsulting
 
 ### POST `/api/admin/business-consulting`
 
@@ -320,17 +320,17 @@
 }
 ```
 
-**Output:** Created InvestmentConsulting
+**Output:** Created BusinessConsulting
 
 ### GET `/api/admin/business-consulting/:id`
 
 **Input:** `id` (path param)
-**Output:** Single InvestmentConsulting
+**Output:** Single BusinessConsulting
 
 ### PATCH `/api/admin/business-consulting/:id`
 
-**Input:** `id` (path param) + Partial InvestmentConsulting fields
-**Output:** Updated InvestmentConsulting
+**Input:** `id` (path param) + Partial BusinessConsulting fields
+**Output:** Updated BusinessConsulting
 
 ### DELETE `/api/admin/business-consulting/:id`
 

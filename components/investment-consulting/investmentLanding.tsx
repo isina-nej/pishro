@@ -13,14 +13,14 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { investmentConsultingData } from "@/public/data";
+import { businessConsultingData } from "@/public/data";
 
 const InvestmentLanding = () => {
   return (
     <div className="relative w-full h-screen overflow-hidden isolate flex items-center justify-start text-center px-4 -mb-32">
       {/* 📷 Background Image */}
       <Image
-        src={investmentConsultingData.image}
+        src={businessConsultingData.image}
         alt="مشاوره سرمایه‌گذاری"
         fill
         className="object-cover z-0"
@@ -33,10 +33,10 @@ const InvestmentLanding = () => {
       {/* 📝 Main Content */}
       <div className="relative z-20 max-w-2xl text-white flex flex-col items-center rtl gap-y-8 px-8">
         <h3 className="text-4xl lg:text-5xl font-bold leading-tight">
-          {investmentConsultingData.title}
+          {businessConsultingData.title}
         </h3>
         <p className="text-white/90 text-lg max-w-xl mx-auto leading-relaxed">
-          {investmentConsultingData.text}
+          {businessConsultingData.text}
         </p>
 
         {/* 🎯 Call-to-Actions */}

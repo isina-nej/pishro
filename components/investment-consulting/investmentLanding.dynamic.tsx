@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/drawer";
 import { useEffect, useState } from "react";
 
-interface InvestmentConsultingData {
+interface BusinessConsultingData {
   id: string;
   title: string;
   description: string;
@@ -34,7 +34,7 @@ interface InvestmentConsultingData {
 }
 
 const InvestmentLandingDynamic = () => {
-  const [data, setData] = useState<InvestmentConsultingData | null>(null);
+  const [data, setData] = useState<BusinessConsultingData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

@@ -7,7 +7,7 @@ import axios from "axios";
 import type {
   HomeLandingResponse,
   AboutPageData,
-  InvestmentConsultingData,
+  BusinessConsultingData,
   InvestmentPlansData,
 } from "@/types/landing";
 
@@ -44,8 +44,8 @@ export function useAboutPage() {
 /**
  * Hook for fetching investment consulting page data
  */
-export function useInvestmentConsulting() {
-  return useQuery<InvestmentConsultingData>({
+export function useBusinessConsulting() {
+  return useQuery<BusinessConsultingData>({
     queryKey: ["landing", "business-consulting"],
     queryFn: async () => {
       const { data } = await axios.get("/api/landing/business-consulting");

@@ -87,9 +87,9 @@ export async function getBusinessConsultingData() {
 
 // ==================== INVESTMENT CONSULTING ====================
 
-export async function getInvestmentConsultingData() {
+export async function getBusinessConsultingData() {
   try {
-    const data = await prisma.investmentConsulting.findFirst({
+    const data = await prisma.businessConsulting.findFirst({
       where: { published: true },
     });
 
