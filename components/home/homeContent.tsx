@@ -1,7 +1,7 @@
 // @/components/home/homeContent.tsx
 
-import LandingOverlay from "./landingOverlay";
-import MobileScrollSection from "./mobileScrollSection";
+import LandingOverlayServer from "./landingOverlay.server";
+import MobileScrollSectionServer from "./mobileScrollSection.server";
 import CalculatorSection from "./calculatorSection";
 import CoursesSec from "@/components/utils/CoursesSec.server";
 import HomeComments from "./homeComments";
@@ -18,8 +18,8 @@ export default function HomePageContent({
 }: HomePageContentProps) {
   return (
     <div className="w-full">
-      <LandingOverlay homeLandingData={homeLandingData} />
-      <MobileScrollSection />
+      <LandingOverlayServer />
+      <MobileScrollSectionServer />
       <CalculatorSection />
       <CoursesSec />
       <HomeComments />
