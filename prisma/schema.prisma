@@ -645,15 +645,12 @@ model HomeLanding {
 model MobileScrollerStep {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  stepNumber  Int
-  title       String
-  description String
-  imageUrl    String?
-  gradient    String? // کلاس CSS برای gradient
-
-  // Cards داخل هر Step
-  // مثال: [{"title": "شروع", "desc": "ورود مطمئن", "icon": "LineChart", "top": "25%", "right": "-10%"}]
-  cards Json @default("[]")
+  stepNumber      Int
+  title           String
+  description     String
+  imageUrl        String? // تصویر داخل موبایل (مثل in-mobile-1.svg)
+  coverImageUrl   String? // تصویر پس‌زمینه موبایل
+  gradient        String? // کلاس CSS برای gradient
 
   order     Int     @default(0)
   published Boolean @default(true)

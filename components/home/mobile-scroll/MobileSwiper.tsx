@@ -1,21 +1,14 @@
 "use client";
 
-import clsx from "clsx";
-import { AnimatePresence, motion } from "framer-motion";
+import { type CSSProperties } from "react";
 import Image from "next/image";
-import { type CSSProperties, useState } from "react";
 import { Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-import { mobileScrollerSteps, MobileScrollerStep } from "./data";
+import { mobileScrollerSteps, type MobileScrollerStep } from "./data";
 
 import "swiper/css";
 import "swiper/css/pagination";
-
-const cardVariants = {
-  initial: { opacity: 0, scale: 0.9, y: 12 },
-  animate: { opacity: 1, scale: 1, y: 0 },
-};
 
 type MobileSwiperProps = {
   steps?: MobileScrollerStep[];
@@ -23,7 +16,6 @@ type MobileSwiperProps = {
 
 export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
   const steps = providedSteps && providedSteps.length > 0 ? providedSteps : mobileScrollerSteps;
-  const [activeIndex, setActiveIndex] = useState(0);
 
   return (
     <section className="relative w-full h-screen overflow-hidden mt-10">
@@ -41,8 +33,6 @@ export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
           spaceBetween={24}
           slidesPerView={1}
           pagination={{ clickable: true }}
-          onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
-          onAfterInit={(swiper) => setActiveIndex(swiper.realIndex)}
           className="relative flex-1 !pb-16 !w-full"
           style={
             {
@@ -51,7 +41,7 @@ export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
             } as CSSProperties
           }
         >
-          {steps.map((step, stepIndex) => (
+          {steps.map((step) => (
             <SwiperSlide
               key={step.id}
               className="!h-full !w-full overflow-hidden"
@@ -64,56 +54,30 @@ export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
                 </div>
 
                 <div className="absolute -bottom-[100px] right-0 flex w-full flex-col items-center justify-center">
-                  <div className="relative w-full max-w-[270px] aspect-[500/960] ">
+                  <div className="relative w-full max-w-[270px] aspect-[500/960]">
+                    {/* mobile frame (background layer) */}
                     <Image
-                      src={step.img}
-                      alt="mobile screen"
+                      src={
+                        step.imgCover ||
+                        "/images/home/mobile-scroll/mobile.webp"
+                      }
+                      alt="mobile frame"
                       fill
                       className="object-cover"
                       sizes="(max-width: 1024px) 300px"
                     />
-
-                    {activeIndex === stepIndex && (
-                      <AnimatePresence initial={false}>
-                        {step.cards.map((card, cardIndex) => {
-                          const Icon = card.icon;
-                          return (
-                            <motion.div
-                              key={card.id}
-                              variants={cardVariants}
-                              initial="initial"
-                              animate="animate"
-                              exit="initial"
-                              transition={{
-                                duration: 0.45,
-                                delay: cardIndex * 0.12,
-                                ease: "easeOut",
-                              }}
-                              style={{
-                                top: card.top,
-                                left: card.left,
-                                right: card.right,
-                                transform: "translate(-50%, -50%)",
-                              }}
-                              className={clsx(
-                                "absolute w-[96px] h-[96px] p-3 rounded-2xl border backdrop-blur-xl",
-                                "bg-gradient-to-br",
-                                step.gradient,
-                                "shadow-[0_0_15px_-4px_rgba(255,255,255,0.25)] flex flex-col items-center justify-center text-center"
-                              )}
-                            >
-                              <Icon className="w-5 h-5 mb-1.5 text-black/90" />
-                              <h5 className="text-sm font-semibold text-black">
-                                {card.title}
-                              </h5>
-                              <p className="text-[11px] text-gray-900/90 mt-0.5">
-                                {card.desc}
-                              </p>
-                            </motion.div>
-                          );
-                        })}
-                      </AnimatePresence>
-                    )}
+                    {/* mobile screen content (foreground layer) */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="relative w-[88%] h-[96%]">
+                        <Image
+                          src={step.img}
+                          alt="mobile screen content"
+                          fill
+                          className="object-contain"
+                          sizes="(max-width: 1024px) 260px"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

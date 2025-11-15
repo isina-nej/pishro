@@ -5,14 +5,19 @@ import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import clsx from "clsx";
 
-import { mobileScrollerSteps, MobileScrollerStep } from "./data";
+import { mobileScrollerSteps, type MobileScrollerStep } from "./data";
 
 type DesktopScrollerProps = {
   steps?: MobileScrollerStep[];
 };
 
-export function DesktopScroller({ steps: providedSteps }: DesktopScrollerProps = {}) {
-  const steps = providedSteps && providedSteps.length > 0 ? providedSteps : mobileScrollerSteps;
+export function DesktopScroller({
+  steps: providedSteps,
+}: DesktopScrollerProps = {}) {
+  const steps =
+    providedSteps && providedSteps.length > 0
+      ? providedSteps
+      : mobileScrollerSteps;
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState<"up" | "down">("down");
   const sectionRef = useRef<HTMLElement>(null);
@@ -34,6 +39,7 @@ export function DesktopScroller({ steps: providedSteps }: DesktopScrollerProps =
       lastScrollTop = window.scrollY;
       setIndex(newIndex);
     };
+    console.log(steps);
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -130,68 +136,26 @@ export function DesktopScroller({ steps: providedSteps }: DesktopScrollerProps =
                     exit="exit"
                     className="relative w-[435px] aspect-[500/980] -mb-[80px]"
                   >
-                    {/* mobile bg */}
+                    {/* mobile frame (background layer) */}
                     <Image
-                      src={steps[index].img}
-                      alt="mobile screen"
+                      src={
+                        steps[index].imgCover ||
+                        "/images/home/mobile-scroll/mobile.webp"
+                      }
+                      alt="mobile frame"
                       fill
                       className="object-cover rounded-2xl"
+                      priority
                     />
-                    {/* flying cards */}
-                    <div className="absolute inset-0 flex flex-col justify-end">
-                      <div className="flex flex-col items-center gap-3 mb-[210px]">
-                        {steps[index].cards.map((card, i) => {
-                          const Icon = card.icon;
-                          return (
-                            <motion.div
-                              key={card.id}
-                              initial={{ opacity: 0, y: 60 * (4 - i) }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{
-                                duration: 0.5,
-                                delay: (i + 1) * 0.3, // هر کارت با تاخیر وارد میشه
-                                ease: "easeOut",
-                              }}
-                              className={clsx(
-                                "relative p-2 rounded-xl border backdrop-blur-xl",
-                                "shadow-[0_0_10px_-3px_rgba(255,255,255,0.25)]",
-                                "bg-gradient-to-br",
-                                steps[index].gradient,
-                                "flex items-center justify-start text-center",
-                                i === 0
-                                  ? "w-[100%] h-[87px] px-3"
-                                  : "w-[80%] h-[70px]"
-                              )}
-                            >
-                              <Icon
-                                className={clsx(
-                                  "text-black/80",
-                                  i === 0 ? "size-9 ml-4" : "size-8 ml-3"
-                                )}
-                              />
-                              <div className="flex flex-col items-start text-black/90">
-                                <h5
-                                  className={clsx(
-                                    "text-base font-semibold",
-                                    i === 0 ? "text-lg" : "text-base"
-                                  )}
-                                >
-                                  {card.title}
-                                </h5>
-                                {card.desc && (
-                                  <p
-                                    className={clsx(
-                                      "text-sm text-black/70 leading-none mt-0.5",
-                                      i === 0 ? "text-base" : "text-sm"
-                                    )}
-                                  >
-                                    {card.desc}
-                                  </p>
-                                )}
-                              </div>
-                            </motion.div>
-                          );
-                        })}
+                    {/* mobile screen content (foreground layer) */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="relative w-[88%] h-[96%]">
+                        <Image
+                          src={steps[index].img}
+                          alt="mobile screen content"
+                          fill
+                          className="object-contain"
+                        />
                       </div>
                     </div>
                   </motion.div>
