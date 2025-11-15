@@ -7,8 +7,15 @@ import CoursesSec from "@/components/utils/CoursesSec.server";
 import HomeComments from "./homeComments";
 import NewsClub from "./newsClub";
 import FloatingNotificationManager from "@/components/utils/floatingNotificationManager";
+import { HomeLanding } from "@prisma/client";
 
-export default function HomePageContent() {
+interface HomePageContentProps {
+  homeLandingData: HomeLanding;
+}
+
+export default function HomePageContent({
+  homeLandingData,
+}: HomePageContentProps) {
   return (
     <div className="w-full">
       <LandingOverlayServer />

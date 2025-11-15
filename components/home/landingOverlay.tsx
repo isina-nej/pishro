@@ -9,6 +9,7 @@ import {
 } from "framer-motion";
 
 import ImageZoomSliderSection from "./imageZoomSliderSection";
+import { HomeLanding } from "@prisma/client";
 
 // =================================================
 //                   Types
