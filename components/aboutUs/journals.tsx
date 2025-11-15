@@ -5,11 +5,19 @@ import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { LuArrowLeft, LuNewspaper } from "react-icons/lu";
-import { pishroJournals } from "@/public/data";
+import type { NewsArticle } from "@/types/about-us";
 
-const Journals = () => {
+interface JournalsProps {
+  news: NewsArticle[];
+}
+
+const Journals = ({ news }: JournalsProps) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  if (news.length === 0) {
+    return null;
+  }
 
   return (
     <div ref={ref} className="container-md py-20">
@@ -34,9 +42,9 @@ const Journals = () => {
 
       {/* Journals Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {pishroJournals.map((item, idx) => (
+        {news.map((item, idx) => (
           <motion.div
-            key={idx}
+            key={item.id}
             initial={{ opacity: 0, y: 50 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5, delay: idx * 0.1 }}
@@ -47,19 +55,26 @@ const Journals = () => {
               <LuNewspaper className="text-2xl" />
             </div>
 
+            {/* Category Badge */}
+            <div className="mb-3">
+              <span className="inline-block bg-myPrimary/10 text-myPrimary px-3 py-1 rounded-full text-xs font-medium">
+                {item.category}
+              </span>
+            </div>
+
             {/* Title */}
-            <h5 className="font-bold text-xl mb-4 text-gray-800 group-hover:text-myPrimary transition-colors">
+            <h5 className="font-bold text-xl mb-4 text-gray-800 group-hover:text-myPrimary transition-colors line-clamp-2">
               {item.title}
             </h5>
 
             {/* Text */}
             <p className="font-medium text-base leading-relaxed text-gray-600 mb-6 line-clamp-4">
-              {item.text}
+              {item.excerpt}
             </p>
 
             {/* Link */}
             <Link
-              href={item.link}
+              href={`/news/${item.slug}`}
               className="inline-flex items-center gap-2 text-myPrimary font-bold group-hover:gap-4 transition-all"
             >
               <span>مطالعه بیشتر</span>

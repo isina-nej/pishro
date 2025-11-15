@@ -6,51 +6,20 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import { HiXMark } from "react-icons/hi2";
 import { LuAward } from "react-icons/lu";
+import type { Certificate } from "@/types/about-us";
 
-// دیتای نمونه برای گالری - بعداً می‌تونید با دیتای واقعی جایگزین کنید
-const certificatesData = [
-  {
-    id: 1,
-    image: "/images/about/about.jpg",
-    title: "تقدیرنامه برتر سال ۱۴۰۱",
-    description: "دریافت تندیس برترین آموزشگاه بازارهای مالی",
-  },
-  {
-    id: 2,
-    image: "/images/about/about2.jpg",
-    title: "گواهینامه تخصصی",
-    description: "مجوز فعالیت آموزشی از سازمان بورس",
-  },
-  {
-    id: 3,
-    image: "/images/about/about3.jpg",
-    title: "افتخار ملی",
-    description: "دریافت نشان ملی کارآفرینی",
-  },
-  {
-    id: 4,
-    image: "/images/about/about.jpg",
-    title: "گواهی استاندارد",
-    description: "گواهی استاندارد ISO از مرکز ملی استاندارد",
-  },
-  {
-    id: 5,
-    image: "/images/about/about2.jpg",
-    title: "تقدیرنامه نوآوری",
-    description: "برترین مرکز آموزشی نوآور",
-  },
-  {
-    id: 6,
-    image: "/images/about/about3.jpg",
-    title: "جایزه ملی",
-    description: "دریافت جایزه ملی کیفیت",
-  },
-];
+interface CertificatesGalleryProps {
+  certificates: Certificate[];
+}
 
-const CertificatesGallery = () => {
+const CertificatesGallery = ({ certificates }: CertificatesGalleryProps) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
+
+  if (certificates.length === 0) {
+    return null;
+  }
 
   return (
     <>
@@ -77,7 +46,7 @@ const CertificatesGallery = () => {
 
           {/* Gallery Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {certificatesData.map((cert, index) => (
+            {certificates.map((cert, index) => (
               <motion.div
                 key={cert.id}
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -102,7 +71,11 @@ const CertificatesGallery = () => {
                         <LuAward className="text-yellow-400" />
                         <h3 className="font-bold text-lg">{cert.title}</h3>
                       </div>
-                      <p className="text-sm text-gray-200">{cert.description}</p>
+                      {cert.description && (
+                        <p className="text-sm text-gray-200">
+                          {cert.description}
+                        </p>
+                      )}
                     </div>
                   </div>
 
@@ -116,16 +89,18 @@ const CertificatesGallery = () => {
           </div>
 
           {/* CTA */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.8 }}
-            className="text-center mt-12"
-          >
-            <p className="text-gray-600 mb-4">
-              و بیش از ۵۰ مورد افتخار دیگر در طول این سال‌ها...
-            </p>
-          </motion.div>
+          {certificates.length > 3 && (
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.8 }}
+              className="text-center mt-12"
+            >
+              <p className="text-gray-600 mb-4">
+                و افتخارات بیشتری در مسیر خدمت‌رسانی به جامعه...
+              </p>
+            </motion.div>
+          )}
         </div>
       </div>
 
@@ -153,8 +128,8 @@ const CertificatesGallery = () => {
             className="relative w-full max-w-4xl aspect-[4/3] rounded-2xl overflow-hidden"
           >
             <Image
-              src={certificatesData[selectedImage].image}
-              alt={certificatesData[selectedImage].title}
+              src={certificates[selectedImage].image}
+              alt={certificates[selectedImage].title}
               fill
               className="object-contain"
             />
@@ -163,11 +138,13 @@ const CertificatesGallery = () => {
           {/* Info */}
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-md text-white px-8 py-4 rounded-2xl max-w-2xl text-center">
             <h3 className="font-bold text-xl mb-2">
-              {certificatesData[selectedImage].title}
+              {certificates[selectedImage].title}
             </h3>
-            <p className="text-gray-200">
-              {certificatesData[selectedImage].description}
-            </p>
+            {certificates[selectedImage].description && (
+              <p className="text-gray-200">
+                {certificates[selectedImage].description}
+              </p>
+            )}
           </div>
         </motion.div>
       )}

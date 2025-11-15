@@ -2,9 +2,38 @@
 
 import { motion } from "framer-motion";
 import { HiSparkles } from "react-icons/hi2";
-import { LuTarget, LuAward, LuUsers } from "react-icons/lu";
+import * as LuIcons from "react-icons/lu";
+import { IconType } from "react-icons";
+import type { StatItem } from "@/types/about-us";
+import type { Prisma } from "@prisma/client";
 
-const HeroSection = () => {
+interface HeroSectionProps {
+  title: string;
+  subtitle?: string | null;
+  description?: string | null;
+  badgeText?: string | null;
+  stats: Prisma.JsonValue;
+}
+
+const HeroSection = ({
+  title,
+  subtitle,
+  description,
+  badgeText,
+  stats,
+}: HeroSectionProps) => {
+  // Parse stats JSON
+  const statsData: StatItem[] = Array.isArray(stats)
+    ? (stats as unknown as StatItem[])
+    : [];
+
+  // Helper function to get icon component from icon name
+  const getIconComponent = (iconName?: string): IconType => {
+    if (!iconName) return LuIcons.LuTarget;
+    const IconComponent = (LuIcons as Record<string, IconType>)[iconName];
+    return IconComponent || LuIcons.LuTarget;
+  };
+
   return (
     <div className="relative bg-gradient-to-br from-myPrimary via-mySecondary to-myPrimary overflow-hidden">
       {/* Animated Background Elements */}
@@ -16,17 +45,17 @@ const HeroSection = () => {
       <div className="container-md py-24 relative z-10">
         <div className="text-center text-white">
           {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-2 mb-8"
-          >
-            <HiSparkles className="text-yellow-300 text-xl" />
-            <span className="text-sm font-medium">
-              پیشرو در آموزش و سرمایه‌گذاری
-            </span>
-          </motion.div>
+          {badgeText && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-2 mb-8"
+            >
+              <HiSparkles className="text-yellow-300 text-xl" />
+              <span className="text-sm font-medium">{badgeText}</span>
+            </motion.div>
+          )}
 
           {/* Main Title */}
           <motion.h1
@@ -35,68 +64,62 @@ const HeroSection = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight px-4"
           >
-            آکادمی مالی
-            <br />
-            <span className="text-yellow-300">پیشرو سرمایه</span>
+            {subtitle && (
+              <>
+                {subtitle}
+                <br />
+              </>
+            )}
+            <span className="text-yellow-300">{title}</span>
           </motion.h1>
 
           {/* Description */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed mb-8 text-white/90 px-4"
-          >
-            با تجربه‌ای بیش از ۵ سال در زمینه آموزش و مشاوره بازارهای مالی،
-            همراه شما در مسیر موفقیت و ثروت‌آفرینی هستیم
-          </motion.p>
+          {description && (
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed mb-8 text-white/90 px-4"
+            >
+              {description}
+            </motion.p>
+          )}
 
           {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto px-4"
-          >
-            {/* Stat 1 */}
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
-              <div className="flex items-center justify-center mb-4">
-                <div className="bg-yellow-300/20 p-4 rounded-full group-hover:scale-110 transition-transform">
-                  <LuUsers className="text-3xl md:text-4xl text-yellow-300" />
-                </div>
-              </div>
-              <div className="text-3xl md:text-4xl font-bold mb-2">+۳۰۰۰</div>
-              <div className="text-white/80 text-sm md:text-base">
-                دانشجوی موفق
-              </div>
-            </div>
-
-            {/* Stat 2 */}
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
-              <div className="flex items-center justify-center mb-4">
-                <div className="bg-yellow-300/20 p-4 rounded-full group-hover:scale-110 transition-transform">
-                  <LuAward className="text-3xl md:text-4xl text-yellow-300" />
-                </div>
-              </div>
-              <div className="text-3xl md:text-4xl font-bold mb-2">+۱۰۰</div>
-              <div className="text-white/80 text-sm md:text-base">
-                دوره تخصصی
-              </div>
-            </div>
-
-            {/* Stat 3 */}
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 group sm:col-span-2 md:col-span-1">
-              <div className="flex items-center justify-center mb-4">
-                <div className="bg-yellow-300/20 p-4 rounded-full group-hover:scale-110 transition-transform">
-                  <LuTarget className="text-3xl md:text-4xl text-yellow-300" />
-                </div>
-              </div>
-              <div className="text-3xl md:text-4xl font-bold mb-2">%۹۵</div>
-              <div className="text-white/80 text-sm md:text-base">
-                رضایت کاربران
-              </div>
-            </div>
-          </motion.div>
+          {statsData.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto px-4"
+            >
+              {statsData.map((stat: StatItem, index: number) => {
+                const IconComponent = getIconComponent(stat.icon);
+                return (
+                  <div
+                    key={index}
+                    className={`bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 group ${
+                      index === statsData.length - 1 && statsData.length % 3 !== 0
+                        ? "sm:col-span-2 md:col-span-1"
+                        : ""
+                    }`}
+                  >
+                    <div className="flex items-center justify-center mb-4">
+                      <div className="bg-yellow-300/20 p-4 rounded-full group-hover:scale-110 transition-transform">
+                        <IconComponent className="text-3xl md:text-4xl text-yellow-300" />
+                      </div>
+                    </div>
+                    <div className="text-3xl md:text-4xl font-bold mb-2">
+                      {stat.value}
+                    </div>
+                    <div className="text-white/80 text-sm md:text-base">
+                      {stat.label}
+                    </div>
+                  </div>
+                );
+              })}
+            </motion.div>
+          )}
         </div>
       </div>
 

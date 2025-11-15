@@ -4,12 +4,33 @@ import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import Link from "next/link";
-import { LuArrowLeft, LuPhone, LuMail } from "react-icons/lu";
+import { LuArrowLeft } from "react-icons/lu";
 import { HiSparkles } from "react-icons/hi2";
 
-const CtaSection = () => {
+interface CtaSectionProps {
+  title?: string | null;
+  description?: string | null;
+  buttonText?: string | null;
+  buttonLink?: string | null;
+}
+
+const CtaSection = ({
+  title,
+  description,
+  buttonText,
+  buttonLink,
+}: CtaSectionProps) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  // Default values
+  const ctaTitle =
+    title || "آماده‌اید برای شروع سفر سرمایه‌گذاری هوشمند؟";
+  const ctaDescription =
+    description ||
+    "با پیوستن به جمع هزاران دانشجوی موفق ما، اولین قدم را برای دستیابی به استقلال مالی بردارید";
+  const ctaButtonText = buttonText || "مشاهده دوره‌ها";
+  const ctaButtonLink = buttonLink || "/courses";
 
   return (
     <div ref={ref} className="container-md py-20">
@@ -45,9 +66,7 @@ const CtaSection = () => {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight px-4"
             >
-              آماده‌اید برای شروع سفر
-              <br />
-              <span className="text-yellow-300">سرمایه‌گذاری هوشمند؟</span>
+              {ctaTitle}
             </motion.h2>
 
             {/* Description */}
@@ -57,51 +76,23 @@ const CtaSection = () => {
               transition={{ duration: 0.6, delay: 0.4 }}
               className="text-base sm:text-lg md:text-xl text-white/90 mb-10 leading-relaxed max-w-2xl mx-auto px-4"
             >
-              با پیوستن به جمع هزاران دانشجوی موفق ما، اولین قدم را برای
-              دستیابی به استقلال مالی بردارید
+              {ctaDescription}
             </motion.p>
 
-            {/* Buttons */}
+            {/* Button */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
+              className="flex flex-col sm:flex-row gap-4 justify-center"
             >
               <Link
-                href="/courses"
+                href={ctaButtonLink}
                 className="group bg-white text-myPrimary px-8 py-4 rounded-xl font-bold text-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center gap-2"
               >
-                <span>مشاهده دوره‌ها</span>
+                <span>{ctaButtonText}</span>
                 <LuArrowLeft className="group-hover:-translate-x-1 transition-transform" />
               </Link>
-              <Link
-                href="/investment-consulting"
-                className="bg-white/10 backdrop-blur-sm border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white hover:text-myPrimary transition-all duration-300 flex items-center justify-center gap-2"
-              >
-                <span>درخواست مشاوره</span>
-              </Link>
-            </motion.div>
-
-            {/* Contact Info */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.6 }}
-              className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center text-white/80 px-4"
-            >
-              <div className="flex items-center gap-2">
-                <div className="bg-white/10 p-2 rounded-lg backdrop-blur-sm">
-                  <LuPhone className="text-lg md:text-xl" />
-                </div>
-                <span className="font-medium text-sm md:text-base">۰۲۱-۱۲۳۴۵۶۷۸</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="bg-white/10 p-2 rounded-lg backdrop-blur-sm">
-                  <LuMail className="text-lg md:text-xl" />
-                </div>
-                <span className="font-medium text-sm md:text-base">info@pishro-sarmaye.ir</span>
-              </div>
             </motion.div>
           </div>
         </div>

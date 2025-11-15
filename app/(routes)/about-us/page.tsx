@@ -15,9 +15,27 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const AboutUsPage = async () => {
+  // Fetch about page data
+  const aboutPage = await getAboutPageData();
+
+  // If no data is available, show a fallback message
+  if (!aboutPage) {
+    return (
+      <div className="container-md py-20 text-center">
+        <h1 className="text-3xl font-bold text-gray-800 mb-4">
+          صفحه درباره ما
+        </h1>
+        <p className="text-gray-600">
+          اطلاعات صفحه درباره ما در حال حاضر در دسترس نیست. لطفاً بعداً مراجعه
+          کنید.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <>
-      <AboutUsContent />
+      <AboutUsContent aboutPageData={aboutPage} />
     </>
   );
 };
