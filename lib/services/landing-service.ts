@@ -85,21 +85,6 @@ export async function getBusinessConsultingData() {
   }
 }
 
-// ==================== INVESTMENT CONSULTING ====================
-
-export async function getBusinessConsultingData() {
-  try {
-    const data = await prisma.businessConsulting.findFirst({
-      where: { published: true },
-    });
-
-    return data;
-  } catch (error) {
-    console.error("Error fetching investment consulting data:", error);
-    return null;
-  }
-}
-
 // ==================== INVESTMENT PLANS ====================
 
 export async function getInvestmentPlansData() {
