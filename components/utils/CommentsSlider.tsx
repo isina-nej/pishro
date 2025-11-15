@@ -10,6 +10,7 @@ import "swiper/css/pagination";
 
 import RatingStars from "./RatingStars";
 import LikeDislike from "./LikeDislike";
+import { formatDate } from "@/lib/utils";
 
 type Comment = {
   id: string;
@@ -97,7 +98,7 @@ const CommentsSlider = ({
                             {comment.userRole}
                           </p>
                           <p className="text-[11px] sm:text-xs font-bold text-[#8e8e8e]">
-                            {comment.date}
+                            {formatDate(comment.date)}
                           </p>
                         </div>
                       </div>
