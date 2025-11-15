@@ -16,31 +16,13 @@ import { Swiper as SwiperType } from "swiper/types";
 import clsx from "clsx";
 import "swiper/css";
 import MiniMovingSlider from "./miniMovingSlider";
-import { miniSliderData1, miniSliderData2 } from "@/public/data";
 
-/* ------------------------- 🖼️ Image Data ------------------------- */
-const SLIDES = [
-  {
-    src: "/images/home/landing-slider/p03.webp",
-    title: "گالری پروژه‌های پیشرو",
-    text: "مجموعه‌ای کامل از پروژه‌های موفق و خلاقانه ما در حوزه وب3 و بلاکچین را مشاهده کنید. هر پروژه داستان یک نوآوری است.",
-  },
-  {
-    src: "/images/home/landing-slider/p01.webp",
-    title: "نمونه کارهای برجسته",
-    text: "از پلتفرم‌های DeFi گرفته تا اپلیکیشن‌های NFT، نمونه کارهای ما نشان‌دهنده تخصص عمیق تیم در توسعه راهکارهای دیجیتال پیشرفته است.",
-  },
-  {
-    src: "/images/home/landing-slider/p02.webp",
-    title: "پروژه‌های متاورس و گیمینگ",
-    text: "تجربه‌های منحصربه‌فرد ما در ساخت دنیاهای مجازی تعاملی و پلتفرم‌های بازی مبتنی بر بلاکچین را در این گالری کشف کنید.",
-  },
-  {
-    src: "/images/home/landing-slider/p04.webp",
-    title: "راهکارهای کسب‌وکار دیجیتال",
-    text: "از ایده تا اجرا، پروژه‌های ما شامل طراحی UI/UX پیشرفته، توسعه قراردادهای هوشمند و راه‌اندازی محصولات موفق در بازار است.",
-  },
-];
+/* ------------------------- 🖼️ Types ------------------------- */
+type SlideData = {
+  src: string;
+  title: string;
+  text: string;
+};
 
 /* ------------------------------------------------------------------ */
 /* 🧠 Hook: Handles all scroll-based animations and scale transitions */
@@ -146,8 +128,14 @@ const SliderNavigation = ({
 /* ------------------------------------------------------------------ */
 const ImageZoomSliderSection = ({
   parentRef,
+  slides: slidesData,
+  miniSlider1Data,
+  miniSlider2Data,
 }: {
   parentRef: React.RefObject<HTMLElement | null>;
+  slides?: SlideData[];
+  miniSlider1Data?: string[];
+  miniSlider2Data?: string[];
 }) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const swiperRef = useRef<SwiperType | null>(null);
@@ -176,7 +164,11 @@ const ImageZoomSliderSection = ({
     else setShowMiniSlider(false);
   });
 
-  const slides = useMemo(() => [...SLIDES, ...SLIDES], []);
+  // Use provided slides or empty array
+  const slides = useMemo(() => {
+    if (!slidesData || slidesData.length === 0) return [];
+    return [...slidesData, ...slidesData];
+  }, [slidesData]);
 
   // 🌀 Control autoplay based on visibility
   useMotionValueEvent(sectionScroll, "change", (latestSection) => {
@@ -311,15 +303,21 @@ const ImageZoomSliderSection = ({
           </motion.div>
         </div>
       </motion.section>
-      <motion.div className="relative w-full py-4 bg-black -mt-20">
-        <MiniMovingSlider isVisible={showMiniSlider} data={miniSliderData1} />
-        <div className="h-5"></div>
-        <MiniMovingSlider
-          isVisible={showMiniSlider}
-          data={miniSliderData2}
-          baseSpeed={6000}
-        />
-      </motion.div>
+      {(miniSlider1Data || miniSlider2Data) && (
+        <motion.div className="relative w-full py-4 bg-black -mt-20">
+          {miniSlider1Data && miniSlider1Data.length > 0 && (
+            <MiniMovingSlider isVisible={showMiniSlider} data={miniSlider1Data} />
+          )}
+          <div className="h-5"></div>
+          {miniSlider2Data && miniSlider2Data.length > 0 && (
+            <MiniMovingSlider
+              isVisible={showMiniSlider}
+              data={miniSlider2Data}
+              baseSpeed={6000}
+            />
+          )}
+        </motion.div>
+      )}
     </>
   );
 };

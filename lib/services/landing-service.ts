@@ -36,6 +36,37 @@ export async function getMobileScrollerSteps() {
   }
 }
 
+export async function getHomeSlides() {
+  try {
+    const slides = await prisma.homeSlide.findMany({
+      where: { published: true },
+      orderBy: { order: "asc" },
+    });
+
+    return slides;
+  } catch (error) {
+    console.error("Error fetching home slides:", error);
+    return [];
+  }
+}
+
+export async function getHomeMiniSliders(row?: number) {
+  try {
+    const sliders = await prisma.homeMiniSlider.findMany({
+      where: {
+        published: true,
+        ...(row && { row }),
+      },
+      orderBy: { order: "asc" },
+    });
+
+    return sliders;
+  } catch (error) {
+    console.error("Error fetching home mini sliders:", error);
+    return [];
+  }
+}
+
 // ==================== ABOUT PAGE ====================
 
 export async function getAboutPageData() {

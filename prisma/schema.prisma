@@ -888,3 +888,36 @@ model InvestmentTag {
 
   @@index([investmentPlansId, order])
 }
+
+// مدل برای اسلایدر اصلی تصاویری صفحه اصلی (ImageZoomSliderSection)
+model HomeSlide {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  title       String
+  description String
+  imageUrl    String
+
+  order     Int     @default(0)
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published, order])
+}
+
+// مدل برای اسلایدرهای کوچک (Mini Moving Sliders)
+model HomeMiniSlider {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  imageUrl String
+  row      Int     @default(1) // 1 یا 2 برای تعیین ردیف اول یا دوم
+
+  order     Int     @default(0)
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published, row, order])
+}

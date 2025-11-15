@@ -5,9 +5,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import clsx from "clsx";
 
-import { mobileScrollerSteps } from "./data";
+import { mobileScrollerSteps, MobileScrollerStep } from "./data";
 
-export function DesktopScroller() {
+type DesktopScrollerProps = {
+  steps?: MobileScrollerStep[];
+};
+
+export function DesktopScroller({ steps: providedSteps }: DesktopScrollerProps = {}) {
+  const steps = providedSteps && providedSteps.length > 0 ? providedSteps : mobileScrollerSteps;
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState<"up" | "down">("down");
   const sectionRef = useRef<HTMLElement>(null);
@@ -21,7 +26,7 @@ export function DesktopScroller() {
       const scrollTop = window.scrollY - node.offsetTop;
       const stepHeight = 500;
       const newIndex = Math.min(
-        mobileScrollerSteps.length - 1,
+        steps.length - 1,
         Math.max(0, Math.floor(scrollTop / stepHeight))
       );
 
@@ -32,7 +37,7 @@ export function DesktopScroller() {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [steps]);
 
   const variants = {
     enter: (dir: "up" | "down") => ({
@@ -46,7 +51,7 @@ export function DesktopScroller() {
   return (
     <section
       ref={sectionRef}
-      style={{ height: `calc(${mobileScrollerSteps.length * 501}px + 100vh)` }}
+      style={{ height: `calc(${steps.length * 501}px + 100vh)` }}
       className="relative w-full mt-20"
     >
       <div className="sticky top-0 h-screen flex items-center justify-center container-xl py-8">
@@ -78,7 +83,7 @@ export function DesktopScroller() {
                   </h4>
 
                   <ul className="space-y-4">
-                    {mobileScrollerSteps.map((step, i) => (
+                    {steps.map((step, i) => (
                       <li
                         key={i}
                         className="flex items-center space-x-4 space-x-reverse"
@@ -117,7 +122,7 @@ export function DesktopScroller() {
               <div className="relative w-[500px] flex justify-center pl-12">
                 <AnimatePresence mode="popLayout" custom={direction}>
                   <motion.div
-                    key={mobileScrollerSteps[index].id}
+                    key={steps[index].id}
                     variants={variants}
                     custom={direction}
                     initial="enter"
@@ -127,7 +132,7 @@ export function DesktopScroller() {
                   >
                     {/* mobile bg */}
                     <Image
-                      src={mobileScrollerSteps[index].img}
+                      src={steps[index].img}
                       alt="mobile screen"
                       fill
                       className="object-cover rounded-2xl"
@@ -135,7 +140,7 @@ export function DesktopScroller() {
                     {/* flying cards */}
                     <div className="absolute inset-0 flex flex-col justify-end">
                       <div className="flex flex-col items-center gap-3 mb-[210px]">
-                        {mobileScrollerSteps[index].cards.map((card, i) => {
+                        {steps[index].cards.map((card, i) => {
                           const Icon = card.icon;
                           return (
                             <motion.div
@@ -151,7 +156,7 @@ export function DesktopScroller() {
                                 "relative p-2 rounded-xl border backdrop-blur-xl",
                                 "shadow-[0_0_10px_-3px_rgba(255,255,255,0.25)]",
                                 "bg-gradient-to-br",
-                                mobileScrollerSteps[index].gradient,
+                                steps[index].gradient,
                                 "flex items-center justify-start text-center",
                                 i === 0
                                   ? "w-[100%] h-[87px] px-3"

@@ -1,7 +1,7 @@
 // @/components/home/homeContent.tsx
 
-import LandingOverlay from "./landingOverlay";
-import MobileScrollSection from "./mobileScrollSection";
+import LandingOverlayServer from "./landingOverlay.server";
+import MobileScrollSectionServer from "./mobileScrollSection.server";
 import CalculatorSection from "./calculatorSection";
 import CoursesSec from "@/components/utils/CoursesSec.server";
 import HomeComments from "./homeComments";
@@ -11,8 +11,8 @@ import FloatingNotificationManager from "@/components/utils/floatingNotification
 export default function HomePageContent() {
   return (
     <div className="w-full">
-      <LandingOverlay />
-      <MobileScrollSection />
+      <LandingOverlayServer />
+      <MobileScrollSectionServer />
       <CalculatorSection />
       <CoursesSec />
       <HomeComments />

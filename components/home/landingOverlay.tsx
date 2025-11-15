@@ -11,9 +11,38 @@ import {
 import ImageZoomSliderSection from "./imageZoomSliderSection";
 
 // =================================================
+//                   Types
+// =================================================
+type SlideData = {
+  src: string;
+  title: string;
+  text: string;
+};
+
+type LandingOverlayProps = {
+  mainHeroTitle?: string;
+  mainHeroSubtitle?: string;
+  mainHeroCta1Link?: string;
+  heroVideoUrl?: string;
+  overlayTexts?: string[];
+  slides?: SlideData[];
+  miniSlider1Data?: string[];
+  miniSlider2Data?: string[];
+};
+
+// =================================================
 //                   کامپوننت اصلی
 // =================================================
-const LandingOverlay = () => {
+const LandingOverlay = ({
+  mainHeroTitle,
+  mainHeroSubtitle,
+  mainHeroCta1Link,
+  heroVideoUrl,
+  overlayTexts,
+  slides,
+  miniSlider1Data,
+  miniSlider2Data,
+}: LandingOverlayProps) => {
   const ref = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [hideMainText, setHideMainText] = useState(false);
@@ -54,7 +83,7 @@ const LandingOverlay = () => {
             playsInline
             className="absolute inset-0 w-full h-full object-cover -z-50"
           >
-            <source src="/videos/aboutUs.webm" type="video/webm" />
+            <source src={heroVideoUrl || "/videos/aboutUs.webm"} type="video/webm" />
           </video>
 
           {/* پس‌زمینه نیمه‌تاریک */}
@@ -77,7 +106,11 @@ const LandingOverlay = () => {
               transition={{ duration: 0.5, ease: "easeInOut" }}
               className="absolute top-0 z-10"
             >
-              <OverlayMainText />
+              <OverlayMainText
+                title={mainHeroTitle}
+                subtitle={mainHeroSubtitle}
+                ctaLink={mainHeroCta1Link}
+              />
             </motion.div>
           )}
         </AnimatePresence>
@@ -88,13 +121,18 @@ const LandingOverlay = () => {
             style={{ opacity: textOpacity, backgroundColor: bgColor }}
             className="w-full flex justify-center"
           >
-            <OverlayText onEnter={setHideMainText} />
+            <OverlayText onEnter={setHideMainText} texts={overlayTexts} />
           </motion.div>
         </div>
       </section>
 
       {/* اسلایدر نهایی */}
-      <ImageZoomSliderSection parentRef={ref} />
+      <ImageZoomSliderSection
+        parentRef={ref}
+        slides={slides}
+        miniSlider1Data={miniSlider1Data}
+        miniSlider2Data={miniSlider2Data}
+      />
     </>
   );
 };
@@ -104,18 +142,26 @@ export default LandingOverlay;
 // =================================================
 //                   متن اسکرولی
 // =================================================
-const OverlayText = ({ onEnter }: { onEnter: (visible: boolean) => void }) => {
-  const texts = [
+const OverlayText = ({
+  onEnter,
+  texts,
+}: {
+  onEnter: (visible: boolean) => void;
+  texts?: string[];
+}) => {
+  const defaultTexts = [
     "پیشرو در مسیر سرمایه‌گذاری هوشمند",
     "ما در پیشرو با ارائه آموزش‌های تخصصی بورس، بازارهای مالی و سرمایه‌گذاری، شما را در مسیر رشد مالی همراهی می‌کنیم.",
     "از آموزش اصولی و گام‌به‌گام تا مشاوره‌های حرفه‌ای و همراهی در مسیر رشد سرمایه شما، همه و همه در پیشرو فراهم است.",
     "پیشرو انتخابی مطمئن برای کسانی است که به دنبال امنیت مالی، رشد پایدار و آینده‌ای روشن هستند.",
   ];
 
+  const displayTexts = texts && texts.length > 0 ? texts : defaultTexts;
+
   return (
     <div className="w-full flex justify-center py-32">
       <div className="z-10 flex flex-col items-center text-right w-full container-xl space-y-12 px-4">
-        {texts.map((text, i) => (
+        {displayTexts.map((text, i) => (
           <motion.h4
             key={i}
             initial={{ opacity: 0, y: 60 }}
@@ -150,19 +196,27 @@ const OverlayText = ({ onEnter }: { onEnter: (visible: boolean) => void }) => {
 // =================================================
 //                   متن اصلی (روی ویدیو)
 // =================================================
-const OverlayMainText = () => (
+const OverlayMainText = ({
+  title,
+  subtitle,
+  ctaLink,
+}: {
+  title?: string;
+  subtitle?: string;
+  ctaLink?: string;
+}) => (
   <div className="h-screen container-xl pt-32 flex flex-col items-start justify-start space-y-8">
     <h4 className="text-white text-6xl md:text-[88px] font-extrabold leading-tight max-w-4xl">
-      پیشرو بزرگترین مؤسسه سرمایه‌گذاری در ایران
+      {title || "پیشرو بزرگترین مؤسسه سرمایه‌گذاری در ایران"}
     </h4>
 
     <motion.a
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      href="/business-consulting"
+      href={ctaLink || "/business-consulting"}
       className="bg-white text-black font-bold px-8 py-4 rounded-full text-lg shadow-lg hover:bg-white/90 transition-all"
     >
-      شروع مسیر موفقیت
+      {subtitle || "شروع مسیر موفقیت"}
     </motion.a>
   </div>
 );

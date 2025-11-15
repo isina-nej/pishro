@@ -7,7 +7,7 @@ import { type CSSProperties, useState } from "react";
 import { Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-import { mobileScrollerSteps } from "./data";
+import { mobileScrollerSteps, MobileScrollerStep } from "./data";
 
 import "swiper/css";
 import "swiper/css/pagination";
@@ -17,7 +17,12 @@ const cardVariants = {
   animate: { opacity: 1, scale: 1, y: 0 },
 };
 
-export function MobileSwiper() {
+type MobileSwiperProps = {
+  steps?: MobileScrollerStep[];
+};
+
+export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
+  const steps = providedSteps && providedSteps.length > 0 ? providedSteps : mobileScrollerSteps;
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
@@ -46,7 +51,7 @@ export function MobileSwiper() {
             } as CSSProperties
           }
         >
-          {mobileScrollerSteps.map((step, stepIndex) => (
+          {steps.map((step, stepIndex) => (
             <SwiperSlide
               key={step.id}
               className="!h-full !w-full overflow-hidden"
