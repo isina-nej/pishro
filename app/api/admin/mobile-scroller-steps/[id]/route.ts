@@ -86,8 +86,8 @@ export async function PATCH(
     if (body.title !== undefined) updateData.title = body.title;
     if (body.description !== undefined) updateData.description = body.description;
     if (body.imageUrl !== undefined) updateData.imageUrl = body.imageUrl;
+    if (body.coverImageUrl !== undefined) updateData.coverImageUrl = body.coverImageUrl;
     if (body.gradient !== undefined) updateData.gradient = body.gradient;
-    if (body.cards !== undefined) updateData.cards = body.cards;
     if (body.order !== undefined) updateData.order = body.order;
     if (body.published !== undefined) updateData.published = body.published;
 
