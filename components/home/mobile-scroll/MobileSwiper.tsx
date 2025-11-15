@@ -15,7 +15,10 @@ type MobileSwiperProps = {
 };
 
 export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
-  const steps = providedSteps && providedSteps.length > 0 ? providedSteps : mobileScrollerSteps;
+  const steps =
+    providedSteps && providedSteps.length > 0
+      ? providedSteps
+      : mobileScrollerSteps;
 
   return (
     <section className="relative w-full h-screen overflow-hidden mt-10">
@@ -68,13 +71,13 @@ export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
                     />
                     {/* mobile screen content (foreground layer) */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="relative w-[88%] h-[96%]">
+                      <div className="relative w-[100%] h-[96%]">
                         <Image
                           src={step.img}
                           alt="mobile screen content"
                           fill
                           className="object-contain"
-                          sizes="(max-width: 1024px) 260px"
+                          sizes="(max-width: 1024px) 300px"
                         />
                       </div>
                     </div>
