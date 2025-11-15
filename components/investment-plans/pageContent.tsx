@@ -1,9 +1,19 @@
 import InvestmentPlansLanding from "./investmentPlansLanding";
+import { InvestmentPlans, InvestmentPlan, InvestmentTag } from "@prisma/client";
 
-const InvestmentPlansPageContent = () => {
+interface InvestmentPlansPageContentProps {
+  investmentPlansData: InvestmentPlans & {
+    plans: InvestmentPlan[];
+    tags: InvestmentTag[];
+  };
+}
+
+const InvestmentPlansPageContent = ({
+  investmentPlansData,
+}: InvestmentPlansPageContentProps) => {
   return (
     <div>
-      <InvestmentPlansLanding />
+      <InvestmentPlansLanding investmentPlansData={investmentPlansData} />
     </div>
   );
 };

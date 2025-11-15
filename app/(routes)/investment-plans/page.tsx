@@ -15,7 +15,25 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const InvestmentPage = async () => {
-  return <InvestmentPlansPageContent />;
+  // Fetch investment plans page data
+  const investmentPlansData = await getInvestmentPlansData();
+
+  // If no data is available, show a fallback message
+  if (!investmentPlansData) {
+    return (
+      <div className="container-md py-20 text-center">
+        <h1 className="text-3xl font-bold text-gray-800 mb-4">
+          سبدهای سرمایه‌گذاری
+        </h1>
+        <p className="text-gray-600">
+          اطلاعات سبدهای سرمایه‌گذاری در حال حاضر در دسترس نیست. لطفاً بعداً مراجعه
+          کنید.
+        </p>
+      </div>
+    );
+  }
+
+  return <InvestmentPlansPageContent investmentPlansData={investmentPlansData} />;
 };
 
 export default InvestmentPage;

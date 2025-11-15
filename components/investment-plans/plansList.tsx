@@ -4,6 +4,7 @@ import { useState } from "react";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { Bitcoin, LineChart, PieChart, XIcon } from "lucide-react";
+import { InvestmentPlans, InvestmentPlan, InvestmentTag } from "@prisma/client";
 
 import {
   Drawer,
@@ -23,6 +24,13 @@ export const PlansListData = [
   { label: "ترکیبی", Icon: PieChart },
 ];
 
+interface PlansListProps {
+  investmentPlansData: InvestmentPlans & {
+    plans: InvestmentPlan[];
+    tags: InvestmentTag[];
+  };
+}
+
 const riskLevels = ["کم ریسک", "ریسک متوسط", "ریسک بالا"];
 const durations = ["۱ ماه", "۳ ماه", "۶ ماه", "۱۲ ماه", "۲ سال", "۳ سال"];
 
@@ -36,8 +44,10 @@ function formatAmount(amount: number) {
   return `${amount.toLocaleString("fa-IR")} میلیون تومان`;
 }
 
-const PlansList = () => {
-  const [amount, setAmount] = useState<number>(1000);
+const PlansList = ({ investmentPlansData }: PlansListProps) => {
+  const [amount, setAmount] = useState<number>(
+    investmentPlansData.minAmount || 1000
+  );
   const [risk, setRisk] = useState<number>(1);
   const [duration, setDuration] = useState<number>(3);
 
@@ -86,9 +96,9 @@ const PlansList = () => {
                       میزان سرمایه (میلیون تومان)
                     </label>
                     <Slider
-                      min={10}
-                      max={10000}
-                      step={10}
+                      min={investmentPlansData.minAmount || 10}
+                      max={investmentPlansData.maxAmount || 10000}
+                      step={investmentPlansData.amountStep || 10}
                       value={[amount]}
                       onValueChange={([val]) => setAmount(val)}
                       className="h-3"

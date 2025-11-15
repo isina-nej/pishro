@@ -1,16 +1,25 @@
 "use client";
 
 import Image from "next/image";
-import { investmentPlansData } from "@/public/data";
 import PlansList from "./plansList";
+import { InvestmentPlans, InvestmentPlan, InvestmentTag } from "@prisma/client";
 
-const InvestmentPlansLanding = () => {
+interface InvestmentPlansLandingProps {
+  investmentPlansData: InvestmentPlans & {
+    plans: InvestmentPlan[];
+    tags: InvestmentTag[];
+  };
+}
+
+const InvestmentPlansLanding = ({
+  investmentPlansData,
+}: InvestmentPlansLandingProps) => {
   return (
     <div className="relative w-full h-screen lg:h-screen overflow-hidden isolate flex items-center justify-start text-center px-4 -mb-28">
       {/* Image behind everything */}
       <Image
-        src={investmentPlansData.image}
-        alt="مشاوره سرمایه‌گذاری"
+        src={investmentPlansData.image || "/images/investment-plans.jpg"}
+        alt="سبدهای سرمایه‌گذاری"
         fill
         className="object-cover z-0"
         priority
@@ -25,9 +34,9 @@ const InvestmentPlansLanding = () => {
           {investmentPlansData.title}
         </h1>
         <p className="text-lg lg:text-xl text-white/90 lg:leading-8">
-          {investmentPlansData.text}
+          {investmentPlansData.description}
         </p>
-        <PlansList />
+        <PlansList investmentPlansData={investmentPlansData} />
       </div>
     </div>
   );
