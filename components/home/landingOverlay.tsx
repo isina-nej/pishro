@@ -9,7 +9,6 @@ import {
 } from "framer-motion";
 
 import ImageZoomSliderSection from "./imageZoomSliderSection";
-import { HomeLanding } from "@prisma/client";
 
 // =================================================
 //                   Types
@@ -84,7 +83,10 @@ const LandingOverlay = ({
             playsInline
             className="absolute inset-0 w-full h-full object-cover -z-50"
           >
-            <source src={heroVideoUrl || "/videos/aboutUs.webm"} type="video/webm" />
+            <source
+              src={heroVideoUrl || "/videos/aboutUs.webm"}
+              type="video/webm"
+            />
           </video>
 
           {/* پس‌زمینه نیمه‌تاریک */}
