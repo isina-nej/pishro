@@ -1,10 +1,7 @@
 import { PrismaClient } from "@prisma/client";
+
 const prisma = new PrismaClient();
 
-/**
- * Seed data for HomeSlide model (ImageZoomSliderSection)
- * Uses images from /public/images/home/landing-slider
- */
 const homeSlides = [
   {
     title: "تحلیل تکنیکال حرفه‌ای",
@@ -48,22 +45,24 @@ const homeSlides = [
   },
 ];
 
-async function seedHomeSlides() {
+export async function seedHomeSlides() {
   console.log("🌱 Starting HomeSlide seeding...");
 
   try {
-    // Clear existing slides
+    // --------------------------------------------------
+    // Delete existing slides (clean reset)
+    // --------------------------------------------------
     const deleted = await prisma.homeSlide.deleteMany({});
-    console.log(`🗑️  Deleted ${deleted.count} existing slides`);
+    console.log(`🗑️ Deleted ${deleted.count} existing slides`);
 
-    // Insert new slides
-    const result = await prisma.homeSlide.createMany({
+    // --------------------------------------------------
+    // Insert all slides at once
+    // --------------------------------------------------
+    const created = await prisma.homeSlide.createMany({
       data: homeSlides,
-      skipDuplicates: true,
     });
 
-    console.log(`✅ Successfully seeded ${result.count} home slides`);
-    console.log("📊 Seeding completed!");
+    console.log(`✅ Successfully seeded ${created.count} home slides`);
   } catch (error) {
     console.error("❌ Error seeding home slides:", error);
     throw error;
@@ -82,5 +81,3 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
-
-module.exports = { seedHomeSlides };
