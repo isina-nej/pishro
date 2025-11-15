@@ -149,7 +149,7 @@ export function DesktopScroller({
                     />
                     {/* mobile screen content (foreground layer) */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="relative w-[100%] h-[96%]">
+                      <div className="relative w-[100%] h-[100%]">
                         <Image
                           src={steps[index].img}
                           alt="mobile screen content"

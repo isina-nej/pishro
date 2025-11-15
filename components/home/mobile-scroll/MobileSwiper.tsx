@@ -71,7 +71,7 @@ export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
                     />
                     {/* mobile screen content (foreground layer) */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="relative w-[100%] h-[96%]">
+                      <div className="relative w-[100%] h-[100%]">
                         <Image
                           src={step.img}
                           alt="mobile screen content"
