@@ -1,4 +1,4 @@
-// @/app/api/landing/investment-consulting/route.ts
+// @/app/api/landing/business-consulting/route.ts
 
 import { NextRequest } from "next/server";
 import { getInvestmentConsultingData } from "@/lib/services/landing-service";
@@ -18,7 +18,7 @@ export async function GET(_req: NextRequest) {
 
     return successResponse(data);
   } catch (error) {
-    console.error("Error in GET /api/landing/investment-consulting:", error);
+    console.error("Error in GET /api/landing/business-consulting:", error);
     return errorResponse(
       "خطا در دریافت اطلاعات مشاوره سرمایه‌گذاری",
       "DATABASE_ERROR"

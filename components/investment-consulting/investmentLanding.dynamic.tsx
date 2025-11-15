@@ -40,7 +40,7 @@ const InvestmentLandingDynamic = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("/api/landing/investment-consulting");
+        const response = await fetch("/api/landing/business-consulting");
         const result = await response.json();
         if (result.status === "success") {
           setData(result.data);

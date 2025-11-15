@@ -289,12 +289,12 @@
 
 ## 7. Investment Consulting
 
-### GET `/api/admin/investment-consulting`
+### GET `/api/admin/business-consulting`
 
 **Input:** `?page=1&limit=20&published=true|false`
 **Output:** Paginated list of InvestmentConsulting
 
-### POST `/api/admin/investment-consulting`
+### POST `/api/admin/business-consulting`
 
 **Input:**
 
@@ -322,17 +322,17 @@
 
 **Output:** Created InvestmentConsulting
 
-### GET `/api/admin/investment-consulting/:id`
+### GET `/api/admin/business-consulting/:id`
 
 **Input:** `id` (path param)
 **Output:** Single InvestmentConsulting
 
-### PATCH `/api/admin/investment-consulting/:id`
+### PATCH `/api/admin/business-consulting/:id`
 
 **Input:** `id` (path param) + Partial InvestmentConsulting fields
 **Output:** Updated InvestmentConsulting
 
-### DELETE `/api/admin/investment-consulting/:id`
+### DELETE `/api/admin/business-consulting/:id`
 
 **Input:** `id` (path param)
 **Output:** 204 No Content

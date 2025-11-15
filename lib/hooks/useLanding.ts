@@ -46,9 +46,9 @@ export function useAboutPage() {
  */
 export function useInvestmentConsulting() {
   return useQuery<InvestmentConsultingData>({
-    queryKey: ["landing", "investment-consulting"],
+    queryKey: ["landing", "business-consulting"],
     queryFn: async () => {
-      const { data } = await axios.get("/api/landing/investment-consulting");
+      const { data } = await axios.get("/api/landing/business-consulting");
       return data.data;
     },
     staleTime: 1000 * 60 * 5, // 5 minutes

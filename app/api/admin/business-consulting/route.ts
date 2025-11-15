@@ -1,7 +1,7 @@
 /**
  * Admin Investment Consulting Management API
- * GET /api/admin/investment-consulting - List all investment consulting pages
- * POST /api/admin/investment-consulting - Create a new investment consulting page
+ * GET /api/admin/business-consulting - List all investment consulting pages
+ * POST /api/admin/business-consulting - Create a new investment consulting page
  */
 
 import { NextRequest } from "next/server";

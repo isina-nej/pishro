@@ -1,8 +1,8 @@
 /**
  * Admin Investment Consulting Management API (Single Item)
- * GET /api/admin/investment-consulting/[id] - Get investment consulting by ID
- * PATCH /api/admin/investment-consulting/[id] - Update investment consulting
- * DELETE /api/admin/investment-consulting/[id] - Delete investment consulting
+ * GET /api/admin/business-consulting/[id] - Get investment consulting by ID
+ * PATCH /api/admin/business-consulting/[id] - Update investment consulting
+ * DELETE /api/admin/business-consulting/[id] - Delete investment consulting
  */
 
 import { NextRequest } from "next/server";
