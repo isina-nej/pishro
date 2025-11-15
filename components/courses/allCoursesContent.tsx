@@ -5,6 +5,7 @@ import { Category, Course } from "@prisma/client";
 import CourseCard from "@/components/utils/courseCard";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
+import CtaSection from "./ctaSection";
 
 type CategoryWithCourses = Category & {
   courses: Course[];
@@ -131,6 +132,14 @@ export default function AllCoursesContent({
           </motion.section>
         ))}
       </div>
+
+      {/* CTA Section */}
+      <CtaSection
+        title="آماده‌اید برای شروع یادگیری؟"
+        description="با ثبت‌نام در دوره‌های ما، دانش و مهارت‌های لازم برای موفقیت در بازارهای مالی را کسب کنید و به جمع هزاران دانشجوی موفق ما بپیوندید"
+        buttonText="درباره ما بیشتر بدانید"
+        buttonLink="/about-us"
+      />
     </div>
   );
 }

@@ -28,6 +28,7 @@ import RatingStars from "@/components/utils/RatingStars";
 import CommentsSlider from "@/components/utils/CommentsSlider";
 import AddToCartButton from "@/components/utils/AddToCartButton";
 import { CourseLevel } from "@prisma/client";
+import CtaSection from "@/components/courses/ctaSection";
 
 // ISR Configuration: Revalidate every 1 hour for fresh content
 export const revalidate = 3600;
@@ -438,6 +439,14 @@ export default async function CourseDetailPage({
             </Suspense>
           </section>
         )}
+
+        {/* CTA Section */}
+        <CtaSection
+          title="آماده شروع این دوره هستید؟"
+          description="با ثبت‌نام در این دوره، مهارت‌های جدید کسب کنید و در مسیر موفقیت قدم بردارید. همین حالا شروع کنید!"
+          buttonText="مشاهده همه دوره‌ها"
+          buttonLink="/courses"
+        />
       </main>
     );
   } catch (error) {
