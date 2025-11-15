@@ -86,20 +86,12 @@ export interface MobileScrollerStep {
   title: string;
   description: string;
   imageUrl: string | null;
+  coverImageUrl: string | null;
   gradient: string | null;
-  cards: MobileScrollerCard[];
   order: number;
   published: boolean;
   createdAt: string;
   updatedAt: string;
-}
-
-export interface MobileScrollerCard {
-  title: string;
-  desc: string;
-  icon: string;
-  top: string;
-  right: string;
 }
 
 // ==================== ABOUT PAGE ====================

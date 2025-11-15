@@ -651,7 +651,6 @@ model MobileScrollerStep {
   imageUrl        String? // تصویر داخل موبایل (مثل in-mobile-1.svg)
   coverImageUrl   String? // تصویر پس‌زمینه موبایل
   gradient        String? // کلاس CSS برای gradient
-  cards           Json    @default("[]") // کارت‌های اطلاعاتی مرحله (title, desc, icon, top, right)
 
   order     Int     @default(0)
   published Boolean @default(true)
