@@ -35,6 +35,16 @@ type CourseWithRelations = Prisma.CourseGetPayload<{
   };
 }>;
 
+// Type for serialized course with string dates (from server component)
+type SerializedCourseWithRelations = Omit<CourseWithRelations, "createdAt" | "updatedAt" | "relatedTags"> & {
+  createdAt: string;
+  updatedAt: string;
+  relatedTags: Array<Omit<CourseWithRelations["relatedTags"][number], "createdAt" | "updatedAt"> & {
+    createdAt: string;
+    updatedAt: string;
+  }>;
+};
+
 const levelOptions = [
   { label: "همه سطوح", value: null },
   { label: "مبتدی", value: "BEGINNER" as CourseLevel },
@@ -43,7 +53,7 @@ const levelOptions = [
 ];
 
 interface CoursesGridCategoryClientProps {
-  courses: CourseWithRelations[] | Course[];
+  courses: SerializedCourseWithRelations[] | Course[];
   categorySlug: string;
   categoryTitle: string;
 }

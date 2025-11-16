@@ -7,7 +7,7 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
-import { LuTarget, LuBookOpen, LuUsers } from "react-icons/lu";
+// Icons are now handled in the client component
 import { PageContent } from "@prisma/client";
 import {
   getCategoryBySlug,
@@ -202,15 +202,15 @@ export default async function CategoryPage({
       ],
       features: landingContentData?.features?.map((f) => ({ text: f })) || [
         {
-          icon: <LuTarget className="text-myPrimary text-3xl" />,
+          iconName: "LuTarget",
           text: "نقشه راه کامل از صفر",
         },
         {
-          icon: <LuBookOpen className="text-myPrimary text-3xl" />,
+          iconName: "LuBookOpen",
           text: "کامل‌ترین محتوا",
         },
         {
-          icon: <LuUsers className="text-myPrimary text-3xl" />,
+          iconName: "LuUsers",
           text: "اجتماع بزرگ دانش‌آموزان",
         },
       ],

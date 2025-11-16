@@ -27,6 +27,7 @@ interface StatCounter {
 
 interface Feature {
   icon?: React.ReactNode;
+  iconName?: string;
   text: string;
 }
 
@@ -62,15 +63,15 @@ const CategoryHeroSection = ({
   statCounters = [],
   features = [
     {
-      icon: <LuTarget className="text-myPrimary text-3xl" />,
+      iconName: "LuTarget",
       text: "نقشه راه کامل از صفر",
     },
     {
-      icon: <LuBookOpen className="text-myPrimary text-3xl" />,
+      iconName: "LuBookOpen",
       text: "کامل‌ترین محتوا",
     },
     {
-      icon: <LuUsers className="text-myPrimary text-3xl" />,
+      iconName: "LuUsers",
       text: "اجتماع بزرگ دانش‌آموزان",
     },
   ],
@@ -82,6 +83,17 @@ const CategoryHeroSection = ({
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  // Map icon names to actual icon components
+  const getIcon = (iconName?: string) => {
+    if (!iconName) return null;
+    const iconMap: { [key: string]: React.ReactNode } = {
+      LuTarget: <LuTarget className="text-myPrimary text-3xl" />,
+      LuBookOpen: <LuBookOpen className="text-myPrimary text-3xl" />,
+      LuUsers: <LuUsers className="text-myPrimary text-3xl" />,
+    };
+    return iconMap[iconName] || null;
+  };
 
   return (
     <section className="min-h-screen relative overflow-hidden flex flex-col justify-between pt-6 sm:pt-8 md:pt-8 lg:pt-0 pb-8 lg:pb-0">
@@ -145,7 +157,7 @@ const CategoryHeroSection = ({
                   className="flex items-center gap-2.5 sm:gap-3 bg-gray-50 sm:bg-transparent rounded-lg sm:rounded-none px-3 py-2.5 sm:px-0 sm:py-0"
                 >
                   <div className="text-xl sm:text-2xl lg:text-3xl flex-shrink-0">
-                    {item.icon}
+                    {item.icon || getIcon(item.iconName)}
                   </div>
                   <p className="text-gray-700 font-medium text-sm sm:text-base">
                     {item.text}
