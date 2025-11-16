@@ -5,7 +5,6 @@ const DARK_PATHS = new Set([
   "/",
   "/business-consulting",
   "/investment-plans",
-  "/investment-plans/custom",
   "/library",
   "/about-us",
   "/faq",

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import clsx from "clsx";
-import { useRouter } from "next/navigation";
 import { Bitcoin, LineChart, PieChart, XIcon } from "lucide-react";
 import { InvestmentPlans, InvestmentPlan, InvestmentTag } from "@prisma/client";
 
@@ -51,7 +50,6 @@ const PlansList = ({ investmentPlansData }: PlansListProps) => {
   const [risk, setRisk] = useState<number>(1);
   const [duration, setDuration] = useState<number>(3);
 
-  const router = useRouter();
   const setInvestmentData = useInvestmentStore((state) => state.setData); // ✅ store setter
 
   const handleCreatePortfolio = (selectedType: string) => {
@@ -62,7 +60,11 @@ const PlansList = ({ investmentPlansData }: PlansListProps) => {
       duration,
     });
 
-    router.push("/investment-plans/custom");
+    // Scroll to portfolio selection form section
+    const portfolioFormSection = document.querySelector("#portfolio-selection-form");
+    if (portfolioFormSection) {
+      portfolioFormSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
 
   return (

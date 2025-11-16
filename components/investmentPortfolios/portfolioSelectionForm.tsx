@@ -86,7 +86,7 @@ const PortfolioSelectionForm = () => {
   const estimatedCost = calculateEstimatedCost();
 
   return (
-    <section className="w-full bg-white py-16 md:py-24">
+    <section id="portfolio-selection-form" className="w-full bg-white py-16 md:py-24">
       <div className="container-xl">
         {/* Header */}
         <div className="text-center mb-12">
