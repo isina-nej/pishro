@@ -35,11 +35,16 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
     // اگر کاربر وارد نشده یا دسترسی نداره، لینک ویدیو رو حذف می‌کنیم
     if (!session?.user?.id) {
       // کاربر وارد نشده - لیست درس‌ها بدون لینک ویدیو
-      const lessonsWithoutVideo = lessons.map(({ videoUrl, ...lesson }) => ({
-        ...lesson,
-        hasAccess: false,
-      }));
-      return successResponse(lessonsWithoutVideo, "کلاس‌ها با موفقیت دریافت شدند");
+      const lessonsWithoutVideo = lessons.map(
+        ({ videoUrl: _videoUrl, ...lesson }) => ({
+          ...lesson,
+          hasAccess: false,
+        })
+      );
+      return successResponse(
+        lessonsWithoutVideo,
+        "کلاس‌ها با موفقیت دریافت شدند"
+      );
     }
 
     // بررسی دسترسی کاربر به این دوره
@@ -54,11 +59,16 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
 
     if (!enrollment) {
       // کاربر دسترسی ندارد - لیست درس‌ها بدون لینک ویدیو
-      const lessonsWithoutVideo = lessons.map(({ videoUrl, ...lesson }) => ({
-        ...lesson,
-        hasAccess: false,
-      }));
-      return successResponse(lessonsWithoutVideo, "کلاس‌ها با موفقیت دریافت شدند");
+      const lessonsWithoutVideo = lessons.map(
+        ({ videoUrl: _videoUrl, ...lesson }) => ({
+          ...lesson,
+          hasAccess: false,
+        })
+      );
+      return successResponse(
+        lessonsWithoutVideo,
+        "کلاس‌ها با موفقیت دریافت شدند"
+      );
     }
 
     // کاربر دسترسی دارد - همه اطلاعات شامل لینک ویدیو
