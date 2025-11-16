@@ -939,3 +939,27 @@ model HomeMiniSlider {
 
   @@index([published, row, order])
 }
+
+// مدل برای کلاس‌های اسکای‌روم
+model SkyRoomClass {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  title       String
+  description String?
+  instructor  String?
+  startDate   DateTime?
+  endDate     DateTime?
+  meetingLink String   // لینک کلاس اسکای‌روم برای ورود مهمان
+  thumbnail   String?
+  duration    String? // مثل "2 ساعت"
+  capacity    Int? // ظرفیت کلاس
+  level       String? // سطح کلاس: مبتدی، متوسط، پیشرفته
+
+  order     Int     @default(0)
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published, order])
+}
