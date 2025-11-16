@@ -367,9 +367,7 @@ const InvestmentModelsSection = () => {
               </svg>
             </div>
             <div className="flex-1">
-              <h4 className="text-lg font-bold text-gray-900 mb-2">
-                توجه مهم
-              </h4>
+              <h4 className="text-lg font-bold text-gray-900 mb-2">توجه مهم</h4>
               <p className="text-gray-700 leading-relaxed">
                 در مدل آنلاین، هزینه سبد متناسب با مبلغ سرمایه‌گذاری و مدت زمان
                 انتخابی شما محاسبه می‌شود. فرمول دقیق محاسبه در آینده نزدیک به
@@ -384,13 +382,16 @@ const InvestmentModelsSection = () => {
         {openModal && (
           <>
             {isDesktop ? (
-              <Dialog open={openModal !== null} onOpenChange={() => setOpenModal(null)}>
-                <DialogContent className="sm:max-w-[500px]">
+              <Dialog
+                open={openModal !== null}
+                onOpenChange={() => setOpenModal(null)}
+              >
+                <DialogContent className="sm:max-w-[600px]">
                   <DialogHeader>
-                    <DialogTitle className="text-2xl font-bold text-gray-900">
+                    <DialogTitle className="text-2xl font-bold text-gray-900 rtl">
                       {contactInfo[openModal].title}
                     </DialogTitle>
-                    <DialogDescription className="text-base text-gray-600">
+                    <DialogDescription className="text-base text-gray-600 rtl">
                       {contactInfo[openModal].description}
                     </DialogDescription>
                   </DialogHeader>
@@ -398,13 +399,16 @@ const InvestmentModelsSection = () => {
                 </DialogContent>
               </Dialog>
             ) : (
-              <Drawer open={openModal !== null} onOpenChange={() => setOpenModal(null)}>
+              <Drawer
+                open={openModal !== null}
+                onOpenChange={() => setOpenModal(null)}
+              >
                 <DrawerContent>
                   <DrawerHeader>
-                    <DrawerTitle className="text-2xl font-bold text-gray-900">
+                    <DrawerTitle className="text-2xl font-bold text-gray-900 rtl">
                       {contactInfo[openModal].title}
                     </DrawerTitle>
-                    <DrawerDescription className="text-base text-gray-600">
+                    <DrawerDescription className="text-base text-gray-600 rtl">
                       {contactInfo[openModal].description}
                     </DrawerDescription>
                   </DrawerHeader>
