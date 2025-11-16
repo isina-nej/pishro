@@ -13,8 +13,8 @@ const PortfolioSelectionForm = () => {
   // 📊 مقادیر اسلایدرها
   const amountSteps = useMemo(
     () => [
-      10_000_000, 20_000_000, 50_000_000, 100_000_000, 200_000_000,
-      500_000_000, 1_000_000_000, 2_000_000_000, 5_000_000_000, 10_000_000_000,
+      10_000_000, 20_000_000, 50_000_000, 100_000_000, 200_000_000, 500_000_000,
+      1_000_000_000, 2_000_000_000, 5_000_000_000, 10_000_000_000,
     ],
     []
   );
@@ -86,7 +86,10 @@ const PortfolioSelectionForm = () => {
   const estimatedCost = calculateEstimatedCost();
 
   return (
-    <section id="portfolio-selection-form" className="w-full bg-white py-16 md:py-24">
+    <section
+      id="portfolio-selection-form"
+      className="w-full bg-white py-16 md:py-24"
+    >
       <div className="container-xl">
         {/* Header */}
         <div className="text-center mb-12">
@@ -99,7 +102,7 @@ const PortfolioSelectionForm = () => {
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto">
+        <div className="w-full">
           <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-6 md:p-10 shadow-xl border border-gray-200">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* مبلغ سرمایه‌گذاری */}
@@ -203,7 +206,9 @@ const PortfolioSelectionForm = () => {
 
               <div className="flex items-center gap-4">
                 <button
-                  onClick={() => setRiskLevel((prev) => Math.max(0, prev - 1) as 0 | 1 | 2)}
+                  onClick={() =>
+                    setRiskLevel((prev) => Math.max(0, prev - 1) as 0 | 1 | 2)
+                  }
                   className="size-10 rounded-full bg-mySecondary/10 hover:bg-mySecondary/20 text-mySecondary text-2xl font-bold flex items-center justify-center active:scale-95 transition"
                 >
                   <span className="mt-1">−</span>
@@ -247,7 +252,9 @@ const PortfolioSelectionForm = () => {
                 </div>
 
                 <button
-                  onClick={() => setRiskLevel((prev) => Math.min(2, prev + 1) as 0 | 1 | 2)}
+                  onClick={() =>
+                    setRiskLevel((prev) => Math.min(2, prev + 1) as 0 | 1 | 2)
+                  }
                   className="size-10 rounded-full bg-mySecondary/10 hover:bg-mySecondary/20 text-mySecondary text-2xl font-bold flex items-center justify-center active:scale-95 transition"
                 >
                   <span className="mt-1">+</span>
