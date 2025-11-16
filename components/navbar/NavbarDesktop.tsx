@@ -33,7 +33,7 @@ const NavbarDesktop = ({ isDark, navbarData }: NavbarDesktopProps) => {
 
     const coursesMenu: NavbarDesktopProps["navbarData"][number] = {
       label: "دوره ها",
-      link: "#",
+      link: "/courses",
       data: groupedItems.map((item) => ({
         label: item.label,
         link: item.link,
