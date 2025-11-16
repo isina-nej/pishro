@@ -37,7 +37,7 @@ const sorters: Record<CourseSortOption, (a: Course, b: Course) => number> = {
     return dateB - dateA;
   },
   "محبوب‌ترین": (a, b) => (b.rating || 0) - (a.rating || 0),
-  "پرفروش‌ترین": (a, b) => (b.studentsCount || 0) - (a.studentsCount || 0),
+  "پرفروش‌ترین": (a, b) => (b.students || 0) - (a.students || 0),
 };
 
 export const useCoursesFilters = (
@@ -92,7 +92,7 @@ export const useCoursesFilters = (
       })
       .filter((course) =>
         normalizedQuery
-          ? [course.title, course.description, course.instructor]
+          ? [course.subject, course.description, course.instructor]
               .filter(Boolean)
               .join(" ")
               .toLowerCase()
@@ -116,7 +116,7 @@ export const useCoursesFilters = (
     const publishedCourses = allCourses.filter((course) => course.published);
     const totalCourses = publishedCourses.length;
     const totalStudents = publishedCourses.reduce(
-      (sum, course) => sum + (course.studentsCount || 0),
+      (sum, course) => sum + (course.students || 0),
       0
     );
     const totalCategories = categoriesWithCourses.length;
