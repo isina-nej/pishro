@@ -66,6 +66,16 @@ export const useCoursesFilters = (
   const filteredCourses = useMemo(() => {
     const normalizedQuery = query.trim();
 
+    // تبدیل مقدار فارسی به enum
+    const getLevelEnum = (persianLevel: string) => {
+      const levelMap: Record<string, string> = {
+        "مقدماتی": "BEGINNER",
+        "متوسط": "INTERMEDIATE",
+        "پیشرفته": "ADVANCED",
+      };
+      return levelMap[persianLevel];
+    };
+
     return allCourses
       .filter((course) => course.published) // فقط دوره‌های منتشر شده
       .filter((course) => {
@@ -77,7 +87,8 @@ export const useCoursesFilters = (
       })
       .filter((course) => {
         if (levelFilter === "همه") return true;
-        return course.level === levelFilter;
+        const enumLevel = getLevelEnum(levelFilter);
+        return course.level === enumLevel;
       })
       .filter((course) =>
         normalizedQuery
