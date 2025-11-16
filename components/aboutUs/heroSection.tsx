@@ -50,7 +50,7 @@ const HeroSection = ({
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-2 mb-8"
+              className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-2 mt-2 mb-6"
             >
               <HiSparkles className="text-yellow-300 text-xl" />
               <span className="text-sm font-medium">{badgeText}</span>
@@ -99,7 +99,8 @@ const HeroSection = ({
                   <div
                     key={index}
                     className={`bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 group ${
-                      index === statsData.length - 1 && statsData.length % 3 !== 0
+                      index === statsData.length - 1 &&
+                      statsData.length % 3 !== 0
                         ? "sm:col-span-2 md:col-span-1"
                         : ""
                     }`}
