@@ -6,8 +6,14 @@ import { Trash2, Tag, TrendingDown } from "lucide-react";
 import { useCartStore } from "@/stores/cart-store";
 import { motion } from "framer-motion";
 
+// Accept both Course and serialized versions (with string dates)
+type CourseData = Course | (Omit<Course, "createdAt" | "updatedAt"> & {
+  createdAt: string | Date;
+  updatedAt: string | Date;
+});
+
 interface ItemCardProps {
-  data: Course;
+  data: CourseData;
   index?: number;
 }
 

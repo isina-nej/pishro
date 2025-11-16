@@ -4,9 +4,15 @@ import { Course } from "@prisma/client";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+// Accept both Course and serialized versions (with string dates)
+type CourseData = Course | (Omit<Course, "createdAt" | "updatedAt"> & {
+  createdAt: string | Date;
+  updatedAt: string | Date;
+});
+
 interface CartStore {
-  items: Course[];
-  addToCart: (course: Course) => void;
+  items: CourseData[];
+  addToCart: (course: CourseData) => void;
   removeFromCart: (id: string) => void;
   clearCart: () => void;
 }

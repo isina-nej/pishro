@@ -1,8 +1,14 @@
 import { Course } from "@prisma/client";
 import ItemCard from "./itemCard";
 
+// Accept both Course and serialized versions (with string dates)
+type CourseData = Course | (Omit<Course, "createdAt" | "updatedAt"> & {
+  createdAt: string | Date;
+  updatedAt: string | Date;
+});
+
 interface CheckoutMainProps {
-  data: Course[];
+  data: CourseData[];
 }
 
 const ShoppingCartMain = ({ data }: CheckoutMainProps) => {

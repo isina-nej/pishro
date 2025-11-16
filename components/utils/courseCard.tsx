@@ -12,8 +12,14 @@ import { useCartStore } from "@/stores/cart-store";
 import toast from "react-hot-toast";
 import { Course } from "@prisma/client";
 
+// Accept both Course and serialized versions (with string dates)
+type CourseData = Course | (Omit<Course, "createdAt" | "updatedAt"> & {
+  createdAt: string | Date;
+  updatedAt: string | Date;
+});
+
 interface CourseCardProps {
-  data: Course;
+  data: CourseData;
   link: string;
 }
 
