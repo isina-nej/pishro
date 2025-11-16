@@ -237,17 +237,9 @@ const InvestmentModelsSection = () => {
   ];
 
   return (
-    <section className="w-full bg-gradient-to-br from-gray-50 via-white to-gray-50 py-16 md:py-24">
+    <section className="w-full bg-gradient-to-br from-gray-50 via-white to-gray-50 py-16 md:py-24 mt-24">
       <div className="container-xl">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            دو مدل سرمایه‌گذاری
-          </h2>
-          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-            بر اساس نیاز و ترجیح خود، یکی از دو مدل زیر را انتخاب کنید
-          </p>
-        </div>
 
         {/* Models Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">

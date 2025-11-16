@@ -23,14 +23,14 @@ const InvestmentPlansPageContent = ({
       {/* Calculator Section from investment-portfolios */}
       <CalculatorSection />
 
+      {/* Investment Models Section from investment-portfolios */}
+      <InvestmentModelsSection />
+
       {/* Portfolios Display from investment-portfolios */}
       <PortfoliosDisplay />
 
       {/* Portfolio Selection Form from investment-portfolios */}
       <PortfolioSelectionForm />
-
-      {/* Investment Models Section from investment-portfolios */}
-      <InvestmentModelsSection />
     </div>
   );
 };
