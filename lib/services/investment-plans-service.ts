@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import type { InvestmentPlans, Prisma } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 
 /**
  * دریافت تمام صفحات سبدهای سرمایه‌گذاری منتشر شده
@@ -155,7 +155,7 @@ export async function createInvestmentPlans(data: {
  */
 export async function updateInvestmentPlans(
   id: string,
-  data: Partial<Omit<InvestmentPlans, "id" | "createdAt" | "updatedAt">>
+  data: Prisma.InvestmentPlansUpdateInput
 ) {
   try {
     const plan = await prisma.investmentPlans.update({

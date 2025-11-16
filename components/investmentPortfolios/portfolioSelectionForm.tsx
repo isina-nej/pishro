@@ -3,12 +3,15 @@
 import { useState, useMemo } from "react";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
-import { Wallet, Clock, BarChart3, Calculator } from "lucide-react";
+import { Wallet, Clock, BarChart3, ShoppingCart } from "lucide-react";
+import axios from "axios";
+import { toast } from "@/lib/hooks/use-toast";
 
 const PortfolioSelectionForm = () => {
   const [amount, setAmount] = useState(50_000_000); // 50 میلیون تومان
   const [duration, setDuration] = useState(6); // 6 ماه
   const [riskLevel, setRiskLevel] = useState<0 | 1 | 2>(1); // 0: کم، 1: متوسط، 2: بالا
+  const [isLoading, setIsLoading] = useState(false);
 
   // 📊 مقادیر اسلایدرها
   const amountSteps = useMemo(
@@ -84,6 +87,60 @@ const PortfolioSelectionForm = () => {
   };
 
   const estimatedCost = calculateEstimatedCost();
+
+  // محاسبه بازده تخمینی و نرخ ماهیانه
+  const getMonthlyRate = () => {
+    // نرخ‌های ماهیانه بر اساس ریسک
+    if (riskLevel === 0) return 0.07; // 7% ماهیانه برای کم‌ریسک
+    if (riskLevel === 1) return 0.08; // 8% ماهیانه برای متوسط
+    return 0.11; // 11% ماهیانه برای پرریسک
+  };
+
+  const monthlyRate = getMonthlyRate();
+  const expectedReturn = amount * monthlyRate * duration;
+
+  // تبدیل riskLevel به portfolioType
+  const getPortfolioType = () => {
+    if (riskLevel === 0) return "low";
+    if (riskLevel === 1) return "medium";
+    return "high";
+  };
+
+  // افزودن به سبد خرید
+  const handleAddToCart = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.post("/api/cart/add-portfolio", {
+        portfolioType: getPortfolioType(),
+        portfolioAmount: amount,
+        portfolioDuration: duration,
+        expectedReturn,
+        monthlyRate,
+        price: Math.round(estimatedCost),
+      });
+
+      if (response.data.success) {
+        toast({
+          title: "موفق",
+          description: "سبد سرمایه‌گذاری با موفقیت به سبد خرید اضافه شد",
+          variant: "default",
+        });
+      }
+    } catch (error) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message ||
+        "خطا در افزودن به سبد خرید. لطفاً دوباره تلاش کنید.";
+
+      toast({
+        title: "خطا",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <section
@@ -272,22 +329,33 @@ const PortfolioSelectionForm = () => {
               </div>
             </div>
 
-            {/* نتیجه و هزینه تخمینی */}
+            {/* نتیجه و دکمه افزودن به سبد */}
             <div className="mt-6 bg-gradient-to-br from-mySecondary/10 to-mySecondary/5 rounded-2xl border-2 border-mySecondary/20 p-6">
-              <div className="flex items-center justify-center gap-2 mb-4">
-                <Calculator className="text-mySecondary" size={28} />
-                <h3 className="text-xl font-bold text-gray-900">
-                  هزینه تخمینی سبد
-                </h3>
+              <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div className="flex-1 text-center md:text-right">
+                  <p className="text-sm text-gray-600 mb-2">هزینه تخمینی سبد</p>
+                  <p className="text-2xl md:text-3xl font-bold text-mySecondary">
+                    {formatNumber(estimatedCost)}{" "}
+                    <span className="text-base text-gray-600">تومان</span>
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    بازده تخمینی: {formatNumber(expectedReturn)} تومان
+                  </p>
+                </div>
+
+                <button
+                  onClick={handleAddToCart}
+                  disabled={isLoading}
+                  className="w-full md:w-auto px-8 py-4 bg-mySecondary hover:bg-mySecondary/90 text-white rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
+                >
+                  <ShoppingCart size={24} />
+                  {isLoading ? "در حال افزودن..." : "افزودن به سبد خرید"}
+                </button>
               </div>
 
-              <p className="text-center text-3xl md:text-4xl font-bold text-mySecondary mb-2">
-                {formatNumber(estimatedCost)}{" "}
-                <span className="text-lg text-gray-600">تومان</span>
-              </p>
-
-              <p className="text-center text-sm text-gray-600">
-                * این مبلغ تخمینی است و فرمول دقیق بعداً اضافه خواهد شد
+              <p className="text-center text-xs text-gray-500 mt-4">
+                نرخ ماهیانه: {(monthlyRate * 100).toFixed(0)}٪ | مدت:{" "}
+                {duration} ماه | نوع: {getRiskLabel(riskLevel)}
               </p>
             </div>
           </div>
