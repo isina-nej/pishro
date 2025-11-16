@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import PlansList from "./plansList";
 import { InvestmentPlans, InvestmentPlan, InvestmentTag } from "@prisma/client";
 
 interface InvestmentPlansLandingProps {
@@ -36,7 +35,6 @@ const InvestmentPlansLanding = ({
         <p className="text-lg lg:text-xl text-white/90 lg:leading-8">
           {investmentPlansData.description}
         </p>
-        <PlansList investmentPlansData={investmentPlansData} />
       </div>
     </div>
   );
