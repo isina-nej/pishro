@@ -7,7 +7,11 @@
 
 import { NextRequest } from "next/server";
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
+import {
+  getInvestmentPlansById,
+  updateInvestmentPlans,
+  deleteInvestmentPlans,
+} from "@/lib/services/investment-plans-service";
 import {
   successResponse,
   errorResponse,
@@ -34,13 +38,7 @@ export async function GET(
 
     const { id } = await params;
 
-    const item = await prisma.investmentPlans.findUnique({
-      where: { id },
-      include: {
-        plans: true,
-        tags: true,
-      },
-    });
+    const item = await getInvestmentPlansById(id);
 
     if (!item) {
       return notFoundResponse("InvestmentPlans", "صفحه سبدهای سرمایه‌گذاری یافت نشد");
@@ -74,9 +72,7 @@ export async function PATCH(
     const body = await req.json();
 
     // Check if item exists
-    const existingItem = await prisma.investmentPlans.findUnique({
-      where: { id },
-    });
+    const existingItem = await getInvestmentPlansById(id);
 
     if (!existingItem) {
       return notFoundResponse("InvestmentPlans", "صفحه سبدهای سرمایه‌گذاری یافت نشد");
@@ -86,8 +82,8 @@ export async function PATCH(
     const updateData: Record<string, unknown> = {};
 
     // Only include fields that are provided
-    if (body.title !== undefined) updateData.title = body.title;
-    if (body.description !== undefined) updateData.description = body.description;
+    if (body.title !== undefined) updateData.title = body.title.trim();
+    if (body.description !== undefined) updateData.description = body.description.trim();
     if (body.image !== undefined) updateData.image = body.image;
     if (body.plansIntroCards !== undefined) updateData.plansIntroCards = body.plansIntroCards;
     if (body.minAmount !== undefined) updateData.minAmount = body.minAmount;
@@ -98,14 +94,7 @@ export async function PATCH(
     if (body.metaKeywords !== undefined) updateData.metaKeywords = body.metaKeywords;
     if (body.published !== undefined) updateData.published = body.published;
 
-    const updatedItem = await prisma.investmentPlans.update({
-      where: { id },
-      data: updateData,
-      include: {
-        plans: true,
-        tags: true,
-      },
-    });
+    const updatedItem = await updateInvestmentPlans(id, updateData);
 
     return successResponse(updatedItem, "صفحه سبدهای سرمایه‌گذاری با موفقیت بروزرسانی شد");
   } catch (error) {
@@ -134,18 +123,14 @@ export async function DELETE(
     const { id } = await params;
 
     // Check if item exists
-    const existingItem = await prisma.investmentPlans.findUnique({
-      where: { id },
-    });
+    const existingItem = await getInvestmentPlansById(id);
 
     if (!existingItem) {
       return notFoundResponse("InvestmentPlans", "صفحه سبدهای سرمایه‌گذاری یافت نشد");
     }
 
     // Delete item (cascading deletes will handle related items)
-    await prisma.investmentPlans.delete({
-      where: { id },
-    });
+    await deleteInvestmentPlans(id);
 
     return noContentResponse();
   } catch (error) {

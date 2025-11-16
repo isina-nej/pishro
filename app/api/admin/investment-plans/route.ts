@@ -5,9 +5,11 @@
  */
 
 import { NextRequest } from "next/server";
-import { Prisma } from "@prisma/client";
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
+import {
+  getAllInvestmentPlansForAdmin,
+  createInvestmentPlans,
+} from "@/lib/services/investment-plans-service";
 import {
   errorResponse,
   unauthorizedResponse,
@@ -34,36 +36,25 @@ export async function GET(req: NextRequest) {
     // Pagination
     const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
     const limit = Math.min(100, parseInt(searchParams.get("limit") || "20"));
-    const skip = (page - 1) * limit;
 
     // Filters
-    const published = searchParams.get("published");
+    const publishedParam = searchParams.get("published");
+    let published: boolean | null = null;
 
-    // Build where clause
-    const where: Prisma.InvestmentPlansWhereInput = {};
-
-    if (published === "true") {
-      where.published = true;
-    } else if (published === "false") {
-      where.published = false;
+    if (publishedParam === "true") {
+      published = true;
+    } else if (publishedParam === "false") {
+      published = false;
     }
 
     // Fetch investment plans pages
-    const [items, total] = await Promise.all([
-      prisma.investmentPlans.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy: { createdAt: "desc" },
-        include: {
-          plans: true,
-          tags: true,
-        },
-      }),
-      prisma.investmentPlans.count({ where }),
-    ]);
+    const result = await getAllInvestmentPlansForAdmin({
+      page,
+      limit,
+      published,
+    });
 
-    return paginatedResponse(items, page, limit, total);
+    return paginatedResponse(result.items, page, limit, result.total);
   } catch (error) {
     console.error("Error fetching investment plans pages:", error);
     return errorResponse(
@@ -100,32 +91,45 @@ export async function POST(req: NextRequest) {
     } = body;
 
     // Validation
-    if (!title || !description) {
-      return validationError({
-        title: !title ? "عنوان الزامی است" : "",
-        description: !description ? "توضیحات الزامی است" : "",
-      });
+    const errors: { [key: string]: string } = {};
+
+    if (!title || title.trim().length < 3) {
+      errors.title = "عنوان الزامی است و باید حداقل 3 کاراکتر باشد";
+    }
+
+    if (!description || description.trim().length < 10) {
+      errors.description = "توضیحات الزامی است و باید حداقل 10 کاراکتر باشد";
+    }
+
+    if (minAmount < 0) {
+      errors.minAmount = "حداقل مبلغ باید مثبت باشد";
+    }
+
+    if (maxAmount <= minAmount) {
+      errors.maxAmount = "حداکثر مبلغ باید بیشتر از حداقل مبلغ باشد";
+    }
+
+    if (amountStep <= 0) {
+      errors.amountStep = "مقدار قدم باید مثبت باشد";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      return validationError(errors, "اطلاعات ارسالی معتبر نیست");
     }
 
     // Create investment plans page
-    const item = await prisma.investmentPlans.create({
-      data: {
-        title,
-        description,
-        image,
-        plansIntroCards,
-        minAmount,
-        maxAmount,
-        amountStep,
-        metaTitle,
-        metaDescription,
-        metaKeywords,
-        published,
-      },
-      include: {
-        plans: true,
-        tags: true,
-      },
+    const item = await createInvestmentPlans({
+      title: title.trim(),
+      description: description.trim(),
+      image,
+      plansIntroCards,
+      minAmount,
+      maxAmount,
+      amountStep,
+      metaTitle,
+      metaDescription,
+      metaKeywords,
+      published,
     });
 
     return createdResponse(item, "صفحه سبدهای سرمایه‌گذاری با موفقیت ایجاد شد");
