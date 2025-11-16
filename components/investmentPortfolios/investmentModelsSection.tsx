@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from "react";
 import {
   Building2,
   Globe,
@@ -10,9 +10,147 @@ import {
   Users,
   CreditCard,
   TrendingUp,
+  Phone,
+  MapPin,
+  Mail,
+  Clock,
+  MessageCircle,
 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerDescription,
+} from "@/components/ui/drawer";
+import { useMediaQuery } from "@/lib/hooks/use-media-query";
 
 const InvestmentModelsSection = () => {
+  const [openModal, setOpenModal] = useState<"in-person" | "online" | null>(
+    null
+  );
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+
+  // Contact information
+  const contactInfo = {
+    "in-person": {
+      title: "رزرو مشاوره حضوری",
+      description: "برای رزرو مشاوره حضوری با ما تماس بگیرید",
+      contacts: [
+        {
+          icon: Phone,
+          title: "تلفن تماس",
+          value: "021-12345678",
+          link: "tel:02112345678",
+        },
+        {
+          icon: Phone,
+          title: "موبایل",
+          value: "0912-345-6789",
+          link: "tel:09123456789",
+        },
+        {
+          icon: MapPin,
+          title: "آدرس دفتر",
+          value: "تهران، خیابان ولیعصر، پلاک 123",
+          link: "https://maps.google.com",
+        },
+        {
+          icon: Clock,
+          title: "ساعت کاری",
+          value: "شنبه تا چهارشنبه: 9 صبح تا 6 عصر",
+        },
+        {
+          icon: Mail,
+          title: "ایمیل",
+          value: "info@pishro.com",
+          link: "mailto:info@pishro.com",
+        },
+      ],
+    },
+    online: {
+      title: "رزرو مشاوره آنلاین",
+      description: "برای مشاوره آنلاین از طریق راه‌های زیر با ما در تماس باشید",
+      contacts: [
+        {
+          icon: MessageCircle,
+          title: "تلگرام",
+          value: "@pishro_support",
+          link: "https://t.me/pishro_support",
+        },
+        {
+          icon: MessageCircle,
+          title: "واتساپ",
+          value: "0912-345-6789",
+          link: "https://wa.me/989123456789",
+        },
+        {
+          icon: Phone,
+          title: "تلفن پشتیبانی",
+          value: "021-87654321",
+          link: "tel:02187654321",
+        },
+        {
+          icon: Mail,
+          title: "ایمیل",
+          value: "online@pishro.com",
+          link: "mailto:online@pishro.com",
+        },
+        {
+          icon: Clock,
+          title: "پشتیبانی آنلاین",
+          value: "همه روزه: 8 صبح تا 12 شب",
+        },
+      ],
+    },
+  };
+
+  // Render contact content
+  const renderContactContent = (type: "in-person" | "online") => {
+    const info = contactInfo[type];
+    return (
+      <div className="space-y-4 p-4">
+        {info.contacts.map((contact, idx) => {
+          const Icon = contact.icon;
+          return (
+            <div
+              key={idx}
+              className="flex items-start gap-4 p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition"
+            >
+              <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-white shadow-sm flex items-center justify-center">
+                <Icon className="text-mySecondary" size={24} />
+              </div>
+              <div className="flex-1">
+                <p className="font-semibold text-gray-900 mb-1">
+                  {contact.title}
+                </p>
+                {contact.link ? (
+                  <a
+                    href={contact.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-mySecondary hover:underline"
+                  >
+                    {contact.value}
+                  </a>
+                ) : (
+                  <p className="text-gray-700">{contact.value}</p>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
   const models = [
     {
       type: "in-person" as const,
@@ -193,8 +331,8 @@ const InvestmentModelsSection = () => {
                   </div>
 
                   {/* CTA Button */}
-                  <Link
-                    href={model.cta.link}
+                  <button
+                    onClick={() => setOpenModal(model.type)}
                     className={`group w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-gradient-to-r ${model.gradient} text-white font-bold text-lg hover:shadow-lg transition-all`}
                   >
                     {model.cta.text}
@@ -202,7 +340,7 @@ const InvestmentModelsSection = () => {
                       className="group-hover:-translate-x-1 transition-transform"
                       size={20}
                     />
-                  </Link>
+                  </button>
                 </div>
               </div>
             );
@@ -241,6 +379,42 @@ const InvestmentModelsSection = () => {
             </div>
           </div>
         </div>
+
+        {/* Contact Modals/Drawers */}
+        {openModal && (
+          <>
+            {isDesktop ? (
+              <Dialog open={openModal !== null} onOpenChange={() => setOpenModal(null)}>
+                <DialogContent className="sm:max-w-[500px]">
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl font-bold text-gray-900">
+                      {contactInfo[openModal].title}
+                    </DialogTitle>
+                    <DialogDescription className="text-base text-gray-600">
+                      {contactInfo[openModal].description}
+                    </DialogDescription>
+                  </DialogHeader>
+                  {renderContactContent(openModal)}
+                </DialogContent>
+              </Dialog>
+            ) : (
+              <Drawer open={openModal !== null} onOpenChange={() => setOpenModal(null)}>
+                <DrawerContent>
+                  <DrawerHeader>
+                    <DrawerTitle className="text-2xl font-bold text-gray-900">
+                      {contactInfo[openModal].title}
+                    </DrawerTitle>
+                    <DrawerDescription className="text-base text-gray-600">
+                      {contactInfo[openModal].description}
+                    </DrawerDescription>
+                  </DrawerHeader>
+                  {renderContactContent(openModal)}
+                  <div className="h-8" />
+                </DrawerContent>
+              </Drawer>
+            )}
+          </>
+        )}
       </div>
     </section>
   );
