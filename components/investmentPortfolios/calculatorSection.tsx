@@ -121,7 +121,7 @@ const CalculatorSection = () => {
           variant: "destructive",
         });
       }
-    } catch (error) {
+    } catch {
       toast({
         title: "خطا",
         description: "خطا در ارتباط با سرور",

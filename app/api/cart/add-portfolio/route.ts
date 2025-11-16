@@ -5,7 +5,7 @@ import {
   successResponse,
   errorResponse,
   unauthorizedResponse,
-} from "@/lib/utils/api-response";
+} from "@/lib/api-response";
 
 export async function POST(req: NextRequest) {
   try {

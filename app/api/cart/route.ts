@@ -5,9 +5,9 @@ import {
   successResponse,
   errorResponse,
   unauthorizedResponse,
-} from "@/lib/utils/api-response";
+} from "@/lib/api-response";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     // Check authentication
     const session = await auth();
