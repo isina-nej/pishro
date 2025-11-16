@@ -151,6 +151,14 @@ const InvestmentModelsSection = () => {
     );
   };
 
+  // Function to scroll to calculator
+  const scrollToCalculator = () => {
+    const calculatorSection = document.getElementById("calculator-section");
+    if (calculatorSection) {
+      calculatorSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   const models = [
     {
       type: "in-person" as const,
@@ -231,7 +239,8 @@ const InvestmentModelsSection = () => {
       ],
       cta: {
         text: "شروع سرمایه‌گذاری آنلاین",
-        link: "/register",
+        link: "#calculator",
+        isScroll: true, // Flag to indicate this should scroll
       },
     },
   ];
@@ -324,7 +333,11 @@ const InvestmentModelsSection = () => {
 
                   {/* CTA Button */}
                   <button
-                    onClick={() => setOpenModal(model.type)}
+                    onClick={() =>
+                      model.type === "online"
+                        ? scrollToCalculator()
+                        : setOpenModal(model.type)
+                    }
                     className={`group w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-gradient-to-r ${model.gradient} text-white font-bold text-lg hover:shadow-lg transition-all`}
                   >
                     {model.cta.text}

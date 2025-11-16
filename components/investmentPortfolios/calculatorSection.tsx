@@ -4,7 +4,9 @@ import { useEffect, useState, useRef, useMemo } from "react";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import CountUp from "react-countup";
-import { Wallet, Clock, BarChart3 } from "lucide-react";
+import { Wallet, Clock, BarChart3, ShoppingCart } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/lib/hooks/use-toast";
 
 const CalculatorSection = () => {
   // 🧩 stateها
@@ -14,8 +16,11 @@ const CalculatorSection = () => {
     "medium"
   );
   const [result, setResult] = useState(0);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   const prevResultRef = useRef(result);
+  const router = useRouter();
+  const { toast } = useToast();
 
   // 💰 نرخ‌های سود بر اساس نوع سبد
   const rates = useMemo(
@@ -69,6 +74,63 @@ const CalculatorSection = () => {
     arr[arr.indexOf(current) + 1] ?? current;
   const getPrev = (current: number, arr: number[]) =>
     arr[arr.indexOf(current) - 1] ?? current;
+
+  // محاسبه قیمت سبد بر اساس مبلغ و مدت
+  const calculatePortfolioPrice = () => {
+    // فرمول محاسبه قیمت:
+    // قیمت پایه = (مبلغ سرمایه‌گذاری / 1,000,000) * مدت * ضریب
+    const basePrice = (amount / 1_000_000) * duration * 50_000;
+    return Math.round(basePrice);
+  };
+
+  // افزودن به سبد خرید
+  const handleAddToCart = async () => {
+    setIsAddingToCart(true);
+    try {
+      const portfolioData = {
+        portfolioType: portfolio,
+        portfolioAmount: amount,
+        portfolioDuration: duration,
+        expectedReturn: result,
+        monthlyRate: rates[portfolio],
+        price: calculatePortfolioPrice(),
+      };
+
+      const response = await fetch("/api/cart/add-portfolio", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(portfolioData),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast({
+          title: "موفقیت",
+          description: "سبد سرمایه‌گذاری به سبد خرید اضافه شد",
+          variant: "default",
+        });
+        // Redirect to cart/checkout
+        router.push("/cart");
+      } else {
+        toast({
+          title: "خطا",
+          description: data.message || "خطا در افزودن به سبد خرید",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "خطا",
+        description: "خطا در ارتباط با سرور",
+        variant: "destructive",
+      });
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
 
   return (
     <section className="relative w-full min-h-[600px] md:min-h-screen bg-gradient-to-br from-[#152c44] via-[#1a3a54] to-[#152c44] text-white overflow-hidden">
@@ -301,6 +363,28 @@ const CalculatorSection = () => {
                   {portfolioDescription[portfolio]}
                 </p>
               </div>
+
+              {/* قیمت سبد */}
+              <div className="mt-4 w-full bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-xl px-4 py-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-blue-900">
+                    هزینه سبد:
+                  </span>
+                  <span className="text-lg font-bold text-blue-700">
+                    {formatNumber(calculatePortfolioPrice())} تومان
+                  </span>
+                </div>
+              </div>
+
+              {/* دکمه افزودن به سبد خرید */}
+              <button
+                onClick={handleAddToCart}
+                disabled={isAddingToCart}
+                className="mt-4 w-full bg-gradient-to-r from-mySecondary to-orange-500 hover:from-mySecondary/90 hover:to-orange-600 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+              >
+                <ShoppingCart size={20} />
+                {isAddingToCart ? "در حال افزودن..." : "افزودن به سبد خرید"}
+              </button>
             </div>
           </div>
         </div>

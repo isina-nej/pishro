@@ -1,4 +1,6 @@
-import InvestmentPlansLanding from "./investmentPlansLanding";
+"use client";
+
+import { InvestmentPlansHero } from "./investmentPlansHero";
 import CalculatorSection from "@/components/investmentPortfolios/calculatorSection";
 import PortfoliosDisplay from "@/components/investmentPortfolios/portfoliosDisplay";
 import PortfolioSelectionForm from "@/components/investmentPortfolios/portfolioSelectionForm";
@@ -17,14 +19,16 @@ const InvestmentPlansPageContent = ({
 }: InvestmentPlansPageContentProps) => {
   return (
     <div>
-      {/* Landing Section from investment-plans */}
-      <InvestmentPlansLanding investmentPlansData={investmentPlansData} />
+      {/* Hero Section - New Design */}
+      <InvestmentPlansHero investmentPlansData={investmentPlansData} />
 
-      {/* Calculator Section from investment-portfolios */}
-      <CalculatorSection />
-
-      {/* Investment Models Section from investment-portfolios */}
+      {/* Investment Models Section - with scroll to calculator */}
       <InvestmentModelsSection />
+
+      {/* Calculator Section with ID for scroll targeting */}
+      <div id="calculator-section">
+        <CalculatorSection />
+      </div>
 
       {/* Portfolios Display from investment-portfolios */}
       <PortfoliosDisplay />

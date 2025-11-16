@@ -27,14 +27,15 @@ model User {
   shebaNumber  String?
   accountOwner String?
 
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  comments     Comment[]     @relation("UserComments")
-  orders       Order[]       @relation("UserOrders")
-  enrollments  Enrollment[]  @relation("UserEnrollments")
-  transactions Transaction[] @relation("UserTransactions")
-  newsComments NewsComment[] @relation("UserNewsComments")
-  quizAttempts QuizAttempt[] @relation("UserQuizAttempts")
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+  comments               Comment[]               @relation("UserComments")
+  orders                 Order[]                 @relation("UserOrders")
+  enrollments            Enrollment[]            @relation("UserEnrollments")
+  transactions           Transaction[]           @relation("UserTransactions")
+  newsComments           NewsComment[]           @relation("UserNewsComments")
+  quizAttempts           QuizAttempt[]           @relation("UserQuizAttempts")
+  investmentPortfolios   UserInvestmentPortfolio[] @relation("UserInvestmentPortfolios")
 }
 
 model TempUser {
@@ -185,11 +186,19 @@ model Transaction {
 }
 
 model OrderItem {
-  id              String @id @default(auto()) @map("_id") @db.ObjectId
-  order           Order  @relation(fields: [orderId], references: [id], name: "OrderOrderItems")
-  orderId         String @db.ObjectId
-  course          Course @relation(fields: [courseId], references: [id], name: "CourseOrderItems")
-  courseId        String @db.ObjectId
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  order           Order   @relation(fields: [orderId], references: [id], name: "OrderOrderItems")
+  orderId         String  @db.ObjectId
+
+  // Optional course (for course purchases)
+  course          Course? @relation(fields: [courseId], references: [id], name: "CourseOrderItems")
+  courseId        String? @db.ObjectId
+
+  // Investment portfolio data (for portfolio purchases)
+  portfolioType   String? // "low", "medium", "high"
+  portfolioAmount Int?    // مبلغ سرمایه‌گذاری
+  portfolioDuration Int?  // مدت سرمایه‌گذاری (ماه)
+
   price           Int
   discountPercent Int?
 }
@@ -938,4 +947,47 @@ model HomeMiniSlider {
   updatedAt DateTime @updatedAt
 
   @@index([published, row, order])
+}
+
+// مدل برای ذخیره سبدهای سرمایه‌گذاری خریداری شده توسط کاربران
+model UserInvestmentPortfolio {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // User relation
+  user   User   @relation("UserInvestmentPortfolios", fields: [userId], references: [id], onDelete: Cascade)
+  userId String @db.ObjectId
+
+  // Portfolio details
+  portfolioType     String // "low", "medium", "high"
+  portfolioAmount   Int    // مبلغ سرمایه‌گذاری
+  portfolioDuration Int    // مدت سرمایه‌گذاری (ماه)
+  expectedReturn    Float  // بازده تخمینی
+  monthlyRate       Float  // نرخ ماهیانه
+
+  // Purchase details
+  purchasePrice     Int      // قیمت پرداختی
+  orderId           String?  @db.ObjectId // ارجاع به سفارش
+  status            PortfolioStatus @default(ACTIVE)
+
+  // Dates
+  startDate    DateTime  @default(now())
+  endDate      DateTime? // تاریخ پایان سرمایه‌گذاری
+  purchasedAt  DateTime  @default(now())
+
+  // Files and data
+  excelFileUrl String? // لینک فایل اکسل
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, status])
+  @@index([status, endDate])
+}
+
+// Enum for Portfolio Status
+enum PortfolioStatus {
+  ACTIVE      // فعال
+  COMPLETED   // تکمیل شده
+  CANCELLED   // لغو شده
+  EXPIRED     // منقضی شده
 }
