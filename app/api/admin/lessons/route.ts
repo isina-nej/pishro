@@ -1,10 +1,7 @@
 // @/app/api/admin/lessons/route.ts
 import { auth } from "@/auth";
 import { NextRequest } from "next/server";
-import {
-  getAllLessons,
-  createLesson,
-} from "@/lib/services/lesson-service";
+import { getAllLessons, createLesson } from "@/lib/services/lesson-service";
 import {
   successResponse,
   errorResponse,
@@ -16,7 +13,7 @@ import {
  * GET /api/admin/lessons
  * دریافت تمام کلاس‌ها (برای ادمین)
  */
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     const session = await auth();
     if (!session?.user || session.user.role !== "ADMIN") {
@@ -47,7 +44,16 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { courseId, title, description, videoUrl, thumbnail, duration, order, published } = body;
+    const {
+      courseId,
+      title,
+      description,
+      videoUrl,
+      thumbnail,
+      duration,
+      order,
+      published,
+    } = body;
 
     // Validation
     if (!courseId || !title || !videoUrl) {

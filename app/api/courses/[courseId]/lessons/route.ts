@@ -1,11 +1,7 @@
 // @/app/api/courses/[courseId]/lessons/route.ts
 import { NextRequest } from "next/server";
 import { getLessonsByCourse } from "@/lib/services/lesson-service";
-import {
-  successResponse,
-  errorResponse,
-  ErrorCodes,
-} from "@/lib/api-response";
+import { successResponse, errorResponse, ErrorCodes } from "@/lib/api-response";
 
 interface RouteParams {
   params: Promise<{
@@ -17,12 +13,15 @@ interface RouteParams {
  * GET /api/courses/[courseId]/lessons
  * دریافت تمام کلاس‌های یک دوره
  */
-export async function GET(req: NextRequest, { params }: RouteParams) {
+export async function GET(_req: NextRequest, { params }: RouteParams) {
   try {
     const { courseId } = await params;
 
     if (!courseId) {
-      return errorResponse("شناسه دوره مشخص نشده است", ErrorCodes.VALIDATION_ERROR);
+      return errorResponse(
+        "شناسه دوره مشخص نشده است",
+        ErrorCodes.VALIDATION_ERROR
+      );
     }
 
     const lessons = await getLessonsByCourse(courseId);

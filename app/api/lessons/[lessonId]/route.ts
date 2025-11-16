@@ -21,12 +21,15 @@ interface RouteParams {
  * GET /api/lessons/[lessonId]
  * دریافت جزئیات یک کلاس
  */
-export async function GET(req: NextRequest, { params }: RouteParams) {
+export async function GET(_req: NextRequest, { params }: RouteParams) {
   try {
     const { lessonId } = await params;
 
     if (!lessonId) {
-      return errorResponse("شناسه کلاس مشخص نشده است", ErrorCodes.VALIDATION_ERROR);
+      return errorResponse(
+        "شناسه کلاس مشخص نشده است",
+        ErrorCodes.VALIDATION_ERROR
+      );
     }
 
     const lesson = await getLessonById(lessonId);
