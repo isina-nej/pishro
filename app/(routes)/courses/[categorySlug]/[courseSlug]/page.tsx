@@ -16,10 +16,10 @@ import {
   LuUsers,
   LuVideo,
   LuBookOpen,
-  LuCheck,
   LuBan,
   LuGlobe,
 } from "react-icons/lu";
+import { BsCheckCircleFill } from "react-icons/bs";
 import {
   getCourseBySlug,
   getAllCourseSlugs,
@@ -292,9 +292,9 @@ export default async function CourseDetailPage({
                     <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {course.learningGoals.map((goal, idx) => (
                         <li key={idx} className="flex items-start gap-3">
-                          <LuCheck
+                          <BsCheckCircleFill
                             className="text-green-500 flex-shrink-0 mt-1"
-                            size={20}
+                            size={22}
                           />
                           <span className="text-gray-700">{goal}</span>
                         </li>
@@ -312,9 +312,9 @@ export default async function CourseDetailPage({
                     <ul className="space-y-3">
                       {course.prerequisites.map((prereq, idx) => (
                         <li key={idx} className="flex items-start gap-3">
-                          <LuCheck
+                          <BsCheckCircleFill
                             className="text-myPrimary flex-shrink-0 mt-1"
-                            size={20}
+                            size={22}
                           />
                           <span className="text-gray-700">{prereq}</span>
                         </li>
