@@ -2,26 +2,28 @@ import { prisma } from "@/lib/prisma";
 import type { SkyRoomClass } from "@prisma/client";
 
 /**
- * دریافت تمام کلاس‌های اسکای‌روم منتشر شده
+ * دریافت لینک همایش منتشر شده
  */
-export async function getAllSkyRoomClasses() {
+export async function getSkyRoomMeetingLink() {
   try {
-    const classes = await prisma.skyRoomClass.findMany({
+    const skyroom = await prisma.skyRoomClass.findFirst({
       where: {
         published: true,
       },
-      orderBy: { order: "asc" },
+      select: {
+        meetingLink: true,
+      },
     });
 
-    return classes;
+    return skyroom?.meetingLink || null;
   } catch (error) {
-    console.error("Error fetching skyroom classes:", error);
-    return [];
+    console.error("Error fetching skyroom meeting link:", error);
+    return null;
   }
 }
 
 /**
- * دریافت یک کلاس اسکای‌روم خاص
+ * دریافت یک لینک همایش خاص (برای ادمین)
  */
 export async function getSkyRoomClassById(classId: string) {
   try {
@@ -37,12 +39,12 @@ export async function getSkyRoomClassById(classId: string) {
 }
 
 /**
- * دریافت تمام کلاس‌های اسکای‌روم (برای ادمین - بدون فیلتر published)
+ * دریافت تمام لینک‌های همایش (برای ادمین)
  */
 export async function getAllSkyRoomClassesForAdmin() {
   try {
     const classes = await prisma.skyRoomClass.findMany({
-      orderBy: [{ order: "asc" }, { createdAt: "desc" }],
+      orderBy: { createdAt: "desc" },
     });
 
     return classes;
@@ -53,36 +55,16 @@ export async function getAllSkyRoomClassesForAdmin() {
 }
 
 /**
- * ایجاد کلاس اسکای‌روم جدید (برای ادمین)
+ * ایجاد لینک همایش جدید (برای ادمین)
  */
 export async function createSkyRoomClass(data: {
-  title: string;
-  description?: string;
-  instructor?: string;
-  startDate?: Date;
-  endDate?: Date;
   meetingLink: string;
-  thumbnail?: string;
-  duration?: string;
-  capacity?: number;
-  level?: string;
-  order?: number;
   published?: boolean;
 }) {
   try {
     const skyRoomClass = await prisma.skyRoomClass.create({
       data: {
-        title: data.title,
-        description: data.description,
-        instructor: data.instructor,
-        startDate: data.startDate,
-        endDate: data.endDate,
         meetingLink: data.meetingLink,
-        thumbnail: data.thumbnail,
-        duration: data.duration,
-        capacity: data.capacity,
-        level: data.level,
-        order: data.order ?? 0,
         published: data.published ?? true,
       },
     });
@@ -95,7 +77,7 @@ export async function createSkyRoomClass(data: {
 }
 
 /**
- * به‌روزرسانی کلاس اسکای‌روم (برای ادمین)
+ * به‌روزرسانی لینک همایش (برای ادمین)
  */
 export async function updateSkyRoomClass(
   classId: string,
@@ -115,7 +97,7 @@ export async function updateSkyRoomClass(
 }
 
 /**
- * حذف کلاس اسکای‌روم (برای ادمین)
+ * حذف لینک همایش (برای ادمین)
  */
 export async function deleteSkyRoomClass(classId: string) {
   try {
