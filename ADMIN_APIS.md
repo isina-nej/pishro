@@ -257,6 +257,42 @@
 
 ---
 
+### Skyroom Classes (کلاس‌های آنلاین/همایش‌ها)
+
+#### `GET /api/admin/skyroom-classes`
+
+لیست تمام لینک‌های همایش/کلاس آنلاین
+
+**Response:** `SuccessResponse<SkyRoomClass[]>`
+
+#### `POST /api/admin/skyroom-classes`
+
+ایجاد لینک همایش جدید
+
+**Body:**
+
+```typescript
+{
+  meetingLink: string (required, must be valid URL)
+  published?: boolean (default: false)
+}
+```
+
+**Response:** `SuccessResponse<SkyRoomClass>`
+
+**Validation:**
+
+- لینک همایش الزامی است
+- باید فرمت URL معتبر داشته باشد
+
+#### `GET /api/admin/skyroom-classes/[id]`
+
+#### `PATCH /api/admin/skyroom-classes/[id]`
+
+#### `DELETE /api/admin/skyroom-classes/[id]`
+
+---
+
 ## 3. آزمون‌ها (Quizzes & Assessment)
 
 ### Quizzes (آزمون‌ها)
@@ -636,6 +672,36 @@
 
 #### `DELETE /api/admin/newsletter-subscribers/[id]`
 
+#### `POST /api/admin/newsletter-subscribers/broadcast-sms`
+
+ارسال پیامک گروهی به تمام اعضای خبرنامه
+
+**Body:**
+
+```typescript
+{
+  message: string (required, max: 500 chars)
+}
+```
+
+**Response:**
+
+```typescript
+{
+  total: number        // تعداد کل اعضا
+  success: number      // تعداد ارسال موفق
+  failed: number       // تعداد ارسال ناموفق
+  failedPhones: string[]  // شماره‌های ناموفق
+  message: string      // پیام خلاصه
+}
+```
+
+**نکات:**
+
+- فقط ادمین دسترسی دارد
+- حداکثر طول پیام: 500 کاراکتر
+- دیلی 200ms بین هر ارسال برای جلوگیری از اورلود سرویس SMS
+
 ---
 
 ### FAQs (سوالات متداول)
@@ -886,8 +952,8 @@ ValidationErrorResponse = {
 
 ---
 
-**تاریخ آخرین بروزرسانی:** 2025-11-16
+**تاریخ آخرین بروزرسانی:** 2025-11-17
 
-**تعداد کل APIها:** 63+ endpoint
+**تعداد کل APIها:** 65+ endpoint
 
-**نسخه:** 1.0.0
+**نسخه:** 1.0.1
