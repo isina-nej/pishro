@@ -217,7 +217,7 @@ export const InvestmentPlansHero = ({
                 iconBg: "bg-amber-500/20",
                 border: "border-amber-400/30",
               },
-            ].map((item, _index) => (
+            ].map((item) => (
               <motion.div
                 key={item.label}
                 variants={itemVariants}

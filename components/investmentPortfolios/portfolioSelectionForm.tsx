@@ -161,13 +161,19 @@ const PortfolioSelectionForm = () => {
   return (
     <section
       id="portfolio-selection-form"
-      className="w-full bg-white py-16 md:py-24"
+      className="w-full bg-gradient-to-b from-white via-mySecondary/5 to-white py-16 md:py-24 relative overflow-hidden"
     >
-      <div className="container-xl">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            سفارشی‌سازی سبد سرمایه‌ گذاری
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-24 -right-24 w-96 h-96 bg-mySecondary/10 rounded-full blur-3xl" />
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-myPrimary/10 rounded-full blur-3xl" />
+      </div>
+
+      <div className="container-xl relative z-10">
+        {/* Header with animation */}
+        <div className="text-center mb-12 animate-in fade-in slide-in-from-top-4 duration-700">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-l from-mySecondary via-myPrimary to-mySecondary bg-clip-text text-transparent mb-4">
+            سفارشی‌سازی سبد سرمایه‌گذاری
           </h2>
           <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
             اطلاعات سرمایه‌ گذاری خود را وارد کنید تا بهترین سبد را برای شما
@@ -176,13 +182,15 @@ const PortfolioSelectionForm = () => {
         </div>
 
         <div className="w-full">
-          <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-6 md:p-10 shadow-xl border border-gray-200">
+          <div className="bg-gradient-to-br from-white via-gray-50/50 to-white rounded-3xl p-6 md:p-10 shadow-2xl border border-gray-200/50 backdrop-blur-sm hover:shadow-mySecondary/10 transition-shadow duration-500">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* مبلغ سرمایه‌ گذاری */}
-              <div className="bg-white rounded-2xl border border-gray-200 p-6">
+              {/* مبلغ سرمایه‌گذاری */}
+              <div className="group bg-white rounded-2xl border border-gray-200 p-6 hover:shadow-lg hover:shadow-mySecondary/10 hover:border-mySecondary/30 transition-all duration-300 hover:scale-[1.02]">
                 <p className="text-center text-lg font-bold mb-6 flex items-center justify-center gap-2 text-gray-900">
-                  <Wallet size={24} className="text-mySecondary" />
-                  مبلغ سرمایه‌ گذاری
+                  <div className="p-2 bg-mySecondary/10 rounded-xl group-hover:bg-mySecondary/20 transition-colors">
+                    <Wallet size={24} className="text-mySecondary" />
+                  </div>
+                  مبلغ سرمایه‌گذاری
                 </p>
 
                 <div className="flex items-start justify-between gap-4 mb-4">
@@ -190,7 +198,7 @@ const PortfolioSelectionForm = () => {
                     onClick={() =>
                       setAmount((prev) => getNext(prev, amountSteps))
                     }
-                    className="size-10 rounded-full bg-mySecondary/10 hover:bg-mySecondary/20 text-mySecondary text-2xl font-bold flex items-center justify-center active:scale-95 transition"
+                    className="size-12 rounded-full bg-gradient-to-br from-mySecondary/10 to-mySecondary/20 hover:from-mySecondary/20 hover:to-mySecondary/30 text-mySecondary text-2xl font-bold flex items-center justify-center active:scale-90 transition-all duration-200 shadow-md hover:shadow-lg hover:shadow-mySecondary/20"
                   >
                     <span className="mt-1">+</span>
                   </button>
@@ -207,18 +215,24 @@ const PortfolioSelectionForm = () => {
                       trackStyle={{
                         background:
                           "linear-gradient(90deg, rgb(244,184,150) 0%, rgb(218,222,241) 100%)",
-                        height: 6,
+                        height: 8,
+                        borderRadius: 4,
                       }}
-                      railStyle={{ backgroundColor: "#DADEF1", height: 6 }}
+                      railStyle={{
+                        backgroundColor: "#DADEF1",
+                        height: 8,
+                        borderRadius: 4,
+                      }}
                       handleStyle={{
-                        borderColor: "#aaa",
+                        borderColor: "#F4B896",
                         backgroundColor: "#fff",
-                        width: 24,
-                        height: 24,
-                        marginTop: -9,
+                        width: 28,
+                        height: 28,
+                        marginTop: -10,
+                        boxShadow: "0 2px 8px rgba(244, 184, 150, 0.4)",
                       }}
                     />
-                    <div className="mx-2 mt-3 flex flex-row-reverse justify-between text-xs text-gray-500">
+                    <div className="mx-2 mt-4 flex flex-row-reverse justify-between text-xs text-gray-500 font-medium">
                       <p>۱۰ میلیون</p>
                       <p>۱۰ میلیارد</p>
                     </div>
@@ -228,23 +242,27 @@ const PortfolioSelectionForm = () => {
                     onClick={() =>
                       setAmount((prev) => getPrev(prev, amountSteps))
                     }
-                    className="size-10 rounded-full bg-mySecondary/10 hover:bg-mySecondary/20 text-mySecondary text-2xl font-bold flex items-center justify-center active:scale-95 transition"
+                    className="size-12 rounded-full bg-gradient-to-br from-mySecondary/10 to-mySecondary/20 hover:from-mySecondary/20 hover:to-mySecondary/30 text-mySecondary text-2xl font-bold flex items-center justify-center active:scale-90 transition-all duration-200 shadow-md hover:shadow-lg hover:shadow-mySecondary/20"
                   >
                     <span className="mt-1">−</span>
                   </button>
                 </div>
 
-                <p className="mt-4 text-center text-xl font-bold text-gray-900">
-                  {formatNumber(amount)}{" "}
-                  <span className="font-normal text-gray-500">تومان</span>
-                </p>
+                <div className="mt-6 text-center p-4 bg-gradient-to-r from-mySecondary/5 via-transparent to-mySecondary/5 rounded-xl">
+                  <p className="text-2xl md:text-3xl font-bold bg-gradient-to-l from-mySecondary to-myPrimary bg-clip-text text-transparent">
+                    {formatNumber(amount)}{" "}
+                    <span className="font-normal text-gray-500 text-lg">تومان</span>
+                  </p>
+                </div>
               </div>
 
-              {/* مدت سرمایه‌ گذاری */}
-              <div className="bg-white rounded-2xl border border-gray-200 p-6">
+              {/* مدت سرمایه‌گذاری */}
+              <div className="group bg-white rounded-2xl border border-gray-200 p-6 hover:shadow-lg hover:shadow-myPrimary/10 hover:border-myPrimary/30 transition-all duration-300 hover:scale-[1.02]">
                 <p className="text-center text-lg font-bold mb-6 flex items-center justify-center gap-2 text-gray-900">
-                  <Clock size={24} className="text-mySecondary" />
-                  مدت سرمایه‌ گذاری
+                  <div className="p-2 bg-myPrimary/10 rounded-xl group-hover:bg-myPrimary/20 transition-colors">
+                    <Clock size={24} className="text-myPrimary" />
+                  </div>
+                  مدت سرمایه‌گذاری
                 </p>
 
                 <div className="grid grid-cols-3 gap-2">
@@ -252,10 +270,10 @@ const PortfolioSelectionForm = () => {
                     <button
                       key={option.value}
                       onClick={() => setDuration(option.value)}
-                      className={`px-4 py-3 rounded-xl border-2 transition-all font-medium ${
+                      className={`px-4 py-3 rounded-xl border-2 transition-all duration-300 font-medium relative overflow-hidden ${
                         duration === option.value
-                          ? "bg-mySecondary text-white border-mySecondary shadow-lg scale-105"
-                          : "bg-white text-gray-700 border-gray-200 hover:border-mySecondary/50"
+                          ? "bg-gradient-to-br from-myPrimary to-myPrimary/80 text-white border-myPrimary shadow-lg shadow-myPrimary/30 scale-105"
+                          : "bg-white text-gray-700 border-gray-200 hover:border-myPrimary/50 hover:shadow-md hover:scale-105"
                       }`}
                     >
                       {option.label}
@@ -263,17 +281,21 @@ const PortfolioSelectionForm = () => {
                   ))}
                 </div>
 
-                <p className="mt-6 text-center text-xl font-bold text-gray-900">
-                  {durationOptions.find((opt) => opt.value === duration)
-                    ?.label || "۶ ماه"}
-                </p>
+                <div className="mt-6 text-center p-4 bg-gradient-to-r from-myPrimary/5 via-transparent to-myPrimary/5 rounded-xl">
+                  <p className="text-2xl md:text-3xl font-bold bg-gradient-to-l from-myPrimary to-mySecondary bg-clip-text text-transparent">
+                    {durationOptions.find((opt) => opt.value === duration)
+                      ?.label || "۶ ماه"}
+                  </p>
+                </div>
               </div>
             </div>
 
             {/* سطح ریسک */}
-            <div className="mt-6 bg-white rounded-2xl border border-gray-200 p-6">
+            <div className="mt-6 group bg-white rounded-2xl border border-gray-200 p-6 hover:shadow-lg hover:shadow-purple-500/10 hover:border-purple-500/30 transition-all duration-300">
               <p className="text-center text-lg font-bold mb-6 flex items-center justify-center gap-2 text-gray-900">
-                <BarChart3 size={24} className="text-mySecondary" />
+                <div className="p-2 bg-purple-500/10 rounded-xl group-hover:bg-purple-500/20 transition-colors">
+                  <BarChart3 size={24} className="text-purple-500" />
+                </div>
                 سطح ریسک‌پذیری
               </p>
 
@@ -282,12 +304,13 @@ const PortfolioSelectionForm = () => {
                   onClick={() =>
                     setRiskLevel((prev) => Math.max(0, prev - 1) as 0 | 1 | 2)
                   }
-                  className="size-10 rounded-full bg-mySecondary/10 hover:bg-mySecondary/20 text-mySecondary text-2xl font-bold flex items-center justify-center active:scale-95 transition"
+                  disabled={riskLevel === 0}
+                  className="size-12 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 text-gray-700 text-2xl font-bold flex items-center justify-center active:scale-90 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span className="mt-1">−</span>
                 </button>
 
-                <div className="flex-1">
+                <div className="flex-1 px-2">
                   <Slider
                     min={0}
                     max={2}
@@ -295,20 +318,40 @@ const PortfolioSelectionForm = () => {
                     value={riskLevel}
                     onChange={(val) => setRiskLevel(Number(val) as 0 | 1 | 2)}
                     marks={{
-                      0: { label: "کم", style: { color: "#16a34a" } },
-                      1: { label: "متوسط", style: { color: "#ea580c" } },
-                      2: { label: "بالا", style: { color: "#dc2626" } },
+                      0: {
+                        label: "کم",
+                        style: { color: "#16a34a", fontWeight: 600 },
+                      },
+                      1: {
+                        label: "متوسط",
+                        style: { color: "#ea580c", fontWeight: 600 },
+                      },
+                      2: {
+                        label: "بالا",
+                        style: { color: "#dc2626", fontWeight: 600 },
+                      },
                     }}
                     trackStyle={{
                       background:
                         riskLevel === 0
-                          ? "#16a34a"
+                          ? "linear-gradient(90deg, #16a34a 0%, #22c55e 100%)"
                           : riskLevel === 1
-                          ? "#ea580c"
-                          : "#dc2626",
-                      height: 6,
+                          ? "linear-gradient(90deg, #ea580c 0%, #f97316 100%)"
+                          : "linear-gradient(90deg, #dc2626 0%, #ef4444 100%)",
+                      height: 8,
+                      borderRadius: 4,
+                      boxShadow:
+                        riskLevel === 0
+                          ? "0 2px 8px rgba(22, 163, 74, 0.3)"
+                          : riskLevel === 1
+                          ? "0 2px 8px rgba(234, 88, 12, 0.3)"
+                          : "0 2px 8px rgba(220, 38, 38, 0.3)",
                     }}
-                    railStyle={{ backgroundColor: "#e5e7eb", height: 6 }}
+                    railStyle={{
+                      backgroundColor: "#e5e7eb",
+                      height: 8,
+                      borderRadius: 4,
+                    }}
                     handleStyle={{
                       borderColor:
                         riskLevel === 0
@@ -317,9 +360,15 @@ const PortfolioSelectionForm = () => {
                           ? "#ea580c"
                           : "#dc2626",
                       backgroundColor: "#fff",
-                      width: 24,
-                      height: 24,
-                      marginTop: -9,
+                      width: 28,
+                      height: 28,
+                      marginTop: -10,
+                      boxShadow:
+                        riskLevel === 0
+                          ? "0 2px 12px rgba(22, 163, 74, 0.4)"
+                          : riskLevel === 1
+                          ? "0 2px 12px rgba(234, 88, 12, 0.4)"
+                          : "0 2px 12px rgba(220, 38, 38, 0.4)",
                     }}
                   />
                 </div>
@@ -328,15 +377,16 @@ const PortfolioSelectionForm = () => {
                   onClick={() =>
                     setRiskLevel((prev) => Math.min(2, prev + 1) as 0 | 1 | 2)
                   }
-                  className="size-10 rounded-full bg-mySecondary/10 hover:bg-mySecondary/20 text-mySecondary text-2xl font-bold flex items-center justify-center active:scale-95 transition"
+                  disabled={riskLevel === 2}
+                  className="size-12 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 text-gray-700 text-2xl font-bold flex items-center justify-center active:scale-90 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span className="mt-1">+</span>
                 </button>
               </div>
 
-              <div className="mt-6 text-center">
+              <div className="mt-8 text-center">
                 <span
-                  className={`inline-block px-6 py-3 rounded-xl border-2 font-bold text-lg ${getRiskColor(
+                  className={`inline-block px-8 py-4 rounded-2xl border-2 font-bold text-xl shadow-lg transition-all duration-300 ${getRiskColor(
                     riskLevel
                   )}`}
                 >
@@ -346,39 +396,67 @@ const PortfolioSelectionForm = () => {
             </div>
 
             {/* نتیجه و دکمه افزودن به سبد */}
-            <div className="mt-6 bg-gradient-to-br from-mySecondary/10 to-mySecondary/5 rounded-2xl border-2 border-mySecondary/20 p-6">
-              <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                <div className="flex-1 text-center md:text-right">
-                  <p className="text-sm text-gray-600 mb-2">هزینه تخمینی سبد</p>
-                  <p className="text-2xl md:text-3xl font-bold text-mySecondary">
+            <div className="mt-6 relative overflow-hidden bg-gradient-to-br from-mySecondary/10 via-myPrimary/5 to-mySecondary/10 rounded-3xl border-2 border-mySecondary/30 p-8 shadow-xl hover:shadow-2xl transition-all duration-500">
+              {/* Decorative background pattern */}
+              <div className="absolute inset-0 opacity-5">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-mySecondary rounded-full blur-2xl" />
+                <div className="absolute bottom-0 left-0 w-32 h-32 bg-myPrimary rounded-full blur-2xl" />
+              </div>
+
+              <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                <div className="flex-1 text-center md:text-right space-y-3">
+                  <p className="text-sm font-medium text-gray-600 mb-2">
+                    💰 هزینه تخمینی سبد
+                  </p>
+                  <p className="text-3xl md:text-4xl font-bold bg-gradient-to-l from-mySecondary to-myPrimary bg-clip-text text-transparent">
                     {formatNumber(estimatedCost)}{" "}
-                    <span className="text-base text-gray-600">تومان</span>
+                    <span className="text-lg text-gray-600">تومان</span>
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    بازده تخمینی: {formatNumber(expectedReturn)} تومان
-                  </p>
-                  <p className="text-start text-xs text-gray-500 mt-4">
-                    نرخ ماهیانه: {(monthlyRate * 100).toFixed(0)}٪ | مدت:{" "}
-                    {duration} ماه | نوع: {getRiskLabel(riskLevel)}
-                  </p>
+                  <div className="flex items-center justify-center md:justify-start gap-2 text-sm text-gray-600">
+                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full font-medium">
+                      📈 بازده: {formatNumber(expectedReturn)} تومان
+                    </span>
+                  </div>
                 </div>
 
                 <button
                   onClick={handleAddToCart}
                   disabled={isLoading || isInCart}
-                  className={`w-full md:w-auto px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 ${
+                  className={`group relative w-full md:w-auto px-10 py-5 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden ${
                     isInCart
                       ? "bg-gray-400 text-white"
-                      : "bg-mySecondary hover:bg-mySecondary/90 text-white"
+                      : "bg-gradient-to-r from-mySecondary to-myPrimary hover:from-myPrimary hover:to-mySecondary text-white active:scale-95"
                   }`}
                 >
-                  <ShoppingCart size={24} />
+                  {/* Button glow effect */}
+                  {!isInCart && !isLoading && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                  )}
+
+                  <ShoppingCart
+                    size={24}
+                    className={!isInCart && !isLoading ? "animate-bounce" : ""}
+                  />
                   {isLoading
                     ? "در حال افزودن..."
                     : isInCart
-                    ? "در سبد خرید"
+                    ? "✓ در سبد خرید"
                     : "افزودن به سبد خرید"}
                 </button>
+              </div>
+
+              <div className="relative z-10 mt-6 pt-6 border-t border-gray-300/50">
+                <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-600">
+                  <span className="px-3 py-1 bg-white/60 backdrop-blur-sm rounded-full font-medium">
+                    📊 نرخ ماهیانه: {(monthlyRate * 100).toFixed(0)}٪
+                  </span>
+                  <span className="px-3 py-1 bg-white/60 backdrop-blur-sm rounded-full font-medium">
+                    ⏱️ مدت: {duration} ماه
+                  </span>
+                  <span className="px-3 py-1 bg-white/60 backdrop-blur-sm rounded-full font-medium">
+                    🎯 ریسک: {getRiskLabel(riskLevel)}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
