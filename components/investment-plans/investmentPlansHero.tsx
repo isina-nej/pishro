@@ -1,9 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Wallet, TrendingUp, Shield, BarChart3 } from "lucide-react";
+import { Wallet, TrendingUp, Shield, BarChart3, ArrowDown, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { InvestmentPlans, InvestmentPlan, InvestmentTag } from "@prisma/client";
+import { Button } from "@/components/ui/button";
 
 interface InvestmentPlansHeroProps {
   investmentPlansData: InvestmentPlans & {
@@ -23,79 +24,260 @@ export const InvestmentPlansHero = ({
     maxReturn: 11, // درصد بازدهی حداکثر
   };
 
+  const scrollToPortfolios = () => {
+    const element = document.getElementById("portfolio-selection");
+    element?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: [0.22, 1, 0.36, 1],
+      },
+    },
+  };
+
+  const floatAnimation = {
+    y: [0, -20, 0],
+    transition: {
+      duration: 6,
+      repeat: Infinity,
+      ease: "easeInOut",
+    },
+  };
+
   return (
-    <section className="relative overflow-hidden pb-32 pt-36 text-white">
-      {/* Background Image */}
+    <section className="relative overflow-hidden pb-20 pt-28 text-white min-h-[90vh] flex items-center">
+      {/* Background Image with Parallax Effect */}
       <div className="absolute inset-0">
-        <Image
-          src={investmentPlansData.image || "/images/investment-plans.jpg"}
-          alt="سبدهای سرمایه‌گذاری"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/90 via-slate-900/70 to-slate-900/90" />
+        <motion.div
+          initial={{ scale: 1.1 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+          className="h-full w-full"
+        >
+          <Image
+            src={investmentPlansData.image || "/images/investment-plans.jpg"}
+            alt="سبدهای سرمایه‌گذاری"
+            fill
+            className="object-cover"
+            priority
+          />
+        </motion.div>
+        {/* Enhanced Gradient Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-950/95 via-slate-900/85 to-slate-950/95" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
       </div>
 
-      {/* Floating Elements for depth */}
-      <div className="absolute -left-10 top-24 h-64 w-64 rounded-full bg-emerald-500/20 blur-3xl" />
-      <div className="absolute -right-16 bottom-10 h-72 w-72 rounded-full bg-blue-500/20 blur-3xl" />
+      {/* Animated Floating Elements */}
+      <motion.div
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.3, 0.5, 0.3],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        className="absolute -top-20 -right-20 h-96 w-96 rounded-full bg-gradient-to-br from-emerald-500/30 to-teal-500/30 blur-3xl"
+      />
+      <motion.div
+        animate={{
+          scale: [1, 1.3, 1],
+          opacity: [0.2, 0.4, 0.2],
+        }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 1,
+        }}
+        className="absolute -bottom-32 -left-32 h-[500px] w-[500px] rounded-full bg-gradient-to-tr from-blue-500/25 to-cyan-500/25 blur-3xl"
+      />
+      <motion.div
+        animate={{
+          scale: [1, 1.1, 1],
+          opacity: [0.15, 0.3, 0.15],
+        }}
+        transition={{
+          duration: 7,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 2,
+        }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-full bg-gradient-to-r from-violet-500/20 to-purple-500/20 blur-3xl"
+      />
 
-      <div className="container-xl relative z-10 flex flex-col gap-10">
-        <div className="max-w-3xl space-y-6">
-          <span className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-4 py-1 text-sm font-medium text-slate-100">
-            سبدهای سرمایه‌گذاری پیشرو
-          </span>
-          <h1 className="text-4xl font-extrabold !leading-tight md:text-5xl">
-            {investmentPlansData.title}
-          </h1>
-          <p className="text-base text-slate-200 md:text-lg">
-            {investmentPlansData.description}
-          </p>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            {
-              label: "نوع سبد",
-              value: stats.totalPlans,
-              icon: <BarChart3 className="h-5 w-5" />,
-            },
-            {
-              label: "حداقل سرمایه (میلیون)",
-              value: stats.minInvestment,
-              icon: <Wallet className="h-5 w-5" />,
-            },
-            {
-              label: "حداکثر بازدهی",
-              value: `${stats.maxReturn}٪`,
-              icon: <TrendingUp className="h-5 w-5" />,
-            },
-            {
-              label: "تضمین سرمایه",
-              value: "100٪",
-              icon: <Shield className="h-5 w-5" />,
-            },
-          ].map((item) => (
-            <motion.div
-              key={item.label}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              viewport={{ once: true }}
-              className="flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 px-5 py-4 backdrop-blur"
-            >
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-white">
-                {item.icon}
+      <div className="container-xl relative z-10">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="flex flex-col gap-12"
+        >
+          {/* Header Section */}
+          <div className="max-w-4xl mx-auto text-center space-y-8">
+            <motion.div variants={itemVariants} className="flex justify-center">
+              <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-6 py-2.5 text-sm font-medium text-emerald-300 shadow-lg shadow-emerald-500/10 backdrop-blur-sm">
+                <Sparkles className="h-4 w-4" />
+                سبدهای سرمایه‌گذاری پیشرو
               </span>
-              <div className="flex flex-col">
-                <span className="text-lg font-semibold">{item.value}</span>
-                <span className="text-sm text-slate-200">{item.label}</span>
-              </div>
             </motion.div>
-          ))}
-        </div>
+
+            <motion.h1
+              variants={itemVariants}
+              className="text-5xl font-black !leading-tight md:text-7xl bg-gradient-to-b from-white via-white to-white/70 bg-clip-text text-transparent"
+            >
+              {investmentPlansData.title}
+            </motion.h1>
+
+            <motion.p
+              variants={itemVariants}
+              className="text-lg text-slate-300 md:text-xl max-w-2xl mx-auto leading-relaxed"
+            >
+              {investmentPlansData.description}
+            </motion.p>
+
+            <motion.div variants={itemVariants}>
+              <Button
+                onClick={scrollToPortfolios}
+                size="lg"
+                className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-xl shadow-emerald-500/25 hover:shadow-2xl hover:shadow-emerald-500/40 transition-all duration-300 px-8 py-6 text-lg font-semibold rounded-2xl group"
+              >
+                شروع سرمایه‌گذاری
+                <ArrowDown className="mr-2 h-5 w-5 group-hover:translate-y-1 transition-transform" />
+              </Button>
+            </motion.div>
+          </div>
+
+          {/* Stats Cards */}
+          <motion.div
+            variants={containerVariants}
+            className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4 max-w-6xl mx-auto w-full"
+          >
+            {[
+              {
+                label: "نوع سبد",
+                value: stats.totalPlans,
+                icon: <BarChart3 className="h-6 w-6" />,
+                gradient: "from-violet-500/20 to-purple-500/20",
+                iconBg: "bg-violet-500/20",
+                border: "border-violet-400/30",
+              },
+              {
+                label: "حداقل سرمایه (میلیون)",
+                value: stats.minInvestment,
+                icon: <Wallet className="h-6 w-6" />,
+                gradient: "from-blue-500/20 to-cyan-500/20",
+                iconBg: "bg-blue-500/20",
+                border: "border-blue-400/30",
+              },
+              {
+                label: "حداکثر بازدهی",
+                value: `${stats.maxReturn}٪`,
+                icon: <TrendingUp className="h-6 w-6" />,
+                gradient: "from-emerald-500/20 to-teal-500/20",
+                iconBg: "bg-emerald-500/20",
+                border: "border-emerald-400/30",
+              },
+              {
+                label: "تضمین سرمایه",
+                value: "100٪",
+                icon: <Shield className="h-6 w-6" />,
+                gradient: "from-amber-500/20 to-orange-500/20",
+                iconBg: "bg-amber-500/20",
+                border: "border-amber-400/30",
+              },
+            ].map((item, index) => (
+              <motion.div
+                key={item.label}
+                variants={itemVariants}
+                whileHover={{
+                  scale: 1.05,
+                  y: -8,
+                  transition: { duration: 0.3 },
+                }}
+                className={`group relative overflow-hidden rounded-3xl border ${item.border} bg-gradient-to-br ${item.gradient} p-6 backdrop-blur-xl shadow-xl hover:shadow-2xl transition-all duration-300`}
+              >
+                {/* Shine effect on hover */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+
+                <div className="relative flex flex-col gap-4">
+                  <span
+                    className={`flex h-14 w-14 items-center justify-center rounded-2xl ${item.iconBg} text-white shadow-lg backdrop-blur-sm`}
+                  >
+                    {item.icon}
+                  </span>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-3xl font-bold text-white">
+                      {item.value}
+                    </span>
+                    <span className="text-sm text-slate-300 font-medium">
+                      {item.label}
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.div>
       </div>
+
+      {/* Scroll Indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5, duration: 1 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
+      >
+        <motion.div
+          animate={floatAnimation}
+          className="flex flex-col items-center gap-2 cursor-pointer"
+          onClick={scrollToPortfolios}
+        >
+          <span className="text-xs text-slate-400 font-medium">مشاهده سبدها</span>
+          <motion.div
+            animate={{
+              y: [0, 8, 0],
+            }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="h-10 w-6 rounded-full border-2 border-white/30 flex items-start justify-center p-1"
+          >
+            <motion.div
+              animate={{
+                opacity: [0, 1, 0],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="h-2 w-2 rounded-full bg-white"
+            />
+          </motion.div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 };
