@@ -143,7 +143,7 @@ const UserLevelSection = ({ categorySlug }: UserLevelSectionProps) => {
         <DialogContent className="max-w-full sm:max-w-2xl md:max-w-3xl mx-4">
           <DialogHeader>
             <DialogTitle className="rtl text-lg sm:text-xl md:text-2xl">
-              {quiz?.title || "آزمون تعیین سطح سرمایه‌گذاری"}
+              {quiz?.title || "آزمون تعیین سطح سرمایه‌ گذاری"}
             </DialogTitle>
             {quiz?.description && (
               <p className="text-sm text-gray-600 mt-2">{quiz.description}</p>
@@ -153,7 +153,9 @@ const UserLevelSection = ({ categorySlug }: UserLevelSectionProps) => {
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
               <FaSpinner className="animate-spin text-mySecondary text-3xl" />
-              <span className="mr-3 text-gray-600">در حال بارگذاری آزمون...</span>
+              <span className="mr-3 text-gray-600">
+                در حال بارگذاری آزمون...
+              </span>
             </div>
           ) : error ? (
             <div className="text-center py-8 text-red-600">
@@ -276,7 +278,9 @@ const UserLevelSection = ({ categorySlug }: UserLevelSectionProps) => {
                 <Button
                   onClick={handleSubmit}
                   size="lg"
-                  disabled={!allQuestionsAnswered || submitQuizMutation.isPending}
+                  disabled={
+                    !allQuestionsAnswered || submitQuizMutation.isPending
+                  }
                   className="bg-mySecondary px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base disabled:opacity-50"
                   aria-label="تعیین سطح"
                 >

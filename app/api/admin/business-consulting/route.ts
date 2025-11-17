@@ -63,7 +63,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.error("Error fetching investment consulting pages:", error);
     return errorResponse(
-      "خطا در دریافت صفحات مشاوره سرمایه‌گذاری",
+      "خطا در دریافت صفحات مشاوره سرمایه‌ گذاری",
       ErrorCodes.DATABASE_ERROR
     );
   }
@@ -132,11 +132,14 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return createdResponse(item, "صفحه مشاوره سرمایه‌گذاری با موفقیت ایجاد شد");
+    return createdResponse(
+      item,
+      "صفحه مشاوره سرمایه‌ گذاری با موفقیت ایجاد شد"
+    );
   } catch (error) {
     console.error("Error creating investment consulting page:", error);
     return errorResponse(
-      "خطا در ایجاد صفحه مشاوره سرمایه‌گذاری",
+      "خطا در ایجاد صفحه مشاوره سرمایه‌ گذاری",
       ErrorCodes.DATABASE_ERROR
     );
   }

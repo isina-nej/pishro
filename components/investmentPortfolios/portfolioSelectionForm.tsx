@@ -124,7 +124,7 @@ const PortfolioSelectionForm = () => {
   // افزودن به سبد خرید
   const handleAddToCart = async () => {
     if (isInCart) {
-      toast.error("این سبد سرمایه‌گذاری قبلاً به سبد خرید اضافه شده است");
+      toast.error("این سبد سرمایه‌ گذاری قبلاً به سبد خرید اضافه شده است");
       return;
     }
 
@@ -145,7 +145,7 @@ const PortfolioSelectionForm = () => {
       // افزودن به zustand store (برای نمایش فوری در سبد خرید)
       addToCart(portfolioItem);
 
-      toast.success("سبد سرمایه‌گذاری با موفقیت به سبد خرید اضافه شد 🛒");
+      toast.success("سبد سرمایه‌ گذاری با موفقیت به سبد خرید اضافه شد 🛒");
     } catch (error) {
       const errorMessage =
         (error as { response?: { data?: { message?: string } } })?.response
@@ -167,10 +167,10 @@ const PortfolioSelectionForm = () => {
         {/* Header */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            سفارشی‌سازی سبد سرمایه‌گذاری
+            سفارشی‌سازی سبد سرمایه‌ گذاری
           </h2>
           <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-            اطلاعات سرمایه‌گذاری خود را وارد کنید تا بهترین سبد را برای شما
+            اطلاعات سرمایه‌ گذاری خود را وارد کنید تا بهترین سبد را برای شما
             انتخاب کنیم
           </p>
         </div>
@@ -178,11 +178,11 @@ const PortfolioSelectionForm = () => {
         <div className="w-full">
           <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-6 md:p-10 shadow-xl border border-gray-200">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* مبلغ سرمایه‌گذاری */}
+              {/* مبلغ سرمایه‌ گذاری */}
               <div className="bg-white rounded-2xl border border-gray-200 p-6">
                 <p className="text-center text-lg font-bold mb-6 flex items-center justify-center gap-2 text-gray-900">
                   <Wallet size={24} className="text-mySecondary" />
-                  مبلغ سرمایه‌گذاری
+                  مبلغ سرمایه‌ گذاری
                 </p>
 
                 <div className="flex items-start justify-between gap-4 mb-4">
@@ -240,11 +240,11 @@ const PortfolioSelectionForm = () => {
                 </p>
               </div>
 
-              {/* مدت سرمایه‌گذاری */}
+              {/* مدت سرمایه‌ گذاری */}
               <div className="bg-white rounded-2xl border border-gray-200 p-6">
                 <p className="text-center text-lg font-bold mb-6 flex items-center justify-center gap-2 text-gray-900">
                   <Clock size={24} className="text-mySecondary" />
-                  مدت سرمایه‌گذاری
+                  مدت سرمایه‌ گذاری
                 </p>
 
                 <div className="grid grid-cols-3 gap-2">

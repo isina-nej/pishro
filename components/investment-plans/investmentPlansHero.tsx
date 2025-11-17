@@ -86,7 +86,7 @@ export const InvestmentPlansHero = ({
         >
           <Image
             src={investmentPlansData.image || "/images/investment-plans.jpg"}
-            alt="سبدهای سرمایه‌گذاری"
+            alt="سبدهای سرمایه‌ گذاری"
             fill
             className="object-cover"
             priority
@@ -149,7 +149,7 @@ export const InvestmentPlansHero = ({
             <motion.div variants={itemVariants} className="flex justify-center">
               <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-6 py-2.5 text-sm font-medium text-emerald-300 shadow-lg shadow-emerald-500/10 backdrop-blur-sm">
                 <Sparkles className="h-4 w-4" />
-                سبدهای سرمایه‌گذاری پیشرو
+                سبدهای سرمایه‌ گذاری پیشرو
               </span>
             </motion.div>
 
@@ -173,7 +173,7 @@ export const InvestmentPlansHero = ({
                 size="lg"
                 className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-xl shadow-emerald-500/25 hover:shadow-2xl hover:shadow-emerald-500/40 transition-all duration-300 px-8 py-6 text-lg font-semibold rounded-2xl group"
               >
-                شروع سرمایه‌گذاری
+                شروع سرمایه‌ گذاری
                 <ArrowDown className="mr-2 h-5 w-5 group-hover:translate-y-1 transition-transform" />
               </Button>
             </motion.div>

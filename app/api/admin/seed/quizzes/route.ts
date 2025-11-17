@@ -17,7 +17,10 @@ const quizData = [
         question: "ایردراپ (Airdrop) در دنیای کریپتو به چه معناست؟",
         questionType: "MULTIPLE_CHOICE" as QuestionType,
         options: [
-          { text: "توزیع رایگان توکن‌ها به کیف‌پول‌های کاربران", isCorrect: true },
+          {
+            text: "توزیع رایگان توکن‌ها به کیف‌پول‌های کاربران",
+            isCorrect: true,
+          },
           { text: "خرید توکن با قیمت پایین", isCorrect: false },
           { text: "فروش توکن در صرافی", isCorrect: false },
           { text: "استخراج ارز دیجیتال", isCorrect: false },
@@ -141,8 +144,7 @@ const quizData = [
         order: 2,
       },
       {
-        question:
-          "کدام‌یک از موارد زیر کاربردهای NFT است؟ (چند گزینه)",
+        question: "کدام‌یک از موارد زیر کاربردهای NFT است؟ (چند گزینه)",
         questionType: "MULTIPLE_SELECT" as QuestionType,
         options: [
           { text: "آثار هنری دیجیتال", isCorrect: true },
@@ -315,7 +317,7 @@ const quizData = [
         questionType: "MULTIPLE_CHOICE" as QuestionType,
         options: [
           {
-            text: "سرمایه‌گذاری در پروتکل‌های DeFi برای کسب سود",
+            text: "سرمایه‌ گذاری در پروتکل‌های DeFi برای کسب سود",
             isCorrect: true,
           },
           { text: "استخراج ارز دیجیتال", isCorrect: false },
@@ -323,13 +325,12 @@ const quizData = [
           { text: "خرید و نگهداری ارز", isCorrect: false },
         ],
         explanation:
-          "Yield Farming به سرمایه‌گذاری در پروتکل‌های DeFi برای دریافت پاداش و سود گفته می‌شود.",
+          "Yield Farming به سرمایه‌ گذاری در پروتکل‌های DeFi برای دریافت پاداش و سود گفته می‌شود.",
         points: 25,
         order: 3,
       },
       {
-        question:
-          "کدام‌یک از موارد زیر ریسک‌های DeFi هستند؟ (چند گزینه)",
+        question: "کدام‌یک از موارد زیر ریسک‌های DeFi هستند؟ (چند گزینه)",
         questionType: "MULTIPLE_SELECT" as QuestionType,
         options: [
           { text: "آسیب‌پذیری قراردادهای هوشمند", isCorrect: true },
@@ -445,9 +446,7 @@ export async function POST(_req: NextRequest) {
     };
 
     for (const quiz of quizData) {
-      console.log(
-        `📝 در حال ایجاد آزمون برای دسته‌بندی: ${quiz.categorySlug}`
-      );
+      console.log(`📝 در حال ایجاد آزمون برای دسته‌بندی: ${quiz.categorySlug}`);
 
       // بررسی وجود دسته‌بندی
       const category = await prisma.category.findUnique({
@@ -455,9 +454,7 @@ export async function POST(_req: NextRequest) {
       });
 
       if (!category) {
-        console.log(
-          `⚠️  دسته‌بندی ${quiz.categorySlug} یافت نشد - رد شد`
-        );
+        console.log(`⚠️  دسته‌بندی ${quiz.categorySlug} یافت نشد - رد شد`);
         results.skipped.push(quiz.categorySlug);
         continue;
       }
@@ -541,10 +538,6 @@ export async function POST(_req: NextRequest) {
     });
   } catch (error) {
     console.error("❌ خطا در Seed کردن:", error);
-    return errorResponse(
-      "خطا در ایجاد آزمون‌ها",
-      "SEED_ERROR",
-      500
-    );
+    return errorResponse("خطا در ایجاد آزمون‌ها", "SEED_ERROR", 500);
   }
 }

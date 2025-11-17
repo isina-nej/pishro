@@ -30,7 +30,7 @@ export default async function LandingOverlayServer() {
     <LandingOverlay
       mainHeroTitle={
         homeLanding?.mainHeroTitle ||
-        "پیشرو بزرگترین مؤسسه سرمایه‌گذاری در ایران"
+        "پیشرو بزرگترین مؤسسه سرمایه‌ گذاری در ایران"
       }
       mainHeroSubtitle={homeLanding?.mainHeroSubtitle || "شروع مسیر موفقیت"}
       mainHeroCta1Link={homeLanding?.mainHeroCta1Link || "/business-consulting"}
@@ -39,8 +39,8 @@ export default async function LandingOverlayServer() {
         homeLanding?.overlayTexts && homeLanding.overlayTexts.length > 0
           ? homeLanding.overlayTexts
           : [
-              "پیشرو در مسیر سرمایه‌گذاری هوشمند",
-              "ما در پیشرو با ارائه آموزش‌های تخصصی بورس، بازارهای مالی و سرمایه‌گذاری، شما را در مسیر رشد مالی همراهی می‌کنیم.",
+              "پیشرو در مسیر سرمایه‌ گذاری هوشمند",
+              "ما در پیشرو با ارائه آموزش‌های تخصصی بورس، بازارهای مالی و سرمایه‌ گذاری، شما را در مسیر رشد مالی همراهی می‌کنیم.",
               "از آموزش اصولی و گام‌به‌گام تا مشاوره‌های حرفه‌ای و همراهی در مسیر رشد سرمایه شما، همه و همه در پیشرو فراهم است.",
               "پیشرو انتخابی مطمئن برای کسانی است که به دنبال امنیت مالی، رشد پایدار و آینده‌ای روشن هستند.",
             ]

@@ -196,8 +196,8 @@ model OrderItem {
 
   // Investment portfolio data (for portfolio purchases)
   portfolioType   String? // "low", "medium", "high"
-  portfolioAmount Int?    // مبلغ سرمایه‌گذاری
-  portfolioDuration Int?  // مدت سرمایه‌گذاری (ماه)
+  portfolioAmount Int?    // مبلغ سرمایه‌ گذاری
+  portfolioDuration Int?  // مدت سرمایه‌ گذاری (ماه)
 
   price           Int
   discountPercent Int?
@@ -843,7 +843,7 @@ model BusinessConsulting {
   updatedAt DateTime @updatedAt
 }
 
-// مدل برای صفحه سبدهای سرمایه‌گذاری
+// مدل برای صفحه سبدهای سرمایه‌ گذاری
 model InvestmentPlans {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
@@ -878,7 +878,7 @@ model InvestmentPlans {
   updatedAt DateTime @updatedAt
 }
 
-// مدل برای انواع سبدهای سرمایه‌گذاری (ارز دیجیتال، بورس، ترکیبی)
+// مدل برای انواع سبدهای سرمایه‌ گذاری (ارز دیجیتال، بورس، ترکیبی)
 model InvestmentPlan {
   id                String          @id @default(auto()) @map("_id") @db.ObjectId
   investmentPlans   InvestmentPlans @relation("InvestmentPlansPlans", fields: [investmentPlansId], references: [id], onDelete: Cascade)
@@ -897,7 +897,7 @@ model InvestmentPlan {
   @@index([investmentPlansId, order])
 }
 
-// مدل برای تگ‌های سرمایه‌گذاری
+// مدل برای تگ‌های سرمایه‌ گذاری
 model InvestmentTag {
   id                String          @id @default(auto()) @map("_id") @db.ObjectId
   investmentPlans   InvestmentPlans @relation("InvestmentPlansTags", fields: [investmentPlansId], references: [id], onDelete: Cascade)
@@ -963,7 +963,7 @@ model SkyRoomClass {
 }
 
 
-// مدل برای ذخیره سبدهای سرمایه‌گذاری خریداری شده توسط کاربران
+// مدل برای ذخیره سبدهای سرمایه‌ گذاری خریداری شده توسط کاربران
 model UserInvestmentPortfolio {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
@@ -973,8 +973,8 @@ model UserInvestmentPortfolio {
 
   // Portfolio details
   portfolioType     String // "low", "medium", "high"
-  portfolioAmount   Int    // مبلغ سرمایه‌گذاری
-  portfolioDuration Int    // مدت سرمایه‌گذاری (ماه)
+  portfolioAmount   Int    // مبلغ سرمایه‌ گذاری
+  portfolioDuration Int    // مدت سرمایه‌ گذاری (ماه)
   expectedReturn    Float  // بازده تخمینی
   monthlyRate       Float  // نرخ ماهیانه
 
@@ -985,7 +985,7 @@ model UserInvestmentPortfolio {
 
   // Dates
   startDate    DateTime  @default(now())
-  endDate      DateTime? // تاریخ پایان سرمایه‌گذاری
+  endDate      DateTime? // تاریخ پایان سرمایه‌ گذاری
   purchasedAt  DateTime  @default(now())
 
   // Files and data

@@ -16,7 +16,7 @@ const PortfoliosDisplay = () => {
       features: [
         "تضمین ۱۰۰٪ اصل سرمایه",
         "سود ثابت ۷٪ ماهیانه",
-        "مناسب برای سرمایه‌گذاری بلندمدت",
+        "مناسب برای سرمایه‌ گذاری بلندمدت",
         "ریسک بسیار پایین",
       ],
       price: null, // قیمت بعداً اضافه می‌شود
@@ -90,7 +90,7 @@ const PortfoliosDisplay = () => {
         {/* Header */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            انتخاب سبد سرمایه‌گذاری
+            انتخاب سبد سرمایه‌ گذاری
           </h2>
           <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
             بر اساس میزان ریسک‌پذیری خود، یکی از سبدهای زیر را انتخاب کنید
@@ -194,13 +194,11 @@ const PortfoliosDisplay = () => {
               </svg>
             </div>
             <div>
-              <h4 className="text-lg font-bold text-blue-900 mb-2">
-                نکته مهم
-              </h4>
+              <h4 className="text-lg font-bold text-blue-900 mb-2">نکته مهم</h4>
               <p className="text-blue-800 leading-relaxed">
-                تمامی سبدهای سرمایه‌گذاری پیشرو با تضمین اصل سرمایه ارائه می‌شوند.
-                هزینه هر سبد متناسب با مبلغ سرمایه‌گذاری و مدت زمان انتخابی شما
-                محاسبه خواهد شد.
+                تمامی سبدهای سرمایه‌ گذاری پیشرو با تضمین اصل سرمایه ارائه
+                می‌شوند. هزینه هر سبد متناسب با مبلغ سرمایه‌ گذاری و مدت زمان
+                انتخابی شما محاسبه خواهد شد.
               </p>
             </div>
           </div>

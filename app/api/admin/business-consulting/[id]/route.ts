@@ -41,7 +41,7 @@ export async function GET(
     if (!item) {
       return notFoundResponse(
         "BusinessConsulting",
-        "صفحه مشاوره سرمایه‌گذاری یافت نشد"
+        "صفحه مشاوره سرمایه‌ گذاری یافت نشد"
       );
     }
 
@@ -49,7 +49,7 @@ export async function GET(
   } catch (error) {
     console.error("Error fetching investment consulting page:", error);
     return errorResponse(
-      "خطا در دریافت صفحه مشاوره سرمایه‌گذاری",
+      "خطا در دریافت صفحه مشاوره سرمایه‌ گذاری",
       ErrorCodes.DATABASE_ERROR
     );
   }
@@ -80,7 +80,7 @@ export async function PATCH(
     if (!existingItem) {
       return notFoundResponse(
         "BusinessConsulting",
-        "صفحه مشاوره سرمایه‌گذاری یافت نشد"
+        "صفحه مشاوره سرمایه‌ گذاری یافت نشد"
       );
     }
 
@@ -125,12 +125,12 @@ export async function PATCH(
 
     return successResponse(
       updatedItem,
-      "صفحه مشاوره سرمایه‌گذاری با موفقیت بروزرسانی شد"
+      "صفحه مشاوره سرمایه‌ گذاری با موفقیت بروزرسانی شد"
     );
   } catch (error) {
     console.error("Error updating investment consulting page:", error);
     return errorResponse(
-      "خطا در بروزرسانی صفحه مشاوره سرمایه‌گذاری",
+      "خطا در بروزرسانی صفحه مشاوره سرمایه‌ گذاری",
       ErrorCodes.DATABASE_ERROR
     );
   }
@@ -160,7 +160,7 @@ export async function DELETE(
     if (!existingItem) {
       return notFoundResponse(
         "BusinessConsulting",
-        "صفحه مشاوره سرمایه‌گذاری یافت نشد"
+        "صفحه مشاوره سرمایه‌ گذاری یافت نشد"
       );
     }
 
@@ -173,7 +173,7 @@ export async function DELETE(
   } catch (error) {
     console.error("Error deleting investment consulting page:", error);
     return errorResponse(
-      "خطا در حذف صفحه مشاوره سرمایه‌گذاری",
+      "خطا در حذف صفحه مشاوره سرمایه‌ گذاری",
       ErrorCodes.DATABASE_ERROR
     );
   }

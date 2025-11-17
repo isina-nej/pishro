@@ -92,7 +92,7 @@ const CalculatorSection = () => {
             ماشین حساب
           </h4>
           <p className="text-base md:text-lg lg:text-xl leading-relaxed text-gray-200 max-w-2xl mx-auto bg-[#152c44]/70">
-            با انتخاب نوع سبد سرمایه‌گذاری، مبلغ و مدت، میزان بازده خود را
+            با انتخاب نوع سبد سرمایه‌ گذاری، مبلغ و مدت، میزان بازده خود را
             مشاهده کنید.
           </p>
         </div>
@@ -101,11 +101,11 @@ const CalculatorSection = () => {
         <div className="flex flex-col gap-6 md:gap-10 lg:flex-row items-center justify-center">
           {/* Controls */}
           <div className="flex flex-col w-full lg:w-7/12 gap-4 px-1 md:px-0">
-            {/* سبد سرمایه‌گذاری */}
+            {/* سبد سرمایه‌ گذاری */}
             <div className="rounded-2xl border border-[#8B9BB4] bg-white text-[#1A0A3B] px-4 sm:px-6 py-4">
               <p className="text-center text-lg font-semibold mb-4 flex items-center justify-center gap-2">
                 <BarChart3 size={22} className="text-[#1A0A3B]" />
-                نوع سبد سرمایه‌گذاری
+                نوع سبد سرمایه‌ گذاری
               </p>
 
               <div className="flex items-center justify-center gap-4">
@@ -131,11 +131,11 @@ const CalculatorSection = () => {
               </div>
             </div>
 
-            {/* مبلغ سرمایه‌گذاری */}
+            {/* مبلغ سرمایه‌ گذاری */}
             <div className="rounded-2xl border border-[#8B9BB4] bg-white text-[#1A0A3B] px-4 sm:px-6 py-4">
               <p className="text-center text-lg font-bold mb-8 flex items-center justify-center gap-2">
                 <Wallet size={24} className="text-[#1A0A3B]" />
-                مبلغ سرمایه‌گذاری
+                مبلغ سرمایه‌ گذاری
               </p>
 
               <div className="flex items-start justify-between gap-4">
@@ -194,11 +194,11 @@ const CalculatorSection = () => {
               </p>
             </div>
 
-            {/* مدت سرمایه‌گذاری */}
+            {/* مدت سرمایه‌ گذاری */}
             <div className="rounded-2xl border border-[#8B9BB4] bg-white text-[#1A0A3B] px-4 sm:px-6 py-4">
               <p className="text-center text-lg font-bold mb-8 flex items-center justify-center gap-2">
                 <Clock size={24} className="text-[#1A0A3B]" />
-                مدت سرمایه‌گذاری
+                مدت سرمایه‌ گذاری
               </p>
 
               <div className="flex items-center justify-between gap-4">
@@ -260,7 +260,7 @@ const CalculatorSection = () => {
           {/* Result */}
           <div className="w-full h-[-webkit-fill-available] lg:w-5/12 flex flex-col items-center justify-center bg-[#1a0a3b]/50 rounded-2xl p-4 md:p-10 mt-6 md:mt-0 mb-10 md:mb-0">
             <p className="text-center text-2xl font-bold mb-8">
-              نتیجه سرمایه‌گذاریت
+              نتیجه سرمایه‌ گذاریت
             </p>
 
             {/* Result box */}
@@ -317,7 +317,7 @@ const CalculatorSection = () => {
               href="/investment-plans"
               className="mt-10 px-16 w-full sm:w-fit bg-mySecondary border border-mySecondary text-white rounded-full py-4 font-bold text-center hover:bg-mySecondary/30 hover:border-white transition-colors"
             >
-              سرمایه‌گذاری
+              سرمایه‌ گذاری
             </Link>
           </div>
         </div>

@@ -5,7 +5,7 @@
 
 import { PrismaClient } from "@prisma/client";
 import { PersianDataGenerator } from "./persian-data-generator";
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from "url";
 
 const prisma = new PrismaClient();
 const _generator = new PersianDataGenerator(12345);
@@ -18,15 +18,17 @@ const TAGS_DATA = [
     description: "بازار سهام و اوراق بهادار",
     color: "#3B82F6",
     seoTitle: "آموزش بورس و بازار سهام | دوره‌های تخصصی پیشرو",
-    seoDescription: "آموزش جامع بورس، تحلیل تکنیکال و بنیادی بازار سهام. با متخصصان بورس یک سرمایه‌گذار موفق شوید.",
+    seoDescription:
+      "آموزش جامع بورس، تحلیل تکنیکال و بنیادی بازار سهام. با متخصصان بورس یک سرمایه‌گذار موفق شوید.",
   },
   {
     slug: "shares",
     title: "سهام",
-    description: "سرمایه‌گذاری در سهام شرکت‌ها",
+    description: "سرمایه‌ گذاری در سهام شرکت‌ها",
     color: "#10B981",
-    seoTitle: "آموزش خرید و فروش سهام | راهنمای کامل سرمایه‌گذاری در سهام",
-    seoDescription: "یاد بگیرید چگونه سهام مناسب انتخاب کنید و در بازار سهام سود کسب نمایید.",
+    seoTitle: "آموزش خرید و فروش سهام | راهنمای کامل سرمایه‌ گذاری در سهام",
+    seoDescription:
+      "یاد بگیرید چگونه سهام مناسب انتخاب کنید و در بازار سهام سود کسب نمایید.",
   },
   {
     slug: "bitcoin",
@@ -34,7 +36,8 @@ const TAGS_DATA = [
     description: "اولین و بزرگترین ارز دیجیتال",
     color: "#F59E0B",
     seoTitle: "آموزش بیتکوین | خرید و فروش Bitcoin",
-    seoDescription: "همه چیز درباره بیتکوین، از خرید و فروش تا نگهداری امن و سرمایه‌گذاری.",
+    seoDescription:
+      "همه چیز درباره بیتکوین، از خرید و فروش تا نگهداری امن و سرمایه‌ گذاری.",
   },
   {
     slug: "ethereum",
@@ -42,7 +45,8 @@ const TAGS_DATA = [
     description: "پلتفرم قراردادهای هوشمند",
     color: "#8B5CF6",
     seoTitle: "آموزش اتریوم و قراردادهای هوشمند | Ethereum",
-    seoDescription: "آموزش اتریوم، قراردادهای هوشمند و پلتفرم‌های DeFi مبتنی بر ETH.",
+    seoDescription:
+      "آموزش اتریوم، قراردادهای هوشمند و پلتفرم‌های DeFi مبتنی بر ETH.",
   },
   {
     slug: "technical-analysis",
@@ -50,7 +54,8 @@ const TAGS_DATA = [
     description: "تحلیل نمودارها و الگوها",
     color: "#EF4444",
     seoTitle: "آموزش تحلیل تکنیکال | نمودارها و اندیکاتورها",
-    seoDescription: "آموزش کامل تحلیل تکنیکال از صفر، شناسایی الگوها، اندیکاتورها و نقاط ورود و خروج.",
+    seoDescription:
+      "آموزش کامل تحلیل تکنیکال از صفر، شناسایی الگوها، اندیکاتورها و نقاط ورود و خروج.",
   },
   {
     slug: "fundamental-analysis",
@@ -58,7 +63,8 @@ const TAGS_DATA = [
     description: "ارزیابی ارزش ذاتی",
     color: "#06B6D4",
     seoTitle: "آموزش تحلیل بنیادی | ارزیابی شرکت‌ها",
-    seoDescription: "روش‌های تحلیل بنیادی برای ارزیابی ارزش واقعی سهام و شرکت‌ها.",
+    seoDescription:
+      "روش‌های تحلیل بنیادی برای ارزیابی ارزش واقعی سهام و شرکت‌ها.",
   },
   {
     slug: "swing-trading",
@@ -66,15 +72,17 @@ const TAGS_DATA = [
     description: "معامله در نوسانات قیمت",
     color: "#EC4899",
     seoTitle: "آموزش نوسان‌گیری | استراتژی Swing Trading",
-    seoDescription: "تکنیک‌های حرفه‌ای نوسان‌گیری برای کسب سود از نوسانات کوتاه‌مدت بازار.",
+    seoDescription:
+      "تکنیک‌های حرفه‌ای نوسان‌گیری برای کسب سود از نوسانات کوتاه‌مدت بازار.",
   },
   {
     slug: "investment",
-    title: "سرمایه‌گذاری",
+    title: "سرمایه‌ گذاری",
     description: "رشد بلندمدت سرمایه",
     color: "#84CC16",
-    seoTitle: "آموزش سرمایه‌گذاری | رشد و مدیریت سرمایه",
-    seoDescription: "اصول سرمایه‌گذاری موفق، مدیریت سبد و استراتژی‌های بلندمدت.",
+    seoTitle: "آموزش سرمایه‌ گذاری | رشد و مدیریت سرمایه",
+    seoDescription:
+      "اصول سرمایه‌ گذاری موفق، مدیریت سبد و استراتژی‌های بلندمدت.",
   },
   {
     slug: "trading",
@@ -82,7 +90,8 @@ const TAGS_DATA = [
     description: "خرید و فروش دارایی‌ها",
     color: "#F59E0B",
     seoTitle: "آموزش معامله‌گری | تریدینگ حرفه‌ای",
-    seoDescription: "آموزش معامله‌گری از مبتدی تا حرفه‌ای، استراتژی‌ها و تکنیک‌های کاربردی.",
+    seoDescription:
+      "آموزش معامله‌گری از مبتدی تا حرفه‌ای، استراتژی‌ها و تکنیک‌های کاربردی.",
   },
   {
     slug: "forex",
@@ -90,7 +99,8 @@ const TAGS_DATA = [
     description: "بازار ارزهای خارجی",
     color: "#14B8A6",
     seoTitle: "آموزش فارکس | بازار ارزهای خارجی",
-    seoDescription: "آموزش معامله در بازار فارکس، جفت ارزها و تحلیل بازار جهانی.",
+    seoDescription:
+      "آموزش معامله در بازار فارکس، جفت ارزها و تحلیل بازار جهانی.",
   },
   {
     slug: "crypto",
@@ -106,7 +116,8 @@ const TAGS_DATA = [
     description: "فناوری دفتر کل توزیع‌شده",
     color: "#6366F1",
     seoTitle: "آموزش بلاکچین | فناوری زنجیره بلوکی",
-    seoDescription: "آشنایی با فناوری بلاکچین، کاربردها و آینده این تکنولوژی انقلابی.",
+    seoDescription:
+      "آشنایی با فناوری بلاکچین، کاربردها و آینده این تکنولوژی انقلابی.",
   },
   {
     slug: "risk-management",
@@ -122,7 +133,8 @@ const TAGS_DATA = [
     description: "رفتار و احساسات معامله‌گران",
     color: "#8B5CF6",
     seoTitle: "آموزش روانشناسی بازار | کنترل احساسات در ترید",
-    seoDescription: "روانشناسی معامله‌گری و نحوه کنترل احساسات برای تصمیم‌گیری بهتر.",
+    seoDescription:
+      "روانشناسی معامله‌گری و نحوه کنترل احساسات برای تصمیم‌گیری بهتر.",
   },
   {
     slug: "indicators",
@@ -130,7 +142,8 @@ const TAGS_DATA = [
     description: "ابزارهای تحلیل تکنیکال",
     color: "#3B82F6",
     seoTitle: "آموزش اندیکاتورها | ابزارهای تحلیل تکنیکال",
-    seoDescription: "معرفی و آموزش بهترین اندیکاتورهای تحلیل تکنیکال مثل RSI، MACD و...",
+    seoDescription:
+      "معرفی و آموزش بهترین اندیکاتورهای تحلیل تکنیکال مثل RSI، MACD و...",
   },
   {
     slug: "candlestick",
@@ -191,10 +204,11 @@ const TAGS_DATA = [
   {
     slug: "long-term",
     title: "بلندمدت",
-    description: "سرمایه‌گذاری طولانی",
+    description: "سرمایه‌ گذاری طولانی",
     color: "#84CC16",
-    seoTitle: "سرمایه‌گذاری بلندمدت | استراتژی Long-term",
-    seoDescription: "استراتژی‌های سرمایه‌گذاری بلندمدت برای رشد پایدار سرمایه.",
+    seoTitle: "سرمایه‌ گذاری بلندمدت | استراتژی Long-term",
+    seoDescription:
+      "استراتژی‌های سرمایه‌ گذاری بلندمدت برای رشد پایدار سرمایه.",
   },
   {
     slug: "short-term",
@@ -210,7 +224,8 @@ const TAGS_DATA = [
     description: "معاملات خیلی کوتاه‌مدت",
     color: "#F59E0B",
     seoTitle: "آموزش اسکالپینگ | Scalping Trading",
-    seoDescription: "استراتژی اسکالپینگ برای معاملات فوق سریع و کسب سود کوچک اما مکرر.",
+    seoDescription:
+      "استراتژی اسکالپینگ برای معاملات فوق سریع و کسب سود کوچک اما مکرر.",
   },
   {
     slug: "portfolio",
@@ -218,14 +233,14 @@ const TAGS_DATA = [
     description: "مدیریت دارایی‌ها",
     color: "#8B5CF6",
     seoTitle: "مدیریت سبد سرمایه | Portfolio Management",
-    seoDescription: "نحوه ساخت و مدیریت سبد سرمایه‌گذاری متنوع و سودآور.",
+    seoDescription: "نحوه ساخت و مدیریت سبد سرمایه‌ گذاری متنوع و سودآور.",
   },
   {
     slug: "diversification",
     title: "تنوع‌بخشی",
     description: "پخش ریسک در دارایی‌ها",
     color: "#10B981",
-    seoTitle: "آموزش تنوع‌بخشی | کاهش ریسک سرمایه‌گذاری",
+    seoTitle: "آموزش تنوع‌بخشی | کاهش ریسک سرمایه‌ گذاری",
     seoDescription: "استراتژی‌های تنوع‌بخشی برای کاهش ریسک و افزایش بازدهی.",
   },
   {
@@ -234,7 +249,7 @@ const TAGS_DATA = [
     description: "امور مالی غیرمتمرکز",
     color: "#6366F1",
     seoTitle: "آموزش دیفای | امور مالی غیرمتمرکز DeFi",
-    seoDescription: "آشنایی با دنیای DeFi، پلتفرم‌ها و فرصت‌های سرمایه‌گذاری.",
+    seoDescription: "آشنایی با دنیای DeFi، پلتفرم‌ها و فرصت‌های سرمایه‌ گذاری.",
   },
   {
     slug: "nft",
@@ -242,7 +257,8 @@ const TAGS_DATA = [
     description: "توکن‌های غیرمثلی",
     color: "#EC4899",
     seoTitle: "آموزش NFT | توکن‌های غیرقابل تعویض",
-    seoDescription: "همه چیز درباره NFT، از خرید و فروش تا ساخت و سرمایه‌گذاری.",
+    seoDescription:
+      "همه چیز درباره NFT، از خرید و فروش تا ساخت و سرمایه‌ گذاری.",
   },
   {
     slug: "mining",

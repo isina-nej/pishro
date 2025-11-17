@@ -330,7 +330,7 @@ const quizData = [
         questionType: "MULTIPLE_CHOICE",
         options: [
           {
-            text: "سرمایه‌گذاری در پروتکل‌های DeFi برای کسب سود",
+            text: "سرمایه‌ گذاری در پروتکل‌های DeFi برای کسب سود",
             isCorrect: true,
           },
           { text: "استخراج ارز دیجیتال", isCorrect: false },
@@ -338,7 +338,7 @@ const quizData = [
           { text: "خرید و نگهداری ارز", isCorrect: false },
         ],
         explanation:
-          "Yield Farming به سرمایه‌گذاری در پروتکل‌های DeFi برای دریافت پاداش و سود گفته می‌شود.",
+          "Yield Farming به سرمایه‌ گذاری در پروتکل‌های DeFi برای دریافت پاداش و سود گفته می‌شود.",
         points: 25,
         order: 3,
       },

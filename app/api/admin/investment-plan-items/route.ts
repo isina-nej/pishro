@@ -76,7 +76,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.error("Error fetching investment plan items:", error);
     return errorResponse(
-      "خطا در دریافت آیتم‌های سبد سرمایه‌گذاری",
+      "خطا در دریافت آیتم‌های سبد سرمایه‌ گذاری",
       ErrorCodes.DATABASE_ERROR
     );
   }
@@ -106,7 +106,9 @@ export async function POST(req: NextRequest) {
     // Validation
     if (!investmentPlansId || !label) {
       return validationError({
-        investmentPlansId: !investmentPlansId ? "شناسه صفحه سبدهای سرمایه‌گذاری الزامی است" : "",
+        investmentPlansId: !investmentPlansId
+          ? "شناسه صفحه سبدهای سرمایه‌ گذاری الزامی است"
+          : "",
         label: !label ? "برچسب الزامی است" : "",
       });
     }
@@ -118,7 +120,7 @@ export async function POST(req: NextRequest) {
 
     if (!investmentPlans) {
       return errorResponse(
-        "صفحه سبدهای سرمایه‌گذاری یافت نشد",
+        "صفحه سبدهای سرمایه‌ گذاری یافت نشد",
         ErrorCodes.NOT_FOUND
       );
     }
@@ -143,11 +145,11 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return createdResponse(item, "آیتم سبد سرمایه‌گذاری با موفقیت ایجاد شد");
+    return createdResponse(item, "آیتم سبد سرمایه‌ گذاری با موفقیت ایجاد شد");
   } catch (error) {
     console.error("Error creating investment plan item:", error);
     return errorResponse(
-      "خطا در ایجاد آیتم سبد سرمایه‌گذاری",
+      "خطا در ایجاد آیتم سبد سرمایه‌ گذاری",
       ErrorCodes.DATABASE_ERROR
     );
   }

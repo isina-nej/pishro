@@ -76,7 +76,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.error("Error fetching investment tags:", error);
     return errorResponse(
-      "خطا در دریافت تگ‌های سرمایه‌گذاری",
+      "خطا در دریافت تگ‌های سرمایه‌ گذاری",
       ErrorCodes.DATABASE_ERROR
     );
   }
@@ -106,7 +106,9 @@ export async function POST(req: NextRequest) {
     // Validation
     if (!investmentPlansId || !title) {
       return validationError({
-        investmentPlansId: !investmentPlansId ? "شناسه صفحه سبدهای سرمایه‌گذاری الزامی است" : "",
+        investmentPlansId: !investmentPlansId
+          ? "شناسه صفحه سبدهای سرمایه‌ گذاری الزامی است"
+          : "",
         title: !title ? "عنوان الزامی است" : "",
       });
     }
@@ -118,7 +120,7 @@ export async function POST(req: NextRequest) {
 
     if (!investmentPlans) {
       return errorResponse(
-        "صفحه سبدهای سرمایه‌گذاری یافت نشد",
+        "صفحه سبدهای سرمایه‌ گذاری یافت نشد",
         ErrorCodes.NOT_FOUND
       );
     }
@@ -143,11 +145,11 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return createdResponse(item, "تگ سرمایه‌گذاری با موفقیت ایجاد شد");
+    return createdResponse(item, "تگ سرمایه‌ گذاری با موفقیت ایجاد شد");
   } catch (error) {
     console.error("Error creating investment tag:", error);
     return errorResponse(
-      "خطا در ایجاد تگ سرمایه‌گذاری",
+      "خطا در ایجاد تگ سرمایه‌ گذاری",
       ErrorCodes.DATABASE_ERROR
     );
   }

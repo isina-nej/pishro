@@ -4,7 +4,7 @@
  */
 
 import { PrismaClient } from "@prisma/client";
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from "url";
 
 const prisma = new PrismaClient();
 
@@ -103,7 +103,7 @@ export async function seedCategories() {
         heroTitle: "وارد دنیای NFT شوید",
         heroSubtitle: "آینده هنر و دارایی‌های دیجیتال",
         heroDescription:
-          "توکن‌های غیرقابل تعویض را بشناسید. از ساخت و خرید تا فروش و سرمایه‌گذاری در NFT. با آموزش‌های تخصصی ما، یک NFT Creator حرفه‌ای شوید.",
+          "توکن‌های غیرقابل تعویض را بشناسید. از ساخت و خرید تا فروش و سرمایه‌ گذاری در NFT. با آموزش‌های تخصصی ما، یک NFT Creator حرفه‌ای شوید.",
         heroImage: "/images/heroes/nft-hero.jpg",
         heroCta1Text: "یادگیری NFT",
         heroCta1Link: "/courses?category=nft",
@@ -146,21 +146,21 @@ export async function seedCategories() {
         slug: "cryptocurrency",
         title: "اخبار ارز دیجیتال",
         description:
-          "دوره‌های آموزشی ارز دیجیتال، بیتکوین، اتریوم و آلت کوین‌ها. معامله، سرمایه‌گذاری و تحلیل تکنیکال.",
+          "دوره‌های آموزشی ارز دیجیتال، بیتکوین، اتریوم و آلت کوین‌ها. معامله، سرمایه‌ گذاری و تحلیل تکنیکال.",
         icon: "/icons/crypto.svg",
         coverImage: "/images/categories/crypto-cover.jpg",
         color: "#F59E0B",
         metaTitle: "دوره‌های آموزش ارز دیجیتال | پیشرو",
         metaDescription:
-          "آموزش کامل ارز دیجیتال، بیتکوین، معامله و سرمایه‌گذاری در بازار کریپتو.",
+          "آموزش کامل ارز دیجیتال، بیتکوین، معامله و سرمایه‌ گذاری در بازار کریپتو.",
         metaKeywords: [
           "ارز دیجیتال",
           " بیتکوین",
           " اتریوم",
           " معامله ارز دیجیتال",
-          " سرمایه‌گذاری کریپتو",
+          " سرمایه‌ گذاری کریپتو",
         ],
-        heroTitle: "سرمایه‌گذاری هوشمند در ارز دیجیتال",
+        heroTitle: "سرمایه‌ گذاری هوشمند در ارز دیجیتال",
         heroSubtitle: "از بیتکوین تا آلت‌کوین‌های نوظهور",
         heroDescription:
           "دنیای ارزهای دیجیتال را از پایه بیاموزید. از خرید و فروش بیتکوین گرفته تا تحلیل بازار، والت‌ها و امنیت. با اساتید مجرب، یک تریدر موفق شوید.",
@@ -191,7 +191,9 @@ export async function seedCategories() {
       },
     });
 
-    if (cryptocurrency.createdAt.getTime() === cryptocurrency.updatedAt.getTime()) {
+    if (
+      cryptocurrency.createdAt.getTime() === cryptocurrency.updatedAt.getTime()
+    ) {
       created++;
     } else {
       updated++;
@@ -212,26 +214,26 @@ export async function seedCategories() {
         color: "#10B981",
         metaTitle: "دوره‌های آموزش بورس | پیشرو",
         metaDescription:
-          "آموزش جامع بورس ایران، تحلیل تکنیکال و بنیادی، استراتژی‌های سرمایه‌گذاری موفق.",
+          "آموزش جامع بورس ایران، تحلیل تکنیکال و بنیادی، استراتژی‌های سرمایه‌ گذاری موفق.",
         metaKeywords: [
           "آموزش بورس",
           " بورس ایران",
           " تحلیل تکنیکال",
-          " سرمایه‌گذاری در بورس",
+          " سرمایه‌ گذاری در بورس",
         ],
         heroTitle: "بورس را حرفه‌ای یاد بگیرید",
         heroSubtitle: "از صفر تا معامله‌گر موفق در بورس ایران",
         heroDescription:
-          "با آموزش‌های کاربردی و پروژه‌محور ما، اصول سرمایه‌گذاری در بورس را بیاموزید. تحلیل تکنیکال، بنیادی، مدیریت ریسک و استراتژی‌های سودآور را تجربه کنید.",
+          "با آموزش‌های کاربردی و پروژه‌محور ما، اصول سرمایه‌ گذاری در بورس را بیاموزید. تحلیل تکنیکال، بنیادی، مدیریت ریسک و استراتژی‌های سودآور را تجربه کنید.",
         heroImage: "/images/heroes/stock-hero.jpg",
         heroCta1Text: "شروع دوره",
         heroCta1Link: "/courses?category=stock-market",
         heroCta2Text: "دوره‌های پیشرفته",
         heroCta2Link: "/courses?category=stock-market&level=advanced",
         aboutTitle1: "بورس برای همه",
-        aboutTitle2: "سرمایه‌گذاری هوشمند و سودآور",
+        aboutTitle2: "سرمایه‌ گذاری هوشمند و سودآور",
         aboutDescription:
-          "بورس یکی از بهترین بازارهای سرمایه‌گذاری در ایران است. با یادگیری اصولی و استفاده از ابزارهای حرفه‌ای، می‌توانید درآمد پایدار کسب کنید و آینده مالی خود را تضمین نمایید.",
+          "بورس یکی از بهترین بازارهای سرمایه‌ گذاری در ایران است. با یادگیری اصولی و استفاده از ابزارهای حرفه‌ای، می‌توانید درآمد پایدار کسب کنید و آینده مالی خود را تضمین نمایید.",
         aboutImage: "/images/about/stock-about.jpg",
         aboutCta1Text: "راهنمای شروع",
         aboutCta1Link: "/guides/stock-market-start",
@@ -271,7 +273,7 @@ export async function seedCategories() {
         color: "#EC4899",
         metaTitle: "دوره‌های آموزش متاورس | پیشرو",
         metaDescription:
-          "آموزش متاورس، املاک دیجیتال، بازی‌های Play-to-Earn و فرصت‌های سرمایه‌گذاری.",
+          "آموزش متاورس، املاک دیجیتال، بازی‌های Play-to-Earn و فرصت‌های سرمایه‌ گذاری.",
         metaKeywords: [
           "متاورس",
           " metaverse",

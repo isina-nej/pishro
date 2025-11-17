@@ -38,11 +38,11 @@ export async function POST(req: NextRequest) {
     }
 
     if (portfolioAmount < 1_000_000 || portfolioAmount > 5_000_000_000) {
-      return errorResponse("مبلغ سرمایه‌گذاری نامعتبر است", "INVALID_AMOUNT");
+      return errorResponse("مبلغ سرمایه‌ گذاری نامعتبر است", "INVALID_AMOUNT");
     }
 
     if (portfolioDuration < 1 || portfolioDuration > 36) {
-      return errorResponse("مدت سرمایه‌گذاری نامعتبر است", "INVALID_DURATION");
+      return errorResponse("مدت سرمایه‌ گذاری نامعتبر است", "INVALID_DURATION");
     }
 
     // Check if user already has a pending order with this portfolio
@@ -103,9 +103,9 @@ export async function POST(req: NextRequest) {
     return successResponse(
       {
         orderId: order.id,
-        message: "سبد سرمایه‌گذاری با موفقیت به سبد خرید اضافه شد",
+        message: "سبد سرمایه‌ گذاری با موفقیت به سبد خرید اضافه شد",
       },
-      "سبد سرمایه‌گذاری اضافه شد"
+      "سبد سرمایه‌ گذاری اضافه شد"
     );
   } catch (error) {
     console.error("Error adding portfolio to cart:", error);

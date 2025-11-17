@@ -49,7 +49,7 @@ const QAModal = () => {
       <DialogContent className="max-w-lg bg-white rounded-xl shadow-2xl">
         <DialogHeader>
           <DialogTitle className="rtl text-xl font-bold text-gray-800">
-            فرم ثبت‌نام سایت سرمایه‌گذاری
+            فرم ثبت‌نام سایت سرمایه‌ گذاری
           </DialogTitle>
         </DialogHeader>
 

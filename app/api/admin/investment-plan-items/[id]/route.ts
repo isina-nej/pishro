@@ -47,14 +47,17 @@ export async function GET(
     });
 
     if (!item) {
-      return notFoundResponse("InvestmentPlan", "آیتم سبد سرمایه‌گذاری یافت نشد");
+      return notFoundResponse(
+        "InvestmentPlan",
+        "آیتم سبد سرمایه‌ گذاری یافت نشد"
+      );
     }
 
     return successResponse(item);
   } catch (error) {
     console.error("Error fetching investment plan item:", error);
     return errorResponse(
-      "خطا در دریافت آیتم سبد سرمایه‌گذاری",
+      "خطا در دریافت آیتم سبد سرمایه‌ گذاری",
       ErrorCodes.DATABASE_ERROR
     );
   }
@@ -83,7 +86,10 @@ export async function PATCH(
     });
 
     if (!existingItem) {
-      return notFoundResponse("InvestmentPlan", "آیتم سبد سرمایه‌گذاری یافت نشد");
+      return notFoundResponse(
+        "InvestmentPlan",
+        "آیتم سبد سرمایه‌ گذاری یافت نشد"
+      );
     }
 
     // Prepare update data
@@ -92,7 +98,8 @@ export async function PATCH(
     // Only include fields that are provided
     if (body.label !== undefined) updateData.label = body.label;
     if (body.icon !== undefined) updateData.icon = body.icon;
-    if (body.description !== undefined) updateData.description = body.description;
+    if (body.description !== undefined)
+      updateData.description = body.description;
     if (body.order !== undefined) updateData.order = body.order;
     if (body.published !== undefined) updateData.published = body.published;
 
@@ -109,11 +116,14 @@ export async function PATCH(
       },
     });
 
-    return successResponse(updatedItem, "آیتم سبد سرمایه‌گذاری با موفقیت بروزرسانی شد");
+    return successResponse(
+      updatedItem,
+      "آیتم سبد سرمایه‌ گذاری با موفقیت بروزرسانی شد"
+    );
   } catch (error) {
     console.error("Error updating investment plan item:", error);
     return errorResponse(
-      "خطا در بروزرسانی آیتم سبد سرمایه‌گذاری",
+      "خطا در بروزرسانی آیتم سبد سرمایه‌ گذاری",
       ErrorCodes.DATABASE_ERROR
     );
   }
@@ -141,7 +151,10 @@ export async function DELETE(
     });
 
     if (!existingItem) {
-      return notFoundResponse("InvestmentPlan", "آیتم سبد سرمایه‌گذاری یافت نشد");
+      return notFoundResponse(
+        "InvestmentPlan",
+        "آیتم سبد سرمایه‌ گذاری یافت نشد"
+      );
     }
 
     // Delete item
@@ -153,7 +166,7 @@ export async function DELETE(
   } catch (error) {
     console.error("Error deleting investment plan item:", error);
     return errorResponse(
-      "خطا در حذف آیتم سبد سرمایه‌گذاری",
+      "خطا در حذف آیتم سبد سرمایه‌ گذاری",
       ErrorCodes.DATABASE_ERROR
     );
   }

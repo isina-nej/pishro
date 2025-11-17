@@ -162,7 +162,7 @@ const InvestmentModelsSection = () => {
   const models = [
     {
       type: "in-person" as const,
-      title: "سرمایه‌گذاری حضوری",
+      title: "سرمایه‌ گذاری حضوری",
       description:
         "برای سرمایه‌گذاران حرفه‌ای که تمایل به همکاری حضوری و مدیریت مستقیم سرمایه دارند",
       icon: Building2,
@@ -187,14 +187,14 @@ const InvestmentModelsSection = () => {
         {
           icon: FileSpreadsheet,
           title: "گزارش‌های تخصصی",
-          description: "دریافت گزارش‌های کامل سرمایه‌گذاری به صورت چاپی",
+          description: "دریافت گزارش‌های کامل سرمایه‌ گذاری به صورت چاپی",
         },
       ],
       benefits: [
         "تضمین اصل سرمایه با سند رسمی",
         "پشتیبانی ۲۴ ساعته تلفنی",
         "امکان بازدید از دفتر مرکزی",
-        "مشاوره رایگان قبل از سرمایه‌گذاری",
+        "مشاوره رایگان قبل از سرمایه‌ گذاری",
       ],
       cta: {
         text: "رزرو مشاوره حضوری",
@@ -203,7 +203,7 @@ const InvestmentModelsSection = () => {
     },
     {
       type: "online" as const,
-      title: "سرمایه‌گذاری آنلاین",
+      title: "سرمایه‌ گذاری آنلاین",
       description:
         "برای سرمایه‌گذارانی که ترجیح می‌دهند از طریق سایت اقدام کنند و اطلاعات و سیگنال‌ها را به صورت دیجیتال دریافت کنند",
       icon: Globe,
@@ -238,7 +238,7 @@ const InvestmentModelsSection = () => {
         "امکان تمدید و ارتقای سبد",
       ],
       cta: {
-        text: "شروع سرمایه‌گذاری آنلاین",
+        text: "شروع سرمایه‌ گذاری آنلاین",
         link: "#calculator",
         isScroll: true, // Flag to indicate this should scroll
       },
@@ -374,7 +374,7 @@ const InvestmentModelsSection = () => {
             <div className="flex-1">
               <h4 className="text-lg font-bold text-gray-900 mb-2">توجه مهم</h4>
               <p className="text-gray-700 leading-relaxed">
-                در مدل آنلاین، هزینه سبد متناسب با مبلغ سرمایه‌گذاری و مدت زمان
+                در مدل آنلاین، هزینه سبد متناسب با مبلغ سرمایه‌ گذاری و مدت زمان
                 انتخابی شما محاسبه می‌شود. فرمول دقیق محاسبه در آینده نزدیک به
                 سیستم اضافه خواهد شد. پس از پرداخت، فایل اکسل شامل اطلاعات،
                 سیگنال‌ها و فرمول‌های محاسباتی در پنل کاربری شما قرار می‌گیرد.

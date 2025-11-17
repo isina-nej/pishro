@@ -18,7 +18,7 @@ const InvestmentPlansLanding = ({
       {/* Image behind everything */}
       <Image
         src={investmentPlansData.image || "/images/investment-plans.jpg"}
-        alt="سبدهای سرمایه‌گذاری"
+        alt="سبدهای سرمایه‌ گذاری"
         fill
         className="object-cover z-0"
         priority

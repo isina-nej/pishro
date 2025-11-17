@@ -5,7 +5,7 @@
 
 import { PrismaClient } from "@prisma/client";
 import { PersianDataGenerator } from "./persian-data-generator";
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from "url";
 
 const prisma = new PrismaClient();
 const generator = new PersianDataGenerator(12345);
@@ -59,7 +59,7 @@ export async function seedBooks() {
           category: generator.choice([
             "بورس و سهام",
             "ارز دیجیتال",
-            "سرمایه‌گذاری",
+            "سرمایه‌ گذاری",
             "کسب و کار",
             "اقتصاد",
             "تحلیل تکنیکال",

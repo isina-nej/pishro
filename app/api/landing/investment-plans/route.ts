@@ -10,7 +10,7 @@ export async function GET(_req: NextRequest) {
 
     if (!data) {
       return errorResponse(
-        "داده‌های صفحه سبدهای سرمایه‌گذاری یافت نشد",
+        "داده‌های صفحه سبدهای سرمایه‌ گذاری یافت نشد",
         "INVESTMENT_PLANS_NOT_FOUND",
         404
       );
@@ -20,7 +20,7 @@ export async function GET(_req: NextRequest) {
   } catch (error) {
     console.error("Error in GET /api/landing/investment-plans:", error);
     return errorResponse(
-      "خطا در دریافت اطلاعات سبدهای سرمایه‌گذاری",
+      "خطا در دریافت اطلاعات سبدهای سرمایه‌ گذاری",
       "DATABASE_ERROR"
     );
   }
