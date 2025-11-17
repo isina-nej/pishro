@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "motion/react";
-import { HiVideoCamera, HiArrowLeft } from "react-icons/hi";
+import { HiUsers, HiArrowLeft } from "react-icons/hi";
 import Link from "next/link";
 
 interface SkyRoomPageContentProps {
@@ -63,7 +63,7 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
             transition={{ duration: 0.6, delay: 0.4, type: "spring" }}
             className="inline-flex items-center justify-center w-20 h-20 mb-6 bg-white/10 backdrop-blur-md rounded-full border border-white/20"
           >
-            <HiVideoCamera className="text-4xl text-white" />
+            <HiUsers className="text-4xl text-white" />
           </motion.div>
 
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-4 drop-shadow-2xl">
