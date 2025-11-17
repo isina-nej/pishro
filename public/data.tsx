@@ -69,6 +69,10 @@ export const navbarData = [
     label: "درباره ما",
     link: "/about-us", // About us section
   },
+  {
+    label: "همایش",
+    link: "/skyroom-classes",
+  },
   // {
   //   label: "سوالی دارید؟",
   //   link: "/faq", // Airdrop section
