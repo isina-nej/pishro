@@ -23,7 +23,7 @@ export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
   return (
     <section className="relative w-full h-screen overflow-hidden mt-10">
       <div className="container-md px-6 mx-auto h-full flex flex-col justify-between py-8">
-        <div className="flex flex-col gap-3 text-center md:text-right mb-6">
+        <div className="relative z-30 flex flex-col gap-3 text-center md:text-right mb-6">
           <h4 className="text-4xl font-extrabold sm:text-5xl">سامانه پیشرو</h4>
           <p className="text-sm text-gray-500 leading-6">
             سامانه <span className="text-myPrimary">پیشرو</span>، مشاور و همراه
@@ -36,7 +36,7 @@ export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
           spaceBetween={24}
           slidesPerView={1}
           pagination={{ clickable: true }}
-          className="relative flex-1 !pb-16 !w-full"
+          className="relative z-10 flex-1 !pb-16 !w-full"
           style={
             {
               "--swiper-pagination-bottom": "16px",
