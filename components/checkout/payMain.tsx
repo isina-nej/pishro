@@ -19,19 +19,33 @@ const PayMain = () => {
   const { items } = useCartStore();
 
   const cartSummary = useMemo(() => {
-    return items.map((course) => {
-      const price = course.price || 0;
-      const discountPercent = course.discountPercent || 0;
-      const off = Math.round((price * discountPercent) / 100);
-      const lastPrice = price - off;
+    return items.map((item) => {
+      const price = item.price || 0;
 
-      return {
-        title: course.subject,
-        price,
-        off,
-        lastPrice,
-        date: new Date(course.createdAt).toLocaleDateString("fa-IR"),
-      };
+      // بررسی نوع آیتم
+      if ("type" in item && item.type === "portfolio") {
+        // برای investment portfolios
+        return {
+          title: `سبد سرمایه‌گذاری - ${item.portfolioType === "low" ? "کم‌ریسک" : item.portfolioType === "medium" ? "متوسط" : "پرریسک"}`,
+          price,
+          off: 0,
+          lastPrice: price,
+          date: new Date().toLocaleDateString("fa-IR"),
+        };
+      } else {
+        // برای دوره‌ها
+        const discountPercent = "discountPercent" in item ? (item.discountPercent || 0) : 0;
+        const off = Math.round((price * discountPercent) / 100);
+        const lastPrice = price - off;
+
+        return {
+          title: "subject" in item ? item.subject : "دوره",
+          price,
+          off,
+          lastPrice,
+          date: "createdAt" in item ? new Date(item.createdAt).toLocaleDateString("fa-IR") : new Date().toLocaleDateString("fa-IR"),
+        };
+      }
     });
   }, [items]);
 

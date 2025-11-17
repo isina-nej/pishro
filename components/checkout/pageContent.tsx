@@ -33,7 +33,8 @@ const CheckoutPageContent = () => {
       const finalPrice = item.price;
       totalFinalPrice += finalPrice;
 
-      if (item.discountPercent && item.discountPercent > 0) {
+      // فقط برای دوره‌ها تخفیف محاسبه می‌شود
+      if ("discountPercent" in item && item.discountPercent && item.discountPercent > 0) {
         const originalPrice = Math.round(
           finalPrice / (1 - item.discountPercent / 100)
         );

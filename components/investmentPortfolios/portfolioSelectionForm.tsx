@@ -5,7 +5,8 @@ import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { Wallet, Clock, BarChart3, ShoppingCart } from "lucide-react";
 import axios from "axios";
-import { toast } from "@/lib/hooks/use-toast";
+import { toast } from "react-hot-toast";
+import { useCartStore, InvestmentPortfolioItem } from "@/stores/cart-store";
 
 const PortfolioSelectionForm = () => {
   const [amount, setAmount] = useState(50_000_000); // 50 میلیون تومان
@@ -106,10 +107,46 @@ const PortfolioSelectionForm = () => {
     return "high";
   };
 
+  const addToCart = useCartStore((state) => state.addToCart);
+  const items = useCartStore((state) => state.items);
+
+  // بررسی اینکه آیا این portfolio قبلاً به سبد اضافه شده
+  const isInCart = items.some((item) => {
+    if ("type" in item && item.type === "portfolio") {
+      return (
+        item.portfolioType === getPortfolioType() &&
+        item.portfolioAmount === amount &&
+        item.portfolioDuration === duration
+      );
+    }
+    return false;
+  });
+
   // افزودن به سبد خرید
   const handleAddToCart = async () => {
+    if (isInCart) {
+      toast.error("این سبد سرمایه‌گذاری قبلاً به سبد خرید اضافه شده است");
+      return;
+    }
+
     setIsLoading(true);
     try {
+      // ایجاد portfolio item برای zustand store
+      const portfolioItem: InvestmentPortfolioItem = {
+        id: `portfolio-${Date.now()}-${Math.random()}`, // unique ID
+        type: "portfolio",
+        portfolioType: getPortfolioType(),
+        portfolioAmount: amount,
+        portfolioDuration: duration,
+        expectedReturn,
+        monthlyRate,
+        price: Math.round(estimatedCost),
+      };
+
+      // افزودن به zustand store (برای نمایش فوری در سبد خرید)
+      addToCart(portfolioItem);
+
+      // ارسال به سرور (برای ذخیره در دیتابیس)
       const response = await axios.post("/api/cart/add-portfolio", {
         portfolioType: getPortfolioType(),
         portfolioAmount: amount,
@@ -120,11 +157,7 @@ const PortfolioSelectionForm = () => {
       });
 
       if (response.data.success) {
-        toast({
-          title: "موفق",
-          description: "سبد سرمایه‌گذاری با موفقیت به سبد خرید اضافه شد",
-          variant: "default",
-        });
+        toast.success("سبد سرمایه‌گذاری با موفقیت به سبد خرید اضافه شد 🛒");
       }
     } catch (error) {
       const errorMessage =
@@ -132,11 +165,7 @@ const PortfolioSelectionForm = () => {
           ?.data?.message ||
         "خطا در افزودن به سبد خرید. لطفاً دوباره تلاش کنید.";
 
-      toast({
-        title: "خطا",
-        description: errorMessage,
-        variant: "destructive",
-      });
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -345,11 +374,19 @@ const PortfolioSelectionForm = () => {
 
                 <button
                   onClick={handleAddToCart}
-                  disabled={isLoading}
-                  className="w-full md:w-auto px-8 py-4 bg-mySecondary hover:bg-mySecondary/90 text-white rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
+                  disabled={isLoading || isInCart}
+                  className={`w-full md:w-auto px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 ${
+                    isInCart
+                      ? "bg-gray-400 text-white"
+                      : "bg-mySecondary hover:bg-mySecondary/90 text-white"
+                  }`}
                 >
                   <ShoppingCart size={24} />
-                  {isLoading ? "در حال افزودن..." : "افزودن به سبد خرید"}
+                  {isLoading
+                    ? "در حال افزودن..."
+                    : isInCart
+                    ? "در سبد خرید"
+                    : "افزودن به سبد خرید"}
                 </button>
               </div>
 
