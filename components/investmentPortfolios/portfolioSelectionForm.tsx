@@ -186,12 +186,12 @@ const PortfolioSelectionForm = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* مبلغ سرمایه‌گذاری */}
               <div className="group bg-white rounded-2xl border border-gray-200 p-6 hover:shadow-lg hover:shadow-mySecondary/10 hover:border-mySecondary/30 transition-all duration-300 hover:scale-[1.02]">
-                <p className="text-center text-lg font-bold mb-6 flex items-center justify-center gap-2 text-gray-900">
+                <div className="text-center text-lg font-bold mb-6 flex items-center justify-center gap-2 text-gray-900">
                   <div className="p-2 bg-mySecondary/10 rounded-xl group-hover:bg-mySecondary/20 transition-colors">
                     <Wallet size={24} className="text-mySecondary" />
                   </div>
                   مبلغ سرمایه‌گذاری
-                </p>
+                </div>
 
                 <div className="flex items-start justify-between gap-4 mb-4">
                   <button
@@ -251,7 +251,9 @@ const PortfolioSelectionForm = () => {
                 <div className="mt-6 text-center p-4 bg-gradient-to-r from-mySecondary/5 via-transparent to-mySecondary/5 rounded-xl">
                   <p className="text-2xl md:text-3xl font-bold bg-gradient-to-l from-mySecondary to-myPrimary bg-clip-text text-transparent">
                     {formatNumber(amount)}{" "}
-                    <span className="font-normal text-gray-500 text-lg">تومان</span>
+                    <span className="font-normal text-gray-500 text-lg">
+                      تومان
+                    </span>
                   </p>
                 </div>
               </div>
