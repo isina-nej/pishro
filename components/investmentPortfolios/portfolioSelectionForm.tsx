@@ -4,7 +4,6 @@ import { useState, useMemo } from "react";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { Wallet, Clock, BarChart3, ShoppingCart } from "lucide-react";
-import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useCartStore, InvestmentPortfolioItem } from "@/stores/cart-store";
 
@@ -146,19 +145,7 @@ const PortfolioSelectionForm = () => {
       // افزودن به zustand store (برای نمایش فوری در سبد خرید)
       addToCart(portfolioItem);
 
-      // ارسال به سرور (برای ذخیره در دیتابیس)
-      const response = await axios.post("/api/cart/add-portfolio", {
-        portfolioType: getPortfolioType(),
-        portfolioAmount: amount,
-        portfolioDuration: duration,
-        expectedReturn,
-        monthlyRate,
-        price: Math.round(estimatedCost),
-      });
-
-      if (response.data.success) {
-        toast.success("سبد سرمایه‌گذاری با موفقیت به سبد خرید اضافه شد 🛒");
-      }
+      toast.success("سبد سرمایه‌گذاری با موفقیت به سبد خرید اضافه شد 🛒");
     } catch (error) {
       const errorMessage =
         (error as { response?: { data?: { message?: string } } })?.response
@@ -391,8 +378,8 @@ const PortfolioSelectionForm = () => {
               </div>
 
               <p className="text-center text-xs text-gray-500 mt-4">
-                نرخ ماهیانه: {(monthlyRate * 100).toFixed(0)}٪ | مدت:{" "}
-                {duration} ماه | نوع: {getRiskLabel(riskLevel)}
+                نرخ ماهیانه: {(monthlyRate * 100).toFixed(0)}٪ | مدت: {duration}{" "}
+                ماه | نوع: {getRiskLabel(riskLevel)}
               </p>
             </div>
           </div>
