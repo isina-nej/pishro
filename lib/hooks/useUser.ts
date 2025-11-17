@@ -9,6 +9,7 @@ import {
   updatePersonalInfo,
   updateAvatar,
   updatePayInfo,
+  uploadAvatarImage,
   type UserData,
   type EnrolledCourse,
   type Transaction,
@@ -230,6 +231,29 @@ export function useUpdatePayInfo() {
               ?.data?.error
           : undefined;
       toast.error(errorMessage || "خطا در به‌روزرسانی اطلاعات پرداخت");
+    },
+  });
+}
+
+/**
+ * Hook برای آپلود تصویر پروفایل
+ */
+export function useUploadAvatar() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: uploadAvatarImage,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: userKeys.me() });
+      toast.success("تصویر پروفایل با موفقیت آپلود شد");
+    },
+    onError: (error: unknown) => {
+      const errorMessage =
+        typeof error === "object" && error !== null && "response" in error
+          ? (error as { response?: { data?: { message?: string } } }).response
+              ?.data?.message
+          : undefined;
+      toast.error(errorMessage || "خطا در آپلود تصویر پروفایل");
     },
   });
 }
