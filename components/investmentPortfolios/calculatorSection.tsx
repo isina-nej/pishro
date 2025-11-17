@@ -133,7 +133,7 @@ const CalculatorSection = () => {
   };
 
   return (
-    <section className="relative w-full min-h-[600px] md:min-h-screen bg-gradient-to-br from-[#152c44] via-[#1a3a54] to-[#152c44] text-white overflow-hidden">
+    <section className="relative w-full min-h-[600px] md:min-h-screen bg-gradient-to-br from-[#152c44] via-[#1a3a54] to-[#152c44] text-white overflow-hidden mt-44">
       {/* pattern background */}
       <div className="absolute inset-0 bg-[url('/images/utiles/pattern1.svg')] opacity-10 z-0" />
 

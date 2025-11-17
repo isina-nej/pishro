@@ -153,7 +153,7 @@ const InvestmentModelsSection = () => {
 
   // Function to scroll to calculator
   const scrollToCalculator = () => {
-    const calculatorSection = document.getElementById("calculator-section");
+    const calculatorSection = document.getElementById("portfolio-selection");
     if (calculatorSection) {
       calculatorSection.scrollIntoView({ behavior: "smooth", block: "start" });
     }

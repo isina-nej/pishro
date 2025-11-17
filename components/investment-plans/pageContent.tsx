@@ -22,19 +22,19 @@ const InvestmentPlansPageContent = ({
       {/* Hero Section - New Design */}
       <InvestmentPlansHero investmentPlansData={investmentPlansData} />
 
+      {/* Calculator Section with ID for scroll targeting */}
+      <CalculatorSection />
+
       {/* Investment Models Section - with scroll to calculator */}
       <InvestmentModelsSection />
-
-      {/* Calculator Section with ID for scroll targeting */}
-      <div id="calculator-section">
-        <CalculatorSection />
-      </div>
 
       {/* Portfolios Display from investment-portfolios */}
       <PortfoliosDisplay />
 
       {/* Portfolio Selection Form from investment-portfolios */}
-      <PortfolioSelectionForm />
+      <div id="portfolio-selection">
+        <PortfolioSelectionForm />
+      </div>
     </div>
   );
 };
