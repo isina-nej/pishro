@@ -304,12 +304,12 @@ const PortfolioSelectionForm = () => {
               <div className="flex items-center gap-4">
                 <button
                   onClick={() =>
-                    setRiskLevel((prev) => Math.max(0, prev - 1) as 0 | 1 | 2)
+                    setRiskLevel((prev) => Math.min(2, prev + 1) as 0 | 1 | 2)
                   }
-                  disabled={riskLevel === 0}
+                  disabled={riskLevel === 2}
                   className="size-12 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 text-gray-700 text-2xl font-bold flex items-center justify-center active:scale-90 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <span className="mt-1">−</span>
+                  <span className="mt-1">+</span>
                 </button>
 
                 <div className="flex-1 px-2">
@@ -374,15 +374,14 @@ const PortfolioSelectionForm = () => {
                     }}
                   />
                 </div>
-
                 <button
                   onClick={() =>
-                    setRiskLevel((prev) => Math.min(2, prev + 1) as 0 | 1 | 2)
+                    setRiskLevel((prev) => Math.max(0, prev - 1) as 0 | 1 | 2)
                   }
-                  disabled={riskLevel === 2}
+                  disabled={riskLevel === 0}
                   className="size-12 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 text-gray-700 text-2xl font-bold flex items-center justify-center active:scale-90 transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <span className="mt-1">+</span>
+                  <span className="mt-1">−</span>
                 </button>
               </div>
 
