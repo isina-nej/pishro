@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion } from "motion/react";
 import { HiVideoCamera, HiArrowLeft } from "react-icons/hi";
+import Link from "next/link";
 
 interface SkyRoomPageContentProps {
   meetingLink: string | null;
@@ -90,7 +91,7 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
             {/* Glow Effect */}
             <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl blur-xl opacity-70 group-hover:opacity-100 transition duration-500 group-hover:duration-200 animate-pulse" />
 
-            <a
+            <Link
               href={meetingLink}
               target="_blank"
               rel="noopener noreferrer"
@@ -115,7 +116,7 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
                   </motion.div>
                 </div>
               </motion.button>
-            </a>
+            </Link>
           </motion.div>
         ) : (
           <motion.div
