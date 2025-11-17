@@ -40,9 +40,18 @@ export async function GET(req: Request) {
     // For each order, fetch course details from items JSON
     const ordersWithDetails = await Promise.all(
       orders.map(async (order) => {
-        const courseIds = (order.items as { courseId: string }[]).map(
-          (item) => item.courseId
-        );
+        // ✅ Validate items is an array before mapping
+        const itemsArray = Array.isArray(order.items)
+          ? order.items
+          : [];
+
+        const courseIds = itemsArray
+          .filter((item): item is { courseId: string } =>
+            typeof item === 'object' &&
+            item !== null &&
+            'courseId' in item
+          )
+          .map((item) => item.courseId);
 
         const courses = await prisma.course.findMany({
           where: { id: { in: courseIds } },
