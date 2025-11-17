@@ -15,6 +15,8 @@ export default async function MobileScrollSectionServer() {
     img: step.imageUrl || "/images/home/mobile-scroll/in-mobile-1.svg",
     gradient:
       step.gradient || "from-blue-400/30 via-indigo-400/20 to-transparent",
+    // @ts-expect-error - link field will be available after prisma generate
+    link: step.link,
   }));
 
   // If no data, don't render
