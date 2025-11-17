@@ -1,7 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Wallet, TrendingUp, Shield, BarChart3, ArrowDown, Sparkles } from "lucide-react";
+import {
+  Wallet,
+  TrendingUp,
+  Shield,
+  BarChart3,
+  ArrowDown,
+  Sparkles,
+} from "lucide-react";
 import Image from "next/image";
 import { InvestmentPlans, InvestmentPlan, InvestmentTag } from "@prisma/client";
 import { Button } from "@/components/ui/button";
@@ -24,8 +31,13 @@ export const InvestmentPlansHero = ({
     maxReturn: 11, // درصد بازدهی حداکثر
   };
 
-  const scrollToPortfolios = () => {
-    const element = document.getElementById("portfolio-selection");
+  const scrollToModels = () => {
+    const element = document.getElementById("investment-models");
+    element?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const scrollToPlans = () => {
+    const element = document.getElementById("plans-section");
     element?.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -74,7 +86,7 @@ export const InvestmentPlansHero = ({
         >
           <Image
             src={investmentPlansData.image || "/images/investment-plans.jpg"}
-            alt="سبدهای سرمایه‌گذاری"
+            alt="سبدهای سرمایه‌ گذاری"
             fill
             className="object-cover"
             priority
@@ -137,7 +149,7 @@ export const InvestmentPlansHero = ({
             <motion.div variants={itemVariants} className="flex justify-center">
               <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-6 py-2.5 text-sm font-medium text-emerald-300 shadow-lg shadow-emerald-500/10 backdrop-blur-sm">
                 <Sparkles className="h-4 w-4" />
-                سبدهای سرمایه‌گذاری پیشرو
+                سبدهای سرمایه‌ گذاری پیشرو
               </span>
             </motion.div>
 
@@ -157,11 +169,11 @@ export const InvestmentPlansHero = ({
 
             <motion.div variants={itemVariants}>
               <Button
-                onClick={scrollToPortfolios}
+                onClick={scrollToModels}
                 size="lg"
                 className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-xl shadow-emerald-500/25 hover:shadow-2xl hover:shadow-emerald-500/40 transition-all duration-300 px-8 py-6 text-lg font-semibold rounded-2xl group"
               >
-                شروع سرمایه‌گذاری
+                شروع سرمایه‌ گذاری
                 <ArrowDown className="mr-2 h-5 w-5 group-hover:translate-y-1 transition-transform" />
               </Button>
             </motion.div>
@@ -219,7 +231,7 @@ export const InvestmentPlansHero = ({
                 {/* Shine effect on hover */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
 
-                <div className="relative flex flex-col gap-4">
+                <div className="relative flex flex-col items-center text-center gap-4">
                   <span
                     className={`flex h-14 w-14 items-center justify-center rounded-2xl ${item.iconBg} text-white shadow-lg backdrop-blur-sm`}
                   >
@@ -245,14 +257,16 @@ export const InvestmentPlansHero = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5, duration: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
+        className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10"
       >
         <motion.div
           animate={floatAnimation}
           className="flex flex-col items-center gap-2 cursor-pointer"
-          onClick={scrollToPortfolios}
+          onClick={scrollToPlans}
         >
-          <span className="text-xs text-slate-400 font-medium">مشاهده سبدها</span>
+          <span className="text-xs text-slate-400 font-medium">
+            مشاهده سبدها
+          </span>
           <motion.div
             animate={{
               y: [0, 8, 0],

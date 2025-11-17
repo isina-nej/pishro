@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import type { Prisma } from "@prisma/client";
 
 /**
- * دریافت تمام صفحات سبدهای سرمایه‌گذاری منتشر شده
+ * دریافت تمام صفحات سبدهای سرمایه‌ گذاری منتشر شده
  */
 export async function getAllInvestmentPlans() {
   try {
@@ -31,7 +31,7 @@ export async function getAllInvestmentPlans() {
 }
 
 /**
- * دریافت یک صفحه سبدهای سرمایه‌گذاری خاص
+ * دریافت یک صفحه سبدهای سرمایه‌ گذاری خاص
  */
 export async function getInvestmentPlansById(id: string) {
   try {
@@ -57,7 +57,7 @@ export async function getInvestmentPlansById(id: string) {
 }
 
 /**
- * دریافت تمام صفحات سبدهای سرمایه‌گذاری (برای ادمین - بدون فیلتر published)
+ * دریافت تمام صفحات سبدهای سرمایه‌ گذاری (برای ادمین - بدون فیلتر published)
  */
 export async function getAllInvestmentPlansForAdmin(params?: {
   page?: number;
@@ -107,7 +107,7 @@ export async function getAllInvestmentPlansForAdmin(params?: {
 }
 
 /**
- * ایجاد صفحه سبدهای سرمایه‌گذاری جدید (برای ادمین)
+ * ایجاد صفحه سبدهای سرمایه‌ گذاری جدید (برای ادمین)
  */
 export async function createInvestmentPlans(data: {
   title: string;
@@ -151,7 +151,7 @@ export async function createInvestmentPlans(data: {
 }
 
 /**
- * به‌روزرسانی صفحه سبدهای سرمایه‌گذاری (برای ادمین)
+ * به‌روزرسانی صفحه سبدهای سرمایه‌ گذاری (برای ادمین)
  */
 export async function updateInvestmentPlans(
   id: string,
@@ -179,7 +179,7 @@ export async function updateInvestmentPlans(
 }
 
 /**
- * حذف صفحه سبدهای سرمایه‌گذاری (برای ادمین)
+ * حذف صفحه سبدهای سرمایه‌ گذاری (برای ادمین)
  */
 export async function deleteInvestmentPlans(id: string) {
   try {

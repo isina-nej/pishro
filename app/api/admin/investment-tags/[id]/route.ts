@@ -47,14 +47,14 @@ export async function GET(
     });
 
     if (!item) {
-      return notFoundResponse("InvestmentTag", "تگ سرمایه‌گذاری یافت نشد");
+      return notFoundResponse("InvestmentTag", "تگ سرمایه‌ گذاری یافت نشد");
     }
 
     return successResponse(item);
   } catch (error) {
     console.error("Error fetching investment tag:", error);
     return errorResponse(
-      "خطا در دریافت تگ سرمایه‌گذاری",
+      "خطا در دریافت تگ سرمایه‌ گذاری",
       ErrorCodes.DATABASE_ERROR
     );
   }
@@ -83,7 +83,7 @@ export async function PATCH(
     });
 
     if (!existingItem) {
-      return notFoundResponse("InvestmentTag", "تگ سرمایه‌گذاری یافت نشد");
+      return notFoundResponse("InvestmentTag", "تگ سرمایه‌ گذاری یافت نشد");
     }
 
     // Prepare update data
@@ -109,11 +109,14 @@ export async function PATCH(
       },
     });
 
-    return successResponse(updatedItem, "تگ سرمایه‌گذاری با موفقیت بروزرسانی شد");
+    return successResponse(
+      updatedItem,
+      "تگ سرمایه‌ گذاری با موفقیت بروزرسانی شد"
+    );
   } catch (error) {
     console.error("Error updating investment tag:", error);
     return errorResponse(
-      "خطا در بروزرسانی تگ سرمایه‌گذاری",
+      "خطا در بروزرسانی تگ سرمایه‌ گذاری",
       ErrorCodes.DATABASE_ERROR
     );
   }
@@ -141,7 +144,7 @@ export async function DELETE(
     });
 
     if (!existingItem) {
-      return notFoundResponse("InvestmentTag", "تگ سرمایه‌گذاری یافت نشد");
+      return notFoundResponse("InvestmentTag", "تگ سرمایه‌ گذاری یافت نشد");
     }
 
     // Delete item
@@ -153,7 +156,7 @@ export async function DELETE(
   } catch (error) {
     console.error("Error deleting investment tag:", error);
     return errorResponse(
-      "خطا در حذف تگ سرمایه‌گذاری",
+      "خطا در حذف تگ سرمایه‌ گذاری",
       ErrorCodes.DATABASE_ERROR
     );
   }

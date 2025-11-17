@@ -6,10 +6,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const data = await getInvestmentPlansData();
 
   return {
-    title: data?.metaTitle || "سبدهای سرمایه‌گذاری | پیشرو",
+    title: data?.metaTitle || "سبدهای سرمایه‌ گذاری | پیشرو",
     description:
       data?.metaDescription ||
-      "آشنایی با سبدهای سرمایه‌گذاری متنوع در ارز دیجیتال، بورس و ترکیبی",
+      "آشنایی با سبدهای سرمایه‌ گذاری متنوع در ارز دیجیتال، بورس و ترکیبی",
     keywords: data?.metaKeywords || [],
   };
 }
@@ -23,17 +23,19 @@ const InvestmentPage = async () => {
     return (
       <div className="container-md py-20 text-center">
         <h1 className="text-3xl font-bold text-gray-800 mb-4">
-          سبدهای سرمایه‌گذاری
+          سبدهای سرمایه‌ گذاری
         </h1>
         <p className="text-gray-600">
-          اطلاعات سبدهای سرمایه‌گذاری در حال حاضر در دسترس نیست. لطفاً بعداً مراجعه
-          کنید.
+          اطلاعات سبدهای سرمایه‌ گذاری در حال حاضر در دسترس نیست. لطفاً بعداً
+          مراجعه کنید.
         </p>
       </div>
     );
   }
 
-  return <InvestmentPlansPageContent investmentPlansData={investmentPlansData} />;
+  return (
+    <InvestmentPlansPageContent investmentPlansData={investmentPlansData} />
+  );
 };
 
 export default InvestmentPage;

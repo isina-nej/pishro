@@ -30,7 +30,7 @@ interface CategoryAboutSectionProps {
 const CategoryAboutSection = ({
   title1 = "مسیر",
   title2 = "پیشرو",
-  description = "در مسیر پیشرو، هدف ما فقط سرمایه‌گذاری نیست؛ بلکه ساختن آینده‌ای مطمئن و پویاست...",
+  description = "در مسیر پیشرو، هدف ما فقط سرمایه‌ گذاری نیست؛ بلکه ساختن آینده‌ای مطمئن و پویاست...",
   image = "/images/utiles/font-iran-section.svg",
   cta1Text = "شروع مسیر",
   cta1Link = "#",

@@ -22,10 +22,14 @@ const InvestmentPlansPageContent = ({
       <InvestmentPlansHero investmentPlansData={investmentPlansData} />
 
       {/* Investment Models Section */}
-      <InvestmentModelsSection />
+      <div id="investment-models">
+        <InvestmentModelsSection />
+      </div>
 
       {/* Portfolios Display from investment-portfolios */}
-      <PortfoliosDisplay />
+      <div id="plans-section">
+        <PortfoliosDisplay />
+      </div>
 
       {/* Portfolio Selection Form with Add to Cart Button */}
       <div id="portfolio-selection">

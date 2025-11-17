@@ -7,10 +7,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title:
-      homeLanding?.metaTitle || "پیشرو | بزرگترین مؤسسه سرمایه‌گذاری در ایران",
+      homeLanding?.metaTitle || "پیشرو | بزرگترین مؤسسه سرمایه‌ گذاری در ایران",
     description:
       homeLanding?.metaDescription ||
-      "آموزش تخصصی بورس، بازارهای مالی و سرمایه‌گذاری. از آموزش اصولی تا مشاوره حرفه‌ای",
+      "آموزش تخصصی بورس، بازارهای مالی و سرمایه‌ گذاری. از آموزش اصولی تا مشاوره حرفه‌ای",
     keywords: homeLanding?.metaKeywords || [],
   };
 }

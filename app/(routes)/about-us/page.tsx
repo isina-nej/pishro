@@ -9,7 +9,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: aboutPage?.metaTitle || "درباره ما | پیشرو",
     description:
       aboutPage?.metaDescription ||
-      "آشنایی با تیم، تاریخچه و ماموریت مؤسسه سرمایه‌گذاری پیشرو",
+      "آشنایی با تیم، تاریخچه و ماموریت مؤسسه سرمایه‌ گذاری پیشرو",
     keywords: aboutPage?.metaKeywords || [],
   };
 }

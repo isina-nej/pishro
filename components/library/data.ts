@@ -3,7 +3,7 @@ export type BookFormat = "جلد سخت" | "جلد نرم" | "الکترونیک
 export type BookCategory =
   | "بورس و سهام"
   | "ارز دیجیتال"
-  | "سرمایه‌گذاری"
+  | "سرمایه‌ گذاری"
   | "کسب و کار"
   | "اقتصاد"
   | "تحلیل تکنیکال"
@@ -58,7 +58,7 @@ export const libraryBooks: LibraryBook[] = [
     rating: 9.0,
     votes: 3150,
     popularity: 10120,
-    category: "سرمایه‌گذاری",
+    category: "سرمایه‌ گذاری",
     formats: ["جلد نرم", "الکترونیکی"],
     status: "پرفروش",
     cover:
@@ -122,7 +122,7 @@ export const libraryBooks: LibraryBook[] = [
     cover:
       "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=720&q=80",
     description:
-      "گام‌به‌گام تا رسیدن به استقلال مالی در ایران با تمرکز بر درآمد غیرفعال و سرمایه‌گذاری‌های هوشمند.",
+      "گام‌به‌گام تا رسیدن به استقلال مالی در ایران با تمرکز بر درآمد غیرفعال و سرمایه‌ گذاری‌های هوشمند.",
     tags: ["آزادی مالی", "درآمد غیرفعال", "پولسازی"],
     readingTime: "8 ساعت",
     isFeatured: true,
@@ -187,7 +187,7 @@ export const libraryBooks: LibraryBook[] = [
   {
     id: "startup-capital",
     slug: "startup-capital",
-    title: "سرمایه‌گذاری جسورانه",
+    title: "سرمایه‌ گذاری جسورانه",
     author: "شقایق کاظمی",
     year: 2021,
     rating: 8.3,
@@ -210,7 +210,7 @@ export const curatedCollections = [
     id: "crypto-basics",
     title: "ورود هوشمند به کریپتو",
     description:
-      "آشنایی کامل با مفاهیم رمزارز، بلاکچین و سرمایه‌گذاری ایمن در کریپتو.",
+      "آشنایی کامل با مفاهیم رمزارز، بلاکچین و سرمایه‌ گذاری ایمن در کریپتو.",
     accent: "from-cyan-500/80 via-blue-500/80 to-indigo-600/80",
   },
   {
@@ -224,7 +224,7 @@ export const curatedCollections = [
     id: "financial-mindset",
     title: "ذهن ثروت‌ساز",
     description:
-      "کتاب‌هایی برای تغییر نگرش مالی، کنترل احساسات در سرمایه‌گذاری و ساخت درآمد پایدار.",
+      "کتاب‌هایی برای تغییر نگرش مالی، کنترل احساسات در سرمایه‌ گذاری و ساخت درآمد پایدار.",
     accent: "from-emerald-500/80 via-teal-500/80 to-cyan-500/80",
   },
 ];

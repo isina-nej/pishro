@@ -61,9 +61,14 @@ const PlansList = ({ investmentPlansData }: PlansListProps) => {
     });
 
     // Scroll to portfolio selection form section
-    const portfolioFormSection = document.querySelector("#portfolio-selection-form");
+    const portfolioFormSection = document.querySelector(
+      "#portfolio-selection-form"
+    );
     if (portfolioFormSection) {
-      portfolioFormSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      portfolioFormSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     }
   };
 
@@ -82,7 +87,7 @@ const PlansList = ({ investmentPlansData }: PlansListProps) => {
             <DrawerContent className="rounded-t-2xl px-6 pb-8 pt-4 bg-gray-50 shadow-2xl border-t border-gray-200">
               <DrawerHeader className="text-center border-b pb-4 border-gray-200">
                 <DrawerTitle className="text-2xl font-bold text-gray-800">
-                  ساخت سبد سرمایه‌گذاری ({item.label})
+                  ساخت سبد سرمایه‌ گذاری ({item.label})
                 </DrawerTitle>
                 <DrawerDescription className="text-gray-600 mt-1">
                   لطفاً اطلاعات زیر را وارد کنید:
@@ -168,7 +173,7 @@ const PlansList = ({ investmentPlansData }: PlansListProps) => {
                   {/* Duration */}
                   <div>
                     <label className="block mb-2 text-sm font-medium text-gray-700">
-                      مدت سرمایه‌گذاری
+                      مدت سرمایه‌ گذاری
                     </label>
                     <Slider
                       min={0}

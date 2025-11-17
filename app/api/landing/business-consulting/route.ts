@@ -10,7 +10,7 @@ export async function GET(_req: NextRequest) {
 
     if (!data) {
       return errorResponse(
-        "داده‌های صفحه مشاوره سرمایه‌گذاری یافت نشد",
+        "داده‌های صفحه مشاوره سرمایه‌ گذاری یافت نشد",
         "INVESTMENT_CONSULTING_NOT_FOUND",
         404
       );
@@ -20,7 +20,7 @@ export async function GET(_req: NextRequest) {
   } catch (error) {
     console.error("Error in GET /api/landing/business-consulting:", error);
     return errorResponse(
-      "خطا در دریافت اطلاعات مشاوره سرمایه‌گذاری",
+      "خطا در دریافت اطلاعات مشاوره سرمایه‌ گذاری",
       "DATABASE_ERROR"
     );
   }

@@ -24,8 +24,7 @@ const CtaSection = ({
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   // Default values
-  const ctaTitle =
-    title || "آماده‌اید برای شروع سفر سرمایه‌گذاری هوشمند؟";
+  const ctaTitle = title || "آماده‌اید برای شروع سفر سرمایه‌ گذاری هوشمند؟";
   const ctaDescription =
     description ||
     "با پیوستن به جمع هزاران دانشجوی موفق ما، اولین قدم را برای دستیابی به استقلال مالی بردارید";

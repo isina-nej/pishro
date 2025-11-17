@@ -1,8 +1,20 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-import { Trash2, Tag, TrendingDown, Wallet, Clock, BarChart3 } from "lucide-react";
-import { useCartStore, CartItem, isCourse, isPortfolio } from "@/stores/cart-store";
+import {
+  Trash2,
+  Tag,
+  TrendingDown,
+  Wallet,
+  Clock,
+  BarChart3,
+} from "lucide-react";
+import {
+  useCartStore,
+  CartItem,
+  isCourse,
+  isPortfolio,
+} from "@/stores/cart-store";
 import { motion } from "framer-motion";
 
 interface ItemCardProps {
@@ -27,13 +39,15 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
   const itemIsPortfolio = isPortfolio(data);
 
   // محاسبه قیمت اصلی بر اساس درصد تخفیف (فقط برای دوره‌ها)
-  const hasDiscount = itemIsCourse && data.discountPercent && data.discountPercent > 0;
-  const originalPrice = hasDiscount && itemIsCourse
-    ? Math.round(data.price / (1 - data.discountPercent! / 100) / 100_000) *
-      100_000
-    : itemIsCourse
-    ? Math.round(data.price / 100_000) * 100_000
-    : 0;
+  const hasDiscount =
+    itemIsCourse && data.discountPercent && data.discountPercent > 0;
+  const originalPrice =
+    hasDiscount && itemIsCourse
+      ? Math.round(data.price / (1 - data.discountPercent! / 100) / 100_000) *
+        100_000
+      : itemIsCourse
+      ? Math.round(data.price / 100_000) * 100_000
+      : 0;
 
   const savedAmount = hasDiscount ? originalPrice - data.price : 0;
 
@@ -72,12 +86,12 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
         animate={{
           opacity: isRemoving ? 0 : 1,
           y: isRemoving ? -20 : 0,
-          scale: isRemoving ? 0.95 : 1
+          scale: isRemoving ? 0.95 : 1,
         }}
         transition={{
           duration: 0.3,
           delay: index * 0.1,
-          ease: "easeOut"
+          ease: "easeOut",
         }}
         className="w-full h-fit max-w-[410px] bg-white shadow-lg hover:shadow-xl rounded-2xl overflow-hidden border border-gray-100 transition-all duration-300 group"
       >
@@ -93,7 +107,9 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
             >
               <div className="bg-gradient-to-br from-myPrimary to-red-600 text-white px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
                 <Tag className="w-3.5 h-3.5" />
-                <span className="text-xs font-bold">{data.discountPercent}٪ تخفیف</span>
+                <span className="text-xs font-bold">
+                  {data.discountPercent}٪ تخفیف
+                </span>
               </div>
             </motion.div>
           )}
@@ -123,7 +139,9 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
                     className="opacity-50"
                   />
                 </div>
-                <span className="text-gray-400 text-sm">تصویر در دسترس نیست</span>
+                <span className="text-gray-400 text-sm">
+                  تصویر در دسترس نیست
+                </span>
               </div>
             ) : (
               <>
@@ -168,7 +186,8 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
               >
                 <TrendingDown className="w-4 h-4" />
                 <span className="text-xs font-medium">
-                  شما {savedAmount.toLocaleString("fa-IR")} تومان صرفه‌جویی می‌کنید!
+                  شما {savedAmount.toLocaleString("fa-IR")} تومان صرفه‌جویی
+                  می‌کنید!
                 </span>
               </motion.div>
             )}
@@ -213,12 +232,12 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
         animate={{
           opacity: isRemoving ? 0 : 1,
           y: isRemoving ? -20 : 0,
-          scale: isRemoving ? 0.95 : 1
+          scale: isRemoving ? 0.95 : 1,
         }}
         transition={{
           duration: 0.3,
           delay: index * 0.1,
-          ease: "easeOut"
+          ease: "easeOut",
         }}
         className="w-full h-fit max-w-[410px] bg-white shadow-lg hover:shadow-xl rounded-2xl overflow-hidden border border-gray-100 transition-all duration-300 group"
       >
@@ -241,7 +260,7 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
               <BarChart3 className="w-6 h-6" />
             </div>
             <div>
-              <h6 className="font-bold text-lg">سبد سرمایه‌گذاری</h6>
+              <h6 className="font-bold text-lg">سبد سرمایه‌ گذاری</h6>
               <p className="text-sm text-white/80">
                 {getRiskLabel(data.portfolioType)}
               </p>
@@ -289,7 +308,9 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
 
           {/* Expected Return */}
           <div className="bg-green-50 p-3 rounded-lg">
-            <p className="text-xs text-gray-600 mb-1 text-center">بازده تخمینی</p>
+            <p className="text-xs text-gray-600 mb-1 text-center">
+              بازده تخمینی
+            </p>
             <p className="text-lg font-bold text-green-700 text-center">
               {data.expectedReturn.toLocaleString("fa-IR")} تومان
             </p>

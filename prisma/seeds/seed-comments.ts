@@ -3,9 +3,9 @@
  * Creates comment/testimonial records
  */
 
-import { PrismaClient, UserRoleType, Prisma } from '@prisma/client';
-import { PersianDataGenerator } from './persian-data-generator';
-import { fileURLToPath } from 'url';
+import { PrismaClient, UserRoleType, Prisma } from "@prisma/client";
+import { PersianDataGenerator } from "./persian-data-generator";
+import { fileURLToPath } from "url";
 
 const prisma = new PrismaClient();
 const generator = new PersianDataGenerator(12345);
@@ -13,7 +13,7 @@ const generator = new PersianDataGenerator(12345);
 const COMMENT_COUNT = 100;
 
 export async function seedComments() {
-  console.log('🌱 Starting to seed comments...');
+  console.log("🌱 Starting to seed comments...");
 
   try {
     const users = await prisma.user.findMany();
@@ -21,7 +21,7 @@ export async function seedComments() {
     const categories = await prisma.category.findMany();
 
     if (users.length === 0 || courses.length === 0) {
-      console.log('⚠️  Please seed users and courses first!');
+      console.log("⚠️  Please seed users and courses first!");
       return { created: 0, updated: 0, total: 0 };
     }
 
@@ -41,12 +41,12 @@ export async function seedComments() {
         featured: generator.randomInt(0, 10) > 8,
         views: generator.randomInt(0, 500),
         likes: [],
-        dislikes: []
+        dislikes: [],
       };
 
       if (user) {
         commentData.user = {
-          connect: { id: user.id }
+          connect: { id: user.id },
         };
       } else {
         // Guest testimonial
@@ -56,24 +56,24 @@ export async function seedComments() {
         commentData.userRole = generator.choice([
           UserRoleType.STUDENT,
           UserRoleType.PROFESSIONAL_TRADER,
-          UserRoleType.INVESTOR
+          UserRoleType.INVESTOR,
         ]);
         commentData.userCompany = generator.choice([
-          'کارگزاری آگاه',
-          'شرکت سرمایه‌گذاری پیشرو',
-          'بانک ملی',
-          undefined
+          "کارگزاری آگاه",
+          "شرکت سرمایه‌ گذاری پیشرو",
+          "بانک ملی",
+          undefined,
         ]);
       }
 
       // Attach to course or category
       if (generator.randomInt(0, 10) > 3 && courses.length > 0) {
         commentData.course = {
-          connect: { id: generator.choice(courses).id }
+          connect: { id: generator.choice(courses).id },
         };
       } else if (categories.length > 0) {
         commentData.category = {
-          connect: { id: generator.choice(categories).id }
+          connect: { id: generator.choice(categories).id },
         };
       }
 
@@ -90,14 +90,14 @@ export async function seedComments() {
 
     return { created, updated: 0, total: created };
   } catch (error) {
-    console.error('❌ Error seeding comments:', error);
+    console.error("❌ Error seeding comments:", error);
     throw error;
   }
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   seedComments()
-    .catch(error => {
+    .catch((error) => {
       console.error(error);
       process.exit(1);
     })

@@ -3,9 +3,14 @@
  * Creates course records with Persian content
  */
 
-import { PrismaClient, CourseLevel, CourseStatus, Language } from '@prisma/client';
-import { PersianDataGenerator } from './persian-data-generator';
-import { fileURLToPath } from 'url';
+import {
+  PrismaClient,
+  CourseLevel,
+  CourseStatus,
+  Language,
+} from "@prisma/client";
+import { PersianDataGenerator } from "./persian-data-generator";
+import { fileURLToPath } from "url";
 
 const prisma = new PrismaClient();
 const generator = new PersianDataGenerator(12345);
@@ -13,7 +18,7 @@ const generator = new PersianDataGenerator(12345);
 const COURSE_COUNT = 40;
 
 export async function seedCourses() {
-  console.log('🌱 Starting to seed courses...');
+  console.log("🌱 Starting to seed courses...");
 
   try {
     // Get categories and tags to relate to courses
@@ -21,7 +26,7 @@ export async function seedCourses() {
     const tags = await prisma.tag.findMany();
 
     if (categories.length === 0 || tags.length === 0) {
-      console.log('⚠️  Please seed categories and tags first!');
+      console.log("⚠️  Please seed categories and tags first!");
       return { created: 0, updated: 0, total: 0 };
     }
 
@@ -33,7 +38,10 @@ export async function seedCourses() {
       const slug = generator.generateSlug(subject, i);
       const category = generator.choice(categories);
       const selectedTags = generator.choice([2, 3, 4, 5]);
-      const courseTags = tags.slice(i % tags.length, (i % tags.length) + selectedTags);
+      const courseTags = tags.slice(
+        i % tags.length,
+        (i % tags.length) + selectedTags
+      );
 
       const course = await prisma.course.upsert({
         where: { slug },
@@ -46,29 +54,64 @@ export async function seedCourses() {
           rating: generator.generateRating(),
           description: generator.generateParagraphs(2),
           discountPercent: generator.generateDiscount(),
-          time: generator.choice(['2 ساعت', '5 ساعت', '10 ساعت', '15 ساعت', '20 ساعت', '30 ساعت']),
+          time: generator.choice([
+            "2 ساعت",
+            "5 ساعت",
+            "10 ساعت",
+            "15 ساعت",
+            "20 ساعت",
+            "30 ساعت",
+          ]),
           students: generator.randomInt(50, 2000),
           videosCount: generator.randomInt(10, 80),
           categoryId: category.id,
-          tagIds: courseTags.map(t => t.id),
-          level: generator.choice([CourseLevel.BEGINNER, CourseLevel.INTERMEDIATE, CourseLevel.ADVANCED]),
+          tagIds: courseTags.map((t) => t.id),
+          level: generator.choice([
+            CourseLevel.BEGINNER,
+            CourseLevel.INTERMEDIATE,
+            CourseLevel.ADVANCED,
+          ]),
           language: Language.FA,
-          prerequisites: generator.randomInt(0, 10) > 6 ? [
-            'آشنایی با مفاهیم پایه',
-            'داشتن کامپیوتر یا گوشی هوشمند',
-            'اینترنت پایدار'
-          ] : [],
+          prerequisites:
+            generator.randomInt(0, 10) > 6
+              ? [
+                  "آشنایی با مفاهیم پایه",
+                  "داشتن کامپیوتر یا گوشی هوشمند",
+                  "اینترنت پایدار",
+                ]
+              : [],
           learningGoals: [
-            generator.choice(['تسلط بر تحلیل تکنیکال', 'شناخت بازار', 'مدیریت ریسک', 'استراتژی معاملاتی']),
-            generator.choice(['کسب درآمد', 'سرمایه‌گذاری موفق', 'معامله‌گری حرفه‌ای']),
-            generator.choice(['یادگیری ابزارها', 'تحلیل نمودار', 'شناسایی الگوها'])
+            generator.choice([
+              "تسلط بر تحلیل تکنیکال",
+              "شناخت بازار",
+              "مدیریت ریسک",
+              "استراتژی معاملاتی",
+            ]),
+            generator.choice([
+              "کسب درآمد",
+              "سرمایه‌ گذاری موفق",
+              "معامله‌گری حرفه‌ای",
+            ]),
+            generator.choice([
+              "یادگیری ابزارها",
+              "تحلیل نمودار",
+              "شناسایی الگوها",
+            ]),
           ],
-          instructor: generator.generateFullName().firstName + ' ' + generator.generateFullName().lastName,
-          status: generator.choice([CourseStatus.ACTIVE, CourseStatus.ACTIVE, CourseStatus.ACTIVE, CourseStatus.COMING_SOON]),
+          instructor:
+            generator.generateFullName().firstName +
+            " " +
+            generator.generateFullName().lastName,
+          status: generator.choice([
+            CourseStatus.ACTIVE,
+            CourseStatus.ACTIVE,
+            CourseStatus.ACTIVE,
+            CourseStatus.COMING_SOON,
+          ]),
           published: generator.choice([true, true, true, false]),
           featured: generator.randomInt(0, 10) > 7,
-          views: generator.randomInt(0, 5000)
-        }
+          views: generator.randomInt(0, 5000),
+        },
       });
 
       if (course.createdAt.getTime() === course.updatedAt.getTime()) {
@@ -89,14 +132,14 @@ export async function seedCourses() {
 
     return { created, updated, total: created + updated };
   } catch (error) {
-    console.error('❌ Error seeding courses:', error);
+    console.error("❌ Error seeding courses:", error);
     throw error;
   }
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   seedCourses()
-    .catch(error => {
+    .catch((error) => {
       console.error(error);
       process.exit(1);
     })

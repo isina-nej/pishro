@@ -15,6 +15,7 @@ export default async function MobileScrollSectionServer() {
     img: step.imageUrl || "/images/home/mobile-scroll/in-mobile-1.svg",
     gradient:
       step.gradient || "from-blue-400/30 via-indigo-400/20 to-transparent",
+    link: step.link || undefined,
   }));
 
   // If no data, don't render

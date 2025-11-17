@@ -16,20 +16,18 @@ import {
   LuUsers,
   LuVideo,
   LuBookOpen,
-  LuCheck,
   LuBan,
   LuGlobe,
 } from "react-icons/lu";
+import { BsCheckCircleFill } from "react-icons/bs";
 import {
   getCourseBySlug,
   getAllCourseSlugs,
 } from "@/lib/services/course-service";
 import RatingStars from "@/components/utils/RatingStars";
-import CommentsSlider from "@/components/utils/CommentsSlider";
 import AddToCartButton from "@/components/utils/AddToCartButton";
 import { CourseLevel } from "@prisma/client";
 import CtaSection from "@/components/courses/ctaSection";
-import { getUserRolePersian } from "@/lib/role-utils";
 
 // ISR Configuration: Revalidate every 1 hour for fresh content
 export const revalidate = 3600;
@@ -139,35 +137,6 @@ export default async function CourseDetailPage({
       ? (course.price * course.discountPercent) / 100
       : 0;
     const finalPrice = course.price - discountAmount;
-
-    // Transform comments for CommentsSlider
-    const comments = (course.comments || []).map((c) => {
-      let displayName = c.userName || "کاربر";
-      if (!c.userName && c.user) {
-        const firstName = c.user.firstName || "";
-        const lastName = c.user.lastName || "";
-        displayName = `${firstName} ${lastName}`.trim() || "کاربر";
-      }
-
-      const avatar =
-        c.userAvatar || c.user?.avatarUrl || "/images/default-avatar.png";
-
-      return {
-        id: c.id,
-        userName: displayName,
-        userAvatar: avatar,
-        userRole: getUserRolePersian(c.userRole),
-        rating: c.rating || 5,
-        content: c.text,
-        date: c.createdAt.toLocaleDateString("fa-IR", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        }),
-        verified: c.verified,
-        likes: c.likes?.length || 0,
-      };
-    });
 
     return (
       <main className="w-full mt-20">
@@ -323,9 +292,9 @@ export default async function CourseDetailPage({
                     <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {course.learningGoals.map((goal, idx) => (
                         <li key={idx} className="flex items-start gap-3">
-                          <LuCheck
+                          <BsCheckCircleFill
                             className="text-green-500 flex-shrink-0 mt-1"
-                            size={20}
+                            size={22}
                           />
                           <span className="text-gray-700">{goal}</span>
                         </li>
@@ -343,9 +312,9 @@ export default async function CourseDetailPage({
                     <ul className="space-y-3">
                       {course.prerequisites.map((prereq, idx) => (
                         <li key={idx} className="flex items-start gap-3">
-                          <LuCheck
+                          <BsCheckCircleFill
                             className="text-myPrimary flex-shrink-0 mt-1"
-                            size={20}
+                            size={22}
                           />
                           <span className="text-gray-700">{prereq}</span>
                         </li>
@@ -423,23 +392,6 @@ export default async function CourseDetailPage({
             </div>
           </div>
         </section>
-
-        {/* Comments Section */}
-        {comments.length > 0 && (
-          <section
-            className="py-12 sm:py-16 md:py-20 bg-gray-50"
-            aria-label="نظرات دانشجویان"
-          >
-            <Suspense
-              fallback={<div className="h-64 animate-pulse bg-white" />}
-            >
-              <CommentsSlider
-                comments={comments}
-                title={`نظرات دانشجویان دوره ${course.subject}`}
-              />
-            </Suspense>
-          </section>
-        )}
 
         {/* CTA Section */}
         <CtaSection

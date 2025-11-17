@@ -58,7 +58,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.error("Error fetching investment plans pages:", error);
     return errorResponse(
-      "خطا در دریافت صفحات سبدهای سرمایه‌گذاری",
+      "خطا در دریافت صفحات سبدهای سرمایه‌ گذاری",
       ErrorCodes.DATABASE_ERROR
     );
   }
@@ -132,11 +132,14 @@ export async function POST(req: NextRequest) {
       published,
     });
 
-    return createdResponse(item, "صفحه سبدهای سرمایه‌گذاری با موفقیت ایجاد شد");
+    return createdResponse(
+      item,
+      "صفحه سبدهای سرمایه‌ گذاری با موفقیت ایجاد شد"
+    );
   } catch (error) {
     console.error("Error creating investment plans page:", error);
     return errorResponse(
-      "خطا در ایجاد صفحه سبدهای سرمایه‌گذاری",
+      "خطا در ایجاد صفحه سبدهای سرمایه‌ گذاری",
       ErrorCodes.DATABASE_ERROR
     );
   }

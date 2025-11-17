@@ -1,9 +1,9 @@
 import { successResponse, errorResponse, ErrorCodes } from "@/lib/api-response";
-import { getAllSkyRoomClassesForAdmin } from "@/lib/services/skyroom-service";
+import { getSkyRoomMeetingLink } from "@/lib/services/skyroom-service";
 
 export async function GET() {
   try {
-    const classes = await getAllSkyRoomClassesForAdmin();
+    const classes = await getSkyRoomMeetingLink();
     return successResponse(classes);
   } catch (error) {
     console.error("Error fetching skyroom classes:", error);

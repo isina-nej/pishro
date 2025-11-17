@@ -25,7 +25,7 @@ const AboutOtherPages = ({ data }: AboutOtherPagesProps) => {
   const {
     title1 = "مسیر",
     title2 = "پیشرو",
-    description = "در مسیر پیشرو، هدف ما فقط سرمایه‌گذاری نیست؛ بلکه ساختن آینده‌ای مطمئن و پویاست...",
+    description = "در مسیر پیشرو، هدف ما فقط سرمایه‌ گذاری نیست؛ بلکه ساختن آینده‌ای مطمئن و پویاست...",
     button1 = "شروع مسیر",
     button2 = "بیشتر بدانید",
     image = "/images/utiles/font-iran-section.svg",

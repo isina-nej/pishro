@@ -41,14 +41,17 @@ export async function GET(
     const item = await getInvestmentPlansById(id);
 
     if (!item) {
-      return notFoundResponse("InvestmentPlans", "صفحه سبدهای سرمایه‌گذاری یافت نشد");
+      return notFoundResponse(
+        "InvestmentPlans",
+        "صفحه سبدهای سرمایه‌ گذاری یافت نشد"
+      );
     }
 
     return successResponse(item);
   } catch (error) {
     console.error("Error fetching investment plans page:", error);
     return errorResponse(
-      "خطا در دریافت صفحه سبدهای سرمایه‌گذاری",
+      "خطا در دریافت صفحه سبدهای سرمایه‌ گذاری",
       ErrorCodes.DATABASE_ERROR
     );
   }
@@ -75,7 +78,10 @@ export async function PATCH(
     const existingItem = await getInvestmentPlansById(id);
 
     if (!existingItem) {
-      return notFoundResponse("InvestmentPlans", "صفحه سبدهای سرمایه‌گذاری یافت نشد");
+      return notFoundResponse(
+        "InvestmentPlans",
+        "صفحه سبدهای سرمایه‌ گذاری یافت نشد"
+      );
     }
 
     // Prepare update data
@@ -83,24 +89,31 @@ export async function PATCH(
 
     // Only include fields that are provided
     if (body.title !== undefined) updateData.title = body.title.trim();
-    if (body.description !== undefined) updateData.description = body.description.trim();
+    if (body.description !== undefined)
+      updateData.description = body.description.trim();
     if (body.image !== undefined) updateData.image = body.image;
-    if (body.plansIntroCards !== undefined) updateData.plansIntroCards = body.plansIntroCards;
+    if (body.plansIntroCards !== undefined)
+      updateData.plansIntroCards = body.plansIntroCards;
     if (body.minAmount !== undefined) updateData.minAmount = body.minAmount;
     if (body.maxAmount !== undefined) updateData.maxAmount = body.maxAmount;
     if (body.amountStep !== undefined) updateData.amountStep = body.amountStep;
     if (body.metaTitle !== undefined) updateData.metaTitle = body.metaTitle;
-    if (body.metaDescription !== undefined) updateData.metaDescription = body.metaDescription;
-    if (body.metaKeywords !== undefined) updateData.metaKeywords = body.metaKeywords;
+    if (body.metaDescription !== undefined)
+      updateData.metaDescription = body.metaDescription;
+    if (body.metaKeywords !== undefined)
+      updateData.metaKeywords = body.metaKeywords;
     if (body.published !== undefined) updateData.published = body.published;
 
     const updatedItem = await updateInvestmentPlans(id, updateData);
 
-    return successResponse(updatedItem, "صفحه سبدهای سرمایه‌گذاری با موفقیت بروزرسانی شد");
+    return successResponse(
+      updatedItem,
+      "صفحه سبدهای سرمایه‌ گذاری با موفقیت بروزرسانی شد"
+    );
   } catch (error) {
     console.error("Error updating investment plans page:", error);
     return errorResponse(
-      "خطا در بروزرسانی صفحه سبدهای سرمایه‌گذاری",
+      "خطا در بروزرسانی صفحه سبدهای سرمایه‌ گذاری",
       ErrorCodes.DATABASE_ERROR
     );
   }
@@ -126,7 +139,10 @@ export async function DELETE(
     const existingItem = await getInvestmentPlansById(id);
 
     if (!existingItem) {
-      return notFoundResponse("InvestmentPlans", "صفحه سبدهای سرمایه‌گذاری یافت نشد");
+      return notFoundResponse(
+        "InvestmentPlans",
+        "صفحه سبدهای سرمایه‌ گذاری یافت نشد"
+      );
     }
 
     // Delete item (cascading deletes will handle related items)
@@ -136,7 +152,7 @@ export async function DELETE(
   } catch (error) {
     console.error("Error deleting investment plans page:", error);
     return errorResponse(
-      "خطا در حذف صفحه سبدهای سرمایه‌گذاری",
+      "خطا در حذف صفحه سبدهای سرمایه‌ گذاری",
       ErrorCodes.DATABASE_ERROR
     );
   }

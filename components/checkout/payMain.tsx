@@ -6,13 +6,7 @@ import { cn } from "@/lib/utils";
 import { checkoutBank } from "@/public/data";
 import { useCartStore } from "@/stores/cart-store";
 import { motion } from "framer-motion";
-import {
-  CreditCard,
-  CheckCircle2,
-  Calendar,
-  Tag,
-  Receipt,
-} from "lucide-react";
+import { CreditCard, CheckCircle2, Calendar, Tag, Receipt } from "lucide-react";
 
 const PayMain = () => {
   const [bank, setBank] = useState<"saman" | "melli" | "mellat">("saman");
@@ -26,7 +20,13 @@ const PayMain = () => {
       if ("type" in item && item.type === "portfolio") {
         // برای investment portfolios
         return {
-          title: `سبد سرمایه‌گذاری - ${item.portfolioType === "low" ? "کم‌ریسک" : item.portfolioType === "medium" ? "متوسط" : "پرریسک"}`,
+          title: `سبد سرمایه‌ گذاری - ${
+            item.portfolioType === "low"
+              ? "کم‌ریسک"
+              : item.portfolioType === "medium"
+              ? "متوسط"
+              : "پرریسک"
+          }`,
           price,
           off: 0,
           lastPrice: price,
@@ -34,7 +34,8 @@ const PayMain = () => {
         };
       } else {
         // برای دوره‌ها
-        const discountPercent = "discountPercent" in item ? (item.discountPercent || 0) : 0;
+        const discountPercent =
+          "discountPercent" in item ? item.discountPercent || 0 : 0;
         const off = Math.round((price * discountPercent) / 100);
         const lastPrice = price - off;
 
@@ -43,7 +44,10 @@ const PayMain = () => {
           price,
           off,
           lastPrice,
-          date: "createdAt" in item ? new Date(item.createdAt).toLocaleDateString("fa-IR") : new Date().toLocaleDateString("fa-IR"),
+          date:
+            "createdAt" in item
+              ? new Date(item.createdAt).toLocaleDateString("fa-IR")
+              : new Date().toLocaleDateString("fa-IR"),
         };
       }
     });
@@ -81,7 +85,9 @@ const PayMain = () => {
             {checkoutBank.map((item, idx) => (
               <motion.button
                 key={idx}
-                onClick={() => setBank(item.name as "saman" | "melli" | "mellat")}
+                onClick={() =>
+                  setBank(item.name as "saman" | "melli" | "mellat")
+                }
                 whileHover={{ scale: 1.05, y: -4 }}
                 whileTap={{ scale: 0.95 }}
                 transition={{ type: "spring", stiffness: 300 }}

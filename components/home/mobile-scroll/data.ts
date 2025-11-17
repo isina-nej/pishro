@@ -4,6 +4,7 @@ export type MobileScrollerStep = {
   img: string; // تصویر داخل موبایل (مثل in-mobile-1.svg)
   imgCover?: string; // تصویر پس‌زمینه موبایل
   gradient: string;
+  link?: string; // لینک دکمه اطلاعات بیشتر
 };
 
 export const mobileScrollerSteps: MobileScrollerStep[] = [

@@ -17,7 +17,7 @@ const PageContent = () => {
       {/* فرم انتخاب سبد */}
       <PortfolioSelectionForm />
 
-      {/* توضیحات دو مدل سرمایه‌گذاری */}
+      {/* توضیحات دو مدل سرمایه‌ گذاری */}
       <InvestmentModelsSection />
     </div>
   );

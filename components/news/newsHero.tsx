@@ -38,7 +38,7 @@ export const NewsHero = ({ stats }: NewsHeroProps) => {
             اخبار و رویدادهای پیشرو
           </span>
           <h1 className="text-4xl font-extrabold !leading-tight md:text-5xl">
-            به‌روزترین اخبار دنیای سرمایه‌گذاری و کسب‌وکار
+            به‌روزترین اخبار دنیای سرمایه‌ گذاری و کسب‌وکار
           </h1>
           <p className="text-base text-slate-200 md:text-lg">
             تازه‌ترین اخبار، تحلیل‌ها و بینش‌های بازار سرمایه که با دقت توسط تیم

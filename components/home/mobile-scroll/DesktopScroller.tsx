@@ -117,9 +117,18 @@ export function DesktopScroller({
                   </ul>
 
                   <div className="pt-10">
-                    <button className="px-10 py-3 bg-white/10 text-white rounded-full shadow-md hover:bg-white/5 transition">
-                      اطلاعات بیشتر
-                    </button>
+                    {steps[index].link ? (
+                      <a
+                        href={steps[index].link}
+                        className="inline-block px-10 py-3 bg-white/10 text-white rounded-full shadow-md hover:bg-white/5 transition"
+                      >
+                        اطلاعات بیشتر
+                      </a>
+                    ) : (
+                      <button className="px-10 py-3 bg-white/10 text-white rounded-full shadow-md hover:bg-white/5 transition cursor-default">
+                        اطلاعات بیشتر
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

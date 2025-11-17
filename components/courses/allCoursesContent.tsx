@@ -50,7 +50,7 @@ export default function AllCoursesContent({
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-center text-base sm:text-lg md:text-xl max-w-2xl mx-auto opacity-90"
           >
-            مجموعه کامل دوره‌های تخصصی پیشرو در زمینه سرمایه‌گذاری و بازارهای
+            مجموعه کامل دوره‌های تخصصی پیشرو در زمینه سرمایه‌ گذاری و بازارهای
             مالی
           </motion.p>
         </div>

@@ -56,6 +56,21 @@ export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
                   </h6>
                 </div>
 
+                <div className="w-full flex justify-center mt-4 mb-6">
+                  {step.link ? (
+                    <a
+                      href={step.link}
+                      className="inline-block px-8 py-2.5 bg-white/10 text-white rounded-full shadow-md hover:bg-white/5 transition text-sm"
+                    >
+                      اطلاعات بیشتر
+                    </a>
+                  ) : (
+                    <button className="px-8 py-2.5 bg-white/10 text-white rounded-full shadow-md hover:bg-white/5 transition text-sm cursor-default">
+                      اطلاعات بیشتر
+                    </button>
+                  )}
+                </div>
+
                 <div className="absolute -bottom-[100px] right-0 flex w-full flex-col items-center justify-center">
                   <div className="relative w-full max-w-[270px] aspect-[500/960]">
                     {/* mobile frame (background layer) */}
