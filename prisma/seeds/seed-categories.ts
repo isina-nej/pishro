@@ -24,7 +24,7 @@ export async function seedCategories() {
       update: {},
       create: {
         slug: "airdrop",
-        title: "آموزش ایردراپ",
+        title: "اخبار ایردراپ",
         description:
           "دوره‌های جامع آموزش ایردراپ از مبتدی تا پیشرفته. یاد بگیرید چگونه از فرصت‌های ایردراپ بهره‌برداری کنید و توکن‌های رایگان دریافت کنید.",
         icon: "/icons/airdrop.svg",
@@ -84,7 +84,7 @@ export async function seedCategories() {
       update: {},
       create: {
         slug: "nft",
-        title: "آموزش NFT",
+        title: "اخبار NFT",
         description:
           "همه چیز درباره توکن‌های غیرقابل تعویض (NFT). از خرید و فروش تا ساخت و عرضه NFT.",
         icon: "/icons/nft.svg",
@@ -144,7 +144,7 @@ export async function seedCategories() {
       update: {},
       create: {
         slug: "cryptocurrency",
-        title: "آموزش ارز دیجیتال",
+        title: "اخبار ارز دیجیتال",
         description:
           "دوره‌های آموزشی ارز دیجیتال، بیتکوین، اتریوم و آلت کوین‌ها. معامله، سرمایه‌گذاری و تحلیل تکنیکال.",
         icon: "/icons/crypto.svg",
@@ -204,7 +204,7 @@ export async function seedCategories() {
       update: {},
       create: {
         slug: "stock-market",
-        title: "آموزش بورس",
+        title: "اخبار بورس",
         description:
           "آموزش کامل بورس ایران از صفر تا صد. تحلیل تکنیکال، بنیادی و استراتژی‌های معاملاتی.",
         icon: "/icons/stock.svg",
@@ -263,7 +263,7 @@ export async function seedCategories() {
       update: {},
       create: {
         slug: "metaverse",
-        title: "آموزش متاورس",
+        title: "اخبار متاورس",
         description:
           "دنیای متاورس و واقعیت مجازی. از املاک دیجیتال تا بازی‌های Play-to-Earn.",
         icon: "/icons/metaverse.svg",

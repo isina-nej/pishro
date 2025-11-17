@@ -36,8 +36,8 @@ const NewsDetail = ({ articleId }: NewsDetailProps) => {
   }
 
   return (
-    <div className="container-xl py-10 mt-20">
-      <article className="max-w-4xl mx-auto">
+    <div className="py-10 mt-20">
+      <article className="container-xl mx-auto">
         {/* Header */}
         <header className="mb-8">
           <div className="flex flex-wrap items-center gap-2 mb-4">
@@ -104,7 +104,7 @@ const NewsDetail = ({ articleId }: NewsDetailProps) => {
 
         {/* Content */}
         <div
-          className="prose prose-lg max-w-none mb-12"
+          className="prose prose-lg prose-slate max-w-none mb-12 leading-loose [&>p]:leading-loose [&>p]:text-base [&>p]:mb-6"
           dangerouslySetInnerHTML={{ __html: article.content }}
         />
 
