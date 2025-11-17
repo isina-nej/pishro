@@ -249,12 +249,12 @@ const PortfolioSelectionForm = () => {
                 </div>
 
                 <div className="mt-6 text-center p-4 bg-gradient-to-r from-mySecondary/5 via-transparent to-mySecondary/5 rounded-xl">
-                  <p className="text-2xl md:text-3xl font-bold bg-gradient-to-l from-mySecondary to-myPrimary bg-clip-text text-transparent">
+                  <div className="text-2xl md:text-3xl font-bold bg-gradient-to-l from-mySecondary to-myPrimary bg-clip-text text-transparent">
                     {formatNumber(amount)}{" "}
                     <span className="font-normal text-gray-500 text-lg">
                       تومان
                     </span>
-                  </p>
+                  </div>
                 </div>
               </div>
 
@@ -294,12 +294,12 @@ const PortfolioSelectionForm = () => {
 
             {/* سطح ریسک */}
             <div className="mt-6 group bg-white rounded-2xl border border-gray-200 p-6 hover:shadow-lg hover:shadow-purple-500/10 hover:border-purple-500/30 transition-all duration-300">
-              <p className="text-center text-lg font-bold mb-6 flex items-center justify-center gap-2 text-gray-900">
+              <div className="text-center text-lg font-bold mb-6 flex items-center justify-center gap-2 text-gray-900">
                 <div className="p-2 bg-purple-500/10 rounded-xl group-hover:bg-purple-500/20 transition-colors">
                   <BarChart3 size={24} className="text-purple-500" />
                 </div>
                 سطح ریسک‌پذیری
-              </p>
+              </div>
 
               <div className="flex items-center gap-4">
                 <button
