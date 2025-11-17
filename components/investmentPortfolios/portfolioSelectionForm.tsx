@@ -357,6 +357,10 @@ const PortfolioSelectionForm = () => {
                   <p className="text-xs text-gray-500 mt-1">
                     بازده تخمینی: {formatNumber(expectedReturn)} تومان
                   </p>
+                  <p className="text-start text-xs text-gray-500 mt-4">
+                    نرخ ماهیانه: {(monthlyRate * 100).toFixed(0)}٪ | مدت:{" "}
+                    {duration} ماه | نوع: {getRiskLabel(riskLevel)}
+                  </p>
                 </div>
 
                 <button
@@ -376,11 +380,6 @@ const PortfolioSelectionForm = () => {
                     : "افزودن به سبد خرید"}
                 </button>
               </div>
-
-              <p className="text-center text-xs text-gray-500 mt-4">
-                نرخ ماهیانه: {(monthlyRate * 100).toFixed(0)}٪ | مدت: {duration}{" "}
-                ماه | نوع: {getRiskLabel(riskLevel)}
-              </p>
             </div>
           </div>
         </div>
