@@ -168,3 +168,20 @@ export async function updatePayInfo(data: {
   const res = await axios.put<ApiSuccessResponse<UserData>>("/api/user/pay", data);
   return res.data;
 }
+
+// ✅ Upload avatar image
+export async function uploadAvatarImage(file: File) {
+  const formData = new FormData();
+  formData.append("avatar", file);
+
+  const res = await axios.post<ApiSuccessResponse<{ avatarUrl: string }>>(
+    "/api/user/upload-avatar",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+  return res.data;
+}
