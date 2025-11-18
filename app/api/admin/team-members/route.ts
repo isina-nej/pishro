@@ -105,6 +105,8 @@ export async function POST(req: NextRequest) {
       linkedinUrl,
       emailUrl,
       twitterUrl,
+      whatsappUrl,
+      telegramUrl,
       order = 0,
       published = false,
     } = body;
@@ -143,6 +145,8 @@ export async function POST(req: NextRequest) {
         linkedinUrl,
         emailUrl,
         twitterUrl,
+        whatsappUrl,
+        telegramUrl,
         order,
         published,
       },

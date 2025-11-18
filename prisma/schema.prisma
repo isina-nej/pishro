@@ -787,9 +787,11 @@ model TeamMember {
   specialties String[] @default([])
 
   // Social Links
-  linkedinUrl String?
-  emailUrl    String?
-  twitterUrl  String?
+  linkedinUrl  String?
+  emailUrl     String?
+  twitterUrl   String?
+  whatsappUrl  String?
+  telegramUrl  String?
 
   order     Int     @default(0)
   published Boolean @default(true)

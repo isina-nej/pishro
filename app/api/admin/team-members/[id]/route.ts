@@ -99,6 +99,8 @@ export async function PATCH(
     if (body.linkedinUrl !== undefined) updateData.linkedinUrl = body.linkedinUrl;
     if (body.emailUrl !== undefined) updateData.emailUrl = body.emailUrl;
     if (body.twitterUrl !== undefined) updateData.twitterUrl = body.twitterUrl;
+    if (body.whatsappUrl !== undefined) updateData.whatsappUrl = body.whatsappUrl;
+    if (body.telegramUrl !== undefined) updateData.telegramUrl = body.telegramUrl;
     if (body.order !== undefined) updateData.order = body.order;
     if (body.published !== undefined) updateData.published = body.published;
 
