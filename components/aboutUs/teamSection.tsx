@@ -5,6 +5,7 @@ import { useInView } from "framer-motion";
 import { useRef } from "react";
 import Image from "next/image";
 import { LuLinkedin, LuMail, LuGraduationCap, LuTwitter } from "react-icons/lu";
+import { FaTelegramPlane, FaWhatsapp } from "react-icons/fa";
 import type { TeamMember } from "@/types/about-us";
 
 interface TeamSectionProps {
@@ -116,14 +117,14 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
               )}
 
               {/* Social Links */}
-              {(member.linkedinUrl || member.emailUrl || member.twitterUrl) && (
-                <div className="flex gap-3 pt-6 border-t">
+              {(member.linkedinUrl || member.emailUrl || member.twitterUrl || member.whatsappUrl || member.telegramUrl) && (
+                <div className="flex flex-wrap gap-3 pt-6 border-t">
                   {member.linkedinUrl && (
                     <a
                       href={member.linkedinUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 bg-myPrimary/10 hover:bg-myPrimary text-myPrimary hover:text-white py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
+                      className="flex-1 min-w-[120px] bg-myPrimary/10 hover:bg-myPrimary text-myPrimary hover:text-white py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
                     >
                       <LuLinkedin />
                       <span>لینکدین</span>
@@ -132,7 +133,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
                   {member.emailUrl && (
                     <a
                       href={member.emailUrl}
-                      className="flex-1 bg-mySecondary/10 hover:bg-mySecondary text-mySecondary hover:text-white py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
+                      className="flex-1 min-w-[120px] bg-mySecondary/10 hover:bg-mySecondary text-mySecondary hover:text-white py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
                     >
                       <LuMail />
                       <span>ایمیل</span>
@@ -143,10 +144,32 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
                       href={member.twitterUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 bg-blue-100 hover:bg-blue-500 text-blue-500 hover:text-white py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
+                      className="flex-1 min-w-[120px] bg-blue-100 hover:bg-blue-500 text-blue-500 hover:text-white py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
                     >
                       <LuTwitter />
                       <span>توییتر</span>
+                    </a>
+                  )}
+                  {member.whatsappUrl && (
+                    <a
+                      href={member.whatsappUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 min-w-[120px] bg-green-100 hover:bg-green-500 text-green-600 hover:text-white py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
+                    >
+                      <FaWhatsapp />
+                      <span>واتساپ</span>
+                    </a>
+                  )}
+                  {member.telegramUrl && (
+                    <a
+                      href={member.telegramUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 min-w-[120px] bg-sky-100 hover:bg-sky-500 text-sky-600 hover:text-white py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
+                    >
+                      <FaTelegramPlane />
+                      <span>تلگرام</span>
                     </a>
                   )}
                 </div>

@@ -29,6 +29,8 @@ export interface TeamMember {
   linkedinUrl?: string | null;
   emailUrl?: string | null;
   twitterUrl?: string | null;
+  whatsappUrl?: string | null;
+  telegramUrl?: string | null;
   order: number;
 }
 
