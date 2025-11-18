@@ -209,18 +209,26 @@ model Lesson {
   courseId    String  @db.ObjectId
   title       String
   description String?
-  videoUrl    String
-  thumbnail   String?
-  duration    String? // مدت زمان ویدیو (مثل "45:30")
-  order       Int     @default(0)
-  published   Boolean @default(true)
-  views       Int     @default(0)
+
+  // Video relation (optional for backward compatibility)
+  video   Video?  @relation("VideoLessons", fields: [videoId], references: [id], onDelete: SetNull)
+  videoId String? @db.ObjectId
+
+  // Legacy fields (for backward compatibility)
+  videoUrl  String? // برای سازگاری با ویدیوهای قبلی
+  thumbnail String?
+  duration  String? // مدت زمان ویدیو (مثل "45:30")
+
+  order     Int     @default(0)
+  published Boolean @default(true)
+  views     Int     @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([courseId, order])
   @@index([courseId, published])
+  @@index([videoId])
 }
 
 model NewsArticle {
@@ -1004,4 +1012,56 @@ enum PortfolioStatus {
   COMPLETED // تکمیل شده
   CANCELLED // لغو شده
   EXPIRED // منقضی شده
+}
+
+// مدل برای مدیریت ویدیوها
+model Video {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // اطلاعات پایه
+  title       String
+  description String?
+  videoId     String  @unique // شناسه یکتای ویدیو
+
+  // فایل اصلی
+  originalPath String // مسیر فایل اصلی در object storage
+  fileSize     Int // حجم فایل به بایت
+  fileFormat   String // پسوند فایل (mp4, mov, avi, ...)
+  duration     String? // مدت زمان ویدیو (مثل "45:30")
+
+  // HLS
+  hlsPlaylistPath String? // مسیر فایل playlist.m3u8
+  hlsSegmentsPath String? // مسیر پوشه segments
+
+  // وضعیت پردازش
+  processingStatus VideoProcessingStatus @default(UPLOADING)
+  processingError  String? // متن خطا در صورت وجود
+
+  // Thumbnail
+  thumbnailPath String? // مسیر تصویر thumbnail
+
+  // Metadata
+  width      Int? // عرض ویدیو
+  height     Int? // ارتفاع ویدیو
+  bitrate    Int? // بیت‌ریت
+  codec      String? // کدک ویدیو
+  frameRate  Float? // فریم ریت
+
+  // Relations
+  lessons Lesson[] @relation("VideoLessons")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([videoId])
+  @@index([processingStatus])
+}
+
+// Enum for Video Processing Status
+enum VideoProcessingStatus {
+  UPLOADING // در حال آپلود
+  UPLOADED // آپلود شده (منتظر پردازش)
+  PROCESSING // در حال تبدیل به HLS
+  READY // آماده برای پخش
+  FAILED // خطا در پردازش
 }

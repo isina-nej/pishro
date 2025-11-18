@@ -1,0 +1,66 @@
+# Dockerfile برای Video Processing Worker
+# این Dockerfile یک container با FFmpeg برای پردازش ویدیوها می‌سازد
+
+FROM node:18-alpine AS base
+
+# نصب FFmpeg
+RUN apk add --no-cache \
+    ffmpeg \
+    python3 \
+    make \
+    g++
+
+# ایجاد دایرکتوری کاری
+WORKDIR /app
+
+# کپی package files
+COPY package*.json ./
+COPY prisma ./prisma/
+
+# نصب dependencies
+RUN npm ci --only=production && \
+    npm cache clean --force
+
+# کپی کد برنامه
+COPY . .
+
+# تولید Prisma Client
+RUN npx prisma generate
+
+# ایجاد دایرکتوری موقت برای پردازش
+RUN mkdir -p /tmp/video-processing && \
+    chmod 777 /tmp/video-processing
+
+# متغیرهای محیطی
+ENV NODE_ENV=production
+ENV TEMP_DIR=/tmp/video-processing
+
+# اجرای worker
+CMD ["node", "scripts/video-processor-worker.js"]
+
+# ===================================
+# استفاده:
+# ===================================
+
+# Build:
+# docker build -f Dockerfile.video-processor -t video-processor .
+
+# Run:
+# docker run --rm \
+#   --env-file .env \
+#   -v /path/to/temp:/tmp/video-processing \
+#   video-processor
+
+# Docker Compose:
+# services:
+#   video-processor:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile.video-processor
+#     env_file: .env
+#     volumes:
+#       - video-processing-tmp:/tmp/video-processing
+#     restart: always
+#
+# volumes:
+#   video-processing-tmp:
