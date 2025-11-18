@@ -140,7 +140,7 @@ model Comment {
 
 model Order {
   id           String        @id @default(auto()) @map("_id") @db.ObjectId
-  user         User?         @relation(fields: [userId], references: [id], name: "UserOrders")
+  user         User?         @relation(fields: [userId], references: [id], name: "UserOrders", onDelete: SetNull)
   userId       String?       @db.ObjectId
   items        Json
   total        Int
@@ -159,7 +159,7 @@ model NewsletterSubscriber {
 
 model Enrollment {
   id           String    @id @default(auto()) @map("_id") @db.ObjectId
-  user         User      @relation(fields: [userId], references: [id], name: "UserEnrollments")
+  user         User      @relation(fields: [userId], references: [id], name: "UserEnrollments", onDelete: Cascade)
   userId       String    @db.ObjectId
   course       Course    @relation(fields: [courseId], references: [id], name: "CourseEnrollments")
   courseId     String    @db.ObjectId
@@ -173,8 +173,8 @@ model Enrollment {
 
 model Transaction {
   id          String            @id @default(auto()) @map("_id") @db.ObjectId
-  user        User              @relation(fields: [userId], references: [id], name: "UserTransactions")
-  userId      String            @db.ObjectId
+  user        User?             @relation(fields: [userId], references: [id], name: "UserTransactions", onDelete: SetNull)
+  userId      String?           @db.ObjectId
   order       Order?            @relation(fields: [orderId], references: [id], name: "OrderTransactions")
   orderId     String?           @db.ObjectId
   amount      Int
