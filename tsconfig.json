@@ -29,6 +29,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src"
-, "prisma/seed-categories.js"  ],
+, "prisma/seed-categories.js", "prisma/seed-simple.js"  ],
   "exclude": ["node_modules"]
 }

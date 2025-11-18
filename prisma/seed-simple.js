@@ -15,7 +15,7 @@ async function main() {
 
   // حذف کاربر تست در صورت وجود
   await prisma.user.deleteMany({
-    where: { phone: "09123456789" },
+    where: { phone: "09123456788" },
   });
 
   console.log("✓ داده‌های قبلی پاک شدند");
@@ -23,9 +23,9 @@ async function main() {
   // 1. ایجاد یک کاربر تست
   const testUser = await prisma.user.create({
     data: {
-      phone: "09123456789",
+      phone: "09123456788",
       passwordHash:
-        "$2a$10$YourHashedPasswordHere1234567890", // فقط برای تست
+        "$2b$10$mWwKqmihXJBsv5XY494s.elSM73bOjh07P..R7CWsgv4GxnxN6DSe", // فقط برای تست
       phoneVerified: true,
       role: "USER",
       firstName: "کاربر",
@@ -37,7 +37,7 @@ async function main() {
   // 2. ایجاد یک دوره
   const course = await prisma.course.create({
     data: {
-      subject: "آموزش تحلیل تکنیکال",
+      subject: "آموزش تحلیل تکنیکال تستی",
       price: 500000,
       img: "/images/courses/placeholder.png",
       rating: 4.5,
@@ -69,8 +69,7 @@ async function main() {
     data: {
       courseId: course.id,
       title: "مقدمه‌ای بر تحلیل تکنیکال",
-      description:
-        "در این جلسه با مفاهیم پایه تحلیل تکنیکال آشنا می‌شوید",
+      description: "در این جلسه با مفاهیم پایه تحلیل تکنیکال آشنا می‌شوید",
       videoUrl: "https://example.com/videos/lesson1.mp4",
       thumbnail: "/images/lessons/lesson1-thumb.jpg",
       duration: "45:30",
@@ -111,7 +110,7 @@ async function main() {
   console.log(`  - ${lesson3.title} (ID: ${lesson3.id})`);
 
   // 4. ثبت‌نام کاربر در دوره
-  const enrollment = await prisma.enrollment.create({
+  const _enrollment = await prisma.enrollment.create({
     data: {
       userId: testUser.id,
       courseId: course.id,
@@ -132,12 +131,8 @@ async function main() {
   console.log(
     `\n⚠️  توجه: در حال حاضر لینک دوره به /class/${course.id} اشاره می‌کند`
   );
-  console.log(
-    `   اما باید به اولین کلاس یعنی /class/${lesson1.id} اشاره کند`
-  );
-  console.log(
-    "   این مشکل را در کد enrolledCourses.tsx باید برطرف کنید."
-  );
+  console.log(`   اما باید به اولین کلاس یعنی /class/${lesson1.id} اشاره کند`);
+  console.log("   این مشکل را در کد enrolledCourses.tsx باید برطرف کنید.");
 }
 
 main()
@@ -149,3 +144,5 @@ main()
     await prisma.$disconnect();
     process.exit(1);
   });
+
+// $2b$10$mWwKqmihXJBsv5XY494s.elSM73bOjh07P..R7CWsgv4GxnxN6DSe
