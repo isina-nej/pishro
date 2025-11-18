@@ -1,183 +1,146 @@
+"use client";
+
 import clsx from "clsx";
 import Image from "next/image";
-import { Reply, ChevronUp } from "lucide-react";
-import { useState } from "react";
 import { MdOutlineComment } from "react-icons/md";
-import { motion, AnimatePresence } from "framer-motion";
-import { Comment, commentsData } from "@/public/data";
+import { useCourseComments, Comment } from "@/lib/hooks/useComments";
 
-const CommentsSection = () => {
-  const [comments, setComments] = useState<Comment[]>(commentsData);
-  const [newCommentText, setNewCommentText] = useState("");
-  const [replyText, setReplyText] = useState<{ [key: string]: string }>({});
-  const [openReplyForm, setOpenReplyForm] = useState<string | null>(null);
+interface CommentsSectionProps {
+  courseId: string;
+}
 
-  const addReplyToComment = (
-    comments: Comment[],
-    commentId: string,
-    reply: Comment
-  ): Comment[] => {
-    return comments.map((c) => {
-      if (c.id === commentId) {
-        return { ...c, replies: [...c.replies, reply] };
-      }
-      if (c.replies && c.replies.length > 0) {
-        return {
-          ...c,
-          replies: addReplyToComment(c.replies, commentId, reply),
-        };
-      }
-      return c;
-    });
-  };
-
-  const handleSubmitComment = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!newCommentText.trim()) return;
-    const newComment: Comment = {
-      id: Date.now().toString(),
-      name: "نام کاربر",
-      message: newCommentText,
-      date: new Date().toLocaleDateString("fa-IR"),
-      profile: "/images/profile/Avatar-24-24.png",
-      replies: [],
-    };
-    setComments((prev) => [newComment, ...prev]);
-    setNewCommentText("");
-  };
-
-  const handleSubmitReply = (
-    e: React.FormEvent<HTMLFormElement>,
-    commentId: string
-  ) => {
-    e.preventDefault();
-    if (!replyText[commentId]?.trim()) return;
-    const newReply: Comment = {
-      id: Date.now().toString(),
-      name: "نام کاربر",
-      message: replyText[commentId],
-      date: new Date().toLocaleDateString("fa-IR"),
-      profile: "/images/profile/Avatar-24-24.png",
-      replies: [],
-    };
-    setComments((prev) => addReplyToComment(prev, commentId, newReply));
-    setReplyText((prev) => ({ ...prev, [commentId]: "" }));
-    setOpenReplyForm(null);
-  };
-
-  const handleReply = (id: string) => {
-    setOpenReplyForm(openReplyForm === id ? null : id);
-  };
+const CommentsSection: React.FC<CommentsSectionProps> = ({ courseId }) => {
+  const { data: comments = [], isLoading, error } = useCourseComments(courseId, 50);
 
   const renderComment = (comment: Comment) => {
+    // نام کاربر را تعیین کنید
+    const userName = comment.user
+      ? `${comment.user.firstName || ""} ${comment.user.lastName || ""}`.trim() || "کاربر"
+      : comment.userName || "کاربر مهمان";
+
+    // آواتار کاربر
+    const userAvatar =
+      comment.user?.avatarUrl ||
+      comment.userAvatar ||
+      "/images/profile/Avatar-24-24.png";
+
     return (
-      <div key={comment.id} className="p-8 mb-6 bg-[#fafafa] shadow">
+      <div key={comment.id} className="p-8 mb-6 bg-[#fafafa] shadow rounded-lg">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 mb-6">
             {/* Profile Image */}
             <div className="relative w-6 h-6">
               <Image
-                src={comment.profile}
-                alt={`${comment.name} profile`}
+                src={userAvatar}
+                alt={`${userName} profile`}
                 fill
                 className="rounded-full object-cover"
               />
             </div>
             <span className="font-bold text-sm text-[#4D4D4D]">
-              {comment.name}
+              {userName}
             </span>
-          </div>
-          <button className="p-1" onClick={() => handleReply(comment.id)}>
-            {openReplyForm === comment.id ? <ChevronUp /> : <Reply />}
-          </button>
-        </div>
-        {/* Comment Message */}
-        <div
-          className={clsx(
-            "flex items-start gap-2 mt-2",
-            openReplyForm === comment.id && "border-b pb-6"
-          )}
-        >
-          <p className="text-xs text-[#666666] leading-6">{comment.message}</p>
-        </div>
-        {/* Animated Reply Form */}
-        <AnimatePresence>
-          {openReplyForm === comment.id && (
-            <motion.form
-              onSubmit={(e) => handleSubmitReply(e, comment.id)}
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="mt-6"
-            >
-              <div className="bg-[#fafafa] py-3 px-5 mb-2 flex items-center gap-2">
-                <textarea
-                  value={replyText[comment.id] || ""}
-                  onChange={(e) =>
-                    setReplyText({
-                      ...replyText,
-                      [comment.id]: e.target.value,
-                    })
-                  }
-                  placeholder="دیدگاه خود را درج کنید..."
-                  className="flex-1 bg-white p-2 outline-none text-sm min-h-20 resize-none"
-                ></textarea>
+            {/* نمایش تاییدیه اگر نظر verified باشد */}
+            {comment.verified && (
+              <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
+                ✓ تایید شده
+              </span>
+            )}
+            {/* نمایش ستاره‌ها اگر rating وجود داشت */}
+            {comment.rating && (
+              <div className="flex items-center gap-1">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <span
+                    key={i}
+                    className={clsx(
+                      "text-sm",
+                      i < comment.rating! ? "text-yellow-500" : "text-gray-300"
+                    )}
+                  >
+                    ★
+                  </span>
+                ))}
               </div>
-              <button
-                type="submit"
-                className="w-full text-white bg-[#214254] py-2 text-sm font-medium"
-              >
-                افزودن دیدگاه
-              </button>
-            </motion.form>
-          )}
-        </AnimatePresence>
-        {/* Render nested replies recursively */}
-        {comment.replies && comment.replies.length > 0 && (
-          <div className="mt-8 ml-6 border-l-2 border-gray-200 pl-4">
-            {comment.replies.map((reply) => renderComment(reply))}
+            )}
           </div>
-        )}
+          <div className="text-xs text-gray-500">
+            {new Date(comment.createdAt).toLocaleDateString("fa-IR", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </div>
+        </div>
+
+        {/* Comment Message */}
+        <div className="flex items-start gap-2 mt-2">
+          <p className="text-xs text-[#666666] leading-6">{comment.text}</p>
+        </div>
+
+        {/* نمایش تعداد لایک/دیسلایک */}
+        <div className="flex items-center gap-4 mt-4 text-xs text-gray-500">
+          {comment.likes.length > 0 && (
+            <span>👍 {comment.likes.length}</span>
+          )}
+          {comment.dislikes.length > 0 && (
+            <span>👎 {comment.dislikes.length}</span>
+          )}
+          {comment.views > 0 && (
+            <span>👁 {comment.views.toLocaleString("fa-IR")} بازدید</span>
+          )}
+        </div>
       </div>
     );
   };
 
   return (
     <div className="mt-20 border-t">
-      {/* Add Comment Form Header */}
+      {/* Comments Section Header */}
       <div className="border-b w-full max-w-4xl">
         <h5 className="mt-8 mb-4 flex gap-3 items-center">
           <MdOutlineComment className="text-gray-600 text-xl" />
-          دیدگاه خود را درج کنید
+          نظرات دوره
         </h5>
       </div>
-      {/* Add Comment Form */}
-      <form
-        onSubmit={handleSubmitComment}
-        className="max-w-4xl w-full bg-[#fafafa]"
-      >
-        <div className="py-3 px-5 mt-5 mb-2 flex items-center gap-2">
-          <p className="text-sm">نام کاربری اینجا درج میشود</p>
+
+      {/* Loading State */}
+      {isLoading && (
+        <div className="max-w-4xl mt-10 text-center py-12">
+          <div className="inline-block w-8 h-8 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin" />
+          <p className="mt-4 text-gray-600">در حال بارگذاری نظرات...</p>
         </div>
-        <div className="py-3 px-5 mb-2 flex items-center gap-2">
-          <textarea
-            value={newCommentText}
-            onChange={(e) => setNewCommentText(e.target.value)}
-            placeholder="دیدگاه خود را درج کنید..."
-            className="flex-1 bg-white outline-none text-sm min-h-20 resize-none"
-          ></textarea>
+      )}
+
+      {/* Error State */}
+      {error && (
+        <div className="max-w-4xl mt-10 text-center py-12 bg-red-50 rounded-lg">
+          <p className="text-red-600">خطا در بارگذاری نظرات</p>
+          <p className="text-sm text-gray-600 mt-2">
+            لطفاً بعداً دوباره تلاش کنید
+          </p>
         </div>
-        <button
-          type="submit"
-          className="w-full text-white bg-[#214254] py-2 text-sm font-medium"
-        >
-          افزودن دیدگاه
-        </button>
-      </form>
+      )}
+
+      {/* Empty State */}
+      {!isLoading && !error && comments.length === 0 && (
+        <div className="max-w-4xl mt-10 text-center py-12 bg-gray-50 rounded-lg">
+          <MdOutlineComment className="text-gray-400 text-5xl mx-auto mb-4" />
+          <p className="text-gray-600">هنوز نظری برای این دوره ثبت نشده است</p>
+          <p className="text-sm text-gray-500 mt-2">
+            اولین نفری باشید که نظر می‌دهید!
+          </p>
+        </div>
+      )}
+
       {/* Show Comments Section */}
-      <div className="mt-10 max-w-4xl">
-        {comments.map((comment) => renderComment(comment))}
-      </div>
+      {!isLoading && !error && comments.length > 0 && (
+        <div className="mt-10 max-w-4xl">
+          <p className="text-sm text-gray-600 mb-6">
+            {comments.length.toLocaleString("fa-IR")} نظر
+          </p>
+          {comments.map((comment) => renderComment(comment))}
+        </div>
+      )}
     </div>
   );
 };

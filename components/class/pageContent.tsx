@@ -34,17 +34,18 @@ const ClassPageContent: React.FC<ClassPageContentProps> = ({
         <div className="flex-1 w-full min-w-4xl">
           {selectedLesson ? (
             <VideoPlayer
+              videoId={selectedLesson.videoId}
               label={selectedLesson.title}
-              videoUrl={selectedLesson.videoUrl}
               description={selectedLesson.description}
               duration={selectedLesson.duration}
               views={selectedLesson.views}
               createdAt={selectedLesson.createdAt}
+              thumbnail={selectedLesson.thumbnail}
             />
           ) : (
-            <p className="text-center text-gray-500">
-              ویدیویی برای نمایش وجود ندارد
-            </p>
+            <div className="text-center py-12 bg-gray-50 rounded-lg">
+              <p className="text-gray-500">ویدیویی برای نمایش وجود ندارد</p>
+            </div>
           )}
         </div>
 
@@ -101,8 +102,11 @@ const ClassPageContent: React.FC<ClassPageContentProps> = ({
           </ul>
         </div>
       </div>
-      {/* comments section */}
-      <CommentsSection />
+
+      {/* بخش نظرات - فقط اگر courseId موجود باشد */}
+      {selectedLesson?.courseId && (
+        <CommentsSection courseId={selectedLesson.courseId} />
+      )}
     </div>
   );
 };
