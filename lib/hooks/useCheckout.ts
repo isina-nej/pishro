@@ -53,8 +53,11 @@ export function useCreateCheckout() {
         queryClient.invalidateQueries({ queryKey: userKeys.all });
         queryClient.invalidateQueries({ queryKey: orderKeys.all });
 
-        // هدایت به درگاه پرداخت
-        window.location.href = data.payUrl;
+        // هدایت به صفحه processing (به جای redirect مستقیم)
+        const processingUrl = `/checkout/processing?payUrl=${encodeURIComponent(
+          data.payUrl
+        )}&orderId=${data.orderId}`;
+        window.location.href = processingUrl;
       } else {
         toast.error(data.error || "خطا در ایجاد سفارش");
       }

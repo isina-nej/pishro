@@ -146,12 +146,18 @@ const Result = () => {
               <span
                 className={clsx(
                   "px-3 py-1 rounded-full text-sm font-medium",
-                  order.status === "paid"
+                  order.status.toUpperCase() === "PAID"
                     ? "bg-green-100 text-green-700"
+                    : order.status.toUpperCase() === "FAILED"
+                    ? "bg-red-100 text-red-700"
                     : "bg-yellow-100 text-yellow-700"
                 )}
               >
-                {order.status === "paid" ? "پرداخت‌شده" : "در انتظار پرداخت"}
+                {order.status.toUpperCase() === "PAID"
+                  ? "پرداخت‌شده"
+                  : order.status.toUpperCase() === "FAILED"
+                  ? "پرداخت ناموفق"
+                  : "در انتظار پرداخت"}
               </span>
             </div>
           </div>
