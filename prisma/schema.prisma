@@ -36,6 +36,7 @@ model User {
   newsComments         NewsComment[]             @relation("UserNewsComments")
   quizAttempts         QuizAttempt[]             @relation("UserQuizAttempts")
   investmentPortfolios UserInvestmentPortfolio[] @relation("UserInvestmentPortfolios")
+  images               Image[]                   @relation("UserImages")
 }
 
 model TempUser {
@@ -1063,4 +1064,55 @@ enum VideoProcessingStatus {
   PROCESSING // در حال تبدیل به HLS
   READY // آماده برای پخش
   FAILED // خطا در پردازش
+}
+
+// مدل برای مدیریت تصاویر
+model Image {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // اطلاعات پایه
+  title       String? // عنوان تصویر (اختیاری)
+  description String? // توضیحات تصویر (اختیاری)
+  alt         String? // متن جایگزین برای SEO
+
+  // کاربر آپلودکننده
+  uploadedBy   User   @relation("UserImages", fields: [uploadedById], references: [id], onDelete: Cascade)
+  uploadedById String @db.ObjectId
+
+  // اطلاعات فایل
+  fileName     String // نام فایل اصلی
+  filePath     String // مسیر فایل در storage
+  fileSize     Int // حجم فایل به بایت
+  mimeType     String // نوع فایل (image/jpeg, image/png, ...)
+  width        Int? // عرض تصویر
+  height       Int? // ارتفاع تصویر
+
+  // دسته‌بندی کاربرد
+  category ImageCategory @default(OTHER) // نوع کاربرد تصویر
+
+  // تگ‌ها و دسته‌بندی
+  tags String[] @default([]) // تگ‌های دلخواه
+
+  // وضعیت
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([uploadedById])
+  @@index([category])
+  @@index([published])
+}
+
+// Enum for Image Categories
+enum ImageCategory {
+  PROFILE // تصویر پروفایل
+  COURSE // تصاویر دوره‌ها
+  BOOK // تصاویر کتاب‌ها
+  NEWS // تصاویر اخبار
+  RESUME // تصاویر رزومه
+  CERTIFICATE // تصاویر گواهینامه
+  TEAM // تصاویر اعضای تیم
+  LANDING // تصاویر صفحات لندینگ
+  OTHER // سایر موارد
 }

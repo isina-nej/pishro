@@ -59,6 +59,7 @@
     "react-multi-date-picker": "^4.5.2",
     "react-player": "^2.16.0",
     "react-simple-typewriter": "^5.0.1",
+    "sharp": "^0.34.5",
     "swiper": "^11.2.10",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
