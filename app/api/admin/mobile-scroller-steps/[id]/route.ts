@@ -60,7 +60,6 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
     const session = await auth();
     if (!session?.user) {
       return unauthorizedResponse("لطفا وارد شوید");
@@ -72,7 +71,12 @@ export async function PATCH(
     const { id } = await params;
     const body = await req.json();
 
-    // Check if item exists
+    // 🔍 DEBUG
+    console.log("=== BACKEND DEBUG ===");
+    console.log("📥 body.link:", body.link);
+    console.log("📥 typeof body.link:", typeof body.link);
+    console.log("================");
+
     const existingItem = await prisma.mobileScrollerStep.findUnique({
       where: { id },
     });
@@ -84,10 +88,8 @@ export async function PATCH(
       );
     }
 
-    // Prepare update data
     const updateData: Record<string, unknown> = {};
 
-    // Only include fields that are provided
     if (body.stepNumber !== undefined) updateData.stepNumber = body.stepNumber;
     if (body.title !== undefined) updateData.title = body.title;
     if (body.description !== undefined)
@@ -100,10 +102,18 @@ export async function PATCH(
     if (body.published !== undefined) updateData.published = body.published;
     if (body.link !== undefined) updateData.link = body.link;
 
+    // 🔍 DEBUG
+    console.log("📦 updateData.link:", updateData.link);
+    console.log("================");
+
     const updatedItem = await prisma.mobileScrollerStep.update({
       where: { id },
       data: updateData,
     });
+
+    // 🔍 DEBUG
+    console.log("✅ updatedItem.link:", updatedItem.link);
+    console.log("================");
 
     return successResponse(
       updatedItem,
