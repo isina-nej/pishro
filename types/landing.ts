@@ -304,6 +304,67 @@ export interface PlansIntroCard {
   description: string;
 }
 
+// ==================== INVESTMENT MODELS ====================
+
+export interface InvestmentModelsPageData {
+  id: string;
+
+  // Models
+  models: InvestmentModelData[];
+
+  // Additional Info
+  additionalInfoTitle: string | null;
+  additionalInfoContent: string | null;
+
+  published: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface InvestmentModelData {
+  id: string;
+  type: string; // "in-person" | "online"
+  title: string;
+  description: string;
+  icon: string;
+  color: string;
+  gradient: string;
+
+  // Features - JSON array
+  features: InvestmentModelFeature[];
+
+  // Benefits - String array
+  benefits: string[];
+
+  // CTA
+  ctaText: string;
+  ctaLink: string | null;
+  ctaIsScroll: boolean;
+
+  // Contact Info
+  contactTitle: string | null;
+  contactDescription: string | null;
+  contacts: InvestmentModelContact[];
+
+  order: number;
+  published: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface InvestmentModelFeature {
+  icon: string;
+  title: string;
+  description: string;
+}
+
+export interface InvestmentModelContact {
+  icon: string;
+  title: string;
+  value: string;
+  link?: string;
+}
+
 // ==================== API RESPONSES ====================
 
 export interface HomeLandingResponse {

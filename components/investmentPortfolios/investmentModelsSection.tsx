@@ -31,95 +31,218 @@ import {
   DrawerDescription,
 } from "@/components/ui/drawer";
 import { useMediaQuery } from "@/lib/hooks/use-media-query";
+import { useInvestmentModels } from "@/lib/hooks/useInvestmentModels";
+import type { InvestmentModelData } from "@/types/landing";
+
+// Icon mapping
+const iconMap: Record<string, any> = {
+  Building2,
+  Globe,
+  Users,
+  CreditCard,
+  TrendingUp,
+  FileSpreadsheet,
+  Phone,
+  MapPin,
+  Mail,
+  Clock,
+  MessageCircle,
+};
 
 const InvestmentModelsSection = () => {
   const [openModal, setOpenModal] = useState<"in-person" | "online" | null>(
     null
   );
   const isDesktop = useMediaQuery("(min-width: 768px)");
+  const { data: pageData, isLoading, error } = useInvestmentModels();
 
-  // TODO add it to cms
-  // Contact information
-  const contactInfo = {
-    "in-person": {
-      title: "رزرو مشاوره حضوری",
-      description: "برای رزرو مشاوره حضوری با ما تماس بگیرید",
+  // Fallback data in case DB is empty
+  const fallbackModels: InvestmentModelData[] = [
+    {
+      id: "fallback-in-person",
+      type: "in-person",
+      title: "سرمایه‌ گذاری حضوری",
+      description:
+        "برای سرمایه‌گذاران حرفه‌ای که تمایل به همکاری حضوری و مدیریت مستقیم سرمایه دارند",
+      icon: "Building2",
+      color: "green",
+      gradient: "from-green-500 to-emerald-600",
+      features: [
+        {
+          icon: "Users",
+          title: "مشاوره حضوری",
+          description: "جلسات مشاوره حضوری با کارشناسان مجرب",
+        },
+        {
+          icon: "CreditCard",
+          title: "پرداخت حضوری",
+          description: "پرداخت نقدی یا کارت به کارت در دفتر",
+        },
+        {
+          icon: "TrendingUp",
+          title: "دریافت سود",
+          description: "دریافت سود ماهیانه یا سررسید به صورت نقدی",
+        },
+        {
+          icon: "FileSpreadsheet",
+          title: "گزارش‌های تخصصی",
+          description: "دریافت گزارش‌های کامل سرمایه‌ گذاری به صورت چاپی",
+        },
+      ],
+      benefits: [
+        "تضمین اصل سرمایه با سند رسمی",
+        "پشتیبانی ۲۴ ساعته تلفنی",
+        "امکان بازدید از دفتر مرکزی",
+        "مشاوره رایگان قبل از سرمایه‌ گذاری",
+      ],
+      ctaText: "رزرو مشاوره حضوری",
+      ctaLink: "/contact",
+      ctaIsScroll: false,
+      contactTitle: "رزرو مشاوره حضوری",
+      contactDescription: "برای رزرو مشاوره حضوری با ما تماس بگیرید",
       contacts: [
         {
-          icon: Phone,
+          icon: "Phone",
           title: "تلفن تماس",
           value: "021-12345678",
           link: "tel:02112345678",
         },
         {
-          icon: Phone,
+          icon: "Phone",
           title: "موبایل",
           value: "0912-345-6789",
           link: "tel:09123456789",
         },
         {
-          icon: MapPin,
+          icon: "MapPin",
           title: "آدرس دفتر",
           value: "تهران، خیابان ولیعصر، پلاک 123",
           link: "https://maps.google.com",
         },
         {
-          icon: Clock,
+          icon: "Clock",
           title: "ساعت کاری",
           value: "شنبه تا چهارشنبه: 9 صبح تا 6 عصر",
         },
         {
-          icon: Mail,
+          icon: "Mail",
           title: "ایمیل",
           value: "info@pishro.com",
           link: "mailto:info@pishro.com",
         },
       ],
+      order: 0,
+      published: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     },
-    online: {
-      title: "رزرو مشاوره آنلاین",
-      description: "برای مشاوره آنلاین از طریق راه‌های زیر با ما در تماس باشید",
+    {
+      id: "fallback-online",
+      type: "online",
+      title: "سرمایه‌ گذاری آنلاین",
+      description:
+        "برای سرمایه‌گذارانی که ترجیح می‌دهند از طریق سایت اقدام کنند و اطلاعات و سیگنال‌ها را به صورت دیجیتال دریافت کنند",
+      icon: "Globe",
+      color: "blue",
+      gradient: "from-blue-500 to-cyan-600",
+      features: [
+        {
+          icon: "CreditCard",
+          title: "پرداخت آنلاین",
+          description: "پرداخت امن از طریق درگاه بانکی",
+        },
+        {
+          icon: "FileSpreadsheet",
+          title: "فایل اکسل اختصاصی",
+          description: "دریافت فایل اکسل با سیگنال‌های معاملاتی",
+        },
+        {
+          icon: "TrendingUp",
+          title: "به‌روزرسانی مستمر",
+          description: "دریافت سیگنال‌ها و اطلاعات در پنل کاربری",
+        },
+        {
+          icon: "Users",
+          title: "پشتیبانی آنلاین",
+          description: "پشتیبانی سریع از طریق تلگرام و واتساپ",
+        },
+      ],
+      benefits: [
+        "دسترسی ۲۴/۷ به پنل کاربری",
+        "دریافت فایل اکسل با فرمول‌های محاسباتی",
+        "هزینه متناسب با سرمایه و مدت زمان",
+        "امکان تمدید و ارتقای سبد",
+      ],
+      ctaText: "شروع سرمایه‌ گذاری آنلاین",
+      ctaLink: "#calculator",
+      ctaIsScroll: true,
+      contactTitle: "رزرو مشاوره آنلاین",
+      contactDescription: "برای مشاوره آنلاین از طریق راه‌های زیر با ما در تماس باشید",
       contacts: [
         {
-          icon: MessageCircle,
+          icon: "MessageCircle",
           title: "تلگرام",
           value: "@pishro_support",
           link: "https://t.me/pishro_support",
         },
         {
-          icon: MessageCircle,
+          icon: "MessageCircle",
           title: "واتساپ",
           value: "0912-345-6789",
           link: "https://wa.me/989123456789",
         },
         {
-          icon: Phone,
+          icon: "Phone",
           title: "تلفن پشتیبانی",
           value: "021-87654321",
           link: "tel:02187654321",
         },
         {
-          icon: Mail,
+          icon: "Mail",
           title: "ایمیل",
           value: "online@pishro.com",
           link: "mailto:online@pishro.com",
         },
         {
-          icon: Clock,
+          icon: "Clock",
           title: "پشتیبانی آنلاین",
           value: "همه روزه: 8 صبح تا 12 شب",
         },
       ],
+      order: 1,
+      published: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     },
-  };
+  ];
+
+  // Use API data or fallback
+  const models = pageData?.models && pageData.models.length > 0
+    ? pageData.models
+    : fallbackModels;
+
+  const additionalInfo = pageData?.additionalInfoContent
+    ? {
+        title: pageData.additionalInfoTitle || "توجه مهم",
+        content:
+          pageData.additionalInfoContent ||
+          "در مدل آنلاین، هزینه سبد متناسب با مبلغ سرمایه‌ گذاری و مدت زمان انتخابی شما محاسبه می‌شود.",
+      }
+    : {
+        title: "توجه مهم",
+        content:
+          "در مدل آنلاین، هزینه سبد متناسب با مبلغ سرمایه‌ گذاری و مدت زمان انتخابی شما محاسبه می‌شود. فرمول دقیق محاسبه در آینده نزدیک به سیستم اضافه خواهد شد. پس از پرداخت، فایل اکسل شامل اطلاعات، سیگنال‌ها و فرمول‌های محاسباتی در پنل کاربری شما قرار می‌گیرد.",
+      };
 
   // Render contact content
   const renderContactContent = (type: "in-person" | "online") => {
-    const info = contactInfo[type];
+    const model = models.find((m) => m.type === type);
+    if (!model) return null;
+
     return (
       <div className="space-y-4 p-4">
-        {info.contacts.map((contact, idx) => {
-          const Icon = contact.icon;
+        {model.contacts.map((contact, idx) => {
+          const Icon = iconMap[contact.icon] || Phone;
           return (
             <div
               key={idx}
@@ -160,104 +283,27 @@ const InvestmentModelsSection = () => {
     }
   };
 
-  const models = [
-    {
-      type: "in-person" as const,
-      title: "سرمایه‌ گذاری حضوری",
-      description:
-        "برای سرمایه‌گذاران حرفه‌ای که تمایل به همکاری حضوری و مدیریت مستقیم سرمایه دارند",
-      icon: Building2,
-      color: "green",
-      gradient: "from-green-500 to-emerald-600",
-      features: [
-        {
-          icon: Users,
-          title: "مشاوره حضوری",
-          description: "جلسات مشاوره حضوری با کارشناسان مجرب",
-        },
-        {
-          icon: CreditCard,
-          title: "پرداخت حضوری",
-          description: "پرداخت نقدی یا کارت به کارت در دفتر",
-        },
-        {
-          icon: TrendingUp,
-          title: "دریافت سود",
-          description: "دریافت سود ماهیانه یا سررسید به صورت نقدی",
-        },
-        {
-          icon: FileSpreadsheet,
-          title: "گزارش‌های تخصصی",
-          description: "دریافت گزارش‌های کامل سرمایه‌ گذاری به صورت چاپی",
-        },
-      ],
-      benefits: [
-        "تضمین اصل سرمایه با سند رسمی",
-        "پشتیبانی ۲۴ ساعته تلفنی",
-        "امکان بازدید از دفتر مرکزی",
-        "مشاوره رایگان قبل از سرمایه‌ گذاری",
-      ],
-      cta: {
-        text: "رزرو مشاوره حضوری",
-        link: "/contact",
-      },
-    },
-    {
-      type: "online" as const,
-      title: "سرمایه‌ گذاری آنلاین",
-      description:
-        "برای سرمایه‌گذارانی که ترجیح می‌دهند از طریق سایت اقدام کنند و اطلاعات و سیگنال‌ها را به صورت دیجیتال دریافت کنند",
-      icon: Globe,
-      color: "blue",
-      gradient: "from-blue-500 to-cyan-600",
-      features: [
-        {
-          icon: CreditCard,
-          title: "پرداخت آنلاین",
-          description: "پرداخت امن از طریق درگاه بانکی",
-        },
-        {
-          icon: FileSpreadsheet,
-          title: "فایل اکسل اختصاصی",
-          description: "دریافت فایل اکسل با سیگنال‌های معاملاتی",
-        },
-        {
-          icon: TrendingUp,
-          title: "به‌روزرسانی مستمر",
-          description: "دریافت سیگنال‌ها و اطلاعات در پنل کاربری",
-        },
-        {
-          icon: Users,
-          title: "پشتیبانی آنلاین",
-          description: "پشتیبانی سریع از طریق تلگرام و واتساپ",
-        },
-      ],
-      benefits: [
-        "دسترسی ۲۴/۷ به پنل کاربری",
-        "دریافت فایل اکسل با فرمول‌های محاسباتی",
-        "هزینه متناسب با سرمایه و مدت زمان",
-        "امکان تمدید و ارتقای سبد",
-      ],
-      cta: {
-        text: "شروع سرمایه‌ گذاری آنلاین",
-        link: "#calculator",
-        isScroll: true, // Flag to indicate this should scroll
-      },
-    },
-  ];
+  // Loading state
+  if (isLoading) {
+    return (
+      <section className="w-full bg-gradient-to-br from-gray-50 via-white to-gray-50 py-16 md:py-24 mt-24">
+        <div className="container-xl">
+          <div className="text-center">در حال بارگذاری...</div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="w-full bg-gradient-to-br from-gray-50 via-white to-gray-50 py-16 md:py-24 mt-24">
       <div className="container-xl">
-        {/* Header */}
-
         {/* Models Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           {models.map((model) => {
-            const Icon = model.icon;
+            const Icon = iconMap[model.icon] || Building2;
             return (
               <div
-                key={model.type}
+                key={model.id}
                 className="flex flex-col bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden hover:shadow-2xl transition-shadow duration-300"
               >
                 {/* Header با gradient */}
@@ -289,7 +335,7 @@ const InvestmentModelsSection = () => {
                       </h4>
                       <div className="grid grid-cols-1 gap-4">
                         {model.features.map((feature, idx) => {
-                          const FeatureIcon = feature.icon;
+                          const FeatureIcon = iconMap[feature.icon] || Users;
                           return (
                             <div
                               key={idx}
@@ -337,13 +383,13 @@ const InvestmentModelsSection = () => {
                   {/* CTA Button */}
                   <button
                     onClick={() =>
-                      model.type === "online"
+                      model.ctaIsScroll
                         ? scrollToCalculator()
-                        : setOpenModal(model.type)
+                        : setOpenModal(model.type as "in-person" | "online")
                     }
                     className={`group w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-gradient-to-r ${model.gradient} text-white font-bold text-lg hover:shadow-lg transition-all`}
                   >
-                    {model.cta.text}
+                    {model.ctaText}
                     <ArrowRight
                       className="group-hover:-translate-x-1 transition-transform"
                       size={20}
@@ -375,12 +421,11 @@ const InvestmentModelsSection = () => {
               </svg>
             </div>
             <div className="flex-1">
-              <h4 className="text-lg font-bold text-gray-900 mb-2">توجه مهم</h4>
+              <h4 className="text-lg font-bold text-gray-900 mb-2">
+                {additionalInfo.title}
+              </h4>
               <p className="text-gray-700 leading-relaxed">
-                در مدل آنلاین، هزینه سبد متناسب با مبلغ سرمایه‌ گذاری و مدت زمان
-                انتخابی شما محاسبه می‌شود. فرمول دقیق محاسبه در آینده نزدیک به
-                سیستم اضافه خواهد شد. پس از پرداخت، فایل اکسل شامل اطلاعات،
-                سیگنال‌ها و فرمول‌های محاسباتی در پنل کاربری شما قرار می‌گیرد.
+                {additionalInfo.content}
               </p>
             </div>
           </div>
@@ -397,10 +442,12 @@ const InvestmentModelsSection = () => {
                 <DialogContent className="sm:max-w-[600px]">
                   <DialogHeader>
                     <DialogTitle className="text-2xl font-bold text-gray-900 rtl">
-                      {contactInfo[openModal].title}
+                      {models.find((m) => m.type === openModal)?.contactTitle ||
+                        "اطلاعات تماس"}
                     </DialogTitle>
                     <DialogDescription className="text-base text-gray-600 rtl">
-                      {contactInfo[openModal].description}
+                      {models.find((m) => m.type === openModal)
+                        ?.contactDescription || ""}
                     </DialogDescription>
                   </DialogHeader>
                   {renderContactContent(openModal)}
@@ -414,10 +461,12 @@ const InvestmentModelsSection = () => {
                 <DrawerContent>
                   <DrawerHeader>
                     <DrawerTitle className="text-2xl font-bold text-gray-900 rtl">
-                      {contactInfo[openModal].title}
+                      {models.find((m) => m.type === openModal)?.contactTitle ||
+                        "اطلاعات تماس"}
                     </DrawerTitle>
                     <DrawerDescription className="text-base text-gray-600 rtl">
-                      {contactInfo[openModal].description}
+                      {models.find((m) => m.type === openModal)
+                        ?.contactDescription || ""}
                     </DrawerDescription>
                   </DrawerHeader>
                   {renderContactContent(openModal)}

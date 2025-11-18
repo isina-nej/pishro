@@ -1118,3 +1118,60 @@ enum ImageCategory {
   LANDING // تصاویر صفحات لندینگ
   OTHER // سایر موارد
 }
+
+// مدل برای صفحه مدل‌های سرمایه‌گذاری (InvestmentModelsSection)
+model InvestmentModelsPage {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // Models (حضوری و آنلاین)
+  models InvestmentModel[] @relation("InvestmentModelsPageModels")
+
+  // Additional Info (توجه مهم در انتها)
+  additionalInfoTitle   String?
+  additionalInfoContent String?
+
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// مدل برای هر نوع سرمایه‌گذاری (حضوری/آنلاین)
+model InvestmentModel {
+  id                     String               @id @default(auto()) @map("_id") @db.ObjectId
+  investmentModelsPage   InvestmentModelsPage @relation("InvestmentModelsPageModels", fields: [investmentModelsPageId], references: [id], onDelete: Cascade)
+  investmentModelsPageId String               @db.ObjectId
+
+  type        String // "in-person" | "online"
+  title       String
+  description String
+  icon        String // نام آیکون (مثل "Building2", "Globe")
+  color       String // رنگ اصلی (مثل "green", "blue")
+  gradient    String // کلاس gradient (مثل "from-green-500 to-emerald-600")
+
+  // Features - JSON array
+  // Example: [{"icon": "Users", "title": "مشاوره حضوری", "description": "..."}]
+  features Json @default("[]")
+
+  // Benefits - String array
+  benefits String[] @default([])
+
+  // CTA
+  ctaText     String
+  ctaLink     String?
+  ctaIsScroll Boolean @default(false)
+
+  // Contact Info (برای modal/drawer تماس)
+  contactTitle       String?
+  contactDescription String?
+  // Example: [{"icon": "Phone", "title": "تلفن تماس", "value": "021-12345678", "link": "tel:02112345678"}]
+  contacts           Json    @default("[]")
+
+  order     Int     @default(0)
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([investmentModelsPageId, order])
+}
