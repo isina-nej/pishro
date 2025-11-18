@@ -45,6 +45,7 @@ export interface EnrolledCourse {
     rating?: number;
     videosCount?: number;
     description?: string;
+    lessons?: { id: string }[];
   };
 }
 

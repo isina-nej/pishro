@@ -36,6 +36,14 @@ export async function GET(req: Request) {
               rating: true,
               videosCount: true,
               description: true,
+              lessons: {
+                where: { published: true },
+                orderBy: { order: "asc" },
+                take: 1,
+                select: {
+                  id: true,
+                },
+              },
             },
           },
         },
