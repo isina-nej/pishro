@@ -39,18 +39,33 @@ export async function POST(req: Request) {
       );
     }
 
-    // 🧮 Calculate total from real DB data
+    // 🧮 Calculate total from real DB data (with discount applied)
     const total = courses.reduce((sum, course) => {
-      return sum + course.price;
+      const finalPrice = course.discountPercent
+        ? Math.round(course.price * (1 - course.discountPercent / 100))
+        : course.price;
+      return sum + finalPrice;
     }, 0);
 
-    // ✅ Create order in DB
+    // ✅ Create order in DB with OrderItems
     const order = await prisma.order.create({
       data: {
         userId,
         items: courses.map((c) => ({ courseId: c.id })), // stored as JSON
         total,
         status: "PENDING",
+        orderItems: {
+          create: courses.map((course) => {
+            const finalPrice = course.discountPercent
+              ? Math.round(course.price * (1 - course.discountPercent / 100))
+              : course.price;
+            return {
+              courseId: course.id,
+              price: finalPrice,
+              discount: course.discountPercent || 0,
+            };
+          }),
+        },
       },
     });
 
