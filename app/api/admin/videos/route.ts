@@ -15,7 +15,11 @@ import {
   getVideosCountByStatus,
 } from "@/lib/services/video-service";
 import { processVideoToHLS } from "@/lib/services/hls-transcoding-service";
-import type { CreateVideoInput, VideoFilterOptions } from "@/types/video";
+import type {
+  CreateVideoInput,
+  VideoFilterOptions,
+  VideoProcessingStatus,
+} from "@/types/video";
 
 /**
  * GET /api/admin/videos
@@ -30,8 +34,9 @@ export async function GET(req: NextRequest) {
 
     const searchParams = req.nextUrl.searchParams;
 
+    const statusParam = searchParams.get("status");
     const options: VideoFilterOptions = {
-      processingStatus: searchParams.get("status") as any,
+      processingStatus: statusParam as VideoProcessingStatus | undefined,
       search: searchParams.get("search") || undefined,
       page: parseInt(searchParams.get("page") || "1"),
       limit: parseInt(searchParams.get("limit") || "20"),
@@ -40,7 +45,7 @@ export async function GET(req: NextRequest) {
     const { videos, total, page, limit } = await getVideos(options);
 
     // دریافت آمار کلی
-    const stats = await getVideosCountByStatus();
+    const _stats = await getVideosCountByStatus();
 
     return paginatedResponse(
       videos,
@@ -133,10 +138,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("[POST /api/admin/videos] error:", error);
 
-    if (
-      error instanceof Error &&
-      error.message.includes("Unique constraint")
-    ) {
+    if (error instanceof Error && error.message.includes("Unique constraint")) {
       return validationError({
         videoId: "این شناسه ویدیو قبلاً استفاده شده است",
       });

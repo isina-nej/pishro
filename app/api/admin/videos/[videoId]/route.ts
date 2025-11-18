@@ -6,7 +6,7 @@ import {
   errorResponse,
   unauthorizedResponse,
   notFoundResponse,
-  validationError,
+  validationError as _validationError,
   ErrorCodes,
 } from "@/lib/api-response";
 import {

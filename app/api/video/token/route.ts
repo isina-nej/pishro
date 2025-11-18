@@ -53,8 +53,8 @@ export async function POST(req: NextRequest) {
 
     // بررسی دسترسی کاربر به ویدیو
     // اگر ویدیو به یک درس متصل باشد، باید کاربر در دوره آن درس ثبت‌نام کرده باشد
-    const lessons = await import("@/lib/services/lesson-service").then((m) =>
-      m.getLessonsByCourse
+    const _lessons = await import("@/lib/services/lesson-service").then(
+      (m) => m.getLessonsByCourse
     );
 
     // پیدا کردن درس‌هایی که این ویدیو دارند
