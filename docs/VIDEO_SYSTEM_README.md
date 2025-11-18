@@ -16,6 +16,7 @@
 ## معرفی
 
 سیستم مدیریت ویدیوی جامع برای پلتفرم آموزشی که شامل:
+
 - آپلود امن ویدیو از CMS
 - تبدیل خودکار به HLS (Adaptive Bitrate Streaming)
 - پخش امن با سیستم توکن‌گذاری چند لایه
@@ -28,16 +29,19 @@
 ### ✨ ویژگی‌های اصلی
 
 1. **آپلود امن:**
+
    - Signed Upload URL با اعتبار محدود
    - آپلود مستقیم از مرورگر به Object Storage
    - پشتیبانی از فایل‌های تا 5GB
 
 2. **تبدیل خودکار به HLS:**
+
    - پشتیبانی از چند کیفیت (360p, 720p, 1080p)
    - تولید خودکار thumbnail
    - Segment duration قابل تنظیم
 
 3. **امنیت پخش:**
+
    - توکن‌های کوتاه‌مدت (30 ثانیه)
    - Signed URLs برای فایل‌های HLS
    - اعتبارسنجی دسترسی کاربر به دوره
@@ -137,17 +141,20 @@ npm install -D @types/hls.js
 FFmpeg برای تبدیل ویدیو به HLS ضروری است.
 
 **Ubuntu/Debian:**
+
 ```bash
 sudo apt update
 sudo apt install ffmpeg
 ```
 
 **macOS:**
+
 ```bash
 brew install ffmpeg
 ```
 
 **Docker:**
+
 ```dockerfile
 FROM node:18-alpine
 
@@ -158,6 +165,7 @@ RUN apk add --no-cache ffmpeg
 ```
 
 **بررسی نصب:**
+
 ```bash
 ffmpeg -version
 ffprobe -version
@@ -170,11 +178,11 @@ ffprobe -version
 ```env
 # Object Storage (S3-compatible)
 S3_REGION=default
-S3_ENDPOINT=https://s3.ir-thr-at1.arvanstorage.ir  # برای Arvan Cloud
+S3_ENDPOINT=https://s3.ir-thr-at1.iranServerstorage.ir  # for iranServer Cloud
 S3_ACCESS_KEY_ID=your-access-key
 S3_SECRET_ACCESS_KEY=your-secret-key
 S3_BUCKET_NAME=your-bucket-name
-S3_PUBLIC_ENDPOINT=https://your-bucket.s3.ir-thr-at1.arvanstorage.ir
+S3_PUBLIC_ENDPOINT=https://your-bucket.s3.ir-thr-at1.iranServerstorage.ir
 
 # Video Token Secret
 VIDEO_TOKEN_SECRET=your-very-strong-secret-key-here-min-32-chars
@@ -188,9 +196,9 @@ DATABASE_URL=mongodb://...
 
 ### 4. تنظیمات Object Storage
 
-#### برای Arvan Cloud:
+#### برای iranServer Cloud:
 
-1. وارد پنل Arvan شوید
+1. وارد پنل iranServer شوید
 2. بخش Cloud Storage → ایجاد Bucket جدید
 3. دریافت Access Key و Secret Key
 4. تنظیم CORS:
@@ -229,12 +237,14 @@ npx prisma db push
 برای محیط production، باید یک worker جداگانه برای پردازش ویدیوها داشته باشید:
 
 **Option 1: Cron Job**
+
 ```bash
 # اضافه کردن به crontab
 */5 * * * * node /path/to/video-processor-worker.js
 ```
 
 **Option 2: Queue System (پیشنهادی)**
+
 ```bash
 npm install bull redis
 ```
@@ -321,6 +331,7 @@ function VideoManagement() {
 **Authentication:** Admin only
 
 **Request Body:**
+
 ```json
 {
   "fileName": "my-video.mp4",
@@ -332,6 +343,7 @@ function VideoManagement() {
 ```
 
 **Response:**
+
 ```json
 {
   "status": "success",
@@ -349,6 +361,7 @@ function VideoManagement() {
 **Endpoint:** `POST /api/admin/videos`
 
 **Request Body:**
+
 ```json
 {
   "title": "عنوان ویدیو",
@@ -368,6 +381,7 @@ function VideoManagement() {
 **Authentication:** User must be logged in
 
 **Request Body:**
+
 ```json
 {
   "videoId": "abc123"
@@ -375,6 +389,7 @@ function VideoManagement() {
 ```
 
 **Response:**
+
 ```json
 {
   "status": "success",
@@ -391,9 +406,11 @@ function VideoManagement() {
 **Endpoint:** `GET /api/video/stream/[videoId]/index.m3u8?token=xxx`
 
 **Headers:**
+
 - `Range`: برای byte-range requests
 
 **Response:**
+
 - `Content-Type: application/vnd.apple.mpegurl`
 - Body: محتوای m3u8 با URLهای modify شده
 
@@ -402,21 +419,25 @@ function VideoManagement() {
 ## امنیت
 
 ### سطح 1: Signed Upload URLs
+
 - تولید URL با اعتبار 1 ساعته
 - فقط ادمین می‌تواند درخواست دهد
 - هر URL فقط یک بار قابل استفاده
 
 ### سطح 2: Token Verification
+
 - قبل از پخش، توکن 30 ثانیه‌ای دریافت شود
 - توکن شامل userId و videoId است
 - HMAC SHA256 برای امضای توکن
 
 ### سطح 3: Stream Proxy
+
 - هر درخواست playlist و segment باید توکن داشته باشد
 - توکن در server اعتبارسنجی می‌شود
 - فایل‌ها از storage خوانده و proxy می‌شوند
 
 ### سطح 4: Access Control
+
 - بررسی اینکه کاربر در دوره ثبت‌نام کرده باشد
 - فقط کاربران authorized می‌توانند ویدیو ببینند
 
@@ -427,6 +448,7 @@ function VideoManagement() {
 ### خطای "FFmpeg not found"
 
 **راه‌حل:**
+
 ```bash
 # بررسی نصب
 which ffmpeg
@@ -445,7 +467,9 @@ brew install ffmpeg
 **علت:** Player خیلی دیر درخواست segment را فرستاده
 
 **راه‌حل:**
+
 - در `video-token-service.ts` مدت اعتبار را افزایش دهید:
+
 ```ts
 const DEFAULT_TOKEN_EXPIRY = 60; // از 30 به 60 ثانیه
 ```
@@ -453,6 +477,7 @@ const DEFAULT_TOKEN_EXPIRY = 60; // از 30 به 60 ثانیه
 ### خطای "Access Denied" در Object Storage
 
 **راه‌حل:**
+
 1. بررسی Access Key و Secret Key
 2. بررسی CORS settings در bucket
 3. بررسی Bucket Policy
@@ -462,12 +487,14 @@ const DEFAULT_TOKEN_EXPIRY = 60; // از 30 به 60 ثانیه
 **علت:** Safari نیاز به HTTPS برای HLS دارد
 
 **راه‌حل:**
+
 - از HTTPS در production استفاده کنید
 - برای development از `ngrok` یا `localtunnel` استفاده کنید
 
 ### پردازش ویدیو خیلی طول می‌کشد
 
 **راه‌حل:**
+
 1. کیفیت‌های کمتری را فعال کنید (فقط 360p و 720p)
 2. `segmentDuration` را افزایش دهید (از 6 به 10 ثانیه)
 3. از server قوی‌تر استفاده کنید
@@ -561,6 +588,7 @@ export default function VideosManagementPage() {
 ## پشتیبانی
 
 برای سوالات و مشکلات:
+
 - GitHub Issues: [لینک به repository]
 - Email: support@example.com
 
