@@ -1041,11 +1041,11 @@ model Video {
   thumbnailPath String? // مسیر تصویر thumbnail
 
   // Metadata
-  width      Int? // عرض ویدیو
-  height     Int? // ارتفاع ویدیو
-  bitrate    Int? // بیت‌ریت
-  codec      String? // کدک ویدیو
-  frameRate  Float? // فریم ریت
+  width     Int? // عرض ویدیو
+  height    Int? // ارتفاع ویدیو
+  bitrate   Int? // بیت‌ریت
+  codec     String? // کدک ویدیو
+  frameRate Float? // فریم ریت
 
   // Relations
   lessons Lesson[] @relation("VideoLessons")
@@ -1053,7 +1053,6 @@ model Video {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([videoId])
   @@index([processingStatus])
 }
 
