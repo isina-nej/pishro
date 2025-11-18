@@ -14,7 +14,7 @@ import {
 } from "@/lib/api-response";
 import { getUserImageStats } from "@/lib/services/image-service";
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     // Auth check - only admins
     const session = await auth();
