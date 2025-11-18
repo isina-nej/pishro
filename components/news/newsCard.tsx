@@ -8,7 +8,7 @@ interface NewsCardProps {
     title: string;
     slug: string;
     excerpt: string;
-    content: string;
+    content?: string; // Optional because it's not always loaded in list views
     coverImage: string | null;
     author: string | null;
     category: string;
@@ -17,13 +17,14 @@ interface NewsCardProps {
     publishedAt: Date | null;
     views: number;
     createdAt: Date;
-    updatedAt: Date;
+    updatedAt?: Date; // Optional for consistency
   };
 }
 
 const NewsCard = ({ data }: NewsCardProps) => {
   // محاسبه تقریبی زمان مطالعه (بر اساس تعداد کلمات)
-  const getReadingTime = (content: string) => {
+  const getReadingTime = (content?: string) => {
+    if (!content) return 1; // حداقل 1 دقیقه برای محتوای خالی یا undefined
     const wordsPerMinute = 200;
     const wordCount = content.split(/\s+/).length;
     const minutes = Math.ceil(wordCount / wordsPerMinute);
@@ -53,7 +54,7 @@ const NewsCard = ({ data }: NewsCardProps) => {
     return colors[category] || "bg-myPrimary";
   };
 
-  const readingTime = getReadingTime(data.content);
+  const readingTime = getReadingTime(data.content || data.excerpt);
 
   return (
     <div className="group min-h-[240px] flex justify-between border border-gray-200 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-myPrimary/10 hover:border-myPrimary/30 transition-all duration-500 bg-white relative">
