@@ -39,7 +39,10 @@ export async function GET(
     });
 
     if (!item) {
-      return notFoundResponse("MobileScrollerStep", "مرحله اسکرولر موبایل یافت نشد");
+      return notFoundResponse(
+        "MobileScrollerStep",
+        "مرحله اسکرولر موبایل یافت نشد"
+      );
     }
 
     return successResponse(item);
@@ -75,7 +78,10 @@ export async function PATCH(
     });
 
     if (!existingItem) {
-      return notFoundResponse("MobileScrollerStep", "مرحله اسکرولر موبایل یافت نشد");
+      return notFoundResponse(
+        "MobileScrollerStep",
+        "مرحله اسکرولر موبایل یافت نشد"
+      );
     }
 
     // Prepare update data
@@ -84,19 +90,25 @@ export async function PATCH(
     // Only include fields that are provided
     if (body.stepNumber !== undefined) updateData.stepNumber = body.stepNumber;
     if (body.title !== undefined) updateData.title = body.title;
-    if (body.description !== undefined) updateData.description = body.description;
+    if (body.description !== undefined)
+      updateData.description = body.description;
     if (body.imageUrl !== undefined) updateData.imageUrl = body.imageUrl;
-    if (body.coverImageUrl !== undefined) updateData.coverImageUrl = body.coverImageUrl;
+    if (body.coverImageUrl !== undefined)
+      updateData.coverImageUrl = body.coverImageUrl;
     if (body.gradient !== undefined) updateData.gradient = body.gradient;
     if (body.order !== undefined) updateData.order = body.order;
     if (body.published !== undefined) updateData.published = body.published;
+    if (body.link !== undefined) updateData.link = body.link;
 
     const updatedItem = await prisma.mobileScrollerStep.update({
       where: { id },
       data: updateData,
     });
 
-    return successResponse(updatedItem, "مرحله اسکرولر موبایل با موفقیت بروزرسانی شد");
+    return successResponse(
+      updatedItem,
+      "مرحله اسکرولر موبایل با موفقیت بروزرسانی شد"
+    );
   } catch (error) {
     console.error("Error updating mobile scroller step:", error);
     return errorResponse(
@@ -128,7 +140,10 @@ export async function DELETE(
     });
 
     if (!existingItem) {
-      return notFoundResponse("MobileScrollerStep", "مرحله اسکرولر موبایل یافت نشد");
+      return notFoundResponse(
+        "MobileScrollerStep",
+        "مرحله اسکرولر موبایل یافت نشد"
+      );
     }
 
     // Delete item
