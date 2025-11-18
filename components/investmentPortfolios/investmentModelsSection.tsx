@@ -15,6 +15,7 @@ import {
   Mail,
   Clock,
   MessageCircle,
+  type LucideIcon,
 } from "lucide-react";
 import {
   Dialog,
@@ -35,7 +36,7 @@ import { useInvestmentModels } from "@/lib/hooks/useInvestmentModels";
 import type { InvestmentModelData } from "@/types/landing";
 
 // Icon mapping
-const iconMap: Record<string, any> = {
+const iconMap: Record<string, LucideIcon> = {
   Building2,
   Globe,
   Users,
@@ -54,7 +55,7 @@ const InvestmentModelsSection = () => {
     null
   );
   const isDesktop = useMediaQuery("(min-width: 768px)");
-  const { data: pageData, isLoading, error } = useInvestmentModels();
+  const { data: pageData, isLoading } = useInvestmentModels();
 
   // Fallback data in case DB is empty
   const fallbackModels: InvestmentModelData[] = [
