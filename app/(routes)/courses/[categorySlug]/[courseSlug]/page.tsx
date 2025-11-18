@@ -28,6 +28,7 @@ import RatingStars from "@/components/utils/RatingStars";
 import AddToCartButton from "@/components/utils/AddToCartButton";
 import { CourseLevel } from "@prisma/client";
 import CtaSection from "@/components/courses/ctaSection";
+import DoctorExplanationVideo from "@/components/courses/doctorExplanationVideo";
 
 // ISR Configuration: Revalidate every 1 hour for fresh content
 export const revalidate = 3600;
@@ -232,7 +233,7 @@ export default async function CourseDetailPage({
                 )}
 
                 {/* Price & CTA */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-4">
+                <div className="flex flex-col gap-4 pt-4">
                   <div className="flex items-center gap-3">
                     {course.discountPercent && course.discountPercent > 0 ? (
                       <>
@@ -252,13 +253,16 @@ export default async function CourseDetailPage({
                       </span>
                     )}
                   </div>
-                  <Suspense
-                    fallback={
-                      <div className="w-40 h-12 animate-pulse bg-gray-200 rounded-full" />
-                    }
-                  >
-                    <AddToCartButton course={course} />
-                  </Suspense>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                    <Suspense
+                      fallback={
+                        <div className="w-40 h-12 animate-pulse bg-gray-200 rounded-full" />
+                      }
+                    >
+                      <AddToCartButton course={course} />
+                    </Suspense>
+                    <DoctorExplanationVideo />
+                  </div>
                 </div>
               </div>
 
