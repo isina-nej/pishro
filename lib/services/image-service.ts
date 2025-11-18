@@ -161,14 +161,25 @@ export async function uploadImage(params: {
     IMAGES_FOLDER,
     category.toLowerCase()
   );
+
   try {
     await mkdir(uploadDir, { recursive: true });
   } catch (err) {
     console.error("Error creating directory:", err);
+    throw new Error(
+      `خطا در ایجاد پوشه آپلود: ${err instanceof Error ? err.message : "خطای نامشخص"}`
+    );
   }
 
   // ذخیره فایل روی سرور
-  await writeFile(fullPath, buffer);
+  try {
+    await writeFile(fullPath, buffer);
+  } catch (err) {
+    console.error("Error writing file:", err);
+    throw new Error(
+      `خطا در ذخیره فایل: ${err instanceof Error ? err.message : "خطای نامشخص"}`
+    );
+  }
 
   // ذخیره در دیتابیس
   const image = await prisma.image.create({
