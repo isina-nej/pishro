@@ -7,7 +7,7 @@ import { NextRequest } from "next/server";
 import { getInvestmentModelsPage } from "@/lib/services/investment-models-service";
 import { successResponse, errorResponse, ErrorCodes } from "@/lib/api-response";
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     const page = await getInvestmentModelsPage();
 
