@@ -10,9 +10,11 @@ import FloatingNotificationManager from "@/components/utils/floatingNotification
 
 export default function HomePageContent() {
   return (
-    <div className="w-full">
+    <div className="w-full overflow-x-hidden">
       <LandingOverlayServer />
-      <MobileScrollSectionServer />
+      <div className="-mt-12 sm:-mt-16 md:-mt-20">
+        <MobileScrollSectionServer />
+      </div>
       <CalculatorSection />
       <CoursesSec />
       <HomeComments />
