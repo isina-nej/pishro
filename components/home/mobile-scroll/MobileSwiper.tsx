@@ -51,7 +51,7 @@ export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
               key={step.id}
               className="!h-auto !w-full overflow-visible"
             >
-              <div className="relative w-full min-h-[600px] rounded-[28px] bg-mySecondary p-4 sm:p-6 pt-6 pb-[280px] sm:pb-[320px]">
+              <div className="relative w-full min-h-[600px] rounded-[28px] bg-mySecondary p-4 sm:p-6 pt-6 pb-[280px] sm:pb-[320px] overflow-hidden">
                 <div className="w-full text-center px-2 sm:px-4 mt-4 mb-4">
                   <h6 className="text-lg sm:text-xl md:text-2xl font-extrabold leading-7 sm:leading-8 md:leading-9 text-gray-100">
                     {step.text}
