@@ -21,11 +21,11 @@ export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
       : mobileScrollerSteps;
 
   return (
-    <section className="relative w-full h-screen overflow-hidden mt-10">
-      <div className="container-md px-6 mx-auto h-full flex flex-col justify-between py-8">
-        <div className="relative z-30 flex flex-col gap-3 text-center md:text-right mb-6">
-          <h4 className="text-4xl font-extrabold sm:text-5xl">سامانه پیشرو</h4>
-          <p className="text-sm text-gray-500 leading-6">
+    <section className="relative w-full min-h-screen overflow-hidden mt-10 pb-20">
+      <div className="container-md px-6 mx-auto h-full flex flex-col justify-start py-8">
+        <div className="relative z-30 flex flex-col gap-2 text-center md:text-right mb-8">
+          <h4 className="text-2xl font-extrabold sm:text-3xl md:text-4xl">سامانه پیشرو</h4>
+          <p className="text-xs sm:text-sm text-gray-500 leading-5 sm:leading-6">
             سامانه <span className="text-myPrimary">پیشرو</span>، مشاور و همراه
             مالی شما در مسیر پیشرفت
           </p>
@@ -36,43 +36,45 @@ export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
           spaceBetween={24}
           slidesPerView={1}
           pagination={{ clickable: true }}
-          className="relative z-10 flex-1 !pb-16 !w-full"
+          className="relative z-10 !pb-16 !w-full"
           style={
             {
               "--swiper-pagination-bottom": "16px",
               width: "100%",
+              height: "auto",
+              minHeight: "600px",
             } as CSSProperties
           }
         >
           {steps.map((step) => (
             <SwiperSlide
               key={step.id}
-              className="!h-full !w-full overflow-hidden"
+              className="!h-auto !w-full overflow-visible"
             >
-              <div className="relative size-full rounded-[28px] bg-mySecondary p-6">
-                <div className="w-full text-center px-4 mt-6 mb-6">
-                  <h6 className="text-2xl font-extrabold leading-9 text-gray-100">
+              <div className="relative w-full min-h-[600px] rounded-[28px] bg-mySecondary p-4 sm:p-6 pt-6 pb-[280px] sm:pb-[320px]">
+                <div className="w-full text-center px-2 sm:px-4 mt-4 mb-4">
+                  <h6 className="text-lg sm:text-xl md:text-2xl font-extrabold leading-7 sm:leading-8 md:leading-9 text-gray-100">
                     {step.text}
                   </h6>
                 </div>
 
-                <div className="w-full flex justify-center mt-4 mb-6">
+                <div className="w-full flex justify-center mt-3 mb-4 sm:mb-6">
                   {step.link ? (
                     <a
                       href={step.link}
-                      className="inline-block px-8 py-2.5 bg-white/10 text-white rounded-full shadow-md hover:bg-white/5 transition text-sm"
+                      className="inline-block px-6 sm:px-8 py-2 sm:py-2.5 bg-white/10 text-white rounded-full shadow-md hover:bg-white/5 transition text-xs sm:text-sm"
                     >
                       اطلاعات بیشتر
                     </a>
                   ) : (
-                    <button className="px-8 py-2.5 bg-white/10 text-white rounded-full shadow-md hover:bg-white/5 transition text-sm cursor-default">
+                    <button className="px-6 sm:px-8 py-2 sm:py-2.5 bg-white/10 text-white rounded-full shadow-md hover:bg-white/5 transition text-xs sm:text-sm cursor-default">
                       اطلاعات بیشتر
                     </button>
                   )}
                 </div>
 
-                <div className="absolute -bottom-[100px] right-0 flex w-full flex-col items-center justify-center">
-                  <div className="relative w-full max-w-[270px] aspect-[500/960]">
+                <div className="absolute -bottom-[80px] sm:-bottom-[100px] right-0 flex w-full flex-col items-center justify-center">
+                  <div className="relative w-full max-w-[240px] sm:max-w-[270px] aspect-[500/960]">
                     {/* mobile frame (background layer) */}
                     <Image
                       src={
