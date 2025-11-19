@@ -93,19 +93,19 @@ const OrdersTable = () => {
         <table className="min-w-full divide-y divide-[#f5f5f5]">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-5 py-3 text-xs font-medium text-gray-500 text-right">
+              <th className="px-3 md:px-5 py-2 md:py-3 text-xs font-medium text-gray-500 text-right">
                 دوره‌ها
               </th>
-              <th className="px-5 py-3 text-xs font-medium text-gray-500 text-right">
+              <th className="px-3 md:px-5 py-2 md:py-3 text-xs font-medium text-gray-500 text-right">
                 تاریخ
               </th>
-              <th className="px-5 py-3 text-xs font-medium text-gray-500 text-right">
+              <th className="px-3 md:px-5 py-2 md:py-3 text-xs font-medium text-gray-500 text-right">
                 مبلغ کل
               </th>
-              <th className="px-5 py-3 text-xs font-medium text-gray-500 text-right">
+              <th className="px-3 md:px-5 py-2 md:py-3 text-xs font-medium text-gray-500 text-right">
                 وضعیت پرداخت
               </th>
-              <th className="px-5 py-3 text-xs font-medium text-gray-500 text-left">
+              <th className="px-3 md:px-5 py-2 md:py-3 text-xs font-medium text-gray-500 text-left">
                 جزییات
               </th>
             </tr>
@@ -116,25 +116,25 @@ const OrdersTable = () => {
                 key={order.id}
                 className="hover:bg-gray-50 transition-colors duration-150"
               >
-                <td className="px-5 py-4 whitespace-nowrap text-xs text-gray-900">
+                <td className="px-3 md:px-5 py-3 md:py-4 whitespace-nowrap text-xs text-gray-900">
                   {order.itemCount} دوره
                 </td>
-                <td className="px-5 py-4 whitespace-nowrap text-xs font-irsans text-gray-600">
+                <td className="px-3 md:px-5 py-3 md:py-4 whitespace-nowrap text-xs font-irsans text-gray-600">
                   {formatDate(order.createdAt)}
                 </td>
-                <td className="px-5 py-4 whitespace-nowrap text-xs text-gray-900">
+                <td className="px-3 md:px-5 py-3 md:py-4 whitespace-nowrap text-xs text-gray-900">
                   {order.total.toLocaleString("fa-IR")} تومان
                 </td>
-                <td className="px-5 py-4 whitespace-nowrap">
+                <td className="px-3 md:px-5 py-3 md:py-4 whitespace-nowrap">
                   {getStatusBadge(order.status)}
                 </td>
-                <td className="px-5 py-4 whitespace-nowrap text-xs flex justify-end">
+                <td className="px-3 md:px-5 py-3 md:py-4 whitespace-nowrap text-xs flex justify-end">
                   <Link
                     href={`/profile/orders/${order.id}`}
                     className="flex items-center gap-1 text-[#214254] hover:text-blue-600 transition-colors"
                   >
                     <span className="text-xs">مشاهده</span>
-                    <LuSquareChevronLeft className="size-5" />
+                    <LuSquareChevronLeft className="size-4 md:size-5" />
                   </Link>
                 </td>
               </tr>

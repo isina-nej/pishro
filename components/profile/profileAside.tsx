@@ -70,10 +70,10 @@ const ProfileAside = () => {
   };
 
   return (
-    <aside className="rounded-md bg-[#131B22] text-white w-[286px]">
+    <aside className="rounded-md bg-[#131B22] text-white w-full md:w-[286px] md:min-w-[286px]">
       {/* بخش پروفایل کاربر */}
-      <div className="w-full flex flex-col justify-center items-center pt-8 pb-16 border-b border-dashed border-[#495157]">
-        <div className="relative rounded-full overflow-hidden w-20 h-20 mb-2 bg-gray-700">
+      <div className="w-full flex flex-col justify-center items-center pt-6 md:pt-8 pb-8 md:pb-16 border-b border-dashed border-[#495157]">
+        <div className="relative rounded-full overflow-hidden w-16 h-16 md:w-20 md:h-20 mb-2 bg-gray-700">
           <Image
             alt="user-profile"
             src={user?.avatarUrl || "/images/profile/profile-1.png"}
@@ -82,19 +82,19 @@ const ProfileAside = () => {
           />
         </div>
         {loading ? (
-          <p className="font-medium text-sm animate-pulse">
+          <p className="font-medium text-xs md:text-sm animate-pulse">
             در حال بارگذاری...
           </p>
         ) : (
           <>
-            <p className="font-medium text-sm">{user?.phone}</p>
-            <p className="font-medium text-sm">{getUserName()}</p>
+            <p className="font-medium text-xs md:text-sm">{user?.phone}</p>
+            <p className="font-medium text-xs md:text-sm">{getUserName()}</p>
           </>
         )}
       </div>
 
       {/* لینک‌های ناوبری */}
-      <div className="pt-8 pb-80 pr-2 flex flex-col items-start gap-4 border-b border-dashed border-[#495157]">
+      <div className="pt-6 md:pt-8 pb-6 md:pb-80 pr-2 flex flex-col items-start gap-3 md:gap-4 border-b border-dashed border-[#495157]">
         {sidebarLinks.map((item, idx) => {
           const isActive = pathname.includes(item.link);
           return (
@@ -107,12 +107,12 @@ const ProfileAside = () => {
               )}
               <Link
                 href={item.link}
-                className={`text-sm flex gap-5 items-center pl-4 pr-2 py-2 transition ${
+                className={`text-xs md:text-sm flex gap-3 md:gap-5 items-center pl-4 pr-2 py-2 transition ${
                   isActive ? "font-bold" : "font-medium"
                 }`}
               >
                 <span
-                  className={`transition text-lg ${
+                  className={`transition text-base md:text-lg ${
                     isActive ? "text-white" : "text-gray-400"
                   }`}
                 >
@@ -126,10 +126,10 @@ const ProfileAside = () => {
       </div>
 
       {/* دکمه خروج */}
-      <div className="flex justify-center items-center w-full py-8">
+      <div className="flex justify-center items-center w-full py-6 md:py-8">
         <Button
           variant="destructive"
-          className="text-xs py-1.5 px-8"
+          className="text-xs py-1.5 px-6 md:px-8"
           onClick={handleLogout} // ← تابع خروج
         >
           خروج از حساب
