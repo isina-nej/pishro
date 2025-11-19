@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { LuPlayCircle } from "react-icons/lu";
+import { IoPlayCircle } from "react-icons/io5";
 import {
   Dialog,
   DialogContent,
@@ -30,7 +30,7 @@ export default function DoctorExplanationVideo({
           variant="outline"
           className="flex items-center gap-2 px-6 py-3 border-2 border-myPrimary text-myPrimary hover:bg-myPrimary hover:text-white transition-all duration-300 rounded-full font-bold"
         >
-          <LuPlayCircle size={20} />
+          <IoPlayCircle size={20} />
           توضیحات خانم دکتر
         </Button>
       </DialogTrigger>
