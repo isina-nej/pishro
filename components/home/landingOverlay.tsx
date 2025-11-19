@@ -162,8 +162,8 @@ const OverlayText = ({
   const displayTexts = texts && texts.length > 0 ? texts : defaultTexts;
 
   return (
-    <div className="w-full flex justify-center py-32">
-      <div className="z-10 flex flex-col items-center text-right w-full container-xl space-y-12 px-4">
+    <div className="w-full flex justify-center py-16 sm:py-24 md:py-32">
+      <div className="z-10 flex flex-col items-center text-right w-full container-xl space-y-8 sm:space-y-10 md:space-y-12 px-4 sm:px-6">
         {displayTexts.map((text, i) => (
           <motion.h4
             key={i}
@@ -178,7 +178,7 @@ const OverlayText = ({
             viewport={{ once: false, amount: 0.1 }}
             onViewportEnter={i === 0 ? () => onEnter(true) : undefined}
             onViewportLeave={i === 0 ? () => onEnter(false) : undefined}
-            className="text-2xl md:text-4xl lg:text-5xl font-bold text-white w-full !leading-[1.5]"
+            className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-white w-full !leading-[1.5]"
           >
             {text.includes("پیشرو") ? (
               <>
@@ -208,8 +208,8 @@ const OverlayMainText = ({
   subtitle?: string;
   ctaLink?: string;
 }) => (
-  <div className="h-screen container-xl pt-32 flex flex-col items-start justify-start space-y-8">
-    <h4 className="text-white text-6xl md:text-[88px] font-extrabold leading-tight max-w-4xl">
+  <div className="h-screen container-xl pt-20 sm:pt-24 md:pt-32 px-4 sm:px-6 flex flex-col items-start justify-start space-y-4 sm:space-y-6 md:space-y-8">
+    <h4 className="text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-[88px] font-extrabold leading-tight max-w-4xl">
       {title || "پیشرو بزرگترین مؤسسه سرمایه‌ گذاری در ایران"}
     </h4>
 
@@ -217,7 +217,7 @@ const OverlayMainText = ({
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       href={ctaLink || "/business-consulting"}
-      className="bg-white text-black font-bold px-8 py-4 rounded-full text-lg shadow-lg hover:bg-white/90 transition-all"
+      className="bg-white text-black font-bold px-6 py-3 sm:px-8 sm:py-4 rounded-full text-base sm:text-lg shadow-lg hover:bg-white/90 transition-all"
     >
       {subtitle || "شروع مسیر موفقیت"}
     </motion.a>

@@ -58,20 +58,30 @@ const MiniMovingSlider = ({
         duration: 1,
         ease: "easeOut",
       }}
-      className="relative w-full h-[212px] flex items-center justify-center overflow-hidden"
+      className="relative w-full h-[150px] sm:h-[180px] md:h-[200px] lg:h-[212px] flex items-center justify-center overflow-hidden"
     >
       <Swiper
         modules={[Autoplay]}
-        slidesPerView={3.8}
+        slidesPerView={1.5}
         loop={true}
         allowTouchMove={false}
-        spaceBetween={20}
+        spaceBetween={12}
         centeredSlides={false}
         speed={baseSpeed} // سرعت اولیه
         autoplay={{
           delay: 0, // بدون تأخیر برای حرکت پیوسته
           disableOnInteraction: false,
           pauseOnMouseEnter: false,
+        }}
+        breakpoints={{
+          640: {
+            slidesPerView: 2.5,
+            spaceBetween: 15,
+          },
+          1024: {
+            slidesPerView: 3.8,
+            spaceBetween: 20,
+          },
         }}
         onSwiper={(swiper) => (swiperRef.current = swiper)} // ذخیره رفرنس Swiper
         className="w-full h-full"
@@ -80,7 +90,7 @@ const MiniMovingSlider = ({
         {[...data, ...data].map((src, i) => (
           <SwiperSlide key={i} className="relative w-full h-full">
             <div
-              className="relative w-full h-full rounded-2xl overflow-hidden shadow-lg"
+              className="relative w-full h-full rounded-xl sm:rounded-2xl overflow-hidden shadow-lg"
               onMouseEnter={() => handleMouseEnter(i)}
               onMouseLeave={handleMouseLeave}
             >

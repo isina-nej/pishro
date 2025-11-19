@@ -68,12 +68,12 @@ const useImageZoomScroll = (
   const overlayTextRight = useTransform(
     bgScale,
     [1.8, 1.7, 1.05],
-    [118, 112, 48]
+    [48, 42, 16]
   );
   const overlayTextTop = useTransform(
     bgScale,
     [1.8, 1.7, 1.05],
-    ["33%", "33%", "33%"]
+    ["20%", "25%", "25%"]
   );
 
   return {
@@ -106,19 +106,19 @@ const SliderNavigation = ({
 }) => (
   <motion.div
     style={style}
-    className="absolute inset-0 flex items-center justify-between px-[5vw]"
+    className="absolute inset-0 flex items-center justify-between px-2 sm:px-4 md:px-[5vw]"
   >
     <button
       onClick={onPrev}
       className="text-white/80 hover:text-white transition-colors z-50"
     >
-      <HiChevronRight size={60} />
+      <HiChevronRight className="w-8 h-8 sm:w-12 sm:h-12 md:w-14 md:h-14" />
     </button>
     <button
       onClick={onNext}
       className="text-white/80 hover:text-white transition-colors z-50"
     >
-      <HiChevronLeft size={60} />
+      <HiChevronLeft className="w-8 h-8 sm:w-12 sm:h-12 md:w-14 md:h-14" />
     </button>
   </motion.div>
 );
@@ -191,7 +191,7 @@ const ImageZoomSliderSection = ({
       <motion.section
         ref={sectionRef}
         style={{ opacity: sectionOpacity }}
-        className="relative h-[225vh] -mt-[100vh]"
+        className="relative h-[200vh] sm:h-[215vh] md:h-[225vh] -mt-[100vh]"
       >
         <div className="sticky top-0 h-screen flex items-center justify-center bg-black overflow-hidden">
           <motion.div className="relative w-full flex items-center justify-center">
@@ -202,17 +202,27 @@ const ImageZoomSliderSection = ({
               <Swiper
                 modules={[Autoplay]}
                 onSwiper={(swiper) => (swiperRef.current = swiper)}
-                slidesPerView={1.5}
+                slidesPerView={1}
                 centeredSlides
                 loop={slides.length >= 4}
                 allowTouchMove={false}
-                spaceBetween={30}
+                spaceBetween={15}
                 autoplay={{
                   delay: 10000,
                   disableOnInteraction: false,
                   pauseOnMouseEnter: true,
                 }}
                 onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
+                breakpoints={{
+                  640: {
+                    slidesPerView: 1.2,
+                    spaceBetween: 20,
+                  },
+                  1024: {
+                    slidesPerView: 1.5,
+                    spaceBetween: 30,
+                  },
+                }}
                 className="w-full flex items-center justify-center !overflow-visible"
               >
                 {slides.map((slide, index) => {
@@ -229,7 +239,7 @@ const ImageZoomSliderSection = ({
                           scale: isActive ? bgScale : otherSlidesScale,
                         }}
                         transition={{ duration: 0.4 }}
-                        className="relative w-full aspect-[16/9] rounded-3xl overflow-hidden shadow-2xl"
+                        className="relative w-full aspect-[16/10] sm:aspect-[16/9] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl"
                       >
                         <Image
                           src={slide.src}
@@ -242,12 +252,12 @@ const ImageZoomSliderSection = ({
                         <motion.div
                           style={{ opacity: textOpacity }}
                           transition={{ duration: 0.6, ease: "easeOut" }}
-                          className="absolute top-[33%] right-12 text-right text-white z-20"
+                          className="absolute top-[20%] sm:top-[25%] md:top-[33%] right-4 sm:right-6 md:right-12 text-right text-white z-20 px-2"
                         >
-                          <h3 className="text-5xl font-semibold mb-5 drop-shadow-lg">
+                          <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold mb-2 sm:mb-3 md:mb-5 drop-shadow-lg">
                             {slide.title}
                           </h3>
-                          <p className="text-lg text-white/80 max-w-[560px] leading-snug drop-shadow">
+                          <p className="text-sm sm:text-base md:text-lg text-white/80 max-w-[320px] sm:max-w-[400px] md:max-w-[560px] leading-snug drop-shadow">
                             {slide.text}
                           </p>
                         </motion.div>
@@ -275,12 +285,12 @@ const ImageZoomSliderSection = ({
                                   top: overlayTextTop,
                                 }}
                                 transition={{ duration: 0.6, ease: "easeOut" }}
-                                className="absolute top-[33%] right-28 text-right text-white z-20"
+                                className="absolute text-right text-white z-20 px-2"
                               >
-                                <h3 className="text-5xl font-semibold mb-5 drop-shadow-lg">
+                                <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold mb-2 sm:mb-3 md:mb-5 drop-shadow-lg">
                                   {slide.title}
                                 </h3>
-                                <p className="text-lg text-white/80 max-w-[560px] leading-snug drop-shadow">
+                                <p className="text-sm sm:text-base md:text-lg text-white/80 max-w-[320px] sm:max-w-[400px] md:max-w-[560px] leading-snug drop-shadow">
                                   {slide.text}
                                 </p>
                               </motion.div>
@@ -304,7 +314,7 @@ const ImageZoomSliderSection = ({
         </div>
       </motion.section>
       {(miniSlider1Data || miniSlider2Data) && (
-        <motion.div className="relative w-full py-4 bg-black -mt-20">
+        <motion.div className="relative w-full py-2 sm:py-3 md:py-4 bg-black -mt-12 sm:-mt-16 md:-mt-20">
           {miniSlider1Data && miniSlider1Data.length > 0 && (
             <MiniMovingSlider
               isVisible={showMiniSlider}
@@ -312,7 +322,7 @@ const ImageZoomSliderSection = ({
               baseSpeed={10000}
             />
           )}
-          <div className="h-5"></div>
+          <div className="h-3 sm:h-4 md:h-5"></div>
           {miniSlider2Data && miniSlider2Data.length > 0 && (
             <MiniMovingSlider
               isVisible={showMiniSlider}
