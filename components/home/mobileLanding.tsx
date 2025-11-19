@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectCards, Pagination } from "swiper/modules";
@@ -95,8 +95,8 @@ const HeroSection = ({
   videoUrl?: string;
   videoLoaded: boolean;
   setVideoLoaded: (loaded: boolean) => void;
-  opacity;
-  scale;
+  opacity: MotionValue<number>;
+  scale: MotionValue<number>;
 }) => {
   return (
     <motion.section
