@@ -28,7 +28,7 @@ export default function DoctorExplanationVideo({
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className="flex items-center gap-2 px-6 py-3 border-2 border-myPrimary text-myPrimary hover:bg-myPrimary hover:text-white transition-all duration-300 rounded-full font-bold"
+          className="text-base flex items-center gap-2 px-6 py-6 border-2 border-myPrimary text-myPrimary hover:bg-myPrimary hover:text-white transition-all duration-300 rounded-full font-bold"
         >
           <IoPlayCircle size={20} />
           توضیحات خانم دکتر
@@ -36,10 +36,10 @@ export default function DoctorExplanationVideo({
       </DialogTrigger>
       <DialogContent className="max-w-4xl">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-gray-900">
+          <DialogTitle className="text-xl font-bold text-gray-900 rtl">
             توضیحات خانم دکتر
           </DialogTitle>
-          <DialogDescription className="text-gray-600">
+          <DialogDescription className="text-gray-600 rtl">
             ویدیو توضیحات تکمیلی دوره
           </DialogDescription>
         </DialogHeader>
