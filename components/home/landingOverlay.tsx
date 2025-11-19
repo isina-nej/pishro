@@ -107,7 +107,7 @@ const LandingOverlay = ({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -60 }}
               transition={{ duration: 0.5, ease: "easeInOut" }}
-              className="absolute top-0 z-10"
+              className="absolute top-0 z-10 hidden sm:block"
             >
               <OverlayMainText
                 title={mainHeroTitle}
@@ -119,7 +119,7 @@ const LandingOverlay = ({
         </AnimatePresence>
 
         {/* متن‌های اسکرولی */}
-        <div className="relative z-10 flex flex-col items-center justify-start">
+        <div className="relative z-10 flex-col items-center justify-start hidden sm:flex">
           <motion.div
             style={{ opacity: textOpacity, backgroundColor: bgColor }}
             className="w-full flex justify-center"

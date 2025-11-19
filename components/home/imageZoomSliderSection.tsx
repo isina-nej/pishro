@@ -191,7 +191,7 @@ const ImageZoomSliderSection = ({
       <motion.section
         ref={sectionRef}
         style={{ opacity: sectionOpacity }}
-        className="relative h-[200vh] sm:h-[215vh] md:h-[225vh] -mt-[100vh]"
+        className="relative h-screen sm:h-[215vh] md:h-[225vh] -mt-0 sm:-mt-[100vh]"
       >
         <div className="sticky top-0 h-screen flex items-center justify-center bg-black overflow-hidden">
           <motion.div className="relative w-full flex items-center justify-center">
@@ -314,7 +314,7 @@ const ImageZoomSliderSection = ({
         </div>
       </motion.section>
       {(miniSlider1Data || miniSlider2Data) && (
-        <motion.div className="relative w-full py-2 sm:py-3 md:py-4 bg-black -mt-12 sm:-mt-16 md:-mt-20">
+        <motion.div className="relative w-full py-2 sm:py-3 md:py-4 bg-black mt-0 sm:-mt-16 md:-mt-20">
           {miniSlider1Data && miniSlider1Data.length > 0 && (
             <MiniMovingSlider
               isVisible={showMiniSlider}
