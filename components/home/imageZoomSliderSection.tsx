@@ -191,7 +191,7 @@ const ImageZoomSliderSection = ({
       <motion.section
         ref={sectionRef}
         style={{ opacity: sectionOpacity }}
-        className="relative h-[150vh] sm:h-[160vh] md:h-[170vh] -mt-[100vh]"
+        className="relative h-[200vh] sm:h-[215vh] md:h-[225vh] -mt-[100vh]"
       >
         <div className="sticky top-0 h-screen flex items-center justify-center bg-black overflow-hidden">
           <motion.div className="relative w-full flex items-center justify-center">
@@ -248,7 +248,19 @@ const ImageZoomSliderSection = ({
                           className="object-cover"
                           priority
                         />
-                        {/* Text removed as per user request */}
+                        {/* 🔹 Text Appears When Scale = 1 */}
+                        <motion.div
+                          style={{ opacity: textOpacity }}
+                          transition={{ duration: 0.6, ease: "easeOut" }}
+                          className="absolute top-[20%] sm:top-[25%] md:top-[33%] right-4 sm:right-6 md:right-12 text-right text-white z-20 px-2"
+                        >
+                          <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold mb-2 sm:mb-3 md:mb-5 drop-shadow-lg">
+                            {slide.title}
+                          </h3>
+                          <p className="text-sm sm:text-base md:text-lg text-white/80 max-w-[320px] sm:max-w-[400px] md:max-w-[560px] leading-snug drop-shadow">
+                            {slide.text}
+                          </p>
+                        </motion.div>
                       </motion.div>
 
                       {/* Zoomed Overlay */}
@@ -266,7 +278,22 @@ const ImageZoomSliderSection = ({
                                 className="object-cover"
                                 priority
                               />
-                              {/* Overlay text removed */}
+                              <motion.div
+                                style={{
+                                  opacity: overlayTextOpacity,
+                                  right: overlayTextRight,
+                                  top: overlayTextTop,
+                                }}
+                                transition={{ duration: 0.6, ease: "easeOut" }}
+                                className="absolute text-right text-white z-20 px-2"
+                              >
+                                <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold mb-2 sm:mb-3 md:mb-5 drop-shadow-lg">
+                                  {slide.title}
+                                </h3>
+                                <p className="text-sm sm:text-base md:text-lg text-white/80 max-w-[320px] sm:max-w-[400px] md:max-w-[560px] leading-snug drop-shadow">
+                                  {slide.text}
+                                </p>
+                              </motion.div>
                             </div>
                           </motion.div>
                         </>
@@ -287,7 +314,7 @@ const ImageZoomSliderSection = ({
         </div>
       </motion.section>
       {(miniSlider1Data || miniSlider2Data) && (
-        <motion.div className="relative w-full py-2 sm:py-3 md:py-4 bg-black -mt-32 sm:-mt-40 md:-mt-48">
+        <motion.div className="relative w-full py-2 sm:py-3 md:py-4 bg-black -mt-12 sm:-mt-16 md:-mt-20">
           {miniSlider1Data && miniSlider1Data.length > 0 && (
             <MiniMovingSlider
               isVisible={showMiniSlider}

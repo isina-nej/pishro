@@ -81,7 +81,7 @@ const CalculatorSection = () => {
     arr[arr.indexOf(current) - 1] ?? current;
 
   return (
-    <section className="relative w-full min-h-[600px] md:min-h-screen bg-[#152c44] text-white overflow-hidden mt-4 md:mt-8">
+    <section className="relative w-full min-h-[600px] md:min-h-screen bg-[#152c44] text-white overflow-hidden mt-8 md:mt-20">
       {/* pattern background */}
       <div className="absolute inset-0 bg-[url('/images/utiles/pattern1.svg')] opacity-10 z-0" />
 
