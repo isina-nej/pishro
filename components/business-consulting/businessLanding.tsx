@@ -24,7 +24,10 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
     <div className="relative w-full h-screen overflow-hidden isolate flex items-center justify-start text-center px-4 pt-20 md:pt-0 -mb-32">
       {/* 📷 Background Image */}
       <Image
-        src={businessConsultingData.image || "/images/business-consulting/landing.jpg"}
+        src={
+          businessConsultingData.image ||
+          "/images/business-consulting/landing.jpg"
+        }
         alt="مشاوره کسب و کار"
         fill
         className="object-cover z-0"
@@ -35,7 +38,7 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
       <div className="absolute inset-0 bg-gradient-to-l from-black/90 via-black/50 to-black/5 z-10 pointer-events-none" />
 
       {/* 📝 Main Content */}
-      <div className="relative z-20 max-w-2xl text-white flex flex-col items-center rtl gap-y-8 px-8">
+      <div className="relative z-20 max-w-2xl text-white flex flex-col items-center rtl gap-y-8 px-2 sm:px-8 py-12 sm:py-0">
         <h3 className="text-4xl lg:text-5xl font-bold leading-tight">
           {businessConsultingData.title}
         </h3>
@@ -71,7 +74,10 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
                   {businessConsultingData.phoneNumber || "0912-123-4567"}
                 </p>
                 <a
-                  href={`tel:${businessConsultingData.phoneNumber?.replace(/-/g, "")}`}
+                  href={`tel:${businessConsultingData.phoneNumber?.replace(
+                    /-/g,
+                    ""
+                  )}`}
                   className="inline-block px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium transition"
                 >
                   تماس بگیرید
