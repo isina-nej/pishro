@@ -57,12 +57,12 @@ const NewsCard = ({ data }: NewsCardProps) => {
   const readingTime = getReadingTime(data.content || data.excerpt);
 
   return (
-    <div className="group min-h-[240px] flex justify-between border border-gray-200 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-mySecondary/10 hover:border-mySecondary/30 transition-all duration-500 bg-white relative">
+    <div className="group min-h-[240px] flex flex-col md:flex-row md:justify-between border border-gray-200 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-mySecondary/10 hover:border-mySecondary/30 transition-all duration-500 bg-white relative">
       {/* Gradient accent line */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-mySecondary to-mySecondary/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
       {/* تصویر */}
-      <div className="relative flex-shrink-0 w-[220px] xl:w-[250px] min-h-[240px] overflow-hidden">
+      <div className="relative flex-shrink-0 w-full md:w-[220px] xl:w-[250px] h-[200px] md:min-h-[240px] overflow-hidden">
         <Image
           src={data.coverImage ?? "/images/default-news.jpg"}
           alt={data.title}
@@ -88,18 +88,18 @@ const NewsCard = ({ data }: NewsCardProps) => {
       </div>
 
       {/* محتوا */}
-      <div className="px-6 xl:px-8 py-6 flex flex-col justify-between flex-1">
-        <div className="space-y-3">
-          <h5 className="font-bold text-lg xl:text-xl text-[#131b22] line-clamp-2 leading-relaxed group-hover:text-mySecondary transition-colors duration-300">
+      <div className="px-4 md:px-6 xl:px-8 py-4 md:py-6 flex flex-col justify-between flex-1">
+        <div className="space-y-2 md:space-y-3">
+          <h5 className="font-bold text-base md:text-lg xl:text-xl text-[#131b22] line-clamp-2 leading-relaxed group-hover:text-mySecondary transition-colors duration-300">
             {data.title}
           </h5>
 
-          <p className="font-normal text-sm xl:text-base text-gray-600 line-clamp-3 leading-relaxed">
+          <p className="font-normal text-sm xl:text-base text-gray-600 line-clamp-2 md:line-clamp-3 leading-relaxed">
             {data.excerpt}
           </p>
 
           {/* Meta information */}
-          <div className="flex flex-wrap items-center gap-4 pt-2">
+          <div className="flex flex-wrap items-center gap-3 md:gap-4 pt-1 md:pt-2">
             {data.publishedAt && (
               <div className="flex items-center gap-1.5 text-xs text-gray-500">
                 <Calendar className="w-3.5 h-3.5" />
@@ -131,7 +131,7 @@ const NewsCard = ({ data }: NewsCardProps) => {
         {/* دکمه ادامه مطلب */}
         <Link
           href={`/news/${data.slug}`}
-          className="mt-4 text-sm font-bold border border-mySecondary rounded px-2 py-1 text-mySecondary hover:text-white hover:bg-mySecondary transition-all duration-300 self-end inline-flex items-center gap-2 no-underline group-hover:gap-3"
+          className="mt-3 md:mt-4 text-sm font-bold border border-mySecondary rounded px-2 py-1 text-mySecondary hover:text-white hover:bg-mySecondary transition-all duration-300 self-end inline-flex items-center gap-2 no-underline group-hover:gap-3"
         >
           <span>ادامه مطلب</span>
           <span className="text-base group-hover:-translate-x-1 transition-transform duration-300">
