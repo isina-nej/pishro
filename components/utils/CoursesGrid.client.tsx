@@ -77,8 +77,11 @@ export default function CoursesGridClient({ courses }: Props) {
       aria-label="دوره‌های آموزشی"
     >
       {/* Header */}
-      <div className="w-full flex justify-center items-center text-center gap-3 sm:gap-4 mb-4 sm:mb-6 md:mb-0">
-        <div className="w-[340px]"></div>
+      <div className="w-full flex flex-col lg:flex-row justify-center items-center text-center gap-3 sm:gap-4 mb-4 sm:mb-6 md:mb-8">
+        {/* Spacer for desktop only */}
+        <div className="hidden lg:block w-[340px]"></div>
+
+        {/* Title & Description */}
         <div className="flex-1 flex flex-col items-center">
           <h2 className="font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl flex items-center justify-center gap-2 sm:gap-2.5 md:gap-3">
             <span>دوره‌ها</span>
@@ -97,10 +100,10 @@ export default function CoursesGridClient({ courses }: Props) {
         </div>
 
         {/* Dropdown & Button */}
-        <div className="relative flex items-center justify-end gap-3 mt-2 w-[340px]">
+        <div className="relative flex items-center justify-center lg:justify-end gap-2 sm:gap-3 mt-3 lg:mt-2 w-full lg:w-[340px] px-4 lg:px-0">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-1 bg-white border border-gray-300 px-3 py-2 rounded-lg shadow-sm hover:shadow-md transition text-xs font-bold">
+              <button className="flex items-center gap-1 bg-white border border-gray-300 px-3 py-2 rounded-lg shadow-sm hover:shadow-md transition text-xs sm:text-sm font-bold">
                 <ChevronDown size={16} />
                 <span>{selectedCategory.label}</span>
               </button>
@@ -128,7 +131,7 @@ export default function CoursesGridClient({ courses }: Props) {
 
           <Link
             href={selectedCategory.href}
-            className="flex items-center gap-1 bg-mySecondary text-white px-4 py-2 rounded-lg text-xs font-bold hover:opacity-90 transition"
+            className="flex items-center gap-1 bg-mySecondary text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-bold hover:opacity-90 transition whitespace-nowrap"
           >
             <Folder size={16} />
             <span>صفحه {selectedCategory.label}</span>
