@@ -129,13 +129,15 @@ const LandingOverlay = ({
         </div>
       </section>
 
-      {/* اسلایدر نهایی */}
-      <ImageZoomSliderSection
-        parentRef={ref}
-        slides={slides}
-        miniSlider1Data={miniSlider1Data}
-        miniSlider2Data={miniSlider2Data}
-      />
+      {/* اسلایدر نهایی - فقط در دسکتاپ */}
+      <div className="hidden lg:block">
+        <ImageZoomSliderSection
+          parentRef={ref}
+          slides={slides}
+          miniSlider1Data={miniSlider1Data}
+          miniSlider2Data={miniSlider2Data}
+        />
+      </div>
     </>
   );
 };
