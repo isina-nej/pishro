@@ -5,9 +5,13 @@ import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { Wallet, Clock, BarChart3, ShoppingCart } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import { useCartStore, InvestmentPortfolioItem } from "@/stores/cart-store";
 
 const PortfolioSelectionForm = () => {
+  // Detect mobile for performance optimization
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
   const [amount, setAmount] = useState(50_000_000); // 50 میلیون تومان
   const [duration, setDuration] = useState(6); // 6 ماه
   const [riskLevel, setRiskLevel] = useState<0 | 1 | 2>(1); // 0: کم، 1: متوسط، 2: بالا
@@ -163,10 +167,10 @@ const PortfolioSelectionForm = () => {
       id="portfolio-selection-form"
       className="w-full bg-gradient-to-b from-white via-mySecondary/5 to-white py-16 md:py-24 relative overflow-hidden"
     >
-      {/* Background decorative elements */}
+      {/* Background decorative elements - reduced blur on mobile */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-mySecondary/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-myPrimary/10 rounded-full blur-3xl" />
+        <div className="absolute -top-24 -right-24 w-96 h-96 bg-mySecondary/10 rounded-full blur-xl md:blur-3xl" />
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-myPrimary/10 rounded-full blur-xl md:blur-3xl" />
       </div>
 
       <div className="container-xl relative z-10">
@@ -185,7 +189,7 @@ const PortfolioSelectionForm = () => {
           <div className="bg-gradient-to-br from-white via-gray-50/50 to-white rounded-3xl p-6 md:p-10 shadow-2xl border border-gray-200/50 backdrop-blur-sm hover:shadow-mySecondary/10 transition-shadow duration-500">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* مبلغ سرمایه‌گذاری */}
-              <div className="group bg-white rounded-2xl border border-gray-200 p-6 hover:shadow-lg hover:shadow-mySecondary/10 hover:border-mySecondary/30 transition-all duration-300 hover:scale-[1.02]">
+              <div className="group bg-white rounded-2xl border border-gray-200 p-6 hover:shadow-lg hover:shadow-mySecondary/10 hover:border-mySecondary/30 transition-all duration-300 md:hover:scale-[1.02]">
                 <div className="text-center text-lg font-bold mb-6 flex items-center justify-center gap-2 text-gray-900">
                   <div className="p-2 bg-mySecondary/10 rounded-xl group-hover:bg-mySecondary/20 transition-colors">
                     <Wallet size={24} className="text-mySecondary" />
@@ -259,7 +263,7 @@ const PortfolioSelectionForm = () => {
               </div>
 
               {/* مدت سرمایه‌گذاری */}
-              <div className="group bg-white rounded-2xl border border-gray-200 p-6 hover:shadow-lg hover:shadow-myPrimary/10 hover:border-myPrimary/30 transition-all duration-300 hover:scale-[1.02]">
+              <div className="group bg-white rounded-2xl border border-gray-200 p-6 hover:shadow-lg hover:shadow-myPrimary/10 hover:border-myPrimary/30 transition-all duration-300 md:hover:scale-[1.02]">
                 <div className="text-center text-lg font-bold mb-6 flex items-center justify-center gap-2 text-gray-900">
                   <div className="p-2 bg-myPrimary/10 rounded-xl group-hover:bg-myPrimary/20 transition-colors">
                     <Clock size={24} className="text-myPrimary" />
@@ -429,14 +433,16 @@ const PortfolioSelectionForm = () => {
                       : "bg-gradient-to-r from-mySecondary to-myPrimary hover:from-myPrimary hover:to-mySecondary text-white active:scale-95"
                   }`}
                 >
-                  {/* Button glow effect */}
-                  {!isInCart && !isLoading && (
+                  {/* Button glow effect - disabled on mobile for performance */}
+                  {!isInCart && !isLoading && !isMobile && (
                     <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                   )}
 
                   <ShoppingCart
                     size={24}
-                    className={!isInCart && !isLoading ? "animate-bounce" : ""}
+                    className={
+                      !isInCart && !isLoading && !isMobile ? "animate-bounce" : ""
+                    }
                   />
                   {isLoading
                     ? "در حال افزودن..."

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import {
   Wallet,
   TrendingUp,
@@ -22,6 +23,9 @@ interface InvestmentPlansHeroProps {
 export const InvestmentPlansHero = ({
   investmentPlansData,
 }: InvestmentPlansHeroProps) => {
+  // Detect mobile for performance optimization
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
   // Calculate stats from data
   const stats = {
     totalPlans: investmentPlansData.plans.length || 3,
@@ -98,45 +102,54 @@ export const InvestmentPlansHero = ({
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
       </div>
 
-      {/* Animated Floating Elements */}
-      <motion.div
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.3, 0.5, 0.3],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-        className="absolute -top-20 -right-20 h-96 w-96 rounded-full bg-gradient-to-br from-emerald-500/30 to-teal-500/30 blur-3xl"
-      />
-      <motion.div
-        animate={{
-          scale: [1, 1.3, 1],
-          opacity: [0.2, 0.4, 0.2],
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 1,
-        }}
-        className="absolute -bottom-32 -left-32 h-[500px] w-[500px] rounded-full bg-gradient-to-tr from-blue-500/25 to-cyan-500/25 blur-3xl"
-      />
-      <motion.div
-        animate={{
-          scale: [1, 1.1, 1],
-          opacity: [0.15, 0.3, 0.15],
-        }}
-        transition={{
-          duration: 7,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 2,
-        }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-full bg-gradient-to-r from-violet-500/20 to-purple-500/20 blur-3xl"
-      />
+      {/* Animated Floating Elements - Disabled on mobile for performance */}
+      {!isMobile && (
+        <>
+          <motion.div
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.5, 0.3],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="absolute -top-20 -right-20 h-96 w-96 rounded-full bg-gradient-to-br from-emerald-500/30 to-teal-500/30 blur-3xl"
+          />
+          <motion.div
+            animate={{
+              scale: [1, 1.3, 1],
+              opacity: [0.2, 0.4, 0.2],
+            }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 1,
+            }}
+            className="absolute -bottom-32 -left-32 h-[500px] w-[500px] rounded-full bg-gradient-to-tr from-blue-500/25 to-cyan-500/25 blur-3xl"
+          />
+          <motion.div
+            animate={{
+              scale: [1, 1.1, 1],
+              opacity: [0.15, 0.3, 0.15],
+            }}
+            transition={{
+              duration: 7,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 2,
+            }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-full bg-gradient-to-r from-violet-500/20 to-purple-500/20 blur-3xl"
+          />
+        </>
+      )}
+
+      {/* Static background for mobile */}
+      {isMobile && (
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-blue-500/10" />
+      )}
 
       <div className="container-xl relative z-10">
         <motion.div
@@ -222,15 +235,23 @@ export const InvestmentPlansHero = ({
               <motion.div
                 key={item.label}
                 variants={itemVariants}
-                whileHover={{
-                  scale: 1.05,
-                  y: -8,
-                  transition: { duration: 0.3 },
-                }}
-                className={`group relative overflow-hidden rounded-3xl border ${item.border} bg-gradient-to-br ${item.gradient} p-6 backdrop-blur-xl shadow-xl hover:shadow-2xl transition-all duration-300`}
+                whileHover={
+                  !isMobile
+                    ? {
+                        scale: 1.05,
+                        y: -8,
+                        transition: { duration: 0.3 },
+                      }
+                    : undefined
+                }
+                className={`group relative overflow-hidden rounded-3xl border ${item.border} bg-gradient-to-br ${item.gradient} p-6 ${
+                  isMobile ? "backdrop-blur-sm" : "backdrop-blur-xl"
+                } shadow-xl hover:shadow-2xl transition-all duration-300`}
               >
-                {/* Shine effect on hover */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                {/* Shine effect on hover - disabled on mobile */}
+                {!isMobile && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                )}
 
                 <div className="relative flex flex-col items-center text-center gap-4">
                   <span
@@ -253,46 +274,60 @@ export const InvestmentPlansHero = ({
         </motion.div>
       </div>
 
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5, duration: 1 }}
-        className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10"
-      >
+      {/* Scroll Indicator - Simplified on mobile */}
+      {!isMobile ? (
         <motion.div
-          animate={floatAnimation}
-          className="flex flex-col items-center gap-2 cursor-pointer"
-          onClick={scrollToPlans}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5, duration: 1 }}
+          className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10"
         >
-          <span className="text-xs text-slate-400 font-medium">
-            مشاهده سبدها
-          </span>
           <motion.div
-            animate={{
-              y: [0, 8, 0],
-            }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            className="h-10 w-6 rounded-full border-2 border-white/30 flex items-start justify-center p-1"
+            animate={floatAnimation}
+            className="flex flex-col items-center gap-2 cursor-pointer"
+            onClick={scrollToPlans}
           >
+            <span className="text-xs text-slate-400 font-medium">
+              مشاهده سبدها
+            </span>
             <motion.div
               animate={{
-                opacity: [0, 1, 0],
+                y: [0, 8, 0],
               }}
               transition={{
                 duration: 1.5,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="h-2 w-2 rounded-full bg-white"
-            />
+              className="h-10 w-6 rounded-full border-2 border-white/30 flex items-start justify-center p-1"
+            >
+              <motion.div
+                animate={{
+                  opacity: [0, 1, 0],
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="h-2 w-2 rounded-full bg-white"
+              />
+            </motion.div>
           </motion.div>
         </motion.div>
-      </motion.div>
+      ) : (
+        <div
+          className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 cursor-pointer"
+          onClick={scrollToPlans}
+        >
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-xs text-slate-400 font-medium">
+              مشاهده سبدها
+            </span>
+            <ArrowDown className="h-5 w-5 text-white/60" />
+          </div>
+        </div>
+      )}
     </section>
   );
 };

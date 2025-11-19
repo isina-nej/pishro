@@ -307,9 +307,9 @@ const InvestmentModelsSection = () => {
                 key={model.id}
                 className="flex flex-col bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden hover:shadow-2xl transition-shadow duration-300"
               >
-                {/* Header با gradient */}
+                {/* Header با gradient - با ارتفاع یکسان */}
                 <div
-                  className={`bg-gradient-to-br ${model.gradient} p-8 text-white`}
+                  className={`bg-gradient-to-br ${model.gradient} p-8 text-white min-h-[200px] md:min-h-[220px] flex flex-col justify-center`}
                 >
                   <div className="flex items-center gap-4 mb-4">
                     <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
@@ -321,7 +321,7 @@ const InvestmentModelsSection = () => {
                       </h3>
                     </div>
                   </div>
-                  <p className="text-white/90 leading-relaxed">
+                  <p className="text-white/90 leading-relaxed line-clamp-4">
                     {model.description}
                   </p>
                 </div>
