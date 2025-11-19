@@ -9,7 +9,7 @@ const Navbar = () => {
   const isDark = useIsDarkNavbar();
 
   return (
-    <nav className="w-full flex flex-col z-[100]">
+    <nav className="w-full flex flex-col z-[9999]">
       <div className="hidden md:block">
         <NavbarDesktop isDark={isDark} navbarData={navbarData} />
       </div>

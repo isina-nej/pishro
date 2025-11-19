@@ -57,7 +57,7 @@ const NavbarMobile = ({
     <>
       <div
         className={clsx(
-          "fixed top-0 left-0 w-full flex justify-between items-center md:hidden py-2 px-4 z-[100] transition-transform duration-300",
+          "fixed top-0 left-0 w-full flex justify-between items-center md:hidden py-2 px-4 z-[9999] transition-transform duration-300",
           isHidden ? "-translate-y-full" : "translate-y-0",
           isOpen
             ? "bg-transparent text-white border-b border-white/20"
@@ -108,7 +108,7 @@ const NavbarMobile = ({
       {isMounted && (
         <div
           className={clsx(
-            "fixed inset-0 z-[51] flex flex-col pt-20 bg-mySecondary transition-opacity duration-300 ease-out md:hidden overflow-hidden",
+            "fixed inset-0 z-[9998] flex flex-col pt-20 bg-mySecondary transition-opacity duration-300 ease-out md:hidden overflow-hidden",
             isOpen
               ? "opacity-100 pointer-events-auto"
               : "opacity-0 pointer-events-none"
@@ -126,7 +126,7 @@ const NavbarMobile = ({
               className="flex flex-col items-start gap-6 px-4 text-lg text-white"
             />
             <div className="flex flex-col items-center mt-10 pb-10 gap-4">
-              <NavbarActions isDark={isDark} />
+              <NavbarActions isDark={true} />
             </div>
           </div>
         </div>
