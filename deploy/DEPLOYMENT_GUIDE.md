@@ -10,40 +10,53 @@
 2. [پیش‌نیازها](#پیش‌نیازها)
 3. [آماده‌سازی سرور](#آماده‌سازی-سرور)
 4. [نصب Dependencies](#نصب-dependencies)
-5. [تنظیم Object Storage](#تنظیم-object-storage)
-6. [Deploy کردن پروژه](#deploy-کردن-پروژه)
-7. [راه‌اندازی Worker](#راه‌اندازی-worker)
-8. [تست و Monitoring](#تست-و-monitoring)
-9. [عیب‌یابی](#عیب‌یابی)
-10. [نگهداری](#نگهداری)
+5. [نصب و تنظیم MongoDB](#نصب-و-تنظیم-mongodb)
+6. [تنظیم Object Storage](#تنظیم-object-storage)
+7. [Deploy کردن پروژه اصلی](#deploy-کردن-پروژه-اصلی)
+8. [Deploy کردن پروژه CMS](#deploy-کردن-پروژه-cms)
+9. [راه‌اندازی Worker](#راه‌اندازی-worker)
+10. [تست و Monitoring](#تست-و-monitoring)
+11. [عیب‌یابی](#عیب‌یابی)
+12. [نگهداری](#نگهداری)
 
 ---
 
 ## 🏗️ معماری سیستم
 
-سیستم پردازش ویدیو پیشرو شامل اجزای زیر است:
+سیستم پیشرو شامل دو پروژه اصلی است که در یک سرور اجرا می‌شوند:
 
 ```
-┌─────────────────┐
-│   Next.js App   │  ← Frontend + API Routes
-│   (Port 3000)   │
-└────────┬────────┘
-         │
-         ├─────────────────┐
-         │                 │
-         ▼                 ▼
-┌─────────────────┐ ┌──────────────────┐
-│    MongoDB      │ │  Object Storage  │
-│   (Database)    │ │   (iranServer)   │
-└─────────────────┘ └──────────────────┘
-         ▲                 ▲
-         │                 │
-         └────────┬────────┘
-                  │
-         ┌────────▼─────────┐
-         │  Video Worker    │  ← FFmpeg Processing
-         │  (Background)    │
-         └──────────────────┘
+┌────────────────────────────────────────────────┐
+│            Server: 178.239.147.136             │
+├────────────────────────────────────────────────┤
+│                                                │
+│  ┌──────────────────┐  ┌──────────────────┐   │
+│  │  Main Site       │  │  CMS Panel       │   │
+│  │  (Port 3000)     │  │  (Port 3001)     │   │
+│  │  User Frontend   │  │  Admin Panel     │   │
+│  └────────┬─────────┘  └────────┬─────────┘   │
+│           │                     │             │
+│           └──────────┬──────────┘             │
+│                      │                        │
+│           ┌──────────▼──────────┐             │
+│           │      MongoDB        │             │
+│           │   (Port 27017)      │             │
+│           │                     │             │
+│           │  DB: pishro         │  ← Main    │
+│           │  DB: pishro_admin   │  ← CMS     │
+│           └──────────┬──────────┘             │
+│                      │                        │
+│           ┌──────────▼──────────┐             │
+│           │  Object Storage     │             │
+│           │  (iranServer S3)    │             │
+│           └──────────┬──────────┘             │
+│                      │                        │
+│           ┌──────────▼──────────┐             │
+│           │   Video Worker      │             │
+│           │  (FFmpeg Processing)│             │
+│           └─────────────────────┘             │
+│                                                │
+└────────────────────────────────────────────────┘
 ```
 
 **جریان کار:**
@@ -156,6 +169,133 @@ docker --version
 
 ---
 
+## 🗄️ نصب و تنظیم MongoDB
+
+### چرا MongoDB روی سرور؟
+
+برای استفاده در production، توصیه می‌شود MongoDB را روی همان سرور نصب کنید تا:
+- ✅ اتصال سریع‌تر و کم‌تاخیر باشد
+- ✅ هزینه‌های خدمات ابری کاهش یابد
+- ✅ کنترل کامل بر database داشته باشید
+
+### نصب سریع
+
+```bash
+# برای جزئیات کامل، مراجعه کنید به: deploy/MONGODB_SETUP.md
+
+# نصب MongoDB 7.0
+curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | \
+   sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg --dearmor
+
+echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+
+sudo apt-get update
+sudo apt-get install -y mongodb-org
+
+# شروع MongoDB
+sudo systemctl start mongod
+sudo systemctl enable mongod
+
+# بررسی وضعیت
+sudo systemctl status mongod
+```
+
+### ایجاد کاربر Admin
+
+```bash
+mongosh
+```
+
+```javascript
+use admin
+
+db.createUser({
+  user: "admin",
+  pwd: "your-very-secure-password",
+  roles: [
+    { role: "userAdminAnyDatabase", db: "admin" },
+    { role: "readWriteAnyDatabase", db: "admin" },
+    { role: "dbAdminAnyDatabase", db: "admin" }
+  ]
+})
+
+exit
+```
+
+### فعال‌سازی Authentication
+
+```bash
+sudo nano /etc/mongod.conf
+```
+
+اضافه کردن:
+```yaml
+security:
+  authorization: enabled
+
+net:
+  port: 27017
+  bindIp: 127.0.0.1
+```
+
+```bash
+sudo systemctl restart mongod
+```
+
+### ایجاد Database برای پروژه اصلی
+
+```bash
+mongosh -u admin -p --authenticationDatabase admin
+```
+
+```javascript
+// Database پروژه اصلی
+use pishro
+
+db.createUser({
+  user: "pishro_user",
+  pwd: "pishro-secure-password-123",
+  roles: [
+    { role: "readWrite", db: "pishro" },
+    { role: "dbAdmin", db: "pishro" }
+  ]
+})
+```
+
+### ایجاد Database برای CMS
+
+```javascript
+// Database پروژه CMS
+use pishro_admin
+
+db.createUser({
+  user: "pishro_admin_user",
+  pwd: "cms-secure-password-456",
+  roles: [
+    { role: "readWrite", db: "pishro_admin" },
+    { role: "dbAdmin", db: "pishro_admin" }
+  ]
+})
+
+exit
+```
+
+### تست اتصال
+
+```bash
+# تست پروژه اصلی
+mongosh "mongodb://pishro_user:pishro-secure-password-123@localhost:27017/pishro"
+
+# تست CMS
+mongosh "mongodb://pishro_admin_user:cms-secure-password-456@localhost:27017/pishro_admin"
+```
+
+**⚠️ مهم:** رمزهای عبور قوی انتخاب کنید و در جای امن ذخیره کنید.
+
+**📚 راهنمای کامل:** برای جزئیات بیشتر، به `deploy/MONGODB_SETUP.md` مراجعه کنید.
+
+---
+
 ## 🗄️ تنظیم Object Storage (iranServer)
 
 ### اطلاعات مورد نیاز
@@ -195,7 +335,7 @@ aws s3api put-bucket-policy --bucket pishro-videos \
 
 ---
 
-## 🚀 Deploy کردن پروژه
+## 🚀 Deploy کردن پروژه اصلی
 
 ### 1. Clone کردن Repository
 
@@ -315,6 +455,110 @@ pm2 start npm --name "pishro-app" -- start
 pm2 save
 pm2 startup
 ```
+
+---
+
+## 🎨 Deploy کردن پروژه CMS
+
+حالا که پروژه اصلی آماده است، پنل مدیریت (CMS) را در پورت 3001 راه‌اندازی می‌کنیم.
+
+### 1. Clone کردن Repository CMS
+
+```bash
+cd /opt
+sudo git clone https://github.com/amir-9/pishro-admin.git pishro-admin
+cd pishro-admin
+sudo chown -R $USER:$USER /opt/pishro-admin
+```
+
+### 2. نصب Dependencies
+
+```bash
+npm install
+```
+
+### 3. ایجاد فایل `.env` برای CMS
+
+```bash
+cp .env.example .env
+nano .env
+```
+
+**محتوای فایل `.env` برای CMS:**
+
+```env
+# Database جداگانه برای CMS
+DATABASE_URL="mongodb://pishro_admin_user:cms-secure-password-456@localhost:27017/pishro_admin"
+
+# همان Object Storage
+S3_ENDPOINT="https://s3.iran-server.com"
+S3_REGION="default"
+S3_ACCESS_KEY_ID="YOUR_ACCESS_KEY_HERE"
+S3_SECRET_ACCESS_KEY="YOUR_SECRET_KEY_HERE"
+S3_BUCKET_NAME="pishro-videos"
+S3_PUBLIC_URL="https://your-bucket.s3.iran-server.com"
+
+TEMP_DIR="/tmp/video-processing"
+NODE_ENV="production"
+
+# AUTH_SECRET متفاوت از پروژه اصلی
+AUTH_SECRET="different-secret-key-for-cms-32-characters-long"
+NEXTAUTH_URL="http://178.239.147.136:3001"
+
+# همان اطلاعات SMS و Payment
+SMS_USERNAME="your-sms-username"
+SMS_PASSWORD="your-sms-password"
+SMS_FROM="your-sms-number"
+
+ZARINPAL_MERCHANT_ID="your-merchant-id"
+ZARINPAL_CALLBACK_URL="http://178.239.147.136:3001/api/payment/verify"
+```
+
+**نکات مهم:**
+- ✅ `DATABASE_URL` به database جداگانه اشاره کند (`pishro_admin`)
+- ✅ `AUTH_SECRET` متفاوت از پروژه اصلی باشد
+- ✅ `NEXTAUTH_URL` پورت 3001 داشته باشد
+
+### 4. Setup Database
+
+```bash
+npx prisma generate
+npx prisma db push
+```
+
+### 5. Build
+
+```bash
+npm run build
+```
+
+### 6. راه‌اندازی با PM2
+
+```bash
+PORT=3001 pm2 start npm --name "pishro-cms" -- start
+pm2 save
+```
+
+### 7. بررسی وضعیت
+
+```bash
+pm2 status
+# باید هر دو پروژه در حال اجرا باشند:
+# - pishro-app (پورت 3000)
+# - pishro-cms (پورت 3001)
+```
+
+### 8. باز کردن پورت 3001 در Firewall (اگر نیاز است)
+
+```bash
+sudo ufw allow 3001/tcp
+```
+
+**🎉 تبریک!** هر دو پروژه در حال اجرا هستند:
+- Main Site: `http://178.239.147.136:3000`
+- CMS Panel: `http://178.239.147.136:3001`
+
+**📚 راهنمای کامل CMS:** برای جزئیات بیشتر، مانند تنظیم Nginx و subdomain، به `deploy/CMS_DEPLOYMENT.md` مراجعه کنید.
 
 ---
 
