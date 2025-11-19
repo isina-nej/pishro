@@ -81,12 +81,12 @@ const PersonalInfoForm = forwardRef((props, ref) => {
   }));
 
   return (
-    <div className="bg-[#fafafa] w-full rounded mt-8">
+    <div className="bg-[#fafafa] w-full rounded mt-6 md:mt-8">
       {/* header */}
-      <div className="w-full p-5 border-b border-[#e1e1e1]">
-        <h6 className="font-irsans text-xs text-[#4d4d4d] mb-5 flex items-center">
+      <div className="w-full p-4 md:p-5 border-b border-[#e1e1e1]">
+        <h6 className="font-irsans text-xs text-[#4d4d4d] mb-3 md:mb-5 flex items-start md:items-center flex-col md:flex-row gap-2 md:gap-0">
           <ProfileIcon className="size-4 stroke-[#2F2F2F]" />
-          <span className="mr-3">
+          <span className="md:mr-3">
             مشخصات فردی (شخصیت حقوقی هستید؟{" "}
             <button className="text-[#2B93F3]">کلید کنید</button>)
           </span>
@@ -94,23 +94,23 @@ const PersonalInfoForm = forwardRef((props, ref) => {
       </div>
 
       {/* form */}
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-5">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-4 md:p-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 md:gap-x-16 gap-y-4 md:gap-y-6">
           {/* نام */}
           <div>
-            <div className="flex items-center">
-              <label className="w-[110px] block text-xs font-medium text-[#1a1a1a]">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+              <label className="w-full sm:w-[110px] block text-xs font-medium text-[#1a1a1a]">
                 نام <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 {...register("firstName")}
                 disabled={loading}
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                className="block w-full border border-gray-300 rounded-md p-2 text-sm"
               />
             </div>
             {errors.firstName && (
-              <p className="text-red-500 text-xs mt-1 mr-[100px]">
+              <p className="text-red-500 text-xs mt-1 sm:mr-[110px]">
                 {errors.firstName.message}
               </p>
             )}
@@ -118,19 +118,19 @@ const PersonalInfoForm = forwardRef((props, ref) => {
 
           {/* نام خانوادگی */}
           <div>
-            <div className="flex items-center">
-              <label className="w-[110px] block text-xs font-medium text-[#1a1a1a]">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+              <label className="w-full sm:w-[110px] block text-xs font-medium text-[#1a1a1a]">
                 نام خانوادگی <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 {...register("lastName")}
                 disabled={loading}
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                className="block w-full border border-gray-300 rounded-md p-2 text-sm"
               />
             </div>
             {errors.lastName && (
-              <p className="text-red-500 text-xs mt-1 mr-[100px]">
+              <p className="text-red-500 text-xs mt-1 sm:mr-[110px]">
                 {errors.lastName.message}
               </p>
             )}
@@ -138,19 +138,19 @@ const PersonalInfoForm = forwardRef((props, ref) => {
 
           {/* شماره تماس */}
           <div>
-            <div className="flex items-center">
-              <label className="w-[110px] block text-xs font-medium text-[#1a1a1a]">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+              <label className="w-full sm:w-[110px] block text-xs font-medium text-[#1a1a1a]">
                 شماره تماس <span className="text-red-500">*</span>
               </label>
               <input
                 type="tel"
                 {...register("phone")}
                 disabled={loading}
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                className="block w-full border border-gray-300 rounded-md p-2 text-sm"
               />
             </div>
             {errors.phone && (
-              <p className="text-red-500 text-xs mt-1 mr-[100px]">
+              <p className="text-red-500 text-xs mt-1 sm:mr-[110px]">
                 {errors.phone.message}
               </p>
             )}
@@ -158,19 +158,19 @@ const PersonalInfoForm = forwardRef((props, ref) => {
 
           {/* نشانی ایمیل */}
           <div>
-            <div className="flex items-center">
-              <label className="w-[110px] block text-xs font-medium text-[#1a1a1a]">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+              <label className="w-full sm:w-[110px] block text-xs font-medium text-[#1a1a1a]">
                 نشانی ایمیل <span className="text-red-500">*</span>
               </label>
               <input
                 type="email"
                 {...register("email")}
                 disabled={loading}
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                className="block w-full border border-gray-300 rounded-md p-2 text-sm"
               />
             </div>
             {errors.email && (
-              <p className="text-red-500 text-xs mt-1 mr-[100px]">
+              <p className="text-red-500 text-xs mt-1 sm:mr-[110px]">
                 {errors.email.message}
               </p>
             )}
@@ -178,19 +178,19 @@ const PersonalInfoForm = forwardRef((props, ref) => {
 
           {/* کد ملی */}
           <div>
-            <div className="flex items-center">
-              <label className="w-[110px] block text-xs font-medium text-[#1a1a1a]">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+              <label className="w-full sm:w-[110px] block text-xs font-medium text-[#1a1a1a]">
                 کد ملی
               </label>
               <input
                 type="text"
                 {...register("nationalCode")}
                 disabled={loading}
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                className="block w-full border border-gray-300 rounded-md p-2 text-sm"
               />
             </div>
             {errors.nationalCode && (
-              <p className="text-red-500 text-xs mt-1 mr-[100px]">
+              <p className="text-red-500 text-xs mt-1 sm:mr-[110px]">
                 {errors.nationalCode.message}
               </p>
             )}
@@ -198,8 +198,8 @@ const PersonalInfoForm = forwardRef((props, ref) => {
 
           {/* تاریخ تولد */}
           <div>
-            <div className="flex items-center">
-              <label className="w-[110px] block text-xs font-medium text-[#1a1a1a]">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+              <label className="w-full sm:w-[110px] block text-xs font-medium text-[#1a1a1a]">
                 تاریخ تولد
               </label>
               <Controller
@@ -213,7 +213,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
                     locale={persian_fa}
                     calendarPosition="bottom-right"
                     placeholder="انتخاب تاریخ"
-                    inputClass="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                    inputClass="block w-full border border-gray-300 rounded-md p-2 text-sm"
                     containerClassName="w-full"
                     disabled={loading}
                   />
@@ -221,7 +221,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
               />
             </div>
             {errors.birthDate && (
-              <p className="text-red-500 text-xs mt-1 mr-[100px]">
+              <p className="text-red-500 text-xs mt-1 sm:mr-[110px]">
                 {errors.birthDate.message as string}
               </p>
             )}

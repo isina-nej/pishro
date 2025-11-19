@@ -32,7 +32,7 @@ const AllForms = ({ formType }: AllFormsProps) => {
   };
 
   return (
-    <div className="p-5">
+    <div className="p-4 md:p-5">
       {formType === "personal" && (
         <>
           {/* pick profile picture */}
@@ -48,10 +48,10 @@ const AllForms = ({ formType }: AllFormsProps) => {
           <PayInfoForm ref={payInfoFormRef} />
         </>
       )}
-      <div className="mt-8 flex justify-end">
+      <div className="mt-6 md:mt-8 flex justify-end">
         <Button
           variant={"destructive"}
-          className="px-6 text-xs"
+          className="px-4 md:px-6 text-xs w-full sm:w-auto"
           onClick={handleSaveChanges}
         >
           ذخیره تغییرات

@@ -32,21 +32,21 @@ const ProfileHeader = () => {
   };
 
   return (
-    <div className="container-xl flex justify-between items-center mb-4">
-      <p className="font-semibold text-base text-[#333]">
+    <div className="container-xl flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-3 px-4 md:px-0">
+      <p className="font-semibold text-sm md:text-base text-[#333] truncate max-w-full">
         {loading ? (
           <span className="animate-pulse">در حال بارگذاری...</span>
         ) : (
           <>
-            {getGreeting()} بخیر {getUserName()}
+            {getGreeting()} بخیر <span className="hidden sm:inline">{getUserName()}</span>
           </>
         )}
       </p>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto justify-end">
         {/* date */}
-        <div className="flex gap-4 items-center bg-white rounded-sm px-1 h-[26px]">
-          <CiCalendarDate className="size-5 text-[#130F26]" />
-          <span className="text-[#333]">{today}</span>
+        <div className="flex gap-2 md:gap-4 items-center bg-white rounded-sm px-2 h-[26px]">
+          <CiCalendarDate className="size-4 md:size-5 text-[#130F26]" />
+          <span className="text-xs md:text-sm text-[#333]">{today}</span>
         </div>
         {/* notification */}
         <button className="flex justify-center items-center bg-white rounded-sm px-1 h-[26px] relative">
