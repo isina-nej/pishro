@@ -35,7 +35,21 @@ const HeroSection = ({
   };
 
   return (
-    <div className="relative bg-gradient-to-br from-myPrimary via-mySecondary to-myPrimary overflow-hidden">
+    <div className="relative overflow-hidden">
+      {/* Video Background */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover"
+      >
+        <source src="/videos/aboutUsLanding.webm" type="video/webm" />
+      </video>
+
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/60"></div>
+
       {/* Animated Background Elements */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-20 right-20 w-72 h-72 bg-white rounded-full blur-3xl animate-pulse"></div>
