@@ -108,7 +108,7 @@ const NavbarMobile = ({
       {isMounted && (
         <div
           className={clsx(
-            "fixed inset-0 z-[51] flex flex-col pt-20 bg-mySecondary transition-opacity duration-300 ease-out md:hidden",
+            "fixed inset-0 z-[51] flex flex-col pt-20 bg-mySecondary transition-opacity duration-300 ease-out md:hidden overflow-hidden",
             isOpen
               ? "opacity-100 pointer-events-auto"
               : "opacity-0 pointer-events-none"
@@ -116,7 +116,7 @@ const NavbarMobile = ({
         >
           <div
             className={clsx(
-              "transition-transform duration-300 ease-out h-full flex flex-col justify-between",
+              "transition-transform duration-300 ease-out h-full flex flex-col justify-between overflow-y-auto",
               isOpen ? "translate-y-0" : "-translate-y-4"
             )}
           >

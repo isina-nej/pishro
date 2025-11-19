@@ -3,51 +3,31 @@ export const navbarData = [
     label: "صفحه اصلی",
     link: "/", // Home page
   },
-  // {
-  //   label: "دوره های آموزشی",
-  //   link: "#courses", // Courses listing
-  //   data: [
-  //     {
-  //       label: "کریپتو",
-  //       link: "/cryptocurrency?section=courses", // اضافه کردن به Query Parameters
-  //     },
-  //     {
-  //       label: "بورس",
-  //       link: "/stock-market?section=courses",
-  //     },
-  //     {
-  //       label: "متاورس",
-  //       link: "/metaverse?section=courses",
-  //     },
-  //     {
-  //       label: "NFT",
-  //       link: "/nft?section=courses",
-  //     },
-  //     {
-  //       label: "ایردراپ",
-  //       link: "/airdrop?section=courses",
-  //     },
-  //   ],
-  // },
   {
-    label: "کریپتو",
-    link: "/courses/cryptocurrency", // Cryptocurrency section
-  },
-  {
-    label: "بورس",
-    link: "/courses/stock-market", // Stock market section
-  },
-  {
-    label: "متاورس",
-    link: "/courses/metaverse", // Metaverse section
-  },
-  {
-    label: "NFT",
-    link: "/courses/nft", // NFT section
-  },
-  {
-    label: "ایردراپ",
-    link: "/courses/airdrop", // Airdrop section
+    label: "دوره ها",
+    link: "#courses", // Courses listing
+    data: [
+      {
+        label: "کریپتو",
+        link: "/courses/cryptocurrency",
+      },
+      {
+        label: "بورس",
+        link: "/courses/stock-market",
+      },
+      {
+        label: "متاورس",
+        link: "/courses/metaverse",
+      },
+      {
+        label: "NFT",
+        link: "/courses/nft",
+      },
+      {
+        label: "ایردراپ",
+        link: "/courses/airdrop",
+      },
+    ],
   },
   {
     label: "مشاوره کسب و کار",
