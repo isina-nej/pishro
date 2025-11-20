@@ -65,6 +65,7 @@ model Course {
   time            String?
   students        Int?
   videosCount     Int?
+  introVideoUrl   String? // ویدیو معرفی دوره
   createdAt       DateTime @default(now())
   updatedAt       DateTime @default(now())
 
@@ -706,10 +707,11 @@ model AboutPage {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   // Hero Section
-  heroTitle       String
-  heroSubtitle    String?
-  heroDescription String?
-  heroBadgeText   String?
+  heroTitle          String
+  heroSubtitle       String?
+  heroDescription    String?
+  heroBadgeText      String?
+  doctorIntroVideoUrl String? // ویدیو معرفی دکتر
 
   // Hero Stats
   // مثال: [{"label": "دانشجوی موفق", "value": 3000, "icon": "LuUsers"}]
