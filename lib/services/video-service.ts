@@ -375,11 +375,10 @@ export async function getVideoStats(): Promise<{
     // تعداد کل ویدیوها
     const totalVideos = await prisma.video.count();
 
-    // مجموع حجم و مدت زمان
+    // مجموع حجم فایل‌ها
     const aggregations = await prisma.video.aggregate({
       _sum: {
         fileSize: true,
-        duration: true,
       },
     });
 
@@ -405,8 +404,8 @@ export async function getVideoStats(): Promise<{
 
     return {
       totalVideos,
-      totalSize: aggregations._sum.fileSize || 0,
-      totalDuration: aggregations._sum.duration || 0,
+      totalSize: aggregations._sum?.fileSize || 0,
+      totalDuration: 0, // Duration is a string field, cannot be aggregated
       byStatus,
       recentVideos: recentVideos as Video[],
     };

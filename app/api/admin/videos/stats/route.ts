@@ -19,10 +19,10 @@ export async function GET(_req: NextRequest) {
     // Auth check - only admins
     const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("D7A' H'1/ 4H�/");
+      return unauthorizedResponse("وارد حساب کاربری شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("/3*13� E-/H/ (G '/E�F");
+      return forbiddenResponse("دسترسی مجاز نیست فقط ادمین");
     }
 
     const stats = await getVideoStats();
@@ -31,7 +31,7 @@ export async function GET(_req: NextRequest) {
   } catch (error) {
     console.error("Error fetching video stats:", error);
     return errorResponse(
-      ".7' /1 /1�'A* "E'1 H�/�HG'",
+      "خطا در دریافت آمار ویدیوها",
       ErrorCodes.DATABASE_ERROR
     );
   }
