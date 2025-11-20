@@ -68,15 +68,6 @@ export const InvestmentPlansHero = ({
     },
   };
 
-  const floatAnimation = {
-    y: [0, -20, 0],
-    transition: {
-      duration: 6,
-      repeat: Infinity,
-      ease: "easeInOut",
-    },
-  };
-
   return (
     <section className="relative overflow-hidden pb-20 pt-28 text-white min-h-[90vh] flex items-center">
       {/* Background Video with Parallax Effect */}
@@ -94,12 +85,14 @@ export const InvestmentPlansHero = ({
             playsInline
             className="h-full w-full object-cover"
           >
-            <source src="/videos/investment-plans/landing.mp4" type="video/mp4" />
+            <source
+              src="/videos/investment-plans/landing.mp4"
+              type="video/mp4"
+            />
           </video>
         </motion.div>
         {/* Enhanced Gradient Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-950/95 via-slate-900/85 to-slate-950/95" />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-black/60"></div>
       </div>
 
       {/* Animated Floating Elements - Disabled on mobile for performance */}
@@ -244,21 +237,15 @@ export const InvestmentPlansHero = ({
                       }
                     : undefined
                 }
-                className={`group relative overflow-hidden rounded-3xl border ${item.border} bg-gradient-to-br ${item.gradient} p-6 ${
+                className={`group relative overflow-hidden rounded-3xl border border-white/20 bg-white/10 p-6 ${
                   isMobile ? "backdrop-blur-sm" : "backdrop-blur-xl"
-                } shadow-xl hover:shadow-2xl transition-all duration-300`}
+                } hover:bg-white/20 transition-all duration-300 shadow-xl`}
               >
-                {/* Shine effect on hover - disabled on mobile */}
-                {!isMobile && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-                )}
-
                 <div className="relative flex flex-col items-center text-center gap-4">
-                  <span
-                    className={`flex h-14 w-14 items-center justify-center rounded-2xl ${item.iconBg} text-white shadow-lg backdrop-blur-sm`}
-                  >
+                  <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 text-white shadow-lg backdrop-blur-sm">
                     {item.icon}
                   </span>
+
                   <div className="flex flex-col gap-1">
                     <span className="text-3xl font-bold text-white">
                       {item.value}
@@ -283,7 +270,6 @@ export const InvestmentPlansHero = ({
           className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10"
         >
           <motion.div
-            animate={floatAnimation}
             className="flex flex-col items-center gap-2 cursor-pointer"
             onClick={scrollToPlans}
           >
