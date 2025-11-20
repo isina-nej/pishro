@@ -360,3 +360,70 @@ export async function getVideoByLessonId(
     return null;
   }
 }
+
+/**
+ * دریافت آمار کامل ویدیوها برای ادمین
+ */
+export async function getVideoStats(): Promise<{
+  totalVideos: number;
+  totalSize: number;
+  totalDuration: number;
+  byStatus: Record<VideoProcessingStatus, number>;
+  recentVideos: Video[];
+}> {
+  try {
+    // تعداد کل ویدیوها
+    const totalVideos = await prisma.video.count();
+
+    // مجموع حجم و مدت زمان
+    const aggregations = await prisma.video.aggregate({
+      _sum: {
+        fileSize: true,
+        duration: true,
+      },
+    });
+
+    // تعداد بر اساس وضعیت
+    const byStatus = await getVideosCountByStatus();
+
+    // آخرین ویدیوها
+    const recentVideos = await prisma.video.findMany({
+      take: 5,
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        videoId: true,
+        title: true,
+        description: true,
+        processingStatus: true,
+        fileSize: true,
+        duration: true,
+        thumbnailPath: true,
+        createdAt: true,
+      },
+    });
+
+    return {
+      totalVideos,
+      totalSize: aggregations._sum.fileSize || 0,
+      totalDuration: aggregations._sum.duration || 0,
+      byStatus,
+      recentVideos: recentVideos as Video[],
+    };
+  } catch (error) {
+    console.error("Error fetching video stats:", error);
+    return {
+      totalVideos: 0,
+      totalSize: 0,
+      totalDuration: 0,
+      byStatus: {
+        UPLOADING: 0,
+        UPLOADED: 0,
+        PROCESSING: 0,
+        READY: 0,
+        FAILED: 0,
+      },
+      recentVideos: [],
+    };
+  }
+}
