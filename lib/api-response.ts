@@ -15,6 +15,10 @@ export const ALLOWED_ORIGINS = [
   "https://pishro-0.vercel.app",
   "http://localhost:3000", // برای development
   "http://localhost:3001",
+  "https://178.239.147.136:3001/",
+  "http://178.239.147.136:3001/",
+  "https://admin.pishrosarmaye.com",
+  "http://admin.pishrosarmaye.com",
 ];
 
 /**
