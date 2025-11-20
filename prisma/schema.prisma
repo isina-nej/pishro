@@ -1121,6 +1121,23 @@ enum ImageCategory {
   OTHER // سایر موارد
 }
 
+// مدل برای تنظیمات سایت (تنها یک رکورد در دیتابیس)
+model SiteSettings {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // تنظیمات درگاه پرداخت زرین‌پال
+  zarinpalMerchantId String?
+
+  // سایر تنظیمات می‌توانند در آینده اضافه شوند
+  siteName        String?
+  siteDescription String?
+  supportEmail    String?
+  supportPhone    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 // مدل برای صفحه مدل‌های سرمایه‌گذاری (InvestmentModelsSection)
 model InvestmentModelsPage {
   id String @id @default(auto()) @map("_id") @db.ObjectId

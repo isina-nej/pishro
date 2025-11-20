@@ -5,6 +5,8 @@ import {
   createTransaction,
   createEnrollmentsFromOrder,
 } from "@/lib/helpers/transaction";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { getZarinpalMerchantId } from "@/lib/services/settings-service";
 // import Zarinpal from "zarinpal-nodejs"; // (در آینده فعال می‌شود)
 
 export async function GET(req: Request) {
@@ -29,7 +31,17 @@ export async function GET(req: Request) {
 
     // 💳 حالت واقعی (فعلاً کامنت شده)
     /*
-    const zarinpal = Zarinpal.create(process.env.ZARINPAL_MERCHANT_ID!, true);
+    // Get merchant ID from database settings (with fallback to env)
+    const merchantId = await getZarinpalMerchantId();
+    if (!merchantId) {
+      console.error("Zarinpal Merchant ID not configured");
+      return NextResponse.json(
+        { error: "تنظیمات درگاه پرداخت ناقص است" },
+        { status: 500 }
+      );
+    }
+
+    const zarinpal = Zarinpal.create(merchantId, true);
     const verifyRes = await zarinpal.PaymentVerification({
       Amount: order.total,
       Authority: authority,
