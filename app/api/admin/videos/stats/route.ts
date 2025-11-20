@@ -19,10 +19,10 @@ export async function GET(_req: NextRequest) {
     // Auth check - only admins
     const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("وارد حساب کاربری شوید");
+      return unauthorizedResponse("لطفا وارد شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی مجاز نیست فقط ادمین");
+      return forbiddenResponse("دسترسی محدود به ادمین");
     }
 
     const stats = await getVideoStats();
