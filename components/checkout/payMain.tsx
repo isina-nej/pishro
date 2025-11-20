@@ -1,15 +1,11 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import Image from "next/image";
-import { cn } from "@/lib/utils";
-import { checkoutBank } from "@/public/data";
+import { useMemo } from "react";
 import { useCartStore } from "@/stores/cart-store";
 import { motion } from "framer-motion";
-import { CreditCard, CheckCircle2, Calendar, Tag, Receipt } from "lucide-react";
+import { Calendar, Tag, Receipt } from "lucide-react";
 
 const PayMain = () => {
-  const [bank, setBank] = useState<"saman" | "melli" | "mellat">("saman");
   const { items } = useCartStore();
 
   const cartSummary = useMemo(() => {
@@ -56,107 +52,12 @@ const PayMain = () => {
   const totalPrice = cartSummary.reduce((sum, item) => sum + item.lastPrice, 0);
 
   return (
-    <main className="w-full space-y-6">
-      {/* Bank Selection Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden"
-      >
-        {/* Header */}
-        <div className="bg-gradient-to-l from-mySecondary to-myBlue p-5 text-white">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-              <CreditCard className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="font-bold text-lg">انتخاب روش پرداخت</p>
-              <p className="text-xs text-white/80">
-                درگاه پرداخت اینترنتی را انتخاب کنید
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Bank Options */}
-        <div className="p-8">
-          <div className="grid grid-cols-3 gap-6">
-            {checkoutBank.map((item, idx) => (
-              <motion.button
-                key={idx}
-                onClick={() =>
-                  setBank(item.name as "saman" | "melli" | "mellat")
-                }
-                whileHover={{ scale: 1.05, y: -4 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 300 }}
-                className={cn(
-                  "relative flex flex-col items-center gap-4 p-6 rounded-2xl border-2 transition-all duration-300 group",
-                  bank === item.name
-                    ? "border-myPrimary bg-gradient-to-br from-myPrimary/5 to-red-50 shadow-lg"
-                    : "border-gray-200 bg-white hover:border-myBlue hover:shadow-md"
-                )}
-              >
-                {/* Selected Badge */}
-                {bank === item.name && (
-                  <motion.div
-                    initial={{ scale: 0, rotate: -180 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    className="absolute -top-2 -right-2"
-                  >
-                    <div className="w-8 h-8 bg-gradient-to-br from-myPrimary to-red-600 rounded-full flex items-center justify-center shadow-lg">
-                      <CheckCircle2 className="w-5 h-5 text-white" />
-                    </div>
-                  </motion.div>
-                )}
-
-                {/* Bank Logo */}
-                <div
-                  className={cn(
-                    "w-20 h-20 rounded-2xl flex items-center justify-center transition-all duration-300",
-                    bank === item.name
-                      ? "bg-gradient-to-br from-myPrimary to-red-600 shadow-xl"
-                      : "bg-gradient-to-br from-gray-100 to-gray-200 group-hover:from-myBlue/20 group-hover:to-mySecondary/20"
-                  )}
-                >
-                  <div className="relative w-12 h-12">
-                    <Image
-                      src={item.logo}
-                      alt={item.name}
-                      fill
-                      className={cn(
-                        "object-cover filter transition-all duration-300",
-                        bank === item.name
-                          ? "brightness-0 invert"
-                          : "brightness-0 opacity-60 group-hover:opacity-100"
-                      )}
-                    />
-                  </div>
-                </div>
-
-                {/* Bank Label */}
-                <p
-                  className={cn(
-                    "text-sm font-bold transition-colors duration-300",
-                    bank === item.name
-                      ? "text-myPrimary"
-                      : "text-gray-600 group-hover:text-gray-900"
-                  )}
-                >
-                  {item.label}
-                </p>
-              </motion.button>
-            ))}
-          </div>
-        </div>
-      </motion.div>
-
+    <main className="w-full">
       {/* Order Summary Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.2 }}
+        transition={{ duration: 0.4 }}
         className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden"
       >
         {/* Header */}

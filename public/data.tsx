@@ -398,12 +398,6 @@ export const faqData = [
   },
 ];
 
-export const checkoutBank = [
-  { name: "saman", label: "بانک سامان", logo: "/images/checkout/saman.png" },
-  { name: "melli", label: "بانک ملی", logo: "/images/checkout/melli.png" },
-  { name: "mellat", label: "بانک ملت", logo: "/images/checkout/mellat.png" },
-];
-
 export const profileAvatars = [
   {
     img: "/images/profile/profile-1.png",
