@@ -17,6 +17,7 @@ import {
   ErrorCodes,
   noContentResponse,
 } from "@/lib/api-response";
+import { normalizeImageUrl } from "@/lib/utils";
 
 export async function GET(
   req: NextRequest,
@@ -92,7 +93,10 @@ export async function PATCH(
     // Only include fields that are provided
     if (body.name !== undefined) updateData.name = body.name;
     if (body.role !== undefined) updateData.role = body.role;
-    if (body.image !== undefined) updateData.image = body.image;
+    if (body.image !== undefined) {
+      // Normalize image URL (extract original URL from Next.js optimization URLs)
+      updateData.image = normalizeImageUrl(body.image);
+    }
     if (body.education !== undefined) updateData.education = body.education;
     if (body.description !== undefined) updateData.description = body.description;
     if (body.specialties !== undefined) updateData.specialties = body.specialties;

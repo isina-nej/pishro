@@ -17,6 +17,7 @@ import {
   forbiddenResponse,
   validationError,
 } from "@/lib/api-response";
+import { normalizeImageUrl } from "@/lib/utils";
 
 export async function GET(req: NextRequest) {
   try {
@@ -163,6 +164,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Normalize coverImage URL (extract original URL from Next.js optimization URLs)
+    const normalizedCoverImage = normalizeImageUrl(coverImage);
+
     // Create article
     const article = await prisma.newsArticle.create({
       data: {
@@ -170,7 +174,7 @@ export async function POST(req: NextRequest) {
         slug,
         excerpt,
         content,
-        coverImage,
+        coverImage: normalizedCoverImage,
         author,
         category: category || "",
         tags,

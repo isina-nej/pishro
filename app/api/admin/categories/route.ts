@@ -17,6 +17,7 @@ import {
   forbiddenResponse,
   validationError,
 } from "@/lib/api-response";
+import { normalizeImageUrl } from "@/lib/utils";
 
 export async function GET(req: NextRequest) {
   try {
@@ -170,6 +171,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Normalize image URLs (extract original URLs from Next.js optimization URLs)
+    const normalizedCoverImage = normalizeImageUrl(coverImage);
+    const normalizedHeroImage = normalizeImageUrl(heroImage);
+    const normalizedAboutImage = normalizeImageUrl(aboutImage);
+
     // Create category
     const category = await prisma.category.create({
       data: {
@@ -177,7 +183,7 @@ export async function POST(req: NextRequest) {
         title,
         description,
         icon,
-        coverImage,
+        coverImage: normalizedCoverImage,
         color,
         metaTitle,
         metaDescription,
@@ -185,7 +191,7 @@ export async function POST(req: NextRequest) {
         heroTitle,
         heroSubtitle,
         heroDescription,
-        heroImage,
+        heroImage: normalizedHeroImage,
         heroCta1Text,
         heroCta1Link,
         heroCta2Text,
@@ -193,7 +199,7 @@ export async function POST(req: NextRequest) {
         aboutTitle1,
         aboutTitle2,
         aboutDescription,
-        aboutImage,
+        aboutImage: normalizedAboutImage,
         aboutCta1Text,
         aboutCta1Link,
         aboutCta2Text,

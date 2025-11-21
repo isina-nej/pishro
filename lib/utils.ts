@@ -35,3 +35,36 @@ export function formatDate(
 
   return new Intl.DateTimeFormat("fa-IR", options || defaultOptions).format(date);
 }
+
+/**
+ * Normalize image URL by extracting the original URL from Next.js Image Optimization URLs
+ * Supports both new optimized URLs (/_next/image?url=...) and old direct URLs
+ * @param url - The image URL to normalize
+ * @returns The original image URL
+ */
+export function normalizeImageUrl(url: string | null | undefined): string | null {
+  if (!url) {
+    return null;
+  }
+
+  // Check if this is a Next.js Image Optimization URL
+  if (url.includes("/_next/image?url=")) {
+    try {
+      // Extract the URL from the query parameter
+      const urlObj = new URL(url, "https://example.com"); // Base URL needed for relative URLs
+      const originalUrl = urlObj.searchParams.get("url");
+
+      if (originalUrl) {
+        // Decode the URL-encoded string
+        return decodeURIComponent(originalUrl);
+      }
+    } catch (error) {
+      console.error("Error parsing image URL:", error);
+      // If parsing fails, return the original URL
+      return url;
+    }
+  }
+
+  // Return the URL as-is if it's not an optimized URL
+  return url;
+}

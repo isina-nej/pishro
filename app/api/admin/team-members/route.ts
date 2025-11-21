@@ -17,6 +17,7 @@ import {
   forbiddenResponse,
   validationError,
 } from "@/lib/api-response";
+import { normalizeImageUrl } from "@/lib/utils";
 
 export async function GET(req: NextRequest) {
   try {
@@ -132,13 +133,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Normalize image URL (extract original URL from Next.js optimization URLs)
+    const normalizedImage = normalizeImageUrl(image);
+
     // Create team member
     const item = await prisma.teamMember.create({
       data: {
         aboutPageId,
         name,
         role,
-        image,
+        image: normalizedImage,
         education,
         description,
         specialties,
