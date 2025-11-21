@@ -25,6 +25,7 @@ export function getCorsHeaders(origin?: string | null): HeadersInit {
     "http://pishrosarmaye.com",
     "https://www.pishrosarmaye.com",
     "http://www.pishrosarmaye.com",
+    "https://teh-1.s3.poshtiban.com",
   ].filter(Boolean) as string[];
 
   // Check if origin is allowed
