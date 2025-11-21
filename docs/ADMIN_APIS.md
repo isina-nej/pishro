@@ -552,6 +552,112 @@
 
 ---
 
+### Investment Models (مدل‌های سرمایه‌ گذاری)
+
+#### `POST /api/admin/investment-models`
+
+ایجاد مدل سرمایه‌ گذاری جدید
+
+**Body:**
+
+```typescript
+{
+  investmentModelsPageId: string (required)
+  type: "in-person" | "online" (required)
+  title: string (required, min: 3 chars)
+  description: string (required, min: 10 chars)
+  icon: string (required)
+  color: string (required)
+  gradient: string (required)
+  features?: string[]
+  benefits?: string[]
+  ctaText: string (required, min: 3 chars)
+  ctaLink?: string
+  ctaIsScroll?: boolean (default: false)
+  contactTitle?: string
+  contactDescription?: string
+  contacts?: any[]
+  order?: number (default: 0)
+  published?: boolean (default: true)
+}
+```
+
+**Response:** `CreatedResponse<InvestmentModel>`
+
+#### `GET /api/admin/investment-models/[id]`
+
+دریافت یک مدل سرمایه‌ گذاری
+
+**Response:** `SuccessResponse<InvestmentModel>`
+
+#### `PATCH /api/admin/investment-models/[id]`
+
+ویرایش مدل سرمایه‌ گذاری
+
+**Body:** همان فیلدهای POST (همه اختیاری)
+
+**Response:** `SuccessResponse<InvestmentModel>`
+
+#### `DELETE /api/admin/investment-models/[id]`
+
+حذف مدل سرمایه‌ گذاری
+
+**Response:** `NoContentResponse`
+
+---
+
+### Investment Models Page (صفحه مدل‌های سرمایه‌ گذاری)
+
+#### `GET /api/admin/investment-models-page`
+
+لیست تمام صفحات مدل‌های سرمایه‌ گذاری
+
+**Query Params:**
+
+- `page` (number, default: 1)
+- `limit` (number, default: 20, max: 100)
+- `published` (boolean)
+
+**Response:** `PaginatedResponse<InvestmentModelsPage[]>`
+
+#### `POST /api/admin/investment-models-page`
+
+ایجاد صفحه جدید
+
+**Body:**
+
+```typescript
+{
+  additionalInfoTitle?: string
+  additionalInfoContent?: string
+  published?: boolean (default: true)
+}
+```
+
+**Response:** `CreatedResponse<InvestmentModelsPage>`
+
+#### `GET /api/admin/investment-models-page/[id]`
+
+دریافت یک صفحه
+
+**Response:** `SuccessResponse<InvestmentModelsPage>`
+
+#### `PATCH /api/admin/investment-models-page/[id]`
+
+ویرایش صفحه
+
+**Body:** همان فیلدهای POST (همه اختیاری)
+
+**Response:** `SuccessResponse<InvestmentModelsPage>`
+
+#### `DELETE /api/admin/investment-models-page/[id]`
+
+حذف صفحه (به صورت cascade مدل‌های مرتبط نیز حذف می‌شوند)
+
+**Response:** `NoContentResponse`
+
+---
+
 ### Business Consulting (مشاوره کسب‌وکار)
 
 #### `GET /api/admin/business-consulting`
@@ -878,6 +984,320 @@
 
 ---
 
+## 13. رسانه و آپلود (Media & Uploads)
+
+### Images (مدیریت تصاویر)
+
+#### `GET /api/admin/images`
+
+لیست تمام تصاویر با صفحه‌بندی و فیلتر
+
+**Query Params:**
+
+- `page` (number, default: 1)
+- `limit` (number, default: 20, max: 100)
+- `search` (string) - جستجو در عنوان، توضیحات، alt
+- `category` (ImageCategory) - دسته‌بندی تصویر
+
+**Response:** `PaginatedResponse<Image[]>`
+
+#### `POST /api/admin/images`
+
+آپلود تصویر جدید (multipart/form-data)
+
+**Body (FormData):**
+
+```typescript
+{
+  file: File (required) - فایل تصویر
+  category?: ImageCategory (default: "OTHER")
+  title?: string
+  description?: string
+  alt?: string
+  tags?: string (comma-separated)
+}
+```
+
+**Response:** `CreatedResponse<Image>`
+
+**نکات:**
+
+- فایل الزامی است
+- فرمت باید یکی از فرمت‌های معتبر تصویر باشد
+- Category باید یکی از مقادیر enum باشد
+
+#### `GET /api/admin/images/[id]`
+
+دریافت یک تصویر
+
+**Response:** `SuccessResponse<Image>`
+
+#### `PATCH /api/admin/images/[id]`
+
+ویرایش متادیتای تصویر
+
+**Body:**
+
+```typescript
+{
+  title?: string
+  description?: string
+  alt?: string
+  tags?: string[]
+  category?: ImageCategory
+  published?: boolean
+}
+```
+
+**Response:** `SuccessResponse<Image>`
+
+#### `DELETE /api/admin/images/[id]`
+
+حذف تصویر (از دیتابیس و storage)
+
+**Response:** `SuccessResponse`
+
+#### `GET /api/admin/images/stats`
+
+دریافت آمار تصاویر کاربر
+
+**Response:**
+
+```typescript
+{
+  total: number
+  byCategory: Record<string, number>
+  totalSize: number
+}
+```
+
+---
+
+### Videos (مدیریت ویدیوها)
+
+#### `GET /api/admin/videos`
+
+لیست تمام ویدیوها با فیلتر و صفحه‌بندی
+
+**Query Params:**
+
+- `page` (number, default: 1)
+- `limit` (number, default: 20)
+- `search` (string) - جستجو در عنوان، توضیحات
+- `status` (VideoProcessingStatus) - وضعیت پردازش (PENDING, PROCESSING, COMPLETED, FAILED)
+
+**Response:** `PaginatedResponse<Video[]>` + includes processing status
+
+#### `POST /api/admin/videos`
+
+ایجاد ویدیوی جدید و شروع پردازش HLS
+
+**Body:**
+
+```typescript
+{
+  title: string (required)
+  videoId: string (required)
+  originalPath: string (required)
+  fileSize: number (required)
+  fileFormat: string (required)
+  description?: string
+  duration?: number
+  width?: number
+  height?: number
+  bitrate?: number
+  codec?: string
+  frameRate?: number
+  startProcessing?: boolean (default: true)
+}
+```
+
+**Response:** `SuccessResponse<Video>`
+
+**نکات:**
+
+- videoId باید یکتا باشد
+- پردازش HLS به صورت background انجام می‌شود
+- startProcessing = true به صورت خودکار پردازش را شروع می‌کند
+
+#### `GET /api/admin/videos/[videoId]`
+
+دریافت اطلاعات یک ویدیو
+
+**Response:** `SuccessResponse<Video>`
+
+#### `PUT /api/admin/videos/[videoId]`
+
+بروزرسانی اطلاعات یک ویدیو
+
+**Body:**
+
+```typescript
+{
+  title?: string
+  description?: string
+  processingStatus?: VideoProcessingStatus
+  hlsPath?: string
+  thumbnailPath?: string
+  duration?: number
+  width?: number
+  height?: number
+  qualities?: string[]
+  /* سایر فیلدها */
+}
+```
+
+**Response:** `SuccessResponse<Video>`
+
+#### `DELETE /api/admin/videos/[videoId]`
+
+حذف یک ویدیو (شامل فایل‌ها از storage)
+
+**Response:** `SuccessResponse`
+
+#### `GET /api/admin/videos/stats`
+
+دریافت آمار جامع ویدیوها
+
+**Response:**
+
+```typescript
+{
+  total: number
+  byStatus: Record<VideoProcessingStatus, number>
+  totalSize: number
+  totalDuration: number
+}
+```
+
+#### `POST /api/admin/videos/upload-url`
+
+دریافت Signed Upload URL برای آپلود مستقیم ویدیو از مرورگر
+
+**Body:**
+
+```typescript
+{
+  fileName: string (required)
+  fileSize: number (required)
+  fileFormat: string (required) - mp4, mov, avi, mkv, webm
+  title: string (required)
+  description?: string
+}
+```
+
+**Response:**
+
+```typescript
+{
+  uploadUrl: string        // URL برای آپلود
+  videoId: string          // شناسه یکتا
+  storagePath: string      // مسیر در storage
+  uniqueFileName: string   // نام فایل یکتا
+  expiresAt: number        // زمان انقضا (timestamp)
+  metadata: {
+    title: string
+    description?: string
+    fileSize: number
+    fileFormat: string
+  }
+}
+```
+
+**نکات:**
+
+- URL معتبر برای 1 ساعت است
+- حداکثر حجم: 5GB
+- فقط فرمت‌های ویدیویی مجاز هستند
+
+---
+
+### Upload Video (آپلود مستقیم ویدیو)
+
+#### `POST /api/admin/upload-video`
+
+آپلود مستقیم ویدیو به سرور (multipart/form-data)
+
+**Body (FormData):**
+
+```typescript
+{
+  video: File (required) - فایل ویدیو
+}
+```
+
+**Response:**
+
+```typescript
+{
+  videoUrl: string       // URL نسبی فایل
+  filename: string       // نام فایل ذخیره شده
+  fileSize: number       // حجم فایل
+  fileType: string       // نوع MIME
+}
+```
+
+**محدودیت‌ها:**
+
+- حداکثر حجم: 256MB
+- فرمت‌های مجاز: mp4, mov, avi, mkv, webm
+- فقط ادمین دسترسی دارد
+
+**نکته:** برای فایل‌های بزرگ‌تر از 256MB از `/api/admin/videos/upload-url` استفاده کنید
+
+---
+
+## 14. تنظیمات سیستم (System Settings)
+
+### Settings (تنظیمات سایت)
+
+#### `GET /api/admin/settings`
+
+دریافت تنظیمات فعلی سایت (فقط ادمین)
+
+**Response:** `SuccessResponse<Settings>`
+
+**Schema:**
+
+```typescript
+{
+  id: string
+  zarinpalMerchantId?: string   // شناسه پذیرنده زرین‌پال
+  siteName?: string              // نام سایت
+  siteDescription?: string       // توضیحات سایت
+  supportEmail?: string          // ایمیل پشتیبانی
+  supportPhone?: string          // تلفن پشتیبانی
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+```
+
+#### `PATCH /api/admin/settings`
+
+بروزرسانی تنظیمات سایت (فقط ادمین)
+
+**Body:**
+
+```typescript
+{
+  zarinpalMerchantId?: string  // 36 کاراکتر (UUID format)
+  siteName?: string
+  siteDescription?: string
+  supportEmail?: string
+  supportPhone?: string
+}
+```
+
+**Response:** `SuccessResponse<Settings>`
+
+**نکات:**
+
+- حداقل یک فیلد برای به‌روزرسانی الزامی است
+- zarinpalMerchantId باید دقیقا 36 کاراکتر باشد (فرمت UUID)
+- فقط ادمین دسترسی دارد
+
+---
+
 ## توضیحات کلی
 
 ### Response Types
@@ -952,8 +1372,14 @@ ValidationErrorResponse = {
 
 ---
 
-**تاریخ آخرین بروزرسانی:** 2025-11-17
+**تاریخ آخرین بروزرسانی:** 2025-11-21
 
-**تعداد کل APIها:** 65+ endpoint
+**تعداد کل APIها:** 85+ endpoint
 
-**نسخه:** 1.0.1
+**نسخه:** 1.1.0
+
+**تغییرات نسخه 1.1.0:**
+- ✅ اضافه شدن بخش "رسانه و آپلود" شامل Images, Videos, Upload Video
+- ✅ اضافه شدن بخش "تنظیمات سیستم" شامل Settings
+- ✅ تکمیل Investment Models و Investment Models Page با تمام CRUDها
+- ✅ اضافه شدن 20+ endpoint جدید به مستندات
