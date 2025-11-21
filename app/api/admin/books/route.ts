@@ -17,6 +17,7 @@ import {
   forbiddenResponse,
   validationError,
 } from "@/lib/api-response";
+import { normalizeImageUrl } from "@/lib/utils";
 
 export async function GET(req: NextRequest) {
   try {
@@ -157,6 +158,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Normalize cover URL (extract original URL from Next.js optimization URLs)
+    const normalizedCover = normalizeImageUrl(cover);
+
     // Create book
     const book = await prisma.digitalBook.create({
       data: {
@@ -164,7 +168,7 @@ export async function POST(req: NextRequest) {
         slug,
         author,
         description,
-        cover,
+        cover: normalizedCover,
         publisher,
         year,
         pages,

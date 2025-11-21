@@ -17,6 +17,7 @@ import {
   ErrorCodes,
   noContentResponse,
 } from "@/lib/api-response";
+import { normalizeImageUrl } from "@/lib/utils";
 
 export async function GET(
   req: NextRequest,
@@ -109,7 +110,10 @@ export async function PATCH(
     if (body.slug !== undefined) updateData.slug = body.slug;
     if (body.author !== undefined) updateData.author = body.author;
     if (body.description !== undefined) updateData.description = body.description;
-    if (body.cover !== undefined) updateData.cover = body.cover;
+    if (body.cover !== undefined) {
+      // Normalize cover URL (extract original URL from Next.js optimization URLs)
+      updateData.cover = normalizeImageUrl(body.cover);
+    }
     if (body.publisher !== undefined) updateData.publisher = body.publisher;
     if (body.year !== undefined) updateData.year = body.year;
     if (body.pages !== undefined) updateData.pages = body.pages;
