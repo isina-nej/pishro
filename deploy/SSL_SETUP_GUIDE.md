@@ -22,9 +22,11 @@
 ## 1. SSL چیه و چرا لازمه؟
 
 ### SSL چیه؟
+
 SSL (Secure Sockets Layer) یک پروتکل امنیتی برای رمزنگاری اطلاعات بین مرورگر و سرور است.
 
 ### چرا لازمه؟
+
 - 🔒 **امنیت**: اطلاعات کاربران رمزنگاری میشه
 - ✅ **اعتماد**: مرورگرها علامت قفل سبز نشون میدن
 - 📈 **SEO**: گوگل سایت‌های HTTPS رو بالاتر رتبه‌بندی می‌کنه
@@ -32,6 +34,7 @@ SSL (Secure Sockets Layer) یک پروتکل امنیتی برای رمزنگا�
 - 🔐 **الزامی**: برای پرداخت آنلاین و دیتای حساس ضروریه
 
 ### Let's Encrypt چیه؟
+
 یک سرویس رایگان که گواهی SSL صادر می‌کنه. کاملا رایگان و قابل اعتماد!
 
 ---
@@ -72,6 +75,7 @@ sudo systemctl status nginx
 ### تست Nginx:
 
 باز کن در مرورگر:
+
 ```
 http://آدرس_IP_سرورت
 ```
@@ -91,6 +95,7 @@ http://آدرس_IP_سرورت
 2. **به قسمت DNS Management برو**
 
 3. **یک رکورد A اضافه کن:**
+
    ```
    Type: A
    Name: @ (یا خالی بذار)
@@ -110,13 +115,13 @@ http://آدرس_IP_سرورت
 
 ```bash
 # چک کردن دامنه اصلی
-nslookup your-domain.com
+nslookup pishrosarmaye.com
 
 # چک کردن www
-nslookup www.your-domain.com
+nslookup www.pishrosarmaye.com
 
 # یا با dig
-dig your-domain.com
+dig pishrosarmaye.com
 ```
 
 ⏱️ **توجه:** تغییرات DNS ممکنه تا 24-48 ساعت طول بکشه (معمولا 1-2 ساعت کافیه).
@@ -141,6 +146,7 @@ certbot --version
 ```
 
 باید شبیه این باشه:
+
 ```
 certbot 1.x.x
 ```
@@ -162,7 +168,7 @@ sudo nano /etc/nginx/sites-available/pishro
 ```nginx
 server {
     listen 80;
-    server_name your-domain.com www.your-domain.com;
+    server_name pishrosarmaye.com www.pishrosarmaye.com;
 
     location / {
         proxy_pass http://localhost:3000;
@@ -178,9 +184,10 @@ server {
 }
 ```
 
-**نکته:** `your-domain.com` رو با دامنه واقعیت جایگذین کن!
+**نکته:** `pishrosarmaye.com` رو با دامنه واقعیت جایگذین کن!
 
 ### ذخیره فایل:
+
 - `Ctrl + O` → `Enter` → `Ctrl + X`
 
 ### فعال کردن سایت:
@@ -202,32 +209,37 @@ sudo systemctl restart nginx
 ### مرحله 2: دریافت گواهی SSL
 
 ```bash
-sudo certbot --nginx -d your-domain.com -d www.your-domain.com
+sudo certbot --nginx -d pishrosarmaye.com -d www.pishrosarmaye.com
 ```
 
 **جایگذاری:**
-- `your-domain.com` با دامنه واقعیت
+
+- `pishrosarmaye.com` با دامنه واقعیت
 
 ### سوالات Certbot:
 
 1. **ایمیل:**
+
    ```
    Enter email address: your-email@example.com
    ```
 
 2. **شرایط استفاده:**
+
    ```
    Please read the Terms of Service...
    (A)gree/(C)ancel: A
    ```
 
 3. **اشتراک خبرنامه:**
+
    ```
    Would you be willing to share your email...
    (Y)es/(N)o: N  (یا Y، هرکدوم که می‌خوای)
    ```
 
 4. **Redirect به HTTPS:**
+
    ```
    Please choose whether or not to redirect HTTP to HTTPS:
    1: No redirect
@@ -242,10 +254,10 @@ sudo certbot --nginx -d your-domain.com -d www.your-domain.com
 
 ```
 Congratulations! Your certificate and chain have been saved at:
-/etc/letsencrypt/live/your-domain.com/fullchain.pem
+/etc/letsencrypt/live/pishrosarmaye.com/fullchain.pem
 
 Your key file has been saved at:
-/etc/letsencrypt/live/your-domain.com/privkey.pem
+/etc/letsencrypt/live/pishrosarmaye.com/privkey.pem
 
 Your cert will expire on 2025-XX-XX.
 ```
@@ -266,7 +278,7 @@ cat /etc/nginx/sites-available/pishro
 
 ```nginx
 server {
-    server_name your-domain.com www.your-domain.com;
+    server_name pishrosarmaye.com www.pishrosarmaye.com;
 
     location / {
         proxy_pass http://localhost:3000;
@@ -281,23 +293,23 @@ server {
     }
 
     listen 443 ssl; # managed by Certbot
-    ssl_certificate /etc/letsencrypt/live/your-domain.com/fullchain.pem; # managed by Certbot
-    ssl_certificate_key /etc/letsencrypt/live/your-domain.com/privkey.pem; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/pishrosarmaye.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/pishrosarmaye.com/privkey.pem; # managed by Certbot
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 }
 
 server {
-    if ($host = www.your-domain.com) {
+    if ($host = www.pishrosarmaye.com) {
         return 301 https://$host$request_uri;
     } # managed by Certbot
 
-    if ($host = your-domain.com) {
+    if ($host = pishrosarmaye.com) {
         return 301 https://$host$request_uri;
     } # managed by Certbot
 
     listen 80;
-    server_name your-domain.com www.your-domain.com;
+    server_name pishrosarmaye.com www.pishrosarmaye.com;
     return 404; # managed by Certbot
 }
 ```
@@ -339,10 +351,11 @@ sudo cat /etc/cron.d/certbot
 ### 1. باز کردن سایت با HTTPS:
 
 ```
-https://your-domain.com
+https://pishrosarmaye.com
 ```
 
 باید:
+
 - ✅ قفل سبز در مرورگر ببینی
 - ✅ سایت بدون هیچ خطایی باز بشه
 - ✅ اگه HTTP وارد کنی، به HTTPS redirect بشه
@@ -372,6 +385,7 @@ https://your-domain.com
 **علت:** Nginx یا Next.js در حال اجرا نیست.
 
 **راه‌حل:**
+
 ```bash
 # چک Nginx
 sudo systemctl status nginx
@@ -389,10 +403,11 @@ pm2 restart pishro-app
 **علت:** DNS تنظیم نشده یا هنوز propagate نشده.
 
 **راه‌حل:**
+
 ```bash
 # تست DNS
-nslookup your-domain.com
-dig your-domain.com
+nslookup pishrosarmaye.com
+dig pishrosarmaye.com
 
 # صبر کن تا DNS propagate بشه (1-48 ساعت)
 ```
@@ -404,10 +419,12 @@ dig your-domain.com
 **علت:** خیلی زیاد درخواست SSL دادی (محدودیت: 50 گواهی در هفته).
 
 **راه‌حل:**
+
 - صبر کن تا هفته بعد
 - یا از staging environment استفاده کن:
+
 ```bash
-sudo certbot --nginx --staging -d your-domain.com
+sudo certbot --nginx --staging -d pishrosarmaye.com
 ```
 
 ---
@@ -417,6 +434,7 @@ sudo certbot --nginx --staging -d your-domain.com
 **علت:** پورت 443 بسته است.
 
 **راه‌حل:**
+
 ```bash
 # باز کردن پورت 443
 sudo ufw allow 443/tcp
@@ -431,6 +449,7 @@ sudo ufw status
 ### مشکل 5: تمدید خودکار کار نمی‌کنه
 
 **راه‌حل:**
+
 ```bash
 # تست تمدید
 sudo certbot renew --dry-run
@@ -479,26 +498,31 @@ sudo systemctl restart nginx
 ## 📊 دستورات مفید
 
 ### مشاهده تمام گواهی‌ها:
+
 ```bash
 sudo certbot certificates
 ```
 
 ### حذف یک گواهی:
+
 ```bash
-sudo certbot delete --cert-name your-domain.com
+sudo certbot delete --cert-name pishrosarmaye.com
 ```
 
 ### تمدید دستی:
+
 ```bash
 sudo certbot renew
 ```
 
 ### تست تمدید:
+
 ```bash
 sudo certbot renew --dry-run
 ```
 
 ### مشاهده لاگ‌ها:
+
 ```bash
 sudo tail -f /var/log/letsencrypt/letsencrypt.log
 ```
@@ -543,13 +567,13 @@ sudo nginx -t
 sudo systemctl restart nginx
 
 # 5. دریافت SSL
-sudo certbot --nginx -d your-domain.com -d www.your-domain.com
+sudo certbot --nginx -d pishrosarmaye.com -d www.pishrosarmaye.com
 
 # 6. تست تمدید
 sudo certbot renew --dry-run
 
 # 7. باز کردن سایت
-# https://your-domain.com
+# https://pishrosarmaye.com
 ```
 
 ---
