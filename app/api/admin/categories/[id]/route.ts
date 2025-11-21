@@ -17,6 +17,7 @@ import {
   ErrorCodes,
   noContentResponse,
 } from "@/lib/api-response";
+import { normalizeImageUrl } from "@/lib/utils";
 
 export async function GET(
   req: NextRequest,
@@ -119,7 +120,10 @@ export async function PATCH(
     if (body.title !== undefined) updateData.title = body.title;
     if (body.description !== undefined) updateData.description = body.description;
     if (body.icon !== undefined) updateData.icon = body.icon;
-    if (body.coverImage !== undefined) updateData.coverImage = body.coverImage;
+    if (body.coverImage !== undefined) {
+      // Normalize coverImage URL (extract original URL from Next.js optimization URLs)
+      updateData.coverImage = normalizeImageUrl(body.coverImage);
+    }
     if (body.color !== undefined) updateData.color = body.color;
     if (body.metaTitle !== undefined) updateData.metaTitle = body.metaTitle;
     if (body.metaDescription !== undefined) updateData.metaDescription = body.metaDescription;
@@ -127,7 +131,10 @@ export async function PATCH(
     if (body.heroTitle !== undefined) updateData.heroTitle = body.heroTitle;
     if (body.heroSubtitle !== undefined) updateData.heroSubtitle = body.heroSubtitle;
     if (body.heroDescription !== undefined) updateData.heroDescription = body.heroDescription;
-    if (body.heroImage !== undefined) updateData.heroImage = body.heroImage;
+    if (body.heroImage !== undefined) {
+      // Normalize heroImage URL (extract original URL from Next.js optimization URLs)
+      updateData.heroImage = normalizeImageUrl(body.heroImage);
+    }
     if (body.heroCta1Text !== undefined) updateData.heroCta1Text = body.heroCta1Text;
     if (body.heroCta1Link !== undefined) updateData.heroCta1Link = body.heroCta1Link;
     if (body.heroCta2Text !== undefined) updateData.heroCta2Text = body.heroCta2Text;
@@ -135,7 +142,10 @@ export async function PATCH(
     if (body.aboutTitle1 !== undefined) updateData.aboutTitle1 = body.aboutTitle1;
     if (body.aboutTitle2 !== undefined) updateData.aboutTitle2 = body.aboutTitle2;
     if (body.aboutDescription !== undefined) updateData.aboutDescription = body.aboutDescription;
-    if (body.aboutImage !== undefined) updateData.aboutImage = body.aboutImage;
+    if (body.aboutImage !== undefined) {
+      // Normalize aboutImage URL (extract original URL from Next.js optimization URLs)
+      updateData.aboutImage = normalizeImageUrl(body.aboutImage);
+    }
     if (body.aboutCta1Text !== undefined) updateData.aboutCta1Text = body.aboutCta1Text;
     if (body.aboutCta1Link !== undefined) updateData.aboutCta1Link = body.aboutCta1Link;
     if (body.aboutCta2Text !== undefined) updateData.aboutCta2Text = body.aboutCta2Text;

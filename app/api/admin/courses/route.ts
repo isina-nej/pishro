@@ -17,6 +17,7 @@ import {
   forbiddenResponse,
   validationError,
 } from "@/lib/api-response";
+import { normalizeImageUrl } from "@/lib/utils";
 
 export async function GET(req: NextRequest) {
   try {
@@ -182,12 +183,15 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Normalize img URL (extract original URL from Next.js optimization URLs)
+    const normalizedImg = normalizeImageUrl(img);
+
     // Create course
     const course = await prisma.course.create({
       data: {
         subject,
         price,
-        img,
+        img: normalizedImg,
         rating,
         description,
         discountPercent,

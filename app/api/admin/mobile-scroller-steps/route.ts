@@ -17,6 +17,7 @@ import {
   forbiddenResponse,
   validationError,
 } from "@/lib/api-response";
+import { normalizeImageUrl } from "@/lib/utils";
 
 export async function GET(req: NextRequest) {
   try {
@@ -101,14 +102,18 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // Normalize image URLs (extract original URLs from Next.js optimization URLs)
+    const normalizedImageUrl = normalizeImageUrl(imageUrl);
+    const normalizedCoverImageUrl = normalizeImageUrl(coverImageUrl);
+
     // Create mobile scroller step
     const item = await prisma.mobileScrollerStep.create({
       data: {
         stepNumber,
         title,
         description,
-        imageUrl,
-        coverImageUrl,
+        imageUrl: normalizedImageUrl,
+        coverImageUrl: normalizedCoverImageUrl,
         gradient,
         order,
         published,
