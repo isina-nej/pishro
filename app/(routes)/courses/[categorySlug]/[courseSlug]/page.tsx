@@ -32,6 +32,7 @@ import DoctorExplanationVideo from "@/components/courses/doctorExplanationVideo"
 
 // ISR Configuration: Revalidate every 1 hour for fresh content
 export const revalidate = 3600;
+export const dynamic = 'force-dynamic';
 
 // Generate static params for all courses at build time (ISR)
 export async function generateStaticParams() {

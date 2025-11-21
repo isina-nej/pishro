@@ -27,6 +27,9 @@ import { getUserRolePersian } from "@/lib/role-utils";
 // ISR Configuration: Revalidate every 1 hour
 export const revalidate = 3600;
 
+// Force dynamic rendering to handle date-based queries properly
+export const dynamic = 'force-dynamic';
+
 // Generate static params for all categories at build time
 export async function generateStaticParams() {
   try {
