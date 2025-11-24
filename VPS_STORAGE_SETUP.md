@@ -21,6 +21,9 @@
 # ایجاد پوشه اصلی
 sudo mkdir -p /var/www/uploads
 
+
+
+
 # دادن دسترسی نوشتن به user اجرای برنامه (معمولاً www-data یا node)
 sudo chown -R www-data:www-data /var/www/uploads
 # یا اگر با user دیگری اجرا می‌کنید:
