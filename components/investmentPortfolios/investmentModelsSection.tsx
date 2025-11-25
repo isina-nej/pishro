@@ -5,7 +5,6 @@ import {
   Building2,
   Globe,
   CheckCircle2,
-  ArrowRight,
   FileSpreadsheet,
   Users,
   CreditCard,
@@ -391,10 +390,6 @@ const InvestmentModelsSection = () => {
                     className={`group w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-gradient-to-r ${model.gradient} text-white font-bold text-lg hover:shadow-lg transition-all`}
                   >
                     {model.ctaText}
-                    <ArrowRight
-                      className="group-hover:-translate-x-1 transition-transform"
-                      size={20}
-                    />
                   </button>
                 </div>
               </div>
