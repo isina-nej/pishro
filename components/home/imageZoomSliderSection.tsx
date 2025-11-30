@@ -151,10 +151,10 @@ const ImageZoomSliderSection = ({
     const swiper = swiperRef.current;
     if (!swiper) return;
 
-    const textsGone = parentScroll.get() > 0.98;
+    const _textsGone = parentScroll.get() > 0.98;
     const inView = latestSection > 0 && latestSection < 1;
 
-    if (textsGone && inView) swiper.autoplay.start();
+    if (_textsGone && inView) swiper.autoplay.start();
     else swiper.autoplay.stop();
   });
 
