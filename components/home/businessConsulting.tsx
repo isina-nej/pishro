@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import type { Variants } from "framer-motion";
 
 import { businessConsultingData } from "@/public/data";
 
 const BusinessConsulting = () => {
-  const buttonVariants: any = {
+  const buttonVariants = {
     idle: {
       scale: 1,
       boxShadow: "0 0 0 rgba(0, 0, 0, 0)",
@@ -42,7 +43,7 @@ const BusinessConsulting = () => {
         ease: "easeInOut",
       },
     },
-  };
+  } as unknown as Variants;
 
   return (
     <div className="container-md flex justify-between gap-20 my-20">
