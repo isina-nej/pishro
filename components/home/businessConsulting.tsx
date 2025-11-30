@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { businessConsultingData } from "@/public/data";
 
 const BusinessConsulting = () => {
-  const buttonVariants = {
+  const buttonVariants: any = {
     idle: {
       scale: 1,
       boxShadow: "0 0 0 rgba(0, 0, 0, 0)",
