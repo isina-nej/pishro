@@ -38,7 +38,7 @@ const LandingOverlay = ({
   mainHeroSubtitle,
   mainHeroCta1Link,
   heroVideoUrl,
-  _overlayTexts,
+  overlayTexts: _overlayTexts,
   slides,
   miniSlider1Data,
   miniSlider2Data,
