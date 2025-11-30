@@ -181,7 +181,6 @@ export const InvestmentPlansHero = ({
                 className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-xl shadow-emerald-500/25 hover:shadow-2xl hover:shadow-emerald-500/40 transition-all duration-300 px-8 py-6 text-lg font-semibold rounded-2xl group"
               >
                 شروع سرمایه‌ گذاری
-                <ArrowDown className="mr-2 h-5 w-5 group-hover:translate-y-1 transition-transform" />
               </Button>
             </motion.div>
           </div>

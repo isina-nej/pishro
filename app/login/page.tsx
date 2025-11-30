@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { LuSquareChevronRight } from "react-icons/lu";
+import { LuArrowUpRight } from "react-icons/lu";
 import { AuthForm } from "@/components/auth/AuthForm";
 import { OtpForm } from "@/components/auth/OtpForm";
 import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
@@ -43,16 +43,11 @@ const LoginPage = () => {
     <div className="flex min-h-lvh overflow-x-hidden">
       <div className="w-full max-w-[570px] px-16 py-8 bg-white">
         <Link href="/">
-          <Button
-            variant="costume"
-            className="text-xs font-medium text-[#214254] group flex items-center gap-2 pb-0 h-7 px-1"
-          >
-            <LuSquareChevronRight className="group-hover:fill-gray-100 transition-all" />
-            بازگشت
-          </Button>
+          <button className="group flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-gray-500 rounded-md hover:text-gray-900 transition-colors duration-200 hover:bg-gray-50">
+            <LuArrowUpRight className="w-3.5 h-3.5 group-hover:rotate-45 group-hover:scale-110 transition-all duration-300" />
+            <span>برگشت</span>
+          </button>
         </Link>
-
-        <p className="text-xs mt-8">سلام اوقاتتون بخیر</p>
 
         {showForgotPassword ? (
           <ForgotPasswordForm

@@ -38,7 +38,7 @@ const LandingOverlay = ({
   mainHeroSubtitle,
   mainHeroCta1Link,
   heroVideoUrl,
-  overlayTexts,
+  _overlayTexts,
   slides,
   miniSlider1Data,
   miniSlider2Data,
@@ -58,12 +58,12 @@ const LandingOverlay = ({
     [0.05, 0.2, 0.65, 0.95],
     [0, 0.7, 0.7, 1]
   );
-  const textOpacity = useTransform(
+  const _textOpacity = useTransform(
     scrollYProgress,
     [0, 0.1, 0.15],
     [0, 0.8, 1]
   );
-  const bgColor = useTransform(
+  const _bgColor = useTransform(
     scrollYProgress,
     [0, 0.9, 0.91],
     ["transparent", "transparent", "black"]

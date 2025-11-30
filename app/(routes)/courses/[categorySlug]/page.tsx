@@ -19,7 +19,7 @@ import CategoryHeroSection from "@/components/utils/CategoryHeroSection";
 import CategoryAboutSection from "@/components/utils/CategoryAboutSection";
 import UserLevelSection from "@/components/utils/UserLevelSelection";
 import CoursesSectionCategory from "@/components/utils/CoursesSec.category.server";
-import CommentsSlider from "@/components/utils/CommentsSlider";
+
 import TagsListDynamic from "@/components/utils/TagsList.dynamic";
 import ScrollToHashClient from "@/components/utils/scrollToHashClient";
 import { getUserRolePersian } from "@/lib/role-utils";
@@ -236,37 +236,6 @@ export default async function CategoryPage({
       cta2Link: category.aboutCta2Link || undefined,
     };
 
-    // Transform comments for CommentsSlider
-    const comments = (category.comments || []).map((c) => {
-      // Determine user name
-      let displayName = c.userName || "کاربر";
-      if (!c.userName && c.user) {
-        const firstName = c.user.firstName || "";
-        const lastName = c.user.lastName || "";
-        displayName = `${firstName} ${lastName}`.trim() || "کاربر";
-      }
-
-      // Determine avatar
-      const avatar =
-        c.userAvatar || c.user?.avatarUrl || "/images/default-avatar.png";
-
-      return {
-        id: c.id,
-        userName: displayName,
-        userAvatar: avatar,
-        userRole: getUserRolePersian(c.userRole),
-        rating: c.rating || 5,
-        content: c.text,
-        date: c.createdAt.toLocaleDateString("fa-IR", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        }),
-        verified: c.verified,
-        likes: c.likes?.length || 0,
-      };
-    });
-
     // Transform tags for TagsListDynamic
     const tagList = tags.map((tag) => ({
       id: tag.id,
@@ -323,24 +292,7 @@ export default async function CategoryPage({
           </Suspense>
         </section>
 
-        {/* 5️⃣ Testimonials/Comments Section */}
-        {comments.length > 0 && (
-          <section
-            className="w-full mt-12 sm:mt-16 md:mt-20 lg:mt-24"
-            aria-label="نظرات کاربران"
-          >
-            <Suspense
-              fallback={<div className="h-64 animate-pulse bg-white" />}
-            >
-              <CommentsSlider
-                comments={comments}
-                title={`نظرات دوره آموزان ${category.title}`}
-              />
-            </Suspense>
-          </section>
-        )}
-
-        {/* 6️⃣ Tags Section */}
+        {/* 5️⃣ Tags Section */}
         {tagList.length > 0 && (
           <section
             className="w-full mt-12 sm:mt-16 md:mt-20 lg:mt-24 pb-8 sm:pb-12 md:pb-16 lg:pb-20"

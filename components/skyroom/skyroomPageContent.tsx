@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "motion/react";
-import { HiUsers, HiArrowLeft } from "react-icons/hi";
+import { HiUsers } from "react-icons/hi";
 import Link from "next/link";
 
 interface SkyRoomPageContentProps {
@@ -76,7 +76,7 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
             transition={{ duration: 0.8, delay: 0.6 }}
             className="text-xl md:text-2xl text-white/90 max-w-2xl mx-auto"
           >
-            به همایش ما خوش آمدید
+            خانواده بزرگ پیشرو خوش آمدید
           </motion.p>
         </motion.div>
 
@@ -104,16 +104,10 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
 
-                <div className="relative flex items-center gap-4">
+                <div className="relative flex items-center justify-center">
                   <span className="text-2xl md:text-3xl font-bold text-white drop-shadow-lg">
                     ورود به همایش
                   </span>
-                  <motion.div
-                    animate={{ x: [0, 5, 0] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                  >
-                    <HiArrowLeft className="text-3xl text-white" />
-                  </motion.div>
                 </div>
               </motion.button>
             </Link>

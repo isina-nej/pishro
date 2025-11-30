@@ -18,6 +18,7 @@ import {
   noContentResponse,
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
+import { deleteFileFromStorage } from "@/lib/services/object-storage-service";
 
 export async function GET(
   req: NextRequest,
@@ -112,6 +113,14 @@ export async function PATCH(
     if (body.description !== undefined) updateData.description = body.description;
     if (body.cover !== undefined) {
       // Normalize cover URL (extract original URL from Next.js optimization URLs)
+      // If cover changed from previous, delete previous file in storage (if applicable)
+      if (existingBook.cover && existingBook.cover !== body.cover) {
+        try {
+          await deleteFileFromStorage(existingBook.cover);
+        } catch (err) {
+          console.error("Error deleting previous cover:", err);
+        }
+      }
       updateData.cover = normalizeImageUrl(body.cover);
     }
     if (body.publisher !== undefined) updateData.publisher = body.publisher;
@@ -131,8 +140,26 @@ export async function PATCH(
     if (body.readingTime !== undefined) updateData.readingTime = body.readingTime;
     if (body.isFeatured !== undefined) updateData.isFeatured = body.isFeatured;
     if (body.price !== undefined) updateData.price = body.price;
-    if (body.fileUrl !== undefined) updateData.fileUrl = body.fileUrl;
-    if (body.audioUrl !== undefined) updateData.audioUrl = body.audioUrl;
+    if (body.fileUrl !== undefined) {
+      if (existingBook.fileUrl && existingBook.fileUrl !== body.fileUrl) {
+        try {
+          await deleteFileFromStorage(existingBook.fileUrl);
+        } catch (err) {
+          console.error("Error deleting previous fileUrl:", err);
+        }
+      }
+      updateData.fileUrl = body.fileUrl;
+    }
+    if (body.audioUrl !== undefined) {
+      if (existingBook.audioUrl && existingBook.audioUrl !== body.audioUrl) {
+        try {
+          await deleteFileFromStorage(existingBook.audioUrl);
+        } catch (err) {
+          console.error("Error deleting previous audioUrl:", err);
+        }
+      }
+      updateData.audioUrl = body.audioUrl;
+    }
 
     const updatedBook = await prisma.digitalBook.update({
       where: { id },
@@ -181,6 +208,16 @@ export async function DELETE(
 
     if (!existingBook) {
       return notFoundResponse("Book", "Book not found");
+    }
+
+    // Delete files from storage if present
+    try {
+      if (existingBook.cover) await deleteFileFromStorage(existingBook.cover);
+      if (existingBook.fileUrl) await deleteFileFromStorage(existingBook.fileUrl);
+      if (existingBook.audioUrl) await deleteFileFromStorage(existingBook.audioUrl);
+    } catch (err) {
+      console.error('Error deleting files from storage while deleting book:', err);
+      // continue to delete DB record
     }
 
     // Delete book

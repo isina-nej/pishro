@@ -203,9 +203,6 @@ export default async function CourseDetailPage({
                 <div className="flex flex-wrap items-center gap-4 sm:gap-6">
                   <div className="flex items-center gap-2">
                     <RatingStars rating={course.rating || 4.5} />
-                    <span className="text-sm text-gray-600">
-                      ({course._count?.comments || 0} نظر)
-                    </span>
                   </div>
                   <div className="flex items-center gap-2 text-gray-600">
                     <LuUsers className="text-myPrimary" size={20} />

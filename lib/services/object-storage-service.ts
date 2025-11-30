@@ -50,6 +50,20 @@ export function generateUniqueFileName(
 }
 
 /**
+ * تولید شناسه یکتا عمومی برای هر نوع فایل
+ */
+export function generateFileId(): string {
+  return crypto.randomBytes(16).toString("hex");
+}
+
+/**
+ * تولید مسیر ذخیره‌سازی عمومی برای هر نوع فایل
+ */
+export function getStoragePath(folder: string, id: string, fileName: string) {
+  return `${folder}/${id}/${fileName}`;
+}
+
+/**
  * تولید مسیر فایل در storage
  */
 export function getVideoStoragePath(videoId: string, fileName: string): string {
@@ -97,6 +111,29 @@ export async function generateSignedUploadUrl(
   } catch (error) {
     console.error("Error generating signed upload URL:", error);
     throw new Error("خطا در تولید URL آپلود");
+  }
+}
+
+/**
+ * تولید Signed Upload URL برای مسیر دلخواه (generic)
+ */
+export async function generateSignedUploadUrlForPath(
+  filePath: string,
+  contentType: string,
+  expiresIn: number = 3600,
+): Promise<string> {
+  try {
+    const command = new PutObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: filePath,
+      ContentType: contentType,
+    });
+
+    const signedUrl = await getSignedUrl(s3Client, command, { expiresIn });
+    return signedUrl;
+  } catch (error) {
+    console.error("Error generating signed upload URL for path:", error);
+    throw new Error("خطا در تولید URL آپلود برای مسیر");
   }
 }
 
