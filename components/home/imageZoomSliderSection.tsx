@@ -224,11 +224,7 @@ const ImageZoomSliderSection = ({
                           className="object-cover"
                           priority
                         />
-<<<<<<< HEAD
                         {/* 🔹 Text Removed - Only images displayed */}
-=======
-
->>>>>>> fix/eslint-unused-ca3132c
                       </motion.div>
 
                       {/* Zoomed Overlay */}
