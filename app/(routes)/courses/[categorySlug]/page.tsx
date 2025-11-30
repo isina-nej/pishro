@@ -22,7 +22,7 @@ import CoursesSectionCategory from "@/components/utils/CoursesSec.category.serve
 
 import TagsListDynamic from "@/components/utils/TagsList.dynamic";
 import ScrollToHashClient from "@/components/utils/scrollToHashClient";
-import { getUserRolePersian } from "@/lib/role-utils";
+// getUserRolePersian removed — not used in this page
 
 // ISR Configuration: Revalidate every 1 hour
 export const revalidate = 3600;

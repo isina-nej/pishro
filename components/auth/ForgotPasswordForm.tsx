@@ -30,7 +30,7 @@ interface ForgotPasswordFormProps {
 }
 
 export function ForgotPasswordForm({
-  onBack,
+  onBack: _onBack,
   onSuccess,
 }: ForgotPasswordFormProps) {
   const [step, setStep] = useState<ForgotPasswordStep>("phone");
