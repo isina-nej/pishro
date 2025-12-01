@@ -40,6 +40,24 @@ pm2 save
 # If pm2 startup not configured, run the startup command printed by `pm2 startup`.
 ```
 
+### Quick update/deploy script
+We added `deploy/update-deploy.sh` — a helper script to pull latest changes, run `npm ci`, build, and restart PM2. Use it like this:
+
+```bash
+# update both the main app and admin
+sudo /opt/pishro/deploy/update-deploy.sh --app all --branch main
+
+# update only the admin app
+sudo /opt/pishro/deploy/update-deploy.sh --app pishro-admin --branch main
+
+# skip build (useful if you just want to pull code and restart)
+sudo /opt/pishro/deploy/update-deploy.sh --app pishro-admin --branch main --skip-build
+
+# Force update even with local changes (dangerous)
+sudo /opt/pishro/deploy/update-deploy.sh --app all --branch main --force
+```
+
+
 ## Avoiding duplicate processes
 - If you have duplicate processes (e.g., `pishro-admin` repeated), check `pm2 ls` and `pm2 show <id>` to find which PID and `cwd` the process is running with.
 - Remove unwanted duplicate by `pm2 delete <id>` and then `pm2 save`.
