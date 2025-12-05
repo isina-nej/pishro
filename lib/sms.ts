@@ -1,14 +1,14 @@
 // @/lib/sms.ts
 import { URLSearchParams } from "url";
-const MELI_USERNAME = process.env.MELIPAYAMAK_USERNAME!;
-const MELIPAYAMAK_API_KEY = process.env.MELIPAYAMAK_API_KEY!;
-const MELI_SENDER = process.env.MELIPAYAMAK_SENDER!; // e.g. "5000XXXXXXX"
-
 /**
  * Send SMS via Melipayamak REST API
  * Docs: https://www.melipayamak.com/docs/
  */
 export async function sendSmsMelipayamak(phone: string, text: string) {
+  const MELI_USERNAME = process.env.MELIPAYAMAK_USERNAME;
+  const MELIPAYAMAK_API_KEY = process.env.MELIPAYAMAK_API_KEY;
+  const MELI_SENDER = process.env.MELIPAYAMAK_SENDER;
+
   if (!MELI_USERNAME || !MELIPAYAMAK_API_KEY || !MELI_SENDER) {
     throw new Error(
       "Melipayamak credentials are missing in environment variables."
@@ -55,6 +55,10 @@ export async function sendBulkSmsMelipayamak(
   text: string,
   batchSize: number = 50
 ) {
+  const MELI_USERNAME = process.env.MELIPAYAMAK_USERNAME;
+  const MELIPAYAMAK_API_KEY = process.env.MELIPAYAMAK_API_KEY;
+  const MELI_SENDER = process.env.MELIPAYAMAK_SENDER;
+
   if (!MELI_USERNAME || !MELIPAYAMAK_API_KEY || !MELI_SENDER) {
     throw new Error(
       "Melipayamak credentials are missing in environment variables."
@@ -133,4 +137,56 @@ export async function sendBulkSmsMelipayamak(
   }
 
   return results;
+}
+
+/**
+ * Send OTP via Melipayamak Pattern-based SMS
+ * This uses pattern/template messages which bypass blacklist restrictions
+ * Docs: https://www.melipayamak.com/api/sendwithpattern/
+ */
+export async function sendOtpWithPattern(
+  phone: string,
+  code: string
+) {
+  const MELI_USERNAME = process.env.MELIPAYAMAK_USERNAME;
+  const MELIPAYAMAK_API_KEY = process.env.MELIPAYAMAK_API_KEY;
+  const PATTERN_CODE = process.env.MELIPAYAMAK_PATTERN_CODE;
+
+  if (!MELI_USERNAME || !MELIPAYAMAK_API_KEY || !PATTERN_CODE) {
+    throw new Error(
+      "Melipayamak pattern credentials are missing in environment variables."
+    );
+  }
+
+  const url = "https://api.payamak-panel.com/post/Send.asmx/SendByBaseNumber";
+
+  const params = new URLSearchParams({
+    username: MELI_USERNAME,
+    password: MELIPAYAMAK_API_KEY,
+    text: code, // مقدار متغیر پترن (کد تایید)
+    to: phone,
+    bodyId: PATTERN_CODE,
+  });
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: params.toString(),
+  });
+
+  const responseText = await res.text();
+
+  // Check for errors (including error code 11 - blacklisted number)
+  if (
+    !res.ok ||
+    responseText.includes("Error") ||
+    responseText.includes("<int>11</int>")
+  ) {
+    console.error("Pattern SMS API error:", responseText);
+    throw new Error("Failed to send pattern SMS");
+  }
+
+  return responseText;
 }

@@ -3,7 +3,7 @@
 import LandingOverlayServer from "./landingOverlay.server";
 import MobileLandingServer from "./mobileLanding.server";
 import MobileScrollSectionServer from "./mobileScrollSection.server";
-import CalculatorSection from "./calculatorSection";
+
 import CoursesSec from "@/components/utils/CoursesSec.server";
 import HomeComments from "./homeComments";
 import NewsClub from "./newsClub";
@@ -21,7 +21,7 @@ export default function HomePageContent() {
       </div>
 
       <MobileScrollSectionServer />
-      <CalculatorSection />
+      {/* CalculatorSection moved to Business Consulting page */}
       <CoursesSec />
       <HomeComments />
       <NewsClub />

@@ -21,7 +21,7 @@ interface BusinessLandingProps {
 
 const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
   return (
-    <div className="relative w-full h-screen overflow-hidden isolate flex items-center justify-start text-center px-4 pt-20 md:pt-0 -mb-32">
+    <div className="relative w-full h-screen overflow-hidden isolate flex items-center justify-start text-right px-4 pt-20 md:pt-0 -mb-32">
       {/* 📷 Background Image */}
       <Image
         src={
@@ -38,16 +38,16 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
       <div className="absolute inset-0 bg-gradient-to-l from-black/90 via-black/50 to-black/5 z-10 pointer-events-none" />
 
       {/* 📝 Main Content */}
-      <div className="relative z-20 max-w-2xl text-white flex flex-col items-center rtl gap-y-8 px-2 sm:px-8 py-12 sm:py-0">
+      <div className="relative z-20 max-w-2xl text-white flex flex-col items-start rtl gap-y-8 px-2 sm:px-8 py-12 sm:py-0">
         <h3 className="text-4xl lg:text-5xl font-bold leading-tight">
           {businessConsultingData.title}
         </h3>
-        <p className="text-white/90 text-lg max-w-xl mx-auto leading-relaxed">
+        <p className="text-white/90 text-lg max-w-xl leading-relaxed">
           {businessConsultingData.description}
         </p>
 
         {/* 🎯 Call-to-Actions */}
-        <div className="flex flex-col sm:flex-row justify-center gap-4 w-full">
+        <div className="flex flex-col sm:flex-row justify-start gap-4 w-full">
           {/* 📍 مشاوره حضوری */}
           <Drawer>
             <DrawerTrigger asChild>
@@ -71,10 +71,10 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
               </DrawerHeader>
               <div className="text-center mt-4 space-y-3">
                 <p className="text-xl font-semibold text-green-700 tracking-tight">
-                  {businessConsultingData.phoneNumber || "0912-123-4567"}
+                  {businessConsultingData.phoneNumber || "021-12345678"}
                 </p>
                 <a
-                  href={`tel:${businessConsultingData.phoneNumber?.replace(
+                  href={`tel:${(businessConsultingData.phoneNumber || "021-12345678").replace(
                     /-/g,
                     ""
                   )}`}
@@ -114,12 +114,12 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
               </DrawerHeader>
               <div className="text-center mt-4 space-y-3">
                 <p className="text-xl font-semibold text-blue-700 tracking-tight">
-                  {businessConsultingData.telegramId || "@BusinessSupport"}
+                  {businessConsultingData.telegramId || "@amirhossein_v2"}
                 </p>
                 <Link
                   href={
                     businessConsultingData.telegramLink ||
-                    "https://t.me/BusinessSupport"
+                    "https://t.me/amirhossein_v2"
                   }
                   target="_blank"
                   className="inline-block px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition"

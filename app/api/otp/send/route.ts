@@ -1,6 +1,6 @@
 // app/api/otp/send/route.ts
 import { prisma } from "@/lib/prisma";
-import { sendSmsMelipayamak } from "@/lib/sms";
+import { sendOtpWithPattern } from "@/lib/sms";
 import {
   successResponse,
   validationError,
@@ -17,7 +17,7 @@ function generateOtpDigits(length = 4) {
 export async function POST(req: Request) {
   try {
     const { phone } = await req.json();
-    
+
     if (!phone || !/^09\d{9}$/.test(phone)) {
       return validationError(
         { phone: "شماره تلفن معتبر نیست" },
@@ -33,13 +33,10 @@ export async function POST(req: Request) {
       data: { phone, code, expiresAt },
     });
 
-    // Prepare SMS text
-    const text = `کد تایید شما: ${code}\nاین کد تا ۲ دقیقه معتبر است.`;
-
-    // Send SMS
+    // Send OTP via Pattern-based SMS (bypasses blacklist)
     try {
-      const response = await sendSmsMelipayamak(phone, text);
-      console.log("SMS sent:", response);
+      const response = await sendOtpWithPattern(phone, code);
+      console.log("Pattern SMS sent:", response);
     } catch (err) {
       console.error("SMS send failed:", err);
       return errorResponse(

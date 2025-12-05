@@ -46,7 +46,7 @@ const NewsClub = () => {
       <div className="container-xl h-full flex flex-col md:flex-row items-center md:items-center md:gap-8 gap-3">
         <div className="md:flex-1 w-full flex items-end md:h-full justify-center md:justify-start order-2 md:order-1 mt-10 md:mt-0">
           {/* wrapper با نسبت درست */}
-          <div className="relative w-full max-w-[400px] md:max-w-full aspect-[1.3] md:aspect-[661/504]">
+          <div className="relative w-full max-w-[400px] md:max-w-full aspect-[1.6] md:aspect-[16/9]">
             <Image
               src={"/images/home/news-club/news-club.svg"}
               fill

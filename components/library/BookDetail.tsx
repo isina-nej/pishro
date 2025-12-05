@@ -101,17 +101,21 @@ const BookDetail = ({ bookId }: BookDetailProps) => {
               </div>
 
               {book.fileUrl && (
-                <Button className="w-full mt-4" size="lg">
-                  <Download className="w-4 h-4 mr-2" />
-                  دانلود کتاب
-                </Button>
+                <a href={book.fileUrl} target="_blank" rel="noopener noreferrer" className="block w-full mt-4">
+                  <Button className="w-full" size="lg">
+                    <Download className="w-4 h-4 mr-2" />
+                    دانلود کتاب
+                  </Button>
+                </a>
               )}
 
               {book.audioUrl && (
-                <Button className="w-full mt-2" variant="outline" size="lg">
-                  <BookOpen className="w-4 h-4 mr-2" />
-                  نسخه صوتی
-                </Button>
+                <a href={book.audioUrl} target="_blank" rel="noopener noreferrer" className="block w-full mt-2">
+                  <Button className="w-full" variant="outline" size="lg">
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    نسخه صوتی
+                  </Button>
+                </a>
               )}
             </div>
           </div>

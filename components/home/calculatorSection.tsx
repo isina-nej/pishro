@@ -41,9 +41,9 @@ const CalculatorSection = () => {
   // 📊 متن توضیح برای هر نوع سبد
   const portfolioDescription = useMemo(
     () => ({
-      low: "تضمین اصل سرمایه و سود بازدهی ثابت",
-      medium: "تضمین اصل سرمایه و سود بازدهی ثابت",
-      high: "تضمین اصل سرمایه با بازدهی بین ۵ تا ۵۰ درصد",
+      low: "تضمین اصل سرمایه با سود ثابت ماهیانه",
+      medium: "ریسک متعادل با بازدهی رقابتی و رشد سرمایه",
+      high: "پتانسیل سود بالا با استراتژی‌های جسورانه",
     }),
     []
   );
@@ -119,11 +119,10 @@ const CalculatorSection = () => {
                     onClick={() =>
                       setPortfolio(item.key as "low" | "medium" | "high")
                     }
-                    className={`px-5 py-2 rounded-full border transition-all  ${
-                      portfolio === item.key
+                    className={`px-5 py-2 rounded-full border transition-all  ${portfolio === item.key
                         ? "bg-mySecondary text-white border-mySecondary"
                         : "bg-gray-100 text-mySecondary border-gray-300 hover:bg-gray-200"
-                    }`}
+                      }`}
                   >
                     {item.label}
                   </button>
@@ -293,21 +292,8 @@ const CalculatorSection = () => {
 
               {/* 🛡 پیام تضمین سرمایه */}
               <div className="mt-4 flex items-start gap-2 bg-green-100 border border-green-300 rounded-xl px-4 py-3 text-green-700 text-sm font-medium shadow-sm">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                  />
-                </svg>
-                <p className="leading-relaxed">
+                {/* آیکون حذف شد */}
+                <p className="leading-relaxed text-center w-full">
                   {portfolioDescription[portfolio]}
                 </p>
               </div>
@@ -385,7 +371,7 @@ const CalculatorSection = () => {
               </DrawerHeader>
               <div className="text-center mt-4 space-y-3">
                 <p className="text-xl font-semibold text-blue-700 tracking-tight">
-                  @InvestmentSupport
+                  @amirhossein_v2
                 </p>
                 <Link
                   href="https://t.me/amirhossein_v2"

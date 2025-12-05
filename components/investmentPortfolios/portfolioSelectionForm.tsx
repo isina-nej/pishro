@@ -136,7 +136,7 @@ const PortfolioSelectionForm = () => {
     try {
       // ایجاد portfolio item برای zustand store
       const portfolioItem: InvestmentPortfolioItem = {
-        id: `portfolio-${Date.now()}-${Math.random()}`, // unique ID
+        id: `portfolio-${crypto.randomUUID()}`, // unique ID - using crypto.randomUUID() to avoid hydration errors
         type: "portfolio",
         portfolioType: getPortfolioType(),
         portfolioAmount: amount,
@@ -276,11 +276,10 @@ const PortfolioSelectionForm = () => {
                     <button
                       key={option.value}
                       onClick={() => setDuration(option.value)}
-                      className={`px-4 py-3 rounded-xl border-2 transition-all duration-300 font-medium relative overflow-hidden ${
-                        duration === option.value
+                      className={`px-4 py-3 rounded-xl border-2 transition-all duration-300 font-medium relative overflow-hidden ${duration === option.value
                           ? "bg-gradient-to-br from-myPrimary to-myPrimary/80 text-white border-myPrimary shadow-lg shadow-myPrimary/30 scale-105"
                           : "bg-white text-gray-700 border-gray-200 hover:border-myPrimary/50 hover:shadow-md hover:scale-105"
-                      }`}
+                        }`}
                     >
                       {option.label}
                     </button>
@@ -342,16 +341,16 @@ const PortfolioSelectionForm = () => {
                         riskLevel === 0
                           ? "linear-gradient(90deg, #16a34a 0%, #22c55e 100%)"
                           : riskLevel === 1
-                          ? "linear-gradient(90deg, #ea580c 0%, #f97316 100%)"
-                          : "linear-gradient(90deg, #dc2626 0%, #ef4444 100%)",
+                            ? "linear-gradient(90deg, #ea580c 0%, #f97316 100%)"
+                            : "linear-gradient(90deg, #dc2626 0%, #ef4444 100%)",
                       height: 8,
                       borderRadius: 4,
                       boxShadow:
                         riskLevel === 0
                           ? "0 2px 8px rgba(22, 163, 74, 0.3)"
                           : riskLevel === 1
-                          ? "0 2px 8px rgba(234, 88, 12, 0.3)"
-                          : "0 2px 8px rgba(220, 38, 38, 0.3)",
+                            ? "0 2px 8px rgba(234, 88, 12, 0.3)"
+                            : "0 2px 8px rgba(220, 38, 38, 0.3)",
                     }}
                     railStyle={{
                       backgroundColor: "#e5e7eb",
@@ -363,8 +362,8 @@ const PortfolioSelectionForm = () => {
                         riskLevel === 0
                           ? "#16a34a"
                           : riskLevel === 1
-                          ? "#ea580c"
-                          : "#dc2626",
+                            ? "#ea580c"
+                            : "#dc2626",
                       backgroundColor: "#fff",
                       width: 28,
                       height: 28,
@@ -373,8 +372,8 @@ const PortfolioSelectionForm = () => {
                         riskLevel === 0
                           ? "0 2px 12px rgba(22, 163, 74, 0.4)"
                           : riskLevel === 1
-                          ? "0 2px 12px rgba(234, 88, 12, 0.4)"
-                          : "0 2px 12px rgba(220, 38, 38, 0.4)",
+                            ? "0 2px 12px rgba(234, 88, 12, 0.4)"
+                            : "0 2px 12px rgba(220, 38, 38, 0.4)",
                     }}
                   />
                 </div>
@@ -427,11 +426,10 @@ const PortfolioSelectionForm = () => {
                 <button
                   onClick={handleAddToCart}
                   disabled={isLoading || isInCart}
-                  className={`group relative w-full md:w-auto px-10 py-5 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden ${
-                    isInCart
+                  className={`group relative w-full md:w-auto px-10 py-5 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden ${isInCart
                       ? "bg-gray-400 text-white"
                       : "bg-gradient-to-r from-mySecondary to-myPrimary hover:from-myPrimary hover:to-mySecondary text-white active:scale-95"
-                  }`}
+                    }`}
                 >
                   {/* Button glow effect - disabled on mobile for performance */}
                   {!isInCart && !isLoading && !isMobile && (
@@ -447,8 +445,8 @@ const PortfolioSelectionForm = () => {
                   {isLoading
                     ? "در حال افزودن..."
                     : isInCart
-                    ? "✓ در سبد خرید"
-                    : "افزودن به سبد خرید"}
+                      ? "✓ در سبد خرید"
+                      : "افزودن به سبد خرید"}
                 </button>
               </div>
 

@@ -1,0 +1,27 @@
+DATABASE_URL="mongodb+srv://pishroAdmin:pishroadmin123***@cluster0.7nnhb6v.mongodb.net/mydb?retryWrites=true&w=majority"
+NEXT_PUBLIC_BASE_URL="https://www.pishrosarmaye.com"
+NEXT_PUBLIC_CMS_URL="https://pishro-admin.vercel.app"
+NEXTAUTH_URL="https://www.pishrosarmaye.com"
+NEXTAUTH_SECRET="sdfjkdsDFsd7943r8eDFA"
+
+# meli payamak
+MELIPAYAMAK_API_KEY="3be926bb-37cf-43f2-81d4-4b0e968bc37e"
+MELIPAYAMAK_SENDER="50002710087390"
+MELIPAYAMAK_USERNAME="09117387390"
+MELIPAYAMAK_PATTERN_CODE="کد الگویی که از پنل دریافت کردید"
+
+# zarinpal
+ZARINPAL_MERCHANT_ID="your-merchant-id-here"
+ZARINPAL_CALLBACK_URL="https://www.pishrosarmaye.com/api/payment/verify"
+
+# object server
+S3_REGION="default"
+S3_ENDPOINT="https://teh-1.s3.poshtiban.com"
+S3_ACCESS_KEY_ID="7D3AXRQC6ZQQ9QO4O514"
+S3_SECRET_ACCESS_KEY="qv4TTOeWqRjOlWxp7fJpRcl0akC8hyIYUKEGVYBd"
+S3_BUCKET_NAME="videos"
+S3_PUBLIC_ENDPOINT="https://teh-1.s3.poshtiban.com"
+
+# video coding
+VIDEO_TOKEN_SECRET="926bb-37cf-43kjfsdkjf2-81d4-4b0e96"
+TEMP_DIR="/tmp/video-processing"

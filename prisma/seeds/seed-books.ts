@@ -75,8 +75,8 @@ export async function seedBooks() {
             generator.randomInt(0, 10) > 7
               ? ["جدید"]
               : generator.randomInt(0, 10) > 5
-              ? ["پرفروش"]
-              : [],
+                ? ["پرفروش"]
+                : [],
           tags: bookTags.map((t) => t.title),
           readingTime: `${generator.randomInt(5, 20)} ساعت`,
           isFeatured: generator.randomInt(0, 10) > 7,
@@ -84,10 +84,10 @@ export async function seedBooks() {
             generator.randomInt(0, 10) > 5
               ? generator.generatePrice(50000, 300000)
               : null,
-          fileUrl: `https://storage.pishro.com/books/${slug}.pdf`,
+          fileUrl: `${process.env.S3_ENDPOINT}/${process.env.S3_BUCKET_NAME}/books/file/8dc06c28-8710-40b7-86be-215f6d00d03b/____________-fa.pdf`,
           audioUrl:
             generator.randomInt(0, 10) > 6
-              ? `https://storage.pishro.com/audiobooks/${slug}.mp3`
+              ? `${process.env.S3_ENDPOINT}/${process.env.S3_BUCKET_NAME}/books/audio/b8a526b4-69b6-4fdc-8ab6-a407749a296e/Flip_Grater_-_Oh_My_Word.mp3`
               : null,
           tagIds: bookTags.map((t) => t.id),
         },

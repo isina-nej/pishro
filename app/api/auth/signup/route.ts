@@ -1,7 +1,7 @@
 // app/api/auth/signup/route.ts
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
-import { sendSmsMelipayamak } from "@/lib/sms";
+import { sendOtpWithPattern } from "@/lib/sms";
 import {
   successResponse,
   validationError,
@@ -74,13 +74,10 @@ export async function POST(req: Request) {
         data: { phone, passwordHash: hashedPassword },
       });
     }
-    // Prepare SMS text
-    const text = `کد تایید شما: ${code}\nاین کد تا ۲ دقیقه معتبر است.`;
-
-    // Send SMS
+    // Send OTP via Pattern-based SMS (bypasses blacklist)
     try {
-      const response = await sendSmsMelipayamak(phone, text);
-      console.log("SMS sent:", response);
+      const response = await sendOtpWithPattern(phone, code);
+      console.log("Pattern SMS sent:", response);
     } catch (err) {
       console.error("SMS send failed:", err);
       return errorResponse(
