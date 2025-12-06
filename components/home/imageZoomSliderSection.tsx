@@ -81,23 +81,7 @@ const useImageZoomScroll = (
   const btnOpacity = useTransform(bgScale, [1.2, 1.1], [0, 1]);
   const revealSlides = useTransform(parentScroll, [0, 0.05, 0.1], [0, 0, 1]);
 
-  // 🔹 Text appearance opacity (when scale → 1)
-  const textOpacity = useTransform(bgScale, [1.05, 1], [0, 1]);
-  const overlayTextOpacity = useTransform(
-    bgScale,
-    [1.78, 1.75, 1.72, 1.01, 1],
-    [0, 0.1, 1, 1, 0]
-  );
-  const overlayTextRight = useTransform(
-    bgScale,
-    [1.8, 1.7, 1.05],
-    [48, 42, 16]
-  );
-  const overlayTextTop = useTransform(
-    bgScale,
-    [1.8, 1.7, 1.05],
-    ["20%", "25%", "25%"]
-  );
+
 
   return {
     parentScroll,
@@ -108,10 +92,7 @@ const useImageZoomScroll = (
     sectionOpacity,
     btnOpacity,
     revealSlides,
-    textOpacity,
-    overlayTextOpacity,
-    overlayTextRight,
-    overlayTextTop,
+
   };
 };
 
@@ -173,10 +154,7 @@ const ImageZoomSliderSection = ({
     sectionOpacity,
     btnOpacity,
     revealSlides,
-    textOpacity,
-    overlayTextOpacity,
-    overlayTextRight,
-    overlayTextTop,
+
   } = useImageZoomScroll(parentRef, sectionRef);
 
   const [showMiniSlider, setShowMiniSlider] = useState(false);
