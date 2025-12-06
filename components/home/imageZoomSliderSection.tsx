@@ -24,6 +24,29 @@ type SlideData = {
   text: string;
 };
 
+const DEFAULT_SLIDES: SlideData[] = [
+  {
+    src: "/images/home/landing-slider/p01.webp",
+    title: "سرمایه‌ گذاری هوشمند",
+    text: "با راهکارهای نوین و تحلیل‌های دقیق، آینده مالی خود را تضمین کنید.",
+  },
+  {
+    src: "/images/home/landing-slider/p02.webp",
+    title: "آموزش‌های تخصصی",
+    text: "یادگیری اصول بازارهای مالی با بهره‌گیری از تجربه بهترین اساتید.",
+  },
+  {
+    src: "/images/home/landing-slider/p03.webp",
+    title: "مشاوره حرفه‌ای",
+    text: "ارائه مشاوره‌های اختصاصی برای بهینه‌سازی سبد سرمایه شما.",
+  },
+  {
+    src: "/images/home/landing-slider/p04.webp",
+    title: "رشد پایدار",
+    text: "همراهی شما در مسیر رشد و توسعه کسب‌وکار با استراتژی‌های موثر.",
+  },
+];
+
 /* ------------------------------------------------------------------ */
 /* 🧠 Hook: Handles all scroll-based animations and scale transitions */
 /* ------------------------------------------------------------------ */
@@ -164,10 +187,15 @@ const ImageZoomSliderSection = ({
     else setShowMiniSlider(false);
   });
 
-  // Use provided slides or empty array
+  // Use provided slides or default slides
   const slides = useMemo(() => {
-    if (!slidesData || slidesData.length === 0) return [];
-    return [...slidesData, ...slidesData];
+    const activeSlides =
+      slidesData && slidesData.length > 0 ? slidesData : DEFAULT_SLIDES;
+    // Duplicate slides for smoother loop if not enough slides
+    if (activeSlides.length < 4) {
+      return [...activeSlides, ...activeSlides, ...activeSlides].slice(0, 6); // Ensure at least 4-6 items for loop
+    }
+    return activeSlides;
   }, [slidesData]);
 
   // 🌀 Control autoplay based on visibility
