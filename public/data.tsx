@@ -96,7 +96,7 @@ export const whyUsData = [
 با مثال‌های عملی و محتوای کاربردی، یادگیری تبدیل به تجربه‌ای لذت‌بخش و مفید میشه.
 پیشرو همیشه با جدیدترین ترندها و روش‌های سرمایه‌ گذاری همراهتونه.`,
     btnLabel: "اطلاعات بیشتر",
-    btnHref: "/about-us",
+    btnHref: "/courses",
     animationPath: "/animations/investment-education.json",
     imagePath: "/images/landing/img-1.jpg",
   },

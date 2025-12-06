@@ -5,6 +5,31 @@
 
 import { PrismaClient } from '@prisma/client';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
+import path from 'path';
+
+// Load .env and .env.local manually
+const files = [".env", ".env.local"];
+
+files.forEach(file => {
+  const envPath = path.resolve(process.cwd(), file);
+  if (fs.existsSync(envPath)) {
+    console.log(`Loading ${file}...`);
+    const envConfig = fs.readFileSync(envPath, 'utf8');
+    envConfig.split(/\r?\n/).forEach(line => {
+      const parts = line.split('=');
+      if (parts.length > 1) {
+        const key = parts.shift()?.trim();
+        const value = parts.join('=').trim();
+        if (key && value && !key.startsWith("#")) {
+          const cleanValue = value.replace(/^["'](.*)["']$/, '$1');
+          process.env[key] = cleanValue;
+        }
+      }
+    });
+  }
+});
+
 import { seedCategories } from './seed-categories';
 import { seedTags } from './seed-tags';
 import { seedUsers } from './seed-users';

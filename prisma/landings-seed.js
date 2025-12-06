@@ -1,7 +1,32 @@
 import { PrismaClient } from "@prisma/client";
+import fs from "fs";
+import path from "path";
+
+// Load .env and .env.local manually
+const files = [".env", ".env.local"];
+
+files.forEach(file => {
+  const envPath = path.resolve(process.cwd(), file);
+  if (fs.existsSync(envPath)) {
+    console.log(`Loading ${file}...`);
+    const envConfig = fs.readFileSync(envPath, 'utf8');
+    envConfig.split(/\r?\n/).forEach(line => {
+      const parts = line.split('=');
+      if (parts.length > 1) {
+        const key = parts.shift()?.trim();
+        const value = parts.join('=').trim();
+        if (key && value && !key.startsWith("#")) {
+          const cleanValue = value.replace(/^["'](.*)["']$/, '$1');
+          process.env[key] = cleanValue;
+        }
+      }
+    });
+  }
+});
+
 import { seedMiniSlider1 } from "./seeds/mini-slider-1-seed.js";
 import { seedMiniSlider2 } from "./seeds/mini-slider-2-seed.js";
-
+// ...
 const prisma = new PrismaClient();
 
 async function main() {
@@ -123,7 +148,7 @@ async function main() {
         "با مشاوره‌های تخصصی و آموزش‌های کاربردی، اولین قدم مطمئن در بازار سرمایه را بردارید.",
       imageUrl: "/images/home/mobile-scroll/mobile.webp",
       gradient: "from-blue-400/30 via-indigo-400/20 to-transparent",
-      cards: JSON.parse(
+      /* cards: JSON.parse(
         JSON.stringify([
           {
             id: 1,
@@ -158,7 +183,7 @@ async function main() {
             left: "-10%",
           },
         ])
-      ),
+      ), */
       order: 1,
       published: true,
     },
@@ -169,7 +194,7 @@ async function main() {
         "دسترسی به تحلیل‌های روزانه و فرصت‌های طلایی در بورس و بازارهای نوین.",
       imageUrl: "/images/home/mobile-scroll/mobile.webp",
       gradient: "from-blue-400/30 via-mySecondary-400/20 to-transparent",
-      cards: JSON.parse(
+      /* cards: JSON.parse(
         JSON.stringify([
           {
             id: 1,
@@ -204,7 +229,7 @@ async function main() {
             left: "-10%",
           },
         ])
-      ),
+      ), */
       order: 2,
       published: true,
     },
@@ -215,7 +240,7 @@ async function main() {
         "با استراتژی‌های پیشرفته و ابزارهای مدرن، سبد سرمایه خود را حرفه‌ای مدیریت کنید.",
       imageUrl: "/images/home/mobile-scroll/mobile.webp",
       gradient: "from-amber-400/30 via-orange-400/20 to-transparent",
-      cards: JSON.parse(
+      /* cards: JSON.parse(
         JSON.stringify([
           {
             id: 1,
@@ -250,7 +275,7 @@ async function main() {
             left: "-10%",
           },
         ])
-      ),
+      ), */
       order: 3,
       published: true,
     },

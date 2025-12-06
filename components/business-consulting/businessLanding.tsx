@@ -25,8 +25,9 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
       {/* 📷 Background Image */}
       <Image
         src={
-          businessConsultingData.image ||
-          "/images/business-consulting/landing.jpg"
+          (businessConsultingData.image && businessConsultingData.image.trim() !== ""
+            ? businessConsultingData.image
+            : "/images/business-consulting/landing.jpg")
         }
         alt="مشاوره کسب و کار"
         fill
