@@ -34,15 +34,14 @@ export async function POST(req: NextRequest) {
       const parsed = JSON.parse(rawBody);
       body.phone = typeof parsed?.phone === 'string' ? parsed.phone : undefined;
       body.password = typeof parsed?.password === 'string' ? parsed.password : undefined;
-    }
-    console.log('[Login] Parsed body:', JSON.stringify(body));
-    console.log('[Login] Phone type:', typeof body.phone, 'Phone value:', body.phone);
-    console.log('[Login] Password type:', typeof body.password, 'Password value:', body.password);
     } catch (jsonErr) {
       console.error("[Login] JSON parse error:", jsonErr, "raw:", rawBody);
       const response = validationError({}, "بدنه درخواست نامعتبر است");
       return addCorsHeaders(response, origin);
     }
+    console.log('[Login] Parsed body:', JSON.stringify(body));
+    console.log('[Login] Phone type:', typeof body.phone, 'Phone value:', body.phone);
+    console.log('[Login] Password type:', typeof body.password, 'Password value:', body.password);
     const { phone, password } = body;
 
     // Validation
