@@ -26,12 +26,20 @@ export async function OPTIONS(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
     try {
+        // Debug logging for request headers
+        const authHeader = req.headers.get('authorization');
+        console.log("[Upload] Request headers - Authorization:", authHeader ? "present" : "missing");
+        
         // Auth check - only admins
         const session = await auth();
+        console.log("[Upload] Session result:", session ? "authenticated" : "not authenticated");
+        
         if (!session?.user) {
+            console.log("[Upload] No session user");
             return unauthorizedResponse("لطفا وارد شوید");
         }
         if (session.user.role !== "ADMIN") {
+            console.log("[Upload] User role is not ADMIN:", session.user.role);
             return forbiddenResponse("دسترسی محدود به ادمین");
         }
 
@@ -125,9 +133,10 @@ export async function POST(req: NextRequest) {
         );
 
     } catch (error) {
-        console.error("Error uploading book file:", error);
+        console.error("[Upload] Error uploading book file:", error);
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
         return errorResponse(
-            "خطا در آپلود فایل",
+            `خطا در آپلود فایل: ${errorMessage}`,
             ErrorCodes.INTERNAL_ERROR
         );
     }
