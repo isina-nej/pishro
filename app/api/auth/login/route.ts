@@ -29,9 +29,11 @@ export async function POST(req: NextRequest) {
   try {
     const rawBody = await req.text();
     console.log("[Login] Raw body:", rawBody);
-    let body: Record<string, any>;
+    let body: { phone?: string; password?: string } = {};
     try {
-      body = JSON.parse(rawBody);
+      const parsed = JSON.parse(rawBody);
+      body.phone = typeof parsed?.phone === 'string' ? parsed.phone : undefined;
+      body.password = typeof parsed?.password === 'string' ? parsed.password : undefined;
     } catch (jsonErr) {
       console.error("[Login] JSON parse error:", jsonErr, "raw:", rawBody);
       const response = validationError({}, "بدنه درخواست نامعتبر است");
