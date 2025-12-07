@@ -11,6 +11,19 @@ import {
 import { saveFileToStorage } from "@/lib/services/storage-adapter";
 import { generateUniqueImageFileName, generateImageId } from "@/lib/services/image-service";
 
+// Handle CORS preflight requests
+export async function OPTIONS(req: NextRequest) {
+    return new Response(null, {
+        status: 200,
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization",
+            "Access-Control-Max-Age": "86400",
+        },
+    });
+}
+
 export async function POST(req: NextRequest) {
     try {
         // Auth check - only admins
