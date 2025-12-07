@@ -30,6 +30,18 @@ sudo chown -R www-data:www-data /var/www/uploads
 sudo chmod -R 755 /var/www/uploads
 ```
 
+### 1.1 ساخت پوشه‌های کتاب
+
+برای دسته‌بندی فایل‌های کتاب، این پوشه‌ها را بسازید (اختیاری ولی توصیه می‌شود):
+
+```bash
+sudo mkdir -p /var/www/uploads/books/Audio
+sudo mkdir -p /var/www/uploads/books/Image
+sudo mkdir -p /var/www/uploads/books/PDF
+sudo chown -R www-data:www-data /var/www/uploads/books
+sudo chmod -R 755 /var/www/uploads/books
+```
+
 ### 2. تنظیم Nginx برای سرو فایل‌ها
 
 فایل تنظیمات Nginx خود را ویرایش کنید (معمولاً در `/etc/nginx/sites-available/`):

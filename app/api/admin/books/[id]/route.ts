@@ -18,6 +18,7 @@ import {
   noContentResponse,
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
+import { getRelativePathFromUrl, deleteFileFromStorage } from "@/lib/services/storage-adapter";
 
 export async function GET(
   req: NextRequest,
@@ -113,6 +114,15 @@ export async function PATCH(
     if (body.cover !== undefined) {
       // Normalize cover URL (extract original URL from Next.js optimization URLs)
       updateData.cover = normalizeImageUrl(body.cover);
+      // Remove old cover if it exists and is different
+      try {
+        if (existingBook.cover && existingBook.cover !== updateData.cover) {
+          const prevRelative = getRelativePathFromUrl(existingBook.cover);
+          await deleteFileFromStorage(prevRelative);
+        }
+      } catch (err) {
+        console.warn("Unable to delete previous cover:", err);
+      }
     }
     if (body.publisher !== undefined) updateData.publisher = body.publisher;
     if (body.year !== undefined) updateData.year = body.year;
@@ -131,8 +141,30 @@ export async function PATCH(
     if (body.readingTime !== undefined) updateData.readingTime = body.readingTime;
     if (body.isFeatured !== undefined) updateData.isFeatured = body.isFeatured;
     if (body.price !== undefined) updateData.price = body.price;
-    if (body.fileUrl !== undefined) updateData.fileUrl = body.fileUrl;
-    if (body.audioUrl !== undefined) updateData.audioUrl = body.audioUrl;
+    if (body.fileUrl !== undefined) {
+      // Remove old file if present
+      try {
+        if (existingBook.fileUrl && existingBook.fileUrl !== body.fileUrl) {
+          const prevRelative = getRelativePathFromUrl(existingBook.fileUrl);
+          await deleteFileFromStorage(prevRelative);
+        }
+      } catch (err) {
+        console.warn("Unable to delete previous fileUrl:", err);
+      }
+      updateData.fileUrl = body.fileUrl;
+    }
+
+    if (body.audioUrl !== undefined) {
+      try {
+        if (existingBook.audioUrl && existingBook.audioUrl !== body.audioUrl) {
+          const prevRelative = getRelativePathFromUrl(existingBook.audioUrl);
+          await deleteFileFromStorage(prevRelative);
+        }
+      } catch (err) {
+        console.warn("Unable to delete previous audioUrl:", err);
+      }
+      updateData.audioUrl = body.audioUrl;
+    }
 
     const updatedBook = await prisma.digitalBook.update({
       where: { id },
@@ -184,6 +216,24 @@ export async function DELETE(
     }
 
     // Delete book
+    // Delete files associated with the book (non-fatal)
+    try {
+      if (existingBook.cover) {
+        const prevRelative = getRelativePathFromUrl(existingBook.cover);
+        await deleteFileFromStorage(prevRelative);
+      }
+      if (existingBook.fileUrl) {
+        const prevRelative = getRelativePathFromUrl(existingBook.fileUrl);
+        await deleteFileFromStorage(prevRelative);
+      }
+      if (existingBook.audioUrl) {
+        const prevRelative = getRelativePathFromUrl(existingBook.audioUrl);
+        await deleteFileFromStorage(prevRelative);
+      }
+    } catch (err) {
+      console.warn("Unable to delete some book files:", err);
+    }
+
     await prisma.digitalBook.delete({
       where: { id },
     });

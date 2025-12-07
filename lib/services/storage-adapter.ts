@@ -4,8 +4,8 @@
  * این adapter از environment variables برای تنظیم مسیر ذخیره‌سازی استفاده می‌کند
  */
 
-import { writeFile, mkdir, unlink } from "fs/promises";
-import { join } from "path";
+import { writeFile, mkdir, unlink, chmod } from "fs/promises";
+import { join, dirname, normalize } from "path";
 import { existsSync } from "fs";
 
 export interface StorageConfig {
@@ -41,10 +41,17 @@ export async function saveFileToStorage(
   relativePath: string
 ): Promise<string> {
   const config = getStorageConfig();
-  const fullPath = join(config.storagePath, relativePath);
+  // Normalize and prevent directory traversal
+  // remove leading slashes
+  const normalizedRelative = normalize(relativePath).replace(/^([\\/])+/, "");
+  if (normalizedRelative.includes("..")) {
+    throw new Error("Invalid file path");
+  }
+
+  const fullPath = join(config.storagePath, normalizedRelative);
 
   // ایجاد دایرکتوری اگر وجود ندارد
-  const directory = fullPath.substring(0, fullPath.lastIndexOf("/"));
+  const directory = dirname(fullPath);
 
   try {
     await mkdir(directory, { recursive: true });
@@ -58,6 +65,13 @@ export async function saveFileToStorage(
   // ذخیره فایل
   try {
     await writeFile(fullPath, buffer);
+    // Optionally, ensure file has reasonable permissions (e.g., 0644)
+    try {
+      await chmod(fullPath, 0o644);
+    } catch (e) {
+      // Not fatal, just log
+      console.warn("Unable to set file permissions:", e);
+    }
   } catch (err) {
     console.error("Error writing file:", err);
     throw new Error(
@@ -66,7 +80,10 @@ export async function saveFileToStorage(
   }
 
   // برگرداندن URL کامل
-  return `${config.baseUrl}/${relativePath}`;
+  // Ensure base URL doesn't end with a slash and the path uses forward slashes
+  const base = config.baseUrl.replace(/\/$/, "");
+  const urlPath = normalizedRelative.replace(/\\\\/g, "/");
+  return `${base}/${urlPath}`;
 }
 
 /**

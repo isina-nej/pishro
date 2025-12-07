@@ -26,8 +26,10 @@ export function generateUniqueImageFileName(
   originalFileName: string
 ): string {
   const extension = originalFileName.split(".").pop()?.toLowerCase() || "jpg";
+  // sanitize extension (alpha-numeric only)
+  const sanitizedExtension = extension.replace(/[^a-z0-9]/gi, "") || "jpg";
   const timestamp = Date.now();
-  return `${imageId}_${timestamp}.${extension}`;
+  return `${imageId}_${timestamp}.${sanitizedExtension}`;
 }
 
 /**

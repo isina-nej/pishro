@@ -56,7 +56,15 @@ export async function POST(req: NextRequest) {
 
         // Determine folder name (First letter capitalized as requested: Audio, Image, PDF)
         let folderName = "";
+        const maxSizeMB = {
+            image: 10,
+            pdf: 200,
+            audio: 200,
+        } as const;
         switch (typeLower) {
+        if (file.size > (maxSizeMB[typeLower as keyof typeof maxSizeMB] || 50) * 1024 * 1024) {
+            return validationError({ file: "حجم فایل بیش از حد مجاز است" }, `حداکثر حجم برای ${typeLower} ${maxSizeMB[typeLower as keyof typeof maxSizeMB]}MB است`);
+        }
             case "pdf":
                 folderName = "PDF";
                 break;
@@ -74,6 +82,18 @@ export async function POST(req: NextRequest) {
 
         // Using image service helper for consistent naming or generic unique naming
         const uniqueId = generateImageId();
+        // Validate extension matches expected types
+        const extension = (file.name.split('.').pop() || '').toLowerCase();
+        const allowedExtensionsByType: Record<string, string[]> = {
+            image: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'],
+            pdf: ['pdf'],
+            audio: ['mp3', 'wav', 'mpeg', 'ogg', 'aac', 'm4a'],
+        };
+
+        if (!allowedExtensionsByType[typeLower].includes(extension)) {
+            return validationError({ file: 'پسوند فایل نامعتبر است' }, `پسوند فایل باید یکی از ${allowedExtensionsByType[typeLower].join(', ')} باشد`);
+        }
+
         const fileName = generateUniqueImageFileName(uniqueId, file.name);
 
         // Path: books/{Type}/{filename}
