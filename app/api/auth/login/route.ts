@@ -30,6 +30,7 @@ export async function POST(req: NextRequest) {
     const rawBody = await req.text();
     console.log("[Login] Raw body:", rawBody);
     const body: { phone?: string; password?: string } = {};
+    
     try {
       const parsed = JSON.parse(rawBody);
       body.phone = typeof parsed?.phone === 'string' ? parsed.phone : undefined;
@@ -39,6 +40,7 @@ export async function POST(req: NextRequest) {
       const response = validationError({}, "بدنه درخواست نامعتبر است");
       return addCorsHeaders(response, origin);
     }
+    
     console.log('[Login] Parsed body:', JSON.stringify(body));
     console.log('[Login] Phone type:', typeof body.phone, 'Phone value:', body.phone);
     console.log('[Login] Password type:', typeof body.password, 'Password value:', body.password);

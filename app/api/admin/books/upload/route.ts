@@ -98,6 +98,8 @@ export async function POST(req: NextRequest) {
             case "audio":
                 folderName = "Audio";
                 break;
+            default:
+                folderName = "Other";
         }
 
         // Generate unique filename
