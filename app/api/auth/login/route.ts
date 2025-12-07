@@ -27,7 +27,16 @@ export async function OPTIONS(_req: NextRequest) {
 export async function POST(req: NextRequest) {
   const origin = req.headers.get("origin");
   try {
-    const body = await req.json();
+    const rawBody = await req.text();
+    console.log("[Login] Raw body:", rawBody);
+    let body: Record<string, any>;
+    try {
+      body = JSON.parse(rawBody);
+    } catch (jsonErr) {
+      console.error("[Login] JSON parse error:", jsonErr, "raw:", rawBody);
+      const response = validationError({}, "بدنه درخواست نامعتبر است");
+      return addCorsHeaders(response, origin);
+    }
     const { phone, password } = body;
 
     // Validation
