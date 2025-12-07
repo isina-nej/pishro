@@ -16,7 +16,7 @@ import { corsPreflightResponse, addCorsHeaders } from "@/lib/cors";
 
 // Handle CORS preflight
 export async function OPTIONS(_req: NextRequest) {
-  return corsPreflightResponse(req.headers.get("origin"));
+  return corsPreflightResponse(_req.headers.get("origin"));
 }
 
 export async function POST(req: NextRequest) {
