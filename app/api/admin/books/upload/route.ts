@@ -61,10 +61,13 @@ export async function POST(req: NextRequest) {
             pdf: 200,
             audio: 200,
         } as const;
-        switch (typeLower) {
+
+        // Enforce size limit based on type
         if (file.size > (maxSizeMB[typeLower as keyof typeof maxSizeMB] || 50) * 1024 * 1024) {
             return validationError({ file: "حجم فایل بیش از حد مجاز است" }, `حداکثر حجم برای ${typeLower} ${maxSizeMB[typeLower as keyof typeof maxSizeMB]}MB است`);
         }
+
+        switch (typeLower) {
             case "pdf":
                 folderName = "PDF";
                 break;
