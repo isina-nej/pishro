@@ -12,7 +12,7 @@ import { saveFileToStorage } from "@/lib/services/storage-adapter";
 import { generateUniqueImageFileName, generateImageId } from "@/lib/services/image-service";
 
 // Handle CORS preflight requests
-export async function OPTIONS(req: NextRequest) {
+export async function OPTIONS(_req: NextRequest) {
     return new Response(null, {
         status: 200,
         headers: {

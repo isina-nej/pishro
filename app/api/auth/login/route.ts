@@ -20,7 +20,7 @@ import { signIn } from "@/auth";
 import { corsPreflightResponse, addCorsHeaders } from "@/lib/cors";
 
 // Handle CORS preflight
-export async function OPTIONS(req: NextRequest) {
+export async function OPTIONS(_req: NextRequest) {
   return corsPreflightResponse(req.headers.get("origin"));
 }
 
