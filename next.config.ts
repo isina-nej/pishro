@@ -20,6 +20,11 @@ const nextConfig: NextConfig = {
         hostname: "www.pishrosarmaye.com",
         pathname: "/uploads/**",
       },
+      {
+        protocol: "https",
+        hostname: "teh-1.s3.poshtiban.com",
+        pathname: "/**",
+      },
     ],
   },
 };

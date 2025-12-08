@@ -401,6 +401,41 @@
 
 ---
 
+#### `POST /api/admin/books/upload` (آپلود فایل کتاب، صوت و کاور)
+
+**کاربرد:** آپلود فایل کتاب (PDF/EPUB)، فایل صوتی و کاور کتاب. این endpoint برای آپلود سریع و ذخیره فایل‌ها استفاده می‌شود و URL های ایجادشده را برمی‌گرداند که می‌توانند در فیلدهای `fileUrl`, `audioUrl`, و `cover` هنگام ایجاد یا ویرایش کتاب استفاده شوند.
+
+**نوع درخواست:** `multipart/form-data`
+
+**پارامترها (FormData):**
+
+- `book`: File (اختیاری, PDF یا EPUB)
+- `audio`: File (اختیاری, MP3, M4A, WAV, OGG)
+- `cover`: File (اختیاری, تصویر JPG/PNG/WEBP/SVG)
+
+**محدودیت‌ها:**
+
+- حجم فایل کتاب: تا 100MB
+- حجم فایل صوتی: تا 200MB
+- حجم تصویر کاور: تا 10MB
+
+**پاسخ موفق:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "uploads": [
+      { "field": "fileUrl", "url": "/uploads/books/files/book_12345.pdf" },
+      { "field": "audioUrl", "url": "/uploads/books/audios/audio_12345.mp3" }
+    ]
+  }
+}
+```
+
+
+---
+
 ### Certificates (گواهینامه‌ها)
 
 #### `GET /api/admin/certificates`

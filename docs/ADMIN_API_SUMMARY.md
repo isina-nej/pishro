@@ -150,6 +150,10 @@ This document provides a comprehensive summary of all admin API routes implement
 - `POST /api/admin/books` - Create new book
   - Validates required fields
   - Checks slug uniqueness
+- `POST /api/admin/books/upload` - Upload files for a book (book file, audio, cover)
+  - Accepts multipart/form-data with `book`, `audio`, `cover` fields
+  - Returns URLs for uploaded files to be used in `fileUrl`, `audioUrl`, `cover`
+  - Note: Files are saved under `public/uploads/books/{files|audios|covers}` by default and served at `/uploads/books/...`.
 
 - `GET /api/admin/books/[id]` - Get book by ID
 - `PATCH /api/admin/books/[id]` - Update book
