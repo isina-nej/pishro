@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
+import { debugCorsOrigin } from "./lib/cors";
 import type { NextRequest } from "next/server";
 
 /**
  * لیست دامنه‌های مجاز برای CORS
  * شامل محیط توسعه (localhost) و پروداکشن (vercel)
  */
+const envOrigin = (process.env.NEXT_PUBLIC_CMS_URL || "").toString().trim().replace(/^"|"$/g, "").trim();
 const allowedOrigins = [
+  envOrigin,
   "http://localhost:3001",
   "http://localhost:3000",
   "https://pishro-admin.vercel.app",
@@ -19,7 +22,7 @@ const allowedOrigins = [
   "https://www.pishrosarmaye.com",
   "http://www.pishrosarmaye.com",
   "https://teh-1.s3.poshtiban.com",
-];
+].filter(Boolean);
 
 /**
  * بررسی می‌کند که آیا origin درخواست در لیست مجاز است یا نه
@@ -35,18 +38,29 @@ function isAllowedOrigin(origin: string | null): boolean {
  * افزودن هدرهای CORS به response
  */
 function addCorsHeaders(response: NextResponse, origin: string | null) {
-  if (origin && isAllowedOrigin(origin)) {
-    response.headers.set("Access-Control-Allow-Origin", origin);
-    response.headers.set("Access-Control-Allow-Credentials", "true");
-    response.headers.set(
-      "Access-Control-Allow-Methods",
-      "GET, POST, PUT, PATCH, DELETE, OPTIONS"
-    );
-    response.headers.set(
-      "Access-Control-Allow-Headers",
-      "Content-Type, Authorization, X-Requested-With"
-    );
+  // Choose an allowed origin (use request origin if allowed, otherwise fallback to first env origin or wildcard)
+  const normalizedOrigin = origin?.toString().trim();
+  const matchedOrigin = normalizedOrigin && isAllowedOrigin(normalizedOrigin) ? normalizedOrigin : allowedOrigins[0] || "*";
+
+  // Optional: log origin for debugging if enabled
+  if (normalizedOrigin && process.env.ENABLE_CORS_DEBUG === "true") {
+    debugCorsOrigin(normalizedOrigin);
+    if (!isAllowedOrigin(normalizedOrigin)) {
+      console.warn(`[CORS Warning] Request origin not allowed: ${normalizedOrigin}`);
+    }
   }
+
+  response.headers.set("Access-Control-Allow-Origin", matchedOrigin);
+  response.headers.set("Access-Control-Allow-Credentials", "true");
+  response.headers.set(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+  );
+  response.headers.set(
+    "Access-Control-Allow-Headers",
+    "Accept, Accept-Language, Content-Type, Authorization, X-Requested-With, X-CSRF-Token"
+  );
+  response.headers.set("Vary", "Origin");
   return response;
 }
 

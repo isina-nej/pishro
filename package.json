@@ -11,7 +11,8 @@
     "svgr": "svgr ./public/icons --out-dir ./public/svgr-icons --icon",
     "seed": "tsx prisma/seeds/seed-all.ts",
     "seed:reset": "npx prisma db push --force-reset && npm run seed",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "test:cors": "npx ts-node --esm ./scripts/test-cors.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
