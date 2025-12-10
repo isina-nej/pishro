@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 
 import { businessConsultingData } from "@/public/data";
 
 const BusinessConsulting = () => {
-  const buttonVariants = {
+  const buttonVariants: Variants = {
     idle: {
       scale: 1,
       boxShadow: "0 0 0 rgba(0, 0, 0, 0)",
@@ -18,18 +18,18 @@ const BusinessConsulting = () => {
         "0 0 12px rgba(255,255,255,0.4)",
         "0 0 0 rgba(0,0,0,0)",
       ],
-      transition: {
+          transition: {
         scale: {
           duration: 2,
           repeat: Infinity,
-          repeatType: "loop",
-          ease: "easeInOut",
+              repeatType: "loop" as const,
+              ease: "easeInOut" as const,
         },
         boxShadow: {
           duration: 2,
           repeat: Infinity,
-          repeatType: "loop",
-          ease: "easeInOut",
+              repeatType: "loop" as const,
+              ease: "easeInOut" as const,
         },
       },
     },
