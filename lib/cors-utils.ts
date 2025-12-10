@@ -42,10 +42,10 @@ export function getCorsHeaders(origin?: string | null): Record<string, string> {
 export function debugCorsOrigin(origin?: string | null): void {
   try {
     if (process.env.ENABLE_CORS_DEBUG === "true") {
-      // eslint-disable-next-line no-console
-      console.debug("[CORS] Request origin:", origin);
+        console.debug("[CORS] Request origin:", origin);
     }
-  } catch (e) {
-    // ignore
+  } catch (_e) {
+    // intentionally reference to mark as used (silence no-unused-vars)
+    void _e;
   }
 }
