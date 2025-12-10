@@ -1,8 +1,9 @@
 // @/lib/helpers/transaction.ts
 import { prisma } from "@/lib/prisma";
+import type { TransactionType as PrismaTransactionType, TransactionStatus as PrismaTransactionStatus } from "@prisma/client";
 
-type TransactionType = "payment" | "refund" | "withdrawal";
-type TransactionStatus = "pending" | "success" | "failed";
+type TransactionType = PrismaTransactionType; // PERSIST enum from Prisma
+type TransactionStatus = PrismaTransactionStatus; // PERSIST enum from Prisma
 
 interface CreateTransactionParams {
   userId: string;

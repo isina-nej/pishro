@@ -10,6 +10,7 @@ import "swiper/css/pagination";
 
 import RatingStars from "./RatingStars";
 import LikeDislike from "./LikeDislike";
+import { homeCommentsData } from "@/public/data";
 
 type Comment = {
   id: string;
@@ -24,14 +25,38 @@ type Comment = {
 };
 
 interface CommentSliderProps {
-  comments: Comment[];
+  comments?: Comment[];
   title?: string;
 }
 
-const CommentsSlider = ({
-  comments,
-  title = "نظرات دوره آموزان",
-}: CommentSliderProps) => {
+const CommentsSlider = ({ comments, title = "نظرات دوره آموزان" }: CommentSliderProps) => {
+  // If comments prop isn't provided, use homeCommentsData (mapped to component's Comment type)
+  type HomeComment = {
+    id?: number | string;
+    avatar?: string;
+    name?: string;
+    position?: string;
+    comment?: string;
+    date?: string;
+    profile?: string;
+    likes?: number;
+    verified?: boolean;
+    rating?: number;
+  };
+
+  const mappedComments: Comment[] = (comments && comments.length > 0)
+    ? comments
+    : homeCommentsData.slice(0, 9).map((c: HomeComment, idx: number) => ({
+      id: String(c.id || idx),
+      userName: c.name || "کاربر",
+        userAvatar: c.avatar || c.profile || "/images/profile/Avatar-24-24.png",
+        userRole: c.position || "دانشجو",
+        rating: c.rating || 4,
+        content: c.comment || "",
+        date: c.date || "",
+        verified: c.verified || false,
+        likes: c.likes || 0,
+      }));
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
@@ -68,7 +93,7 @@ const CommentsSlider = ({
             }}
             onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
           >
-            {comments.map((comment, idx) => {
+            {mappedComments.map((comment, idx) => {
               const isActive = idx === activeIndex;
               return (
                 <SwiperSlide

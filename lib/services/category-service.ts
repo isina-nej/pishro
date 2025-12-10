@@ -22,8 +22,15 @@ export type CategoryWithRelations = Prisma.CategoryGetPayload<{
     faqs: true;
     comments: {
       include: {
-        user: true;
-      };
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            avatarUrl: true,
+          },
+        },
+      },
     };
   };
 }>;

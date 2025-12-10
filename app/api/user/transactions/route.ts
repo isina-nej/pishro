@@ -8,6 +8,7 @@ import {
   ErrorCodes,
 } from "@/lib/api-response";
 import { Prisma } from "@prisma/client";
+import type { TransactionType, TransactionStatus } from "@prisma/client";
 
 // ✅ Get user's transactions
 export async function GET(req: Request) {
@@ -22,12 +23,14 @@ export async function GET(req: Request) {
     const limit = parseInt(searchParams.get("limit") || "20");
     const type = searchParams.get("type"); // "payment", "refund", "withdrawal"
     const status = searchParams.get("status"); // "pending", "success", "failed"
+    const typeValue = type ? (type.toUpperCase() as TransactionType) : undefined;
+    const statusValue = status ? (status.toUpperCase() as TransactionStatus) : undefined;
     const skip = (page - 1) * limit;
 
     // Build where clause
     const where: Prisma.TransactionWhereInput = { userId: session.user.id };
-    if (type) where.type = type;
-    if (status) where.status = status;
+    if (typeValue) where.type = typeValue;
+    if (statusValue) where.status = statusValue;
 
     const [transactions, total] = await Promise.all([
       prisma.transaction.findMany({

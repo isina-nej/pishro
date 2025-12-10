@@ -1,5 +1,6 @@
 // @/app/api/user/orders/route.ts
 import { Prisma } from "@prisma/client";
+import type { OrderStatus } from "@prisma/client";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
@@ -21,11 +22,14 @@ export async function GET(req: Request) {
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "10");
     const status = searchParams.get("status"); // "pending", "paid", "failed"
+    const statusValue = status
+      ? (status.toUpperCase() as OrderStatus)
+      : undefined;
     const skip = (page - 1) * limit;
 
     // Build where clause
     const where: Prisma.OrderWhereInput = { userId: session.user.id };
-    if (status) where.status = status;
+    if (statusValue) where.status = statusValue;
 
     const [orders, total] = await Promise.all([
       prisma.order.findMany({
