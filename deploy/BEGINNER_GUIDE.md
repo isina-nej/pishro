@@ -302,6 +302,43 @@ npm run build
 
 **توضیح:** این کار پروژه رو برای production آماده می‌کنه. ممکنه چند دقیقه طول بکشه.
 
+### اگر build خطا داد (مشکل مربوط به `sharp`)
+
+اگر در هنگام build با خطایی مشابه زیر روبرو شدید:
+
+```
+Error: Could not load the "sharp" module using the linux-x64 runtime
+Unsupported CPU: Prebuilt binaries for linux-x64 require v2 microarchitecture
+```
+
+در این حالت، `sharp` از باینری‌های prebuilt استفاده کرده که با CPU سرور شما سازگار نیست. برای رفع مشکل:
+
+1) نصب پیش‌نیازهای libvips و ابزار ساخت از apt:
+```bash
+sudo apt-get update
+sudo apt-get install -y pkg-config libvips-dev libcairo2-dev libjpeg-dev libpng-dev libwebp-dev libgif-dev libexif-dev build-essential
+```
+
+2) بازسازی/نصب دوبارهٔ `sharp` از سورس:
+```bash
+# حذف node_modules (و درصورت لزوم package-lock.json)
+rm -rf node_modules
+npm ci --include=optional
+
+# یا فقط بازسازی sharp
+npm rebuild sharp --build-from-source
+```
+
+3) دوباره build پروژه:
+```bash
+npm run build
+```
+
+این باید مشکلِ ناسازگاری باینری را رفع کند، چون `sharp` از سورس ساخته می‌شود و متناسب با CPU سرور شما خواهد بود.
+
+نکته: اگر شما در سروری با CPU خیلی قدیمی یا محدود کار می‌کنید، ممکن است مدت ساخت طول بکشد؛ در این حالت اجرای اپ با Docker در ماشینی مدرن یا استفاده از یک سرور با معماری جدید توصیه می‌شود.
+
+
 ### ✅ اگه هیچ خطایی ندیدی، آفرین! موفق شدی 🎉
 
 ---
@@ -488,6 +525,37 @@ docker compose restart video-processor
 sudo journalctl -u pishro-worker -n 50
 sudo systemctl restart pishro-worker
 ```
+
+### مشکل 7: خطای build مربوط به بسته `sharp`
+
+اگر هنگام اجرای `npm run build` با خطای مشابه زیر مواجه شدید:
+
+```
+Error: Could not load the "sharp" module using the linux-x64 runtime
+Unsupported CPU: Prebuilt binaries for linux-x64 require v2 microarchitecture
+```
+
+راه‌حل: `sharp` به‌صورت پیش‌فرض از باینری‌های prebuilt استفاده می‌کند که ممکن است با CPU سرور شما هم‌خوانی نداشته باشد، در این حالت باید `sharp` را از سورس بسازید یا پیش‌نیازهای `libvips` را نصب کنید.
+
+دستورهای پیشنهادی:
+
+```bash
+# نصب پیش نیازها
+sudo apt-get update
+sudo apt-get install -y pkg-config libvips-dev libcairo2-dev libjpeg-dev libpng-dev libwebp-dev libgif-dev libexif-dev build-essential
+
+# بازسازی sharp و نصب دوباره
+cd /opt/pishro
+rm -rf node_modules
+npm ci --include=optional
+npm rebuild sharp --build-from-source
+
+# دوباره تلاش برای ساخت
+npm run build
+```
+
+اگر باز هم خطا دارید، خروجی کامل `npm run build` را اینجا paste کنید تا کمک کنم خطا را دقیق‌تر بررسی کنیم.
+
 
 ---
 

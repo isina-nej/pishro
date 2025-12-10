@@ -163,7 +163,15 @@ apt-get install -y \
     curl \
     wget \
     unzip \
-    build-essential
+    build-essential \
+    pkg-config \
+    libvips-dev \
+    libcairo2-dev \
+    libjpeg-dev \
+    libpng-dev \
+    libwebp-dev \
+    libgif-dev \
+    libexif-dev
 print_success "Additional tools installed"
 echo ""
 

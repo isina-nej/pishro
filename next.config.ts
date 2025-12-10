@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    unoptimized: true,   // ← این خط تمام وابستگی به sharp را قطع می‌کند
     remotePatterns: [
       {
         protocol: "https",
@@ -25,7 +26,9 @@ const nextConfig: NextConfig = {
         hostname: "teh-1.s3.poshtiban.com",
       },
     ],
+ 
   },
+  output: "standalone",
 };
 
 export default nextConfig;

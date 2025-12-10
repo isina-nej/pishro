@@ -19,7 +19,12 @@ import {
 const BATCH_SIZE = 3; // تعداد ویدیوهایی که هم‌زمان پردازش شوند
 const RETRY_LIMIT = 3; // تعداد دفعات تلاش مجدد در صورت خطا
 
-async function main() {
+// add this helper in the script (top-level)
+function sleep(ms: number) {
+  return new Promise((res) => setTimeout(res, ms));
+}
+
+async function mainOnce() {
   console.log(`[${new Date().toISOString()}] Video Processor Worker started`);
 
   try {
@@ -85,5 +90,18 @@ async function main() {
   }
 }
 
+async function loop() {
+  const POLL_INTERVAL_MS = 30_000; // 30 seconds
+  while (true) {
+    try {
+      await mainOnce(); // you'll need to extract the existing main body into mainOnce
+    } catch (err) {
+      console.error("Worker loop error:", err);
+    }
+    await sleep(POLL_INTERVAL_MS);
+  }
+}
+
 // اجرای worker
-main();
+mainOnce(); // or run loop();
+loop();

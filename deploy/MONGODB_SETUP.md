@@ -65,6 +65,26 @@ docker logs -f pishro-mongo
 docker exec -it pishro-mongo mongosh -u admin -p "sdfjkdsDFsd7943r8eDFA"
 ```
 
+> ⚠️ تذکر: اگر MongoDB را از طریق apt (systemd) نصب کرده‌اید و سرویس mongod روی میزبان در حال اجراست، اتصال Docker به پورت 27017 با خطای "address already in use" مواجه خواهد شد. برای اجتناب از این مشکل یکی از گزینه‌های زیر را انجام دهید:
+>
+> - توقف سرویس systemd قبل از اجرای کانتینر:
+>   ```bash
+>   sudo systemctl stop mongod
+>   # سپس اجرای کانتینر
+>   ```
+> - اجرای کانتینر روی پورت دیگر (مثلاً 27018):
+>   ```bash
+>   docker run -d --name pishro-mongo -p 27018:27017 -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD="YOUR_PASS" -v mongodb_data:/data/db --restart unless-stopped mongo:7.0
+>   ```
+> - یا از سرویس mongod روی میزبان استفاده کنید و کانتینر را اجرا نکنید (یا از شبکه‌های داخلی Docker استفاده کنید بدون map کردن پورت روی میزبان).
+
+> همچنین برای بررسی اینکه چه سرویسی به پورت 27017 گوش می‌دهد:
+> ```bash
+> sudo ss -nltp | grep 27017
+> # یا
+> sudo netstat -tulpn | grep 27017
+> ```
+
 ---
 
 ## 🔐 تنظیمات امنیتی
@@ -147,6 +167,51 @@ db.createUser({
   ]
 })
 ```
+
+> 💡 نکته: اگر با خطای "Command createUser requires authentication" مواجه شدید، یعنی در نشست فعلی (mongosh) به حساب Admin وارد نشده‌اید یا admin هنوز ساخته نشده است. برای حل:
+>
+> 1. بررسی کنید به کدام MongoDB متصل هستید (systemd یا کانتینر):
+> ```bash
+> sudo ss -nltp | grep 27017
+> docker ps -a --filter "name=pishro-mongo"
+> ```
+> - اگر `docker ps -a` کانتینر `pishro-mongo` را نشان می‌دهد و `ss` نشان‌دهنده `127.0.0.1:27017` با process `mongod` است، ممکن است دو نسخه متفاوت (سیستم و کانتینری) موجود باشند.
+>
+> 2. اگر از systemd `mongod` استفاده می‌کنید و admin را هنوز نساخته‌اید یا وارد نشده‌اید، اجرا و ساخت admin به روش زیر انجام گیرد:
+> ```bash
+> # disable auth temporarily (edit file or start without auth)
+> sudo nano /etc/mongod.conf
+> # comment out or remove the security.authorization: enabled section
+> sudo systemctl restart mongod
+>
+> # connect without auth and create admin
+> mongosh
+> use admin
+> db.createUser({
+>   user: "admin",
+>   pwd: "your-very-secure-password",
+>   roles: [
+>     { role: "userAdminAnyDatabase", db: "admin" },
+>     { role: "readWriteAnyDatabase", db: "admin" },
+>     { role: "dbAdminAnyDatabase", db: "admin" }
+>   ]
+> })
+>
+> # re-enable auth and restart
+> # uncomment security section, then restart
+> sudo systemctl restart mongod
+> ```
+>
+> 3. یا اگر می‌خواهید admin را در کانتینر Docker بسازید، راه امن این است که کانتینر را با متغیرهای `MONGO_INITDB_ROOT_USERNAME` و `MONGO_INITDB_ROOT_PASSWORD` اجرا کنید یا در صورتی که کانتینر در حال اجراست از `docker exec` استفاده کنید:
+> ```bash
+> # اگر کانتینر جدید است، از env var هنگام run استفاده کنید (تنها در initialization اولین بار) :
+> docker run -d --name pishro-mongo -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD="mypassword" -v mongodb_data:/data/db --restart unless-stopped mongo:7.0
+>
+> # اگر کانتینر در حال اجراست و می‌خواهید admin را اضافه کنید:
+> docker exec -it pishro-mongo mongosh
+> use admin
+> db.createUser({ user: 'admin', pwd: 'mypassword', roles: [{ role: 'userAdminAnyDatabase', db: 'admin' }, { role: 'readWriteAnyDatabase', db: 'admin' }] })
+> ```
 
 ### 3. ایجاد Database و کاربر برای پروژه CMS (pishro-admin)
 
@@ -389,6 +454,31 @@ db.createUser(...)
 # فعال مجدد authentication
 # uncomment security section و restart
 ```
+
+اضافه بر این، اگر پس از ایجاد admin هنوز با خطای Authentication مواجهید:
+
+- اطمینان حاصل کنید که شما به همان نمونه Mongo متصلید که admin در آن ساخته شده (host/container).
+- اگر admin را با Docker init ساخته‌اید و سپس روی میزبان systemd راه‌اندازی شده، ممکن است admin در data path container باشد، نه /var/lib/mongodb میزبان؛ بررسی کنید.
+- اگر رمز عبور فراموش شده، می‌توانید با غیرفعال‌سازی موقت Authorization آن را بازنشانی کنید:
+
+```bash
+# توقف mongo
+sudo systemctl stop mongod
+
+# استارت بدون auth (موقتی) - مثال: با پارامتر --auth/--noauth
+sudo -u mongodb mongod --dbpath /var/lib/mongodb --port 27017 --bind_ip 127.0.0.1 --setParameter authenticationMechanisms=SCRAM-SHA-256 --noauth &
+
+# اتصال و تغییر رمز
+mongosh
+use admin
+db.changeUserPassword('admin', 'new_password')
+
+# متوقف کردن این instance و استارت systemd مجدد
+sudo pkill mongod
+sudo systemctl start mongod
+```
+
+⚠️ هشدار: اجرای mongod از خط فرمان (مثال بالا) به عنوان یوزر mongodb و با dbpath صحیح انجام شود؛ از عملیات اشتباه که باعث آسیب دیتابیس می‌شود پرهیز کنید.
 
 ### فضای دیسک پر
 

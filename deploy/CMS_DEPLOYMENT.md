@@ -514,6 +514,23 @@ sudo tail -f /var/log/nginx/access.log
 sudo systemctl restart nginx
 ```
 
+### خطای build مربوط به `sharp`
+
+اگر هنگام اجرای `npm run build` با خطاهای مرتبط با `sharp` مواجه شدید (مثلاً "Unsupported CPU: Prebuilt binaries for linux-x64 require v2 microarchitecture"), انجام دهید:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y pkg-config libvips-dev libcairo2-dev libjpeg-dev libpng-dev libwebp-dev libgif-dev libexif-dev build-essential
+cd /opt/pishro-admin
+rm -rf node_modules
+npm ci --include=optional
+npm rebuild sharp --build-from-source
+npm run build
+```
+
+درصورت لزوم خروجی کامل build را ارسال کنید تا کمک کنم مشکل را دقیق‌تر بررسی کنم.
+
+
 ### دو پروژه به هم conflict دارند
 
 این مشکل معمولاً به دلیل استفاده از یک database یا AUTH_SECRET یکسان است:
