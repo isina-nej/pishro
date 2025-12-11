@@ -10,7 +10,7 @@ async function seed() {
     await client.connect();
     console.log('✓ Connected to MongoDB');
 
-    const db = client.db();
+    const db = client.db('pishro');
 
     // Create collections
     const collections = [
@@ -25,8 +25,12 @@ async function seed() {
     ];
 
     for (const collection of collections) {
-      const exists = await db.collection(collection).findOne({}) !== null || true;
-      console.log(`✓ Collection ${collection} ready`);
+      try {
+        await db.createCollection(collection);
+        console.log(`✓ Collection ${collection} created`);
+      } catch (e) {
+        console.log(`✓ Collection ${collection} already exists`);
+      }
     }
 
     // Seed default user
