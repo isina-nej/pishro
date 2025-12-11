@@ -174,9 +174,10 @@ cd /opt
 ### 2. دانلود پروژه:
 
 ```bash
-sudo git clone https://github.com/amir-9/pishro.git pishro
+sudo git clone https://github.com/isina-nej/pishro.git pishro
 cd pishro
 ```
+sudo git clone https://github.com/amir-9/pishro.git pishro
 
 ### 3. دادن دسترسی به پوشه:
 

@@ -2,12 +2,20 @@
 import { prisma } from "@/lib/prisma";
 import { ImageCategory } from "@prisma/client";
 import crypto from "crypto";
-import sharp from "sharp";
 import {
   saveFileToStorage,
   deleteFileFromStorage,
   getRelativePathFromUrl,
 } from "./storage-adapter";
+
+let sharp: any = null;
+if (typeof window === "undefined") {
+  try {
+    sharp = require("sharp");
+  } catch (e) {
+    console.warn("sharp module not available");
+  }
+}
 
 const IMAGES_FOLDER = "images"; // پوشه اصلی تصاویر
 
@@ -75,6 +83,10 @@ export async function getImageDimensions(
   buffer: Buffer
 ): Promise<{ width: number; height: number } | null> {
   try {
+    if (!sharp) {
+      console.warn("sharp module not available, skipping dimension extraction");
+      return { width: 1920, height: 1080 }; // Default dimensions
+    }
     const metadata = await sharp(buffer).metadata();
     if (metadata.width && metadata.height) {
       return { width: metadata.width, height: metadata.height };
