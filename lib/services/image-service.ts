@@ -8,11 +8,13 @@ import {
   getRelativePathFromUrl,
 } from "./storage-adapter";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-require-imports
 let sharp: any = null;
 if (typeof window === "undefined") {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     sharp = require("sharp");
-  } catch (e) {
+  } catch {
     console.warn("sharp module not available");
   }
 }
