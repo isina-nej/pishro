@@ -21,7 +21,7 @@ interface BusinessLandingProps {
 
 const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
   return (
-    <div className="relative w-full h-screen overflow-hidden isolate flex items-center justify-start text-center px-4 pt-20 md:pt-0 -mb-32">
+    <div className="relative w-full min-h-[70vh] flex items-center justify-start text-center px-4 pt-20 md:pt-0">
       {/* 📷 Background Image */}
       <Image
         src={
@@ -30,13 +30,14 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
             : "/images/business-consulting/landing.jpg")
         }
         alt="مشاوره کسب و کار"
-        fill
+        width={1600}
+        height={900}
+        sizes="(max-width: 1024px) 100vw, 1600px"
         className="object-cover z-0"
-        priority
       />
 
       {/* 🔲 Dark Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-l from-black/90 via-black/50 to-black/5 z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-black/60 z-10 pointer-events-none" />
 
       {/* 📝 Main Content */}
       <div className="relative z-20 max-w-2xl text-white flex flex-col items-center rtl gap-y-8 px-2 sm:px-8 py-12 sm:py-0">

@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { isValidObjectId } from "@/lib/utils/mongo";
 import type { Prisma } from "@prisma/client";
 
 /**
@@ -35,6 +36,11 @@ export async function getAllInvestmentPlans() {
  */
 export async function getInvestmentPlansById(id: string) {
   try {
+    if (!isValidObjectId(id)) {
+      // invalid id format - return null instead of throwing Prisma P2023
+      return null;
+    }
+
     const plan = await prisma.investmentPlans.findUnique({
       where: { id },
       include: {

@@ -8,6 +8,7 @@ import { NextRequest } from "next/server";
 import { Prisma } from "@prisma/client";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { isValidObjectId } from "@/lib/utils/mongo";
 import {
   errorResponse,
   unauthorizedResponse,
@@ -110,6 +111,12 @@ export async function POST(req: NextRequest) {
           ? "شناسه صفحه سبدهای سرمایه‌ گذاری الزامی است"
           : "",
         title: !title ? "عنوان الزامی است" : "",
+      });
+    }
+
+    if (!isValidObjectId(investmentPlansId)) {
+      return validationError({
+        investmentPlansId: "شناسه صفحه سبدهای سرمایه‌ گذاری نامعتبر است",
       });
     }
 
