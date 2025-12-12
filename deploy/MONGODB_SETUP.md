@@ -50,7 +50,7 @@ sudo systemctl status mongod
 ```bash
 # اجرای MongoDB در Docker
 docker run -d \
-  --name pishro-mongo \
+  --name mydb \
   -p 27017:27017 \
   -e MONGO_INITDB_ROOT_USERNAME=admin \
   -e MONGO_INITDB_ROOT_PASSWORD="sdfjkdsDFsd7943r8eDFA" \
@@ -59,10 +59,10 @@ docker run -d \
   mongo:7.0
 
 # بررسی logs
-docker logs -f pishro-mongo
+docker logs -f mydb
 
 # اتصال به MongoDB shell
-docker exec -it pishro-mongo mongosh -u admin -p "sdfjkdsDFsd7943r8eDFA"
+docker exec -it mydb mongosh -u admin -p "sdfjkdsDFsd7943r8eDFA"
 ```
 
 > ⚠️ تذکر: اگر MongoDB را از طریق apt (systemd) نصب کرده‌اید و سرویس mongod روی میزبان در حال اجراست، اتصال Docker به پورت 27017 با خطای "address already in use" مواجه خواهد شد. برای اجتناب از این مشکل یکی از گزینه‌های زیر را انجام دهید:
@@ -74,7 +74,7 @@ docker exec -it pishro-mongo mongosh -u admin -p "sdfjkdsDFsd7943r8eDFA"
 >   ```
 > - اجرای کانتینر روی پورت دیگر (مثلاً 27018):
 >   ```bash
->   docker run -d --name pishro-mongo -p 27018:27017 -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD="YOUR_PASS" -v mongodb_data:/data/db --restart unless-stopped mongo:7.0
+>   docker run -d --name mydb -p 27018:27017 -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD="sdfjkdsDFsd7943r8eDFA" -v mongodb_data:/data/db --restart unless-stopped mongo:7.0
 >   ```
 > - یا از سرویس mongod روی میزبان استفاده کنید و کانتینر را اجرا نکنید (یا از شبکه‌های داخلی Docker استفاده کنید بدون map کردن پورت روی میزبان).
 
@@ -173,9 +173,9 @@ db.createUser({
 > 1. بررسی کنید به کدام MongoDB متصل هستید (systemd یا کانتینر):
 > ```bash
 > sudo ss -nltp | grep 27017
-> docker ps -a --filter "name=pishro-mongo"
+> docker ps -a --filter "name=mydb"
 > ```
-> - اگر `docker ps -a` کانتینر `pishro-mongo` را نشان می‌دهد و `ss` نشان‌دهنده `127.0.0.1:27017` با process `mongod` است، ممکن است دو نسخه متفاوت (سیستم و کانتینری) موجود باشند.
+> - اگر `docker ps -a` کانتینر `mydb` را نشان می‌دهد و `ss` نشان‌دهنده `127.0.0.1:27017` با process `mongod` است، ممکن است دو نسخه متفاوت (سیستم و کانتینری) موجود باشند.
 >
 > 2. اگر از systemd `mongod` استفاده می‌کنید و admin را هنوز نساخته‌اید یا وارد نشده‌اید، اجرا و ساخت admin به روش زیر انجام گیرد:
 > ```bash
@@ -205,10 +205,10 @@ db.createUser({
 > 3. یا اگر می‌خواهید admin را در کانتینر Docker بسازید، راه امن این است که کانتینر را با متغیرهای `MONGO_INITDB_ROOT_USERNAME` و `MONGO_INITDB_ROOT_PASSWORD` اجرا کنید یا در صورتی که کانتینر در حال اجراست از `docker exec` استفاده کنید:
 > ```bash
 > # اگر کانتینر جدید است، از env var هنگام run استفاده کنید (تنها در initialization اولین بار) :
-> docker run -d --name pishro-mongo -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD="mypassword" -v mongodb_data:/data/db --restart unless-stopped mongo:7.0
+> docker run -d --name mydb -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD="mypassword" -v mongodb_data:/data/db --restart unless-stopped mongo:7.0
 >
 > # اگر کانتینر در حال اجراست و می‌خواهید admin را اضافه کنید:
-> docker exec -it pishro-mongo mongosh
+> docker exec -it mydb mongosh
 > use admin
 > db.createUser({ user: 'admin', pwd: 'mypassword', roles: [{ role: 'userAdminAnyDatabase', db: 'admin' }, { role: 'readWriteAnyDatabase', db: 'admin' }] })
 > ```
