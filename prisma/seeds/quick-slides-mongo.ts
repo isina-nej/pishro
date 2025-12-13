@@ -61,11 +61,8 @@ async function main() {
   const slides = [
     {
       title: 'اسلاید اول',
-      subtitle: 'معرفی خدمات پیشرو',
+      description: 'معرفی خدمات پیشرو',
       imageUrl: images[0].url,
-      imageId: imageIds[0],
-      ctaText: 'مشاهده دوره‌ها',
-      ctaLink: '/courses',
       published: true,
       order: 1,
       createdAt: now,
@@ -73,11 +70,8 @@ async function main() {
     },
     {
       title: 'اسلاید دوم',
-      subtitle: 'مشاوره سرمایه‌گذاری',
+      description: 'مشاوره سرمایه‌گذاری',
       imageUrl: images[1].url,
-      imageId: imageIds[1],
-      ctaText: 'درخواست مشاوره',
-      ctaLink: '/business-consulting',
       published: true,
       order: 2,
       createdAt: now,
