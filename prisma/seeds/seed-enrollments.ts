@@ -53,10 +53,12 @@ export async function seedEnrollments() {
             },
           });
           created++;
-        } catch (error) {
+        } catch (error: any) {
+          if (error.code === 'P2002') {
+            // Skip if enrollment already exists (unique constraint)
+            continue;
+          }
           console.log(error);
-          // Skip if enrollment already exists (unique constraint)
-          continue;
         }
       }
 
