@@ -18,18 +18,18 @@ const BusinessConsulting = () => {
         "0 0 12px rgba(255,255,255,0.4)",
         "0 0 0 rgba(0,0,0,0)",
       ],
-          transition: {
+      transition: {
         scale: {
           duration: 2,
           repeat: Infinity,
-              repeatType: "loop" as const,
-              ease: "easeInOut" as const,
+          repeatType: "loop",
+          ease: "easeInOut",
         },
         boxShadow: {
           duration: 2,
           repeat: Infinity,
-              repeatType: "loop" as const,
-              ease: "easeInOut" as const,
+          repeatType: "loop",
+          ease: "easeInOut",
         },
       },
     },
