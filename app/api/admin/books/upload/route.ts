@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { auth } from "@/auth";
 import {
     errorResponse,
@@ -146,7 +146,7 @@ export async function POST(req: NextRequest) {
             `خطا در آپلود فایل: ${errorMessage}`,
             ErrorCodes.INTERNAL_ERROR
         );
-        const origin = (arguments[0] as NextRequest).headers.get("origin");
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         return addCorsHeaders(response, origin);
     }
 }

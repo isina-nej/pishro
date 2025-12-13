@@ -2,7 +2,8 @@
 // It can be safely ignored for TypeScript/ESLint checks
 import { MongoClient } from 'mongodb';
 
-const client = new MongoClient('mongodb://127.0.0.1:27017/pishro');
+const MONGO_URL = process.env.MONGO_URL || process.env.DATABASE_URL || 'mongodb://127.0.0.1:27017/pishro';
+const client = new MongoClient(MONGO_URL, { useUnifiedTopology: true });
 
 (async () => {
   try {

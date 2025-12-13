@@ -15,8 +15,10 @@ async function seedBasicData() {
       await prisma.homeLanding.create({
         data: {
           title: 'پیشرو سرمایه',
+          heroTitle: 'پیشرو سرمایه',
           mainHeroTitle: 'خوش‌آمدید به پیشرو سرمایه',
           mainHeroSubtitle: 'یادگیری و سرمایه‌گذاری هوشمند',
+          heroSubtitle: 'پلاتفرم آموزش و سرمایه‌گذاری',
           metaDescription: 'آموزش تخصصی بورس، بازارهای مالی و سرمایه‌ گذاری',
           metaKeywords: ['بورس', 'سرمایه‌گذاری', 'آموزش'],
           published: true,

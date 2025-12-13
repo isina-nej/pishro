@@ -11,18 +11,23 @@ import { NextResponse } from "next/server";
  * لیست originهای مجاز برای CORS
  */
 export const ALLOWED_ORIGINS = [
-  "http://localhost:3001",
-  "http://localhost:3000",
-  "https://pishro-admin.vercel.app",
-  "https://pishro-0.vercel.app",
-  "https://178.239.147.136:3001",
-  "http://178.239.147.136:3001",
+  // Production origins - highest priority
   "https://admin.pishrosarmaye.com",
   "http://admin.pishrosarmaye.com",
   "https://pishrosarmaye.com",
   "http://pishrosarmaye.com",
   "https://www.pishrosarmaye.com",
   "http://www.pishrosarmaye.com",
+  // Local development
+  "http://localhost:3001",
+  "http://localhost:3000",
+  // Server IPs
+  "https://178.239.147.136:3001",
+  "http://178.239.147.136:3001",
+  // Legacy/Vercel origins
+  "https://pishro-admin.vercel.app",
+  "https://pishro-0.vercel.app",
+  // S3/Storage
   "https://teh-1.s3.poshtiban.com"
 ];
 

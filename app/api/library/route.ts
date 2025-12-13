@@ -81,6 +81,14 @@ export async function GET(req: NextRequest) {
       prisma.digitalBook.count({ where }),
     ]);
 
+    // Debug logs: output count and first slugs to server logs for debugging visibility
+    try {
+      const slugs = (books || []).slice(0, 10).map((b) => b.slug);
+      console.log('[LIBRARY API] fetched books count=', books.length, 'firstSlugs=', JSON.stringify(slugs));
+    } catch (e) {
+      console.log('[LIBRARY API] logging error', e);
+    }
+
     return paginatedResponse(books, page, limit, total);
   } catch (error) {
     console.error("Error fetching books:", error);

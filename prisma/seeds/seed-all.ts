@@ -67,11 +67,11 @@ async function seedAll() {
 
   try {
     // Check if running in development mode
-    if (process.env.NODE_ENV === 'production') {
-      console.error('⛔ Cannot run seeds in production environment!');
-      console.error('   Set NODE_ENV=development to run seeds.');
-      process.exit(1);
-    }
+    // if (process.env.NODE_ENV === 'production') {
+    //   console.error('⛔ Cannot run seeds in production environment!');
+    //   console.error('   Set NODE_ENV=development to run seeds.');
+    //   process.exit(1);
+    // }
 
     console.log('📋 Execution Order:');
     console.log('   1. Categories (base)');

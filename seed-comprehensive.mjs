@@ -1,9 +1,9 @@
 import { MongoClient, ObjectId } from 'mongodb';
 
-const MONGO_URL = 'mongodb://127.0.0.1:27017/pishro?authSource=admin&directConnection=true';
+const MONGO_URL = process.env.MONGO_URL || process.env.DATABASE_URL || 'mongodb://127.0.0.1:27017/pishro?authSource=admin&directConnection=true';
 
 async function seedAllData() {
-  const client = new MongoClient(MONGO_URL);
+  const client = new MongoClient(MONGO_URL, { useUnifiedTopology: true });
   
   try {
     await client.connect();

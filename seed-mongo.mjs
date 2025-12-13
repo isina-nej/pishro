@@ -1,9 +1,11 @@
 import { MongoClient } from 'mongodb';
 
-const MONGO_URL = 'mongodb://127.0.0.1:27017/pishro';
+// Prefer environment variable (MONGO_URL or DATABASE_URL) so we can run seeds
+// against authenticated or remote Mongo instances without editing the file.
+const MONGO_URL = process.env.MONGO_URL || process.env.DATABASE_URL || 'mongodb://127.0.0.1:27017/pishro';
 
 async function seedDatabase() {
-  const client = new MongoClient(MONGO_URL);
+  const client = new MongoClient(MONGO_URL, { useUnifiedTopology: true });
   
   try {
     await client.connect();

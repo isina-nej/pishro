@@ -18,16 +18,19 @@ export const authConfig: NextAuthConfig = {
   session: { strategy: "jwt" },
   secret: process.env.NEXTAUTH_SECRET,
   trustHost: true, // ✅ اجازه میدهد Auth.js در محیط‌های مختلف (Vercel, localhost) کار کند
-  cookies: {
-    sessionToken: {
-      name: "authjs.session-token",
-      options: {
-        httpOnly: true,
-        sameSite: "none", // ⬅️ برای Cross-Origin ضروری
-        secure: true, // ⬅️ چون دامنه‌هات HTTPS هستن
-      },
-    },
-  },
+  // cookies: {
+  //   sessionToken: {
+  //     name: "authjs.session-token",
+  //     options: {
+  //       httpOnly: true,
+  //       sameSite: "none", // ⬅️ برای Cross-Origin ضروری
+  //       secure: true, // ⬅️ چون دامنه‌هات HTTPS هستن
+  //       // Allow subdomains (admin.pishrosarmaye.com) to receive the cookie.
+  //       // You can override by setting SESSION_COOKIE_DOMAIN in the environment.
+  //       domain: process.env.SESSION_COOKIE_DOMAIN || ".pishrosarmaye.com",
+  //     },
+  //   },
+  // },
   providers: [
     Credentials({
       name: "Phone + Password",
