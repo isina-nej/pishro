@@ -1,18 +1,31 @@
 import { MongoClient } from 'mongodb';
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
+import path from 'path';
 
-let url = 'mongodb://127.0.0.1:27017/pishro';
-try {
-  const env = readFileSync('./.env', 'utf8');
-  env.split(/\r?\n/).forEach((line) => {
-    if (!line || line.startsWith('#')) return;
-    const idx = line.indexOf('=');
-    if (idx === -1) return;
-    const key = line.slice(0, idx);
-    const val = line.slice(idx + 1).replace(/^"(.*)"$/, '$1');
-    if (key === 'DATABASE_URL') url = val;
-  });
-} catch (e) {}
+// Load .env and .env.local manually
+const files = [".env", ".env.local"];
+
+files.forEach(file => {
+  const envPath = path.resolve(process.cwd(), file);
+  if (existsSync(envPath)) {
+    console.log(`Loading ${file}...`);
+    const envConfig = readFileSync(envPath, 'utf8');
+    envConfig.split(/\r?\n/).forEach(line => {
+      const parts = line.split('=');
+      if (parts.length > 1) {
+        const key = parts.shift()?.trim();
+        const value = parts.join('=').trim();
+        if (key && value && !key.startsWith("#")) {
+          const cleanValue = value.replace(/^["'](.*)["']$/, '$1');
+          process.env[key] = cleanValue;
+        }
+      }
+    });
+  }
+});
+
+const url = process.env.DATABASE_URL || 'mongodb://127.0.0.1:27017/pishro';
+console.log('Using database URL:', url.replace(/:[^:]*@/, ':****@'));
 
 async function main() {
   const client = new MongoClient(url);
