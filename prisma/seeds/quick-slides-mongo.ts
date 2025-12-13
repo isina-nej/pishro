@@ -55,6 +55,10 @@ async function main() {
     },
   ];
 
+  // Clear existing
+  await db.collection('HomeSlide').deleteMany({});
+  await db.collection('HomeMiniSlider').deleteMany({});
+
   const imgRes = await db.collection('Image').insertMany(images);
   const imageIds = Object.values(imgRes.insertedIds);
 

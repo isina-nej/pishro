@@ -34,6 +34,9 @@ async function main() {
   const db = client.db();
   const collection = db.collection('HomeLanding');
 
+  // Clear existing
+  await collection.deleteMany({});
+
   const doc = {
     mainHeroTitle: 'پیشرو در مسیر سرمایه‌ گذاری هوشمند',
     mainHeroSubtitle: 'آموزش تخصصی بورس و بازارهای مالی',
