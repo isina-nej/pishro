@@ -25,6 +25,18 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "teh-1.s3.poshtiban.com",
       },
+      {
+        protocol: "http",
+        hostname: "localhost",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost:3000",
+      },
+      {
+        protocol: "http",
+        hostname: "127.0.0.1",
+      },
     ],
  
   },

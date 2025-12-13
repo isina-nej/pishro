@@ -3,20 +3,33 @@ import { Metadata } from "next";
 import { getHomeLandingData } from "@/lib/services/landing-service";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const homeLanding = await getHomeLandingData();
+  try {
+    const homeLanding = await getHomeLandingData();
 
-  return {
-    title: "52392950",
-    description:
-      homeLanding?.metaDescription ||
-      "آموزش تخصصی بورس، بازارهای مالی و سرمایه‌ گذاری. از آموزش اصولی تا مشاوره حرفه‌ای",
-    keywords: homeLanding?.metaKeywords || [],
-  };
+    return {
+      title: "52392950",
+      description:
+        homeLanding?.metaDescription ||
+        "آموزش تخصصی بورس، بازارهای مالی و سرمایه‌ گذاری. از آموزش اصولی تا مشاوره حرفه‌ای",
+      keywords: homeLanding?.metaKeywords || [],
+    };
+  } catch (error) {
+    console.error("Error in generateMetadata:", error);
+    return {
+      title: "52392950",
+      description: "آموزش تخصصی بورس، بازارهای مالی و سرمایه‌ گذاری. از آموزش اصولی تا مشاوره حرفه‌ای",
+    };
+  }
 }
 
 const Home = async () => {
   // Fetch home landing data
-  const homeLanding = await getHomeLandingData();
+  let homeLanding = null;
+  try {
+    homeLanding = await getHomeLandingData();
+  } catch (error) {
+    console.error("Error loading home landing data:", error);
+  }
 
   // If no data is available, show a fallback message
   if (!homeLanding) {

@@ -11,13 +11,13 @@ import { prisma } from "@/lib/prisma";
 export async function getHomeLandingData() {
   try {
     const homeLanding = await prisma.homeLanding.findFirst({
-      where: { published: true },
       orderBy: { order: "asc" },
     });
 
     return homeLanding;
   } catch (error) {
     console.error("Error fetching home landing data:", error);
+    // Return null instead of throwing - allows graceful degradation
     return null;
   }
 }
@@ -32,6 +32,7 @@ export async function getMobileScrollerSteps() {
     return steps;
   } catch (error) {
     console.error("Error fetching mobile scroller steps:", error);
+    // Return empty array for graceful degradation
     return [];
   }
 }
@@ -46,6 +47,7 @@ export async function getHomeSlides() {
     return slides;
   } catch (error) {
     console.error("Error fetching home slides:", error);
+    // Return empty array for graceful degradation
     return [];
   }
 }
@@ -72,7 +74,6 @@ export async function getHomeMiniSliders(row?: number) {
 export async function getAboutPageData() {
   try {
     const aboutPage = await prisma.aboutPage.findFirst({
-      where: { published: true },
       include: {
         resumeItems: {
           where: { published: true },
@@ -105,9 +106,7 @@ export async function getAboutPageData() {
 
 export async function getBusinessConsultingData() {
   try {
-    const data = await prisma.businessConsulting.findFirst({
-      where: { published: true },
-    });
+    const data = await prisma.businessConsulting.findFirst({});
 
     return data;
   } catch (error) {
@@ -121,7 +120,6 @@ export async function getBusinessConsultingData() {
 export async function getInvestmentPlansData() {
   try {
     const data = await prisma.investmentPlans.findFirst({
-      where: { published: true },
       include: {
         plans: {
           where: { published: true },

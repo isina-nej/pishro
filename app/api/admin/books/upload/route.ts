@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import {
     errorResponse,
@@ -8,23 +8,18 @@ import {
     validationError,
     ErrorCodes,
 } from "@/lib/api-response";
+import { corsPreflightResponse, addCorsHeaders } from "@/lib/cors";
 import { saveFileToStorage } from "@/lib/services/storage-adapter";
 import { generateUniqueImageFileName, generateImageId } from "@/lib/services/image-service";
 
 // Handle CORS preflight requests
-export async function OPTIONS(_req: NextRequest) {
-    return new Response(null, {
-        status: 200,
-        headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-            "Access-Control-Allow-Headers": "Content-Type, Authorization",
-            "Access-Control-Max-Age": "86400",
-        },
-    });
+export async function OPTIONS(req: NextRequest) {
+    const origin = req.headers.get("origin");
+    return corsPreflightResponse(origin);
 }
 
 export async function POST(req: NextRequest) {
+    const origin = req.headers.get("origin");
     try {
         // Debug logging for request headers
         const authHeader = req.headers.get('authorization');
@@ -36,11 +31,13 @@ export async function POST(req: NextRequest) {
         
         if (!session?.user) {
             console.log("[Upload] No session user");
-            return unauthorizedResponse("لطفا وارد شوید");
+            const response = unauthorizedResponse("لطفا وارد شوید");
+            return addCorsHeaders(response, origin);
         }
         if (session.user.role !== "ADMIN") {
             console.log("[Upload] User role is not ADMIN:", session.user.role);
-            return forbiddenResponse("دسترسی محدود به ادمین");
+            const response = forbiddenResponse("دسترسی محدود به ادمین");
+            return addCorsHeaders(response, origin);
         }
 
         const formData = await req.formData();
@@ -48,14 +45,16 @@ export async function POST(req: NextRequest) {
         const type = formData.get("type") as string | null;
 
         if (!file) {
-            return validationError({ file: "فایل الزامی است" }, "فایل الزامی است");
+            const response = validationError({ file: "فایل الزامی است" }, "فایل الزامی است");
+            return addCorsHeaders(response, origin);
         }
 
         if (!type || !["pdf", "image", "audio"].includes(type.toLowerCase())) {
-            return validationError(
+            const response = validationError(
                 { type: "نوع فایل نامعتبر است" },
                 "نوع فایل باید یکی از موارد pdf, image, audio باشد"
             );
+            return addCorsHeaders(response, origin);
         }
 
         // Validate mime types based on requested type
@@ -63,16 +62,19 @@ export async function POST(req: NextRequest) {
         const typeLower = type.toLowerCase();
 
         if (typeLower === "pdf" && mimeType !== "application/pdf") {
-            return validationError({ file: "فرمت فایل نامعتبر است" }, "فایل باید PDF باشد");
+            const response = validationError({ file: "فرمت فایل نامعتبر است" }, "فایل باید PDF باشد");
+            return addCorsHeaders(response, origin);
         }
 
         if (typeLower === "image" && !mimeType.startsWith("image/")) {
-            return validationError({ file: "فرمت فایل نامعتبر است" }, "فایل باید تصویر باشد");
+            const response = validationError({ file: "فرمت فایل نامعتبر است" }, "فایل باید تصویر باشد");
+            return addCorsHeaders(response, origin);
         }
 
         if (typeLower === "audio" && !mimeType.startsWith("audio/")) {
             // Broad check for audio, some browsers send specific audio types
-            return validationError({ file: "فرمت فایل نامعتبر است" }, "فایل باید صوتی باشد");
+            const response = validationError({ file: "فرمت فایل نامعتبر است" }, "فایل باید صوتی باشد");
+            return addCorsHeaders(response, origin);
         }
 
         // Determine folder name (First letter capitalized as requested: Audio, Image, PDF)
@@ -85,7 +87,8 @@ export async function POST(req: NextRequest) {
 
         // Enforce size limit based on type
         if (file.size > (maxSizeMB[typeLower as keyof typeof maxSizeMB] || 50) * 1024 * 1024) {
-            return validationError({ file: "حجم فایل بیش از حد مجاز است" }, `حداکثر حجم برای ${typeLower} ${maxSizeMB[typeLower as keyof typeof maxSizeMB]}MB است`);
+            const response = validationError({ file: "حجم فایل بیش از حد مجاز است" }, `حداکثر حجم برای ${typeLower} ${maxSizeMB[typeLower as keyof typeof maxSizeMB]}MB است`);
+            return addCorsHeaders(response, origin);
         }
 
         switch (typeLower) {
@@ -117,7 +120,8 @@ export async function POST(req: NextRequest) {
         };
 
         if (!allowedExtensionsByType[typeLower].includes(extension)) {
-            return validationError({ file: 'پسوند فایل نامعتبر است' }, `پسوند فایل باید یکی از ${allowedExtensionsByType[typeLower].join(', ')} باشد`);
+            const response = validationError({ file: 'پسوند فایل نامعتبر است' }, `پسوند فایل باید یکی از ${allowedExtensionsByType[typeLower].join(', ')} باشد`);
+            return addCorsHeaders(response, origin);
         }
 
         const fileName = generateUniqueImageFileName(uniqueId, file.name);
@@ -129,17 +133,20 @@ export async function POST(req: NextRequest) {
         // Save
         const url = await saveFileToStorage(buffer, relativePath);
 
-        return successResponse(
+        const response = successResponse(
             { url, fileName, type: typeLower },
             "فایل با موفقیت آپلود شد"
         );
+        return addCorsHeaders(response, origin);
 
     } catch (error) {
         console.error("[Upload] Error uploading book file:", error);
         const errorMessage = error instanceof Error ? error.message : "Unknown error";
-        return errorResponse(
+        const response = errorResponse(
             `خطا در آپلود فایل: ${errorMessage}`,
             ErrorCodes.INTERNAL_ERROR
         );
+        const origin = (arguments[0] as NextRequest).headers.get("origin");
+        return addCorsHeaders(response, origin);
     }
 }
