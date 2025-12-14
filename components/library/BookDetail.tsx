@@ -106,7 +106,7 @@ const BookDetail = ({ bookId }: BookDetailProps) => {
                   download
                   target="_blank"
                   rel="noopener noreferrer"
-                >
+                > 
                   <Button className="w-full" size="lg">
                     <Download className="w-4 h-4 mr-2" />
                     دانلود کتاب
