@@ -37,8 +37,8 @@ async function main() {
 
   const images = [
     {
-      filename: 'home-slide-1.jpg',
-      url: '/images/home/slide-1.jpg',
+      filename: 'p01.webp',
+      url: '/images/home/landing-slider/p01.webp',
       uploadedById: null,
       category: 'home',
       published: true,
@@ -46,8 +46,8 @@ async function main() {
       updatedAt: now,
     },
     {
-      filename: 'home-slide-2.jpg',
-      url: '/images/home/slide-2.jpg',
+      filename: 'p02.webp',
+      url: '/images/home/landing-slider/p02.webp',
       uploadedById: null,
       category: 'home',
       published: true,
@@ -88,7 +88,7 @@ async function main() {
     {
       row: 1,
       title: 'مینی اسلایدر ۱',
-      imageUrl: '/images/home/mini-1.jpg',
+      imageUrl: '/images/home/landing-slider/p05.jpg',
       published: true,
       order: 1,
       createdAt: now,
@@ -97,7 +97,7 @@ async function main() {
     {
       row: 1,
       title: 'مینی اسلایدر ۲',
-      imageUrl: '/images/home/mini-2.jpg',
+      imageUrl: '/images/home/landing-slider/p06.jpg',
       published: true,
       order: 2,
       createdAt: now,
