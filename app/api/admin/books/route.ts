@@ -19,6 +19,11 @@ import {
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
 
+// DEBUG: Log Environment
+const dbUrl = process.env.DATABASE_URL || 'UNKNOWN';
+const maskedDbUrl = dbUrl.replace(/:[^:]*@/, ':****@');
+console.log(`[API] Admin Books Route Loaded. DB URL: ${maskedDbUrl}`);
+
 export async function GET(req: NextRequest) {
   try {
     // Auth check - only admins
@@ -107,6 +112,8 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
+    console.log(`[API] Creating book with title: ${body.title}, slug: ${body.slug}`);
+    console.log(`[API] DB Connection: ${maskedDbUrl}`);
     const {
       title,
       slug,
