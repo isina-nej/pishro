@@ -1,0 +1,1196 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  phone         String   @unique
+  passwordHash  String
+  phoneVerified Boolean  @default(false)
+  role          UserRole @default(USER)
+
+  // Personal Info
+  firstName    String?
+  lastName     String?
+  email        String?
+  nationalCode String?
+  birthDate    DateTime?
+  avatarUrl    String?
+
+  // Pay Info
+  cardNumber   String?
+  shebaNumber  String?
+  accountOwner String?
+
+  createdAt            DateTime                  @default(now())
+  updatedAt            DateTime                  @updatedAt
+  comments             Comment[]                 @relation("UserComments")
+  orders               Order[]                   @relation("UserOrders")
+  enrollments          Enrollment[]              @relation("UserEnrollments")
+  transactions         Transaction[]             @relation("UserTransactions")
+  newsComments         NewsComment[]             @relation("UserNewsComments")
+  quizAttempts         QuizAttempt[]             @relation("UserQuizAttempts")
+  investmentPortfolios UserInvestmentPortfolio[] @relation("UserInvestmentPortfolios")
+  images               Image[]                   @relation("UserImages")
+}
+
+model TempUser {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  phone        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+model Otp {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  phone     String   @unique
+  code      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Course {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  subject         String
+  price           Int
+  img             String?
+  rating          Float?
+  description     String?
+  discountPercent Int?
+  time            String?
+  students        Int?
+  videosCount     Int?
+  introVideoUrl   String? // ویدیو معرفی دوره
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now())
+
+  category   Category? @relation("CategoryCourses", fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId String?   @db.ObjectId
+
+  relatedTags Tag[]    @relation("CourseTags", fields: [tagIds], references: [id])
+  tagIds      String[] @db.ObjectId
+
+  slug          String?      @unique
+  level         CourseLevel?
+  language      Language     @default(FA)
+  prerequisites String[]     @default([])
+  learningGoals String[]     @default([])
+  instructor    String?
+  status        CourseStatus @default(ACTIVE)
+  published     Boolean      @default(true)
+  featured      Boolean      @default(false)
+  views         Int          @default(0)
+
+  comments    Comment[]    @relation("CourseComments")
+  enrollments Enrollment[] @relation("CourseEnrollments")
+  orderItems  OrderItem[]  @relation("CourseOrderItems")
+  quizzes     Quiz[]       @relation("CourseQuizzes")
+  lessons     Lesson[]     @relation("CourseLessons")
+
+  @@index([categoryId])
+  @@index([published, featured])
+}
+
+model Comment {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // User relation (optional for testimonials from non-users)
+  user   User?   @relation(fields: [userId], references: [id], name: "UserComments", onDelete: SetNull)
+  userId String? @db.ObjectId
+
+  // For testimonials without user account
+  userName    String?
+  userAvatar  String?
+  userRole    UserRoleType?
+  userCompany String?
+
+  // Content
+  text   String
+  rating Int?
+
+  // Relations
+  course     Course?   @relation(fields: [courseId], references: [id], name: "CourseComments", onDelete: Cascade)
+  courseId   String?   @db.ObjectId
+  category   Category? @relation("CategoryComments", fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId String?   @db.ObjectId
+
+  // Engagement
+  likes    String[] @default([])
+  dislikes String[] @default([])
+
+  // Status & Visibility
+  published Boolean @default(false)
+  verified  Boolean @default(false)
+  featured  Boolean @default(false)
+
+  // Analytics
+  views Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([courseId, published])
+  @@index([categoryId, published])
+  @@index([featured])
+}
+
+model Order {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  user         User?         @relation(fields: [userId], references: [id], name: "UserOrders", onDelete: SetNull)
+  userId       String?       @db.ObjectId
+  items        Json
+  total        Int
+  status       OrderStatus   @default(PENDING)
+  paymentRef   String?
+  createdAt    DateTime      @default(now())
+  orderItems   OrderItem[]   @relation("OrderOrderItems")
+  transactions Transaction[] @relation("OrderTransactions")
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  phone     String   @unique
+  createdAt DateTime @default(now())
+}
+
+model Enrollment {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  user         User      @relation(fields: [userId], references: [id], name: "UserEnrollments", onDelete: Cascade)
+  userId       String    @db.ObjectId
+  course       Course    @relation(fields: [courseId], references: [id], name: "CourseEnrollments", onDelete: Cascade)
+  courseId     String    @db.ObjectId
+  enrolledAt   DateTime  @default(now())
+  progress     Int       @default(0)
+  completedAt  DateTime?
+  lastAccessAt DateTime?
+
+  @@unique([userId, courseId])
+}
+
+model Transaction {
+  id          String            @id @default(auto()) @map("_id") @db.ObjectId
+  user        User?             @relation(fields: [userId], references: [id], name: "UserTransactions", onDelete: SetNull)
+  userId      String?           @db.ObjectId
+  order       Order?            @relation(fields: [orderId], references: [id], name: "OrderTransactions", onDelete: SetNull)
+  orderId     String?           @db.ObjectId
+  amount      Int
+  type        TransactionType
+  status      TransactionStatus
+  gateway     String?
+  refNumber   String?
+  description String?
+  createdAt   DateTime          @default(now())
+}
+
+model OrderItem {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  order   Order  @relation(fields: [orderId], references: [id], name: "OrderOrderItems", onDelete: Cascade)
+  orderId String @db.ObjectId
+
+  // Optional course (for course purchases)
+  course   Course? @relation(fields: [courseId], references: [id], name: "CourseOrderItems", onDelete: SetNull)
+  courseId String? @db.ObjectId
+
+  // Investment portfolio data (for portfolio purchases)
+  portfolioType     String? // "low", "medium", "high"
+  portfolioAmount   Int? // مبلغ سرمایه‌ گذاری
+  portfolioDuration Int? // مدت سرمایه‌ گذاری (ماه)
+
+  price           Int
+  discountPercent Int?
+}
+
+model Lesson {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  course      Course  @relation("CourseLessons", fields: [courseId], references: [id], onDelete: Cascade)
+  courseId    String  @db.ObjectId
+  title       String
+  description String?
+
+  // Video relation (optional for backward compatibility)
+  video   Video?  @relation("VideoLessons", fields: [videoId], references: [id], onDelete: SetNull)
+  videoId String? @db.ObjectId
+
+  // Legacy fields (for backward compatibility)
+  videoUrl  String? // برای سازگاری با ویدیوهای قبلی
+  thumbnail String?
+  duration  String? // مدت زمان ویدیو (مثل "45:30")
+
+  order     Int     @default(0)
+  published Boolean @default(true)
+  views     Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([courseId, order])
+  @@index([courseId, published])
+  @@index([videoId])
+}
+
+model NewsArticle {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  slug        String    @unique
+  excerpt     String
+  content     String
+  coverImage  String?
+  author      String?
+  category    String
+  tags        String[]
+  published   Boolean   @default(false)
+  publishedAt DateTime?
+  views       Int       @default(0)
+
+  relatedCategory Category? @relation("CategoryNews", fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId      String?   @db.ObjectId
+
+  relatedTags Tag[]    @relation("NewsTags", fields: [tagIds], references: [id])
+  tagIds      String[] @db.ObjectId
+
+  featured    Boolean @default(false)
+  readingTime Int?
+  likes       Int     @default(0)
+
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  comments  NewsComment[] @relation("NewsArticleComments")
+
+  // Relation with AboutPage
+  aboutPageId String?    @db.ObjectId
+  aboutPage   AboutPage? @relation("AboutNews", fields: [aboutPageId], references: [id], onDelete: SetNull)
+
+  @@index([categoryId])
+  @@index([published, featured])
+  @@index([publishedAt])
+}
+
+model NewsComment {
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
+  article   NewsArticle @relation(fields: [articleId], references: [id], name: "NewsArticleComments", onDelete: Cascade)
+  articleId String      @db.ObjectId
+  user      User?       @relation(fields: [userId], references: [id], name: "UserNewsComments", onDelete: SetNull)
+  userId    String?     @db.ObjectId
+  content   String
+  likes     String[]    @default([])
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+model DigitalBook {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  slug        String   @unique
+  author      String
+  description String
+  cover       String?
+  publisher   String?
+  year        Int
+  pages       Int?
+  isbn        String?
+  language    String   @default("فارسی")
+  rating      Float    @default(0)
+  votes       Int      @default(0)
+  views       Int      @default(0)
+  downloads   Int      @default(0)
+  category    String
+  formats     String[]
+  status      String[] @default([])
+  tags        String[] @default([])
+  readingTime String?
+  isFeatured  Boolean  @default(false)
+  price       Int?
+  fileUrl     String?
+  audioUrl    String?
+
+  relatedTags Tag[]    @relation("BookTags", fields: [tagIds], references: [id])
+  tagIds      String[] @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  slug        String  @unique
+  title       String
+  description String?
+  icon        String?
+  coverImage  String?
+  color       String?
+
+  metaTitle       String?
+  metaDescription String?
+  metaKeywords    String[] @default([])
+
+  // Hero/Landing section data
+  heroTitle       String?
+  heroSubtitle    String?
+  heroDescription String?
+  heroImage       String?
+  heroCta1Text    String?
+  heroCta1Link    String?
+  heroCta2Text    String?
+  heroCta2Link    String?
+
+  // About section data
+  aboutTitle1      String?
+  aboutTitle2      String?
+  aboutDescription String?
+  aboutImage       String?
+  aboutCta1Text    String?
+  aboutCta1Link    String?
+  aboutCta2Text    String?
+  aboutCta2Link    String?
+
+  // Stats/Metrics boxes (JSON array)
+  // Example: [{"text": "محتوای کاربردی", "number": "1K+", "icon": "/path/to/icon.svg"}]
+  statsBoxes Json? @default("[]")
+
+  // User level options (beginner, intermediate, advanced)
+  enableUserLevelSection Boolean @default(false)
+
+  published Boolean @default(true)
+  featured  Boolean @default(false)
+  order     Int     @default(0)
+
+  tags   Tag[]    @relation("CategoryTags", fields: [tagIds], references: [id])
+  tagIds String[] @db.ObjectId
+
+  courses  Course[]      @relation("CategoryCourses")
+  content  PageContent[] @relation("CategoryContent")
+  news     NewsArticle[] @relation("CategoryNews")
+  faqs     FAQ[]         @relation("CategoryFAQs")
+  comments Comment[]     @relation("CategoryComments")
+  quizzes  Quiz[]        @relation("CategoryQuizzes")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published, featured])
+}
+
+model Tag {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  slug        String   @unique
+  title       String
+  description String?
+  color       String?
+  icon        String?
+  published   Boolean? @default(false)
+
+  categories  Category[] @relation("CategoryTags", fields: [categoryIds], references: [id])
+  categoryIds String[]   @db.ObjectId
+
+  courses   Course[] @relation("CourseTags", fields: [courseIds], references: [id])
+  courseIds String[] @db.ObjectId
+
+  news    NewsArticle[] @relation("NewsTags", fields: [newsIds], references: [id])
+  newsIds String[]      @db.ObjectId
+
+  books   DigitalBook[] @relation("BookTags", fields: [bookIds], references: [id])
+  bookIds String[]      @db.ObjectId
+
+  usageCount Int @default(0)
+  clicks     Int @default(0)
+
+  seoTitle       String?
+  seoDescription String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([usageCount])
+}
+
+model PageContent {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  category   Category @relation("CategoryContent", fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId String   @db.ObjectId
+
+  type      PageContentType
+  section   String?
+  title     String?
+  subtitle  String?
+  content   Json
+  language  Language        @default(FA)
+  order     Int             @default(0)
+  published Boolean         @default(true)
+  publishAt DateTime?
+  expireAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([categoryId, type])
+  @@index([published, publishAt])
+}
+
+model FAQ {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  question    String
+  answer      String
+  category    Category?    @relation("CategoryFAQs", fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId  String?      @db.ObjectId
+  faqCategory FAQCategory?
+  order       Int          @default(0)
+  published   Boolean      @default(true)
+  featured    Boolean      @default(false)
+  views       Int          @default(0)
+  helpful     Int          @default(0)
+  notHelpful  Int          @default(0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([categoryId, published])
+  @@index([faqCategory])
+}
+
+model Quiz {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+
+  // Course relation (optional for level assessment quizzes)
+  course   Course? @relation("CourseQuizzes", fields: [courseId], references: [id], onDelete: Cascade)
+  courseId String? @db.ObjectId
+
+  // Category relation (optional for category-level assessment quizzes)
+  category   Category? @relation("CategoryQuizzes", fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId String?   @db.ObjectId
+
+  // Quiz settings
+  timeLimit          Int? // Time limit in minutes (null = no limit)
+  passingScore       Int     @default(70) // Percentage needed to pass
+  maxAttempts        Int? // Maximum attempts allowed (null = unlimited)
+  shuffleQuestions   Boolean @default(false)
+  shuffleAnswers     Boolean @default(false)
+  showResults        Boolean @default(true) // Show results after completion
+  showCorrectAnswers Boolean @default(true) // Show correct answers after completion
+
+  // Status
+  published Boolean @default(false)
+  order     Int     @default(0)
+
+  // Relations
+  questions QuizQuestion[] @relation("QuizQuestions")
+  attempts  QuizAttempt[]  @relation("QuizAttempts")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([courseId, published])
+  @@index([categoryId, published])
+  @@index([published, order])
+}
+
+model QuizQuestion {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  quiz   Quiz   @relation("QuizQuestions", fields: [quizId], references: [id], onDelete: Cascade)
+  quizId String @db.ObjectId
+
+  question     String
+  questionType QuestionType @default(MULTIPLE_CHOICE)
+
+  // Options for multiple choice/checkbox questions (JSON array)
+  // Example: [{"text": "گزینه 1", "isCorrect": true}, {"text": "گزینه 2", "isCorrect": false}]
+  options Json @default("[]")
+
+  // For true/false questions
+  correctAnswer Boolean?
+
+  // Explanation shown after answering
+  explanation String?
+
+  // Points awarded for correct answer
+  points Int @default(1)
+
+  order Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([quizId, order])
+}
+
+model QuizAttempt {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  quiz   Quiz   @relation("QuizAttempts", fields: [quizId], references: [id], onDelete: Cascade)
+  quizId String @db.ObjectId
+
+  user   User   @relation("UserQuizAttempts", fields: [userId], references: [id], onDelete: Cascade)
+  userId String @db.ObjectId
+
+  // Attempt data
+  answers     Json // User's answers: [{"questionId": "...", "answer": "..." or ["...", "..."] for multiple}]
+  score       Float // Score percentage (0-100)
+  totalPoints Int // Total points earned
+  maxPoints   Int // Maximum possible points
+  passed      Boolean @default(false)
+  timeSpent   Int? // Time spent in seconds
+
+  // Status
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  @@index([quizId, userId])
+  @@index([userId, completedAt])
+}
+
+//
+// ===================== ENUMS =====================
+//
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum CourseLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum CourseStatus {
+  ACTIVE
+  COMING_SOON
+  ARCHIVED
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
+enum TransactionType {
+  PAYMENT
+  REFUND
+  WITHDRAWAL
+}
+
+enum TransactionStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum PageContentType {
+  LANDING
+  ABOUT
+  FEATURES
+  FAQ
+  TESTIMONIAL
+  HERO
+  STATS
+}
+
+enum Language {
+  FA
+  EN
+}
+
+enum FAQCategory {
+  GENERAL
+  PAYMENT
+  COURSES
+  TECHNICAL
+}
+
+enum UserRoleType {
+  STUDENT
+  PROFESSIONAL_TRADER
+  INVESTOR
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE // چند گزینه‌ای (یک جواب صحیح)
+  MULTIPLE_SELECT // چند گزینه‌ای (چند جواب صحیح)
+  TRUE_FALSE // صحیح/غلط
+  SHORT_ANSWER // پاسخ کوتاه
+}
+
+//
+// ===================== LANDING PAGE MODELS =====================
+//
+
+// مدل برای مدیریت محتوای صفحه اصلی (Home Landing)
+model HomeLanding {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // Main Hero (متن اصلی روی ویدیو)
+  mainHeroTitle    String?
+  mainHeroSubtitle String?
+  mainHeroCta1Text String?
+  mainHeroCta1Link String?
+
+  // Hero Section
+  heroTitle       String
+  heroSubtitle    String?
+  heroDescription String?
+  heroVideoUrl    String? // لینک ویدیو پس‌زمینه
+  heroCta1Text    String?
+  heroCta1Link    String?
+
+  // Overlay Text Sections (متن‌های اسکرولی روی ویدیو)
+  overlayTexts String[] @default([])
+
+  // Stats (آمار و ارقام)
+  // مثال: [{"label": "دانشجوی موفق", "value": 3000, "suffix": "+"}, ...]
+  statsData Json @default("[]")
+
+  // Why Us Section
+  whyUsTitle       String?
+  whyUsDescription String?
+  // مثال: [{"label": "آموزش حرفه‌ای", "title": "...", "text": "...", "btnLabel": "...", "btnHref": "...", "imagePath": "..."}]
+  whyUsItems       Json    @default("[]")
+
+  // Newsletter/News Club Section
+  newsClubTitle       String?
+  newsClubDescription String?
+
+  // Calculator Section
+  calculatorTitle               String?
+  calculatorDescription         String?
+  calculatorRateLow             Float?  @default(0.07)
+  calculatorRateMedium          Float?  @default(0.08)
+  calculatorRateHigh            Float?  @default(0.11)
+  calculatorPortfolioLowDesc    String?
+  calculatorPortfolioMediumDesc String?
+  calculatorPortfolioHighDesc   String?
+  calculatorAmountSteps         Json    @default("[1000000, 10000000, 20000000, 30000000, 40000000, 50000000, 60000000, 70000000, 80000000, 90000000, 100000000, 200000000, 300000000, 500000000, 1000000000, 2000000000, 3000000000, 5000000000]")
+  calculatorDurationSteps       Json    @default("[1, 3, 6, 9, 12]")
+  calculatorInPersonPhone       String?
+  calculatorOnlineTelegram      String?
+  calculatorOnlineTelegramLink  String?
+
+  // Meta tags
+  metaTitle       String?
+  metaDescription String?
+  metaKeywords    String[] @default([])
+
+  published Boolean @default(true)
+  order     Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// مدل برای مدیریت Mobile Scroller Steps
+model MobileScrollerStep {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  stepNumber    Int
+  title         String
+  description   String
+  imageUrl      String? // تصویر داخل موبایل (مثل in-mobile-1.svg)
+  coverImageUrl String? // تصویر پس‌زمینه موبایل
+  gradient      String? // کلاس CSS برای gradient
+  link          String? // لینک دکمه اطلاعات بیشتر
+
+  order     Int     @default(0)
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published, order])
+}
+
+// مدل برای مدیریت محتوای صفحه درباره ما
+model AboutPage {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // Hero Section
+  heroTitle          String
+  heroSubtitle       String?
+  heroDescription    String?
+  heroBadgeText      String?
+  doctorIntroVideoUrl String? // ویدیو معرفی دکتر
+
+  // Hero Stats
+  // مثال: [{"label": "دانشجوی موفق", "value": 3000, "icon": "LuUsers"}]
+  heroStats Json @default("[]")
+
+  // Resume Section
+  resumeTitle    String?
+  resumeSubtitle String?
+  resumeItems    ResumeItem[] @relation("AboutResumeItems")
+
+  // Team Section
+  teamTitle    String?
+  teamSubtitle String?
+  teamMembers  TeamMember[] @relation("AboutTeamMembers")
+
+  // Certificates Section
+  certificatesTitle    String?
+  certificatesSubtitle String?
+  certificates         Certificate[] @relation("AboutCertificates")
+
+  // News Section (replace journals)
+  newsTitle    String?
+  newsSubtitle String?
+  news         NewsArticle[] @relation("AboutNews")
+
+  // CTA Section
+  ctaTitle       String?
+  ctaDescription String?
+  ctaButtonText  String?
+  ctaButtonLink  String?
+
+  // Meta
+  metaTitle       String?
+  metaDescription String?
+  metaKeywords    String[] @default([])
+
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// مدل برای آیتم‌های Resume (تاریخچه، ماموریت، چشم‌انداز، ارزش‌ها)
+model ResumeItem {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  aboutPage   AboutPage @relation("AboutResumeItems", fields: [aboutPageId], references: [id], onDelete: Cascade)
+  aboutPageId String    @db.ObjectId
+
+  icon        String? // نام آیکون (مثل "LuClock", "LuTarget", ...)
+  title       String
+  description String
+  color       String? // رنگ gradient (مثل "from-blue-500 to-purple-500")
+  bgColor     String? // رنگ پس‌زمینه (مثل "bg-blue-50")
+
+  order     Int     @default(0)
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([aboutPageId, order])
+}
+
+// مدل برای اعضای تیم
+model TeamMember {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  aboutPage   AboutPage @relation("AboutTeamMembers", fields: [aboutPageId], references: [id], onDelete: Cascade)
+  aboutPageId String    @db.ObjectId
+
+  name        String
+  role        String
+  image       String?
+  education   String?
+  description String?
+  specialties String[] @default([])
+
+  // Social Links
+  linkedinUrl  String?
+  emailUrl     String?
+  twitterUrl   String?
+  whatsappUrl  String?
+  telegramUrl  String?
+
+  order     Int     @default(0)
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([aboutPageId, order])
+}
+
+// مدل برای گواهینامه‌ها و افتخارات
+model Certificate {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  aboutPage   AboutPage @relation("AboutCertificates", fields: [aboutPageId], references: [id], onDelete: Cascade)
+  aboutPageId String    @db.ObjectId
+
+  title       String
+  description String?
+  image       String
+
+  order     Int     @default(0)
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([aboutPageId, order])
+}
+
+// مدل برای صفحه مشاوره کسب و کار
+model BusinessConsulting {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // Landing Content
+  title       String
+  description String
+  image       String?
+
+  // Contact Information
+  phoneNumber  String?
+  telegramId   String?
+  telegramLink String?
+  coursesLink  String?
+
+  // Drawer Content (محتوای drawer برای انواع مشاوره)
+  inPersonTitle       String?
+  inPersonDescription String?
+  onlineTitle         String?
+  onlineDescription   String?
+  coursesTitle        String?
+  coursesDescription  String?
+
+  // Meta tags
+  metaTitle       String?
+  metaDescription String?
+  metaKeywords    String[] @default([])
+
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// مدل برای صفحه سبدهای سرمایه‌ گذاری
+model InvestmentPlans {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // Landing Content
+  title       String
+  description String
+  image       String?
+
+  // Investment Plan Types
+  plans InvestmentPlan[] @relation("InvestmentPlansPlans")
+
+  // Investment Tags
+  tags InvestmentTag[] @relation("InvestmentPlansTags")
+
+  // Intro Cards (کارت‌های معرفی - مثل aboutItCardsData)
+  // مثال: [{"title": "مدیریت سرمایه", "description": "تقسیم سرمایه، ریسک به ریوارد..."}]
+  plansIntroCards Json @default("[]")
+
+  // Settings for sliders
+  minAmount  Int @default(10)
+  maxAmount  Int @default(10000)
+  amountStep Int @default(10)
+
+  // Meta tags
+  metaTitle       String?
+  metaDescription String?
+  metaKeywords    String[] @default([])
+
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// مدل برای انواع سبدهای سرمایه‌ گذاری (ارز دیجیتال، بورس، ترکیبی)
+model InvestmentPlan {
+  id                String          @id @default(auto()) @map("_id") @db.ObjectId
+  investmentPlans   InvestmentPlans @relation("InvestmentPlansPlans", fields: [investmentPlansId], references: [id], onDelete: Cascade)
+  investmentPlansId String          @db.ObjectId
+
+  label       String // مثل "ارز دیجیتال"، "بورس"، "ترکیبی"
+  icon        String? // نام آیکون (مثل "Bitcoin", "LineChart", "PieChart")
+  description String?
+
+  order     Int     @default(0)
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([investmentPlansId, order])
+}
+
+// مدل برای تگ‌های سرمایه‌ گذاری
+model InvestmentTag {
+  id                String          @id @default(auto()) @map("_id") @db.ObjectId
+  investmentPlans   InvestmentPlans @relation("InvestmentPlansTags", fields: [investmentPlansId], references: [id], onDelete: Cascade)
+  investmentPlansId String          @db.ObjectId
+
+  title String
+  color String? // رنگ تگ
+  icon  String? // آیکون تگ
+
+  order     Int     @default(0)
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([investmentPlansId, order])
+}
+
+// مدل برای اسلایدر اصلی تصاویری صفحه اصلی (ImageZoomSliderSection)
+model HomeSlide {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  title       String
+  description String
+  imageUrl    String
+
+  order     Int     @default(0)
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published, order])
+}
+
+// مدل برای اسلایدرهای کوچک (Mini Moving Sliders)
+model HomeMiniSlider {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  imageUrl String
+  row      Int    @default(1) // 1 یا 2 برای تعیین ردیف اول یا دوم
+
+  order     Int     @default(0)
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published, row, order])
+}
+
+// مدل برای کلاس‌های اسکای‌روم
+model SkyRoomClass {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  meetingLink String // لینک همایش برای ورود مهمان
+  published   Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published])
+}
+
+// مدل برای ذخیره سبدهای سرمایه‌ گذاری خریداری شده توسط کاربران
+model UserInvestmentPortfolio {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // User relation
+  user   User   @relation("UserInvestmentPortfolios", fields: [userId], references: [id], onDelete: Cascade)
+  userId String @db.ObjectId
+
+  // Portfolio details
+  portfolioType     String // "low", "medium", "high"
+  portfolioAmount   Int // مبلغ سرمایه‌ گذاری
+  portfolioDuration Int // مدت سرمایه‌ گذاری (ماه)
+  expectedReturn    Float // بازده تخمینی
+  monthlyRate       Float // نرخ ماهیانه
+
+  // Purchase details
+  purchasePrice Int // قیمت پرداختی
+  orderId       String?         @db.ObjectId // ارجاع به سفارش
+  status        PortfolioStatus @default(ACTIVE)
+
+  // Dates
+  startDate   DateTime  @default(now())
+  endDate     DateTime? // تاریخ پایان سرمایه‌ گذاری
+  purchasedAt DateTime  @default(now())
+
+  // Files and data
+  excelFileUrl String? // لینک فایل اکسل
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, status])
+  @@index([status, endDate])
+}
+
+// Enum for Portfolio Status
+enum PortfolioStatus {
+  ACTIVE // فعال
+  COMPLETED // تکمیل شده
+  CANCELLED // لغو شده
+  EXPIRED // منقضی شده
+}
+
+// مدل برای مدیریت ویدیوها
+model Video {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // اطلاعات پایه
+  title       String
+  description String?
+  videoId     String  @unique // شناسه یکتای ویدیو
+
+  // فایل اصلی
+  originalPath String // مسیر فایل اصلی در object storage
+  fileSize     Int // حجم فایل به بایت
+  fileFormat   String // پسوند فایل (mp4, mov, avi, ...)
+  duration     String? // مدت زمان ویدیو (مثل "45:30")
+
+  // HLS
+  hlsPlaylistPath String? // مسیر فایل playlist.m3u8
+  hlsSegmentsPath String? // مسیر پوشه segments
+
+  // وضعیت پردازش
+  processingStatus VideoProcessingStatus @default(UPLOADING)
+  processingError  String? // متن خطا در صورت وجود
+
+  // Thumbnail
+  thumbnailPath String? // مسیر تصویر thumbnail
+
+  // Metadata
+  width     Int? // عرض ویدیو
+  height    Int? // ارتفاع ویدیو
+  bitrate   Int? // بیت‌ریت
+  codec     String? // کدک ویدیو
+  frameRate Float? // فریم ریت
+
+  // Relations
+  lessons Lesson[] @relation("VideoLessons")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([processingStatus])
+}
+
+// Enum for Video Processing Status
+enum VideoProcessingStatus {
+  UPLOADING // در حال آپلود
+  UPLOADED // آپلود شده (منتظر پردازش)
+  PROCESSING // در حال تبدیل به HLS
+  READY // آماده برای پخش
+  FAILED // خطا در پردازش
+}
+
+// مدل برای مدیریت تصاویر
+model Image {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // اطلاعات پایه
+  title       String? // عنوان تصویر (اختیاری)
+  description String? // توضیحات تصویر (اختیاری)
+  alt         String? // متن جایگزین برای SEO
+
+  // کاربر آپلودکننده
+  uploadedBy   User   @relation("UserImages", fields: [uploadedById], references: [id], onDelete: Cascade)
+  uploadedById String @db.ObjectId
+
+  // اطلاعات فایل
+  fileName String // نام فایل اصلی
+  filePath String // مسیر فایل در storage
+  fileSize Int // حجم فایل به بایت
+  mimeType String // نوع فایل (image/jpeg, image/png, ...)
+  width    Int? // عرض تصویر
+  height   Int? // ارتفاع تصویر
+
+  // دسته‌بندی کاربرد
+  category ImageCategory @default(OTHER) // نوع کاربرد تصویر
+
+  // تگ‌ها و دسته‌بندی
+  tags String[] @default([]) // تگ‌های دلخواه
+
+  // وضعیت
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([uploadedById])
+  @@index([category])
+  @@index([published])
+}
+
+// Enum for Image Categories
+enum ImageCategory {
+  PROFILE // تصویر پروفایل
+  COURSE // تصاویر دوره‌ها
+  BOOK // تصاویر کتاب‌ها
+  NEWS // تصاویر اخبار
+  RESUME // تصاویر رزومه
+  CERTIFICATE // تصاویر گواهینامه
+  TEAM // تصاویر اعضای تیم
+  LANDING // تصاویر صفحات لندینگ
+  OTHER // سایر موارد
+}
+
+// مدل برای تنظیمات سایت (تنها یک رکورد در دیتابیس)
+model SiteSettings {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // تنظیمات درگاه پرداخت زرین‌پال
+  zarinpalMerchantId String?
+
+  // سایر تنظیمات می‌توانند در آینده اضافه شوند
+  siteName        String?
+  siteDescription String?
+  supportEmail    String?
+  supportPhone    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// مدل برای صفحه مدل‌های سرمایه‌گذاری (InvestmentModelsSection)
+model InvestmentModelsPage {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // Models (حضوری و آنلاین)
+  models InvestmentModel[] @relation("InvestmentModelsPageModels")
+
+  // Additional Info (توجه مهم در انتها)
+  additionalInfoTitle   String?
+  additionalInfoContent String?
+
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// مدل برای هر نوع سرمایه‌گذاری (حضوری/آنلاین)
+model InvestmentModel {
+  id                     String               @id @default(auto()) @map("_id") @db.ObjectId
+  investmentModelsPage   InvestmentModelsPage @relation("InvestmentModelsPageModels", fields: [investmentModelsPageId], references: [id], onDelete: Cascade)
+  investmentModelsPageId String               @db.ObjectId
+
+  type        String // "in-person" | "online"
+  title       String
+  description String
+  icon        String // نام آیکون (مثل "Building2", "Globe")
+  color       String // رنگ اصلی (مثل "green", "blue")
+  gradient    String // کلاس gradient (مثل "from-green-500 to-emerald-600")
+
+  // Features - JSON array
+  // Example: [{"icon": "Users", "title": "مشاوره حضوری", "description": "..."}]
+  features Json @default("[]")
+
+  // Benefits - String array
+  benefits String[] @default([])
+
+  // CTA
+  ctaText     String
+  ctaLink     String?
+  ctaIsScroll Boolean @default(false)
+
+  // Contact Info (برای modal/drawer تماس)
+  contactTitle       String?
+  contactDescription String?
+  // Example: [{"icon": "Phone", "title": "تلفن تماس", "value": "021-12345678", "link": "tel:02112345678"}]
+  contacts           Json    @default("[]")
+
+  order     Int     @default(0)
+  published Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([investmentModelsPageId, order])
+}

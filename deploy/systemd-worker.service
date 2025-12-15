@@ -1,0 +1,40 @@
+[Unit]
+Description=Pishro Video Processing Worker
+Documentation=https://github.com/amir-9/pishro
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/opt/pishro
+Environment="NODE_ENV=production"
+EnvironmentFile=/opt/pishro/.env
+
+# اجرای worker
+ExecStart=/usr/bin/npx tsx scripts/video-processor-worker.ts
+
+# راه‌اندازی مجدد در صورت بروز خطا
+Restart=on-failure
+RestartSec=10s
+
+# تعداد دفعات تلاش مجدد
+StartLimitInterval=5min
+StartLimitBurst=3
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pishro-worker
+
+# Security settings (اختیاری - برای افزایش امنیت)
+NoNewPrivileges=true
+PrivateTmp=true
+
+# Resource limits (اختیاری)
+# محدود کردن استفاده از CPU و RAM
+LimitNOFILE=65536
+# CPUQuota=200%  # حداکثر 2 core
+# MemoryLimit=2G # حداکثر 2GB RAM
+
+[Install]
+WantedBy=multi-user.target

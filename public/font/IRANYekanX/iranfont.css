@@ -1,0 +1,92 @@
+@font-face {
+  font-family: IRANYekanX;
+  font-style: normal;
+  font-weight: 100;
+  src: url("/font/IRANYekanX/woff/IRANYekanXFaNum-Thin.woff") format("woff"),
+    url("/font/IRANYekanX/woff2/IRANYekanXFaNum-Thin.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: IRANYekanX;
+  font-style: normal;
+  font-weight: 200;
+  src: url("/font/IRANYekanX/woff/IRANYekanXFaNum-UltraLight.woff")
+      format("woff"),
+    url("/font/IRANYekanX/woff2/IRANYekanXFaNum-UltraLight.woff2")
+      format("woff2");
+}
+
+@font-face {
+  font-family: IRANYekanX;
+  font-style: normal;
+  font-weight: 300;
+  src: url("/font/IRANYekanX/woff/IRANYekanXFaNum-Light.woff") format("woff"),
+    url("/font/IRANYekanX/woff2/IRANYekanXFaNum-Light.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: IRANYekanX;
+  font-style: normal;
+  font-weight: 500;
+  src: url("/font/IRANYekanX/woff/IRANYekanXFaNum-Medium.woff") format("woff"),
+    url("/font/IRANYekanX/woff2/IRANYekanXFaNum-Medium.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: IRANYekanX;
+  font-style: normal;
+  font-weight: 600;
+  src: url("/font/IRANYekanX/woff/IRANYekanXFaNum-DemiBold.woff") format("woff"),
+    url("/font/IRANYekanX/woff2/IRANYekanXFaNum-DemiBold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: IRANYekanX;
+  font-style: normal;
+  font-weight: 800;
+  src: url("/font/IRANYekanX/woff/IRANYekanXFaNum-ExtraBold.woff")
+      format("woff"),
+    url("/font/IRANYekanX/woff2/IRANYekanXFaNum-ExtraBold.woff2")
+      format("woff2");
+}
+
+@font-face {
+  font-family: IRANYekanX;
+  font-style: normal;
+  font-weight: 900;
+  src: url("/font/IRANYekanX/woff/IRANYekanXFaNum-Black.woff") format("woff"),
+    url("/font/IRANYekanX/woff2/IRANYekanXFaNum-Black.woff2") format("woff2");
+}
+@font-face {
+  font-family: IRANYekanX;
+  font-style: normal;
+  font-weight: 950;
+  src: url("/font/IRANYekanX/woff/IRANYekanXFaNum-ExtraBlack.woff")
+      format("woff"),
+    url("/font/IRANYekanX/woff2/IRANYekanXFaNum-ExtraBlack.woff2")
+      format("woff2");
+}
+
+@font-face {
+  font-family: IRANYekanX;
+  font-style: normal;
+  font-weight: 1000;
+  src: url("/font/IRANYekanX/woff/IRANYekanXFaNum-Heavy.woff") format("woff"),
+    url("/font/IRANYekanX/woff2/IRANYekanXFaNum-Heavy.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: IRANYekanX;
+  font-style: normal;
+  font-weight: bold;
+  src: url("/font/IRANYekanX/woff/IRANYekanXFaNum-Bold.woff") format("woff"),
+    url("/font/IRANYekanX/woff2/IRANYekanXFaNum-Bold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: IRANYekanX;
+  font-style: normal;
+  font-weight: normal;
+  src: url("/font/IRANYekanX/woff/IRANYekanXFaNum-Regular.woff") format("woff"),
+    url("/font/IRANYekanX/woff2/IRANYekanXFaNum-Regular.woff2") format("woff2");
+}
