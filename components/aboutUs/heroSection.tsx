@@ -44,7 +44,7 @@ const HeroSection = ({
         playsInline
         className="absolute inset-0 w-full h-full object-cover"
       >
-        <source src="/videos/aboutUsLanding.webm" type="video/webm" />
+        <source src="/uploads/videos/aboutUsLanding.webm" type="video/webm" />
       </video>
 
       {/* Overlay */}

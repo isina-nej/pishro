@@ -61,27 +61,27 @@ export const navbarData = [
 
 export const categoriesData = [
   {
-    src: "/images/home/crypto.jpg",
+    src: "/uploads/images/home/landing-slider/p02.webp",
     label: "کریپتو",
     link: "/cryptocurrency",
   },
   {
-    src: "/images/home/stock.png",
+    src: "/uploads/images/home/landing-slider/p01.webp",
     label: "بورس",
     link: "/stock-market",
   },
   {
-    src: "/images/home/metaverse.png",
+    src: "/uploads/images/home/landing-slider/p03.webp",
     label: "متاورس",
     link: "/metaverse",
   },
   {
-    src: "/images/home/nft.png",
+    src: "/uploads/images/home/landing-slider/p11.jpg",
     label: "NFT",
     link: "/nft",
   },
   {
-    src: "/images/home/airdrop.png",
+    src: "/uploads/images/home/landing-slider/p05.jpg",
     label: "ایردراپ",
     link: "/airdrop",
   },
@@ -445,8 +445,8 @@ export const videoList = [
     date: "1403/12/26",
     description:
       "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ است",
-    videoUrl: "/videos/nft.webm",
-    thumbnail: "/images/home/c/crypto.jpg",
+    videoUrl: "/uploads/videos/nft.webm",
+    thumbnail: "/uploads/images/home/landing-slider/p02.webp",
   },
   {
     id: "2",
@@ -454,8 +454,8 @@ export const videoList = [
     date: "1403/12/26",
     description:
       "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ است",
-    videoUrl: "/videos/metaverse.webm",
-    thumbnail: "/images/home/c/crypto.jpg",
+    videoUrl: "/uploads/videos/metaverse.webm",
+    thumbnail: "/uploads/images/home/landing-slider/p02.webp",
   },
   {
     id: "3",
@@ -463,8 +463,8 @@ export const videoList = [
     date: "1403/12/26",
     description:
       "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ است",
-    videoUrl: "/videos/stock.webm",
-    thumbnail: "/images/home/c/crypto.jpg",
+    videoUrl: "/uploads/videos/stock.webm",
+    thumbnail: "/uploads/images/home/landing-slider/p02.webp",
   },
 ];
 
@@ -888,33 +888,33 @@ export const advancedSteps = {
 };
 
 export const miniSliderData1 = [
-  "/images/home/landing-slider/p01.jpg",
-  "/images/home/landing-slider/p02.jpg",
-  "/images/home/landing-slider/p03.jpg",
-  "/images/home/landing-slider/p04.jpg",
-  "/images/home/landing-slider/p05.jpg",
-  "/images/home/landing-slider/p06.jpg",
-  "/images/home/landing-slider/p07.jpg",
-  "/images/home/landing-slider/p08.jpg",
-  "/images/home/landing-slider/p09.jpg",
-  "/images/home/landing-slider/p10.jpg",
-  "/images/home/landing-slider/p11.jpg",
-  "/images/home/landing-slider/p12.jpg",
+  "/uploads/images/home/landing-slider/p01.jpg",
+  "/uploads/images/home/landing-slider/p02.jpg",
+  "/uploads/images/home/landing-slider/p03.jpg",
+  "/uploads/images/home/landing-slider/p04.jpg",
+  "/uploads/images/home/landing-slider/p05.jpg",
+  "/uploads/images/home/landing-slider/p06.jpg",
+  "/uploads/images/home/landing-slider/p07.jpg",
+  "/uploads/images/home/landing-slider/p08.jpg",
+  "/uploads/images/home/landing-slider/p09.jpg",
+  "/uploads/images/home/landing-slider/p10.jpg",
+  "/uploads/images/home/landing-slider/p11.jpg",
+  "/uploads/images/home/landing-slider/p12.jpg",
 ];
 
 export const miniSliderData2 = [
-  "/images/home/landing-slider/p06.jpg",
-  "/images/home/landing-slider/p05.jpg",
-  "/images/home/landing-slider/p07.jpg",
-  "/images/home/landing-slider/p03.jpg",
-  "/images/home/landing-slider/p04.jpg",
-  "/images/home/landing-slider/p08.jpg",
-  "/images/home/landing-slider/p02.jpg",
-  "/images/home/landing-slider/p10.jpg",
-  "/images/home/landing-slider/p01.jpg",
-  "/images/home/landing-slider/p12.jpg",
-  "/images/home/landing-slider/p09.jpg",
-  "/images/home/landing-slider/p11.jpg",
+  "/uploads/images/home/landing-slider/p06.jpg",
+  "/uploads/images/home/landing-slider/p05.jpg",
+  "/uploads/images/home/landing-slider/p07.jpg",
+  "/uploads/images/home/landing-slider/p03.jpg",
+  "/uploads/images/home/landing-slider/p04.jpg",
+  "/uploads/images/home/landing-slider/p08.jpg",
+  "/uploads/images/home/landing-slider/p02.jpg",
+  "/uploads/images/home/landing-slider/p10.jpg",
+  "/uploads/images/home/landing-slider/p01.jpg",
+  "/uploads/images/home/landing-slider/p12.jpg",
+  "/uploads/images/home/landing-slider/p09.jpg",
+  "/uploads/images/home/landing-slider/p11.jpg",
 ];
 
 import { LuTarget, LuBookOpen, LuUsers } from "react-icons/lu";

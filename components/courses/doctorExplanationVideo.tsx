@@ -18,7 +18,7 @@ interface DoctorExplanationVideoProps {
 }
 
 export default function DoctorExplanationVideo({
-  videoUrl = "/videos/doctor-explanation.mp4", // Default video URL
+  videoUrl = "/uploads/videos/doctor-explanation.mp4", // Default video URL
   posterUrl,
 }: DoctorExplanationVideoProps) {
   const [isOpen, setIsOpen] = useState(false);

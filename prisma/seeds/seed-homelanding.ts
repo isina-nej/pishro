@@ -22,7 +22,7 @@ export async function seedHomeLanding() {
                     "با پیشرو، دنیای بورس، ارز دیجیتال و سرمایه‌گذاری را از صفر تا صد بیاموزید",
                 heroCta1Text: "شروع یادگیری",
                 heroCta1Link: "/courses",
-                heroVideoUrl: "/videos/hero-background.mp4",
+                heroVideoUrl: "/uploads/videos/landing-vid.webm",
                 overlayTexts: [
                     "آموزش تحلیل تکنیکال",
                     "معامله‌گری حرفه‌ای",

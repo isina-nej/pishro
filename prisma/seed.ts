@@ -459,7 +459,7 @@ async function main(): Promise<void> {
       heroTitle: "پیشرو در مسیر سرمایه‌ گذاری هوشمند",
       heroSubtitle: "آموزش، مشاوره و همراهی در مسیر موفقیت مالی",
       heroDescription: null,
-      heroVideoUrl: "/videos/aboutUs.webm",
+      heroVideoUrl: "/uploads/videos/aboutUs.webm",
       heroCta1Text: null,
       heroCta1Link: null,
       overlayTexts: [
@@ -963,7 +963,7 @@ async function main(): Promise<void> {
       title: "تحلیل تکنیکال حرفه‌ای",
       description:
         "یادگیری اصول و تکنیک‌های پیشرفته تحلیل تکنیکال برای معامله‌گری موفق در بازارهای مالی",
-      imageUrl: "/images/home/landing-slider/p01.webp",
+      imageUrl: "/uploads/images/home/landing-slider/p01.webp",
       order: 1,
       published: true,
     },
@@ -971,7 +971,7 @@ async function main(): Promise<void> {
       title: "مدیریت ریسک و سرمایه",
       description:
         "آموزش اصولی مدیریت سرمایه و کنترل ریسک برای حفظ و رشد پایدار پورتفولیو سرمایه‌ گذاری",
-      imageUrl: "/images/home/landing-slider/p02.webp",
+      imageUrl: "/uploads/images/home/landing-slider/p02.webp",
       order: 2,
       published: true,
     },
@@ -979,7 +979,7 @@ async function main(): Promise<void> {
       title: "استراتژی‌های معاملاتی",
       description:
         "آشنایی با استراتژی‌های معاملاتی موفق و کاربردی برای بازارهای ارز دیجیتال و بورس",
-      imageUrl: "/images/home/landing-slider/p03.webp",
+      imageUrl: "/uploads/images/home/landing-slider/p03.webp",
       order: 3,
       published: true,
     },
@@ -987,7 +987,7 @@ async function main(): Promise<void> {
       title: "روانشناسی معامله‌گری",
       description:
         "تسلط بر احساسات و تصمیم‌گیری‌های هوشمندانه در بازارهای پرنوسان مالی",
-      imageUrl: "/images/home/landing-slider/p04.webp",
+      imageUrl: "/uploads/images/home/landing-slider/p04.webp",
       order: 4,
       published: true,
     },
@@ -995,7 +995,7 @@ async function main(): Promise<void> {
       title: "تحلیل بنیادی بازارها",
       description:
         "شناخت عوامل بنیادی تأثیرگذار بر بازارهای مالی و تصمیم‌گیری آگاهانه در سرمایه‌ گذاری",
-      imageUrl: "/images/home/landing-slider/p05.jpg",
+      imageUrl: "/uploads/images/home/landing-slider/p05.jpg",
       order: 5,
       published: true,
     },
@@ -1003,7 +1003,7 @@ async function main(): Promise<void> {
       title: "معامله‌گری الگوریتمی",
       description:
         "آموزش اصول معامله‌گری خودکار و استفاده از ابزارهای هوشمند برای بهینه‌سازی معاملات",
-      imageUrl: "/images/home/landing-slider/p06.jpg",
+      imageUrl: "/uploads/images/home/landing-slider/p06.jpg",
       order: 6,
       published: true,
     },
@@ -1011,7 +1011,7 @@ async function main(): Promise<void> {
       title: "تحلیل تکنیکال پیشرفته",
       description:
         "یادگیری اندیکاتورها و الگوهای پیشرفته برای شناسایی فرصت‌های معاملاتی سودآور",
-      imageUrl: "/images/home/landing-slider/p07.jpg",
+      imageUrl: "/uploads/images/home/landing-slider/p07.jpg",
       order: 7,
       published: true,
     },
@@ -1019,7 +1019,7 @@ async function main(): Promise<void> {
       title: "استراتژی نوسان‌گیری",
       description:
         "تکنیک‌های حرفه‌ای نوسان‌گیری در بازارهای کوتاه‌مدت و میان‌مدت برای کسب سود مستمر",
-      imageUrl: "/images/home/landing-slider/p08.jpg",
+      imageUrl: "/uploads/images/home/landing-slider/p08.jpg",
       order: 8,
       published: true,
     },
@@ -1027,7 +1027,7 @@ async function main(): Promise<void> {
       title: "سرمایه‌ گذاری بلندمدت",
       description:
         "اصول و استراتژی‌های سرمایه‌ گذاری بلندمدت برای رشد پایدار و ایجاد ثروت",
-      imageUrl: "/images/home/landing-slider/p09.jpg",
+      imageUrl: "/uploads/images/home/landing-slider/p09.jpg",
       order: 9,
       published: true,
     },
@@ -1035,7 +1035,7 @@ async function main(): Promise<void> {
       title: "تحلیل حجم معاملات",
       description:
         "آموزش تحلیل حجم و شناسایی حرکات اصلی بازار برای ورود و خروج به‌موقع",
-      imageUrl: "/images/home/landing-slider/p10.jpg",
+      imageUrl: "/uploads/images/home/landing-slider/p10.jpg",
       order: 10,
       published: true,
     },
@@ -1043,7 +1043,7 @@ async function main(): Promise<void> {
       title: "استراتژی پرایس اکشن",
       description:
         "تسلط بر تحلیل حرکت قیمت و معامله‌گری بدون نیاز به اندیکاتورهای پیچیده",
-      imageUrl: "/images/home/landing-slider/p11.jpg",
+      imageUrl: "/uploads/images/home/landing-slider/p11.jpg",
       order: 11,
       published: true,
     },
@@ -1051,7 +1051,7 @@ async function main(): Promise<void> {
       title: "مدیریت پورتفولیو",
       description:
         "آموزش تخصیص دارایی و متنوع‌سازی سبد سرمایه‌ گذاری برای کاهش ریسک و افزایش بازدهی",
-      imageUrl: "/images/home/landing-slider/p12.jpg",
+      imageUrl: "/uploads/images/home/landing-slider/p12.jpg",
       order: 12,
       published: true,
     },
@@ -1068,19 +1068,19 @@ async function main(): Promise<void> {
   console.log("🎞️ Creating Home Mini Sliders...");
   const miniSliderImages = [
     // Row 1
-    "/images/home/landing-slider/p01.webp",
-    "/images/home/landing-slider/p02.webp",
-    "/images/home/landing-slider/p03.webp",
-    "/images/home/landing-slider/p04.webp",
-    "/images/home/landing-slider/p05.jpg",
-    "/images/home/landing-slider/p06.jpg",
+    "/uploads/images/home/landing-slider/p01.webp",
+    "/uploads/images/home/landing-slider/p02.webp",
+    "/uploads/images/home/landing-slider/p03.webp",
+    "/uploads/images/home/landing-slider/p04.webp",
+    "/uploads/images/home/landing-slider/p05.jpg",
+    "/uploads/images/home/landing-slider/p06.jpg",
     // Row 2
-    "/images/home/landing-slider/p07.jpg",
-    "/images/home/landing-slider/p08.jpg",
-    "/images/home/landing-slider/p09.jpg",
-    "/images/home/landing-slider/p10.jpg",
-    "/images/home/landing-slider/p11.jpg",
-    "/images/home/landing-slider/p12.jpg",
+    "/uploads/images/home/landing-slider/p07.jpg",
+    "/uploads/images/home/landing-slider/p08.jpg",
+    "/uploads/images/home/landing-slider/p09.jpg",
+    "/uploads/images/home/landing-slider/p10.jpg",
+    "/uploads/images/home/landing-slider/p11.jpg",
+    "/uploads/images/home/landing-slider/p12.jpg",
   ];
 
   let miniOrder = 1;

@@ -86,7 +86,7 @@ export const InvestmentPlansHero = ({
             className="h-full w-full object-cover"
           >
             <source
-              src="/videos/investment-plans/hero.webm"
+              src="/uploads/videos/investment-plans/hero.webm"
               type="video/webm"
             />
           </video>

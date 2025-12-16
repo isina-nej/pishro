@@ -34,7 +34,7 @@ export default async function LandingOverlayServer() {
       }
       mainHeroSubtitle={homeLanding?.mainHeroSubtitle || "شروع مسیر موفقیت"}
       mainHeroCta1Link={homeLanding?.mainHeroCta1Link || "/business-consulting"}
-      heroVideoUrl={homeLanding?.heroVideoUrl || "/videos/aboutUs.webm"}
+      heroVideoUrl={homeLanding?.heroVideoUrl || "/uploads/videos/aboutUs.webm"}
       overlayTexts={
         homeLanding?.overlayTexts && homeLanding.overlayTexts.length > 0
           ? homeLanding.overlayTexts

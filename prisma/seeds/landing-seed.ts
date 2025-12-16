@@ -23,7 +23,7 @@ export async function seedLandingPages() {
       heroTitle: "پیشرو سرمایه",
       heroSubtitle: "بزرگترین مؤسسه سرمایه‌ گذاری در ایران",
       heroDescription: "از آموزش اصولی تا مشاوره حرفه‌ای در بازارهای مالی",
-      heroVideoUrl: "/videos/aboutUs.webm",
+      heroVideoUrl: "/uploads/videos/aboutUs.webm",
       heroCta1Text: "مشاهده دوره‌ها",
       heroCta1Link: "/courses",
 

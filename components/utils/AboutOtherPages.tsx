@@ -89,7 +89,7 @@ const AboutOtherPages = ({ data }: AboutOtherPagesProps) => {
                 </div>
                 <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-black">
                   <video
-                    src="/videos/landing-vid.webm" // مسیر ویدیوی خودت رو اینجا بزار
+                    src="/uploads/videos/landing-vid.webm" // مسیر ویدیوی خودت رو اینجا بزار
                     controls
                     autoPlay
                     className="w-full h-full object-cover"

@@ -84,7 +84,7 @@ const LandingOverlay = ({
             className="absolute inset-0 w-full h-full object-cover -z-50"
           >
             <source
-              src={heroVideoUrl || "/videos/aboutUs.webm"}
+              src={heroVideoUrl || "/uploads/videos/aboutUs.webm"}
               type={heroVideoUrl?.endsWith('.mp4') ? "video/mp4" : "video/webm"}
             />
           </video>

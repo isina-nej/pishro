@@ -116,7 +116,7 @@ const HeroSection = ({
           onLoadedData={() => setVideoLoaded(true)}
           className="absolute inset-0 w-full h-full object-cover"
         >
-          <source src={videoUrl || "/videos/aboutUs.webm"} type={videoUrl?.endsWith('.mp4') ? "video/mp4" : "video/webm"} />
+          <source src={videoUrl || "/uploads/videos/aboutUs.webm"} type={videoUrl?.endsWith('.mp4') ? "video/mp4" : "video/webm"} />
         </video>
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black" />
       </div>

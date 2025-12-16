@@ -7,6 +7,7 @@ import CalculatorSection from "./calculatorSection";
 import CoursesSec from "@/components/utils/CoursesSec.server";
 import HomeComments from "./homeComments";
 import NewsClub from "./newsClub";
+import WhyUs from "./whyUs";
 import FloatingNotificationManager from "@/components/utils/floatingNotificationManager";
 
 export default function HomePageContent() {
@@ -15,9 +16,15 @@ export default function HomePageContent() {
       {/* Desktop Landing - hidden on mobile */}
       <LandingOverlayServer />
 
+      {/* WhyUs - desktop */}
+      <WhyUs />
+
       {/* Mobile Landing - hidden on desktop */}
       <div className="lg:hidden">
         <MobileLandingServer />
+
+        {/* WhyUs - mobile */}
+        <WhyUs />
       </div>
 
       <MobileScrollSectionServer />

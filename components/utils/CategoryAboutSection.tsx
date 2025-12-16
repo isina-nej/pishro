@@ -36,7 +36,7 @@ const CategoryAboutSection = ({
   cta1Link = "#",
   cta2Text = "بیشتر بدانید",
   cta2Link,
-  videoUrl = "/videos/landing-vid.webm",
+  videoUrl = "/uploads/videos/landing-vid.webm",
 }: CategoryAboutSectionProps) => {
   const [open, setOpen] = useState(false);
   const [imageSrc, setImageSrc] = useState(image);
