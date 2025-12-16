@@ -4,7 +4,7 @@
  * این adapter از environment variables برای تنظیم مسیر ذخیره‌سازی استفاده می‌کند
  */
 
-import { writeFile, mkdir, unlink } from "fs/promises";
+import { writeFile, mkdir, unlink, rename } from "fs/promises";
 import { join } from "path";
 import { existsSync } from "fs";
 
@@ -98,4 +98,38 @@ export function getRelativePathFromUrl(url: string): string {
   const config = getStorageConfig();
   // حذف base URL از ابتدای لینک
   return url.replace(`${config.baseUrl}/`, "");
+}
+
+/**
+ * انتقال یا تغییر نام فایل در storage
+ */
+export async function moveFileInStorage(
+  oldRelativePath: string,
+  newRelativePath: string
+): Promise<string> {
+  const config = getStorageConfig();
+  const oldFullPath = join(config.storagePath, oldRelativePath);
+  const newFullPath = join(config.storagePath, newRelativePath);
+
+  // ایجاد دایرکتوری مقصد در صورت عدم وجود
+  const newDirectory = newFullPath.substring(0, newFullPath.lastIndexOf("/"));
+  try {
+    await mkdir(newDirectory, { recursive: true });
+  } catch (err) {
+    console.error("Error creating directory for move:", err);
+    throw new Error(
+      `خطا در ایجاد پوشه مقصد هنگام جابجایی فایل: ${err instanceof Error ? err.message : "خطای نامشخص"}`
+    );
+  }
+
+  try {
+    await rename(oldFullPath, newFullPath);
+  } catch (err) {
+    console.error("Error moving file:", err);
+    throw new Error(
+      `خطا در جابجایی فایل: ${err instanceof Error ? err.message : "خطای نامشخص"}`
+    );
+  }
+
+  return `${config.baseUrl}/${newRelativePath}`;
 }

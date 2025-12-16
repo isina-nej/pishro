@@ -20,7 +20,8 @@
 ```bash
 # ایجاد پوشه اصلی
 sudo mkdir -p /var/www/uploads
-
+# (پیشنهاد) ایجاد زیرپوشه‌های مخصوص کتاب‌ها
+sudo mkdir -p /var/www/uploads/books/images /var/www/uploads/books/files /var/www/uploads/books/audio
 # دادن دسترسی نوشتن به user اجرای برنامه (معمولاً www-data یا node)
 sudo chown -R www-data:www-data /var/www/uploads
 # یا اگر با user دیگری اجرا می‌کنید:
