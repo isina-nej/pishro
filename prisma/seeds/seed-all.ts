@@ -18,6 +18,7 @@ import { seedBooks } from './seed-books';
 import { seedFAQs } from './seed-faqs';
 import { seedPageContent } from './seed-pagecontent';
 import { seedNewsletter } from './seed-newsletter';
+import { seedHomeLanding } from './seed-homelanding';
 
 const prisma = new PrismaClient();
 
@@ -61,7 +62,8 @@ async function seedAll() {
     console.log('   10. Digital Books (depends on: Tags)');
     console.log('   11. FAQs (depends on: Categories)');
     console.log('   12. Page Content (depends on: Categories)');
-    console.log('   13. Newsletter Subscribers (independent)\n');
+    console.log('   13. Newsletter Subscribers (independent)');
+    console.log('   14. Home Landing (independent)\n');
 
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
@@ -126,8 +128,13 @@ async function seedAll() {
     console.log('');
 
     // 13. Seed Newsletter Subscribers
-    console.log('📧 [13/13] Newsletter Subscribers');
+    console.log('📧 [13/14] Newsletter Subscribers');
     summary.newsletter = await seedNewsletter();
+    console.log('');
+
+    // 14. Seed Home Landing
+    console.log('🏠 [14/14] Home Landing');
+    summary.homeLanding = await seedHomeLanding();
     console.log('');
 
     // Calculate totals

@@ -42,7 +42,7 @@ export async function seedPageContent() {
               subheadline: generator.generateParagraph(),
               ctaText: "شروع یادگیری",
               ctaLink: `/courses?category=${category.slug}`,
-              backgroundImage: `https://picsum.photos/seed/hero-${category.slug}/1920/1080`,
+              backgroundImage: `/images/placeholder/hero.jpg`,
             };
             break;
 

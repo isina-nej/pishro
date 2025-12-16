@@ -43,7 +43,7 @@ export async function seedNews() {
           slug,
           excerpt: generator.generateParagraph(),
           content: generator.generateParagraphs(5),
-          coverImage: `https://picsum.photos/seed/news-${i}/1200/630`,
+          coverImage: `/images/placeholder/news.jpg`,
           author: `${firstName} ${lastName}`,
           category: category.title,
           tags: articleTags.map((t) => t.title),

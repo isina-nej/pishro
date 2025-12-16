@@ -209,7 +209,7 @@ sudo systemctl restart nginx
 ### مرحله 2: دریافت گواهی SSL
 
 ```bash
-sudo certbot --nginx -d pishrosarmaye.com -d www.pishrosarmaye.com
+sudo certbot --nginx -d pishrosarmaye.com -d www.pishrosarmaye.com -d pishro.isina-nej.com 
 ```
 
 **جایگذاری:**

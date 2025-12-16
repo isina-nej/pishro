@@ -38,7 +38,7 @@ export async function seedBooks() {
           slug,
           author: `${firstName} ${lastName}`,
           description: generator.generateParagraphs(3),
-          cover: `https://picsum.photos/seed/book-${i}/600/900`,
+          cover: `/images/placeholder/book.jpg`,
           publisher: generator.choice([
             "انتشارات پیشرو",
             "نشر علم و دانش",
@@ -75,8 +75,8 @@ export async function seedBooks() {
             generator.randomInt(0, 10) > 7
               ? ["جدید"]
               : generator.randomInt(0, 10) > 5
-              ? ["پرفروش"]
-              : [],
+                ? ["پرفروش"]
+                : [],
           tags: bookTags.map((t) => t.title),
           readingTime: `${generator.randomInt(5, 20)} ساعت`,
           isFeatured: generator.randomInt(0, 10) > 7,

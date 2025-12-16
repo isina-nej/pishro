@@ -50,7 +50,7 @@ export async function seedCourses() {
           subject,
           slug,
           price: generator.generatePrice(200000, 3000000),
-          img: `https://picsum.photos/seed/course-${i}/800/600`,
+          img: `/images/placeholder/course.jpg`,
           rating: generator.generateRating(),
           description: generator.generateParagraphs(2),
           discountPercent: generator.generateDiscount(),
@@ -75,10 +75,10 @@ export async function seedCourses() {
           prerequisites:
             generator.randomInt(0, 10) > 6
               ? [
-                  "آشنایی با مفاهیم پایه",
-                  "داشتن کامپیوتر یا گوشی هوشمند",
-                  "اینترنت پایدار",
-                ]
+                "آشنایی با مفاهیم پایه",
+                "داشتن کامپیوتر یا گوشی هوشمند",
+                "اینترنت پایدار",
+              ]
               : [],
           learningGoals: [
             generator.choice([
