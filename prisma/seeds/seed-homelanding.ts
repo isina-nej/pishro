@@ -20,8 +20,8 @@ export async function seedHomeLanding() {
                 heroTitle: "پلتفرم جامع آموزش سرمایه‌گذاری و معامله‌گری",
                 heroSubtitle:
                     "با پیشرو، دنیای بورس، ارز دیجیتال و سرمایه‌گذاری را از صفر تا صد بیاموزید",
-                heroCtaText: "شروع یادگیری",
-                heroCtaLink: "/courses",
+                heroCta1Text: "شروع یادگیری",
+                heroCta1Link: "/courses",
                 heroImageUrl: "/images/placeholder/hero.jpg",
                 aboutTitle: "درباره پیشرو",
                 aboutDescription:
