@@ -11,18 +11,20 @@ export async function seedHomeLanding() {
     console.log("🌱 Starting to seed home landing...");
 
     try {
-        // Create or update home landing
-        const homeLanding = await prisma.homeLanding.upsert({
-            where: { id: "default" },
-            update: {},
-            create: {
-                id: "default",
+        // Create or update home landing - use a proper MongoDB ObjectId
+        let homeLanding = await prisma.homeLanding.findFirst({
+            where: {},
+        });
+
+        if (!homeLanding) {
+            homeLanding = await prisma.homeLanding.create({
+                data: {
                 heroTitle: "پلتفرم جامع آموزش سرمایه‌گذاری و معامله‌گری",
                 heroSubtitle:
                     "با پیشرو، دنیای بورس، ارز دیجیتال و سرمایه‌گذاری را از صفر تا صد بیاموزید",
                 heroCta1Text: "شروع یادگیری",
                 heroCta1Link: "/courses",
-                heroVideoUrl: "/uploads/videos/landing-vid.webm",
+                heroVideoUrl: null,
                 overlayTexts: [
                     "آموزش تحلیل تکنیکال",
                     "معامله‌گری حرفه‌ای",
@@ -44,7 +46,7 @@ export async function seedHomeLanding() {
                         text: "آموزش کامل با اساتید مجرب",
                         btnLabel: "مشاهده دوره‌ها",
                         btnHref: "/courses",
-                        imagePath: "/images/placeholder/course.jpg",
+                        imagePath: "/images/courses/placeholder.png",
                     },
                     {
                         label: "پشتیبانی",
@@ -68,8 +70,9 @@ export async function seedHomeLanding() {
                     "آموزش بورس، ارز دیجیتال و سرمایه‌گذاری با پیشرو",
                 metaKeywords: ["بورس", "ارز دیجیتال", "سرمایه‌گذاری", "آموزش"],
                 published: true,
-            },
-        });
+                },
+            });
+        }
 
         console.log("✅ Home landing seeded successfully!");
         return { created: 1, updated: 0, total: 1 };

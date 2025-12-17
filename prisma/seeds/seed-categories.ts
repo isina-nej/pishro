@@ -19,10 +19,13 @@ export async function seedCategories() {
     let updated = 0;
 
     // Airdrop category
-    const airdrop = await prisma.category.upsert({
+    let airdrop = await prisma.category.findFirst({
       where: { slug: "airdrop" },
-      update: {},
-      create: {
+    });
+    
+    if (!airdrop) {
+      airdrop = await prisma.category.create({
+        data: {
         slug: "airdrop",
         title: "اخبار ایردراپ",
         description:
@@ -68,21 +71,20 @@ export async function seedCategories() {
         published: true,
         featured: true,
         order: 1,
-      },
-    });
-
-    if (airdrop.createdAt.getTime() === airdrop.updatedAt.getTime()) {
+        },
+      });
       created++;
-    } else {
-      updated++;
     }
     console.log("  ✓ Airdrop category created");
 
     // NFT category
-    const nft = await prisma.category.upsert({
+    let nft = await prisma.category.findFirst({
       where: { slug: "nft" },
-      update: {},
-      create: {
+    });
+    
+    if (!nft) {
+      nft = await prisma.category.create({
+        data: {
         slug: "nft",
         title: "اخبار NFT",
         description:
@@ -128,21 +130,20 @@ export async function seedCategories() {
         published: true,
         featured: true,
         order: 2,
-      },
-    });
-
-    if (nft.createdAt.getTime() === nft.updatedAt.getTime()) {
+        },
+      });
       created++;
-    } else {
-      updated++;
     }
     console.log("  ✓ NFT category created");
 
     // Cryptocurrency category
-    const cryptocurrency = await prisma.category.upsert({
+    let cryptocurrency = await prisma.category.findFirst({
       where: { slug: "cryptocurrency" },
-      update: {},
-      create: {
+    });
+    
+    if (!cryptocurrency) {
+      cryptocurrency = await prisma.category.create({
+        data: {
         slug: "cryptocurrency",
         title: "اخبار ارز دیجیتال",
         description:
@@ -188,23 +189,20 @@ export async function seedCategories() {
         published: true,
         featured: true,
         order: 3,
-      },
-    });
-
-    if (
-      cryptocurrency.createdAt.getTime() === cryptocurrency.updatedAt.getTime()
-    ) {
+        },
+      });
       created++;
-    } else {
-      updated++;
     }
     console.log("  ✓ Cryptocurrency category created");
 
     // Stock Market category
-    const stockMarket = await prisma.category.upsert({
+    let stockMarket = await prisma.category.findFirst({
       where: { slug: "stock-market" },
-      update: {},
-      create: {
+    });
+    
+    if (!stockMarket) {
+      stockMarket = await prisma.category.create({
+        data: {
         slug: "stock-market",
         title: "اخبار بورس",
         description:
@@ -249,21 +247,20 @@ export async function seedCategories() {
         published: true,
         featured: true,
         order: 4,
-      },
-    });
-
-    if (stockMarket.createdAt.getTime() === stockMarket.updatedAt.getTime()) {
+        },
+      });
       created++;
-    } else {
-      updated++;
     }
     console.log("  ✓ Stock Market category created");
 
     // Metaverse category
-    const metaverse = await prisma.category.upsert({
+    let metaverse = await prisma.category.findFirst({
       where: { slug: "metaverse" },
-      update: {},
-      create: {
+    });
+    
+    if (!metaverse) {
+      metaverse = await prisma.category.create({
+        data: {
         slug: "metaverse",
         title: "اخبار متاورس",
         description:
@@ -309,13 +306,9 @@ export async function seedCategories() {
         published: true,
         featured: true,
         order: 5,
-      },
-    });
-
-    if (metaverse.createdAt.getTime() === metaverse.updatedAt.getTime()) {
+        },
+      });
       created++;
-    } else {
-      updated++;
     }
     console.log("  ✓ Metaverse category created");
 

@@ -14,7 +14,7 @@
     "postinstall": "prisma generate"
   },
   "prisma": {
-    "seed": "tsx prisma/seed.ts"
+    "seed": "echo 'Seeding disabled - MongoDB Replica Set required'"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",

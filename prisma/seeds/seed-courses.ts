@@ -43,81 +43,80 @@ export async function seedCourses() {
         (i % tags.length) + selectedTags
       );
 
-      const course = await prisma.course.upsert({
+      let course = await prisma.course.findFirst({
         where: { slug },
-        update: {},
-        create: {
-          subject,
-          slug,
-          price: generator.generatePrice(200000, 3000000),
-          img: `/images/placeholder/course.jpg`,
-          rating: generator.generateRating(),
-          description: generator.generateParagraphs(2),
-          discountPercent: generator.generateDiscount(),
-          time: generator.choice([
-            "2 ساعت",
-            "5 ساعت",
-            "10 ساعت",
-            "15 ساعت",
-            "20 ساعت",
-            "30 ساعت",
-          ]),
-          students: generator.randomInt(50, 2000),
-          videosCount: generator.randomInt(10, 80),
-          categoryId: category.id,
-          tagIds: courseTags.map((t) => t.id),
-          level: generator.choice([
-            CourseLevel.BEGINNER,
-            CourseLevel.INTERMEDIATE,
-            CourseLevel.ADVANCED,
-          ]),
-          language: Language.FA,
-          prerequisites:
-            generator.randomInt(0, 10) > 6
-              ? [
-                "آشنایی با مفاهیم پایه",
-                "داشتن کامپیوتر یا گوشی هوشمند",
-                "اینترنت پایدار",
-              ]
-              : [],
-          learningGoals: [
-            generator.choice([
-              "تسلط بر تحلیل تکنیکال",
-              "شناخت بازار",
-              "مدیریت ریسک",
-              "استراتژی معاملاتی",
-            ]),
-            generator.choice([
-              "کسب درآمد",
-              "سرمایه‌ گذاری موفق",
-              "معامله‌گری حرفه‌ای",
-            ]),
-            generator.choice([
-              "یادگیری ابزارها",
-              "تحلیل نمودار",
-              "شناسایی الگوها",
-            ]),
-          ],
-          instructor:
-            generator.generateFullName().firstName +
-            " " +
-            generator.generateFullName().lastName,
-          status: generator.choice([
-            CourseStatus.ACTIVE,
-            CourseStatus.ACTIVE,
-            CourseStatus.ACTIVE,
-            CourseStatus.COMING_SOON,
-          ]),
-          published: generator.choice([true, true, true, false]),
-          featured: generator.randomInt(0, 10) > 7,
-          views: generator.randomInt(0, 5000),
-        },
       });
 
-      if (course.createdAt.getTime() === course.updatedAt.getTime()) {
+      if (!course) {
+        course = await prisma.course.create({
+          data: {
+            subject,
+            slug,
+            price: generator.generatePrice(200000, 3000000),
+            img: `/images/courses/placeholder.png`,
+            rating: generator.generateRating(),
+            description: generator.generateParagraphs(2),
+            discountPercent: generator.generateDiscount(),
+            time: generator.choice([
+              "2 ساعت",
+              "5 ساعت",
+              "10 ساعت",
+              "15 ساعت",
+              "20 ساعت",
+              "30 ساعت",
+            ]),
+            students: generator.randomInt(50, 2000),
+            videosCount: generator.randomInt(10, 80),
+            categoryId: category.id,
+            tagIds: courseTags.map((t) => t.id),
+            level: generator.choice([
+              CourseLevel.BEGINNER,
+              CourseLevel.INTERMEDIATE,
+              CourseLevel.ADVANCED,
+            ]),
+            language: Language.FA,
+            prerequisites:
+              generator.randomInt(0, 10) > 6
+                ? [
+                  "آشنایی با مفاهیم پایه",
+                  "داشتن کامپیوتر یا گوشی هوشمند",
+                  "اینترنت پایدار",
+                ]
+                : [],
+            learningGoals: [
+              generator.choice([
+                "تسلط بر تحلیل تکنیکال",
+                "شناخت بازار",
+                "مدیریت ریسک",
+                "استراتژی معاملاتی",
+              ]),
+              generator.choice([
+                "کسب درآمد",
+                "سرمایه‌ گذاری موفق",
+                "معامله‌گری حرفه‌ای",
+              ]),
+              generator.choice([
+                "یادگیری ابزارها",
+                "تحلیل نمودار",
+                "شناسایی الگوها",
+              ]),
+            ],
+            instructor:
+              generator.generateFullName().firstName +
+              " " +
+              generator.generateFullName().lastName,
+            status: generator.choice([
+              CourseStatus.ACTIVE,
+              CourseStatus.ACTIVE,
+              CourseStatus.ACTIVE,
+              CourseStatus.COMING_SOON,
+            ]),
+            published: generator.choice([true, true, true, false]),
+            featured: generator.randomInt(0, 10) > 7,
+            views: generator.randomInt(0, 5000),
+          },
+        });
         created++;
-      } else {
-        updated++;
       }
 
       if ((i + 1) % 10 === 0) {

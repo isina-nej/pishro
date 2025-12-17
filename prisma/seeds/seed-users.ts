@@ -27,25 +27,24 @@ export async function seedUsers() {
     const adminPhone = '09123456789';
     const adminPassword = await bcrypt.hash('Admin@123', 10);
 
-    const admin = await prisma.user.upsert({
+    let admin = await prisma.user.findFirst({
       where: { phone: adminPhone },
-      update: {},
-      create: {
-        phone: adminPhone,
-        passwordHash: adminPassword,
-        phoneVerified: true,
-        role: UserRole.ADMIN,
-        firstName: 'مدیر',
-        lastName: 'سیستم',
-        email: 'admin@pishro.com',
-        avatarUrl: generator.generateAvatarUrl(0)
-      }
     });
 
-    if (admin.createdAt.getTime() === admin.updatedAt.getTime()) {
+    if (!admin) {
+      admin = await prisma.user.create({
+        data: {
+          phone: adminPhone,
+          passwordHash: adminPassword,
+          phoneVerified: true,
+          role: UserRole.ADMIN,
+          firstName: 'مدیر',
+          lastName: 'سیستم',
+          email: 'admin@pishro.com',
+          avatarUrl: generator.generateAvatarUrl(0)
+        }
+      });
       created++;
-    } else {
-      updated++;
     }
     console.log(`  ✓ Admin user created`);
 
@@ -55,30 +54,29 @@ export async function seedUsers() {
       const password = await bcrypt.hash('User@123', 10);
       const { firstName, lastName } = generator.generateFullName();
 
-      const user = await prisma.user.upsert({
+      let user = await prisma.user.findFirst({
         where: { phone },
-        update: {},
-        create: {
-          phone,
-          passwordHash: password,
-          phoneVerified: generator.choice([true, true, true, false]),
-          role: UserRole.USER,
-          firstName,
-          lastName,
-          email: generator.randomInt(0, 10) > 7 ? undefined : `user${i}@example.com`,
-          nationalCode: generator.randomInt(0, 10) > 5 ? generator.generateNationalCode() : undefined,
-          birthDate: generator.randomInt(0, 10) > 6 ? generator.generatePastDate(365 * 40) : undefined,
-          avatarUrl: generator.generateAvatarUrl(i + 1),
-          cardNumber: generator.randomInt(0, 10) > 7 ? generator.generateCardNumber() : undefined,
-          shebaNumber: generator.randomInt(0, 10) > 7 ? generator.generateShebaNumber() : undefined,
-          accountOwner: generator.randomInt(0, 10) > 7 ? `${firstName} ${lastName}` : undefined
-        }
       });
 
-      if (user.createdAt.getTime() === user.updatedAt.getTime()) {
+      if (!user) {
+        user = await prisma.user.create({
+          data: {
+            phone,
+            passwordHash: password,
+            phoneVerified: generator.choice([true, true, true, false]),
+            role: UserRole.USER,
+            firstName,
+            lastName,
+            email: generator.randomInt(0, 10) > 7 ? undefined : `user${i}@example.com`,
+            nationalCode: generator.randomInt(0, 10) > 5 ? generator.generateNationalCode() : undefined,
+            birthDate: generator.randomInt(0, 10) > 6 ? generator.generatePastDate(365 * 40) : undefined,
+            avatarUrl: generator.generateAvatarUrl(i + 1),
+            cardNumber: generator.randomInt(0, 10) > 7 ? generator.generateCardNumber() : undefined,
+            shebaNumber: generator.randomInt(0, 10) > 7 ? generator.generateShebaNumber() : undefined,
+            accountOwner: generator.randomInt(0, 10) > 7 ? `${firstName} ${lastName}` : undefined
+          }
+        });
         created++;
-      } else {
-        updated++;
       }
 
       if ((i + 1) % 10 === 0) {

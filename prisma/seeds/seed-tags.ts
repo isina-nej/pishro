@@ -281,24 +281,20 @@ export async function seedTags() {
     let updated = 0;
 
     for (const tagData of TAGS_DATA) {
-      const result = await prisma.tag.upsert({
+      let tag = await prisma.tag.findFirst({
         where: { slug: tagData.slug },
-        update: {
-          ...tagData,
-          published: true,
-        },
-        create: {
-          ...tagData,
-          published: true,
-          usageCount: 0,
-          clicks: 0,
-        },
       });
 
-      if (result.createdAt.getTime() === result.updatedAt.getTime()) {
+      if (!tag) {
+        tag = await prisma.tag.create({
+          data: {
+            ...tagData,
+            published: true,
+            usageCount: 0,
+            clicks: 0,
+          },
+        });
         created++;
-      } else {
-        updated++;
       }
 
       console.log(`  ✓ Tag: ${tagData.title} (${tagData.slug})`);
