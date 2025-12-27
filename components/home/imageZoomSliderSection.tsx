@@ -150,10 +150,6 @@ const ImageZoomSliderSection = ({
     sectionOpacity,
     btnOpacity,
     revealSlides,
-  } = useImageZoomScroll(parentRef, sectionRef);
-
-  const [showMiniSlider, setShowMiniSlider] = useState(false);
-
   // ✅ Listen to bgScale value changes
   useMotionValueEvent(bgScale, "change", (latest) => {
     if (latest <= 1.01) setShowMiniSlider(true);
