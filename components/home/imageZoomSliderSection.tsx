@@ -150,10 +150,6 @@ const ImageZoomSliderSection = ({
     sectionOpacity,
     btnOpacity,
     revealSlides,
-    textOpacity,
-    overlayTextOpacity,
-    overlayTextRight,
-    overlayTextTop,
   } = useImageZoomScroll(parentRef, sectionRef);
 
   const [showMiniSlider, setShowMiniSlider] = useState(false);
