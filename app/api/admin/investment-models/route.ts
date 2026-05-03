@@ -5,28 +5,23 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import {
-  createInvestmentModel,
+  createInvestmentModel
 } from "@/lib/services/investment-models-service";
 import {
   errorResponse,
-  unauthorizedResponse,
   createdResponse,
   ErrorCodes,
-  forbiddenResponse,
-  validationError,
+  validationError
 } from "@/lib/api-response";
 
 export async function POST(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+      return "لطفا وارد شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود. فقط ادمین.");
+      return "دسترسی محدود. فقط ادمین.");
     }
 
     const body = await req.json();
@@ -47,7 +42,7 @@ export async function POST(req: NextRequest) {
       contactDescription,
       contacts = [],
       order = 0,
-      published = true,
+      published = true
     } = body;
 
     // Validation
@@ -107,7 +102,7 @@ export async function POST(req: NextRequest) {
       contactDescription,
       contacts,
       order,
-      published,
+      published
     });
 
     return createdResponse(item, "مدل سرمایه‌ گذاری با موفقیت ایجاد شد");

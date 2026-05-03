@@ -1,17 +1,15 @@
 import { NextRequest } from "next/server";
 import { writeFile } from "fs/promises";
-import { auth } from "@/auth";
 import {
   successResponse,
-  unauthorizedResponse,
   validationError,
   errorResponse,
-  ErrorCodes,
+  ErrorCodes
 } from "@/lib/api-response";
 import {
   VIDEOS_UPLOAD_PATHS,
   ensureUploadDirExists,
-  generateFileUrl,
+  generateFileUrl
 } from "@/lib/upload-config";
 
 // تنظیمات مجاز برای آپلود ویدیو
@@ -27,15 +25,14 @@ const ALLOWED_EXTENSIONS = ["mp4", "mov", "avi", "mkv", "webm"];
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
 
     // بررسی احراز هویت و نقش ادمین
     if (!session?.user) {
-      return unauthorizedResponse("لطفاً وارد حساب کاربری خود شوید");
+      return "لطفاً وارد حساب کاربری خود شوید");
     }
 
     if (session.user.role !== "ADMIN") {
-      return unauthorizedResponse("دسترسی غیرمجاز - فقط ادمین");
+      return "دسترسی غیرمجاز - فقط ادمین");
     }
 
     const formData = await req.formData();
@@ -106,7 +103,7 @@ export async function POST(req: NextRequest) {
         videoUrl,
         filename,
         fileSize: file.size,
-        fileType: file.type,
+        fileType: file.type
       },
       "ویدیو با موفقیت آپلود شد"
     );

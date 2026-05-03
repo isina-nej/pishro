@@ -6,28 +6,23 @@
 
 import { NextRequest } from "next/server";
 import { Prisma } from "@/types/prisma";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   errorResponse,
-  unauthorizedResponse,
   paginatedResponse,
   createdResponse,
   ErrorCodes,
-  forbiddenResponse,
-  validationError,
+  validationError
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
 
 export async function GET(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -77,10 +72,10 @@ export async function GET(req: NextRequest) {
             select: {
               id: true,
               slug: true,
-              title: true,
-            },
-          },
-        },
+              title: true
+            }
+          }
+        }
       }),
       prisma.digitalBook.count({ where }),
     ]);
@@ -97,13 +92,11 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const body = await req.json();
@@ -131,7 +124,7 @@ export async function POST(req: NextRequest) {
       isFeatured = false,
       price,
       fileUrl,
-      audioUrl,
+      audioUrl
     } = body;
 
     // Validation
@@ -160,7 +153,7 @@ export async function POST(req: NextRequest) {
 
     // Check if slug already exists
     const existingBook = await prisma.digitalBook.findUnique({
-      where: { slug },
+      where: { slug }
     });
 
     if (existingBook) {
@@ -188,7 +181,7 @@ export async function POST(req: NextRequest) {
       tags,
       tagIds: validTagIds,
       fileUrl,
-      audioUrl,
+      audioUrl
     });
 
     // Create book
@@ -218,8 +211,8 @@ export async function POST(req: NextRequest) {
         fileUrl,
         audioUrl,
         // Set tagIds for the relation
-        ...(validTagIds.length > 0 && { tagIds: validTagIds }),
-      },
+        ...(validTagIds.length > 0 && { tagIds: validTagIds })
+      }
     });
 
     console.log("Book created successfully:", { bookId: book.id, fileUrl: book.fileUrl, cover: book.cover });
@@ -232,10 +225,10 @@ export async function POST(req: NextRequest) {
           select: {
             id: true,
             slug: true,
-            title: true,
-          },
-        },
-      },
+            title: true
+          }
+        }
+      }
     });
 
     console.log("Book with tags:", bookWithTags);
@@ -246,7 +239,7 @@ export async function POST(req: NextRequest) {
     console.error("Error details:", {
       name: error instanceof Error ? error.name : "Unknown",
       message: errorMessage,
-      cause: error instanceof Error && error.cause ? String(error.cause) : undefined,
+      cause: error instanceof Error && error.cause ? String(error.cause) : undefined
     });
     return errorResponse(
       `Error creating book: ${errorMessage}`,

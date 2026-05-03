@@ -6,20 +6,17 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import {
   getInvestmentModelById,
   updateInvestmentModel,
-  deleteInvestmentModel,
+  deleteInvestmentModel
 } from "@/lib/services/investment-models-service";
 import {
   successResponse,
   errorResponse,
-  unauthorizedResponse,
-  forbiddenResponse,
   notFoundResponse,
   ErrorCodes,
-  noContentResponse,
+  noContentResponse
 } from "@/lib/api-response";
 
 export async function GET(
@@ -27,13 +24,11 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+      return "لطفا وارد شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود. فقط ادمین.");
+      return "دسترسی محدود. فقط ادمین.");
     }
 
     const { id } = await params;
@@ -59,13 +54,11 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+      return "لطفا وارد شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود. فقط ادمین.");
+      return "دسترسی محدود. فقط ادمین.");
     }
 
     const { id } = await params;
@@ -122,13 +115,11 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+      return "لطفا وارد شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود. فقط ادمین.");
+      return "دسترسی محدود. فقط ادمین.");
     }
 
     const { id } = await params;

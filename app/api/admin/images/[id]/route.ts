@@ -6,20 +6,17 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import {
   errorResponse,
-  unauthorizedResponse,
   successResponse,
   ErrorCodes,
-  forbiddenResponse,
   notFoundResponse,
-  validationError,
+  validationError
 } from "@/lib/api-response";
 import {
   getImageById,
   deleteImage,
-  updateImage,
+  updateImage
 } from "@/lib/services/image-service";
 import { ImageCategory } from "@/types/prisma";
 
@@ -28,13 +25,11 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+      return "لطفا وارد شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود به ادمین");
+      return "دسترسی محدود به ادمین");
     }
 
     const { id } = await params;
@@ -60,13 +55,11 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+      return "لطفا وارد شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود به ادمین");
+      return "دسترسی محدود به ادمین");
     }
 
     const { id } = await params;
@@ -77,7 +70,7 @@ export async function PATCH(
     // Validation
     if (category && !Object.values(ImageCategory).includes(category)) {
       return validationError({
-        category: "دسته‌بندی نامعتبر است",
+        category: "دسته‌بندی نامعتبر است"
       });
     }
 
@@ -90,7 +83,7 @@ export async function PATCH(
         alt,
         tags,
         category,
-        published,
+        published
       });
 
       return successResponse(updatedImage, "تصویر با موفقیت به‌روزرسانی شد");
@@ -120,13 +113,11 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+      return "لطفا وارد شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود به ادمین");
+      return "دسترسی محدود به ادمین");
     }
 
     const { id } = await params;

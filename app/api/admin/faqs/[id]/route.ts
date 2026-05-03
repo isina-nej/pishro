@@ -6,16 +6,13 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   successResponse,
   errorResponse,
-  unauthorizedResponse,
-  forbiddenResponse,
   notFoundResponse,
   ErrorCodes,
-  noContentResponse,
+  noContentResponse
 } from "@/lib/api-response";
 
 export async function GET(
@@ -23,13 +20,11 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const { id } = await params;
@@ -41,10 +36,10 @@ export async function GET(
           select: {
             id: true,
             slug: true,
-            title: true,
-          },
-        },
-      },
+            title: true
+          }
+        }
+      }
     });
 
     if (!faq) {
@@ -66,13 +61,11 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const { id } = await params;
@@ -80,7 +73,7 @@ export async function PATCH(
 
     // Check if FAQ exists
     const existingFaq = await prisma.fAQ.findUnique({
-      where: { id },
+      where: { id }
     });
 
     if (!existingFaq) {
@@ -110,10 +103,10 @@ export async function PATCH(
           select: {
             id: true,
             slug: true,
-            title: true,
-          },
-        },
-      },
+            title: true
+          }
+        }
+      }
     });
 
     return successResponse(updatedFaq, "FAQ updated successfully");
@@ -131,20 +124,18 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const { id } = await params;
 
     // Check if FAQ exists
     const existingFaq = await prisma.fAQ.findUnique({
-      where: { id },
+      where: { id }
     });
 
     if (!existingFaq) {
@@ -153,7 +144,7 @@ export async function DELETE(
 
     // Delete FAQ
     await prisma.fAQ.delete({
-      where: { id },
+      where: { id }
     });
 
     return noContentResponse();

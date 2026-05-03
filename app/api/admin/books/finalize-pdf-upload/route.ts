@@ -10,7 +10,7 @@ import path from "path";
 import {
   successResponse,
   validationError,
-  errorResponse,
+  errorResponse
 } from "@/lib/api-response";
 
 const UPLOAD_DIR = process.env.UPLOAD_BASE_DIR || "/opt/pishro_uploads";
@@ -36,7 +36,7 @@ function corsHeaders(req: NextRequest) {
     "Access-Control-Allow-Origin": isOriginAllowed ? origin : "*",
     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
-    "Access-Control-Allow-Credentials": isOriginAllowed ? "true" : "false",
+    "Access-Control-Allow-Credentials": isOriginAllowed ? "true" : "false"
   };
 }
 
@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
       fileUrl,
       fileSize: fileSize || 0,
       mimeType: "application/pdf",
-      uploadedAt: new Date().toISOString(),
+      uploadedAt: new Date().toISOString()
     });
 
     // Add CORS headers

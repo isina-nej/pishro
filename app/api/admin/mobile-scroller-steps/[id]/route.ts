@@ -6,16 +6,13 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   successResponse,
   errorResponse,
-  unauthorizedResponse,
-  forbiddenResponse,
   notFoundResponse,
   ErrorCodes,
-  noContentResponse,
+  noContentResponse
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
 
@@ -24,19 +21,17 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+      return "لطفا وارد شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود. فقط ادمین.");
+      return "دسترسی محدود. فقط ادمین.");
     }
 
     const { id } = await params;
 
     const item = await prisma.mobileScrollerStep.findUnique({
-      where: { id },
+      where: { id }
     });
 
     if (!item) {
@@ -61,12 +56,11 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+      return "لطفا وارد شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود. فقط ادمین.");
+      return "دسترسی محدود. فقط ادمین.");
     }
 
     const { id } = await params;
@@ -79,7 +73,7 @@ export async function PATCH(
     console.log("================");
 
     const existingItem = await prisma.mobileScrollerStep.findUnique({
-      where: { id },
+      where: { id }
     });
 
     if (!existingItem) {
@@ -114,7 +108,7 @@ export async function PATCH(
 
     const updatedItem = await prisma.mobileScrollerStep.update({
       where: { id },
-      data: updateData,
+      data: updateData
     });
 
     // 🔍 DEBUG
@@ -139,20 +133,18 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+      return "لطفا وارد شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود. فقط ادمین.");
+      return "دسترسی محدود. فقط ادمین.");
     }
 
     const { id } = await params;
 
     // Check if item exists
     const existingItem = await prisma.mobileScrollerStep.findUnique({
-      where: { id },
+      where: { id }
     });
 
     if (!existingItem) {
@@ -164,7 +156,7 @@ export async function DELETE(
 
     // Delete item
     await prisma.mobileScrollerStep.delete({
-      where: { id },
+      where: { id }
     });
 
     return noContentResponse();

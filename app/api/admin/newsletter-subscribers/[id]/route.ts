@@ -5,16 +5,13 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   successResponse,
   errorResponse,
-  unauthorizedResponse,
-  forbiddenResponse,
   notFoundResponse,
   ErrorCodes,
-  noContentResponse,
+  noContentResponse
 } from "@/lib/api-response";
 
 export async function GET(
@@ -22,19 +19,17 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const { id } = await params;
 
     const subscriber = await prisma.newsletterSubscriber.findUnique({
-      where: { id },
+      where: { id }
     });
 
     if (!subscriber) {
@@ -56,20 +51,18 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const { id } = await params;
 
     // Check if subscriber exists
     const existingSubscriber = await prisma.newsletterSubscriber.findUnique({
-      where: { id },
+      where: { id }
     });
 
     if (!existingSubscriber) {
@@ -78,7 +71,7 @@ export async function DELETE(
 
     // Delete subscriber
     await prisma.newsletterSubscriber.delete({
-      where: { id },
+      where: { id }
     });
 
     return noContentResponse();

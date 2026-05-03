@@ -6,28 +6,23 @@
 
 import { NextRequest } from "next/server";
 import { Prisma } from "@/types/prisma";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   errorResponse,
-  unauthorizedResponse,
   paginatedResponse,
   createdResponse,
   ErrorCodes,
-  forbiddenResponse,
-  validationError,
+  validationError
 } from "@/lib/api-response";
 import bcrypt from "bcryptjs";
 
 export async function GET(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -90,10 +85,10 @@ export async function GET(req: NextRequest) {
               comments: true,
               orders: true,
               enrollments: true,
-              transactions: true,
-            },
-          },
-        },
+              transactions: true
+            }
+          }
+        }
       }),
       prisma.user.count({ where }),
     ]);
@@ -110,13 +105,11 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const body = await req.json();
@@ -128,27 +121,27 @@ export async function POST(req: NextRequest) {
       lastName,
       email,
       nationalCode,
-      phoneVerified = false,
+      phoneVerified = false
     } = body;
 
     // Validation
     if (!phone || !password) {
       return validationError({
         phone: !phone ? "Phone is required" : "",
-        password: !password ? "Password is required" : "",
+        password: !password ? "Password is required" : ""
       });
     }
 
     // Validate phone format
     if (!/^09\d{9}$/.test(phone)) {
       return validationError({
-        phone: "Invalid phone format. Must be 09XXXXXXXXX",
+        phone: "Invalid phone format. Must be 09XXXXXXXXX"
       });
     }
 
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
-      where: { phone },
+      where: { phone }
     });
 
     if (existingUser) {
@@ -171,7 +164,7 @@ export async function POST(req: NextRequest) {
         lastName,
         email,
         nationalCode,
-        phoneVerified,
+        phoneVerified
       },
       select: {
         id: true,
@@ -181,8 +174,8 @@ export async function POST(req: NextRequest) {
         firstName: true,
         lastName: true,
         email: true,
-        createdAt: true,
-      },
+        createdAt: true
+      }
     });
 
     return createdResponse(user, "User created successfully");

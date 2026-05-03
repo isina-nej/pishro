@@ -6,16 +6,13 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   successResponse,
   errorResponse,
-  unauthorizedResponse,
-  forbiddenResponse,
   notFoundResponse,
   ErrorCodes,
-  noContentResponse,
+  noContentResponse
 } from "@/lib/api-response";
 import bcrypt from "bcryptjs";
 
@@ -24,13 +21,11 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const { id } = await params;
@@ -45,10 +40,10 @@ export async function GET(
             enrollments: true,
             transactions: true,
             newsComments: true,
-            quizAttempts: true,
-          },
-        },
-      },
+            quizAttempts: true
+          }
+        }
+      }
     });
 
     if (!user) {
@@ -73,13 +68,11 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const { id } = await params;
@@ -87,7 +80,7 @@ export async function PATCH(
 
     // Check if user exists
     const existingUser = await prisma.user.findUnique({
-      where: { id },
+      where: { id }
     });
 
     if (!existingUser) {
@@ -146,8 +139,8 @@ export async function PATCH(
         shebaNumber: true,
         accountOwner: true,
         createdAt: true,
-        updatedAt: true,
-      },
+        updatedAt: true
+      }
     });
 
     return successResponse(updatedUser, "User updated successfully");
@@ -165,20 +158,18 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const { id } = await params;
 
     // Check if user exists
     const existingUser = await prisma.user.findUnique({
-      where: { id },
+      where: { id }
     });
 
     if (!existingUser) {
@@ -187,12 +178,12 @@ export async function DELETE(
 
     // Prevent deleting yourself
     if (id === session.user.id) {
-      return forbiddenResponse("Cannot delete your own account");
+      return "Cannot delete your own account");
     }
 
     // Delete user (cascading deletes will handle related records)
     await prisma.user.delete({
-      where: { id },
+      where: { id }
     });
 
     return noContentResponse();

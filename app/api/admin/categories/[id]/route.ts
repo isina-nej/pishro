@@ -6,16 +6,13 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   successResponse,
   errorResponse,
-  unauthorizedResponse,
-  forbiddenResponse,
   notFoundResponse,
   ErrorCodes,
-  noContentResponse,
+  noContentResponse
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
 
@@ -24,13 +21,11 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const { id } = await params;
@@ -42,8 +37,8 @@ export async function GET(
           select: {
             id: true,
             slug: true,
-            title: true,
-          },
+            title: true
+          }
         },
         _count: {
           select: {
@@ -52,10 +47,10 @@ export async function GET(
             news: true,
             faqs: true,
             comments: true,
-            quizzes: true,
-          },
-        },
-      },
+            quizzes: true
+          }
+        }
+      }
     });
 
     if (!category) {
@@ -77,13 +72,11 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const { id } = await params;
@@ -91,7 +84,7 @@ export async function PATCH(
 
     // Check if category exists
     const existingCategory = await prisma.category.findUnique({
-      where: { id },
+      where: { id }
     });
 
     if (!existingCategory) {
@@ -101,7 +94,7 @@ export async function PATCH(
     // If slug is being updated, check uniqueness
     if (body.slug && body.slug !== existingCategory.slug) {
       const slugExists = await prisma.category.findUnique({
-        where: { slug: body.slug },
+        where: { slug: body.slug }
       });
 
       if (slugExists) {
@@ -165,10 +158,10 @@ export async function PATCH(
           select: {
             id: true,
             slug: true,
-            title: true,
-          },
-        },
-      },
+            title: true
+          }
+        }
+      }
     });
 
     return successResponse(updatedCategory, "Category updated successfully");
@@ -186,13 +179,11 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const { id } = await params;
@@ -204,10 +195,10 @@ export async function DELETE(
         _count: {
           select: {
             courses: true,
-            news: true,
-          },
-        },
-      },
+            news: true
+          }
+        }
+      }
     });
 
     if (!existingCategory) {
@@ -216,14 +207,14 @@ export async function DELETE(
 
     // Check if category has associated content
     if (existingCategory._count.courses > 0 || existingCategory._count.news > 0) {
-      return forbiddenResponse(
+      return 
         "Cannot delete category with associated courses or news. Please reassign or delete them first."
       );
     }
 
     // Delete category (cascading deletes will handle related records)
     await prisma.category.delete({
-      where: { id },
+      where: { id }
     });
 
     return noContentResponse();

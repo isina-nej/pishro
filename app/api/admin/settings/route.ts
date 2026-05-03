@@ -5,19 +5,16 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import {
   errorResponse,
-  unauthorizedResponse,
   successResponse,
   ErrorCodes,
-  forbiddenResponse,
-  validationError,
+  validationError
 } from "@/lib/api-response";
 import {
   getSettings,
   updateSettings,
-  UpdateSettingsInput,
+  UpdateSettingsInput
 } from "@/lib/services/settings-service";
 
 /**
@@ -26,13 +23,11 @@ import {
  */
 export async function GET(_req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+      return "لطفا وارد شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود به ادمین");
+      return "دسترسی محدود به ادمین");
     }
 
     const settings = await getSettings();
@@ -62,13 +57,11 @@ export async function GET(_req: NextRequest) {
  */
 export async function PATCH(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+      return "لطفا وارد شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود به ادمین");
+      return "دسترسی محدود به ادمین");
     }
 
     // Parse request body
@@ -92,7 +85,7 @@ export async function PATCH(req: NextRequest) {
         return validationError(
           {
             zarinpalMerchantId:
-              "شناسه پذیرنده باید 36 کاراکتر باشد (فرمت UUID)",
+              "شناسه پذیرنده باید 36 کاراکتر باشد (فرمت UUID)"
           },
           "فرمت شناسه پذیرنده صحیح نیست"
         );

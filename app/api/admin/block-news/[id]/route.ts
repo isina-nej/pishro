@@ -4,18 +4,15 @@
  * DELETE /api/admin/block-news/[id] - Delete news article
  */
 
-import { auth } from '@/auth';
 import {
-  unauthorizedResponse,
-  forbiddenResponse,
   successResponse,
   errorResponse,
-  validationError,
+  validationError
 } from '@/lib/api-response';
 import {
   getNews,
   updateNewsMetadata,
-  deleteNews,
+  deleteNews
 } from '@/lib/services/block-news-service';
 import { UpdateNewsSchema } from '@/lib/schemas/block-news-schema';
 import type { UpdateNewsRequest } from '@/lib/types/block-news';
@@ -25,13 +22,12 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse('ورود به سیستم الزامی است');
+      return 'ورود به سیستم الزامی است');
     }
 
     if (session.user.role !== 'ADMIN') {
-      return forbiddenResponse('دسترسی منحصر به مدیران است');
+      return 'دسترسی منحصر به مدیران است');
     }
 
     const news = await getNews(params.id);
@@ -50,13 +46,12 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse('ورود به سیستم الزامی است');
+      return 'ورود به سیستم الزامی است');
     }
 
     if (session.user.role !== 'ADMIN') {
-      return forbiddenResponse('دسترسی منحصر به مدیران است');
+      return 'دسترسی منحصر به مدیران است');
     }
 
     const body = (await req.json()) as UpdateNewsRequest;
@@ -87,13 +82,12 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse('ورود به سیستم الزامی است');
+      return 'ورود به سیستم الزامی است');
     }
 
     if (session.user.role !== 'ADMIN') {
-      return forbiddenResponse('دسترسی منحصر به مدیران است');
+      return 'دسترسی منحصر به مدیران است');
     }
 
     const result = await deleteNews(params.id);

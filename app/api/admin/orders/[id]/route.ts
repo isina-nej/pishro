@@ -5,15 +5,12 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   successResponse,
   errorResponse,
-  unauthorizedResponse,
-  forbiddenResponse,
   notFoundResponse,
-  ErrorCodes,
+  ErrorCodes
 } from "@/lib/api-response";
 
 export async function GET(
@@ -21,13 +18,11 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const { id } = await params;
@@ -41,8 +36,8 @@ export async function GET(
             phone: true,
             firstName: true,
             lastName: true,
-            email: true,
-          },
+            email: true
+          }
         },
         orderItems: {
           include: {
@@ -51,15 +46,15 @@ export async function GET(
                 id: true,
                 subject: true,
                 slug: true,
-                img: true,
-              },
-            },
-          },
+                img: true
+              }
+            }
+          }
         },
         transactions: {
-          orderBy: { createdAt: "desc" },
-        },
-      },
+          orderBy: { createdAt: "desc" }
+        }
+      }
     });
 
     if (!order) {
@@ -81,13 +76,11 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const { id } = await params;
@@ -95,7 +88,7 @@ export async function PATCH(
 
     // Check if order exists
     const existingOrder = await prisma.order.findUnique({
-      where: { id },
+      where: { id }
     });
 
     if (!existingOrder) {
@@ -118,8 +111,8 @@ export async function PATCH(
             id: true,
             phone: true,
             firstName: true,
-            lastName: true,
-          },
+            lastName: true
+          }
         },
         orderItems: {
           include: {
@@ -127,12 +120,12 @@ export async function PATCH(
               select: {
                 id: true,
                 subject: true,
-                slug: true,
-              },
-            },
-          },
-        },
-      },
+                slug: true
+              }
+            }
+          }
+        }
+      }
     });
 
     return successResponse(updatedOrder, "Order updated successfully");

@@ -4,15 +4,12 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   successResponse,
   errorResponse,
-  unauthorizedResponse,
-  forbiddenResponse,
   notFoundResponse,
-  ErrorCodes,
+  ErrorCodes
 } from "@/lib/api-response";
 
 export async function GET(
@@ -20,13 +17,11 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const { id } = await params;
@@ -40,8 +35,8 @@ export async function GET(
             phone: true,
             firstName: true,
             lastName: true,
-            email: true,
-          },
+            email: true
+          }
         },
         order: {
           select: {
@@ -54,14 +49,14 @@ export async function GET(
                   select: {
                     id: true,
                     subject: true,
-                    slug: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
+                    slug: true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     });
 
     if (!transaction) {

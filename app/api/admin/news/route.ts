@@ -6,28 +6,23 @@
 
 import { NextRequest } from "next/server";
 import { Prisma } from "@/types/prisma";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   errorResponse,
-  unauthorizedResponse,
   paginatedResponse,
   createdResponse,
   ErrorCodes,
-  forbiddenResponse,
-  validationError,
+  validationError
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
 
 export async function GET(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -83,22 +78,22 @@ export async function GET(req: NextRequest) {
             select: {
               id: true,
               slug: true,
-              title: true,
-            },
+              title: true
+            }
           },
           relatedTags: {
             select: {
               id: true,
               slug: true,
-              title: true,
-            },
+              title: true
+            }
           },
           _count: {
             select: {
-              comments: true,
-            },
-          },
-        },
+              comments: true
+            }
+          }
+        }
       }),
       prisma.newsArticle.count({ where }),
     ]);
@@ -115,13 +110,11 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const body = await req.json();
@@ -139,7 +132,7 @@ export async function POST(req: NextRequest) {
       published = false,
       publishedAt,
       featured = false,
-      readingTime,
+      readingTime
     } = body;
 
     // Validation
@@ -148,13 +141,13 @@ export async function POST(req: NextRequest) {
         title: !title ? "Title is required" : "",
         slug: !slug ? "Slug is required" : "",
         excerpt: !excerpt ? "Excerpt is required" : "",
-        content: !content ? "Content is required" : "",
+        content: !content ? "Content is required" : ""
       });
     }
 
     // Check if slug already exists
     const existingArticle = await prisma.newsArticle.findUnique({
-      where: { slug },
+      where: { slug }
     });
 
     if (existingArticle) {
@@ -183,24 +176,24 @@ export async function POST(req: NextRequest) {
         published,
         publishedAt: published ? (publishedAt ? new Date(publishedAt) : new Date()) : null,
         featured,
-        readingTime,
+        readingTime
       },
       include: {
         relatedCategory: {
           select: {
             id: true,
             slug: true,
-            title: true,
-          },
+            title: true
+          }
         },
         relatedTags: {
           select: {
             id: true,
             slug: true,
-            title: true,
-          },
-        },
-      },
+            title: true
+          }
+        }
+      }
     });
 
     return createdResponse(article, "News article created successfully");

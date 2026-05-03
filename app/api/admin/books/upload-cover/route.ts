@@ -4,12 +4,12 @@ import {
   successResponse,
   validationError,
   errorResponse,
-  ErrorCodes,
+  ErrorCodes
 } from "@/lib/api-response";
 import {
   BOOKS_UPLOAD_PATHS,
   ensureUploadDirExists,
-  generateFileUrl,
+  generateFileUrl
 } from "@/lib/upload-config";
 
 // تنظیمات برای آپلود کاور کتاب
@@ -35,7 +35,7 @@ function corsHeaders(req: NextRequest) {
     "Access-Control-Allow-Origin": isOriginAllowed ? origin : "*",
     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
-    "Access-Control-Allow-Credentials": isOriginAllowed ? "true" : "false",
+    "Access-Control-Allow-Credentials": isOriginAllowed ? "true" : "false"
   };
 }
 
@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
         fileUrl: coverUrl,
         fileSize: file.size,
         mimeType: file.type,
-        uploadedAt: new Date().toISOString(),
+        uploadedAt: new Date().toISOString()
       },
       "تصویر کاور با موفقیت آپلود شد"
     );

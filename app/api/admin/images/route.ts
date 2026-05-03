@@ -5,28 +5,23 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import {
   errorResponse,
-  unauthorizedResponse,
   paginatedResponse,
   createdResponse,
   ErrorCodes,
-  forbiddenResponse,
-  validationError,
+  validationError
 } from "@/lib/api-response";
 import { getUserImages, uploadImage } from "@/lib/services/image-service";
 import { ImageCategory } from "@/types/prisma";
 
 export async function GET(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+      return "لطفا وارد شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود به ادمین");
+      return "دسترسی محدود به ادمین");
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -45,7 +40,7 @@ export async function GET(req: NextRequest) {
       category,
       search,
       page,
-      limit,
+      limit
     });
 
     return paginatedResponse(
@@ -65,13 +60,11 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+      return "لطفا وارد شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود به ادمین");
+      return "دسترسی محدود به ادمین");
     }
 
     // Parse multipart form data
@@ -87,13 +80,13 @@ export async function POST(req: NextRequest) {
     // Validation
     if (!file) {
       return validationError({
-        file: "فایل الزامی است",
+        file: "فایل الزامی است"
       });
     }
 
     if (!Object.values(ImageCategory).includes(category)) {
       return validationError({
-        category: "دسته‌بندی نامعتبر است",
+        category: "دسته‌بندی نامعتبر است"
       });
     }
 
@@ -106,7 +99,7 @@ export async function POST(req: NextRequest) {
         title,
         description,
         alt,
-        tags,
+        tags
       });
 
       return createdResponse(result, "تصویر با موفقیت آپلود شد");

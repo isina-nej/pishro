@@ -6,27 +6,22 @@
 
 import { NextRequest } from "next/server";
 import { Prisma } from "@/types/prisma";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   errorResponse,
-  unauthorizedResponse,
   paginatedResponse,
   createdResponse,
   ErrorCodes,
-  forbiddenResponse,
-  validationError,
+  validationError
 } from "@/lib/api-response";
 
 export async function GET(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -70,10 +65,10 @@ export async function GET(req: NextRequest) {
             select: {
               id: true,
               slug: true,
-              title: true,
-            },
-          },
-        },
+              title: true
+            }
+          }
+        }
       }),
       prisma.pageContent.count({ where }),
     ]);
@@ -90,13 +85,11 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const body = await req.json();
@@ -111,7 +104,7 @@ export async function POST(req: NextRequest) {
       order = 0,
       published = true,
       publishAt,
-      expireAt,
+      expireAt
     } = body;
 
     // Validation
@@ -119,7 +112,7 @@ export async function POST(req: NextRequest) {
       return validationError({
         categoryId: !categoryId ? "Category ID is required" : "",
         type: !type ? "Type is required" : "",
-        content: !content ? "Content is required" : "",
+        content: !content ? "Content is required" : ""
       });
     }
 
@@ -136,17 +129,17 @@ export async function POST(req: NextRequest) {
         order,
         published,
         publishAt: publishAt ? new Date(publishAt) : null,
-        expireAt: expireAt ? new Date(expireAt) : null,
+        expireAt: expireAt ? new Date(expireAt) : null
       },
       include: {
         category: {
           select: {
             id: true,
             slug: true,
-            title: true,
-          },
-        },
-      },
+            title: true
+          }
+        }
+      }
     });
 
     return createdResponse(pageContent, "Page content created successfully");

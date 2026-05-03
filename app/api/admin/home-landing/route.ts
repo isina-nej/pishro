@@ -6,27 +6,22 @@
 
 import { NextRequest } from "next/server";
 import { Prisma } from "@/types/prisma";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   errorResponse,
-  unauthorizedResponse,
   paginatedResponse,
   createdResponse,
   ErrorCodes,
-  forbiddenResponse,
-  validationError,
+  validationError
 } from "@/lib/api-response";
 
 export async function GET(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+      return "لطفا وارد شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود. فقط ادمین.");
+      return "دسترسی محدود. فقط ادمین.");
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -54,7 +49,7 @@ export async function GET(req: NextRequest) {
         where,
         skip,
         take: limit,
-        orderBy: { order: "asc" },
+        orderBy: { order: "asc" }
       }),
       prisma.homeLanding.count({ where }),
     ]);
@@ -71,13 +66,11 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+      return "لطفا وارد شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود. فقط ادمین.");
+      return "دسترسی محدود. فقط ادمین.");
     }
 
     const body = await req.json();
@@ -116,13 +109,13 @@ export async function POST(req: NextRequest) {
       metaDescription,
       metaKeywords = [],
       published = false,
-      order = 0,
+      order = 0
     } = body;
 
     // Validation
     if (!heroTitle) {
       return validationError({
-        heroTitle: "عنوان Hero الزامی است",
+        heroTitle: "عنوان Hero الزامی است"
       });
     }
 
@@ -163,8 +156,8 @@ export async function POST(req: NextRequest) {
         metaDescription,
         metaKeywords,
         published,
-        order,
-      },
+        order
+      }
     });
 
     return createdResponse(item, "صفحه لندینگ با موفقیت ایجاد شد");

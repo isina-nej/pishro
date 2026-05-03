@@ -6,27 +6,22 @@
 
 import { NextRequest } from "next/server";
 import { Prisma } from "@/types/prisma";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   errorResponse,
-  unauthorizedResponse,
   paginatedResponse,
   createdResponse,
   ErrorCodes,
-  forbiddenResponse,
-  validationError,
+  validationError
 } from "@/lib/api-response";
 
 export async function GET(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+      return "لطفا وارد شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود. فقط ادمین.");
+      return "دسترسی محدود. فقط ادمین.");
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -64,10 +59,10 @@ export async function GET(req: NextRequest) {
           investmentPlans: {
             select: {
               id: true,
-              title: true,
-            },
-          },
-        },
+              title: true
+            }
+          }
+        }
       }),
       prisma.investmentTag.count({ where }),
     ]);
@@ -84,13 +79,11 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+      return "لطفا وارد شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود. فقط ادمین.");
+      return "دسترسی محدود. فقط ادمین.");
     }
 
     const body = await req.json();
@@ -100,7 +93,7 @@ export async function POST(req: NextRequest) {
       color,
       icon,
       order = 0,
-      published = false,
+      published = false
     } = body;
 
     // Validation
@@ -109,13 +102,13 @@ export async function POST(req: NextRequest) {
         investmentPlansId: !investmentPlansId
           ? "شناسه صفحه سبدهای سرمایه‌ گذاری الزامی است"
           : "",
-        title: !title ? "عنوان الزامی است" : "",
+        title: !title ? "عنوان الزامی است" : ""
       });
     }
 
     // Check if investment plans exists
     const investmentPlans = await prisma.investmentPlans.findUnique({
-      where: { id: investmentPlansId },
+      where: { id: investmentPlansId }
     });
 
     if (!investmentPlans) {
@@ -133,16 +126,16 @@ export async function POST(req: NextRequest) {
         color,
         icon,
         order,
-        published,
+        published
       },
       include: {
         investmentPlans: {
           select: {
             id: true,
-            title: true,
-          },
-        },
-      },
+            title: true
+          }
+        }
+      }
     });
 
     return createdResponse(item, "تگ سرمایه‌ گذاری با موفقیت ایجاد شد");

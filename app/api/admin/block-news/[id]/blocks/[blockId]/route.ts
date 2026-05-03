@@ -4,16 +4,13 @@
  * DELETE /api/admin/block-news/[id]/blocks/[blockId] - Delete content block
  */
 
-import { auth } from '@/auth';
 import {
-  unauthorizedResponse,
-  forbiddenResponse,
   successResponse,
-  errorResponse,
+  errorResponse
 } from '@/lib/api-response';
 import {
   updateContentBlock,
-  deleteContentBlock,
+  deleteContentBlock
 } from '@/lib/services/block-news-service';
 import { BlockInputSchema } from '@/lib/schemas/block-news-schema';
 import type { ContentBlockUpdateRequest } from '@/lib/types/block-news';
@@ -23,13 +20,12 @@ export async function GET(
   { params }: { params: { id: string; blockId: string } }
 ) {
   try {
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse('ورود به سیستم الزامی است');
+      return 'ورود به سیستم الزامی است');
     }
 
     if (session.user.role !== 'ADMIN') {
-      return forbiddenResponse('دسترسی منحصر به مدیران است');
+      return 'دسترسی منحصر به مدیران است');
     }
 
     // TODO: Implement getContentBlock service function
@@ -45,13 +41,12 @@ export async function PATCH(
   { params }: { params: { id: string; blockId: string } }
 ) {
   try {
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse('ورود به سیستم الزامی است');
+      return 'ورود به سیستم الزامی است');
     }
 
     if (session.user.role !== 'ADMIN') {
-      return forbiddenResponse('دسترسی منحصر به مدیران است');
+      return 'دسترسی منحصر به مدیران است');
     }
 
     const body = (await req.json()) as ContentBlockUpdateRequest;
@@ -74,13 +69,12 @@ export async function DELETE(
   { params }: { params: { id: string; blockId: string } }
 ) {
   try {
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse('ورود به سیستم الزامی است');
+      return 'ورود به سیستم الزامی است');
     }
 
     if (session.user.role !== 'ADMIN') {
-      return forbiddenResponse('دسترسی منحصر به مدیران است');
+      return 'دسترسی منحصر به مدیران است');
     }
 
     const result = await deleteContentBlock(params.id, params.blockId);

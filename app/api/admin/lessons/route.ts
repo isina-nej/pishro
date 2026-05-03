@@ -1,12 +1,10 @@
 // @/app/api/admin/lessons/route.ts
-import { auth } from "@/auth";
 import { NextRequest } from "next/server";
 import { getAllLessons, createLesson } from "@/lib/services/lesson-service";
 import {
   successResponse,
   errorResponse,
-  unauthorizedResponse,
-  ErrorCodes,
+  ErrorCodes
 } from "@/lib/api-response";
 
 /**
@@ -15,9 +13,8 @@ import {
  */
 export async function GET(_req: NextRequest) {
   try {
-    const session = await auth();
     if (!session?.user || session.user.role !== "ADMIN") {
-      return unauthorizedResponse("دسترسی غیرمجاز");
+      return "دسترسی غیرمجاز");
     }
 
     const lessons = await getAllLessons();
@@ -38,9 +35,8 @@ export async function GET(_req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
     if (!session?.user || session.user.role !== "ADMIN") {
-      return unauthorizedResponse("دسترسی غیرمجاز");
+      return "دسترسی غیرمجاز");
     }
 
     const body = await req.json();
@@ -52,7 +48,7 @@ export async function POST(req: NextRequest) {
       thumbnail,
       duration,
       order,
-      published,
+      published
     } = body;
 
     // Validation
@@ -71,7 +67,7 @@ export async function POST(req: NextRequest) {
       thumbnail,
       duration,
       order,
-      published,
+      published
     });
 
     return successResponse(lesson, "کلاس با موفقیت ایجاد شد");

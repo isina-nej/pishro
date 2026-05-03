@@ -5,30 +5,25 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import {
   getAllInvestmentModelsPagesForAdmin,
-  createInvestmentModelsPage,
+  createInvestmentModelsPage
 } from "@/lib/services/investment-models-service";
 import {
   errorResponse,
-  unauthorizedResponse,
   paginatedResponse,
   createdResponse,
   ErrorCodes,
-  forbiddenResponse,
-  validationError,
+  validationError
 } from "@/lib/api-response";
 
 export async function GET(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+      return "لطفا وارد شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود. فقط ادمین.");
+      return "دسترسی محدود. فقط ادمین.");
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -51,7 +46,7 @@ export async function GET(req: NextRequest) {
     const result = await getAllInvestmentModelsPagesForAdmin({
       page,
       limit,
-      published,
+      published
     });
 
     return paginatedResponse(result.items, page, limit, result.total);
@@ -66,20 +61,18 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+      return "لطفا وارد شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود. فقط ادمین.");
+      return "دسترسی محدود. فقط ادمین.");
     }
 
     const body = await req.json();
     const {
       additionalInfoTitle,
       additionalInfoContent,
-      published = true,
+      published = true
     } = body;
 
     // Validation
@@ -95,7 +88,7 @@ export async function POST(req: NextRequest) {
     const item = await createInvestmentModelsPage({
       additionalInfoTitle,
       additionalInfoContent,
-      published,
+      published
     });
 
     return createdResponse(

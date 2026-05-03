@@ -6,27 +6,22 @@
 
 import { NextRequest } from "next/server";
 import { Prisma } from "@/types/prisma";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   errorResponse,
-  unauthorizedResponse,
   paginatedResponse,
   createdResponse,
   ErrorCodes,
-  forbiddenResponse,
-  validationError,
+  validationError
 } from "@/lib/api-response";
 
 export async function GET(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -78,23 +73,23 @@ export async function GET(req: NextRequest) {
             select: {
               id: true,
               subject: true,
-              slug: true,
-            },
+              slug: true
+            }
           },
           category: {
             select: {
               id: true,
               title: true,
-              slug: true,
-            },
+              slug: true
+            }
           },
           _count: {
             select: {
               questions: true,
-              attempts: true,
-            },
-          },
-        },
+              attempts: true
+            }
+          }
+        }
       }),
       prisma.quiz.count({ where }),
     ]);
@@ -111,13 +106,11 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const body = await req.json();
@@ -134,13 +127,13 @@ export async function POST(req: NextRequest) {
       showResults = true,
       showCorrectAnswers = true,
       published = false,
-      order = 0,
+      order = 0
     } = body;
 
     // Validation
     if (!title) {
       return validationError({
-        title: "Title is required",
+        title: "Title is required"
       });
     }
 
@@ -159,24 +152,24 @@ export async function POST(req: NextRequest) {
         showResults,
         showCorrectAnswers,
         published,
-        order,
+        order
       },
       include: {
         course: {
           select: {
             id: true,
             subject: true,
-            slug: true,
-          },
+            slug: true
+          }
         },
         category: {
           select: {
             id: true,
             title: true,
-            slug: true,
-          },
-        },
-      },
+            slug: true
+          }
+        }
+      }
     });
 
     return createdResponse(quiz, "Quiz created successfully");

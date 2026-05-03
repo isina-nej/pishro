@@ -5,25 +5,20 @@
 
 import { NextRequest } from "next/server";
 import { Prisma } from "@/types/prisma";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   errorResponse,
-  unauthorizedResponse,
   paginatedResponse,
-  ErrorCodes,
-  forbiddenResponse,
+  ErrorCodes
 } from "@/lib/api-response";
 
 export async function GET(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -83,17 +78,17 @@ export async function GET(req: NextRequest) {
               id: true,
               phone: true,
               firstName: true,
-              lastName: true,
-            },
+              lastName: true
+            }
           },
           order: {
             select: {
               id: true,
               total: true,
-              status: true,
-            },
-          },
-        },
+              status: true
+            }
+          }
+        }
       }),
       prisma.transaction.count({ where }),
     ]);

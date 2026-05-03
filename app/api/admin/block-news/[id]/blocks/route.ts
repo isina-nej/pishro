@@ -3,18 +3,15 @@
  * POST /api/admin/block-news/[id]/blocks - Add new content block to news article
  */
 
-import { auth } from '@/auth';
 import {
-  unauthorizedResponse,
-  forbiddenResponse,
   successResponse,
   errorResponse,
   validationError,
-  createdResponse,
+  createdResponse
 } from '@/lib/api-response';
 import {
   getNews,
-  addContentBlock,
+  addContentBlock
 } from '@/lib/services/block-news-service';
 import { BlockInputSchema } from '@/lib/schemas/block-news-schema';
 import type { ContentBlockCreateRequest } from '@/lib/types/block-news';
@@ -24,13 +21,12 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse('ورود به سیستم الزامی است');
+      return 'ورود به سیستم الزامی است');
     }
 
     if (session.user.role !== 'ADMIN') {
-      return forbiddenResponse('دسترسی منحصر به مدیران است');
+      return 'دسترسی منحصر به مدیران است');
     }
 
     const news = await getNews(params.id);
@@ -49,13 +45,12 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse('ورود به سیستم الزامی است');
+      return 'ورود به سیستم الزامی است');
     }
 
     if (session.user.role !== 'ADMIN') {
-      return forbiddenResponse('دسترسی منحصر به مدیران است');
+      return 'دسترسی منحصر به مدیران است');
     }
 
     const body = (await req.json()) as ContentBlockCreateRequest;

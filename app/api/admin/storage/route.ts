@@ -7,25 +7,21 @@
 import { NextRequest } from "next/server";
 import { copyFile, readdir, mkdir } from "fs/promises";
 import { join } from "path";
-import { auth } from "@/auth";
 import {
   successResponse,
   errorResponse,
-  unauthorizedResponse,
-  forbiddenResponse,
-  ErrorCodes,
+  ErrorCodes
 } from "@/lib/api-response";
 import { getAllUploadPaths } from "@/lib/upload-config";
 
 export async function GET(_req: NextRequest) {
   try {
     // فقط ادمین می‌تواند این endpoint را دیده‌ها را ببیند
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفاً وارد حساب کاربری خود شوید");
+      return "لطفاً وارد حساب کاربری خود شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("فقط ادمین می‌تواند این اطلاعات را ببیند");
+      return "فقط ادمین می‌تواند این اطلاعات را ببیند");
     }
 
     const paths = getAllUploadPaths();
@@ -35,8 +31,8 @@ export async function GET(_req: NextRequest) {
         booksPath: paths.books,
         videosPath: paths.videos,
         environment: {
-          uploadBaseDirEnv: process.env.UPLOAD_BASE_DIR || "Not set",
-        },
+          uploadBaseDirEnv: process.env.UPLOAD_BASE_DIR || "Not set"
+        }
       },
       "مسیرهای فعلی آپلود"
     );
@@ -52,12 +48,11 @@ export async function GET(_req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     // فقط ادمین می‌تواند مهاجرت انجام دهد
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفاً وارد حساب کاربری خود شوید");
+      return "لطفاً وارد حساب کاربری خود شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("فقط ادمین می‌تواند مهاجرت انجام دهد");
+      return "فقط ادمین می‌تواند مهاجرت انجام دهد");
     }
 
     const body = await req.json();
@@ -113,7 +108,7 @@ async function migrateFiles(
     totalFiles: 0,
     copiedFiles: 0,
     failedFiles: 0,
-    failedList: [] as string[],
+    failedList: [] as string[]
   };
 
   try {

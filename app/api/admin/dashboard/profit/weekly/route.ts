@@ -4,32 +4,28 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import {
   errorResponse,
-  unauthorizedResponse,
-  forbiddenResponse,
   successResponse,
   validationError,
-  ErrorCodes,
+  ErrorCodes
 } from "@/lib/api-response";
 import {
   getWeeklyProfit,
   getCachedData,
-  setCachedData,
+  setCachedData
 } from "@/lib/services/dashboard-service";
 import { WeeklyProfit } from "@/types/dashboard";
 
 export async function GET(req: NextRequest) {
   try {
     // احراز هویت - فقط ادمین‌ها
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+      return "لطفا وارد شوید");
     }
 
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود به ادمین");
+      return "دسترسی محدود به ادمین");
     }
 
     // دریافت پارامترها
@@ -42,7 +38,7 @@ export async function GET(req: NextRequest) {
     // اعتبارسنجی
     if (!period || (period !== "this_week" && period !== "last_week")) {
       return validationError({
-        period: "دوره زمانی باید this_week یا last_week باشد",
+        period: "دوره زمانی باید this_week یا last_week باشد"
       });
     }
 

@@ -6,16 +6,13 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   successResponse,
   errorResponse,
-  unauthorizedResponse,
-  forbiddenResponse,
   notFoundResponse,
   ErrorCodes,
-  noContentResponse,
+  noContentResponse
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
 
@@ -24,13 +21,11 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+      return "لطفا وارد شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود. فقط ادمین.");
+      return "دسترسی محدود. فقط ادمین.");
     }
 
     const { id } = await params;
@@ -41,10 +36,10 @@ export async function GET(
         aboutPage: {
           select: {
             id: true,
-            heroTitle: true,
-          },
-        },
-      },
+            heroTitle: true
+          }
+        }
+      }
     });
 
     if (!item) {
@@ -66,13 +61,11 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+      return "لطفا وارد شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود. فقط ادمین.");
+      return "دسترسی محدود. فقط ادمین.");
     }
 
     const { id } = await params;
@@ -80,7 +73,7 @@ export async function PATCH(
 
     // Check if item exists
     const existingItem = await prisma.teamMember.findUnique({
-      where: { id },
+      where: { id }
     });
 
     if (!existingItem) {
@@ -115,10 +108,10 @@ export async function PATCH(
         aboutPage: {
           select: {
             id: true,
-            heroTitle: true,
-          },
-        },
-      },
+            heroTitle: true
+          }
+        }
+      }
     });
 
     return successResponse(updatedItem, "عضو تیم با موفقیت بروزرسانی شد");
@@ -136,20 +129,18 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+      return "لطفا وارد شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود. فقط ادمین.");
+      return "دسترسی محدود. فقط ادمین.");
     }
 
     const { id } = await params;
 
     // Check if item exists
     const existingItem = await prisma.teamMember.findUnique({
-      where: { id },
+      where: { id }
     });
 
     if (!existingItem) {
@@ -158,7 +149,7 @@ export async function DELETE(
 
     // Delete item
     await prisma.teamMember.delete({
-      where: { id },
+      where: { id }
     });
 
     return noContentResponse();

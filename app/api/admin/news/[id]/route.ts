@@ -7,16 +7,13 @@
 
 import { NextRequest } from "next/server";
 
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   successResponse,
   errorResponse,
-  unauthorizedResponse,
-  forbiddenResponse,
   notFoundResponse,
   ErrorCodes,
-  noContentResponse,
+  noContentResponse
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
 
@@ -25,13 +22,11 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const { id } = await params;
@@ -43,22 +38,22 @@ export async function GET(
           select: {
             id: true,
             slug: true,
-            title: true,
-          },
+            title: true
+          }
         },
         relatedTags: {
           select: {
             id: true,
             slug: true,
-            title: true,
-          },
+            title: true
+          }
         },
         _count: {
           select: {
-            comments: true,
-          },
-        },
-      },
+            comments: true
+          }
+        }
+      }
     });
 
     if (!article) {
@@ -80,13 +75,11 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const { id } = await params;
@@ -94,7 +87,7 @@ export async function PATCH(
 
     // Check if article exists
     const existingArticle = await prisma.newsArticle.findUnique({
-      where: { id },
+      where: { id }
     });
 
     if (!existingArticle) {
@@ -104,7 +97,7 @@ export async function PATCH(
     // If slug is being updated, check uniqueness
     if (body.slug && body.slug !== existingArticle.slug) {
       const slugExists = await prisma.newsArticle.findUnique({
-        where: { slug: body.slug },
+        where: { slug: body.slug }
       });
 
       if (slugExists) {
@@ -153,17 +146,17 @@ export async function PATCH(
           select: {
             id: true,
             slug: true,
-            title: true,
-          },
+            title: true
+          }
         },
         relatedTags: {
           select: {
             id: true,
             slug: true,
-            title: true,
-          },
-        },
-      },
+            title: true
+          }
+        }
+      }
     });
 
     return successResponse(updatedArticle, "News article updated successfully");
@@ -181,20 +174,18 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const { id } = await params;
 
     // Check if article exists
     const existingArticle = await prisma.newsArticle.findUnique({
-      where: { id },
+      where: { id }
     });
 
     if (!existingArticle) {
@@ -203,7 +194,7 @@ export async function DELETE(
 
     // Delete article (cascading deletes will handle comments)
     await prisma.newsArticle.delete({
-      where: { id },
+      where: { id }
     });
 
     return noContentResponse();

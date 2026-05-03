@@ -4,32 +4,28 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import {
   errorResponse,
-  unauthorizedResponse,
-  forbiddenResponse,
   successResponse,
   validationError,
-  ErrorCodes,
+  ErrorCodes
 } from "@/lib/api-response";
 import {
   getDeviceStats,
   getCachedData,
-  setCachedData,
+  setCachedData
 } from "@/lib/services/dashboard-service";
 import { DeviceStats } from "@/types/dashboard";
 
 export async function GET(req: NextRequest) {
   try {
     // احراز هویت - فقط ادمین‌ها
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+      return "لطفا وارد شوید");
     }
 
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود به ادمین");
+      return "دسترسی محدود به ادمین");
     }
 
     // دریافت پارامترها
@@ -39,7 +35,7 @@ export async function GET(req: NextRequest) {
     // اعتبارسنجی
     if (!period || (period !== "monthly" && period !== "yearly")) {
       return validationError({
-        period: "دوره زمانی باید monthly یا yearly باشد",
+        period: "دوره زمانی باید monthly یا yearly باشد"
       });
     }
 

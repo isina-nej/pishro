@@ -6,28 +6,23 @@
 
 import { NextRequest } from "next/server";
 import { Prisma } from "@/types/prisma";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   errorResponse,
-  unauthorizedResponse,
   paginatedResponse,
   createdResponse,
   ErrorCodes,
-  forbiddenResponse,
-  validationError,
+  validationError
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
 
 export async function GET(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -77,8 +72,8 @@ export async function GET(req: NextRequest) {
             select: {
               id: true,
               slug: true,
-              title: true,
-            },
+              title: true
+            }
           },
           _count: {
             select: {
@@ -87,10 +82,10 @@ export async function GET(req: NextRequest) {
               news: true,
               faqs: true,
               comments: true,
-              quizzes: true,
-            },
-          },
-        },
+              quizzes: true
+            }
+          }
+        }
       }),
       prisma.category.count({ where }),
     ]);
@@ -107,13 +102,11 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const body = await req.json();
@@ -148,20 +141,20 @@ export async function POST(req: NextRequest) {
       published = true,
       featured = false,
       order = 0,
-      tagIds = [],
+      tagIds = []
     } = body;
 
     // Validation
     if (!slug || !title) {
       return validationError({
         slug: !slug ? "Slug is required" : "",
-        title: !title ? "Title is required" : "",
+        title: !title ? "Title is required" : ""
       });
     }
 
     // Check if slug already exists
     const existingCategory = await prisma.category.findUnique({
-      where: { slug },
+      where: { slug }
     });
 
     if (existingCategory) {
@@ -209,17 +202,17 @@ export async function POST(req: NextRequest) {
         published,
         featured,
         order,
-        tagIds,
+        tagIds
       },
       include: {
         tags: {
           select: {
             id: true,
             slug: true,
-            title: true,
-          },
-        },
-      },
+            title: true
+          }
+        }
+      }
     });
 
     return createdResponse(category, "Category created successfully");

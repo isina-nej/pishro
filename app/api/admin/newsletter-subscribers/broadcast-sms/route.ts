@@ -4,27 +4,22 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { sendBulkSmsMelipayamak } from "@/lib/sms";
 import {
   errorResponse,
-  unauthorizedResponse,
   successResponse,
   validationError,
-  forbiddenResponse,
-  ErrorCodes,
+  ErrorCodes
 } from "@/lib/api-response";
 
 export async function POST(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("لطفا ابتدا وارد شوید");
+      return "لطفا ابتدا وارد شوید");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی غیرمجاز. فقط ادمین‌ها اجازه دارند.");
+      return "دسترسی غیرمجاز. فقط ادمین‌ها اجازه دارند.");
     }
 
     // Get message text from request body
@@ -50,8 +45,8 @@ export async function POST(req: NextRequest) {
     // Get all newsletter subscribers
     const subscribers = await prisma.newsletterSubscriber.findMany({
       select: {
-        phone: true,
-      },
+        phone: true
+      }
     });
 
     if (subscribers.length === 0) {
@@ -77,7 +72,7 @@ export async function POST(req: NextRequest) {
         failedPhones: results.failedPhones,
         message: `پیامک با موفقیت به ${results.success} نفر از ${results.total} عضو ارسال شد${
           results.failed > 0 ? `. ${results.failed} مورد با خطا مواجه شد` : ""
-        }`,
+        }`
       },
       `ارسال پیامک به ${results.success} نفر انجام شد`
     );

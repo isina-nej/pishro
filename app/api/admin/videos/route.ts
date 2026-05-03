@@ -1,24 +1,22 @@
 // @/app/api/admin/videos/route.ts
-import { auth } from "@/auth";
 import { NextRequest } from "next/server";
 import {
   successResponse,
   errorResponse,
-  unauthorizedResponse,
   validationError,
   paginatedResponse,
-  ErrorCodes,
+  ErrorCodes
 } from "@/lib/api-response";
 import {
   createVideo,
   getVideos,
-  getVideosCountByStatus,
+  getVideosCountByStatus
 } from "@/lib/services/video-service";
 import { processVideoToHLS } from "@/lib/services/hls-transcoding-service";
 import type {
   CreateVideoInput,
   VideoFilterOptions,
-  VideoProcessingStatus,
+  VideoProcessingStatus
 } from "@/types/video";
 
 /**
@@ -27,9 +25,8 @@ import type {
  */
 export async function GET(req: NextRequest) {
   try {
-    const session = await auth();
     if (!session?.user || session.user.role !== "ADMIN") {
-      return unauthorizedResponse("دسترسی غیرمجاز - فقط ادمین");
+      return "دسترسی غیرمجاز - فقط ادمین");
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -39,7 +36,7 @@ export async function GET(req: NextRequest) {
       processingStatus: statusParam as VideoProcessingStatus | undefined,
       search: searchParams.get("search") || undefined,
       page: parseInt(searchParams.get("page") || "1"),
-      limit: parseInt(searchParams.get("limit") || "20"),
+      limit: parseInt(searchParams.get("limit") || "20")
     };
 
     const { videos, total, page, limit } = await getVideos(options);
@@ -69,9 +66,8 @@ export async function GET(req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
     if (!session?.user || session.user.role !== "ADMIN") {
-      return unauthorizedResponse("دسترسی غیرمجاز - فقط ادمین");
+      return "دسترسی غیرمجاز - فقط ادمین");
     }
 
     const body = await req.json();
@@ -98,7 +94,7 @@ export async function POST(req: NextRequest) {
         videoId: !videoId ? "شناسه ویدیو الزامی است" : "",
         originalPath: !originalPath ? "مسیر فایل الزامی است" : "",
         fileSize: !fileSize ? "حجم فایل الزامی است" : "",
-        fileFormat: !fileFormat ? "فرمت فایل الزامی است" : "",
+        fileFormat: !fileFormat ? "فرمت فایل الزامی است" : ""
       });
     }
 
@@ -114,7 +110,7 @@ export async function POST(req: NextRequest) {
       height,
       bitrate,
       codec,
-      frameRate,
+      frameRate
     };
 
     // ایجاد رکورد ویدیو در دیتابیس
@@ -125,7 +121,7 @@ export async function POST(req: NextRequest) {
       processVideoToHLS(videoId, originalPath, {
         qualities: ["360p", "720p"],
         segmentDuration: 6,
-        generateThumbnail: true,
+        generateThumbnail: true
       }).catch((error) => {
         console.error("Background HLS processing error:", error);
       });
@@ -140,7 +136,7 @@ export async function POST(req: NextRequest) {
 
     if (error instanceof Error && error.message.includes("Unique constraint")) {
       return validationError({
-        videoId: "این شناسه ویدیو قبلاً استفاده شده است",
+        videoId: "این شناسه ویدیو قبلاً استفاده شده است"
       });
     }
 

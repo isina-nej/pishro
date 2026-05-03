@@ -1,18 +1,16 @@
 // @/app/api/admin/videos/[videoId]/route.ts
-import { auth } from "@/auth";
 import { NextRequest } from "next/server";
 import {
   successResponse,
   errorResponse,
-  unauthorizedResponse,
   notFoundResponse,
   validationError as _validationError,
-  ErrorCodes,
+  ErrorCodes
 } from "@/lib/api-response";
 import {
   getVideoByVideoId,
   updateVideo,
-  deleteVideo,
+  deleteVideo
 } from "@/lib/services/video-service";
 import type { UpdateVideoInput } from "@/types/video";
 
@@ -25,9 +23,8 @@ export async function GET(
   { params }: { params: Promise<{ videoId: string }> }
 ) {
   try {
-    const session = await auth();
     if (!session?.user || session.user.role !== "ADMIN") {
-      return unauthorizedResponse("دسترسی غیرمجاز - فقط ادمین");
+      return "دسترسی غیرمجاز - فقط ادمین");
     }
 
     const { videoId } = await params;
@@ -57,9 +54,8 @@ export async function PUT(
   { params }: { params: Promise<{ videoId: string }> }
 ) {
   try {
-    const session = await auth();
     if (!session?.user || session.user.role !== "ADMIN") {
-      return unauthorizedResponse("دسترسی غیرمجاز - فقط ادمین");
+      return "دسترسی غیرمجاز - فقط ادمین");
     }
 
     const { videoId } = await params;
@@ -94,9 +90,8 @@ export async function DELETE(
   { params }: { params: Promise<{ videoId: string }> }
 ) {
   try {
-    const session = await auth();
     if (!session?.user || session.user.role !== "ADMIN") {
-      return unauthorizedResponse("دسترسی غیرمجاز - فقط ادمین");
+      return "دسترسی غیرمجاز - فقط ادمین");
     }
 
     const { videoId } = await params;

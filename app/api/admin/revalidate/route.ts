@@ -6,13 +6,11 @@
 
 import { NextRequest } from "next/server";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { auth } from "@/auth";
 import {
   successResponse,
   errorResponse,
-  unauthorizedResponse,
   failResponse,
-  ErrorCodes,
+  ErrorCodes
 } from "@/lib/api-response";
 
 /**
@@ -37,16 +35,14 @@ import {
  */
 export async function POST(req: NextRequest) {
   try {
-    // Auth check - only admins can revalidate
-    const session = await auth();
 
     if (!session?.user) {
-      return unauthorizedResponse("لطفاً وارد حساب کاربری خود شوید");
+      return "لطفاً وارد حساب کاربری خود شوید");
     }
 
     // Check if user is admin (assuming role field exists in user model)
     if (session.user.role !== "admin") {
-      return unauthorizedResponse("شما دسترسی به این عملیات ندارید");
+      return "شما دسترسی به این عملیات ندارید");
     }
 
     // Parse request body
@@ -107,7 +103,7 @@ export async function POST(req: NextRequest) {
       message: "فرآیند بازخوانی کش با موفقیت انجام شد",
       revalidated,
       failed: failed.length > 0 ? failed : undefined,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toISOString()
     };
 
     return successResponse(response);
@@ -126,15 +122,13 @@ export async function POST(req: NextRequest) {
  */
 export async function GET() {
   try {
-    // Auth check
-    const session = await auth();
 
     if (!session?.user) {
-      return unauthorizedResponse("لطفاً وارد حساب کاربری خود شوید");
+      return "لطفاً وارد حساب کاربری خود شوید");
     }
 
     if (session.user.role !== "admin") {
-      return unauthorizedResponse("شما دسترسی به این عملیات ندارید");
+      return "شما دسترسی به این عملیات ندارید");
     }
 
     // Return available paths and tags that can be revalidated
@@ -153,14 +147,14 @@ export async function GET() {
         "/api/categories/stock-market",
         "/api/categories/metaverse",
       ],
-      tags: ["category", "courses", "tags", "faqs", "comments"],
+      tags: ["category", "courses", "tags", "faqs", "comments"]
     };
 
     const response = {
       message: "لیست مسیرهای قابل بازخوانی",
       paths: availablePaths,
       revalidateInterval: 3600, // 1 hour in seconds
-      lastRevalidation: new Date().toISOString(),
+      lastRevalidation: new Date().toISOString()
     };
 
     return successResponse(response);

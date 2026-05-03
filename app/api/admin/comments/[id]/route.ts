@@ -6,16 +6,13 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   successResponse,
   errorResponse,
-  unauthorizedResponse,
-  forbiddenResponse,
   notFoundResponse,
   ErrorCodes,
-  noContentResponse,
+  noContentResponse
 } from "@/lib/api-response";
 
 export async function GET(
@@ -23,13 +20,11 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const { id } = await params;
@@ -43,24 +38,24 @@ export async function GET(
             phone: true,
             firstName: true,
             lastName: true,
-            avatarUrl: true,
-          },
+            avatarUrl: true
+          }
         },
         course: {
           select: {
             id: true,
             subject: true,
-            slug: true,
-          },
+            slug: true
+          }
         },
         category: {
           select: {
             id: true,
             title: true,
-            slug: true,
-          },
-        },
-      },
+            slug: true
+          }
+        }
+      }
     });
 
     if (!comment) {
@@ -82,13 +77,11 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const { id } = await params;
@@ -96,7 +89,7 @@ export async function PATCH(
 
     // Check if comment exists
     const existingComment = await prisma.comment.findUnique({
-      where: { id },
+      where: { id }
     });
 
     if (!existingComment) {
@@ -128,24 +121,24 @@ export async function PATCH(
             phone: true,
             firstName: true,
             lastName: true,
-            avatarUrl: true,
-          },
+            avatarUrl: true
+          }
         },
         course: {
           select: {
             id: true,
             subject: true,
-            slug: true,
-          },
+            slug: true
+          }
         },
         category: {
           select: {
             id: true,
             title: true,
-            slug: true,
-          },
-        },
-      },
+            slug: true
+          }
+        }
+      }
     });
 
     return successResponse(updatedComment, "Comment updated successfully");
@@ -163,20 +156,18 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const { id } = await params;
 
     // Check if comment exists
     const existingComment = await prisma.comment.findUnique({
-      where: { id },
+      where: { id }
     });
 
     if (!existingComment) {
@@ -185,7 +176,7 @@ export async function DELETE(
 
     // Delete comment
     await prisma.comment.delete({
-      where: { id },
+      where: { id }
     });
 
     return noContentResponse();

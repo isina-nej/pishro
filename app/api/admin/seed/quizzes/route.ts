@@ -19,7 +19,7 @@ const quizData = [
         options: [
           {
             text: "توزیع رایگان توکن‌ها به کیف‌پول‌های کاربران",
-            isCorrect: true,
+            isCorrect: true
           },
           { text: "خرید توکن با قیمت پایین", isCorrect: false },
           { text: "فروش توکن در صرافی", isCorrect: false },
@@ -28,7 +28,7 @@ const quizData = [
         explanation:
           "ایردراپ به توزیع رایگان توکن‌ها توسط پروژه‌ها به کاربران گفته می‌شود.",
         points: 10,
-        order: 0,
+        order: 0
       },
       {
         question:
@@ -43,7 +43,7 @@ const quizData = [
         explanation:
           "معمولاً برای شرکت در ایردراپ‌ها به کیف پول، ایمیل و حساب‌های اجتماعی نیاز دارید.",
         points: 15,
-        order: 1,
+        order: 1
       },
       {
         question: "Retroactive Airdrop چیست؟",
@@ -51,7 +51,7 @@ const quizData = [
         options: [
           {
             text: "ایردراپ برای کاربران قدیمی که قبلاً از پروژه استفاده کرده‌اند",
-            isCorrect: true,
+            isCorrect: true
           },
           { text: "ایردراپ برای کاربران جدید", isCorrect: false },
           { text: "ایردراپ برای توسعه‌دهندگان", isCorrect: false },
@@ -60,7 +60,7 @@ const quizData = [
         explanation:
           "Retroactive Airdrop برای پاداش به کاربران قدیمی است که قبلاً از پروژه استفاده کرده‌اند.",
         points: 20,
-        order: 2,
+        order: 2
       },
       {
         question: "کدام شبکه برای دریافت ایردراپ‌های DeFi محبوب‌تر است؟",
@@ -74,7 +74,7 @@ const quizData = [
         explanation:
           "Ethereum پلتفرم اصلی برای پروژه‌های DeFi و ایردراپ‌های آن‌هاست.",
         points: 15,
-        order: 3,
+        order: 3
       },
       {
         question:
@@ -83,7 +83,7 @@ const quizData = [
         options: [
           {
             text: "استفاده فعال از پروژه‌های جدید و تعامل با قراردادهای هوشمند",
-            isCorrect: true,
+            isCorrect: true
           },
           { text: "فقط عضویت در کانال‌های تلگرام", isCorrect: false },
           { text: "خرید توکن از صرافی", isCorrect: false },
@@ -92,9 +92,9 @@ const quizData = [
         explanation:
           "استفاده فعال از پروژه‌ها و تعامل با قراردادهای هوشمند شانس دریافت ایردراپ‌های بزرگ را افزایش می‌دهد.",
         points: 25,
-        order: 4,
+        order: 4
       },
-    ],
+    ]
   },
   {
     categorySlug: "nft",
@@ -114,7 +114,7 @@ const quizData = [
         explanation:
           "NFT مخفف Non-Fungible Token به معنای توکن غیرقابل تعویض است.",
         points: 10,
-        order: 0,
+        order: 0
       },
       {
         question: "تفاوت اصلی NFT با ارزهای دیجیتال معمولی چیست؟",
@@ -128,7 +128,7 @@ const quizData = [
         explanation:
           "NFT‌ها منحصر به فرد هستند و هر کدام ویژگی‌های خاص خود را دارند، برخلاف ارزهای دیجیتال که قابل تعویض هستند.",
         points: 15,
-        order: 1,
+        order: 1
       },
       {
         question: "استاندارد ERC-721 مربوط به چیست؟",
@@ -141,7 +141,7 @@ const quizData = [
         ],
         explanation: "ERC-721 استاندارد NFT در بلاکچین Ethereum است.",
         points: 20,
-        order: 2,
+        order: 2
       },
       {
         question: "کدام‌یک از موارد زیر کاربردهای NFT است؟ (چند گزینه)",
@@ -155,7 +155,7 @@ const quizData = [
         explanation:
           "NFT‌ها در هنر دیجیتال، کلکسیون‌ها، املاک مجازی و بسیاری موارد دیگر کاربرد دارند.",
         points: 20,
-        order: 3,
+        order: 3
       },
       {
         question: "Gas Fee در خرید NFT چیست؟",
@@ -169,9 +169,9 @@ const quizData = [
         explanation:
           "Gas Fee کارمزدی است که برای پردازش تراکنش در شبکه بلاکچین پرداخت می‌شود.",
         points: 20,
-        order: 4,
+        order: 4
       },
-    ],
+    ]
   },
   {
     categorySlug: "cryptocurrency",
@@ -191,7 +191,7 @@ const quizData = [
         explanation:
           "بلاکچین یک دفتر کل توزیع‌شده است که تراکنش‌ها را به صورت غیرمتمرکز ثبت می‌کند.",
         points: 10,
-        order: 0,
+        order: 0
       },
       {
         question: "تفاوت اصلی Bitcoin و Ethereum چیست؟",
@@ -199,7 +199,7 @@ const quizData = [
         options: [
           {
             text: "Ethereum از قراردادهای هوشمند پشتیبانی می‌کند",
-            isCorrect: true,
+            isCorrect: true
           },
           { text: "Bitcoin سریع‌تر است", isCorrect: false },
           { text: "Ethereum قدیمی‌تر است", isCorrect: false },
@@ -208,7 +208,7 @@ const quizData = [
         explanation:
           "Ethereum به عنوان یک پلتفرم قراردادهای هوشمند طراحی شده است.",
         points: 15,
-        order: 1,
+        order: 1
       },
       {
         question:
@@ -223,7 +223,7 @@ const quizData = [
         explanation:
           "کیف پول‌های سخت‌افزاری، نرم‌افزاری و کاغذی از انواع معروف کیف پول‌ها هستند.",
         points: 20,
-        order: 2,
+        order: 2
       },
       {
         question: "DeFi مخفف چیست؟",
@@ -237,7 +237,7 @@ const quizData = [
         explanation:
           "DeFi مخفف امور مالی غیرمتمرکز (Decentralized Finance) است.",
         points: 15,
-        order: 3,
+        order: 3
       },
       {
         question: "استیکینگ (Staking) در ارزهای دیجیتال به چه معناست؟",
@@ -245,7 +245,7 @@ const quizData = [
         options: [
           {
             text: "قفل کردن رمزارز برای دریافت پاداش و تأیید تراکنش‌ها",
-            isCorrect: true,
+            isCorrect: true
           },
           { text: "خرید و فروش سریع ارز", isCorrect: false },
           { text: "استخراج ارز با کارت گرافیک", isCorrect: false },
@@ -254,9 +254,9 @@ const quizData = [
         explanation:
           "استیکینگ به قفل کردن رمزارز در شبکه برای کمک به تأیید تراکنش‌ها و دریافت پاداش گفته می‌شود.",
         points: 25,
-        order: 4,
+        order: 4
       },
-    ],
+    ]
   },
   {
     categorySlug: "defi",
@@ -270,7 +270,7 @@ const quizData = [
         options: [
           {
             text: "برنامه‌ای که به صورت خودکار روی بلاکچین اجرا می‌شود",
-            isCorrect: true,
+            isCorrect: true
           },
           { text: "یک نوع رمزارز", isCorrect: false },
           { text: "یک قرارداد کاغذی هوشمند", isCorrect: false },
@@ -279,7 +279,7 @@ const quizData = [
         explanation:
           "قرارداد هوشمند یک برنامه است که بدون نیاز به واسطه روی بلاکچین اجرا می‌شود.",
         points: 10,
-        order: 0,
+        order: 0
       },
       {
         question: "AMM در DeFi به چه معناست؟",
@@ -293,7 +293,7 @@ const quizData = [
         explanation:
           "AMM مخفف بازارساز خودکار است که برای مبادله توکن‌ها بدون نیاز به دفتر سفارش استفاده می‌شود.",
         points: 15,
-        order: 1,
+        order: 1
       },
       {
         question: "Liquidity Pool چیست؟",
@@ -301,7 +301,7 @@ const quizData = [
         options: [
           {
             text: "استخری از توکن‌ها برای تسهیل معاملات در DEX",
-            isCorrect: true,
+            isCorrect: true
           },
           { text: "یک نوع کیف پول", isCorrect: false },
           { text: "الگوریتم استخراج", isCorrect: false },
@@ -310,7 +310,7 @@ const quizData = [
         explanation:
           "استخر نقدینگی شامل توکن‌هایی است که کاربران قفل می‌کنند تا معاملات را در صرافی‌های غیرمتمرکز امکان‌پذیر کنند.",
         points: 20,
-        order: 2,
+        order: 2
       },
       {
         question: "Yield Farming به چه معناست؟",
@@ -318,7 +318,7 @@ const quizData = [
         options: [
           {
             text: "سرمایه‌ گذاری در پروتکل‌های DeFi برای کسب سود",
-            isCorrect: true,
+            isCorrect: true
           },
           { text: "استخراج ارز دیجیتال", isCorrect: false },
           { text: "کشاورزی واقعی", isCorrect: false },
@@ -327,7 +327,7 @@ const quizData = [
         explanation:
           "Yield Farming به سرمایه‌ گذاری در پروتکل‌های DeFi برای دریافت پاداش و سود گفته می‌شود.",
         points: 25,
-        order: 3,
+        order: 3
       },
       {
         question: "کدام‌یک از موارد زیر ریسک‌های DeFi هستند؟ (چند گزینه)",
@@ -341,9 +341,9 @@ const quizData = [
         explanation:
           "DeFi دارای ریسک‌هایی مانند باگ قراردادها، ضرر ناپایدار و کلاهبرداری است.",
         points: 25,
-        order: 4,
+        order: 4
       },
-    ],
+    ]
   },
   {
     categorySlug: "trading",
@@ -357,7 +357,7 @@ const quizData = [
         options: [
           {
             text: "تحلیل نمودارها و الگوهای قیمتی برای پیش‌بینی روند",
-            isCorrect: true,
+            isCorrect: true
           },
           { text: "بررسی اخبار بازار", isCorrect: false },
           { text: "تحلیل کد منبع پروژه", isCorrect: false },
@@ -366,7 +366,7 @@ const quizData = [
         explanation:
           "تحلیل تکنیکال به بررسی نمودارها، الگوها و اندیکاتورها برای پیش‌بینی قیمت می‌پردازد.",
         points: 10,
-        order: 0,
+        order: 0
       },
       {
         question: "Stop Loss چه کاربردی دارد؟",
@@ -380,7 +380,7 @@ const quizData = [
         explanation:
           "Stop Loss سفارشی است که برای محدود کردن ضرر در صورت حرکت نامطلوب قیمت استفاده می‌شود.",
         points: 15,
-        order: 1,
+        order: 1
       },
       {
         question:
@@ -395,7 +395,7 @@ const quizData = [
         explanation:
           "RSI، MACD و میانگین‌های متحرک از اندیکاتورهای محبوب تحلیل تکنیکال هستند.",
         points: 20,
-        order: 2,
+        order: 2
       },
       {
         question: "معامله با اهرم (Leverage Trading) چیست؟",
@@ -403,7 +403,7 @@ const quizData = [
         options: [
           {
             text: "معامله با سرمایه قرض‌گرفته شده برای افزایش سود یا ضرر",
-            isCorrect: true,
+            isCorrect: true
           },
           { text: "معامله بدون کارمزد", isCorrect: false },
           { text: "معامله خودکار", isCorrect: false },
@@ -412,7 +412,7 @@ const quizData = [
         explanation:
           "معامله با اهرم به استفاده از سرمایه قرض‌گرفته شده برای افزایش قدرت خرید گفته می‌شود که می‌تواند سود یا ضرر را چندبرابر کند.",
         points: 25,
-        order: 3,
+        order: 3
       },
       {
         question: "FOMO در معامله‌گری به چه معناست؟",
@@ -420,7 +420,7 @@ const quizData = [
         options: [
           {
             text: "Fear Of Missing Out - ترس از دست دادن فرصت",
-            isCorrect: true,
+            isCorrect: true
           },
           { text: "نوعی استراتژی معاملاتی", isCorrect: false },
           { text: "یک اندیکاتور تکنیکال", isCorrect: false },
@@ -429,9 +429,9 @@ const quizData = [
         explanation:
           "FOMO یک حالت روانی است که باعث می‌شود معامله‌گران بدون تحلیل کافی وارد معاملات شوند.",
         points: 20,
-        order: 4,
+        order: 4
       },
-    ],
+    ]
   },
 ];
 
@@ -442,7 +442,7 @@ export async function POST(_req: NextRequest) {
     const results = {
       created: [] as string[],
       skipped: [] as string[],
-      errors: [] as string[],
+      errors: [] as string[]
     };
 
     for (const quiz of quizData) {
@@ -450,7 +450,7 @@ export async function POST(_req: NextRequest) {
 
       // بررسی وجود دسته‌بندی
       const category = await prisma.category.findUnique({
-        where: { slug: quiz.categorySlug },
+        where: { slug: quiz.categorySlug }
       });
 
       if (!category) {
@@ -463,14 +463,14 @@ export async function POST(_req: NextRequest) {
       const existingQuiz = await prisma.quiz.findFirst({
         where: {
           title: quiz.title,
-          courseId: null,
-        },
+          courseId: null
+        }
       });
 
       if (existingQuiz) {
         console.log(`   🗑️  حذف آزمون قبلی...`);
         await prisma.quiz.delete({
-          where: { id: existingQuiz.id },
+          where: { id: existingQuiz.id }
         });
       }
 
@@ -489,8 +489,8 @@ export async function POST(_req: NextRequest) {
           showResults: true,
           showCorrectAnswers: true,
           published: true,
-          order: 0,
-        },
+          order: 0
+        }
       });
 
       console.log(`   ✅ آزمون ایجاد شد: ${createdQuiz.id}`);
@@ -505,8 +505,8 @@ export async function POST(_req: NextRequest) {
             options: question.options,
             explanation: question.explanation,
             points: question.points,
-            order: question.order,
-          },
+            order: question.order
+          }
         });
       }
 
@@ -516,7 +516,7 @@ export async function POST(_req: NextRequest) {
 
     // نمایش آمار نهایی
     const totalQuizzes = await prisma.quiz.count({
-      where: { courseId: null },
+      where: { courseId: null }
     });
     const totalQuestions = await prisma.quizQuestion.count();
 
@@ -533,8 +533,8 @@ export async function POST(_req: NextRequest) {
         totalQuestions,
         created: results.created,
         skipped: results.skipped,
-        errors: results.errors,
-      },
+        errors: results.errors
+      }
     });
   } catch (error) {
     console.error("❌ خطا در Seed کردن:", error);

@@ -6,28 +6,23 @@
 
 import { NextRequest } from "next/server";
 import { Prisma } from "@/types/prisma";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   errorResponse,
-  unauthorizedResponse,
   paginatedResponse,
   createdResponse,
   ErrorCodes,
-  forbiddenResponse,
-  validationError,
+  validationError
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
 
 export async function GET(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -93,25 +88,25 @@ export async function GET(req: NextRequest) {
             select: {
               id: true,
               slug: true,
-              title: true,
-            },
+              title: true
+            }
           },
           relatedTags: {
             select: {
               id: true,
               slug: true,
-              title: true,
-            },
+              title: true
+            }
           },
           _count: {
             select: {
               comments: true,
               enrollments: true,
               orderItems: true,
-              quizzes: true,
-            },
-          },
-        },
+              quizzes: true
+            }
+          }
+        }
       }),
       prisma.course.count({ where }),
     ]);
@@ -128,13 +123,11 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const body = await req.json();
@@ -158,21 +151,21 @@ export async function POST(req: NextRequest) {
       instructor,
       status = "ACTIVE",
       published = true,
-      featured = false,
+      featured = false
     } = body;
 
     // Validation
     if (!subject || price === undefined) {
       return validationError({
         subject: !subject ? "Subject is required" : "",
-        price: price === undefined ? "Price is required" : "",
+        price: price === undefined ? "Price is required" : ""
       });
     }
 
     // If slug is provided, check uniqueness
     if (slug) {
       const existingCourse = await prisma.course.findUnique({
-        where: { slug },
+        where: { slug }
       });
 
       if (existingCourse) {
@@ -208,24 +201,24 @@ export async function POST(req: NextRequest) {
         instructor,
         status,
         published,
-        featured,
+        featured
       },
       include: {
         category: {
           select: {
             id: true,
             slug: true,
-            title: true,
-          },
+            title: true
+          }
         },
         relatedTags: {
           select: {
             id: true,
             slug: true,
-            title: true,
-          },
-        },
-      },
+            title: true
+          }
+        }
+      }
     });
 
     return createdResponse(course, "Course created successfully");

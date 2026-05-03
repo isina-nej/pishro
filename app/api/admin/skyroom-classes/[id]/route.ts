@@ -1,18 +1,16 @@
 // @/app/api/admin/skyroom-classes/[id]/route.ts
-import { auth } from "@/auth";
 import { NextRequest } from "next/server";
 import {
   getSkyRoomClassById,
   updateSkyRoomClass,
-  deleteSkyRoomClass,
+  deleteSkyRoomClass
 } from "@/lib/services/skyroom-service";
 import {
   successResponse,
   errorResponse,
-  unauthorizedResponse,
   notFoundResponse,
   validationError,
-  ErrorCodes,
+  ErrorCodes
 } from "@/lib/api-response";
 
 interface RouteParams {
@@ -27,9 +25,8 @@ interface RouteParams {
  */
 export async function GET(req: NextRequest, { params }: RouteParams) {
   try {
-    const session = await auth();
     if (!session?.user || session.user.role !== "ADMIN") {
-      return unauthorizedResponse("دسترسی غیرمجاز");
+      return "دسترسی غیرمجاز");
     }
 
     const { id } = await params;
@@ -55,9 +52,8 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
  */
 export async function PATCH(req: NextRequest, { params }: RouteParams) {
   try {
-    const session = await auth();
     if (!session?.user || session.user.role !== "ADMIN") {
-      return unauthorizedResponse("دسترسی غیرمجاز");
+      return "دسترسی غیرمجاز");
     }
 
     const { id } = await params;
@@ -105,9 +101,8 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
  */
 export async function DELETE(req: NextRequest, { params }: RouteParams) {
   try {
-    const session = await auth();
     if (!session?.user || session.user.role !== "ADMIN") {
-      return unauthorizedResponse("دسترسی غیرمجاز");
+      return "دسترسی غیرمجاز");
     }
 
     const { id } = await params;

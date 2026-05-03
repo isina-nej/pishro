@@ -2,13 +2,10 @@
  * PATCH /api/admin/block-news/[id]/blocks/reorder - Reorder content blocks
  */
 
-import { auth } from '@/auth';
 import {
-  unauthorizedResponse,
-  forbiddenResponse,
   successResponse,
   errorResponse,
-  validationError,
+  validationError
 } from '@/lib/api-response';
 import { reorderBlocks } from '@/lib/services/block-news-service';
 import { ReorderBlocksSchema } from '@/lib/schemas/block-news-schema';
@@ -19,13 +16,12 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse('ورود به سیستم الزامی است');
+      return 'ورود به سیستم الزامی است');
     }
 
     if (session.user.role !== 'ADMIN') {
-      return forbiddenResponse('دسترسی منحصر به مدیران است');
+      return 'دسترسی منحصر به مدیران است');
     }
 
     const body = (await req.json()) as ReorderBlocksRequest;

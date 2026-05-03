@@ -7,16 +7,13 @@
 
 import { NextRequest } from "next/server";
 import { unlink } from "fs/promises";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   successResponse,
   errorResponse,
-  unauthorizedResponse,
-  forbiddenResponse,
   notFoundResponse,
   ErrorCodes,
-  noContentResponse,
+  noContentResponse
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
 import { getFilePathFromUrl } from "@/lib/upload-config";
@@ -45,19 +42,17 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const { id } = await params;
 
     const book = await prisma.digitalBook.findUnique({
-      where: { id },
+      where: { id }
     });
 
     if (!book) {
@@ -72,10 +67,10 @@ export async function GET(
           select: {
             id: true,
             slug: true,
-            title: true,
-          },
-        },
-      },
+            title: true
+          }
+        }
+      }
     });
 
     return successResponse(bookWithRelations);
@@ -93,13 +88,11 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const { id } = await params;
@@ -107,7 +100,7 @@ export async function PATCH(
 
     // Check if book exists
     const existingBook = await prisma.digitalBook.findUnique({
-      where: { id },
+      where: { id }
     });
 
     if (!existingBook) {
@@ -117,7 +110,7 @@ export async function PATCH(
     // If slug is being updated, check uniqueness
     if (body.slug && body.slug !== existingBook.slug) {
       const slugExists = await prisma.digitalBook.findUnique({
-        where: { slug: body.slug },
+        where: { slug: body.slug }
       });
 
       if (slugExists) {
@@ -189,7 +182,7 @@ export async function PATCH(
 
     await prisma.digitalBook.update({
       where: { id },
-      data: updateData,
+      data: updateData
     });
 
     // Fetch the complete book with relations
@@ -200,10 +193,10 @@ export async function PATCH(
           select: {
             id: true,
             slug: true,
-            title: true,
-          },
-        },
-      },
+            title: true
+          }
+        }
+      }
     });
 
     return successResponse(completeBook, "Book updated successfully");
@@ -221,20 +214,18 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Auth check - only admins
-    const session = await auth();
     if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+      return "Please login to continue");
     }
     if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+      return "Access denied. Admin only.");
     }
 
     const { id } = await params;
 
     // Check if book exists
     const existingBook = await prisma.digitalBook.findUnique({
-      where: { id },
+      where: { id }
     });
 
     if (!existingBook) {
@@ -261,7 +252,7 @@ export async function DELETE(
 
     // Delete book from database
     await prisma.digitalBook.delete({
-      where: { id },
+      where: { id }
     });
 
     console.log(`Book and all associated files deleted: ${id}`);
