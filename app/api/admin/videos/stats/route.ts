@@ -4,22 +4,24 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import {
   errorResponse,
   successResponse,
   ErrorCodes
 } from "@/lib/api-response";
 import { getVideoStats } from "@/lib/services/video-service";
+
 export async function GET(_req: NextRequest) {
   try {
-    const session = await auth();
     if (!session?.user) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
       return errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);
+    }
+
     const stats = await getVideoStats();
+
     return successResponse(stats);
   } catch (error) {
     console.error("Error fetching video stats:", error);

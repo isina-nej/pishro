@@ -15,6 +15,7 @@ import {
   ErrorCodes,
   noContentResponse
 } from "@/lib/api-response";
+
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -26,7 +27,10 @@ export async function GET(
     }
     if (session.user.role !== "ADMIN") {
       return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.FORBIDDEN);
+    }
+
     const { id } = await params;
+
     const item = await prisma.aboutPage.findUnique({
       where: { id },
       include: {
@@ -35,8 +39,11 @@ export async function GET(
         certificates: true
       }
     });
+
     if (!item) {
       return notFoundResponse("AboutPage", "صفحه درباره ما یافت نشد");
+    }
+
     return successResponse(item);
   } catch (error) {
     console.error("Error fetching about page:", error);
@@ -46,15 +53,35 @@ export async function GET(
     );
   }
 }
+
 export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
+    }
+    if (session.user.role !== "ADMIN") {
       return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
+    }
+
+    const { id } = await params;
     const body = await req.json();
+
     // Check if item exists
     const existingItem = await prisma.aboutPage.findUnique({
       where: { id }
+    });
+
     if (!existingItem) {
+      return notFoundResponse("AboutPage", "صفحه درباره ما یافت نشد");
+    }
+
     // Prepare update data
     const updateData: Record<string, unknown> = {};
+
     // Only include fields that are provided
     if (body.heroTitle !== undefined) updateData.heroTitle = body.heroTitle;
     if (body.heroSubtitle !== undefined) updateData.heroSubtitle = body.heroSubtitle;
@@ -77,14 +104,62 @@ export async function PATCH(
     if (body.metaDescription !== undefined) updateData.metaDescription = body.metaDescription;
     if (body.metaKeywords !== undefined) updateData.metaKeywords = body.metaKeywords;
     if (body.published !== undefined) updateData.published = body.published;
+
     const updatedItem = await prisma.aboutPage.update({
+      where: { id },
       data: updateData,
+      include: {
+        resumeItems: true,
+        teamMembers: true,
+        certificates: true
+      }
+    });
+
     return successResponse(updatedItem, "صفحه درباره ما با موفقیت بروزرسانی شد");
+  } catch (error) {
     console.error("Error updating about page:", error);
+    return errorResponse(
       "خطا در بروزرسانی صفحه درباره ما",
+      ErrorCodes.DATABASE_ERROR
+    );
+  }
+}
+
 export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
+    }
+    if (session.user.role !== "ADMIN") {
+      return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
+    }
+
+    const { id } = await params;
+
+    // Check if item exists
+    const existingItem = await prisma.aboutPage.findUnique({
+      where: { id }
+    });
+
+    if (!existingItem) {
+      return notFoundResponse("AboutPage", "صفحه درباره ما یافت نشد");
+    }
+
     // Delete item (cascading deletes will handle related items)
     await prisma.aboutPage.delete({
+      where: { id }
+    });
+
     return noContentResponse();
+  } catch (error) {
     console.error("Error deleting about page:", error);
+    return errorResponse(
       "خطا در حذف صفحه درباره ما",
+      ErrorCodes.DATABASE_ERROR
+    );
+  }
+}

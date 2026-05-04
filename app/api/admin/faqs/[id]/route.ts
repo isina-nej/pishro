@@ -6,7 +6,6 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   successResponse,
@@ -15,18 +14,21 @@ import {
   ErrorCodes,
   noContentResponse
 } from "@/lib/api-response";
+
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
     if (!session?.user) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
       return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
+    }
+
     const { id } = await params;
+
     const faq = await prisma.fAQ.findUnique({
       where: { id },
       include: {
@@ -39,8 +41,11 @@ export async function GET(
         }
       }
     });
+
     if (!faq) {
       return notFoundResponse("FAQ", "FAQ not found");
+    }
+
     return successResponse(faq);
   } catch (error) {
     console.error("Error fetching FAQ:", error);
@@ -50,14 +55,34 @@ export async function GET(
     );
   }
 }
+
 export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    if (!session?.user) {
+      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+    }
+    if (session.user.role !== "ADMIN") {
+      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
+    }
+
+    const { id } = await params;
     const body = await req.json();
+
     // Check if FAQ exists
     const existingFaq = await prisma.fAQ.findUnique({
       where: { id }
+    });
+
     if (!existingFaq) {
+      return notFoundResponse("FAQ", "FAQ not found");
+    }
+
     // Prepare update data
     const updateData: Record<string, unknown> = {};
+
     // Only include fields that are provided
     if (body.question !== undefined) updateData.question = body.question;
     if (body.answer !== undefined) updateData.answer = body.answer;
@@ -69,14 +94,65 @@ export async function PATCH(
     if (body.views !== undefined) updateData.views = body.views;
     if (body.helpful !== undefined) updateData.helpful = body.helpful;
     if (body.notHelpful !== undefined) updateData.notHelpful = body.notHelpful;
+
     const updatedFaq = await prisma.fAQ.update({
+      where: { id },
       data: updateData,
+      include: {
+        category: {
+          select: {
+            id: true,
+            slug: true,
+            title: true
+          }
+        }
+      }
+    });
+
     return successResponse(updatedFaq, "FAQ updated successfully");
+  } catch (error) {
     console.error("Error updating FAQ:", error);
+    return errorResponse(
       "Error updating FAQ",
+      ErrorCodes.DATABASE_ERROR
+    );
+  }
+}
+
 export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    if (!session?.user) {
+      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+    }
+    if (session.user.role !== "ADMIN") {
+      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
+    }
+
+    const { id } = await params;
+
+    // Check if FAQ exists
+    const existingFaq = await prisma.fAQ.findUnique({
+      where: { id }
+    });
+
+    if (!existingFaq) {
+      return notFoundResponse("FAQ", "FAQ not found");
+    }
+
     // Delete FAQ
     await prisma.fAQ.delete({
+      where: { id }
+    });
+
     return noContentResponse();
+  } catch (error) {
     console.error("Error deleting FAQ:", error);
+    return errorResponse(
       "Error deleting FAQ",
+      ErrorCodes.DATABASE_ERROR
+    );
+  }
+}

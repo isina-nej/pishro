@@ -6,7 +6,6 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   successResponse,
@@ -16,18 +15,21 @@ import {
   noContentResponse
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
+
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
     if (!session?.user) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
       return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
+    }
+
     const { id } = await params;
+
     const category = await prisma.category.findUnique({
       where: { id },
       include: {
@@ -39,17 +41,22 @@ export async function GET(
           }
         },
         _count: {
+          select: {
             courses: true,
             content: true,
             news: true,
             faqs: true,
             comments: true,
             quizzes: true
+          }
         }
       }
     });
+
     if (!category) {
       return notFoundResponse("Category", "Category not found");
+    }
+
     return successResponse(category);
   } catch (error) {
     console.error("Error fetching category:", error);
@@ -59,24 +66,48 @@ export async function GET(
     );
   }
 }
+
 export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    if (!session?.user) {
+      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+    }
+    if (session.user.role !== "ADMIN") {
+      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
+    }
+
+    const { id } = await params;
     const body = await req.json();
+
     // Check if category exists
     const existingCategory = await prisma.category.findUnique({
       where: { id }
+    });
+
     if (!existingCategory) {
+      return notFoundResponse("Category", "Category not found");
+    }
+
     // If slug is being updated, check uniqueness
     if (body.slug && body.slug !== existingCategory.slug) {
       const slugExists = await prisma.category.findUnique({
         where: { slug: body.slug }
       });
+
       if (slugExists) {
         return errorResponse(
           "Category with this slug already exists",
           ErrorCodes.ALREADY_EXISTS
         );
+      }
+    }
+
     // Prepare update data
     const updateData: Record<string, unknown> = {};
+
     // Only include fields that are provided
     if (body.slug !== undefined) updateData.slug = body.slug;
     if (body.title !== undefined) updateData.title = body.title;
@@ -85,6 +116,7 @@ export async function PATCH(
     if (body.coverImage !== undefined) {
       // Normalize coverImage URL (extract original URL from Next.js optimization URLs)
       updateData.coverImage = normalizeImageUrl(body.coverImage);
+    }
     if (body.color !== undefined) updateData.color = body.color;
     if (body.metaTitle !== undefined) updateData.metaTitle = body.metaTitle;
     if (body.metaDescription !== undefined) updateData.metaDescription = body.metaDescription;
@@ -95,6 +127,7 @@ export async function PATCH(
     if (body.heroImage !== undefined) {
       // Normalize heroImage URL (extract original URL from Next.js optimization URLs)
       updateData.heroImage = normalizeImageUrl(body.heroImage);
+    }
     if (body.heroCta1Text !== undefined) updateData.heroCta1Text = body.heroCta1Text;
     if (body.heroCta1Link !== undefined) updateData.heroCta1Link = body.heroCta1Link;
     if (body.heroCta2Text !== undefined) updateData.heroCta2Text = body.heroCta2Text;
@@ -105,6 +138,7 @@ export async function PATCH(
     if (body.aboutImage !== undefined) {
       // Normalize aboutImage URL (extract original URL from Next.js optimization URLs)
       updateData.aboutImage = normalizeImageUrl(body.aboutImage);
+    }
     if (body.aboutCta1Text !== undefined) updateData.aboutCta1Text = body.aboutCta1Text;
     if (body.aboutCta1Link !== undefined) updateData.aboutCta1Link = body.aboutCta1Link;
     if (body.aboutCta2Text !== undefined) updateData.aboutCta2Text = body.aboutCta2Text;
@@ -115,21 +149,81 @@ export async function PATCH(
     if (body.featured !== undefined) updateData.featured = body.featured;
     if (body.order !== undefined) updateData.order = body.order;
     if (body.tagIds !== undefined) updateData.tagIds = body.tagIds;
+
     const updatedCategory = await prisma.category.update({
+      where: { id },
       data: updateData,
+      include: {
+        tags: {
+          select: {
+            id: true,
+            slug: true,
+            title: true
+          }
+        }
+      }
+    });
+
     return successResponse(updatedCategory, "Category updated successfully");
+  } catch (error) {
     console.error("Error updating category:", error);
+    return errorResponse(
       "Error updating category",
+      ErrorCodes.DATABASE_ERROR
+    );
+  }
+}
+
 export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    if (!session?.user) {
+      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+    }
+    if (session.user.role !== "ADMIN") {
+      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
+    }
+
+    const { id } = await params;
+
+    // Check if category exists
+    const existingCategory = await prisma.category.findUnique({
+      where: { id },
+      include: {
+        _count: {
+          select: {
+            courses: true,
             news: true
+          }
+        }
+      }
+    });
+
+    if (!existingCategory) {
+      return notFoundResponse("Category", "Category not found");
+    }
+
     // Check if category has associated content
     if (existingCategory._count.courses > 0 || existingCategory._count.news > 0) {
       return errorResponse(
         "Cannot delete category with associated courses or news. Please reassign or delete them first.",
         ErrorCodes.CONFLICT
       );
+    }
+
     // Delete category (cascading deletes will handle related records)
     await prisma.category.delete({
+      where: { id }
+    });
+
     return noContentResponse();
+  } catch (error) {
     console.error("Error deleting category:", error);
+    return errorResponse(
       "Error deleting category",
+      ErrorCodes.DATABASE_ERROR
+    );
+  }
+}

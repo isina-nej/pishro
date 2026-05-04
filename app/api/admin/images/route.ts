@@ -5,7 +5,6 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import {
   errorResponse,
   paginatedResponse,
@@ -15,21 +14,26 @@ import {
 } from "@/lib/api-response";
 import { getUserImages, uploadImage } from "@/lib/services/image-service";
 import { ImageCategory } from "@/types/prisma";
+
 export async function GET(req: NextRequest) {
   try {
-    const session = await auth();
     if (!session?.user) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
       return errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);
+    }
+
     const searchParams = req.nextUrl.searchParams;
+
     // Pagination
     const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
     const limit = Math.min(100, parseInt(searchParams.get("limit") || "20"));
+
     // Filters
     const search = searchParams.get("search") || undefined;
     const category = searchParams.get("category") as ImageCategory | undefined;
+
     // Fetch images
     const result = await getUserImages({
       userId: session.user.id,
@@ -38,6 +42,7 @@ export async function GET(req: NextRequest) {
       page,
       limit
     });
+
     return paginatedResponse(
       result.images,
       result.page,
@@ -49,9 +54,19 @@ export async function GET(req: NextRequest) {
     return errorResponse(
       "خطا در دریافت تصاویر",
       ErrorCodes.DATABASE_ERROR
+    );
   }
 }
+
 export async function POST(req: NextRequest) {
+  try {
+    if (!session?.user) {
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
+    }
+    if (session.user.role !== "ADMIN") {
+      return errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);
+    }
+
     // Parse multipart form data
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
@@ -61,13 +76,20 @@ export async function POST(req: NextRequest) {
     const alt = (formData.get("alt") as string) || undefined;
     const tagsString = (formData.get("tags") as string) || "";
     const tags = tagsString ? tagsString.split(",").map((t) => t.trim()) : [];
+
     // Validation
     if (!file) {
       return validationError({
         file: "فایل الزامی است"
       });
+    }
+
     if (!Object.values(ImageCategory).includes(category)) {
+      return validationError({
         category: "دسته‌بندی نامعتبر است"
+      });
+    }
+
     // Upload image
     try {
       const result = await uploadImage({
@@ -78,6 +100,8 @@ export async function POST(req: NextRequest) {
         description,
         alt,
         tags
+      });
+
       return createdResponse(result, "تصویر با موفقیت آپلود شد");
     } catch (uploadError) {
       const message =
@@ -85,6 +109,12 @@ export async function POST(req: NextRequest) {
           ? uploadError.message
           : "خطا در آپلود تصویر";
       return errorResponse(message, ErrorCodes.EXTERNAL_SERVICE_ERROR);
+    }
+  } catch (error) {
     console.error("Error uploading image:", error);
+    return errorResponse(
       "خطا در آپلود تصویر",
       ErrorCodes.INTERNAL_ERROR
+    );
+  }
+}

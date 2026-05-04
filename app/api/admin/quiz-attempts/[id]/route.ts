@@ -5,7 +5,6 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   successResponse,
@@ -14,18 +13,21 @@ import {
   ErrorCodes,
   noContentResponse
 } from "@/lib/api-response";
+
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
     if (!session?.user) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
       return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
+    }
+
     const { id } = await params;
+
     const attempt = await prisma.quizAttempt.findUnique({
       where: { id },
       include: {
@@ -36,14 +38,20 @@ export async function GET(
           }
         },
         user: {
+          select: {
+            id: true,
             phone: true,
             firstName: true,
             lastName: true
+          }
         }
       }
     });
+
     if (!attempt) {
       return notFoundResponse("QuizAttempt", "Quiz attempt not found");
+    }
+
     return successResponse(attempt);
   } catch (error) {
     console.error("Error fetching quiz attempt:", error);
@@ -53,13 +61,41 @@ export async function GET(
     );
   }
 }
+
 export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    if (!session?.user) {
+      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+    }
+    if (session.user.role !== "ADMIN") {
+      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
+    }
+
+    const { id } = await params;
+
     // Check if attempt exists
     const existingAttempt = await prisma.quizAttempt.findUnique({
       where: { id }
+    });
+
     if (!existingAttempt) {
+      return notFoundResponse("QuizAttempt", "Quiz attempt not found");
+    }
+
     // Delete attempt
     await prisma.quizAttempt.delete({
+      where: { id }
+    });
+
     return noContentResponse();
+  } catch (error) {
     console.error("Error deleting quiz attempt:", error);
+    return errorResponse(
       "Error deleting quiz attempt",
+      ErrorCodes.DATABASE_ERROR
+    );
+  }
+}

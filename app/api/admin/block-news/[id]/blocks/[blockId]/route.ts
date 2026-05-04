@@ -8,22 +8,26 @@ import {
   successResponse,
   errorResponse
 } from '@/lib/api-response';
+import {
   updateContentBlock,
   deleteContentBlock
 } from '@/lib/services/block-news-service';
 import { BlockInputSchema } from '@/lib/schemas/block-news-schema';
 import type { ContentBlockUpdateRequest } from '@/lib/types/block-news';
+
 export async function GET(
   req: Request,
   { params }: { params: { id: string; blockId: string } }
 ) {
   try {
-    const session = await auth();
     if (!session?.user) {
       return 'ورود به سیستم الزامی است');
     }
+
     if (session.user.role !== 'ADMIN') {
       return 'دسترسی منحصر به مدیران است');
+    }
+
     // TODO: Implement getContentBlock service function
     return errorResponse('درخواست پشتیبانی نمی‌شود');
   } catch (error) {
@@ -31,17 +35,57 @@ export async function GET(
     return errorResponse('خطا در بارگیری بلاک');
   }
 }
+
 export async function PATCH(
+  req: Request,
+  { params }: { params: { id: string; blockId: string } }
+) {
+  try {
+    if (!session?.user) {
+      return 'ورود به سیستم الزامی است');
+    }
+
+    if (session.user.role !== 'ADMIN') {
+      return 'دسترسی منحصر به مدیران است');
+    }
+
     const body = (await req.json()) as ContentBlockUpdateRequest;
+
     const block = await updateContentBlock(params.id, params.blockId, body);
     return successResponse(block, 'بلاک با موفقیت به‌روز شد');
   } catch (error: unknown) {
     console.error('Error updating block:', error);
+
     if (error instanceof Error && error.message.includes('یافت نشد')) {
       return errorResponse(error.message, 'NOT_FOUND');
+    }
+
     return errorResponse('خطا در به‌روز کردن بلاک');
+  }
+}
+
 export async function DELETE(
+  req: Request,
+  { params }: { params: { id: string; blockId: string } }
+) {
+  try {
+    if (!session?.user) {
+      return 'ورود به سیستم الزامی است');
+    }
+
+    if (session.user.role !== 'ADMIN') {
+      return 'دسترسی منحصر به مدیران است');
+    }
+
     const result = await deleteContentBlock(params.id, params.blockId);
     return successResponse(result);
+  } catch (error: unknown) {
     console.error('Error deleting block:', error);
+
+    if (error instanceof Error && error.message.includes('یافت نشد')) {
+      return errorResponse(error.message, 'NOT_FOUND');
+    }
+
     return errorResponse('خطا در حذف بلاک');
+  }
+}

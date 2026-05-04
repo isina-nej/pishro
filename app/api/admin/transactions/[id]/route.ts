@@ -4,7 +4,6 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   successResponse,
@@ -12,18 +11,21 @@ import {
   notFoundResponse,
   ErrorCodes
 } from "@/lib/api-response";
+
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
     if (!session?.user) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
       return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
+    }
+
     const { id } = await params;
+
     const transaction = await prisma.transaction.findUnique({
       where: { id },
       include: {
@@ -37,6 +39,8 @@ export async function GET(
           }
         },
         order: {
+          select: {
+            id: true,
             total: true,
             status: true,
             orderItems: {
@@ -50,11 +54,15 @@ export async function GET(
                 }
               }
             }
+          }
         }
       }
     });
+
     if (!transaction) {
       return notFoundResponse("Transaction", "Transaction not found");
+    }
+
     return successResponse(transaction);
   } catch (error) {
     console.error("Error fetching transaction:", error);

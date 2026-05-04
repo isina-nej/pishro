@@ -4,7 +4,6 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import { Prisma } from "@/types/prisma";
 import { prisma } from "@/lib/prisma";
 import {
@@ -12,30 +11,40 @@ import {
   paginatedResponse,
   ErrorCodes
 } from "@/lib/api-response";
+
 export async function GET(req: NextRequest) {
   try {
-    const session = await auth();
     if (!session?.user) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
       return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
+    }
+
     const searchParams = req.nextUrl.searchParams;
+
     // Pagination
     const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
     const limit = Math.min(100, parseInt(searchParams.get("limit") || "50"));
     const skip = (page - 1) * limit;
+
     // Filters
     const userId = searchParams.get("userId");
     const status = searchParams.get("status");
     const startDate = searchParams.get("startDate");
     const endDate = searchParams.get("endDate");
+
     // Build where clause
     const where: Prisma.OrderWhereInput = {};
+
     if (userId) {
       where.userId = userId;
+    }
+
     if (status && ["PENDING", "PAID", "FAILED"].includes(status)) {
       where.status = status as Prisma.EnumOrderStatusFilter;
+    }
+
     if (startDate || endDate) {
       where.createdAt = {};
       if (startDate) {
@@ -43,6 +52,9 @@ export async function GET(req: NextRequest) {
       }
       if (endDate) {
         where.createdAt.lte = new Date(endDate);
+      }
+    }
+
     // Fetch orders
     const [orders, total] = await Promise.all([
       prisma.order.findMany({
@@ -68,6 +80,8 @@ export async function GET(req: NextRequest) {
                   slug: true
                 }
               }
+            }
+          },
           transactions: {
             orderBy: { createdAt: "desc" }
           }
@@ -75,6 +89,7 @@ export async function GET(req: NextRequest) {
       }),
       prisma.order.count({ where }),
     ]);
+
     return paginatedResponse(orders, page, limit, total);
   } catch (error) {
     console.error("Error fetching orders:", error);

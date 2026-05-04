@@ -6,7 +6,6 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   successResponse,
@@ -15,26 +14,32 @@ import {
   ErrorCodes,
   noContentResponse
 } from "@/lib/api-response";
+
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
     if (!session?.user) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
       return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
+    }
+
     const { id } = await params;
+
     const item = await prisma.businessConsulting.findUnique({
       where: { id }
     });
+
     if (!item) {
       return notFoundResponse(
         "BusinessConsulting",
         "صفحه مشاوره سرمایه‌ گذاری یافت نشد"
       );
+    }
+
     return successResponse(item);
   } catch (error) {
     console.error("Error fetching investment consulting page:", error);
@@ -44,13 +49,37 @@ export async function GET(
     );
   }
 }
+
 export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    if (!session?.user) {
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
+    }
+    if (session.user.role !== "ADMIN") {
+      return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
+    }
+
+    const { id } = await params;
     const body = await req.json();
+
     // Check if item exists
     const existingItem = await prisma.businessConsulting.findUnique({
+      where: { id }
+    });
+
     if (!existingItem) {
+      return notFoundResponse(
+        "BusinessConsulting",
+        "صفحه مشاوره سرمایه‌ گذاری یافت نشد"
+      );
+    }
+
     // Prepare update data
     const updateData: Record<string, unknown> = {};
+
     // Only include fields that are provided
     if (body.title !== undefined) updateData.title = body.title;
     if (body.description !== undefined)
@@ -81,17 +110,62 @@ export async function PATCH(
     if (body.metaKeywords !== undefined)
       updateData.metaKeywords = body.metaKeywords;
     if (body.published !== undefined) updateData.published = body.published;
+
     const updatedItem = await prisma.businessConsulting.update({
       where: { id },
       data: updateData
+    });
+
     return successResponse(
       updatedItem,
       "صفحه مشاوره سرمایه‌ گذاری با موفقیت بروزرسانی شد"
+    );
+  } catch (error) {
     console.error("Error updating investment consulting page:", error);
+    return errorResponse(
       "خطا در بروزرسانی صفحه مشاوره سرمایه‌ گذاری",
+      ErrorCodes.DATABASE_ERROR
+    );
+  }
+}
+
 export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    if (!session?.user) {
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
+    }
+    if (session.user.role !== "ADMIN") {
+      return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
+    }
+
+    const { id } = await params;
+
+    // Check if item exists
+    const existingItem = await prisma.businessConsulting.findUnique({
+      where: { id }
+    });
+
+    if (!existingItem) {
+      return notFoundResponse(
+        "BusinessConsulting",
+        "صفحه مشاوره سرمایه‌ گذاری یافت نشد"
+      );
+    }
+
     // Delete item
     await prisma.businessConsulting.delete({
+      where: { id }
+    });
+
     return noContentResponse();
+  } catch (error) {
     console.error("Error deleting investment consulting page:", error);
+    return errorResponse(
       "خطا در حذف صفحه مشاوره سرمایه‌ گذاری",
+      ErrorCodes.DATABASE_ERROR
+    );
+  }
+}

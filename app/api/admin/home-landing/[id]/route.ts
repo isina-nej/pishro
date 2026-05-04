@@ -6,7 +6,6 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   successResponse,
@@ -15,23 +14,29 @@ import {
   ErrorCodes,
   noContentResponse
 } from "@/lib/api-response";
+
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
     if (!session?.user) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
       return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
+    }
+
     const { id } = await params;
+
     const item = await prisma.homeLanding.findUnique({
       where: { id }
     });
+
     if (!item) {
       return notFoundResponse("HomeLanding", "صفحه لندینگ یافت نشد");
+    }
+
     return successResponse(item);
   } catch (error) {
     console.error("Error fetching home landing page:", error);
@@ -41,13 +46,34 @@ export async function GET(
     );
   }
 }
+
 export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    if (!session?.user) {
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
+    }
+    if (session.user.role !== "ADMIN") {
+      return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
+    }
+
+    const { id } = await params;
     const body = await req.json();
+
     // Check if item exists
     const existingItem = await prisma.homeLanding.findUnique({
+      where: { id }
+    });
+
     if (!existingItem) {
+      return notFoundResponse("HomeLanding", "صفحه لندینگ یافت نشد");
+    }
+
     // Prepare update data
     const updateData: Record<string, unknown> = {};
+
     // Only include fields that are provided
     if (body.mainHeroTitle !== undefined) updateData.mainHeroTitle = body.mainHeroTitle;
     if (body.mainHeroSubtitle !== undefined) updateData.mainHeroSubtitle = body.mainHeroSubtitle;
@@ -86,15 +112,56 @@ export async function PATCH(
     if (body.metaKeywords !== undefined) updateData.metaKeywords = body.metaKeywords;
     if (body.published !== undefined) updateData.published = body.published;
     if (body.order !== undefined) updateData.order = body.order;
+
     const updatedItem = await prisma.homeLanding.update({
       where: { id },
       data: updateData
+    });
+
     return successResponse(updatedItem, "صفحه لندینگ با موفقیت بروزرسانی شد");
+  } catch (error) {
     console.error("Error updating home landing page:", error);
+    return errorResponse(
       "خطا در بروزرسانی صفحه لندینگ",
+      ErrorCodes.DATABASE_ERROR
+    );
+  }
+}
+
 export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    if (!session?.user) {
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
+    }
+    if (session.user.role !== "ADMIN") {
+      return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
+    }
+
+    const { id } = await params;
+
+    // Check if item exists
+    const existingItem = await prisma.homeLanding.findUnique({
+      where: { id }
+    });
+
+    if (!existingItem) {
+      return notFoundResponse("HomeLanding", "صفحه لندینگ یافت نشد");
+    }
+
     // Delete item
     await prisma.homeLanding.delete({
+      where: { id }
+    });
+
     return noContentResponse();
+  } catch (error) {
     console.error("Error deleting home landing page:", error);
+    return errorResponse(
       "خطا در حذف صفحه لندینگ",
+      ErrorCodes.DATABASE_ERROR
+    );
+  }
+}

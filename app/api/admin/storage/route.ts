@@ -5,7 +5,6 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import { copyFile, readdir, mkdir } from "fs/promises";
 import { join } from "path";
 import {
@@ -14,15 +13,17 @@ import {
   ErrorCodes
 } from "@/lib/api-response";
 import { getAllUploadPaths } from "@/lib/upload-config";
+
 export async function GET(_req: NextRequest) {
   try {
-    const session = await auth();
     // فقط ادمین می‌تواند این endpoint را دیده‌ها را ببیند
     if (!session?.user) {
       return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
       return errorResponse("فقط ادمین می‌تواند این اطلاعات را ببیند", ErrorCodes.UNAUTHORIZED);
+    }
+
     const paths = getAllUploadPaths();
     return successResponse(
       {
@@ -40,28 +41,53 @@ export async function GET(_req: NextRequest) {
     return errorResponse(
       "خطا در دریافت مسیرهای ذخیره‌سازی",
       ErrorCodes.INTERNAL_ERROR
+    );
   }
 }
+
 export async function POST(req: NextRequest) {
+  try {
     // فقط ادمین می‌تواند مهاجرت انجام دهد
+    if (!session?.user) {
+      return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
+    }
+    if (session.user.role !== "ADMIN") {
       return errorResponse("فقط ادمین می‌تواند مهاجرت انجام دهد", ErrorCodes.UNAUTHORIZED);
+    }
+
     const body = await req.json();
     const { fromPath, toPath, dryRun = true } = body;
+
     if (!fromPath || !toPath) {
       return errorResponse(
         "fromPath و toPath الزامی هستند",
         ErrorCodes.VALIDATION_ERROR
       );
+    }
+
     // مهاجرت فایل‌ها
     const result = await migrateFiles(fromPath, toPath, dryRun);
+
     if (dryRun) {
       return successResponse(
         result,
         "این یک تست بود. برای انجام واقعی، dryRun: false ارسال کنید"
+      );
+    }
+
     return successResponse(result, "فایل‌ها با موفقیت منتقل شدند");
+  } catch (error) {
     console.error("Migration error:", error);
+    return errorResponse(
       "خطا در مهاجرت: " + (error instanceof Error ? error.message : String(error)),
+      ErrorCodes.INTERNAL_ERROR
+    );
+  }
+}
+
+/**
  * Migrate files from one directory to another
+ */
 async function migrateFiles(
   fromPath: string,
   toPath: string,
@@ -84,23 +110,33 @@ async function migrateFiles(
     failedFiles: 0,
     failedList: [] as string[]
   };
+
+  try {
     // بررسی اینکه مسیر منبع موجود است
     const files = await readdir(fromPath, { recursive: true });
     results.totalFiles = files.length;
+
+    if (dryRun) {
       console.log(`[DRY RUN] Will migrate ${files.length} files from ${fromPath} to ${toPath}`);
       results.copiedFiles = files.length;
       return results;
+    }
+
     // ایجاد دایرکتوری مقصد
     await mkdir(toPath, { recursive: true });
+
     // کپی کردن فایل‌ها
     for (const file of files) {
       try {
         const sourceFile = join(fromPath, file);
         const destFile = join(toPath, file);
+
         // ایجاد دایرکتوری مقصد اگر موجود نباشد
         const destDir = join(toPath, ...file.split("/").slice(0, -1));
         if (destDir !== toPath) {
           await mkdir(destDir, { recursive: true });
+        }
+
         // کپی فایل
         await copyFile(sourceFile, destFile);
         results.copiedFiles++;
@@ -109,8 +145,13 @@ async function migrateFiles(
         results.failedList.push(file);
         console.error(`Failed to copy ${file}:`, err);
       }
+    }
+
     console.log(`Migration completed: ${results.copiedFiles}/${results.totalFiles} files`);
   } catch (err) {
     console.error("Migration error:", err);
     throw err;
+  }
+
   return results;
+}

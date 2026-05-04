@@ -5,7 +5,6 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   successResponse,
@@ -14,23 +13,29 @@ import {
   ErrorCodes,
   noContentResponse
 } from "@/lib/api-response";
+
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
     if (!session?.user) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
       return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
+    }
+
     const { id } = await params;
+
     const subscriber = await prisma.newsletterSubscriber.findUnique({
       where: { id }
     });
+
     if (!subscriber) {
       return notFoundResponse("NewsletterSubscriber", "Subscriber not found");
+    }
+
     return successResponse(subscriber);
   } catch (error) {
     console.error("Error fetching newsletter subscriber:", error);
@@ -40,12 +45,41 @@ export async function GET(
     );
   }
 }
+
 export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    if (!session?.user) {
+      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+    }
+    if (session.user.role !== "ADMIN") {
+      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
+    }
+
+    const { id } = await params;
+
     // Check if subscriber exists
     const existingSubscriber = await prisma.newsletterSubscriber.findUnique({
+      where: { id }
+    });
+
     if (!existingSubscriber) {
+      return notFoundResponse("NewsletterSubscriber", "Subscriber not found");
+    }
+
     // Delete subscriber
     await prisma.newsletterSubscriber.delete({
+      where: { id }
+    });
+
     return noContentResponse();
+  } catch (error) {
     console.error("Error deleting newsletter subscriber:", error);
+    return errorResponse(
       "Error deleting newsletter subscriber",
+      ErrorCodes.DATABASE_ERROR
+    );
+  }
+}

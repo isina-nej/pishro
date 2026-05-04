@@ -6,7 +6,6 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   successResponse,
@@ -15,18 +14,21 @@ import {
   ErrorCodes,
   noContentResponse
 } from "@/lib/api-response";
+
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
     if (!session?.user) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
       return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
+    }
+
     const { id } = await params;
+
     const item = await prisma.investmentPlan.findUnique({
       where: { id },
       include: {
@@ -38,11 +40,14 @@ export async function GET(
         }
       }
     });
+
     if (!item) {
       return notFoundResponse(
         "InvestmentPlan",
         "آیتم سبد سرمایه‌ گذاری یافت نشد"
       );
+    }
+
     return successResponse(item);
   } catch (error) {
     console.error("Error fetching investment plan item:", error);
@@ -52,14 +57,37 @@ export async function GET(
     );
   }
 }
+
 export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    if (!session?.user) {
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
+    }
+    if (session.user.role !== "ADMIN") {
+      return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
+    }
+
+    const { id } = await params;
     const body = await req.json();
+
     // Check if item exists
     const existingItem = await prisma.investmentPlan.findUnique({
       where: { id }
+    });
+
     if (!existingItem) {
+      return notFoundResponse(
+        "InvestmentPlan",
+        "آیتم سبد سرمایه‌ گذاری یافت نشد"
+      );
+    }
+
     // Prepare update data
     const updateData: Record<string, unknown> = {};
+
     // Only include fields that are provided
     if (body.label !== undefined) updateData.label = body.label;
     if (body.icon !== undefined) updateData.icon = body.icon;
@@ -67,16 +95,70 @@ export async function PATCH(
       updateData.description = body.description;
     if (body.order !== undefined) updateData.order = body.order;
     if (body.published !== undefined) updateData.published = body.published;
+
     const updatedItem = await prisma.investmentPlan.update({
+      where: { id },
       data: updateData,
+      include: {
+        investmentPlans: {
+          select: {
+            id: true,
+            title: true
+          }
+        }
+      }
+    });
+
     return successResponse(
       updatedItem,
       "آیتم سبد سرمایه‌ گذاری با موفقیت بروزرسانی شد"
+    );
+  } catch (error) {
     console.error("Error updating investment plan item:", error);
+    return errorResponse(
       "خطا در بروزرسانی آیتم سبد سرمایه‌ گذاری",
+      ErrorCodes.DATABASE_ERROR
+    );
+  }
+}
+
 export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    if (!session?.user) {
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
+    }
+    if (session.user.role !== "ADMIN") {
+      return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
+    }
+
+    const { id } = await params;
+
+    // Check if item exists
+    const existingItem = await prisma.investmentPlan.findUnique({
+      where: { id }
+    });
+
+    if (!existingItem) {
+      return notFoundResponse(
+        "InvestmentPlan",
+        "آیتم سبد سرمایه‌ گذاری یافت نشد"
+      );
+    }
+
     // Delete item
     await prisma.investmentPlan.delete({
+      where: { id }
+    });
+
     return noContentResponse();
+  } catch (error) {
     console.error("Error deleting investment plan item:", error);
+    return errorResponse(
       "خطا در حذف آیتم سبد سرمایه‌ گذاری",
+      ErrorCodes.DATABASE_ERROR
+    );
+  }
+}

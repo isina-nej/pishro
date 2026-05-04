@@ -6,7 +6,6 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   successResponse,
@@ -16,18 +15,21 @@ import {
   noContentResponse
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
+
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
     if (!session?.user) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
       return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
+    }
+
     const { id } = await params;
+
     const item = await prisma.teamMember.findUnique({
       where: { id },
       include: {
@@ -39,8 +41,11 @@ export async function GET(
         }
       }
     });
+
     if (!item) {
       return notFoundResponse("TeamMember", "عضو تیم یافت نشد");
+    }
+
     return successResponse(item);
   } catch (error) {
     console.error("Error fetching team member:", error);
@@ -50,20 +55,41 @@ export async function GET(
     );
   }
 }
+
 export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    if (!session?.user) {
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
+    }
+    if (session.user.role !== "ADMIN") {
+      return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
+    }
+
+    const { id } = await params;
     const body = await req.json();
+
     // Check if item exists
     const existingItem = await prisma.teamMember.findUnique({
       where: { id }
+    });
+
     if (!existingItem) {
+      return notFoundResponse("TeamMember", "عضو تیم یافت نشد");
+    }
+
     // Prepare update data
     const updateData: Record<string, unknown> = {};
+
     // Only include fields that are provided
     if (body.name !== undefined) updateData.name = body.name;
     if (body.role !== undefined) updateData.role = body.role;
     if (body.image !== undefined) {
       // Normalize image URL (extract original URL from Next.js optimization URLs)
       updateData.image = normalizeImageUrl(body.image);
+    }
     if (body.education !== undefined) updateData.education = body.education;
     if (body.description !== undefined) updateData.description = body.description;
     if (body.specialties !== undefined) updateData.specialties = body.specialties;
@@ -74,14 +100,64 @@ export async function PATCH(
     if (body.telegramUrl !== undefined) updateData.telegramUrl = body.telegramUrl;
     if (body.order !== undefined) updateData.order = body.order;
     if (body.published !== undefined) updateData.published = body.published;
+
     const updatedItem = await prisma.teamMember.update({
+      where: { id },
       data: updateData,
+      include: {
+        aboutPage: {
+          select: {
+            id: true,
+            heroTitle: true
+          }
+        }
+      }
+    });
+
     return successResponse(updatedItem, "عضو تیم با موفقیت بروزرسانی شد");
+  } catch (error) {
     console.error("Error updating team member:", error);
+    return errorResponse(
       "خطا در بروزرسانی عضو تیم",
+      ErrorCodes.DATABASE_ERROR
+    );
+  }
+}
+
 export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    if (!session?.user) {
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
+    }
+    if (session.user.role !== "ADMIN") {
+      return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
+    }
+
+    const { id } = await params;
+
+    // Check if item exists
+    const existingItem = await prisma.teamMember.findUnique({
+      where: { id }
+    });
+
+    if (!existingItem) {
+      return notFoundResponse("TeamMember", "عضو تیم یافت نشد");
+    }
+
     // Delete item
     await prisma.teamMember.delete({
+      where: { id }
+    });
+
     return noContentResponse();
+  } catch (error) {
     console.error("Error deleting team member:", error);
+    return errorResponse(
       "خطا در حذف عضو تیم",
+      ErrorCodes.DATABASE_ERROR
+    );
+  }
+}
