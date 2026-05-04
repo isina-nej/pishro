@@ -46,7 +46,7 @@ export async function OPTIONS(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const formData = await req.formData();
+    const session = await auth();\nconst formData = await req.formData();
     const file = formData.get("cover") as File | null;
 
     if (!file) {

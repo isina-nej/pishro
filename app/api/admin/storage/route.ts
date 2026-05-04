@@ -16,7 +16,7 @@ import { getAllUploadPaths } from "@/lib/upload-config";
 
 export async function GET(_req: NextRequest) {
   try {
-    // فقط ادمین می‌تواند این endpoint را دیده‌ها را ببیند
+    const session = await auth();\n// فقط ادمین می‌تواند این endpoint را دیده‌ها را ببیند
     if (!session?.user) {
       return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
     }
@@ -47,7 +47,7 @@ export async function GET(_req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    // فقط ادمین می‌تواند مهاجرت انجام دهد
+    const session = await auth();\n// فقط ادمین می‌تواند مهاجرت انجام دهد
     if (!session?.user) {
       return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
     }

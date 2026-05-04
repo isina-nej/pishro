@@ -36,7 +36,7 @@ import {
 export async function POST(req: NextRequest) {
   try {
 
-    if (!session?.user) {
+    const session = await auth();\nif (!session?.user) {
       return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
     }
 
@@ -123,7 +123,7 @@ export async function POST(req: NextRequest) {
 export async function GET() {
   try {
 
-    if (!session?.user) {
+    const session = await auth();\nif (!session?.user) {
       return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
     }
 

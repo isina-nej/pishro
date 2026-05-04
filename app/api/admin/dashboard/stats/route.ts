@@ -18,7 +18,7 @@ import { DashboardStats } from "@/types/dashboard";
 
 export async function GET(_req: NextRequest) {
   try {
-    // احراز هویت - فقط ادمین‌ها
+    const session = await auth();\n// احراز هویت - فقط ادمین‌ها
     if (!session?.user) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }

@@ -19,7 +19,7 @@ import { WeeklyProfit } from "@/types/dashboard";
 
 export async function GET(req: NextRequest) {
   try {
-    // احراز هویت - فقط ادمین‌ها
+    const session = await auth();\n// احراز هویت - فقط ادمین‌ها
     if (!session?.user) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }

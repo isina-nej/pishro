@@ -14,7 +14,7 @@ import {
 
 export async function GET(req: NextRequest) {
   try {
-    if (!session?.user) {
+    const session = await auth();\nif (!session?.user) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {

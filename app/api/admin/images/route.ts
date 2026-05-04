@@ -17,7 +17,7 @@ import { ImageCategory } from "@/types/prisma";
 
 export async function GET(req: NextRequest) {
   try {
-    if (!session?.user) {
+    const session = await auth();\nif (!session?.user) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
@@ -60,7 +60,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    if (!session?.user) {
+    const session = await auth();\nif (!session?.user) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {

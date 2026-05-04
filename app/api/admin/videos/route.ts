@@ -25,7 +25,7 @@ import type {
  */
 export async function GET(req: NextRequest) {
   try {
-    if (!session?.user || session.user.role !== "ADMIN") {
+    const session = await auth();\nif (!session?.user || session.user.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
@@ -66,7 +66,7 @@ export async function GET(req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
   try {
-    if (!session?.user || session.user.role !== "ADMIN") {
+    const session = await auth();\nif (!session?.user || session.user.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
     }
 

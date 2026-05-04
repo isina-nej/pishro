@@ -13,7 +13,7 @@ export async function OPTIONS(req: NextRequest) {
 export async function GET(req: NextRequest) {
   const origin = req.headers.get("origin");
   try {
-    // Return payment data
+    const session = await auth();\n// Return payment data
     const data = [
       { month: "Jan", revenue: 4000 },
       { month: "Feb", revenue: 3000 },

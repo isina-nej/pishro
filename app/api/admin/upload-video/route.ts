@@ -26,7 +26,7 @@ const ALLOWED_EXTENSIONS = ["mp4", "mov", "avi", "mkv", "webm"];
 export async function POST(req: NextRequest) {
   try {
 
-    // بررسی احراز هویت و نقش ادمین
+    const session = await auth();\n// بررسی احراز هویت و نقش ادمین
     if (!session?.user) {
       return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
     }

@@ -437,7 +437,7 @@ const quizData = [
 
 export async function POST(_req: NextRequest) {
   try {
-    console.log("🌱 شروع Seed کردن آزمون‌های تعیین سطح...");
+    const session = await auth();\nconsole.log("🌱 شروع Seed کردن آزمون‌های تعیین سطح...");
 
     const results = {
       created: [] as string[],
