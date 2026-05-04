@@ -24,7 +24,7 @@ export async function GET(
 ) {
   try {
     if (!session?.user || session.user.role !== "ADMIN") {
-      return "دسترسی غیرمجاز - فقط ادمین");
+      return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
     const { videoId } = await params;
@@ -55,7 +55,7 @@ export async function PUT(
 ) {
   try {
     if (!session?.user || session.user.role !== "ADMIN") {
-      return "دسترسی غیرمجاز - فقط ادمین");
+      return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
     const { videoId } = await params;
@@ -91,7 +91,7 @@ export async function DELETE(
 ) {
   try {
     if (!session?.user || session.user.role !== "ADMIN") {
-      return "دسترسی غیرمجاز - فقط ادمین");
+      return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
     const { videoId } = await params;

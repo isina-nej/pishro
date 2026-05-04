@@ -18,10 +18,10 @@ export async function GET(_req: NextRequest) {
   try {
     // فقط ادمین می‌تواند این endpoint را دیده‌ها را ببیند
     if (!session?.user) {
-      return "لطفاً وارد حساب کاربری خود شوید");
+      return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
-      return "فقط ادمین می‌تواند این اطلاعات را ببیند");
+      return errorResponse("فقط ادمین می‌تواند این اطلاعات را ببیند", ErrorCodes.UNAUTHORIZED);
     }
 
     const paths = getAllUploadPaths();
@@ -49,10 +49,10 @@ export async function POST(req: NextRequest) {
   try {
     // فقط ادمین می‌تواند مهاجرت انجام دهد
     if (!session?.user) {
-      return "لطفاً وارد حساب کاربری خود شوید");
+      return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
-      return "فقط ادمین می‌تواند مهاجرت انجام دهد");
+      return errorResponse("فقط ادمین می‌تواند مهاجرت انجام دهد", ErrorCodes.UNAUTHORIZED);
     }
 
     const body = await req.json();

@@ -14,10 +14,10 @@ import { getUserImageStats } from "@/lib/services/image-service";
 export async function GET(_req: NextRequest) {
   try {
     if (!session?.user) {
-      return "لطفا وارد شوید");
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
-      return "دسترسی محدود به ادمین");
+      return errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
     const stats = await getUserImageStats(session.user.id);

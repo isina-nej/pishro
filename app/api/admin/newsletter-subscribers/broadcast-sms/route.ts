@@ -16,10 +16,10 @@ import {
 export async function POST(req: NextRequest) {
   try {
     if (!session?.user) {
-      return "لطفا ابتدا وارد شوید");
+      return errorResponse("لطفا ابتدا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
-      return "دسترسی غیرمجاز. فقط ادمین‌ها اجازه دارند.");
+      return errorResponse("دسترسی غیرمجاز. فقط ادمین‌ها اجازه دارند.", ErrorCodes.UNAUTHORIZED);
     }
 
     // Get message text from request body

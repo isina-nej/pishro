@@ -20,11 +20,11 @@ export async function GET(_req: NextRequest) {
   try {
     // احراز هویت - فقط ادمین‌ها
     if (!session?.user) {
-      return "لطفا وارد شوید");
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
 
     if (session.user.role !== "ADMIN") {
-      return "دسترسی محدود به ادمین");
+      return errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
     // بررسی کش

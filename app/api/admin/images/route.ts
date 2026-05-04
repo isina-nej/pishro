@@ -18,10 +18,10 @@ import { ImageCategory } from "@/types/prisma";
 export async function GET(req: NextRequest) {
   try {
     if (!session?.user) {
-      return "لطفا وارد شوید");
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
-      return "دسترسی محدود به ادمین");
+      return errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -61,10 +61,10 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     if (!session?.user) {
-      return "لطفا وارد شوید");
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
-      return "دسترسی محدود به ادمین");
+      return errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
     // Parse multipart form data

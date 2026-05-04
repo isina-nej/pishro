@@ -26,7 +26,7 @@ interface RouteParams {
 export async function GET(req: NextRequest, { params }: RouteParams) {
   try {
     if (!session?.user || session.user.role !== "ADMIN") {
-      return "دسترسی غیرمجاز");
+      return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }
 
     const { id } = await params;
@@ -53,7 +53,7 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
 export async function PATCH(req: NextRequest, { params }: RouteParams) {
   try {
     if (!session?.user || session.user.role !== "ADMIN") {
-      return "دسترسی غیرمجاز");
+      return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }
 
     const { id } = await params;
@@ -102,7 +102,7 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
 export async function DELETE(req: NextRequest, { params }: RouteParams) {
   try {
     if (!session?.user || session.user.role !== "ADMIN") {
-      return "دسترسی غیرمجاز");
+      return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }
 
     const { id } = await params;

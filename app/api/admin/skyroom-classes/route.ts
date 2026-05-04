@@ -18,7 +18,7 @@ import {
 export async function GET(_req: NextRequest) {
   try {
     if (!session?.user || session.user.role !== "ADMIN") {
-      return "دسترسی غیرمجاز");
+      return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }
 
     const classes = await getAllSkyRoomClassesForAdmin();
@@ -40,7 +40,7 @@ export async function GET(_req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     if (!session?.user || session.user.role !== "ADMIN") {
-      return "دسترسی غیرمجاز");
+      return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }
 
     const body = await req.json();

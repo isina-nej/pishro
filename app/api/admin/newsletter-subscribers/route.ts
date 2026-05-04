@@ -15,10 +15,10 @@ import {
 export async function GET(req: NextRequest) {
   try {
     if (!session?.user) {
-      return "Please login to continue");
+      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
-      return "Access denied. Admin only.");
+      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
     }
 
     const searchParams = req.nextUrl.searchParams;

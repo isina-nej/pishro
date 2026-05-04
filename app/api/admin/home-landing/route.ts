@@ -18,10 +18,10 @@ import {
 export async function GET(req: NextRequest) {
   try {
     if (!session?.user) {
-      return "لطفا وارد شوید");
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
-      return "دسترسی محدود. فقط ادمین.");
+      return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -67,10 +67,10 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     if (!session?.user) {
-      return "لطفا وارد شوید");
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
-      return "دسترسی محدود. فقط ادمین.");
+      return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
     }
 
     const body = await req.json();

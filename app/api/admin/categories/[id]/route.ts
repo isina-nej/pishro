@@ -22,10 +22,10 @@ export async function GET(
 ) {
   try {
     if (!session?.user) {
-      return "Please login to continue");
+      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
-      return "Access denied. Admin only.");
+      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
     }
 
     const { id } = await params;
@@ -73,10 +73,10 @@ export async function PATCH(
 ) {
   try {
     if (!session?.user) {
-      return "Please login to continue");
+      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
-      return "Access denied. Admin only.");
+      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
     }
 
     const { id } = await params;
@@ -180,10 +180,10 @@ export async function DELETE(
 ) {
   try {
     if (!session?.user) {
-      return "Please login to continue");
+      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
-      return "Access denied. Admin only.");
+      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
     }
 
     const { id } = await params;

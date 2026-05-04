@@ -21,10 +21,10 @@ export async function GET(
 ) {
   try {
     if (!session?.user) {
-      return "لطفا وارد شوید");
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
-      return "دسترسی محدود. فقط ادمین.");
+      return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
     }
 
     const { id } = await params;
@@ -61,10 +61,10 @@ export async function PATCH(
 ) {
   try {
     if (!session?.user) {
-      return "لطفا وارد شوید");
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
-      return "دسترسی محدود. فقط ادمین.");
+      return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
     }
 
     const { id } = await params;
@@ -118,10 +118,10 @@ export async function DELETE(
 ) {
   try {
     if (!session?.user) {
-      return "لطفا وارد شوید");
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
-      return "دسترسی محدود. فقط ادمین.");
+      return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
     }
 
     const { id } = await params;

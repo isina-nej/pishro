@@ -24,10 +24,10 @@ import {
 export async function GET(_req: NextRequest) {
   try {
     if (!session?.user) {
-      return "لطفا وارد شوید");
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
-      return "دسترسی محدود به ادمین");
+      return errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
     const settings = await getSettings();
@@ -58,10 +58,10 @@ export async function GET(_req: NextRequest) {
 export async function PATCH(req: NextRequest) {
   try {
     if (!session?.user) {
-      return "لطفا وارد شوید");
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {
-      return "دسترسی محدود به ادمین");
+      return errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
     // Parse request body

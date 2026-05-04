@@ -10,7 +10,7 @@ export async function POST(_req: NextRequest) {
   try {
     // Check authentication
     if (!session?.user) {
-      return "احراز هویت نشده است");
+      return errorResponse("احراز هویت نشده است", ErrorCodes.UNAUTHORIZED);
     }
 
     // Check if user is admin
@@ -20,7 +20,7 @@ export async function POST(_req: NextRequest) {
     });
 
     if (user?.role !== "ADMIN") {
-      return "دسترسی غیرمجاز - فقط ادمین");
+      return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
     console.log("🔧 Starting database fix for null updatedAt values...");

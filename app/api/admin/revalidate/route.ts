@@ -37,12 +37,12 @@ export async function POST(req: NextRequest) {
   try {
 
     if (!session?.user) {
-      return "لطفاً وارد حساب کاربری خود شوید");
+      return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
     }
 
     // Check if user is admin (assuming role field exists in user model)
     if (session.user.role !== "admin") {
-      return "شما دسترسی به این عملیات ندارید");
+      return errorResponse("شما دسترسی به این عملیات ندارید", ErrorCodes.UNAUTHORIZED);
     }
 
     // Parse request body
@@ -124,11 +124,11 @@ export async function GET() {
   try {
 
     if (!session?.user) {
-      return "لطفاً وارد حساب کاربری خود شوید");
+      return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
     }
 
     if (session.user.role !== "admin") {
-      return "شما دسترسی به این عملیات ندارید");
+      return errorResponse("شما دسترسی به این عملیات ندارید", ErrorCodes.UNAUTHORIZED);
     }
 
     // Return available paths and tags that can be revalidated

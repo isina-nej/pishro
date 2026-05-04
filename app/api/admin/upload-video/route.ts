@@ -28,11 +28,11 @@ export async function POST(req: NextRequest) {
 
     // بررسی احراز هویت و نقش ادمین
     if (!session?.user) {
-      return "لطفاً وارد حساب کاربری خود شوید");
+      return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
     }
 
     if (session.user.role !== "ADMIN") {
-      return "دسترسی غیرمجاز - فقط ادمین");
+      return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
     const formData = await req.formData();
