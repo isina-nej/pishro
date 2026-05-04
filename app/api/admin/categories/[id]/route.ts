@@ -207,8 +207,9 @@ export async function DELETE(
 
     // Check if category has associated content
     if (existingCategory._count.courses > 0 || existingCategory._count.news > 0) {
-      return 
-        "Cannot delete category with associated courses or news. Please reassign or delete them first."
+      return errorResponse(
+        "Cannot delete category with associated courses or news. Please reassign or delete them first.",
+        ErrorCodes.CONFLICT
       );
     }
 
