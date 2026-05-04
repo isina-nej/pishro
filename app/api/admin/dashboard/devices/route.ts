@@ -4,6 +4,7 @@
  */
 
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import {
   errorResponse,
   successResponse,
@@ -19,6 +20,7 @@ import { DeviceStats } from "@/types/dashboard";
 
 export async function GET(req: NextRequest) {
   try {
+    const session = await auth();
     // احراز هویت - فقط ادمین‌ها
     if (!session?.user) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);

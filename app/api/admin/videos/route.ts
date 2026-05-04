@@ -1,5 +1,6 @@
 // @/app/api/admin/videos/route.ts
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import {
   successResponse,
   errorResponse,
@@ -25,6 +26,7 @@ import type {
  */
 export async function GET(req: NextRequest) {
   try {
+    const session = await auth();
     if (!session?.user || session.user.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
     }
@@ -66,6 +68,7 @@ export async function GET(req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
   try {
+    const session = await auth();
     if (!session?.user || session.user.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
     }

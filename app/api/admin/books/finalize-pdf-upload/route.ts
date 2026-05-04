@@ -4,6 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/auth";
 import { readFile, rm, mkdir } from "fs/promises";
 import { createWriteStream, existsSync } from "fs";
 import path from "path";
@@ -47,6 +48,7 @@ export async function OPTIONS(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const session = await auth();
     console.log("🔗 PDF finalize request received");
 
     // Ensure directories exist

@@ -1,5 +1,6 @@
 // @/app/api/admin/videos/[videoId]/route.ts
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import {
   successResponse,
   errorResponse,
@@ -23,6 +24,7 @@ export async function GET(
   { params }: { params: Promise<{ videoId: string }> }
 ) {
   try {
+    const session = await auth();
     if (!session?.user || session.user.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
     }
@@ -54,6 +56,7 @@ export async function PUT(
   { params }: { params: Promise<{ videoId: string }> }
 ) {
   try {
+    const session = await auth();
     if (!session?.user || session.user.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
     }
@@ -90,6 +93,7 @@ export async function DELETE(
   { params }: { params: Promise<{ videoId: string }> }
 ) {
   try {
+    const session = await auth();
     if (!session?.user || session.user.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
     }

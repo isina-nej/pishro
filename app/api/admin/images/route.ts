@@ -5,6 +5,7 @@
  */
 
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import {
   errorResponse,
   paginatedResponse,
@@ -17,6 +18,7 @@ import { ImageCategory } from "@/types/prisma";
 
 export async function GET(req: NextRequest) {
   try {
+    const session = await auth();
     if (!session?.user) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
@@ -60,6 +62,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const session = await auth();
     if (!session?.user) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
@@ -92,6 +95,7 @@ export async function POST(req: NextRequest) {
 
     // Upload image
     try {
+    const session = await auth();
       const result = await uploadImage({
         userId: session.user.id,
         file,

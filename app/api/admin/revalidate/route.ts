@@ -5,6 +5,7 @@
  */
 
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import { revalidatePath, revalidateTag } from "next/cache";
 import {
   successResponse,
@@ -35,6 +36,7 @@ import {
  */
 export async function POST(req: NextRequest) {
   try {
+    const session = await auth();
 
     if (!session?.user) {
       return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
@@ -68,6 +70,7 @@ export async function POST(req: NextRequest) {
 
       for (const p of paths) {
         try {
+    const session = await auth();
           // Validate path format
           if (!p.startsWith("/")) {
             failed.push(p);
@@ -89,6 +92,7 @@ export async function POST(req: NextRequest) {
 
       for (const t of tags) {
         try {
+    const session = await auth();
           revalidateTag(t);
           revalidated.push(`tag:${t}`);
         } catch (error) {
@@ -122,6 +126,7 @@ export async function POST(req: NextRequest) {
  */
 export async function GET() {
   try {
+    const session = await auth();
 
     if (!session?.user) {
       return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);

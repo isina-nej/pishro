@@ -6,6 +6,7 @@
  */
 
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import { unlink } from "fs/promises";
 import { prisma } from "@/lib/prisma";
 import {
@@ -25,6 +26,7 @@ async function deleteFileFromDisk(fileUrl: string | null): Promise<void> {
   if (!fileUrl) return;
 
   try {
+    const session = await auth();
     // Get the full file path using the upload config helper
     const filePath = getFilePathFromUrl(fileUrl);
     if (filePath) {
@@ -42,6 +44,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const session = await auth();
     if (!session?.user) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
@@ -88,6 +91,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const session = await auth();
     if (!session?.user) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
@@ -214,6 +218,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const session = await auth();
     if (!session?.user) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }

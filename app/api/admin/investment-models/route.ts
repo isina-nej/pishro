@@ -5,6 +5,7 @@
  */
 
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import {
   createInvestmentModel
 } from "@/lib/services/investment-models-service";
@@ -17,6 +18,7 @@ import {
 
 export async function POST(req: NextRequest) {
   try {
+    const session = await auth();
     if (!session?.user) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }

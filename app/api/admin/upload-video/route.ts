@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import { writeFile } from "fs/promises";
 import {
   successResponse,
@@ -25,6 +26,7 @@ const ALLOWED_EXTENSIONS = ["mp4", "mov", "avi", "mkv", "webm"];
 
 export async function POST(req: NextRequest) {
   try {
+    const session = await auth();
 
     // بررسی احراز هویت و نقش ادمین
     if (!session?.user) {
@@ -86,6 +88,7 @@ export async function POST(req: NextRequest) {
 
     // ایجاد دایرکتوری اگر وجود ندارد
     try {
+    const session = await auth();
       await ensureUploadDirExists(uploadDir);
     } catch (err) {
       console.error("Error creating directory:", err);

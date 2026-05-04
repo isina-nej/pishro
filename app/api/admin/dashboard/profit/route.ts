@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import {
   successResponse,
   errorResponse,
@@ -13,6 +14,7 @@ export async function OPTIONS(req: NextRequest) {
 export async function GET(req: NextRequest) {
   const origin = req.headers.get("origin");
   try {
+    const session = await auth();
     // Return profit data
     const data = [
       { month: "Jan", profit: 2400 },

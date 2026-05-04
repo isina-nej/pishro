@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/auth";
 import { writeFile } from "fs/promises";
 import {
   successResponse,
@@ -54,6 +55,7 @@ export async function OPTIONS(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const session = await auth();
     const formData = await req.formData();
     const file = formData.get("audio") as File | null;
 
@@ -96,6 +98,7 @@ export async function POST(req: NextRequest) {
 
     // ایجاد دایرکتوری اگر وجود ندارد
     try {
+    const session = await auth();
       await ensureUploadDirExists(uploadDir);
     } catch (err) {
       console.error("Error creating directory:", err);

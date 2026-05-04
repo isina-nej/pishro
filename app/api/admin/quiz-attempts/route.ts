@@ -4,6 +4,7 @@
  */
 
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import { Prisma } from "@/types/prisma";
 import { prisma } from "@/lib/prisma";
 import {
@@ -14,6 +15,7 @@ import {
 
 export async function GET(req: NextRequest) {
   try {
+    const session = await auth();
     if (!session?.user) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }

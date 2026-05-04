@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { successResponse, errorResponse } from "@/lib/api-response";
 import { QuestionType } from "@/types/prisma";
@@ -437,6 +438,7 @@ const quizData = [
 
 export async function POST(_req: NextRequest) {
   try {
+    const session = await auth();
     console.log("🌱 شروع Seed کردن آزمون‌های تعیین سطح...");
 
     const results = {

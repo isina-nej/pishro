@@ -1,5 +1,6 @@
 // @/app/api/admin/skyroom-classes/[id]/route.ts
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import {
   getSkyRoomClassById,
   updateSkyRoomClass,
@@ -25,6 +26,7 @@ interface RouteParams {
  */
 export async function GET(req: NextRequest, { params }: RouteParams) {
   try {
+    const session = await auth();
     if (!session?.user || session.user.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }
@@ -52,6 +54,7 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
  */
 export async function PATCH(req: NextRequest, { params }: RouteParams) {
   try {
+    const session = await auth();
     if (!session?.user || session.user.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }
@@ -67,6 +70,7 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
     } else if (body.meetingLink) {
       // Validate URL format
       try {
+    const session = await auth();
         new URL(body.meetingLink);
       } catch {
         errors.meetingLink = "فرمت لینک همایش معتبر نیست";
@@ -101,6 +105,7 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
  */
 export async function DELETE(req: NextRequest, { params }: RouteParams) {
   try {
+    const session = await auth();
     if (!session?.user || session.user.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }

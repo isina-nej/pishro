@@ -5,6 +5,7 @@
  */
 
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import { copyFile, readdir, mkdir } from "fs/promises";
 import { join } from "path";
 import {
@@ -16,6 +17,7 @@ import { getAllUploadPaths } from "@/lib/upload-config";
 
 export async function GET(_req: NextRequest) {
   try {
+    const session = await auth();
     // فقط ادمین می‌تواند این endpoint را دیده‌ها را ببیند
     if (!session?.user) {
       return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
@@ -47,6 +49,7 @@ export async function GET(_req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const session = await auth();
     // فقط ادمین می‌تواند مهاجرت انجام دهد
     if (!session?.user) {
       return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
@@ -112,6 +115,7 @@ async function migrateFiles(
   };
 
   try {
+    const session = await auth();
     // بررسی اینکه مسیر منبع موجود است
     const files = await readdir(fromPath, { recursive: true });
     results.totalFiles = files.length;
@@ -128,6 +132,7 @@ async function migrateFiles(
     // کپی کردن فایل‌ها
     for (const file of files) {
       try {
+    const session = await auth();
         const sourceFile = join(fromPath, file);
         const destFile = join(toPath, file);
 

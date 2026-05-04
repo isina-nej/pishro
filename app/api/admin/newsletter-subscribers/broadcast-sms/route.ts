@@ -4,6 +4,7 @@
  */
 
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { sendBulkSmsMelipayamak } from "@/lib/sms";
 import {
@@ -15,6 +16,7 @@ import {
 
 export async function POST(req: NextRequest) {
   try {
+    const session = await auth();
     if (!session?.user) {
       return errorResponse("لطفا ابتدا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }

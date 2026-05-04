@@ -5,6 +5,7 @@
  */
 
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import {
   errorResponse,
   successResponse,
@@ -23,6 +24,7 @@ import {
  */
 export async function GET(_req: NextRequest) {
   try {
+    const session = await auth();
     if (!session?.user) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
@@ -57,6 +59,7 @@ export async function GET(_req: NextRequest) {
  */
 export async function PATCH(req: NextRequest) {
   try {
+    const session = await auth();
     if (!session?.user) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }

@@ -1,5 +1,6 @@
 // Admin endpoint to fix null updatedAt values in the database
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   successResponse,
@@ -8,6 +9,7 @@ import {
 
 export async function POST(_req: NextRequest) {
   try {
+    const session = await auth();
     // Check authentication
     if (!session?.user) {
       return errorResponse("احراز هویت نشده است", ErrorCodes.UNAUTHORIZED);

@@ -4,6 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/auth";
 import { writeFile } from "fs/promises";
 import {
   successResponse,
@@ -52,6 +53,7 @@ export async function OPTIONS(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const session = await auth();
     // Note: Auth is handled by the admin panel - this endpoint receives already-authenticated requests
 
     const formData = await req.formData();
@@ -110,6 +112,7 @@ export async function POST(req: NextRequest) {
     console.log("Creating upload directory:", uploadDir);
     // ایجاد دایرکتوری اگر وجود ندارد
     try {
+    const session = await auth();
       await ensureUploadDirExists(uploadDir);
       console.log("Upload directory created successfully");
     } catch (err) {
@@ -120,6 +123,7 @@ export async function POST(req: NextRequest) {
     console.log("Writing file to disk:", filepath);
     // ذخیره فایل
     try {
+    const session = await auth();
       await writeFile(filepath, buffer);
       console.log("File written successfully");
     } catch (err) {

@@ -1,5 +1,6 @@
 // @/app/api/admin/lessons/route.ts
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import { getAllLessons, createLesson } from "@/lib/services/lesson-service";
 import {
   successResponse,
@@ -13,6 +14,7 @@ import {
  */
 export async function GET(_req: NextRequest) {
   try {
+    const session = await auth();
     if (!session?.user || session.user.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }
@@ -35,6 +37,7 @@ export async function GET(_req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
   try {
+    const session = await auth();
     if (!session?.user || session.user.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }

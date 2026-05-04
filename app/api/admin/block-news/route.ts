@@ -19,6 +19,7 @@ import type { NewsListResponse, CreateNewsRequest, NewsDetailResponse } from '@/
 
 export async function GET(req: Request) {
   try {
+    const session = await auth();
     if (!session?.user) {
       return 'ورود به سیستم الزامی است');
     }
@@ -61,6 +62,7 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    const session = await auth();
     if (!session?.user) {
       return 'ورود به سیستم الزامی است');
     }
