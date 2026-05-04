@@ -10,7 +10,6 @@ import { corsPreflightResponse, addCorsHeaders } from "@/lib/cors";
 export async function OPTIONS(req: NextRequest) {
   return corsPreflightResponse(req.headers.get("origin"));
 }
-
 export async function GET(req: NextRequest) {
   const origin = req.headers.get("origin");
   try {
@@ -24,7 +23,6 @@ export async function GET(req: NextRequest) {
       { month: "May", profit: 4800 },
       { month: "Jun", profit: 3800 },
     ];
-
     const response = successResponse(data, "داده‌های سود دریافت شد");
     return addCorsHeaders(response, origin);
   } catch (error) {
@@ -33,6 +31,4 @@ export async function GET(req: NextRequest) {
       "خطا در دریافت داده‌های سود",
       ErrorCodes.INTERNAL_ERROR
     );
-    return addCorsHeaders(response, origin);
   }
-}

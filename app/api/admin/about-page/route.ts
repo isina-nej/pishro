@@ -15,7 +15,6 @@ import {
   ErrorCodes,
   validationError
 } from "@/lib/api-response";
-
 export async function GET(req: NextRequest) {
   try {
     const session = await auth();
@@ -24,27 +23,19 @@ export async function GET(req: NextRequest) {
     }
     if (session.user.role !== "ADMIN") {
       return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
-    }
-
     const searchParams = req.nextUrl.searchParams;
-
     // Pagination
     const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
     const limit = Math.min(100, parseInt(searchParams.get("limit") || "20"));
     const skip = (page - 1) * limit;
-
     // Filters
     const published = searchParams.get("published");
-
     // Build where clause
     const where: Prisma.AboutPageWhereInput = {};
-
     if (published === "true") {
       where.published = true;
     } else if (published === "false") {
       where.published = false;
-    }
-
     // Fetch about pages
     const [items, total] = await Promise.all([
       prisma.aboutPage.findMany({
@@ -60,7 +51,6 @@ export async function GET(req: NextRequest) {
       }),
       prisma.aboutPage.count({ where }),
     ]);
-
     return paginatedResponse(items, page, limit, total);
   } catch (error) {
     console.error("Error fetching about pages:", error);
@@ -70,17 +60,7 @@ export async function GET(req: NextRequest) {
     );
   }
 }
-
 export async function POST(req: NextRequest) {
-  try {
-    const session = await auth();
-    if (!session?.user) {
-      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
-    }
-    if (session.user.role !== "ADMIN") {
-      return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
-    }
-
     const body = await req.json();
     const {
       heroTitle,
@@ -105,14 +85,11 @@ export async function POST(req: NextRequest) {
       metaKeywords = [],
       published = false
     } = body;
-
     // Validation
     if (!heroTitle) {
       return validationError({
         heroTitle: "عنوان Hero الزامی است"
       });
-    }
-
     // Create about page
     const item = await prisma.aboutPage.create({
       data: {
@@ -144,13 +121,6 @@ export async function POST(req: NextRequest) {
         certificates: true
       }
     });
-
     return createdResponse(item, "صفحه درباره ما با موفقیت ایجاد شد");
-  } catch (error) {
     console.error("Error creating about page:", error);
-    return errorResponse(
       "خطا در ایجاد صفحه درباره ما",
-      ErrorCodes.DATABASE_ERROR
-    );
-  }
-}

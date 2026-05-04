@@ -13,7 +13,6 @@ import {
   validationError,
   ErrorCodes
 } from "@/lib/api-response";
-
 export async function POST(req: NextRequest) {
   try {
     const session = await auth();
@@ -22,49 +21,34 @@ export async function POST(req: NextRequest) {
     }
     if (session.user.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز. فقط ادمین‌ها اجازه دارند.", ErrorCodes.UNAUTHORIZED);
-    }
-
     // Get message text from request body
     const body = await req.json();
     const { message } = body;
-
     // Validation
     if (!message || typeof message !== "string" || message.trim().length === 0) {
       return validationError(
         { message: "متن پیامک الزامی است" },
         "متن پیامک نمی‌تواند خالی باشد"
       );
-    }
-
     // Check message length (Persian SMS limit is around 70 characters per message)
     if (message.trim().length > 500) {
-      return validationError(
         { message: "متن پیامک نباید بیشتر از 500 کاراکتر باشد" },
         "متن پیامک خیلی طولانی است"
-      );
-    }
-
     // Get all newsletter subscribers
     const subscribers = await prisma.newsletterSubscriber.findMany({
       select: {
         phone: true
       }
     });
-
     if (subscribers.length === 0) {
       return errorResponse(
         "هیچ عضوی در باشگاه خبری یافت نشد",
         ErrorCodes.NOT_FOUND
-      );
-    }
-
     // Extract phone numbers
     const phones = subscribers.map(s => s.phone);
-
     // Send SMS to all subscribers using bulk sending
     // batchSize = 50 means 50 phones per API call
     const results = await sendBulkSmsMelipayamak(phones, message.trim(), 50);
-
     // Return results
     return successResponse(
       {
@@ -83,6 +67,5 @@ export async function POST(req: NextRequest) {
     return errorResponse(
       "خطا در ارسال پیامک گروهی",
       ErrorCodes.INTERNAL_ERROR
-    );
   }
 }

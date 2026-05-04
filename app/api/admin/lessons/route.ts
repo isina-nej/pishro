@@ -18,9 +18,7 @@ export async function GET(_req: NextRequest) {
     if (!session?.user || session.user.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }
-
     const lessons = await getAllLessons();
-
     return successResponse(lessons, "کلاس‌ها با موفقیت دریافت شدند");
   } catch (error) {
     console.error("[GET /api/admin/lessons] error:", error);
@@ -30,18 +28,9 @@ export async function GET(_req: NextRequest) {
     );
   }
 }
-
-/**
  * POST /api/admin/lessons
  * ایجاد کلاس جدید (برای ادمین)
- */
 export async function POST(req: NextRequest) {
-  try {
-    const session = await auth();
-    if (!session?.user || session.user.role !== "ADMIN") {
-      return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
-    }
-
     const body = await req.json();
     const {
       courseId,
@@ -53,32 +42,14 @@ export async function POST(req: NextRequest) {
       order,
       published
     } = body;
-
     // Validation
     if (!courseId || !title || !videoUrl) {
       return errorResponse(
         "شناسه دوره، عنوان و آدرس ویدیو الزامی است",
         ErrorCodes.VALIDATION_ERROR
       );
-    }
-
     const lesson = await createLesson({
-      courseId,
-      title,
-      description,
-      videoUrl,
-      thumbnail,
-      duration,
-      order,
-      published
     });
-
     return successResponse(lesson, "کلاس با موفقیت ایجاد شد");
-  } catch (error) {
     console.error("[POST /api/admin/lessons] error:", error);
-    return errorResponse(
       "خطایی در ایجاد کلاس رخ داد",
-      ErrorCodes.DATABASE_ERROR
-    );
-  }
-}

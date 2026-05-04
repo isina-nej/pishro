@@ -16,7 +16,6 @@ import {
   validationError
 } from "@/lib/api-response";
 import bcrypt from "bcryptjs";
-
 export async function GET(req: NextRequest) {
   try {
     const session = await auth();
@@ -25,23 +24,17 @@ export async function GET(req: NextRequest) {
     }
     if (session.user.role !== "ADMIN") {
       return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
-    }
-
     const searchParams = req.nextUrl.searchParams;
-
     // Pagination
     const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
     const limit = Math.min(100, parseInt(searchParams.get("limit") || "20"));
     const skip = (page - 1) * limit;
-
     // Filters
     const search = searchParams.get("search");
     const role = searchParams.get("role");
     const phoneVerified = searchParams.get("phoneVerified");
-
     // Build where clause
     const where: Prisma.UserWhereInput = {};
-
     if (search) {
       where.OR = [
         { phone: { contains: search } },
@@ -50,18 +43,12 @@ export async function GET(req: NextRequest) {
         { email: { contains: search, mode: "insensitive" } },
         { nationalCode: { contains: search } },
       ];
-    }
-
     if (role && (role === "USER" || role === "ADMIN")) {
       where.role = role as Prisma.EnumUserRoleFilter;
-    }
-
     if (phoneVerified === "true") {
       where.phoneVerified = true;
     } else if (phoneVerified === "false") {
       where.phoneVerified = false;
-    }
-
     // Fetch users
     const [users, total] = await Promise.all([
       prisma.user.findMany({
@@ -94,7 +81,6 @@ export async function GET(req: NextRequest) {
       }),
       prisma.user.count({ where }),
     ]);
-
     return paginatedResponse(users, page, limit, total);
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -104,17 +90,7 @@ export async function GET(req: NextRequest) {
     );
   }
 }
-
 export async function POST(req: NextRequest) {
-  try {
-    const session = await auth();
-    if (!session?.user) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
-    }
-    if (session.user.role !== "ADMIN") {
-      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
-    }
-
     const body = await req.json();
     const {
       phone,
@@ -126,37 +102,26 @@ export async function POST(req: NextRequest) {
       nationalCode,
       phoneVerified = false
     } = body;
-
     // Validation
     if (!phone || !password) {
       return validationError({
         phone: !phone ? "Phone is required" : "",
         password: !password ? "Password is required" : ""
       });
-    }
-
     // Validate phone format
     if (!/^09\d{9}$/.test(phone)) {
-      return validationError({
         phone: "Invalid phone format. Must be 09XXXXXXXXX"
-      });
-    }
-
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
       where: { phone }
     });
-
     if (existingUser) {
       return errorResponse(
         "User with this phone already exists",
         ErrorCodes.ALREADY_EXISTS
       );
-    }
-
     // Hash password
     const passwordHash = await bcrypt.hash(password, 10);
-
     // Create user
     const user = await prisma.user.create({
       data: {
@@ -179,14 +144,6 @@ export async function POST(req: NextRequest) {
         email: true,
         createdAt: true
       }
-    });
-
     return createdResponse(user, "User created successfully");
-  } catch (error) {
     console.error("Error creating user:", error);
-    return errorResponse(
       "Error creating user",
-      ErrorCodes.DATABASE_ERROR
-    );
-  }
-}

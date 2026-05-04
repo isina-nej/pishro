@@ -15,7 +15,6 @@ import {
   ErrorCodes,
   noContentResponse
 } from "@/lib/api-response";
-
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -27,10 +26,7 @@ export async function GET(
     }
     if (session.user.role !== "ADMIN") {
       return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
-    }
-
     const { id } = await params;
-
     const comment = await prisma.newsComment.findUnique({
       where: { id },
       include: {
@@ -44,19 +40,13 @@ export async function GET(
           }
         },
         article: {
-          select: {
-            id: true,
             title: true,
             slug: true
-          }
         }
       }
     });
-
     if (!comment) {
       return notFoundResponse("NewsComment", "News comment not found");
-    }
-
     return successResponse(comment);
   } catch (error) {
     console.error("Error fetching news comment:", error);
@@ -66,106 +56,24 @@ export async function GET(
     );
   }
 }
-
 export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const session = await auth();
-    if (!session?.user) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
-    }
-    if (session.user.role !== "ADMIN") {
-      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
-    }
-
-    const { id } = await params;
     const body = await req.json();
-
     // Check if comment exists
     const existingComment = await prisma.newsComment.findUnique({
       where: { id }
-    });
-
     if (!existingComment) {
-      return notFoundResponse("NewsComment", "News comment not found");
-    }
-
     // Prepare update data
     const updateData: Record<string, unknown> = {};
-
     // Only include fields that are provided
     if (body.content !== undefined) updateData.content = body.content;
-
     const updatedComment = await prisma.newsComment.update({
-      where: { id },
       data: updateData,
-      include: {
-        user: {
-          select: {
-            id: true,
-            phone: true,
-            firstName: true,
-            lastName: true,
-            avatarUrl: true
-          }
-        },
-        article: {
-          select: {
-            id: true,
-            title: true,
-            slug: true
-          }
-        }
-      }
-    });
-
     return successResponse(updatedComment, "News comment updated successfully");
-  } catch (error) {
     console.error("Error updating news comment:", error);
-    return errorResponse(
       "Error updating news comment",
-      ErrorCodes.DATABASE_ERROR
-    );
-  }
-}
-
 export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const session = await auth();
-    if (!session?.user) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
-    }
-    if (session.user.role !== "ADMIN") {
-      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
-    }
-
-    const { id } = await params;
-
-    // Check if comment exists
-    const existingComment = await prisma.newsComment.findUnique({
-      where: { id }
-    });
-
-    if (!existingComment) {
-      return notFoundResponse("NewsComment", "News comment not found");
-    }
-
     // Delete comment
     await prisma.newsComment.delete({
-      where: { id }
-    });
-
     return noContentResponse();
-  } catch (error) {
     console.error("Error deleting news comment:", error);
-    return errorResponse(
       "Error deleting news comment",
-      ErrorCodes.DATABASE_ERROR
-    );
-  }
-}

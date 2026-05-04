@@ -13,8 +13,6 @@ import {
   failResponse,
   ErrorCodes
 } from "@/lib/api-response";
-
-/**
  * POST request to revalidate cached pages
  * Body params:
  * - path: Single path or array of paths to revalidate
@@ -24,33 +22,24 @@ import {
  * Examples:
  * 1. Revalidate single category page:
  *    { "path": "/courses/airdrop" }
- *
  * 2. Revalidate multiple pages:
  *    { "path": ["/courses/airdrop", "/courses/nft"] }
- *
  * 3. Revalidate by tag:
  *    { "tag": "category", "type": "tag" }
- *
  * 4. Revalidate specific category and its API:
  *    { "path": ["/courses/airdrop", "/api/categories/airdrop"] }
- */
 export async function POST(req: NextRequest) {
   try {
     const session = await auth();
-
     if (!session?.user) {
       return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
     }
-
     // Check if user is admin (assuming role field exists in user model)
     if (session.user.role !== "admin") {
       return errorResponse("شما دسترسی به این عملیات ندارید", ErrorCodes.UNAUTHORIZED);
-    }
-
     // Parse request body
     const body = await req.json();
     const { path, tag, type = "path" } = body;
-
     // Validation
     if (!path && !tag) {
       return failResponse(
@@ -59,24 +48,18 @@ export async function POST(req: NextRequest) {
         },
         "لطفاً path یا tag را مشخص کنید"
       );
-    }
-
     const revalidated: string[] = [];
     const failed: string[] = [];
-
     // Revalidate by path
     if (type === "path" && path) {
       const paths = Array.isArray(path) ? path : [path];
-
       for (const p of paths) {
         try {
-    const session = await auth();
           // Validate path format
           if (!p.startsWith("/")) {
             failed.push(p);
             continue;
           }
-
           revalidatePath(p);
           revalidated.push(p);
         } catch (error) {
@@ -84,24 +67,14 @@ export async function POST(req: NextRequest) {
           failed.push(p);
         }
       }
-    }
-
     // Revalidate by tag
     if (type === "tag" && tag) {
       const tags = Array.isArray(tag) ? tag : [tag];
-
       for (const t of tags) {
-        try {
-    const session = await auth();
           revalidateTag(t);
           revalidated.push(`tag:${t}`);
-        } catch (error) {
           console.error(`Error revalidating tag ${t}:`, error);
           failed.push(`tag:${t}`);
-        }
-      }
-    }
-
     // Build response
     const response = {
       message: "فرآیند بازخوانی کش با موفقیت انجام شد",
@@ -109,7 +82,6 @@ export async function POST(req: NextRequest) {
       failed: failed.length > 0 ? failed : undefined,
       timestamp: new Date().toISOString()
     };
-
     return successResponse(response);
   } catch (error) {
     console.error("Error in revalidate API:", error);
@@ -119,23 +91,9 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-
-/**
  * GET request to check revalidation status and get available paths
  * Useful for admin dashboard
- */
 export async function GET() {
-  try {
-    const session = await auth();
-
-    if (!session?.user) {
-      return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
-    }
-
-    if (session.user.role !== "admin") {
-      return errorResponse("شما دسترسی به این عملیات ندارید", ErrorCodes.UNAUTHORIZED);
-    }
-
     // Return available paths and tags that can be revalidated
     const availablePaths = {
       categories: [
@@ -151,23 +109,10 @@ export async function GET() {
         "/api/categories/cryptocurrency",
         "/api/categories/stock-market",
         "/api/categories/metaverse",
-      ],
       tags: ["category", "courses", "tags", "faqs", "comments"]
-    };
-
-    const response = {
       message: "لیست مسیرهای قابل بازخوانی",
       paths: availablePaths,
       revalidateInterval: 3600, // 1 hour in seconds
       lastRevalidation: new Date().toISOString()
-    };
-
-    return successResponse(response);
-  } catch (error) {
     console.error("Error fetching revalidation info:", error);
-    return errorResponse(
       "خطا در دریافت اطلاعات بازخوانی",
-      ErrorCodes.INTERNAL_ERROR
-    );
-  }
-}

@@ -12,7 +12,6 @@ import {
   paginatedResponse,
   ErrorCodes
 } from "@/lib/api-response";
-
 export async function GET(req: NextRequest) {
   try {
     const session = await auth();
@@ -21,25 +20,17 @@ export async function GET(req: NextRequest) {
     }
     if (session.user.role !== "ADMIN") {
       return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
-    }
-
     const searchParams = req.nextUrl.searchParams;
-
     // Pagination
     const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
     const limit = Math.min(100, parseInt(searchParams.get("limit") || "50"));
     const skip = (page - 1) * limit;
-
     // Filters
     const search = searchParams.get("search");
-
     // Build where clause
     const where: Prisma.NewsletterSubscriberWhereInput = {};
-
     if (search) {
       where.phone = { contains: search };
-    }
-
     // Fetch subscribers
     const [subscribers, total] = await Promise.all([
       prisma.newsletterSubscriber.findMany({
@@ -50,7 +41,6 @@ export async function GET(req: NextRequest) {
       }),
       prisma.newsletterSubscriber.count({ where }),
     ]);
-
     return paginatedResponse(subscribers, page, limit, total);
   } catch (error) {
     console.error("Error fetching newsletter subscribers:", error);

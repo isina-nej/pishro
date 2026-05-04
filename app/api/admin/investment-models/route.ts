@@ -9,13 +9,11 @@ import { auth } from "@/auth";
 import {
   createInvestmentModel
 } from "@/lib/services/investment-models-service";
-import {
   errorResponse,
   createdResponse,
   ErrorCodes,
   validationError
 } from "@/lib/api-response";
-
 export async function POST(req: NextRequest) {
   try {
     const session = await auth();
@@ -24,8 +22,6 @@ export async function POST(req: NextRequest) {
     }
     if (session.user.role !== "ADMIN") {
       return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
-    }
-
     const body = await req.json();
     const {
       investmentModelsPageId,
@@ -46,67 +42,38 @@ export async function POST(req: NextRequest) {
       order = 0,
       published = true
     } = body;
-
     // Validation
     const errors: { [key: string]: string } = {};
-
     if (!investmentModelsPageId) {
       errors.investmentModelsPageId = "شناسه صفحه الزامی است";
-    }
-
     if (!type || (type !== "in-person" && type !== "online")) {
       errors.type = "نوع باید 'in-person' یا 'online' باشد";
-    }
-
     if (!title || title.trim().length < 3) {
       errors.title = "عنوان الزامی است و باید حداقل 3 کاراکتر باشد";
-    }
-
     if (!description || description.trim().length < 10) {
       errors.description = "توضیحات الزامی است و باید حداقل 10 کاراکتر باشد";
-    }
-
     if (!icon) {
       errors.icon = "آیکون الزامی است";
-    }
-
     if (!color) {
       errors.color = "رنگ الزامی است";
-    }
-
     if (!gradient) {
       errors.gradient = "gradient الزامی است";
-    }
-
     if (!ctaText || ctaText.trim().length < 3) {
       errors.ctaText = "متن دکمه الزامی است";
-    }
-
     if (Object.keys(errors).length > 0) {
       return validationError(errors, "اطلاعات ارسالی معتبر نیست");
-    }
-
     // Create investment model
     const item = await createInvestmentModel({
-      investmentModelsPageId,
-      type,
       title: title.trim(),
       description: description.trim(),
-      icon,
-      color,
-      gradient,
       features,
       benefits,
       ctaText: ctaText.trim(),
-      ctaLink,
       ctaIsScroll,
-      contactTitle,
-      contactDescription,
       contacts,
       order,
       published
     });
-
     return createdResponse(item, "مدل سرمایه‌ گذاری با موفقیت ایجاد شد");
   } catch (error) {
     console.error("Error creating investment model:", error);

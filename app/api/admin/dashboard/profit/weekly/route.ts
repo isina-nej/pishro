@@ -11,13 +11,11 @@ import {
   validationError,
   ErrorCodes
 } from "@/lib/api-response";
-import {
   getWeeklyProfit,
   getCachedData,
   setCachedData
 } from "@/lib/services/dashboard-service";
 import { WeeklyProfit } from "@/types/dashboard";
-
 export async function GET(req: NextRequest) {
   try {
     const session = await auth();
@@ -25,39 +23,28 @@ export async function GET(req: NextRequest) {
     if (!session?.user) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
-
     if (session.user.role !== "ADMIN") {
       return errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);
-    }
-
     // دریافت پارامترها
     const searchParams = req.nextUrl.searchParams;
     const period = searchParams.get("period") as
       | "this_week"
       | "last_week"
       | null;
-
     // اعتبارسنجی
     if (!period || (period !== "this_week" && period !== "last_week")) {
       return validationError({
         period: "دوره زمانی باید this_week یا last_week باشد"
       });
-    }
-
     // بررسی کش
     const cacheKey = `dashboard-profit-${period}`;
     const cachedData = getCachedData<WeeklyProfit>(cacheKey);
-
     if (cachedData) {
       return successResponse(cachedData, "داده‌ها از کش بارگذاری شد");
-    }
-
     // دریافت داده‌ها
     const profit = await getWeeklyProfit(period);
-
     // ذخیره در کش
     setCachedData(cacheKey, profit);
-
     return successResponse(profit, "داده‌ها با موفقیت دریافت شد");
   } catch (error) {
     console.error("Error fetching weekly profit:", error);

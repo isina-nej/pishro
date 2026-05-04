@@ -13,7 +13,6 @@ import {
   notFoundResponse,
   ErrorCodes
 } from "@/lib/api-response";
-
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -25,10 +24,7 @@ export async function GET(
     }
     if (session.user.role !== "ADMIN") {
       return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
-    }
-
     const { id } = await params;
-
     const order = await prisma.order.findUnique({
       where: { id },
       include: {
@@ -51,18 +47,13 @@ export async function GET(
                 img: true
               }
             }
-          }
-        },
         transactions: {
           orderBy: { createdAt: "desc" }
         }
       }
     });
-
     if (!order) {
       return notFoundResponse("Order", "Order not found");
-    }
-
     return successResponse(order);
   } catch (error) {
     console.error("Error fetching order:", error);
@@ -72,71 +63,21 @@ export async function GET(
     );
   }
 }
-
 export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const session = await auth();
-    if (!session?.user) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
-    }
-    if (session.user.role !== "ADMIN") {
-      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
-    }
-
-    const { id } = await params;
     const body = await req.json();
-
     // Check if order exists
     const existingOrder = await prisma.order.findUnique({
       where: { id }
-    });
-
     if (!existingOrder) {
-      return notFoundResponse("Order", "Order not found");
-    }
-
     // Prepare update data
     const updateData: Record<string, unknown> = {};
-
     // Only allow updating status and paymentRef
     if (body.status !== undefined) updateData.status = body.status;
     if (body.paymentRef !== undefined) updateData.paymentRef = body.paymentRef;
-
     const updatedOrder = await prisma.order.update({
-      where: { id },
       data: updateData,
-      include: {
-        user: {
-          select: {
-            id: true,
-            phone: true,
-            firstName: true,
             lastName: true
-          }
-        },
-        orderItems: {
-          include: {
-            course: {
-              select: {
-                id: true,
-                subject: true,
                 slug: true
-              }
-            }
-          }
-        }
-      }
-    });
-
     return successResponse(updatedOrder, "Order updated successfully");
-  } catch (error) {
     console.error("Error updating order:", error);
-    return errorResponse(
       "Error updating order",
-      ErrorCodes.DATABASE_ERROR
-    );
-  }
-}

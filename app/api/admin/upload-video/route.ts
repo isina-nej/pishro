@@ -7,7 +7,6 @@ import {
   errorResponse,
   ErrorCodes
 } from "@/lib/api-response";
-import {
   VIDEOS_UPLOAD_PATHS,
   ensureUploadDirExists,
   generateFileUrl
@@ -23,84 +22,55 @@ const ALLOWED_TYPES = [
   "video/webm",
 ];
 const ALLOWED_EXTENSIONS = ["mp4", "mov", "avi", "mkv", "webm"];
-
 export async function POST(req: NextRequest) {
   try {
     const session = await auth();
-
     // بررسی احراز هویت و نقش ادمین
     if (!session?.user) {
       return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
     }
-
     if (session.user.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
-    }
-
     const formData = await req.formData();
     const file = formData.get("video") as File | null;
-
     if (!file) {
       return validationError(
         { video: "فایل ویدیو الزامی است" },
         "فایل ویدیو الزامی است"
       );
-    }
-
     // بررسی نوع فایل
     if (!ALLOWED_TYPES.includes(file.type)) {
-      return validationError(
         { video: "فقط فایل‌های ویدیویی مجاز هستند" },
         "فقط فرمت‌های MP4، MOV، AVI، MKV و WebM مجاز هستند"
-      );
-    }
-
     // بررسی حجم فایل
     if (file.size > MAX_FILE_SIZE) {
-      return validationError(
         { video: "حجم فایل نباید بیشتر از 256 مگابایت باشد" },
         "حجم فایل نباید بیشتر از 256 مگابایت باشد"
-      );
-    }
-
     // تبدیل فایل به buffer
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-
     // ایجاد نام منحصر به فرد برای فایل
     const timestamp = Date.now();
     const randomString = Math.random().toString(36).substring(2, 15);
     const extension = file.name.split(".").pop()?.toLowerCase() || "mp4";
-
     // بررسی اعتبار پسوند
     if (!ALLOWED_EXTENSIONS.includes(extension)) {
-      return validationError(
         { video: "پسوند فایل معتبر نیست" },
         "پسوند فایل معتبر نیست"
-      );
-    }
-
     const filename = `video_${timestamp}_${randomString}.${extension}`;
-
     // مسیر ذخیره فایل
     const uploadDir = VIDEOS_UPLOAD_PATHS.videos.dir;
     const filepath = `${uploadDir}\\${filename}`;
-
     // ایجاد دایرکتوری اگر وجود ندارد
     try {
-    const session = await auth();
       await ensureUploadDirExists(uploadDir);
     } catch (err) {
       console.error("Error creating directory:", err);
       throw err;
-    }
-
     // ذخیره فایل
     await writeFile(filepath, buffer);
-
     // URL نسبی فایل
     const videoUrl = generateFileUrl("video", filename);
-
     return successResponse(
       {
         videoUrl,
@@ -115,6 +85,5 @@ export async function POST(req: NextRequest) {
     return errorResponse(
       "خطایی در آپلود ویدیو رخ داد",
       ErrorCodes.INTERNAL_ERROR
-    );
   }
 }

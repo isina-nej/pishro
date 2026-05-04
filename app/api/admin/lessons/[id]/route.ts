@@ -6,7 +6,6 @@ import {
   updateLesson,
   deleteLesson
 } from "@/lib/services/lesson-service";
-import {
   successResponse,
   errorResponse,
   notFoundResponse,
@@ -18,7 +17,6 @@ interface RouteParams {
     id: string;
   }>;
 }
-
 /**
  * GET /api/admin/lessons/[id]
  * دریافت یک کلاس (برای ادمین)
@@ -29,14 +27,10 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
     if (!session?.user || session.user.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }
-
     const { id } = await params;
     const lesson = await getLessonById(id);
-
     if (!lesson) {
       return notFoundResponse("کلاس مورد نظر یافت نشد");
-    }
-
     return successResponse(lesson, "کلاس با موفقیت دریافت شد");
   } catch (error) {
     console.error("[GET /api/admin/lessons/[id]] error:", error);
@@ -45,55 +39,18 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
       ErrorCodes.DATABASE_ERROR
     );
   }
-}
-
-/**
  * PATCH /api/admin/lessons/[id]
  * به‌روزرسانی یک کلاس (برای ادمین)
- */
 export async function PATCH(req: NextRequest, { params }: RouteParams) {
-  try {
-    const session = await auth();
-    if (!session?.user || session.user.role !== "ADMIN") {
-      return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
-    }
-
-    const { id } = await params;
     const body = await req.json();
-
     const lesson = await updateLesson(id, body);
-
     return successResponse(lesson, "کلاس با موفقیت به‌روزرسانی شد");
-  } catch (error) {
     console.error("[PATCH /api/admin/lessons/[id]] error:", error);
-    return errorResponse(
       "خطایی در به‌روزرسانی کلاس رخ داد",
-      ErrorCodes.DATABASE_ERROR
-    );
-  }
-}
-
-/**
  * DELETE /api/admin/lessons/[id]
  * حذف یک کلاس (برای ادمین)
- */
 export async function DELETE(req: NextRequest, { params }: RouteParams) {
-  try {
-    const session = await auth();
-    if (!session?.user || session.user.role !== "ADMIN") {
-      return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
-    }
-
-    const { id } = await params;
-
     await deleteLesson(id);
-
     return successResponse(null, "کلاس با موفقیت حذف شد");
-  } catch (error) {
     console.error("[DELETE /api/admin/lessons/[id]] error:", error);
-    return errorResponse(
       "خطایی در حذف کلاس رخ داد",
-      ErrorCodes.DATABASE_ERROR
-    );
-  }
-}

@@ -11,7 +11,6 @@ import {
   ErrorCodes
 } from "@/lib/api-response";
 import { getVideoStats } from "@/lib/services/video-service";
-
 export async function GET(_req: NextRequest) {
   try {
     const session = await auth();
@@ -20,10 +19,7 @@ export async function GET(_req: NextRequest) {
     }
     if (session.user.role !== "ADMIN") {
       return errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);
-    }
-
     const stats = await getVideoStats();
-
     return successResponse(stats);
   } catch (error) {
     console.error("Error fetching video stats:", error);

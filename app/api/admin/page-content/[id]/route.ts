@@ -15,7 +15,6 @@ import {
   ErrorCodes,
   noContentResponse
 } from "@/lib/api-response";
-
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -27,10 +26,7 @@ export async function GET(
     }
     if (session.user.role !== "ADMIN") {
       return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
-    }
-
     const { id } = await params;
-
     const content = await prisma.pageContent.findUnique({
       where: { id },
       include: {
@@ -43,11 +39,8 @@ export async function GET(
         }
       }
     });
-
     if (!content) {
       return notFoundResponse("PageContent", "Page content not found");
-    }
-
     return successResponse(content);
   } catch (error) {
     console.error("Error fetching page content:", error);
@@ -57,35 +50,14 @@ export async function GET(
     );
   }
 }
-
 export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const session = await auth();
-    if (!session?.user) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
-    }
-    if (session.user.role !== "ADMIN") {
-      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
-    }
-
-    const { id } = await params;
     const body = await req.json();
-
     // Check if content exists
     const existingContent = await prisma.pageContent.findUnique({
       where: { id }
-    });
-
     if (!existingContent) {
-      return notFoundResponse("PageContent", "Page content not found");
-    }
-
     // Prepare update data
     const updateData: Record<string, unknown> = {};
-
     // Only include fields that are provided
     if (body.type !== undefined) updateData.type = body.type;
     if (body.section !== undefined) updateData.section = body.section;
@@ -97,66 +69,14 @@ export async function PATCH(
     if (body.published !== undefined) updateData.published = body.published;
     if (body.publishAt !== undefined) updateData.publishAt = body.publishAt ? new Date(body.publishAt) : null;
     if (body.expireAt !== undefined) updateData.expireAt = body.expireAt ? new Date(body.expireAt) : null;
-
     const updatedContent = await prisma.pageContent.update({
-      where: { id },
       data: updateData,
-      include: {
-        category: {
-          select: {
-            id: true,
-            slug: true,
-            title: true
-          }
-        }
-      }
-    });
-
     return successResponse(updatedContent, "Page content updated successfully");
-  } catch (error) {
     console.error("Error updating page content:", error);
-    return errorResponse(
       "Error updating page content",
-      ErrorCodes.DATABASE_ERROR
-    );
-  }
-}
-
 export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const session = await auth();
-    if (!session?.user) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
-    }
-    if (session.user.role !== "ADMIN") {
-      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
-    }
-
-    const { id } = await params;
-
-    // Check if content exists
-    const existingContent = await prisma.pageContent.findUnique({
-      where: { id }
-    });
-
-    if (!existingContent) {
-      return notFoundResponse("PageContent", "Page content not found");
-    }
-
     // Delete content
     await prisma.pageContent.delete({
-      where: { id }
-    });
-
     return noContentResponse();
-  } catch (error) {
     console.error("Error deleting page content:", error);
-    return errorResponse(
       "Error deleting page content",
-      ErrorCodes.DATABASE_ERROR
-    );
-  }
-}
