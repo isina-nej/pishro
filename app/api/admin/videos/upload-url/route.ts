@@ -20,7 +20,8 @@ import type { RequestUploadUrlInput } from "@/types/video";
  */
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();\nif (!session?.user || session.user.role !== "ADMIN") {
+    const session = await auth();
+if (!session?.user || session.user.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
     }
 

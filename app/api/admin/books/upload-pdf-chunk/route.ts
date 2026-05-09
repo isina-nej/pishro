@@ -46,7 +46,8 @@ export async function OPTIONS(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();\nconsole.log("📦 PDF chunk upload request received");
+    const session = await auth();
+console.log("📦 PDF chunk upload request received");
 
     // Ensure chunks directory exists
     if (!existsSync(CHUNKS_DIR)) {

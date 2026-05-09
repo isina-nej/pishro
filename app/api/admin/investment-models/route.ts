@@ -17,7 +17,8 @@ import {
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();\nif (!session?.user) {
+    const session = await auth();
+if (!session?.user) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (session.user.role !== "ADMIN") {

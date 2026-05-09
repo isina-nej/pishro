@@ -23,7 +23,8 @@ export async function GET(
   { params }: { params: Promise<{ videoId: string }> }
 ) {
   try {
-    const session = await auth();\nif (!session?.user || session.user.role !== "ADMIN") {
+    const session = await auth();
+if (!session?.user || session.user.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
@@ -54,7 +55,8 @@ export async function PUT(
   { params }: { params: Promise<{ videoId: string }> }
 ) {
   try {
-    const session = await auth();\nif (!session?.user || session.user.role !== "ADMIN") {
+    const session = await auth();
+if (!session?.user || session.user.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
@@ -90,7 +92,8 @@ export async function DELETE(
   { params }: { params: Promise<{ videoId: string }> }
 ) {
   try {
-    const session = await auth();\nif (!session?.user || session.user.role !== "ADMIN") {
+    const session = await auth();
+if (!session?.user || session.user.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
     }
 

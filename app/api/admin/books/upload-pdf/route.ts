@@ -52,7 +52,8 @@ export async function OPTIONS(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();\n// Note: Auth is handled by the admin panel - this endpoint receives already-authenticated requests
+    const session = await auth();
+// Note: Auth is handled by the admin panel - this endpoint receives already-authenticated requests
 
     const formData = await req.formData();
     const file = formData.get("pdf") as File | null;

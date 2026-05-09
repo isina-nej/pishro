@@ -22,7 +22,8 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await auth();\nif (!session?.user) {
+    const session = await auth();
+if (!session?.user) {
       return 'ورود به سیستم الزامی است');
     }
 
@@ -46,7 +47,8 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await auth();\nif (!session?.user) {
+    const session = await auth();
+if (!session?.user) {
       return 'ورود به سیستم الزامی است');
     }
 
@@ -82,7 +84,8 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await auth();\nif (!session?.user) {
+    const session = await auth();
+if (!session?.user) {
       return 'ورود به سیستم الزامی است');
     }
 

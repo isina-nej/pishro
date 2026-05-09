@@ -8,7 +8,8 @@ import {
 
 export async function POST(_req: NextRequest) {
   try {
-    const session = await auth();\n// Check authentication
+    const session = await auth();
+// Check authentication
     if (!session?.user) {
       return errorResponse("احراز هویت نشده است", ErrorCodes.UNAUTHORIZED);
     }

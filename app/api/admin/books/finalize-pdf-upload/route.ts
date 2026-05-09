@@ -47,7 +47,8 @@ export async function OPTIONS(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();\nconsole.log("🔗 PDF finalize request received");
+    const session = await auth();
+console.log("🔗 PDF finalize request received");
 
     // Ensure directories exist
     if (!existsSync(BOOKS_DIR)) {

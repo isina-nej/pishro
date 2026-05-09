@@ -17,7 +17,8 @@ import {
  */
 export async function GET(_req: NextRequest) {
   try {
-    const session = await auth();\nif (!session?.user || session.user.role !== "ADMIN") {
+    const session = await auth();
+if (!session?.user || session.user.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }
 
@@ -39,7 +40,8 @@ export async function GET(_req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();\nif (!session?.user || session.user.role !== "ADMIN") {
+    const session = await auth();
+if (!session?.user || session.user.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }
 
