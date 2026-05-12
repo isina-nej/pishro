@@ -32,14 +32,14 @@ export default async function OrderPage({ params }: OrderPageProps) {
   const itemsArray = Array.isArray(order.items) ? order.items : [];
 
   const courseIds = itemsArray
-    .filter((item): item is { courseId: string } =>
+    .filter((item: any): item is { courseId: string } =>
       typeof item === 'object' &&
       item !== null &&
       'courseId' in item &&
       typeof item.courseId === 'string' &&
       item.courseId.length > 0
     )
-    .map((item) => item.courseId);
+    .map((item: any) => item.courseId);
 
   // Only fetch courses if we have valid courseIds
   const courses = courseIds.length > 0

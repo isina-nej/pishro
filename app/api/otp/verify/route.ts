@@ -71,7 +71,7 @@ export async function POST(req: Request) {
     } else {
       // Update existing user to mark phone as verified
       await execute(
-        `UPDATE User SET phoneVerified = true, updatedAt = NOW() WHERE phone = ?`,
+        `UPDATE User SET phoneVerified = true, updatedAt NOW() WHERE phone ?`,
         [phone]
       );
     }

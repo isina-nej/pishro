@@ -60,7 +60,7 @@ const ChatWidget = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
             transition={{ duration: 0.3 }}
-            className="fixed bottom-[16px] left-4 w-80 h-[90%] bg-white shadow-lg rounded-lg flex flex-col z-50"
+            className="fixed bottom-[16px] left-4 w-80 h-[90%] bg-white dark:bg-cardBg shadow-lg rounded-lg flex flex-col z-50"
           >
             {/* هدر */}
             <div className="flex items-center justify-between bg-[#173046] text-white p-4 py-2 rounded-t-lg">
@@ -79,9 +79,9 @@ const ChatWidget = () => {
               {selectedTopic ? (
                 <div className="h-full flex flex-col justify-between">
                   <div className="flex items-center justify-between border-b pb-2">
-                    <p className="text-gray-600 text-sm">
-                      موضوع انتخابی:{" "}
-                      <span className="text-gray-900">{selectedTopic}</span>
+                    <p className="text-gray-600 dark:text-textSecondary text-sm">
+                      موضوع انتخابی:{""}
+                      <span className="text-gray-900 dark:text-textPrimary">{selectedTopic}</span>
                     </p>
                     <Button
                       variant="link"
@@ -101,7 +101,7 @@ const ChatWidget = () => {
                 </div>
               ) : (
                 <div className="flex flex-col gap-2">
-                  <p className="text-gray-600 mb-4">سوال شما در چه موردیه؟</p>
+                  <p className="text-gray-600 dark:text-textSecondary mb-4">سوال شما در چه موردیه؟</p>
                   {topics.map((topic, index) => (
                     <button
                       key={index}

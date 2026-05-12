@@ -61,7 +61,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="w-full bg-white mt-8 border-t border-gray-200">
+    <footer className="w-full bg-white dark:bg-cardBg mt-8 border-t border-gray-200 dark:border-borderColor">
       {/* Main Footer Content */}
       <div className="container-xl">
         <div className="pt-12 md:pt-16 pb-8 md:pb-12 xl:px-10">
@@ -250,7 +250,7 @@ const Footer = () => {
         </div>
 
         {/* Footer Bottom */}
-        <div className="border-t border-gray-200 py-4 md:py-6 xl:px-10">
+        <div className="border-t border-gray-200 dark:border-borderColor py-4 md:py-6 xl:px-10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-[#80878C]">
             <p className="text-center md:text-right">
               © {new Date().getFullYear()} پیشرو سرمایه. تمامی حقوق محفوظ است.

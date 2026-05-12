@@ -63,7 +63,7 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
         audioUrl: book.audioUrl,
       });
       return errorResponse(
-        "این فایل برای این کتاب موجود نیست",
+        "این فایل برای کتاب موجود نیست",
         ErrorCodes.NOT_FOUND
       );
     }

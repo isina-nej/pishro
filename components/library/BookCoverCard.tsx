@@ -49,25 +49,27 @@ export const BookCoverCard = ({
         whileHover="hover"
         variants={containerVariants}
         transition={{ type: "spring", stiffness: 200, damping: 18 }}
-        className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer flex flex-col h-full"
+        className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white dark:bg-cardBg shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer flex flex-col h-full"
       >
         {/* Cover Image Container - Proper Aspect Ratio */}
         <div className={`relative ${getAspectRatio()} overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 flex-shrink-0 w-full`}>
-          <Image
-            src={book.cover}
-            alt={book.title}
-            fill
-            className="object-contain transition-transform duration-500 group-hover:scale-105"
-            sizes={
-              variant === "featured"
-                ? "(min-width: 1024px) 220px, 50vw"
-                : variant === "compact"
-                ? "(min-width: 768px) 140px, 40vw"
-                : "(min-width: 1280px) 360px, (min-width: 1024px) 320px, 80vw"
-            }
-            priority={priority}
-            quality={85}
-          />
+          {book.cover && (
+            <Image
+              src={book.cover}
+              alt={book.title}
+              fill
+              className="object-contain transition-transform duration-500 group-hover:scale-105"
+              sizes={
+                variant === "featured"
+                  ? "(min-width: 1024px) 220px, 50vw"
+                  : variant === "compact"
+                  ? "(min-width: 768px) 140px, 40vw"
+                  : "(min-width: 1280px) 360px, 1024px) 320px, 80vw"
+              }
+              priority={priority}
+              quality={85}
+            />
+          )}
 
           {/* Gradient Overlays - Subtle */}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/30" />
@@ -100,7 +102,7 @@ export const BookCoverCard = ({
 
         {/* Content Section - Only for grid variant */}
         {variant === "grid" && (
-          <div className="flex-grow flex flex-col p-5 space-y-3 bg-white">
+          <div className="flex-grow flex flex-col p-5 space-y-3 bg-white dark:bg-cardBg">
             <div className="space-y-1">
               <h3 className="font-bold text-slate-900 text-lg line-clamp-2">
                 {book.title}
@@ -115,15 +117,15 @@ export const BookCoverCard = ({
 
             {/* Tags */}
             <div className="flex flex-wrap gap-1.5 pt-2">
-              {book.tags.slice(0, 2).map((tag) => (
+              {book.tags && book.tags.slice(0, 2).map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-full bg-gradient-to-r from-blue-50 to-purple-50 px-2.5 py-1 text-xs font-medium text-slate-700 border border-blue-100"
+                  className="rounded-full bg-gradient-to-r from-blue-50 to-purple-50 px-2.5 py-1 text-xs font-medium text-slate-700 dark:text-textSecondary border border-blue-100"
                 >
                   #{tag}
                 </span>
               ))}
-              {book.tags.length > 2 && (
+              {book.tags && book.tags.length > 2 && (
                 <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
                   +{book.tags.length - 2}
                 </span>
@@ -136,7 +138,7 @@ export const BookCoverCard = ({
                 <BookOpen className="h-3.5 w-3.5" />
                 <span>{book.votes.toLocaleString('fa')} رای</span>
               </div>
-              <div className="text-xs font-medium text-slate-700 bg-slate-100 px-2 py-1 rounded">
+              <div className="text-xs font-medium text-slate-700 dark:text-textSecondary bg-slate-100 px-2 py-1 rounded">
                 {book.year}
               </div>
             </div>
@@ -145,7 +147,7 @@ export const BookCoverCard = ({
 
         {/* Featured/Compact Variant - Minimal Info */}
         {(variant === "featured" || variant === "compact") && (
-          <div className="p-3 space-y-2 bg-white">
+          <div className="p-3 space-y-2 bg-white dark:bg-cardBg">
             <h4 className="font-semibold text-slate-900 text-base line-clamp-2">
               {book.title}
             </h4>

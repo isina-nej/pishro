@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
 
     if (existingOrder) {
       return errorResponse(
-        "این سبد قبلاً به سبد خرید اضافه شده است",
+        "این سبد قبلاً به خرید اضافه شده است",
         "DUPLICATE_ITEM"
       );
     }
@@ -103,14 +103,14 @@ export async function POST(req: NextRequest) {
     return successResponse(
       {
         orderId: order.id,
-        message: "سبد سرمایه‌ گذاری با موفقیت به سبد خرید اضافه شد",
+        message: "سبد سرمایه‌ گذاری با موفقیت به خرید اضافه شد",
       },
       "سبد سرمایه‌ گذاری اضافه شد"
     );
   } catch (error) {
     console.error("Error adding portfolio to cart:", error);
     return errorResponse(
-      "خطا در افزودن سبد به سبد خرید",
+      "خطا در افزودن سبد به خرید",
       "INTERNAL_SERVER_ERROR"
     );
   }

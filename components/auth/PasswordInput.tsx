@@ -23,7 +23,7 @@ export const PasswordInput = ({
           type={show ? "text" : "password"}
           placeholder={placeholder}
           className={cn(
-            "mt-1 pr-10 pl-8 block w-full rounded-none border-0 border-b border-black focus-visible:ring-0 focus-visible:bg-gray-100",
+            "mt-1 pr-10 pl-8 block w-full rounded-none border-0 border-b border-black focus-visible:ring-0 focus-visible:bg-gray-100 dark:bg-cardBg",
             error && "border-red-500"
           )}
           {...props}

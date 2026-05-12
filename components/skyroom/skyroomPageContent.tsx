@@ -28,7 +28,7 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
       <div className="absolute inset-0 bg-black/40 pointer-events-none z-0"></div>
       {/* Dark Shadow Overlay */}
       <div className="absolute inset-0 bg-black/50 shadow-2xl pointer-events-none z-1" style={{
-        boxShadow: "inset 0 0 80px rgba(0, 0, 0, 0.8), inset 0 0 120px rgba(0, 0, 0, 0.6)"
+        boxShadow: "inset 0 80px rgba(0, 0, 0.8), 120px 0.6)"
       }}></div>
 
       {/* Animated Gradient Overlay */}
@@ -66,7 +66,7 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ duration: 0.6, delay: 0.4, type: "spring" }}
-            className="inline-flex items-center justify-center size-24 mb-6 bg-white/10 backdrop-blur-md rounded-full border border-white/20"
+            className="inline-flex items-center justify-center size-24 mb-6 bg-white dark:bg-cardBg backdrop-blur-md rounded-full border border-white/20"
           >
             <HiUsers className="text-5xl text-white" />
           </motion.div>
@@ -105,7 +105,7 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="relative px-12 py-6 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl overflow-hidden group"
+                className="relative px-12 py-6 bg-white dark:bg-cardBg backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl overflow-hidden group"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
 
@@ -128,7 +128,7 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.8 }}
-            className="relative px-12 py-6 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl"
+            className="relative px-12 py-6 bg-white dark:bg-cardBg backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl"
           >
             <p className="text-xl md:text-2xl text-white/80">
               در حال حاضر همایشی برگزار نمی‌شود

@@ -45,7 +45,7 @@ const MobileLanding = ({
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start start", "end start"],
+    offset: ["start", "end start"],
   });
 
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
@@ -134,7 +134,7 @@ const HeroSection = ({
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 mb-4"
+            className="inline-flex items-center gap-2 bg-white dark:bg-cardBg backdrop-blur-md border border-white/20 rounded-full px-4 py-2 mb-4"
           >
             <Sparkles className="w-4 h-4 text-yellow-400" />
             <span className="text-white text-sm font-medium">
@@ -176,7 +176,7 @@ const HeroSection = ({
             transition={{ duration: 1.5, repeat: Infinity }}
             className="w-6 h-10 border-2 border-white/30 rounded-full flex items-start justify-center p-2"
           >
-            <motion.div className="w-1.5 h-1.5 bg-white rounded-full" />
+            <motion.div className="w-1.5 h-1.5 bg-white dark:bg-cardBg rounded-full" />
           </motion.div>
         </motion.div>
       </div>
@@ -190,8 +190,8 @@ const HeroSection = ({
 const FeatureCardsSection = ({ overlayTexts }: { overlayTexts?: string[] }) => {
   const defaultTexts = [
     "پیشرو در مسیر سرمایه‌ گذاری هوشمند",
-    "ما در پیشرو با ارائه آموزش‌های تخصصی بورس، بازارهای مالی و سرمایه‌ گذاری، شما را در مسیر رشد مالی همراهی می‌کنیم.",
-    "از آموزش اصولی و گام‌به‌گام تا مشاوره‌های حرفه‌ای و همراهی در مسیر رشد سرمایه شما، همه و همه در پیشرو فراهم است.",
+    "ما در پیشرو با ارائه آموزش‌های تخصصی بورس، بازارهای مالی و سرمایه‌ گذاری، شما را مسیر رشد همراهی می‌کنیم.",
+    "از آموزش اصولی و گام‌به‌گام تا مشاوره‌های حرفه‌ای همراهی در مسیر رشد سرمایه شما، همه پیشرو فراهم است.",
     "پیشرو انتخابی مطمئن برای کسانی است که به دنبال امنیت مالی، رشد پایدار و آینده‌ای روشن هستند.",
   ];
 
@@ -225,7 +225,7 @@ const FeatureCardsSection = ({ overlayTexts }: { overlayTexts?: string[] }) => {
             {/* Content */}
             <div className="relative z-10">
               <div className="flex items-start gap-3 mb-3">
-                <div className="flex-shrink-0 w-8 h-8 bg-white/10 rounded-full flex items-center justify-center border border-white/20">
+                <div className="flex-shrink-0 w-8 h-8 bg-white dark:bg-cardBg rounded-full flex items-center justify-center border border-white/20">
                   <span className="text-white text-sm font-bold">
                     {index + 1}
                   </span>

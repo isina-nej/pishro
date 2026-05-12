@@ -36,10 +36,10 @@ const CertificatesGallery = ({ certificates }: CertificatesGalleryProps) => {
               <LuAward className="text-xl" />
               <span className="font-medium">افتخارات و دستاوردها</span>
             </div>
-            <h2 className="text-4xl font-bold mb-4 text-gray-800">
+            <h2 className="text-4xl font-bold mb-4 text-gray-800 dark:text-textPrimary">
               گالری <span className="text-myPrimary">تقدیرنامه‌ها</span>
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-600 dark:text-textSecondary max-w-2xl mx-auto">
               مجموعه‌ای از افتخارات و دستاوردهای ما در مسیر خدمت‌رسانی به جامعه
             </p>
           </motion.div>
@@ -55,7 +55,7 @@ const CertificatesGallery = ({ certificates }: CertificatesGalleryProps) => {
                 onClick={() => setSelectedImage(index)}
                 className="group cursor-pointer"
               >
-                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gray-200 shadow-lg hover:shadow-2xl transition-all duration-300">
+                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gray-200 dark:bg-darkBgHidden shadow-lg hover:shadow-2xl transition-all duration-300">
                   {/* Image */}
                   <Image
                     src={cert.image}
@@ -96,7 +96,7 @@ const CertificatesGallery = ({ certificates }: CertificatesGalleryProps) => {
               transition={{ duration: 0.6, delay: 0.8 }}
               className="text-center mt-12"
             >
-              <p className="text-gray-600 mb-4">
+              <p className="text-gray-600 dark:text-textSecondary mb-4">
                 و افتخارات بیشتری در مسیر خدمت‌رسانی به جامعه...
               </p>
             </motion.div>
@@ -116,7 +116,7 @@ const CertificatesGallery = ({ certificates }: CertificatesGalleryProps) => {
           {/* Close Button */}
           <button
             onClick={() => setSelectedImage(null)}
-            className="absolute top-4 left-4 bg-white/10 hover:bg-white/20 text-white p-3 rounded-full backdrop-blur-sm transition-all z-10"
+            className="absolute top-4 left-4 bg-white dark:bg-cardBg hover:bg-white text-white p-3 rounded-full backdrop-blur-sm transition-all z-10"
           >
             <HiXMark className="text-2xl" />
           </button>
@@ -136,7 +136,7 @@ const CertificatesGallery = ({ certificates }: CertificatesGalleryProps) => {
           </motion.div>
 
           {/* Info */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-md text-white px-8 py-4 rounded-2xl max-w-2xl text-center">
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-white dark:bg-cardBg backdrop-blur-md text-white px-8 py-4 rounded-2xl max-w-2xl text-center">
             <h3 className="font-bold text-xl mb-2">
               {certificates[selectedImage].title}
             </h3>

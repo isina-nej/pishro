@@ -87,6 +87,7 @@ function convertCategory(row: CategoryRow): Category {
     featured: false,
     order: row.order,
     tagIds: [],
+    metaKeywords: [],
   };
 }
 
@@ -143,6 +144,7 @@ async function getCoursesGroupedByCategory() {
         featured: false,
         order: 999,
         tagIds: [],
+        metaKeywords: [],
         courses: uncategorizedRows.map(convertCourse),
       });
     }

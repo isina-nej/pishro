@@ -57,7 +57,7 @@ const NewsCard = ({ data }: NewsCardProps) => {
   const readingTime = getReadingTime(data.content || data.excerpt);
 
   return (
-    <div className="group border border-gray-200 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-mySecondary/10 hover:border-mySecondary/30 transition-all duration-500 bg-white">
+    <div className="group border border-gray-200 dark:border-borderColor rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-mySecondary/10 hover:border-mySecondary/30 transition-all duration-500 bg-white dark:bg-cardBg">
       <Link
         className="flex flex-col md:flex-row h-full"
         href={`/news/${data.slug}`}
@@ -72,7 +72,7 @@ const NewsCard = ({ data }: NewsCardProps) => {
             alt={data.title}
             fill
             className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out w-full h-full"
-            sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 280px, 320px"
+            sizes="(max-width: 640px) 100vw, 768px) 1024px) 280px, 320px"
             priority={false}
           />
 
@@ -96,19 +96,19 @@ const NewsCard = ({ data }: NewsCardProps) => {
               {data.title}
             </h5>
 
-            <p className="font-normal text-xs sm:text-sm md:text-sm text-gray-600 leading-relaxed line-clamp-2 md:line-clamp-3">
+            <p className="font-normal text-xs sm:text-sm md:text-sm text-gray-600 dark:text-textSecondary leading-relaxed line-clamp-2 md:line-clamp-3">
               {data.excerpt}
             </p>
           </div>
 
           {/* Author and Meta Information */}
-          <div className="space-y-2 sm:space-y-2.5 pt-2 sm:pt-3 border-t border-gray-100 mt-2 sm:mt-3">
+          <div className="space-y-2 sm:space-y-2.5 pt-2 sm:pt-3 border-t border-gray-100 dark:border-borderColor mt-2 sm:mt-3">
             {data.author && (
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded-full bg-gradient-to-br from-mySecondary to-mySecondary/70 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
                   {data.author.charAt(0)}
                 </div>
-                <p className="text-xs sm:text-sm text-gray-600 font-medium truncate">
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-textSecondary font-medium truncate">
                   {data.author}
                 </p>
               </div>
@@ -117,18 +117,18 @@ const NewsCard = ({ data }: NewsCardProps) => {
             {/* Meta information - Responsive */}
             <div className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-2">
               {data.publishedAt && (
-                <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-textSecondary">
                   <Calendar className="w-4 h-4 flex-shrink-0" />
                   <span className="truncate">{formatDate(data.publishedAt)}</span>
                 </div>
               )}
 
-              <div className="flex items-center gap-1.5 text-xs text-gray-500">
+              <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-textSecondary">
                 <Eye className="w-4 h-4 flex-shrink-0" />
-                <span className="truncate">{data.views.toLocaleString("fa-IR")} بازدید</span>
+                <span className="truncate">{(data.views ?? 0).toLocaleString("fa-IR")} بازدید</span>
               </div>
 
-              <div className="flex items-center gap-1.5 text-xs text-gray-500">
+              <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-textSecondary">
                 <Clock className="w-4 h-4 flex-shrink-0" />
                 <span className="truncate">{readingTime} دقیقه</span>
               </div>

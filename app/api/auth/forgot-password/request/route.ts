@@ -51,22 +51,22 @@ export async function POST(req: Request) {
     if (otps && otps.length > 0) {
       // Update existing OTP
       await execute(
-        `UPDATE Otp SET code = ?, expiresAt = ?, createdAt = NOW() WHERE phone = ?`,
+        `UPDATE Otp SET code = ?, expiresAt createdAt NOW() WHERE phone ?`,
         [code, expiresAt, phone]
       );
     } else {
       // Create new OTP with ID
       const otpId = randomUUID();
       await execute(
-        `INSERT INTO Otp (id, phone, code, expiresAt, createdAt) VALUES (?, ?, ?, ?, NOW())`,
+        `INSERT INTO Otp (id, phone, code, expiresAt, createdAt) VALUES (?, ?, NOW())`,
         [otpId, phone, code, expiresAt]
       );
     }
 
-    console.log("code: ", code);
+    console.log("code:", code);
 
     // Prepare SMS text
-    const text = `کد بازیابی رمز عبور: ${code}\nاین کد تا ۲ دقیقه معتبر است.`;
+    const text = `کد بازیابی رمز عبور: ${code}\nاین تا ۲ دقیقه معتبر است.`;
 
     // Send SMS asynchronously (don't block on it)
     sendSms(phone, text).catch((err) => {

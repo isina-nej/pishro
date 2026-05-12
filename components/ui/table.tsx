@@ -22,7 +22,7 @@ export const TableHead = ({ className, ...props }: React.ThHTMLAttributes<HTMLTa
 );
 
 export const TableCell = ({ className, ...props }: React.TdHTMLAttributes<HTMLTableCellElement>) => (
-  <td className={cn("px-4 py-3 text-sm text-slate-700", className)} {...props} />
+  <td className={cn("px-4 py-3 text-sm text-slate-700 dark:text-textSecondary", className)} {...props} />
 );
 
 export type { ReactHTML };

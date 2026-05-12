@@ -26,7 +26,7 @@ const ResumeSection = ({ resumeItems }: ResumeSectionProps) => {
   const bgColorMap: Record<string, string> = {
     "bg-blue-50": "bg-blue-50",
     "bg-green-50": "bg-green-50",
-    "bg-orange-50": "bg-orange-50",
+    "bg-orange-50 dark:bg-orange-900": "bg-orange-50 dark:bg-orange-900",
     "bg-pink-50": "bg-pink-50",
     "bg-purple-50": "bg-purple-50",
     "bg-red-50": "bg-red-50",
@@ -34,7 +34,7 @@ const ResumeSection = ({ resumeItems }: ResumeSectionProps) => {
     "bg-indigo-50": "bg-indigo-50",
     "bg-teal-50": "bg-teal-50",
     "bg-cyan-50": "bg-cyan-50",
-    "bg-gray-50": "bg-gray-50",
+    "bg-gray-50 dark:bg-darkBgHidden": "bg-gray-50 dark:bg-darkBgHidden",
   };
 
   // Gradient color mapping - prevents Tailwind purging
@@ -64,10 +64,10 @@ const ResumeSection = ({ resumeItems }: ResumeSectionProps) => {
         transition={{ duration: 0.6 }}
         className="text-center mb-16"
       >
-        <h2 className="text-4xl font-bold mb-4 text-gray-800">
+        <h2 className="text-4xl font-bold mb-4 text-gray-800 dark:text-textPrimary">
           داستان <span className="text-myPrimary">پیشرو</span>
         </h2>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <p className="text-lg text-gray-600 dark:text-textSecondary max-w-2xl mx-auto">
           از آغاز تا امروز، با هدف واحد: ساختن آینده‌ای روشن‌تر برای
           سرمایه‌گذاران
         </p>
@@ -77,7 +77,7 @@ const ResumeSection = ({ resumeItems }: ResumeSectionProps) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {resumeItems.map((item, index) => {
           const IconComponent = getIconComponent(item.icon);
-          const bgColor = bgColorMap[item.bgColor || ""] || "bg-gray-50";
+          const bgColor = bgColorMap[item.bgColor || ""] || "bg-gray-50 dark:bg-darkBgHidden";
           const gradientColor = gradientColorMap[item.color || ""] || "from-blue-500 to-purple-500";
 
           return (
@@ -101,10 +101,10 @@ const ResumeSection = ({ resumeItems }: ResumeSectionProps) => {
               </div>
 
               {/* Content */}
-              <h3 className="text-2xl font-bold mb-4 text-gray-800 relative z-10">
+              <h3 className="text-2xl font-bold mb-4 text-gray-800 dark:text-textPrimary relative z-10">
                 {item.title}
               </h3>
-              <p className="text-gray-600 leading-relaxed relative z-10">
+              <p className="text-gray-600 dark:text-textSecondary leading-relaxed relative z-10">
                 {item.description}
               </p>
             </motion.div>

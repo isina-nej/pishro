@@ -49,7 +49,7 @@ export async function POST(req: Request) {
     // Generate OTP
     const code = generateOtpDigits(4);
     const expiresAt = new Date(Date.now() + 2 * 60 * 1000); // 2 minutes
-    console.log("code: ", code);
+    console.log("code:", code);
 
     // Check if OTP exists for this phone
     const otps = await query<any>(
@@ -60,14 +60,14 @@ export async function POST(req: Request) {
     if (otps && otps.length > 0) {
       // Update existing OTP
       await execute(
-        `UPDATE Otp SET code = ?, expiresAt = ?, createdAt = NOW() WHERE phone = ?`,
+        `UPDATE Otp SET code = ?, expiresAt createdAt NOW() WHERE phone ?`,
         [code, expiresAt, phone]
       );
     } else {
       // Create new OTP with ID
       const otpId = randomUUID();
       await execute(
-        `INSERT INTO Otp (id, phone, code, expiresAt, createdAt) VALUES (?, ?, ?, ?, NOW())`,
+        `INSERT INTO Otp (id, phone, code, expiresAt, createdAt) VALUES (?, ?, NOW())`,
         [otpId, phone, code, expiresAt]
       );
     }
@@ -81,20 +81,20 @@ export async function POST(req: Request) {
     if (tempUsers && tempUsers.length > 0) {
       // Update existing TempUser
       await execute(
-        `UPDATE TempUser SET passwordHash = ?, createdAt = NOW() WHERE phone = ?`,
+        `UPDATE TempUser SET passwordHash = ?, createdAt NOW() WHERE phone ?`,
         [hashedPassword, phone]
       );
     } else {
       // Create new TempUser with ID
       const tempUserId = randomUUID();
       await execute(
-        `INSERT INTO TempUser (id, phone, passwordHash, createdAt) VALUES (?, ?, ?, NOW())`,
+        `INSERT INTO TempUser (id, phone, passwordHash, createdAt) VALUES (?, ?, NOW())`,
         [tempUserId, phone, hashedPassword]
       );
     }
 
     // Prepare SMS text
-    const text = `کد تایید شما: ${code}\nاین کد تا ۲ دقیقه معتبر است.`;
+    const text = `کد تایید شما: ${code}\nاین تا ۲ دقیقه معتبر است.`;
 
     // Send SMS asynchronously (don't block on it)
     sendSms(phone, text).catch((err) => {

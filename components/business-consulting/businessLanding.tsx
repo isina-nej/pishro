@@ -51,26 +51,26 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
           {/* 📍 مشاوره حضوری */}
           <Drawer>
             <DrawerTrigger asChild>
-              <button className="group relative w-full sm:w-auto px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium backdrop-blur-sm shadow-lg transition-all flex items-center justify-center gap-2">
+              <button className="group relative w-full sm:w-auto px-6 py-3 rounded-xl bg-white dark:bg-cardBg hover:bg-white text-white font-medium backdrop-blur-sm shadow-lg transition-all flex items-center justify-center gap-2">
                 <PhoneCall className="h-5 w-5 text-green-400 group-hover:scale-110 transition-transform" />
                 رزرو مشاوره حضوری
               </button>
             </DrawerTrigger>
-            <DrawerContent className="p-6 rounded-t-2xl border-t bg-white shadow-2xl">
+            <DrawerContent className="p-6 rounded-t-2xl border-t bg-white dark:bg-cardBg shadow-2xl">
               <DrawerHeader className="text-center">
                 <div className="flex justify-center">
-                  <PhoneCall className="text-green-600 h-10 w-10" />
+                  <PhoneCall className="text-green-600 dark:text-green-400 h-10 w-10" />
                 </div>
-                <DrawerTitle className="text-2xl font-bold text-gray-900 mt-2">
+                <DrawerTitle className="text-2xl font-bold text-gray-900 dark:text-textPrimary mt-2">
                   {businessConsultingData.inPersonTitle || "مشاوره حضوری"}
                 </DrawerTitle>
-                <DrawerDescription className="text-center text-gray-600 mt-1">
+                <DrawerDescription className="text-center text-gray-600 dark:text-textSecondary mt-1">
                   {businessConsultingData.inPersonDescription ||
                     "برای رزرو مشاوره حضوری با ما تماس بگیرید:"}
                 </DrawerDescription>
               </DrawerHeader>
               <div className="text-center mt-4 space-y-3">
-                <p className="text-xl font-semibold text-green-700 tracking-tight">
+                <p className="text-xl font-semibold text-green-700 dark:text-green-300 tracking-tight">
                   {businessConsultingData.phoneNumber || "0912-123-4567"}
                 </p>
                 <a
@@ -84,7 +84,7 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
                 </a>
               </div>
               <DrawerFooter>
-                <DrawerClose className="block mt-6 text-sm text-gray-400 hover:text-gray-600 underline text-center">
+                <DrawerClose className="block mt-6 text-sm text-gray-400 dark:text-textSecondary hover:text-gray-600 dark:hover:text-textSecondary underline text-center">
                   <XIcon className="inline-block" />
                 </DrawerClose>
               </DrawerFooter>
@@ -94,26 +94,26 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
           {/* 💻 مشاوره آنلاین */}
           <Drawer>
             <DrawerTrigger asChild>
-              <button className="group relative w-full sm:w-auto px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium backdrop-blur-sm shadow-lg transition-all flex items-center justify-center gap-2">
+              <button className="group relative w-full sm:w-auto px-6 py-3 rounded-xl bg-white dark:bg-cardBg hover:bg-white text-white font-medium backdrop-blur-sm shadow-lg transition-all flex items-center justify-center gap-2">
                 <Send className="h-5 w-5 text-blue-400 group-hover:scale-110 transition-transform" />
                 رزرو مشاوره آنلاین
               </button>
             </DrawerTrigger>
-            <DrawerContent className="p-6 rounded-t-2xl border-t bg-white shadow-2xl">
+            <DrawerContent className="p-6 rounded-t-2xl border-t bg-white dark:bg-cardBg shadow-2xl">
               <DrawerHeader className="text-center">
                 <div className="flex justify-center">
-                  <Send className="text-blue-600 h-10 w-10" />
+                  <Send className="text-blue-600 dark:text-blue-400 h-10 w-10" />
                 </div>
-                <DrawerTitle className="text-2xl font-bold text-gray-900 mt-2">
+                <DrawerTitle className="text-2xl font-bold text-gray-900 dark:text-textPrimary mt-2">
                   {businessConsultingData.onlineTitle || "مشاوره آنلاین"}
                 </DrawerTitle>
-                <DrawerDescription className="text-center text-gray-600 mt-1">
+                <DrawerDescription className="text-center text-gray-600 dark:text-textSecondary mt-1">
                   {businessConsultingData.onlineDescription ||
                     "برای دریافت مشاوره آنلاین از طریق تلگرام پیام دهید:"}
                 </DrawerDescription>
               </DrawerHeader>
               <div className="text-center mt-4 space-y-3">
-                <p className="text-xl font-semibold text-blue-700 tracking-tight">
+                <p className="text-xl font-semibold text-blue-700 dark:text-blue-300 tracking-tight">
                   {businessConsultingData.telegramId || "@BusinessSupport"}
                 </p>
                 <Link
@@ -128,7 +128,7 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
                 </Link>
               </div>
               <DrawerFooter>
-                <DrawerClose className="block mt-6 text-sm text-gray-400 hover:text-gray-600 underline text-center">
+                <DrawerClose className="block mt-6 text-sm text-gray-400 dark:text-textSecondary hover:text-gray-600 dark:hover:text-textSecondary underline text-center">
                   <XIcon className="inline-block" />
                 </DrawerClose>
               </DrawerFooter>
@@ -138,20 +138,20 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
           {/* 🎓 دوره‌ها */}
           <Drawer>
             <DrawerTrigger asChild>
-              <button className="group relative w-full sm:w-auto px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium backdrop-blur-sm shadow-lg transition-all flex items-center justify-center gap-2">
+              <button className="group relative w-full sm:w-auto px-6 py-3 rounded-xl bg-white dark:bg-cardBg hover:bg-white text-white font-medium backdrop-blur-sm shadow-lg transition-all flex items-center justify-center gap-2">
                 <GraduationCap className="h-5 w-5 text-yellow-400 group-hover:scale-110 transition-transform" />
                 دوره‌ها
               </button>
             </DrawerTrigger>
-            <DrawerContent className="p-6 rounded-t-2xl border-t bg-white shadow-2xl">
+            <DrawerContent className="p-6 rounded-t-2xl border-t bg-white dark:bg-cardBg shadow-2xl">
               <DrawerHeader className="text-center">
                 <div className="flex justify-center">
                   <GraduationCap className="text-yellow-600 h-10 w-10" />
                 </div>
-                <DrawerTitle className="text-2xl font-bold text-gray-900 mt-2">
+                <DrawerTitle className="text-2xl font-bold text-gray-900 dark:text-textPrimary mt-2">
                   {businessConsultingData.coursesTitle || "دوره‌های آموزشی"}
                 </DrawerTitle>
-                <DrawerDescription className="text-center text-gray-600 mt-1">
+                <DrawerDescription className="text-center text-gray-600 dark:text-textSecondary mt-1">
                   {businessConsultingData.coursesDescription ||
                     "برای مشاهده دوره‌های ما کلیک کنید:"}
                 </DrawerDescription>
@@ -165,7 +165,7 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
                 </Link>
               </div>
               <DrawerFooter>
-                <DrawerClose className="block mt-6 text-sm text-gray-400 hover:text-gray-600 underline text-center">
+                <DrawerClose className="block mt-6 text-sm text-gray-400 dark:text-textSecondary hover:text-gray-600 dark:hover:text-textSecondary underline text-center">
                   <XIcon className="inline-block" />
                 </DrawerClose>
               </DrawerFooter>

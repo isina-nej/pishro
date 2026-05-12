@@ -31,7 +31,7 @@ const AboutUs: React.FC = () => {
       {/* Right section */}
       <div className="flex-1">
         <h3 className="text-4xl mb-4 mt-16">{aboutUsData.title}</h3>
-        <p className="leading-relaxed text-gray-800">
+        <p className="leading-relaxed text-gray-800 dark:text-textPrimary">
           {aboutUsData.description}
         </p>
 

@@ -17,7 +17,7 @@ export const mobileScrollerSteps: MobileScrollerStep[] = [
   },
   {
     id: 2,
-    text: "دسترسی به تحلیل‌های روزانه و فرصت‌های طلایی در بورس و بازارهای نوین.",
+    text: "دسترسی به تحلیل‌های روزانه و فرصت‌های طلایی در بورس بازارهای نوین.",
     img: "/images/home/mobile-scroll/in-mobile-1.svg",
     imgCover: "/images/home/mobile-scroll/mobile.webp",
     gradient: "from-blue-400/30 via-mySecondary-400/20 to-transparent",

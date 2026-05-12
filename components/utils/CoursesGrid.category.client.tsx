@@ -103,7 +103,7 @@ export default function CoursesGridCategoryClient({
         <div className="relative flex items-center justify-end gap-3 mt-2 w-[260px]">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-1 bg-white border border-gray-300 px-3 py-1.5 rounded-lg shadow-sm hover:shadow-md transition text-sm font-bold">
+              <button className="flex items-center gap-1 bg-white dark:bg-cardBg border border-gray-300 dark:border-borderColor px-3 py-1.5 rounded-lg shadow-sm hover:shadow-md transition text-sm font-bold">
                 <ChevronDown size={16} />
                 <span>{selectedLevel.label}</span>
               </button>
@@ -111,13 +111,13 @@ export default function CoursesGridCategoryClient({
 
             <DropdownMenuContent
               align="end"
-              className="w-40 bg-white border border-gray-200 rounded-lg shadow-lg"
+              className="w-40 bg-white dark:bg-cardBg border border-gray-200 dark:border-borderColor rounded-lg shadow-lg"
             >
               {levelOptions.map((level) => (
                 <DropdownMenuItem
                   key={level.label}
                   onClick={() => setSelectedLevel(level)}
-                  className={`cursor-pointer rtl text-right text-sm px-4 py-2 hover:bg-gray-100 ${
+                  className={`cursor-pointer rtl text-right text-sm px-4 py-2 hover:bg-gray-100 dark:hover:bg-cardBg dark:bg-cardBg dark:hover:bg-cardBg dark:bg-cardBg dark:hover:bg-cardBg dark:bg-cardBg dark:bg-cardBg ${
                     level.label === selectedLevel.label
                       ? "font-bold text-mySecondary"
                       : ""
@@ -134,7 +134,7 @@ export default function CoursesGridCategoryClient({
       {/* پیام خالی بودن */}
       {filteredCourses.length === 0 && (
         <div className="mt-6 sm:mt-8 md:mt-12 lg:mt-16 text-center py-12">
-          <p className="text-gray-500 text-lg">
+          <p className="text-gray-500 dark:text-textSecondary text-lg">
             هیچ دوره‌ای در این سطح یافت نشد
           </p>
         </div>

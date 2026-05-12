@@ -31,7 +31,7 @@ export async function GET() {
     for (const update of updates) {
       try {
         const result = await execute(
-          `UPDATE Course SET img = ? WHERE subject = ?`,
+          `UPDATE Course SET img = ? WHERE subject`,
           [update.img, update.subject]
         );
         updated += result.affectedRows || 0;

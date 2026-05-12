@@ -101,7 +101,7 @@ if (!session?.user) {
     }
 
     if (maxAmount <= minAmount) {
-      errors.maxAmount = "حداکثر مبلغ باید بیشتر از حداقل مبلغ باشد";
+      errors.maxAmount = "حداکثر مبلغ باید بیشتر از حداقل باشد";
     }
 
     if (amountStep <= 0) {

@@ -42,7 +42,7 @@ if (!session?.user || session.user.role !== "ADMIN") {
     const allowedFormats = ["mp4", "mov", "avi", "mkv", "webm"];
     if (!allowedFormats.includes(fileFormat.toLowerCase())) {
       return validationError({
-        fileFormat: `فرمت فایل باید یکی از موارد زیر باشد: ${allowedFormats.join(", ")}`
+        fileFormat: `فرمت فایل باید یکی از موارد زیر باشد: ${allowedFormats.join(",")}`
       });
     }
 

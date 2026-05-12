@@ -33,7 +33,7 @@ const useImageZoomScroll = (
 ) => {
   const { scrollYProgress: parentScroll } = useScroll({
     target: parentRef,
-    offset: ["end end", "end start"],
+    offset: ["end", "end start"],
   });
 
   const { scrollYProgress: sectionScroll } = useScroll({

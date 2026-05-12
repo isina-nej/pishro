@@ -7,7 +7,7 @@
  */
 
 import { NextRequest } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { queryOne } from "@/lib/db";
 import bcrypt from "bcryptjs";
 import {
   successResponse,
@@ -16,7 +16,6 @@ import {
   unauthorizedResponse,
   ErrorCodes,
 } from "@/lib/api-response";
-import { signIn } from "@/auth";
 import { corsPreflightResponse, addCorsHeaders } from "@/lib/cors";
 
 // Handle CORS preflight
@@ -61,20 +60,10 @@ export async function POST(req: NextRequest) {
     }
 
     // Find user
-    const user = await prisma.user.findUnique({
-      where: { phone },
-      select: {
-        id: true,
-        phone: true,
-        passwordHash: true,
-        role: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        phoneVerified: true,
-        avatarUrl: true,
-      },
-    });
+    const user = await queryOne<any>(
+      "SELECT id, phone, passwordHash, role, firstName, lastName, email, phoneVerified FROM `User` WHERE phone = ?",
+      [phone]
+    );
 
     if (!user) {
       const response = unauthorizedResponse("شماره تلفن یا رمز عبور اشتباه است");
@@ -98,20 +87,20 @@ export async function POST(req: NextRequest) {
     }
 
     // Authenticate using Auth.js
-    try {
-      await signIn("credentials", {
-        phone,
-        password,
-        redirect: false,
-      });
-    } catch (authError) {
-      console.error("Auth.js sign-in error:", authError);
-      const response = errorResponse(
-        "خطا در احراز هویت",
-        ErrorCodes.INTERNAL_ERROR
-      );
-      return addCorsHeaders(response, origin);
-    }
+    // try {
+    //   await signIn("credentials", {
+    //     phone,
+    //     password,
+    //     redirect: false,
+    //   });
+    // } catch (authError) {
+    //   console.error("Auth.js sign-in error:", authError);
+    //   const response = errorResponse(
+    //     "خطا در احراز هویت",
+    //     ErrorCodes.INTERNAL_ERROR
+    //   );
+    //   return addCorsHeaders(response, origin);
+    // }
 
     // Return user data (excluding sensitive info)
     const userData = {
@@ -125,7 +114,6 @@ export async function POST(req: NextRequest) {
         : null,
       email: user.email,
       phoneVerified: user.phoneVerified,
-      avatarUrl: user.avatarUrl,
     };
 
     const response = successResponse(

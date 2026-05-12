@@ -34,7 +34,7 @@ export async function GET() {
           // Create new category
           const id = generateId();
           await execute(
-            `INSERT INTO \`Category\` (id, slug, title, description, icon, color) VALUES (?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO \`Category\`(id, slug, title, description, icon, color) VALUES (?, ?, ?)`,
             [id, cat.slug, cat.title, cat.description, cat.icon, cat.color]
           );
           categoryIds[cat.slug] = id;
@@ -143,7 +143,7 @@ export async function GET() {
         } else {
           const id = generateId();
           await execute(
-            `INSERT INTO \`Course\` (id, subject, price, img, description, discountPercent, time, students, videosCount, instructor, slug, categoryId, level, published, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO \`Course\`(id, subject, price, img, description, discountPercent, time, students, videosCount, instructor, slug, categoryId, level, published, status) VALUES (?, ?, ?)`,
             [
               id,
               course.subject,

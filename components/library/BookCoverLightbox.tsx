@@ -42,7 +42,7 @@ export const BookCoverLightbox = ({
           whileHover={{ opacity: 1 }}
         >
           <motion.div
-            className="bg-white/95 rounded-full p-3 backdrop-blur-sm"
+            className="bg-white dark:bg-cardBg rounded-full p-3 backdrop-blur-sm"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -70,7 +70,7 @@ export const BookCoverLightbox = ({
               onClick={(e) => e.stopPropagation()}
             >
               {/* Image Container */}
-              <div className="relative w-full h-full bg-white rounded-2xl shadow-2xl overflow-hidden">
+              <div className="relative w-full h-full bg-white dark:bg-cardBg rounded-2xl shadow-2xl overflow-hidden">
                 <Image
                   src={src}
                   alt={alt}
@@ -83,7 +83,7 @@ export const BookCoverLightbox = ({
 
               {/* Close Button */}
               <motion.button
-                className="absolute -top-12 right-0 text-white hover:bg-white/20 rounded-full p-2 backdrop-blur-sm border border-white/20"
+                className="absolute -top-12 right-0 text-white hover:bg-white dark:bg-cardBg rounded-full p-2 backdrop-blur-sm border border-white/20"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setIsOpen(false)}

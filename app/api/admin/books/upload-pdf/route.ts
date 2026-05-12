@@ -151,7 +151,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Error uploading PDF:", error);
     const response = errorResponse(
-      "خطا در آپلود فایل PDF: " + (error instanceof Error ? error.message : String(error)),
+      "خطا در آپلود فایل PDF:" + (error instanceof Error ? error.message : String(error)),
       ErrorCodes.INTERNAL_ERROR
     );
     

@@ -49,11 +49,11 @@ const CheckoutSidebar = ({
         className="w-full lg:w-[380px] sticky top-24"
       >
         {/* Main Card */}
-        <div className="bg-gradient-to-br from-white via-white to-gray-50 rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+        <div className="bg-gradient-to-br from-white via-white to-gray-50 rounded-2xl shadow-lg border border-gray-100 dark:border-borderColor overflow-hidden">
           {/* Header with Icon */}
           <div className="bg-gradient-to-l from-mySecondary to-myBlue p-5 text-white">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-white dark:bg-cardBg backdrop-blur-sm rounded-xl flex items-center justify-center">
                 <ShoppingBag className="w-6 h-6" />
               </div>
               <div>
@@ -67,11 +67,11 @@ const CheckoutSidebar = ({
           <div className="p-6 space-y-4">
             {/* Original Price */}
             <div className="flex justify-between items-center text-sm">
-              <span className="text-gray-600 flex items-center gap-2">
+              <span className="text-gray-600 dark:text-textSecondary flex items-center gap-2">
                 <Wallet className="w-4 h-4" />
                 قیمت کل دوره‌ها
               </span>
-              <span className="font-medium text-gray-500 line-through">
+              <span className="font-medium text-gray-500 dark:text-textSecondary line-through">
                 {price} تومان
               </span>
             </div>
@@ -90,13 +90,13 @@ const CheckoutSidebar = ({
                       <TrendingDown className="w-4 h-4 text-white" />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-600">سود شما از خرید</p>
-                      <p className="text-sm font-bold text-green-600">
+                      <p className="text-xs text-gray-600 dark:text-textSecondary">سود شما از خرید</p>
+                      <p className="text-sm font-bold text-green-600 dark:text-green-400">
                         {discountPercentage}٪ تخفیف
                       </p>
                     </div>
                   </div>
-                  <span className="text-lg font-bold text-green-600">
+                  <span className="text-lg font-bold text-green-600 dark:text-green-400">
                     {off}
                   </span>
                 </div>
@@ -104,7 +104,7 @@ const CheckoutSidebar = ({
             )}
 
             {/* Divider */}
-            <div className="border-t border-dashed border-gray-300" />
+            <div className="border-t border-dashed border-gray-300 dark:border-borderColor" />
 
             {/* Final Price */}
             <motion.div
@@ -115,12 +115,12 @@ const CheckoutSidebar = ({
             >
               <div className="flex justify-between items-center">
                 <div className="space-y-1">
-                  <p className="text-sm text-gray-600 font-medium">
+                  <p className="text-sm text-gray-600 dark:text-textSecondary font-medium">
                     مبلغ قابل پرداخت
                   </p>
                   <div className="flex items-center gap-1">
                     <CheckCircle2 className="w-4 h-4 text-myPrimary" />
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-gray-500 dark:text-textSecondary">
                       قیمت نهایی با تخفیف
                     </span>
                   </div>
@@ -129,7 +129,7 @@ const CheckoutSidebar = ({
                   <p className="text-3xl font-black text-myPrimary">
                     {lastPrice}
                   </p>
-                  <p className="text-xs text-gray-500 font-medium">تومان</p>
+                  <p className="text-xs text-gray-500 dark:text-textSecondary font-medium">تومان</p>
                 </div>
               </div>
             </motion.div>
@@ -174,18 +174,18 @@ const CheckoutSidebar = ({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="mt-4 bg-white rounded-xl shadow-sm border border-gray-100 p-4"
+          className="mt-4 bg-white dark:bg-cardBg rounded-xl shadow-sm border border-gray-100 dark:border-borderColor p-4"
         >
           <div className="space-y-3">
-            <div className="flex items-center gap-3 text-sm text-gray-600">
-              <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                <Shield className="w-4 h-4 text-green-600" />
+            <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-textSecondary">
+              <div className="w-8 h-8 bg-green-100 dark:bg-green-950 rounded-lg flex items-center justify-center">
+                <Shield className="w-4 h-4 text-green-600 dark:text-green-400" />
               </div>
               <span>پرداخت امن و محافظت شده</span>
             </div>
-            <div className="flex items-center gap-3 text-sm text-gray-600">
+            <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-textSecondary">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Clock className="w-4 h-4 text-blue-600" />
+                <Clock className="w-4 h-4 text-blue-600 dark:text-blue-400" />
               </div>
               <span>دسترسی فوری پس از پرداخت</span>
             </div>

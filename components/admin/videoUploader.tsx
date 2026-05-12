@@ -29,7 +29,7 @@ export function VideoUploader({
       // بررسی نوع فایل
       const allowedTypes = ["video/mp4", "video/quicktime", "video/x-msvideo", "video/x-matroska", "video/webm"];
       if (!allowedTypes.includes(file.type)) {
-        alert("فرمت فایل پشتیبانی نمی‌شود. لطفاً فایل MP4, MOV, AVI, MKV یا WebM انتخاب کنید.");
+        alert("فرمت فایل پشتیبانی نمی‌شود. لطفاً MP4, MOV, AVI, MKV یا WebM انتخاب کنید.");
         return;
       }
 
@@ -100,18 +100,18 @@ export function VideoUploader({
   };
 
   const formatFileSize = (bytes: number) => {
-    if (bytes < 1024) return bytes + " B";
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + " KB";
+    if (bytes < 1024) return bytes + "B";
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + "KB";
     if (bytes < 1024 * 1024 * 1024)
-      return (bytes / (1024 * 1024)).toFixed(2) + " MB";
-    return (bytes / (1024 * 1024 * 1024)).toFixed(2) + " GB";
+      return (bytes / (1024 * 1024)).toFixed(2) + "MB";
+    return (bytes / (1024 * 1024 * 1024)).toFixed(2) + "GB";
   };
 
   const isUploading = uploadMutation.isPending;
 
   return (
-    <div className="w-full max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">
+    <div className="w-full max-w-2xl mx-auto p-6 bg-white dark:bg-cardBg rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-textPrimary">
         آپلود ویدیوی جدید
       </h2>
 
@@ -120,7 +120,7 @@ export function VideoUploader({
         <div>
           <label
             htmlFor="video-file"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-gray-700 dark:text-textPrimary mb-2"
           >
             فایل ویدیو *
           </label>
@@ -131,10 +131,10 @@ export function VideoUploader({
             accept="video/mp4,video/quicktime,video/x-msvideo,video/x-matroska,video/webm"
             onChange={handleFileSelect}
             disabled={isUploading}
-            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 disabled:opacity-50"
+            className="block w-full text-sm text-gray-500 dark:text-textSecondary file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 disabled:opacity-50"
           />
           {selectedFile && (
-            <p className="mt-2 text-sm text-gray-600">
+            <p className="mt-2 text-sm text-gray-600 dark:text-textSecondary">
               فایل انتخاب شده: {selectedFile.name} ({formatFileSize(selectedFile.size)})
             </p>
           )}
@@ -144,7 +144,7 @@ export function VideoUploader({
         <div>
           <label
             htmlFor="video-title"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-gray-700 dark:text-textPrimary mb-2"
           >
             عنوان ویدیو *
           </label>
@@ -155,7 +155,7 @@ export function VideoUploader({
             onChange={(e) => setTitle(e.target.value)}
             disabled={isUploading}
             placeholder="عنوان ویدیو را وارد کنید"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-borderColor rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
           />
         </div>
 
@@ -163,7 +163,7 @@ export function VideoUploader({
         <div>
           <label
             htmlFor="video-description"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-gray-700 dark:text-textPrimary mb-2"
           >
             توضیحات
           </label>
@@ -174,7 +174,7 @@ export function VideoUploader({
             disabled={isUploading}
             placeholder="توضیحات ویدیو (اختیاری)"
             rows={4}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-borderColor rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
           />
         </div>
 
@@ -182,14 +182,14 @@ export function VideoUploader({
         {isUploading && (
           <div className="mt-4">
             <div className="flex justify-between items-center mb-2">
-              <span className="text-sm font-medium text-gray-700">
+              <span className="text-sm font-medium text-gray-700 dark:text-textPrimary">
                 {getStageText(uploadStage)}
               </span>
-              <span className="text-sm font-medium text-gray-700">
+              <span className="text-sm font-medium text-gray-700 dark:text-textPrimary">
                 {uploadProgress}%
               </span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2.5">
+            <div className="w-full bg-gray-200 dark:bg-darkBgHidden rounded-full h-2.5">
               <div
                 className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
                 style={{ width: `${uploadProgress}%` }}
@@ -202,7 +202,7 @@ export function VideoUploader({
         <button
           onClick={handleUpload}
           disabled={isUploading || !selectedFile || !title.trim()}
-          className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+          className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors disabled:bg-gray-300 dark:bg-darkBgHidden disabled:cursor-not-allowed"
         >
           {isUploading ? "در حال آپلود..." : "آپلود ویدیو"}
         </button>
@@ -212,7 +212,7 @@ export function VideoUploader({
           <h3 className="text-sm font-semibold text-blue-800 mb-2">
             نکات مهم:
           </h3>
-          <ul className="text-sm text-blue-700 space-y-1 list-disc list-inside">
+          <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-1 list-disc list-inside">
             <li>فرمت‌های پشتیبانی شده: MP4, MOV, AVI, MKV, WebM</li>
             <li>حداکثر حجم فایل: 5 گیگابایت</li>
             <li>

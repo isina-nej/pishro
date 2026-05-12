@@ -41,7 +41,7 @@ const LoginPage = () => {
 
   return (
     <div className="flex min-h-lvh overflow-x-hidden">
-      <div className="w-full max-w-[570px] px-16 py-8 bg-white">
+      <div className="w-full max-w-[570px] px-16 py-8 bg-white dark:bg-cardBg">
         <Link href="/">
           <Button
             variant="costume"

@@ -10,6 +10,7 @@ import clsx from "clsx";
 import { contactInfo } from "@/lib/constants/contact";
 import { useSession } from "next-auth/react";
 import { useCartStore } from "@/stores/cart-store";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 
 interface NavbarActionsProps {
   isDark?: boolean;
@@ -69,6 +70,7 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ isDark }) => {
           isDark ? "text-white" : "text-mySecondary"
         )}
       >
+        <ThemeToggle />
         <Link
           href={contactInfo.socials.linkedin}
           target="_blank"

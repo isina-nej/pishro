@@ -30,7 +30,7 @@ const formatTime = (time: string): string => {
     result += `${hours.toLocaleString("fa-IR")} ساعت`;
   }
   if (minutes > 0) {
-    result += `${result ? " و " : ""}${minutes.toLocaleString("fa-IR")} دقیقه`;
+    result += `${result ? "و" : ""}${minutes.toLocaleString("fa-IR")} دقیقه`;
   }
 
   return result || "۰ دقیقه";
@@ -39,7 +39,7 @@ const formatTime = (time: string): string => {
 export const FormatTime = ({ time }: { time: string }) => {
   return (
     <span className="flex items-center gap-1">
-      <Clock size={20} className="text-gray-900 mb-1" />
+      <Clock size={20} className="text-gray-900 dark:text-textPrimary mb-1" />
       {formatTime(time)}
     </span>
   );

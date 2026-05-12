@@ -86,7 +86,7 @@ export const useNewsFilters = (news: NewsArticle[]): NewsFiltersHook => {
         normalizedQuery
           ? [item.title, item.excerpt, item.author, ...item.tags]
               .filter(Boolean)
-              .join(" ")
+              .join("")
               .toLowerCase()
               .includes(normalizedQuery.toLowerCase())
           : true

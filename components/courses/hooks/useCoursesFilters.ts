@@ -94,7 +94,7 @@ export const useCoursesFilters = (
         normalizedQuery
           ? [course.subject, course.description, course.instructor]
               .filter(Boolean)
-              .join(" ")
+              .join("")
               .toLowerCase()
               .includes(normalizedQuery.toLowerCase())
           : true

@@ -69,7 +69,7 @@ if (!session?.user) {
     const body = await req.json();
 
     // 🔍 DEBUG
-    console.log("=== BACKEND DEBUG ===");
+    console.log("=== BACKEND DEBUG");
     console.log("📥 body.link:", body.link);
     console.log("📥 typeof body.link:", typeof body.link);
     console.log("================");

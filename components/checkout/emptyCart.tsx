@@ -30,7 +30,7 @@ const EmptyCart = () => {
 
           {/* Main Icon Container */}
           <div className="relative w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
-            <ShoppingCart className="w-16 h-16 text-gray-400" strokeWidth={1.5} />
+            <ShoppingCart className="w-16 h-16 text-gray-400 dark:text-textSecondary" strokeWidth={1.5} />
 
             {/* Sparkle Decoration */}
             <motion.div
@@ -54,7 +54,7 @@ const EmptyCart = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-2xl font-black text-gray-800"
+            className="text-2xl font-black text-gray-800 dark:text-textPrimary"
           >
             سبد خرید شما خالی است
           </motion.h3>
@@ -63,7 +63,7 @@ const EmptyCart = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="text-gray-600 leading-relaxed"
+            className="text-gray-600 dark:text-textSecondary leading-relaxed"
           >
             هنوز دوره‌ای به سبد خرید خود اضافه نکرده‌اید.
             <br />
@@ -92,7 +92,7 @@ const EmptyCart = () => {
             <Button
               size="lg"
               variant="outline"
-              className="w-full sm:w-auto border-2 hover:bg-gray-50"
+              className="w-full sm:w-auto border-2 hover:bg-gray-50 dark:hover:bg-darkBgHidden dark:bg-darkBgHidden"
             >
               <span className="font-bold">بازگشت به صفحه اصلی</span>
             </Button>
@@ -104,9 +104,9 @@ const EmptyCart = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="pt-8 border-t border-gray-200"
+          className="pt-8 border-t border-gray-200 dark:border-borderColor"
         >
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500 dark:text-textSecondary">
             💡 نکته: با افزودن دوره‌ها به سبد خرید، می‌توانید همه را یکجا خریداری کنید
           </p>
         </motion.div>

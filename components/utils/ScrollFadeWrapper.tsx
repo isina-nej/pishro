@@ -21,7 +21,7 @@ export default function ScrollFadeWrapper({
   once = true,
   delay = 0,
   duration = 0.6,
-  className = "",
+  className="",
 }: ScrollFadeWrapperProps) {
   const controls = useAnimation();
   const { ref, inView } = useInView({ threshold, triggerOnce: once });

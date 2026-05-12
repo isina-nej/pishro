@@ -44,7 +44,7 @@ export const libraryBooks: LibraryBook[] = [
     cover:
       "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=720&q=80",
     description:
-      "نحوه‌ی تفکر و تصمیم‌گیری معامله‌گران بزرگ بازار رمزارز و روش ساخت ذهن مقاوم در برابر نوسانات شدید.",
+      "نحوه‌ی تفکر و تصمیم‌گیری معامله‌گران بزرگ بازار رمزارز روش ساخت ذهن مقاوم در برابر نوسانات شدید.",
     tags: ["کریپتو", "احساسات بازار", "بیت‌کوین"],
     readingTime: "9 ساعت",
     isFeatured: true,
@@ -64,7 +64,7 @@ export const libraryBooks: LibraryBook[] = [
     cover:
       "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=720&q=80",
     description:
-      "اقتباسی از تفکرات بنجامین گراهام با مثال‌های واقعی از بورس و بازار ایران؛ روشی علمی برای کاهش ریسک و افزایش سود.",
+      "اقتباسی از تفکرات بنجامین گراهام با مثال‌های واقعی بورس و بازار ایران؛ روشی علمی برای کاهش ریسک افزایش سود.",
     tags: ["بورس", "تحلیل بنیادی", "مدیریت ریسک"],
     readingTime: "11 ساعت",
     isFeatured: true,
@@ -84,7 +84,7 @@ export const libraryBooks: LibraryBook[] = [
     cover:
       "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=720&q=80",
     description:
-      "تحلیل رفتار ذهنی تریدرها در شرایط استرس بازار و روش‌های کنترل احساسات هنگام خرید و فروش.",
+      "تحلیل رفتار ذهنی تریدرها در شرایط استرس بازار و روش‌های کنترل احساسات هنگام خرید فروش.",
     tags: ["احساسات", "معامله‌گری", "روانشناسی بازار"],
     readingTime: "6 ساعت",
   },
@@ -142,7 +142,7 @@ export const libraryBooks: LibraryBook[] = [
     cover:
       "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=720&q=80",
     description:
-      "تحلیل جامع رفتار بازار در دوره‌های رونق و رکود با نگاهی به بورس، طلا، ارز و کریپتو.",
+      "تحلیل جامع رفتار بازار در دوره‌های رونق و رکود با نگاهی به بورس، طلا، ارز کریپتو.",
     tags: ["چرخه اقتصادی", "تحلیل بازار", "پیش‌بینی روند"],
     readingTime: "12 ساعت",
   },

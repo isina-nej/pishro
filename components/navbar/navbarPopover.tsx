@@ -44,8 +44,8 @@ const NavbarPopover = ({ item }: NavbarPopoverProps) => {
             backdropFilter: "blur(10px) saturate(180%)",
             WebkitBackdropFilter: "blur(10px) saturate(180%)",
             backgroundColor: isDark
-              ? "rgba(0, 0, 0, 0.4)"
-              : "rgba(255, 255, 255, 0.4)",
+              ? "rgba(0, 0, 0.4)"
+              : "rgba(255, 255, 0.4)",
           } as React.CSSProperties & {
             backdropFilter: string;
             WebkitBackdropFilter: string;
@@ -57,7 +57,7 @@ const NavbarPopover = ({ item }: NavbarPopoverProps) => {
           "rounded-lg z-[200] border shadow-2xl",
           isDark
             ? "text-gray-100 border-white/15 shadow-black/20 ring-1 ring-white/10"
-            : "text-gray-900 border-white/35 shadow-black/10 ring-1 ring-white/20",
+            : "text-gray-900 dark:text-textPrimary border-white/35 shadow-black/10 ring-1 ring-white/20",
           // Override zoom animations that break backdrop-filter - use opacity only
           "!transform-none data-[state=closed]:!zoom-out-95 data-[state=open]:!zoom-in-95"
         )}

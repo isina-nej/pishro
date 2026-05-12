@@ -44,8 +44,8 @@ const STATUS_LABELS: Record<string, string> = {
 
 const STATUS_COLORS: Record<string, string> = {
   [DRAFT]: 'bg-yellow-100 text-yellow-800',
-  [PUBLISHED]: 'bg-green-100 text-green-800',
-  [ARCHIVED]: 'bg-gray-100 text-gray-800',
+  [PUBLISHED]: 'bg-green-100 dark:bg-green-950 text-green-800',
+  [ARCHIVED]: 'bg-gray-100 dark:bg-cardBg text-gray-800 dark:text-textPrimary',
 };
 
 export default function BlockNewsListPage() {
@@ -195,7 +195,7 @@ export default function BlockNewsListPage() {
                             size="sm"
                             onClick={() => handleChangeStatus(news.id, PUBLISHED)}
                           >
-                            <Send className="h-4 w-4 text-green-600" />
+                            <Send className="h-4 w-4 text-green-600 dark:text-green-400" />
                           </Button>
                         )}
                       </TableCell>

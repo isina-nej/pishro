@@ -28,7 +28,7 @@ const EnrolledCourses = () => {
   // ===== Loading State =====
   if (loading) {
     return (
-      <div className="bg-white rounded-md mb-8 shadow p-10 flex justify-center items-center">
+      <div className="bg-white dark:bg-cardBg rounded-md mb-8 shadow p-10 flex justify-center items-center">
         <div className="relative">
           <div className="w-10 h-10 border-4 border-blue-200 rounded-full"></div>
           <div className="absolute top-0 left-0 w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -40,11 +40,11 @@ const EnrolledCourses = () => {
   // ===== Empty State =====
   if (courses.length === 0) {
     return (
-      <div className="bg-white rounded-md mb-8 shadow">
+      <div className="bg-white dark:bg-cardBg rounded-md mb-8 shadow">
         <ProfileHeader>
           <h4 className="font-medium text-sm text-[#131834]">دوره‌های من</h4>
         </ProfileHeader>
-        <div className="p-12 text-center text-gray-500">
+        <div className="p-12 text-center text-gray-500 dark:text-textSecondary">
           هنوز در دوره‌ای ثبت‌نام نکرده‌اید
         </div>
       </div>
@@ -53,7 +53,7 @@ const EnrolledCourses = () => {
 
   // ===== Course List =====
   return (
-    <div className="bg-white rounded-md mb-8 shadow">
+    <div className="bg-white dark:bg-cardBg rounded-md mb-8 shadow">
       <ProfileHeader>
         <h4 className="font-medium text-sm text-[#131834]">
           دوره‌های من ({total})
@@ -64,7 +64,7 @@ const EnrolledCourses = () => {
         {courses.map((enrollment) => (
           <div
             key={enrollment.id}
-            className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-150 bg-white"
+            className="border border-gray-200 dark:border-borderColor rounded-lg overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-150 bg-white dark:bg-cardBg"
           >
             {enrollment.course.img && (
               <div className="relative h-40 w-full">
@@ -84,18 +84,18 @@ const EnrolledCourses = () => {
                     ? `/class/${enrollment.course.lessons[0].id}`
                     : `/class/${enrollment.course.id}`
                 }
-                className="text-sm font-medium text-gray-900 hover:text-blue-600 line-clamp-1"
+                className="text-sm font-medium text-gray-900 dark:text-textPrimary hover:text-blue-600 line-clamp-1"
               >
                 {enrollment.course.subject}
               </Link>
 
               {/* Progress Bar */}
               <div className="mt-3">
-                <div className="flex justify-between text-xs text-gray-600 mb-1">
+                <div className="flex justify-between text-xs text-gray-600 dark:text-textSecondary mb-1">
                   <span>پیشرفت دوره</span>
                   <span>{enrollment.progress}%</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="w-full bg-gray-200 dark:bg-darkBgHidden rounded-full h-2">
                   <div
                     className={`h-2 rounded-full transition-all duration-300 ${
                       enrollment.isCompleted ? "bg-green-500" : "bg-blue-500"
@@ -106,7 +106,7 @@ const EnrolledCourses = () => {
               </div>
 
               {/* Info */}
-              <div className="mt-4 flex items-center justify-between text-xs text-gray-500">
+              <div className="mt-4 flex items-center justify-between text-xs text-gray-500 dark:text-textSecondary">
                 <span>تاریخ ثبت‌نام:</span>
                 <span className="font-irsans">
                   {formatDate(enrollment.enrolledAt)}
@@ -115,7 +115,7 @@ const EnrolledCourses = () => {
 
               {/* Completion Badge */}
               {enrollment.isCompleted && (
-                <div className="mt-3 w-full py-1.5 text-center text-xs font-medium rounded bg-green-100 text-green-600">
+                <div className="mt-3 w-full py-1.5 text-center text-xs font-medium rounded bg-green-100 dark:bg-green-950 text-green-600 dark:text-green-400">
                   تکمیل شده ✓
                 </div>
               )}
@@ -126,7 +126,7 @@ const EnrolledCourses = () => {
 
       {/* Pagination */}
       {total > pageSize && (
-        <div className="flex justify-center items-center gap-3 py-5 border-t border-gray-100">
+        <div className="flex justify-center items-center gap-3 py-5 border-t border-gray-100 dark:border-borderColor">
           <Button
             variant="outline"
             size="sm"
@@ -135,7 +135,7 @@ const EnrolledCourses = () => {
           >
             قبلی
           </Button>
-          <span className="text-sm text-gray-600">
+          <span className="text-sm text-gray-600 dark:text-textSecondary">
             صفحه {page} از {Math.ceil(total / pageSize)}
           </span>
           <Button

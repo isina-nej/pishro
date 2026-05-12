@@ -34,7 +34,7 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
   };
 
   const cardContent = (
-    <div className="w-full shadow-md transition-shadow rounded-xl p-3 pb-8 bg-white flex flex-col relative hover:shadow-lg group cursor-pointer"
+    <div className="w-full shadow-md transition-shadow rounded-xl p-3 pb-8 bg-white dark:bg-cardBg flex flex-col relative hover:shadow-lg group cursor-pointer"
     >
       {/* Image section */}
       <motion.div
@@ -43,7 +43,7 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
       >
         {imageError ? (
           <div className="w-full h-full bg-[#e5e5e5] flex items-center justify-center">
-            <span className="text-gray-400 text-sm">تصویر در دسترس نیست</span>
+            <span className="text-gray-400 dark:text-textSecondary text-sm">تصویر در دسترس نیست</span>
           </div>
         ) : (
           <Image
@@ -69,7 +69,7 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
         </div>
 
         <div className="mt-1 flex flex-col">
-          <p className="font-bold text-sm sm:text-sm text-gray-800 line-clamp-2">
+          <p className="font-bold text-sm sm:text-sm text-gray-800 dark:text-textPrimary line-clamp-2">
             {data.description || "بدون توضیح"}
           </p>
 
@@ -83,11 +83,11 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
           className="mt-1 pt-1.5 flex justify-between text-[#ACACAC] font-bold text-xs sm:text-sm border-t border-dashed border-[#acacac]"
         >
           <span className="flex items-center gap-1">
-            <Users size={16} className="text-gray-900" />
+            <Users size={16} className="text-gray-900 dark:text-textPrimary" />
             {data.students ?? 1} دوره آموز
           </span>
           <span className="flex items-center gap-1">
-            <Video size={16} className="text-gray-900" />
+            <Video size={16} className="text-gray-900 dark:text-textPrimary" />
             {data.videosCount ?? 1} ویدئو تخصصی
           </span>
           <FormatTime time={data.time || "0:00"} />

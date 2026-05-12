@@ -56,9 +56,9 @@ export default function RootLayout({
   return (
     <html lang="fa" suppressHydrationWarning>
       <body
-        className={`font-yekan ${charismaExtraBold.variable} ${charismaRegular.variable} ${montserrat.variable} rtl bg-white dark:bg-slate-950 text-slate-900 dark:text-white transition-colors`}
+        className={`font-yekan ${charismaExtraBold.variable} ${charismaRegular.variable} ${montserrat.variable} rtl bg-white dark:bg-cardBg dark:bg-bodyBg text-slate-900 dark:text-textPrimary transition-colors duration-300 ease-in-out`}
       >
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange={false}>
           <ReactQueryProvider>
             {children}
             <Toaster

@@ -66,7 +66,7 @@ export const CoursesFilterControls = ({
           >
             <SelectTrigger
               className={cn(
-                "w-full min-w-[180px] rounded-2xl border-slate-200 bg-white",
+                "w-full min-w-[180px] rounded-2xl border-slate-200 bg-white dark:bg-cardBg",
                 disabled && "opacity-60"
               )}
               aria-disabled={disabled}
@@ -89,7 +89,7 @@ export const CoursesFilterControls = ({
           >
             <SelectTrigger
               className={cn(
-                "w-full min-w-[180px] rounded-2xl border-slate-200 bg-white",
+                "w-full min-w-[180px] rounded-2xl border-slate-200 bg-white dark:bg-cardBg",
                 disabled && "opacity-60"
               )}
               aria-disabled={disabled}
@@ -110,7 +110,7 @@ export const CoursesFilterControls = ({
       <div className="flex flex-col gap-4">
         <div
           className={cn(
-            "flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm",
+            "flex items-center gap-3 rounded-2xl border border-slate-200 bg-white dark:bg-cardBg p-3 shadow-sm",
             disabled && "opacity-60"
           )}
         >
@@ -143,7 +143,7 @@ export const CoursesFilterControls = ({
                 "whitespace-nowrap rounded-full border px-4 py-2 text-sm font-medium transition-all",
                 selectedCategory === category
                   ? "border-slate-900 bg-slate-900 text-white shadow"
-                  : "border-slate-200 bg-white text-slate-600 hover:bg-slate-100",
+                  : "border-slate-200 bg-white dark:bg-cardBg text-slate-600 hover:bg-slate-100",
                 disabled && "pointer-events-none opacity-60"
               )}
               aria-pressed={selectedCategory === category}

@@ -180,7 +180,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
               className={`p-2 sm:p-2.5 rounded-lg font-medium transition flex items-center justify-center ${
                 liked === "LIKE"
                   ? "bg-blue-600 text-white"
-                  : "text-white hover:bg-white/20"
+                  : "text-white hover:bg-white dark:bg-cardBg dark:bg-cardBg/20"
               }`}
             >
               <ThumbsUp size={18} />
@@ -194,7 +194,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
               className={`p-2 sm:p-2.5 rounded-lg font-medium transition flex items-center justify-center ${
                 liked === "DISLIKE"
                   ? "bg-red-600 text-white"
-                  : "text-white hover:bg-white/20"
+                  : "text-white hover:bg-white dark:bg-cardBg dark:bg-cardBg/20"
               }`}
             >
               <ThumbsDown size={18} />
@@ -208,7 +208,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
               className={`p-2 sm:p-2.5 rounded-lg font-medium transition flex items-center justify-center ${
                 saved
                   ? "bg-purple-600 text-white"
-                  : "text-white hover:bg-white/20"
+                  : "text-white hover:bg-white dark:bg-cardBg dark:bg-cardBg/20"
               }`}
             >
               <Bookmark size={18} fill={saved ? "currentColor" : "none"} />
@@ -218,7 +218,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
             <button
               onClick={handleShare}
               title="اشتراک"
-              className="p-2 sm:p-2.5 rounded-lg font-medium text-white hover:bg-white/20 transition flex items-center justify-center"
+              className="p-2 sm:p-2.5 rounded-lg font-medium text-white hover:bg-white dark:bg-cardBg transition flex items-center justify-center"
             >
               <Share2 size={18} />
             </button>
@@ -239,14 +239,14 @@ export default function CourseDetailModal({ course, trigger }: Props) {
             {course.rating && (
               <div className="flex items-center gap-2 mb-3">
                 <RatingStars rating={course.rating} />
-                <span className="text-xs sm:text-sm text-gray-400">
+                <span className="text-xs sm:text-sm text-gray-400 dark:text-textSecondary">
                   ({course.rating.toFixed(1)})
                 </span>
               </div>
             )}
 
             {course.description && (
-              <p className="text-gray-400 text-sm sm:text-base">{course.description}</p>
+              <p className="text-gray-400 dark:text-textSecondary text-sm sm:text-base">{course.description}</p>
             )}
           </div>
 
@@ -256,7 +256,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
               <div className="flex items-center gap-2 sm:gap-3">
                 <Clock size={18} className="text-mySecondary flex-shrink-0" />
                 <div className="min-w-0">
-                  <p className="text-xs text-gray-500">مدت دوره</p>
+                  <p className="text-xs text-gray-500 dark:text-textSecondary">مدت دوره</p>
                   <p className="font-bold text-sm sm:text-base text-white truncate">{course.time}</p>
                 </div>
               </div>
@@ -265,7 +265,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
               <div className="flex items-center gap-2 sm:gap-3">
                 <Users size={18} className="text-mySecondary flex-shrink-0" />
                 <div className="min-w-0">
-                  <p className="text-xs text-gray-500">دانشجویان</p>
+                  <p className="text-xs text-gray-500 dark:text-textSecondary">دانشجویان</p>
                   <p className="font-bold text-sm sm:text-base text-white truncate">
                     {course.students.toLocaleString("fa-IR")}
                   </p>
@@ -276,7 +276,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
               <div className="flex items-center gap-2 sm:gap-3">
                 <Video size={18} className="text-mySecondary flex-shrink-0" />
                 <div className="min-w-0">
-                  <p className="text-xs text-gray-500">تعداد ویدیو</p>
+                  <p className="text-xs text-gray-500 dark:text-textSecondary">تعداد ویدیو</p>
                   <p className="font-bold text-sm sm:text-base text-white">{course.videosCount}</p>
                 </div>
               </div>
@@ -285,7 +285,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
               <div className="flex items-center gap-2 sm:gap-3">
                 <span className="text-lg sm:text-2xl flex-shrink-0">👨‍🏫</span>
                 <div className="min-w-0">
-                  <p className="text-xs text-gray-500">مدرس</p>
+                  <p className="text-xs text-gray-500 dark:text-textSecondary">مدرس</p>
                   <p className="font-bold text-xs sm:text-sm text-white truncate">{course.instructor}</p>
                 </div>
               </div>
@@ -302,7 +302,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                   className={`pb-3 font-bold border-b-2 transition text-sm sm:text-base whitespace-nowrap ${
                     activeTab === tab
                       ? "border-mySecondary text-mySecondary"
-                      : "border-transparent text-gray-400 hover:text-gray-300"
+                      : "border-transparent text-gray-400 dark:text-textSecondary hover:text-gray-300"
                   }`}
                 >
                   {tab === "about" && "درباره"}
@@ -319,7 +319,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                   {course.description && (
                     <div>
                       <h3 className="font-bold text-base sm:text-lg mb-2 text-white">توضیحات</h3>
-                      <p className="text-gray-400 leading-relaxed text-sm sm:text-base">
+                      <p className="text-gray-400 dark:text-textSecondary leading-relaxed text-sm sm:text-base">
                         {course.description}
                       </p>
                     </div>
@@ -332,7 +332,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                         {course.learningGoals.map((goal, idx) => (
                           <li key={idx} className="flex items-start gap-2">
                             <span className="text-mySecondary mt-1 flex-shrink-0">✓</span>
-                            <span className="text-gray-400 text-sm sm:text-base">{goal}</span>
+                            <span className="text-gray-400 dark:text-textSecondary text-sm sm:text-base">{goal}</span>
                           </li>
                         ))}
                       </ul>
@@ -343,10 +343,10 @@ export default function CourseDetailModal({ course, trigger }: Props) {
 
               {activeTab === "lessons" && (
                 <div className="space-y-2">
-                  <p className="text-gray-400 text-sm sm:text-base">
+                  <p className="text-gray-400 dark:text-textSecondary text-sm sm:text-base">
                     این دوره دارای {course.videosCount} درس است.
                   </p>
-                  <p className="text-xs sm:text-sm text-gray-500">
+                  <p className="text-xs sm:text-sm text-gray-500 dark:text-textSecondary">
                     برای مشاهده درس‌ها صفحه کامل دوره را باز کنید.
                   </p>
                 </div>
@@ -364,7 +364,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                       </div>
                     </div>
                   )}
-                  <p className="text-gray-400 text-xs sm:text-sm">
+                  <p className="text-gray-400 dark:text-textSecondary text-xs sm:text-sm">
                     برای مشاهده تمام نظرات کاربران صفحه کامل دوره را باز کنید.
                   </p>
                 </div>
@@ -380,7 +380,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                   {formatPrice(finalPrice)}
                 </span>
                 {course.discountPercent && (
-                  <span className="text-base sm:text-lg text-gray-600 line-through">
+                  <span className="text-base sm:text-lg text-gray-600 dark:text-textSecondary line-through">
                     {formatPrice(course.price)}
                   </span>
                 )}
@@ -392,7 +392,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
               className={`p-3 rounded-lg transition flex-shrink-0 ${
                 isFavorite
                   ? "bg-red-500 text-white"
-                  : "bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-gray-300"
+                  : "bg-gray-800 text-gray-400 dark:text-textSecondary hover:bg-gray-700 hover:text-gray-300"
               }`}
             >
               <Heart size={20} fill={isFavorite ? "currentColor" : "none"} />

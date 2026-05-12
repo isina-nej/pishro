@@ -42,7 +42,7 @@ export const CourseCard = ({ course }: CourseCardProps) => {
             whileHover={{ opacity: 1, scale: 1 }}
             className="absolute inset-0 flex items-center justify-center"
           >
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/20 backdrop-blur hover:bg-white/30">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white dark:bg-cardBg backdrop-blur hover:bg-white">
               <Play className="h-8 w-8 fill-white text-white" />
             </div>
           </motion.div>

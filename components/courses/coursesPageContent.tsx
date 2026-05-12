@@ -63,7 +63,7 @@ const CoursesPageContent = ({
 
       <section className="relative -mt-16 z-10">
         <div className="container-xl space-y-12">
-          <div className="rounded-3xl border border-white/30 bg-white/85 px-5 py-8 shadow-lg backdrop-blur">
+          <div className="rounded-3xl border border-white/30 bg-white dark:bg-cardBg px-5 py-8 shadow-lg backdrop-blur">
             <CoursesFilterControls
               categories={categories}
               selectedCategory={selectedCategory}
@@ -88,16 +88,16 @@ const CoursesPageContent = ({
                     <>
                       <span className="font-semibold text-slate-900">
                         {filteredCourses.length}
-                      </span>{" "}
-                      دوره{" "}
+                      </span>{""}
+                      دوره{""}
                       {query && (
                         <>
-                          برای جستجوی{" "}
+                          برای جستجوی{""}
                           <span className="font-semibold text-slate-900">
                             &quot;{query}&quot;
                           </span>
                         </>
-                      )}{" "}
+                      )}{""}
                       یافت شد
                     </>
                   ) : (
@@ -138,7 +138,7 @@ const CoursesPageContent = ({
                   {hasActiveFilters && (
                     <button
                       onClick={handleResetFilters}
-                      className="mt-4 rounded-full border border-slate-300 bg-white px-6 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
+                      className="mt-4 rounded-full border border-slate-300 bg-white dark:bg-cardBg px-6 py-2 text-sm font-medium text-slate-700 dark:text-textSecondary transition-colors hover:bg-slate-50"
                     >
                       پاک کردن فیلترها
                     </button>

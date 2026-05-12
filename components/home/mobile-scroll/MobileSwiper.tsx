@@ -25,7 +25,7 @@ export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
       <div className="container-md px-6 mx-auto h-full flex flex-col justify-start py-8">
         <div className="relative z-30 flex flex-col gap-2 text-center md:text-right mb-8">
           <h4 className="text-2xl font-extrabold sm:text-3xl md:text-4xl">سامانه پیشرو</h4>
-          <p className="text-xs sm:text-sm text-gray-500 leading-5 sm:leading-6">
+          <p className="text-xs sm:text-sm text-gray-500 dark:text-textSecondary leading-5 sm:leading-6">
             سامانه <span className="text-myPrimary">پیشرو</span>، مشاور و همراه
             مالی شما در مسیر پیشرفت
           </p>
@@ -62,12 +62,12 @@ export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
                   {step.link ? (
                     <a
                       href={step.link}
-                      className="inline-block px-6 sm:px-8 py-2 sm:py-2.5 bg-white/10 text-white rounded-full shadow-md hover:bg-white/5 transition text-xs sm:text-sm"
+                      className="inline-block px-6 sm:px-8 py-2 sm:py-2.5 bg-white dark:bg-cardBg text-white rounded-full shadow-md hover:bg-white transition text-xs sm:text-sm"
                     >
                       اطلاعات بیشتر
                     </a>
                   ) : (
-                    <button className="px-6 sm:px-8 py-2 sm:py-2.5 bg-white/10 text-white rounded-full shadow-md hover:bg-white/5 transition text-xs sm:text-sm cursor-default">
+                    <button className="px-6 sm:px-8 py-2 sm:py-2.5 bg-white dark:bg-cardBg text-white rounded-full shadow-md hover:bg-white transition text-xs sm:text-sm cursor-default">
                       اطلاعات بیشتر
                     </button>
                   )}

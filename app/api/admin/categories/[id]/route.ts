@@ -211,7 +211,7 @@ if (!session?.user) {
     // Check if category has associated content
     if (existingCategory._count.courses > 0 || existingCategory._count.news > 0) {
       return errorResponse(
-        "Cannot delete category with associated courses or news. Please reassign or delete them first.",
+        "Cannot delete category with associated courses or news. Please reassign them first.",
         ErrorCodes.CONFLICT
       );
     }

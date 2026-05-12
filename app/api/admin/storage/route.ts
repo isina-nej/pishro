@@ -81,7 +81,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Migration error:", error);
     return errorResponse(
-      "خطا در مهاجرت: " + (error instanceof Error ? error.message : String(error)),
+      "خطا در مهاجرت:" + (error instanceof Error ? error.message : String(error)),
       ErrorCodes.INTERNAL_ERROR
     );
   }

@@ -18,7 +18,7 @@ const NewsDetail = ({ articleId }: NewsDetailProps) => {
       <div className="container-xl py-20 flex justify-center items-center min-h-[600px]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-gray-600">در حال بارگذاری...</p>
+          <p className="mt-4 text-gray-600 dark:text-textSecondary">در حال بارگذاری...</p>
         </div>
       </div>
     );
@@ -47,20 +47,20 @@ const NewsDetail = ({ articleId }: NewsDetailProps) => {
             {article.tags.map((tag) => (
               <span
                 key={tag}
-                className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
+                className="px-3 py-1 bg-gray-100 dark:bg-cardBg text-gray-700 dark:text-textPrimary rounded-full text-sm"
               >
                 #{tag}
               </span>
             ))}
           </div>
 
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-textPrimary mb-4">
             {article.title}
           </h1>
 
-          <p className="text-lg text-gray-600 mb-6">{article.excerpt}</p>
+          <p className="text-lg text-gray-600 dark:text-textSecondary mb-6">{article.excerpt}</p>
 
-          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-textSecondary">
             {article.author && (
               <div className="flex items-center gap-2">
                 <User className="w-4 h-4" />
@@ -116,16 +116,16 @@ const NewsDetail = ({ articleId }: NewsDetailProps) => {
             </h2>
             <div className="space-y-6">
               {article.comments.map((comment) => (
-                <div key={comment.id} className="bg-gray-50 rounded-lg p-4">
+                <div key={comment.id} className="bg-gray-50 dark:bg-darkBgHidden rounded-lg p-4">
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
                       <User className="w-5 h-5 text-primary" />
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">
+                      <p className="font-medium text-gray-900 dark:text-textPrimary">
                         {comment.user?.firstName} {comment.user?.lastName}
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 dark:text-textSecondary">
                         {formatDistanceToNow(new Date(comment.createdAt), {
                           addSuffix: true,
                           locale: faIR,
@@ -133,7 +133,7 @@ const NewsDetail = ({ articleId }: NewsDetailProps) => {
                       </p>
                     </div>
                   </div>
-                  <p className="text-gray-700">{comment.content}</p>
+                  <p className="text-gray-700 dark:text-textPrimary">{comment.content}</p>
                 </div>
               ))}
             </div>

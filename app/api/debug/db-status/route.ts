@@ -12,11 +12,11 @@ export async function GET() {
     );
 
     const courseCategories = await query<any>(
-      `SELECT COUNT(*) as total FROM Course WHERE categoryId IS NOT NULL AND categoryId != ''`
+      `SELECT COUNT(*) as total FROM Course WHERE categoryId IS NOT NULL AND != ''`
     );
 
     const uncategorized = await query<any>(
-      `SELECT COUNT(*) as total FROM Course WHERE categoryId IS NULL OR categoryId = ''`
+      `SELECT COUNT(*) as total FROM Course WHERE categoryId IS NULL OR = ''`
     );
 
     return NextResponse.json({

@@ -22,7 +22,7 @@ export async function POST(
     });
 
     if (!comment) {
-      return errorResponse("نظر مورد نظر یافت نشد", "COMMENT_NOT_FOUND");
+      return errorResponse("نظر مورد یافت نشد", "COMMENT_NOT_FOUND");
     }
 
     // Check if user has already disliked

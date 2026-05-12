@@ -52,8 +52,8 @@ const HeroSection = ({
 
       {/* Animated Background Elements */}
       <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-20 right-20 w-72 h-72 bg-white rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 left-20 w-96 h-96 bg-white rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-20 right-20 w-72 h-72 bg-white dark:bg-cardBg rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 left-20 w-96 h-96 bg-white dark:bg-cardBg rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
 
       <div className="container-md py-24 relative z-10">
@@ -64,7 +64,7 @@ const HeroSection = ({
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-2 mt-2 mb-6"
+              className="inline-flex items-center gap-2 bg-white dark:bg-cardBg backdrop-blur-sm rounded-full px-6 py-2 mt-2 mb-6"
             >
               <HiSparkles className="text-yellow-300 text-xl" />
               <span className="text-sm font-medium">{badgeText}</span>
@@ -112,7 +112,7 @@ const HeroSection = ({
                 return (
                   <div
                     key={index}
-                    className={`bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 group ${
+                    className={`bg-white dark:bg-cardBg dark:bg-cardBg dark:bg-cardBg dark:bg-cardBg/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white dark:bg-cardBg dark:bg-cardBg dark:bg-cardBg dark:bg-cardBg/20 transition-all duration-300 group ${
                       index === statsData.length - 1 &&
                       statsData.length % 3 !== 0
                         ? "sm:col-span-2 md:col-span-1"
@@ -142,7 +142,7 @@ const HeroSection = ({
       <div className="absolute -bottom-10 left-0 right-0">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1440 220"
+          viewBox="0 1440 220"
           className="w-full"
         >
           <path

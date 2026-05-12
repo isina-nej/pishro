@@ -65,7 +65,7 @@ const CategoryAboutSection = ({
         <div className="max-w-full sm:max-w-[550px] md:max-w-[650px] lg:max-w-[750px] text-right space-y-4 sm:space-y-5 md:space-y-6">
           {/* عنوان */}
           <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[120px] leading-[1.1] font-extrabold">
-            <span className="text-[#214254]">{title1}</span>{" "}
+            <span className="text-[#214254]">{title1}</span>{""}
             <span className="text-[#FFA135] ml-1 sm:ml-2">{title2}</span>
           </h2>
 

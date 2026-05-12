@@ -80,7 +80,7 @@ const CommentsSlider = ({
                       : "!scale-95 sm:!scale-90 opacity-90"
                   }`}
                 >
-                  <div className="bg-white rounded-2xl md:rounded-3xl shadow-sm border border-gray-200 py-5 md:py-8 px-3 md:px-5 flex flex-col items-center justify-between text-center h-[220px] sm:h-[230px] md:h-[255px]">
+                  <div className="bg-white dark:bg-cardBg rounded-2xl md:rounded-3xl shadow-sm border border-gray-200 dark:border-borderColor py-5 md:py-8 px-3 md:px-5 flex flex-col items-center justify-between text-center h-[220px] sm:h-[230px] md:h-[255px]">
                     <p className="text-[#8E8E8E] text-right text-[11px] sm:text-xs leading-5 font-bold mb-2 md:mb-4">
                       {comment.content}
                     </p>
@@ -124,7 +124,7 @@ const CommentsSlider = ({
               alt="پیکان چپ"
               fill
               className="object-cover"
-              sizes="(max-width: 640px) 80px, (max-width: 768px) 120px, 180px"
+              sizes="(max-width: 640px) 80px, 768px) 120px, 180px"
             />
           </div>
         </div>
@@ -135,7 +135,7 @@ const CommentsSlider = ({
               alt="پیکان راست"
               fill
               className="object-cover"
-              sizes="(max-width: 640px) 80px, (max-width: 768px) 120px, 180px"
+              sizes="(max-width: 640px) 80px, 768px) 120px, 180px"
             />
           </div>
         </div>

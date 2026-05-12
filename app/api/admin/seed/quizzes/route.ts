@@ -11,7 +11,7 @@ const quizData = [
     categorySlug: "airdrop",
     title: "آزمون تعیین سطح ایردراپ",
     description:
-      "با پاسخ به این سوالات، سطح دانش خود در زمینه ایردراپ را تعیین کنید و دوره‌های مناسب را دریافت نمایید.",
+      "با پاسخ به این سوالات، سطح دانش خود در زمینه ایردراپ را تعیین کنید و دوره‌های مناسب دریافت نمایید.",
     questions: [
       {
         question: "ایردراپ (Airdrop) در دنیای کریپتو به چه معناست؟",
@@ -26,7 +26,7 @@ const quizData = [
           { text: "استخراج ارز دیجیتال", isCorrect: false },
         ],
         explanation:
-          "ایردراپ به توزیع رایگان توکن‌ها توسط پروژه‌ها به کاربران گفته می‌شود.",
+          "ایردراپ به توزیع رایگان توکن‌ها توسط پروژه‌ها کاربران گفته می‌شود.",
         points: 10,
         order: 0
       },
@@ -212,7 +212,7 @@ const quizData = [
       },
       {
         question:
-          "کدام‌یک از موارد زیر از انواع کیف پول ارزهای دیجیتال هستند؟ (چند گزینه)",
+          "کدام‌یک از موارد زیر انواع کیف پول ارزهای دیجیتال هستند؟ (چند گزینه)",
         questionType: "MULTIPLE_SELECT" as QuestionType,
         options: [
           { text: "کیف پول سخت‌افزاری (Hardware)", isCorrect: true },
@@ -221,7 +221,7 @@ const quizData = [
           { text: "کیف پول شیشه‌ای (Glass)", isCorrect: false },
         ],
         explanation:
-          "کیف پول‌های سخت‌افزاری، نرم‌افزاری و کاغذی از انواع معروف کیف پول‌ها هستند.",
+          "کیف پول‌های سخت‌افزاری، نرم‌افزاری و کاغذی از انواع معروف پول‌ها هستند.",
         points: 20,
         order: 2
       },
@@ -252,7 +252,7 @@ const quizData = [
           { text: "ذخیره ارز در صرافی", isCorrect: false },
         ],
         explanation:
-          "استیکینگ به قفل کردن رمزارز در شبکه برای کمک به تأیید تراکنش‌ها و دریافت پاداش گفته می‌شود.",
+          "استیکینگ به قفل کردن رمزارز در شبکه برای کمک تأیید تراکنش‌ها و دریافت پاداش گفته می‌شود.",
         points: 25,
         order: 4
       },
@@ -455,7 +455,7 @@ console.log("🌱 شروع Seed کردن آزمون‌های تعیین سطح..
       });
 
       if (!category) {
-        console.log(`⚠️  دسته‌بندی ${quiz.categorySlug} یافت نشد - رد شد`);
+        console.log(`⚠️ دسته‌بندی ${quiz.categorySlug} یافت نشد - رد شد`);
         results.skipped.push(quiz.categorySlug);
         continue;
       }
@@ -469,7 +469,7 @@ console.log("🌱 شروع Seed کردن آزمون‌های تعیین سطح..
       });
 
       if (existingQuiz) {
-        console.log(`   🗑️  حذف آزمون قبلی...`);
+        console.log(`🗑️ حذف آزمون قبلی...`);
         await prisma.quiz.delete({
           where: { id: existingQuiz.id }
         });
@@ -494,7 +494,7 @@ console.log("🌱 شروع Seed کردن آزمون‌های تعیین سطح..
         }
       });
 
-      console.log(`   ✅ آزمون ایجاد شد: ${createdQuiz.id}`);
+      console.log(`✅ آزمون ایجاد شد: ${createdQuiz.id}`);
 
       // ایجاد سوالات
       for (const question of quiz.questions) {
@@ -511,7 +511,7 @@ console.log("🌱 شروع Seed کردن آزمون‌های تعیین سطح..
         });
       }
 
-      console.log(`   ✅ ${quiz.questions.length} سوال ایجاد شد`);
+      console.log(`✅ ${quiz.questions.length} سوال ایجاد شد`);
       results.created.push(quiz.categorySlug);
     }
 

@@ -131,7 +131,7 @@ if (!session?.user || session.user.role !== "ADMIN") {
 
     return successResponse(
       video,
-      "ویدیو با موفقیت ایجاد شد و پردازش آن شروع شد"
+      "ویدیو با موفقیت ایجاد شد و پردازش آن شروع"
     );
   } catch (error) {
     console.error("[POST /api/admin/videos] error:", error);

@@ -101,7 +101,7 @@ const CategoryHeroSection = ({
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-mySecondary leading-tight mt-2 md:mt-0">
             {_subtitle ? (
               <>
-                <span className="block text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-gray-600 mb-2">
+                <span className="block text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-gray-600 dark:text-textSecondary mb-2">
                   {_subtitle}
                 </span>
                 <span className="text-myPrimary">{title}</span>
@@ -118,7 +118,7 @@ const CategoryHeroSection = ({
           </h1>
 
           {/* توضیحات */}
-          <p className="text-gray-600 text-sm sm:text-base md:text-lg leading-relaxed max-w-4xl">
+          <p className="text-gray-600 dark:text-textSecondary text-sm sm:text-base md:text-lg leading-relaxed max-w-4xl">
             {description}
           </p>
 
@@ -126,19 +126,14 @@ const CategoryHeroSection = ({
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 sm:pt-5">
             <a
               href={cta1Link}
-              className="px-5 sm:px-6 py-2.5 sm:py-3 bg-mySecondary text-white border border-mySecondary
-                font-semibold rounded-xl shadow-md transition-transform duration-300 ease-in-out
-                text-sm sm:text-base hover:scale-105 hover:-rotate-1 active:scale-95 text-center
-              "
+              className="px-5 sm:px-6 py-2.5 sm:py-3 bg-mySecondary text-white border border-mySecondary font-semibold rounded-xl shadow-md transition-transform duration-300 ease-in-out text-sm sm:text-base hover:scale-105 hover:-rotate-1 active:scale-95 text-center"
             >
               {cta1Text}
             </a>
 
             <a
               href={cta2Link}
-              className="px-5 sm:px-6 py-2.5 sm:py-3 border border-mySecondary text-mySecondary
-                font-semibold rounded-xl transition-transform duration-300 ease-in-out
-                text-sm sm:text-base hover:scale-105 hover:rotate-1 active:scale-95 text-center"
+              className="px-5 sm:px-6 py-2.5 sm:py-3 border border-mySecondary text-mySecondary font-semibold rounded-xl transition-transform duration-300 ease-in-out text-sm sm:text-base hover:scale-105 hover:rotate-1 active:scale-95 text-center"
             >
               {cta2Text}
             </a>
@@ -150,12 +145,12 @@ const CategoryHeroSection = ({
               {features.map((item, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-2.5 sm:gap-3 bg-gray-50 sm:bg-transparent rounded-lg sm:rounded-none px-3 py-2.5 sm:px-0 sm:py-0"
+                  className="flex items-center gap-2.5 sm:gap-3 bg-gray-50 dark:bg-darkBgHidden sm:bg-transparent rounded-lg sm:rounded-none px-3 py-2.5 sm:px-0 sm:py-0"
                 >
                   <div className="text-xl sm:text-2xl lg:text-3xl flex-shrink-0">
                     {item.icon || getIcon(item.iconName)}
                   </div>
-                  <p className="text-gray-700 font-medium text-sm sm:text-base">
+                  <p className="text-gray-700 dark:text-textPrimary font-medium text-sm sm:text-base">
                     {item.text}
                   </p>
                 </div>
@@ -185,7 +180,7 @@ const CategoryHeroSection = ({
                 )}
                 {item.suffix}
               </span>
-              <p className="text-gray-600 mt-1 sm:mt-2 font-medium text-xs sm:text-sm md:text-base lg:text-lg text-center">
+              <p className="text-gray-600 dark:text-textSecondary mt-1 sm:mt-2 font-medium text-xs sm:text-sm md:text-base lg:text-lg text-center">
                 {item.label}
               </p>
             </motion.div>

@@ -26,8 +26,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   if (!videoId) {
     return (
       <div className="py-8" dir="rtl">
-        <div className="w-full max-w-4xl rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 p-12 text-center">
-          <p className="text-gray-600 dark:text-gray-400 text-lg">
+        <div className="w-full max-w-4xl rounded-lg overflow-hidden bg-gray-100 dark:bg-cardBg p-12 text-center">
+          <p className="text-gray-600 dark:text-textSecondary text-lg">
             ویدیویی برای این درس در دسترس نیست
           </p>
         </div>

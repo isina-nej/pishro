@@ -50,7 +50,7 @@ const LandingOverlay = ({
   // پیشرفت اسکرول نسبت به سکشن اصلی
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start start", "end end"],
+    offset: ["start", "end"],
   });
 
   // افکت‌ها
@@ -156,8 +156,8 @@ const OverlayText = ({
 }) => {
   const defaultTexts = [
     "پیشرو در مسیر سرمایه‌ گذاری هوشمند",
-    "ما در پیشرو با ارائه آموزش‌های تخصصی بورس، بازارهای مالی و سرمایه‌ گذاری، شما را در مسیر رشد مالی همراهی می‌کنیم.",
-    "از آموزش اصولی و گام‌به‌گام تا مشاوره‌های حرفه‌ای و همراهی در مسیر رشد سرمایه شما، همه و همه در پیشرو فراهم است.",
+    "ما در پیشرو با ارائه آموزش‌های تخصصی بورس، بازارهای مالی و سرمایه‌ گذاری، شما را مسیر رشد همراهی می‌کنیم.",
+    "از آموزش اصولی و گام‌به‌گام تا مشاوره‌های حرفه‌ای همراهی در مسیر رشد سرمایه شما، همه پیشرو فراهم است.",
     "پیشرو انتخابی مطمئن برای کسانی است که به دنبال امنیت مالی، رشد پایدار و آینده‌ای روشن هستند.",
   ];
 
@@ -219,7 +219,7 @@ const OverlayMainText = ({
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       href={ctaLink || "/business-consulting"}
-      className="bg-white text-black font-bold px-6 py-3 sm:px-8 sm:py-4 rounded-full text-base sm:text-lg shadow-lg hover:bg-white/90 transition-all"
+      className="bg-white dark:bg-cardBg text-black dark:text-textPrimary font-bold px-6 py-3 sm:px-8 sm:py-4 rounded-full text-base sm:text-lg shadow-lg hover:bg-white transition-all"
     >
       {subtitle || "شروع مسیر موفقیت"}
     </motion.a>

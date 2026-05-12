@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
 
     // Check if already saved
     const existing = await query(
-      `SELECT id FROM CourseSave WHERE userId = ? AND courseId = ? LIMIT 1`,
+      `SELECT id FROM CourseSave WHERE userId = ? AND courseId LIMIT 1`,
       [userId, courseId]
     );
 

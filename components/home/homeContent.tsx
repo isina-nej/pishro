@@ -12,7 +12,7 @@ import FloatingNotificationManager from "@/components/utils/floatingNotification
 
 export default function HomePageContent() {
   return (
-    <div className="w-full bg-white dark:bg-slate-950 transition-colors">
+    <div className="w-full bg-white dark:bg-cardBg transition-colors">
       {/* Desktop Landing - hidden on mobile */}
       <div className="shadow-backdrop">
         <LandingOverlayServer />

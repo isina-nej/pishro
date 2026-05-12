@@ -121,11 +121,11 @@ export function ChangePasswordModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded-lg w-full max-w-md mx-4 p-6 relative animate-in fade-in zoom-in-95 duration-300">
+      <div className="bg-white dark:bg-cardBg rounded-lg w-full max-w-md mx-4 p-6 relative animate-in fade-in zoom-in-95 duration-300">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute left-4 top-4 text-gray-400 hover:text-gray-600 transition-colors"
+          className="absolute left-4 top-4 text-gray-400 dark:text-textSecondary hover:text-gray-600 dark:hover:text-textSecondary transition-colors"
           disabled={isLoading}
         >
           <X className="w-5 h-5" />
@@ -135,10 +135,10 @@ export function ChangePasswordModal({
         {step === "request" && (
           <div className="flex flex-col gap-4">
             <div className="text-center space-y-2 mb-4">
-              <h2 className="text-xl font-bold text-gray-900">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-textPrimary">
                 تغییر رمز عبور
               </h2>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-textSecondary">
                 برای تغییر رمز عبور، ابتدا کد تایید به شماره {phone} ارسال
                 می‌شود
               </p>
@@ -167,7 +167,7 @@ export function ChangePasswordModal({
         {step === "otp" && (
           <div className="flex flex-col gap-4">
             <div className="text-center space-y-2 mb-4">
-              <h2 className="text-xl font-bold text-gray-900">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-textPrimary">
                 تایید شماره موبایل
               </h2>
             </div>
@@ -184,10 +184,10 @@ export function ChangePasswordModal({
         {step === "reset" && (
           <div className="flex flex-col gap-4">
             <div className="text-center space-y-2 mb-4">
-              <h2 className="text-xl font-bold text-gray-900">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-textPrimary">
                 تنظیم رمز عبور جدید
               </h2>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-textSecondary">
                 لطفاً رمز عبور جدید خود را وارد کنید
               </p>
             </div>

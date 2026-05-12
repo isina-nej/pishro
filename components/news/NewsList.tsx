@@ -11,7 +11,7 @@ const NewsList = () => {
       <div className="mt-8 flex justify-center items-center min-h-[400px]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-gray-600">در حال بارگذاری اخبار...</p>
+          <p className="mt-4 text-gray-600 dark:text-textSecondary">در حال بارگذاری اخبار...</p>
         </div>
       </div>
     );
@@ -31,7 +31,7 @@ const NewsList = () => {
   if (!data?.items || data.items.length === 0) {
     return (
       <div className="mt-8 flex justify-center items-center min-h-[400px]">
-        <p className="text-gray-500">هیچ خبری یافت نشد</p>
+        <p className="text-gray-500 dark:text-textSecondary">هیچ خبری یافت نشد</p>
       </div>
     );
   }

@@ -133,7 +133,7 @@ export const CourseDetailsModal = ({
               {/* Close Button */}
               <button
                 onClick={onClose}
-                className="absolute right-4 top-4 z-10 rounded-full bg-white/20 p-2 backdrop-blur hover:bg-white/30"
+                className="absolute right-4 top-4 z-10 rounded-full bg-white dark:bg-cardBg p-2 backdrop-blur hover:bg-white"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -142,7 +142,7 @@ export const CourseDetailsModal = ({
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/20 p-4 backdrop-blur hover:bg-white/30"
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white dark:bg-cardBg p-4 backdrop-blur hover:bg-white"
               >
                 <Play className="h-8 w-8 fill-white" />
               </motion.button>
@@ -173,7 +173,7 @@ export const CourseDetailsModal = ({
                   className={`flex items-center gap-2 rounded-lg px-4 py-2 font-medium transition ${
                     liked === "LIKE"
                       ? "bg-blue-600 text-white"
-                      : "bg-white/10 text-slate-300 hover:bg-white/20"
+                      : "bg-white dark:bg-cardBg dark:bg-cardBg/10 text-slate-300 hover:bg-white dark:bg-cardBg/20"
                   }`}
                 >
                   <ThumbsUp className="h-5 w-5" />
@@ -188,7 +188,7 @@ export const CourseDetailsModal = ({
                   className={`flex items-center gap-2 rounded-lg px-4 py-2 font-medium transition ${
                     liked === "DISLIKE"
                       ? "bg-red-600 text-white"
-                      : "bg-white/10 text-slate-300 hover:bg-white/20"
+                      : "bg-white dark:bg-cardBg dark:bg-cardBg/10 text-slate-300 hover:bg-white dark:bg-cardBg/20"
                   }`}
                 >
                   <ThumbsDown className="h-5 w-5" />
@@ -203,7 +203,7 @@ export const CourseDetailsModal = ({
                   className={`flex items-center gap-2 rounded-lg px-4 py-2 font-medium transition ${
                     saved
                       ? "bg-purple-600 text-white"
-                      : "bg-white/10 text-slate-300 hover:bg-white/20"
+                      : "bg-white dark:bg-cardBg dark:bg-cardBg/10 text-slate-300 hover:bg-white dark:bg-cardBg/20"
                   }`}
                 >
                   <Bookmark className={`h-5 w-5 ${saved ? "fill-current" : ""}`} />
@@ -214,7 +214,7 @@ export const CourseDetailsModal = ({
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleShare}
-                  className="flex items-center gap-2 rounded-lg bg-white/10 px-4 py-2 font-medium text-slate-300 transition hover:bg-white/20"
+                  className="flex items-center gap-2 rounded-lg bg-white dark:bg-cardBg px-4 py-2 font-medium text-slate-300 transition hover:bg-white"
                 >
                   <Share2 className="h-5 w-5" />
                   اشتراک‌گذاری
@@ -225,7 +225,7 @@ export const CourseDetailsModal = ({
             {/* Course Info Grid */}
             <div className="border-b border-white/10 px-6 py-6">
               <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                <div className="rounded-lg bg-white/5 p-3 backdrop-blur">
+                <div className="rounded-lg bg-white dark:bg-cardBg p-3 backdrop-blur">
                   <div className="text-sm text-slate-400">مدت</div>
                   <div className="mt-1 flex items-center gap-2 text-lg font-semibold">
                     <Clock className="h-4 w-4" />
@@ -233,7 +233,7 @@ export const CourseDetailsModal = ({
                   </div>
                 </div>
 
-                <div className="rounded-lg bg-white/5 p-3 backdrop-blur">
+                <div className="rounded-lg bg-white dark:bg-cardBg p-3 backdrop-blur">
                   <div className="text-sm text-slate-400">سطح</div>
                   <div className="mt-1 flex items-center gap-2 text-lg font-semibold">
                     <BarChart3 className="h-4 w-4" />
@@ -241,7 +241,7 @@ export const CourseDetailsModal = ({
                   </div>
                 </div>
 
-                <div className="rounded-lg bg-white/5 p-3 backdrop-blur">
+                <div className="rounded-lg bg-white dark:bg-cardBg p-3 backdrop-blur">
                   <div className="text-sm text-slate-400">دانشجویان</div>
                   <div className="mt-1 flex items-center gap-2 text-lg font-semibold">
                     <Users className="h-4 w-4" />
@@ -249,7 +249,7 @@ export const CourseDetailsModal = ({
                   </div>
                 </div>
 
-                <div className="rounded-lg bg-white/5 p-3 backdrop-blur">
+                <div className="rounded-lg bg-white dark:bg-cardBg p-3 backdrop-blur">
                   <div className="text-sm text-slate-400">ویدیوها</div>
                   <div className="mt-1 flex items-center gap-2 text-lg font-semibold">
                     <BookOpen className="h-4 w-4" />

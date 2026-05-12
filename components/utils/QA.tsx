@@ -33,7 +33,7 @@ const QAModal = () => {
     console.log("Submitted Answers:", answers);
 
     // ✅ نمایش Toast به جای Alert
-    toast.success("پاسخ‌ها با موفقیت ثبت شدند ", {
+    toast.success("پاسخ‌ها با موفقیت ثبت شدند", {
       duration: 3000,
     });
   };
@@ -46,9 +46,9 @@ const QAModal = () => {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-lg bg-white rounded-xl shadow-2xl">
+      <DialogContent className="max-w-lg bg-white dark:bg-cardBg rounded-xl shadow-2xl">
         <DialogHeader>
-          <DialogTitle className="rtl text-xl font-bold text-gray-800">
+          <DialogTitle className="rtl text-xl font-bold text-gray-800 dark:text-textPrimary">
             فرم ثبت‌نام سایت سرمایه‌ گذاری
           </DialogTitle>
         </DialogHeader>
@@ -56,14 +56,14 @@ const QAModal = () => {
         <div className="space-y-4 mt-4">
           {fakeQuestions.map((q) => (
             <div key={q.id} className="space-y-2">
-              <p className="text-gray-700 font-medium">{q.question}</p>
+              <p className="text-gray-700 dark:text-textPrimary font-medium">{q.question}</p>
 
               {q.type === "text" && (
                 <Input
                   placeholder="پاسخ خود را وارد کنید"
                   value={answers[q.id] || ""}
                   onChange={(e) => handleChange(q.id, e.target.value)}
-                  className="bg-gray-50"
+                  className="bg-gray-50 dark:bg-darkBgHidden"
                 />
               )}
 
@@ -72,13 +72,13 @@ const QAModal = () => {
                   placeholder="پاسخ خود را وارد کنید"
                   value={answers[q.id] || ""}
                   onChange={(e) => handleChange(q.id, e.target.value)}
-                  className="bg-gray-50"
+                  className="bg-gray-50 dark:bg-darkBgHidden"
                 />
               )}
 
               {q.type === "select" && q.options && (
                 <Select onValueChange={(val) => handleChange(q.id, val)}>
-                  <SelectTrigger className="bg-gray-50 rtl">
+                  <SelectTrigger className="bg-gray-50 dark:bg-darkBgHidden rtl">
                     <SelectValue placeholder="انتخاب کنید" />
                   </SelectTrigger>
                   <SelectContent>

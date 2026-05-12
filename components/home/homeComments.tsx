@@ -28,7 +28,7 @@ export default function HomeComments() {
     : [];
 
   if (isLoading) {
-    return <div className="h-64 animate-pulse bg-white my-8" />;
+    return <div className="h-64 animate-pulse bg-white dark:bg-cardBg my-8" />;
   }
 
   if (comments.length === 0) {

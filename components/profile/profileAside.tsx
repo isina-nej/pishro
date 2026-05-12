@@ -113,7 +113,7 @@ const ProfileAside = () => {
               >
                 <span
                   className={`transition text-base md:text-lg ${
-                    isActive ? "text-white" : "text-gray-400"
+                    isActive ? "text-white" : "text-gray-400 dark:text-textSecondary"
                   }`}
                 >
                   {isActive ? item.filledIcon : item.outlinedIcon}
