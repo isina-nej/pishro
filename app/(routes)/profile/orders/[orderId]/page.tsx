@@ -54,7 +54,7 @@ export default async function OrderPage({ params }: OrderPageProps) {
       })
     : [];
 
-  const items = courses.map((course) => ({
+  const items = courses.map((course: { id: string; subject: string; price: number; discountPercent: number | null }) => ({
     courseId: course.id,
     title: course.subject,
     price: course.price,
