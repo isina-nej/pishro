@@ -16,16 +16,17 @@ import {
 } from '@/lib/services/block-news-service';
 import { CreateNewsSchema } from '@/lib/schemas/block-news-schema';
 import type { NewsListResponse, CreateNewsRequest, NewsDetailResponse } from '@/lib/types/block-news';
+import { auth } from '@/auth';
 
 export async function GET(req: Request) {
   try {
     const session = await auth();
-if (!session?.user) {
-      return 'ورود به سیستم الزامی است');
+    if (!session?.user) {
+      return errorResponse('ورود به سیستم الزامی است');
     }
 
     if (session.user.role !== 'ADMIN') {
-      return 'دسترسی منحصر به مدیران است');
+      return errorResponse('دسترسی منحصر به مدیران است');
     }
 
     const url = new URL(req.url);
@@ -63,12 +64,12 @@ if (!session?.user) {
 export async function POST(req: Request) {
   try {
     const session = await auth();
-if (!session?.user) {
-      return 'ورود به سیستم الزامی است');
+    if (!session?.user) {
+      return errorResponse('ورود به سیستم الزامی است');
     }
 
     if (session.user.role !== 'ADMIN') {
-      return 'دسترسی منحصر به مدیران است');
+      return errorResponse('دسترسی منحصر به مدیران است');
     }
 
     const body = (await req.json()) as CreateNewsRequest;

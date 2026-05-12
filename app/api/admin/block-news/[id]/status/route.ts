@@ -1,6 +1,7 @@
 /**
  * PATCH /api/admin/block-news/[id]/status - Change news status (publish/archive)
  */
+import { auth } from '@/auth';
 
 import {
   successResponse,
@@ -18,12 +19,12 @@ export async function PATCH(
 ) {
   try {
     const session = await auth();
-if (!session?.user) {
-      return 'ورود به سیستم الزامی است');
+    if (!session?.user) {
+      return errorResponse('ورود به سیستم الزامی است');
     }
 
     if (session.user.role !== 'ADMIN') {
-      return 'دسترسی منحصر به مدیران است');
+      return errorResponse('دسترسی منحصر به مدیران است');
     }
 
     const body = (await req.json()) as { status: 'PUBLISHED' | 'ARCHIVED' };

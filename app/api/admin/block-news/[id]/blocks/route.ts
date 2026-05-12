@@ -15,6 +15,7 @@ import {
 } from '@/lib/services/block-news-service';
 import { BlockInputSchema } from '@/lib/schemas/block-news-schema';
 import type { ContentBlockCreateRequest } from '@/lib/types/block-news';
+import { auth } from '@/auth';
 
 export async function GET(
   req: Request,
@@ -22,12 +23,12 @@ export async function GET(
 ) {
   try {
     const session = await auth();
-if (!session?.user) {
-      return 'ورود به سیستم الزامی است');
+    if (!session?.user) {
+      return errorResponse('ورود به سیستم الزامی است');
     }
 
     if (session.user.role !== 'ADMIN') {
-      return 'دسترسی منحصر به مدیران است');
+      return errorResponse('دسترسی منحصر به مدیران است');
     }
 
     const news = await getNews(params.id);
@@ -47,12 +48,12 @@ export async function POST(
 ) {
   try {
     const session = await auth();
-if (!session?.user) {
-      return 'ورود به سیستم الزامی است');
+    if (!session?.user) {
+      return errorResponse('ورود به سیستم الزامی است');
     }
 
     if (session.user.role !== 'ADMIN') {
-      return 'دسترسی منحصر به مدیران است');
+      return errorResponse('دسترسی منحصر به مدیران است');
     }
 
     const body = (await req.json()) as ContentBlockCreateRequest;
