@@ -8,7 +8,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -29,19 +29,16 @@ import {
 } from '@/lib/hooks/use-block-news';
 import BlockEditor from '@/components/BlockNews/BlockEditor';
 
-interface EditBlockNewsPageProps {
-  params: { id: string };
-}
-
 const STATUS_LABELS: Record<string, string> = {
   DRAFT: 'پیش‌نویس',
   PUBLISHED: 'منتشر',
   ARCHIVED: 'آرشیو',
 };
 
-export default function EditBlockNewsPage({ params }: EditBlockNewsPageProps) {
+export default function EditBlockNewsPage() {
   const router = useRouter();
-  const newsId = params.id;
+  const params = useParams();
+  const newsId = params.id as string;
 
   const { data: news, isLoading: isLoadingNews, error: newsError } = useBlockNews(newsId);
   const { data: blocks, isLoading: isLoadingBlocks } = useBlockNewsBlocks(newsId);
