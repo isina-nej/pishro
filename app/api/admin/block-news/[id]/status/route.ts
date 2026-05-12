@@ -15,9 +15,10 @@ import {
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await auth();
     if (!session?.user) {
       return errorResponse('ورود به سیستم الزامی است');
@@ -37,9 +38,9 @@ export async function PATCH(
 
     let news;
     if (body.status === 'PUBLISHED') {
-      news = await publishNews(params.id);
+      news = await publishNews(id);
     } else {
-      news = await archiveNews(params.id);
+      news = await archiveNews(id);
     }
 
     return successResponse(news, 'وضعیت خبر با موفقیت تغییر یافت');

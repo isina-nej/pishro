@@ -14,9 +14,10 @@ import { auth } from '@/auth';
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await auth();
     if (!session?.user) {
       return errorResponse('ورود به سیستم الزامی است');
@@ -31,7 +32,7 @@ export async function PATCH(
     // Validate input
     const validated = ReorderBlocksSchema.parse(body.blocks);
 
-    const blocks = await reorderBlocks(params.id, validated);
+    const blocks = await reorderBlocks(id, validated);
     return successResponse(blocks, 'ترتیب بلاک‌ها با موفقیت تغییر یافت');
   } catch (error: unknown) {
     console.error('Error reordering blocks:', error);

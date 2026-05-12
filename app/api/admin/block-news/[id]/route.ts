@@ -20,9 +20,10 @@ import { auth } from '@/auth';
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await auth();
     if (!session?.user) {
       return errorResponse('ورود به سیستم الزامی است');
@@ -32,7 +33,7 @@ export async function GET(
       return errorResponse('دسترسی منحصر به مدیران است');
     }
 
-    const news = await getNews(params.id);
+    const news = await getNews(id);
     return successResponse(news);
   } catch (error: unknown) {
     console.error('Error fetching news:', error);
@@ -45,9 +46,10 @@ export async function GET(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await auth();
     if (!session?.user) {
       return errorResponse('ورود به سیستم الزامی است');
@@ -62,7 +64,7 @@ export async function PATCH(
     // Validate input
     const validated = UpdateNewsSchema.parse(body);
 
-    const news = await updateNewsMetadata(params.id, validated);
+    const news = await updateNewsMetadata(id, validated);
     return successResponse(news, 'خبر با موفقیت به‌روز شد');
   } catch (error: unknown) {
     console.error('Error updating news:', error);
@@ -82,9 +84,10 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await auth();
     if (!session?.user) {
       return errorResponse('ورود به سیستم الزامی است');
@@ -94,7 +97,7 @@ export async function DELETE(
       return errorResponse('دسترسی منحصر به مدیران است');
     }
 
-    const result = await deleteNews(params.id);
+    const result = await deleteNews(id);
     return successResponse(result);
   } catch (error: unknown) {
     console.error('Error deleting news:', error);

@@ -19,9 +19,10 @@ import { auth } from '@/auth';
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await auth();
     if (!session?.user) {
       return errorResponse('ورود به سیستم الزامی است');
@@ -31,7 +32,7 @@ export async function GET(
       return errorResponse('دسترسی منحصر به مدیران است');
     }
 
-    const news = await getNews(params.id);
+    const news = await getNews(id);
     return successResponse(news.contentBlocks);
   } catch (error: unknown) {
     console.error('Error fetching blocks:', error);
@@ -44,9 +45,10 @@ export async function GET(
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await auth();
     if (!session?.user) {
       return errorResponse('ورود به سیستم الزامی است');
@@ -61,7 +63,7 @@ export async function POST(
     // Validate input
     const validated = BlockInputSchema.parse(body);
 
-    const block = await addContentBlock(params.id, validated);
+    const block = await addContentBlock(id, validated);
     return createdResponse(block, 'بلاک با موفقیت اضافه شد');
   } catch (error: unknown) {
     console.error('Error adding block:', error);

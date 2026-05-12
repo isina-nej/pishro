@@ -18,9 +18,10 @@ import { auth } from '@/auth';
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string; blockId: string } }
+  { params }: { params: Promise<{ id: string; blockId: string }> }
 ) {
   try {
+    const { id, blockId } = await params;
     const session = await auth();
     if (!session?.user) {
       return errorResponse('ورود به سیستم الزامی است');
@@ -40,9 +41,10 @@ export async function GET(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string; blockId: string } }
+  { params }: { params: Promise<{ id: string; blockId: string }> }
 ) {
   try {
+    const { id, blockId } = await params;
     const session = await auth();
     if (!session?.user) {
       return errorResponse('ورود به سیستم الزامی است');
@@ -54,7 +56,7 @@ export async function PATCH(
 
     const body = (await req.json()) as ContentBlockUpdateRequest;
 
-    const block = await updateContentBlock(params.id, params.blockId, body);
+    const block = await updateContentBlock(id, blockId, body);
     return successResponse(block, 'بلاک با موفقیت به‌روز شد');
   } catch (error: unknown) {
     console.error('Error updating block:', error);
@@ -69,9 +71,10 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string; blockId: string } }
+  { params }: { params: Promise<{ id: string; blockId: string }> }
 ) {
   try {
+    const { id, blockId } = await params;
     const session = await auth();
     if (!session?.user) {
       return errorResponse('ورود به سیستم الزامی است');
@@ -81,7 +84,7 @@ export async function DELETE(
       return errorResponse('دسترسی منحصر به مدیران است');
     }
 
-    const result = await deleteContentBlock(params.id, params.blockId);
+    const result = await deleteContentBlock(id, blockId);
     return successResponse(result);
   } catch (error: unknown) {
     console.error('Error deleting block:', error);
