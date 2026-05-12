@@ -137,7 +137,7 @@ export async function updateNewsMetadata(
     title?: string;
     slug?: string;
     description?: string;
-    categoryId?: string;
+    categoryId?: string | null;
     thumbnail?: string;
   }
 ) {
