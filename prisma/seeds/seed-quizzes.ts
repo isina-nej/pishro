@@ -86,7 +86,7 @@ export async function seedQuizzes() {
           ) {
             const numOptions = generator.randomInt(3, 5);
             const correctIndex = generator.randomInt(0, numOptions);
-            const options = [];
+            const options: any[] = [];
 
             for (let o = 0; o < numOptions; o++) {
               options.push({

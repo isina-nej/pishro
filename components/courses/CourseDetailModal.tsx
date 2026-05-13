@@ -108,7 +108,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
       try {
         await navigator.share({
           title: course.subject,
-          text: course.description,
+          text: course.description ?? undefined,
           url: window.location.href,
         });
       } catch (err) {

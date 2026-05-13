@@ -219,7 +219,6 @@ export async function seedBooks() {
             generator.randomInt(0, 10) > 6
               ? audioPath
               : null,
-          tagIds: bookTags.map((t) => t.id),
         },
       });
 

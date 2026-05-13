@@ -22,7 +22,7 @@ export const bookKeys = {
 export function useBooksList(params?: BookListParams) {
   return useQuery<PaginatedData<DigitalBook>>({
     queryKey: bookKeys.list(params),
-    queryFn: () => getBooks(params),
+    queryFn: () => getBooks(params) as any as Promise<PaginatedData<DigitalBook>>,
     staleTime: 10 * 60 * 1000, // 10 دقیقه fresh - کتاب‌ها کمتر تغییر می‌کنند
     gcTime: 30 * 60 * 1000, // 30 دقیقه در cache
     retry: 2, // دوبار retry در صورت خطا
@@ -36,7 +36,7 @@ export function useBooksList(params?: BookListParams) {
 export function useBookDetail(id: string, enabled: boolean = true) {
   return useQuery<DigitalBook>({
     queryKey: bookKeys.detail(id),
-    queryFn: () => getBookById(id),
+    queryFn: () => getBookById(id) as any as Promise<DigitalBook>,
     staleTime: 10 * 60 * 1000, // 10 دقیقه fresh
     gcTime: 30 * 60 * 1000,
     enabled: !!id && enabled, // فقط اگر id وجود داشته باشد

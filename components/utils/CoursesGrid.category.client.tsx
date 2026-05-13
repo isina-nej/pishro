@@ -1,3 +1,4 @@
+import type { Prisma } from '@prisma/client';
 // Client Component برای نمایش دوره‌های یک دسته‌بندی با فیلتر سطح
 "use client";
 
@@ -157,7 +158,7 @@ export default function CoursesGridCategoryClient({
               transition={{ duration: 0.6, delay: idx * 0.1, ease: "easeOut" }}
               className="w-full"
             >
-              <CourseCard data={course} link={courseLink} />
+              <CourseCard data={course as any} link={courseLink} />
             </motion.div>
           );
         })}

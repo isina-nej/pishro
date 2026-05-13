@@ -112,7 +112,6 @@ export async function seedCourses() {
           students: generator.randomInt(50, 2000),
           videosCount: generator.randomInt(10, 80),
           categoryId: category.id,
-          tagIds: courseTags.map((t) => t.id),
           level: generator.choice([
             CourseLevel.BEGINNER,
             CourseLevel.INTERMEDIATE,
@@ -161,7 +160,7 @@ export async function seedCourses() {
         },
       });
 
-      if (course.createdAt.getTime() === course.updatedAt.getTime()) {
+      if ((course.createdAt?.getTime?.()) === (course.updatedAt?.getTime?.()) ) {
         created++;
       } else {
         updated++;

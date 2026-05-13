@@ -29,6 +29,8 @@ import {
 } from '@/lib/hooks/use-block-news';
 import BlockEditor from '@/components/BlockNews/BlockEditor';
 
+export const dynamic = 'force-dynamic';
+
 const STATUS_LABELS: Record<string, string> = {
   DRAFT: 'پیش‌نویس',
   PUBLISHED: 'منتشر',

@@ -11,7 +11,7 @@ export async function GET() {
     console.log("🌱 Starting courses seed with local images...");
 
     // Step 1: Create categories with INSERT OR IGNORE
-    const categoryData = [
+    const categoryData: any = [
       { slug: "stock", title: "بورس", description: "آموزش کامل معاملات و تحلیل بورس", icon: "📈", color: "#ec4899" },
       { slug: "cryptocurrency", title: "ارزهای دیجیتال", description: "آموزش جامع ارزهای دیجیتال و بلاک‌چین", icon: "🪙", color: "#6366f1" },
       { slug: "nft", title: "NFT", description: "آموزش NFT و دنیای هنر دیجیتال", icon: "🎨", color: "#f59e0b" },
@@ -121,7 +121,7 @@ export async function GET() {
       },
     ];
 
-    const createdCourses = [];
+    const createdCourses: any[] = [];
 
     for (const course of courseData) {
       try {

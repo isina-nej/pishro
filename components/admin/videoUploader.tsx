@@ -76,7 +76,7 @@ export function VideoUploader({
         fileInputRef.current.value = "";
       }
 
-      onUploadComplete?.(video);
+      onUploadComplete?.(video as Video);
     } catch (error) {
       console.error("Upload error:", error);
       onError?.(error as Error);

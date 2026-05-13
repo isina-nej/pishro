@@ -241,7 +241,7 @@ export async function getUserImages(params: {
   ]);
 
   // حالا filePath همان URL کامل است
-  const imagesWithUrls = images.map((image) => {
+  const imagesWithUrls = images.map((image: any) => {
     return {
       ...image,
       url: image.filePath, // filePath حالا URL کامل است
@@ -392,7 +392,7 @@ export async function getUserImageStats(userId: string) {
 
   return {
     total,
-    byCategory: byCategory.map((item) => ({
+    byCategory: byCategory.map((item: any) => ({
       category: item.category,
       count: item._count,
     })),

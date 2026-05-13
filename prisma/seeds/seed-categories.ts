@@ -71,7 +71,7 @@ export async function seedCategories() {
       },
     });
 
-    if (airdrop.createdAt.getTime() === airdrop.updatedAt.getTime()) {
+    if ((airdrop.createdAt?.getTime?.()) === (airdrop.updatedAt?.getTime?.()) ) {
       created++;
     } else {
       updated++;
@@ -131,7 +131,7 @@ export async function seedCategories() {
       },
     });
 
-    if (nft.createdAt.getTime() === nft.updatedAt.getTime()) {
+    if ((nft.createdAt?.getTime?.()) === (nft.updatedAt?.getTime?.()) ) {
       created++;
     } else {
       updated++;
@@ -192,7 +192,7 @@ export async function seedCategories() {
     });
 
     if (
-      cryptocurrency.createdAt.getTime() === cryptocurrency.updatedAt.getTime()
+      (cryptocurrency.createdAt?.getTime?.()) === (cryptocurrency.updatedAt?.getTime?.())
     ) {
       created++;
     } else {
@@ -252,7 +252,7 @@ export async function seedCategories() {
       },
     });
 
-    if (stockMarket.createdAt.getTime() === stockMarket.updatedAt.getTime()) {
+    if ((stockMarket.createdAt?.getTime?.()) === (stockMarket.updatedAt?.getTime?.()) ) {
       created++;
     } else {
       updated++;
@@ -312,7 +312,7 @@ export async function seedCategories() {
       },
     });
 
-    if (metaverse.createdAt.getTime() === metaverse.updatedAt.getTime()) {
+    if ((metaverse.createdAt?.getTime?.()) === (metaverse.updatedAt?.getTime?.()) ) {
       created++;
     } else {
       updated++;

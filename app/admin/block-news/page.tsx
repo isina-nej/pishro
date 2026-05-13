@@ -32,6 +32,8 @@ import {
 import { Plus, Edit2, Trash2, Eye, Send } from 'lucide-react';
 import { useBlockNewsList, useDeleteBlockNews, useChangeBlockNewsStatus } from '@/lib/hooks/use-block-news';
 
+export const dynamic = 'force-dynamic';
+
 const DRAFT = 'DRAFT';
 const PUBLISHED = 'PUBLISHED';
 const ARCHIVED = 'ARCHIVED';

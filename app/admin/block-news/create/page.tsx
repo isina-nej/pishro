@@ -17,6 +17,8 @@ import { ArrowRight } from 'lucide-react';
 import { useCreateBlockNews, useBlockNews } from '@/lib/hooks/use-block-news';
 import BlockEditor from '@/components/BlockNews/BlockEditor';
 
+export const dynamic = 'force-dynamic';
+
 export default function CreateBlockNewsPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({

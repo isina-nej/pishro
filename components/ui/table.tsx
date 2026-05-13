@@ -25,4 +25,3 @@ export const TableCell = ({ className, ...props }: React.TdHTMLAttributes<HTMLTa
   <td className={cn("px-4 py-3 text-sm text-slate-700 dark:text-textSecondary", className)} {...props} />
 );
 
-export type { ReactHTML };

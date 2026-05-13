@@ -89,11 +89,11 @@ export async function getCategoryBySlug(
     const category = categories[0];
     
     // Initialize relations with empty arrays
-    let contentData = [];
-    let tagsData = [];
-    let coursesData = [];
-    let faqsData = [];
-    let commentsData = [];
+    let contentData: any[] = [];
+    let tagsData: any[] = [];
+    let coursesData: any[] = [];
+    let faqsData: any[] = [];
+    let commentsData: any[] = [];
 
     // Try to fetch related FAQs (this table exists)
     try {

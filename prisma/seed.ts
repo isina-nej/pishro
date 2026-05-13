@@ -300,7 +300,7 @@ async function main(): Promise<void> {
   // 🏷️ Insert Tags
   // ==============================================
   console.log("🏷️  Creating tags...");
-  const createdTags = [];
+  const createdTags: any[] = [];
   for (const tag of tags) {
     const created = await prisma.tag.create({
       data: tag,
@@ -318,7 +318,6 @@ async function main(): Promise<void> {
     const created = await prisma.category.create({
       data: {
         ...category,
-        tagIds: createdTags.slice(0, 3).map((t) => t.id),
       },
     });
     createdCategories[category.slug] = created;
@@ -331,7 +330,7 @@ async function main(): Promise<void> {
   // 📚 Insert Courses
   // ==============================================
   console.log("📚 Creating courses...");
-  const createdCourses = [];
+  const createdCourses: any[] = [];
   for (const course of courses) {
     // Find appropriate category
     let categoryId: string | null = null;
@@ -349,7 +348,6 @@ async function main(): Promise<void> {
       data: {
         ...course,
         categoryId,
-        tagIds: createdTags.slice(0, 5).map((t) => t.id),
       },
     });
     createdCourses.push(created);
@@ -405,7 +403,6 @@ async function main(): Promise<void> {
         audioUrl: book.formats.includes("صوتی")
           ? "https://example.com/audio.mp3"
           : null,
-        tagIds: createdTags.slice(0, 3).map((t) => t.id),
       },
     });
   }
@@ -420,7 +417,6 @@ async function main(): Promise<void> {
       data: {
         ...article,
         categoryId: createdCategories["cryptocurrency"].id,
-        tagIds: createdTags.slice(0, 3).map((t) => t.id),
       },
     });
 

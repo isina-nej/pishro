@@ -12,7 +12,7 @@ async function safeCount(name: string, fn: () => Promise<number>){
     const c = await fn();
     console.log(name+':', c);
     return c;
-  } catch(e){ console.error(name+' -> ERROR', e && e.message); return null }
+  } catch(e){ console.error(name+' -> ERROR', e && (e as any).message); return null }
 }
 
 async function main(){
@@ -21,7 +21,7 @@ async function main(){
   const pc = await prisma.pageContent.findMany({ take: 5 })
 
   console.log('businessConsulting sample:', bc.length ? bc[0] : null)
-  console.log('homeLanding sample:', hl.length ? hl[0].title : null)
+  console.log('homeLanding sample:', hl.length ? hl[0].heroTitle : null)
   console.log('pageContent sample count:', pc.length)
 
   await safeCount('businessConsulting', ()=>prisma.businessConsulting.count())

@@ -22,7 +22,7 @@ export const newsKeys = {
 export function useNewsList(params?: NewsListParams) {
   return useQuery<PaginatedData<NewsArticle>>({
     queryKey: newsKeys.list(params),
-    queryFn: () => getNews(params),
+    queryFn: () => getNews(params) as any as Promise<PaginatedData<NewsArticle>>,
     staleTime: 5 * 60 * 1000, // 5 دقیقه fresh - اخبار ممکن است بیشتر به‌روز شوند
     gcTime: 30 * 60 * 1000, // 30 دقیقه در cache
     retry: 2, // دوبار retry در صورت خطا
@@ -36,7 +36,7 @@ export function useNewsList(params?: NewsListParams) {
 export function useNewsDetail(id: string, enabled: boolean = true) {
   return useQuery<NewsArticle>({
     queryKey: newsKeys.detail(id),
-    queryFn: () => getNewsById(id),
+    queryFn: () => getNewsById(id) as any as Promise<NewsArticle>,
     staleTime: 10 * 60 * 1000, // 10 دقیقه fresh
     gcTime: 30 * 60 * 1000,
     enabled: !!id && enabled, // فقط اگر id وجود داشته باشد

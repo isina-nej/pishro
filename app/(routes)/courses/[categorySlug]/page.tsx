@@ -1,3 +1,4 @@
+import { toStr } from '@/lib/utils';
 /**
  * Dynamic Category Page with ISR
  * Route: /courses/[categorySlug]
@@ -61,7 +62,7 @@ export async function generateMetadata({
     return {
       title: category.metaTitle || category.title,
       description: category.metaDescription || category.description,
-      keywords: category.metaKeywords,
+      keywords: category.metaKeywords as string | string[] | undefined,
       openGraph: {
         title: category.metaTitle || category.title,
         description:

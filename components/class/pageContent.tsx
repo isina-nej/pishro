@@ -33,12 +33,12 @@ const ClassPageContent: React.FC<ClassPageContentProps> = ({
         <div className="flex-1 w-full min-w-4xl">
           {selectedLesson ? (
             <VideoPlayer
-              videoId={selectedLesson.videoId}
+              videoId={selectedLesson.videoId as string | null}
               label={selectedLesson.title}
               description={selectedLesson.description}
               duration={selectedLesson.duration}
               views={selectedLesson.views}
-              createdAt={selectedLesson.createdAt}
+              createdAt={selectedLesson.createdAt as Date | undefined}
               thumbnail={selectedLesson.thumbnail}
             />
           ) : (

@@ -100,7 +100,6 @@ export async function seedNews() {
             : null,
           views: generator.randomInt(0, 10000),
           categoryId: category.id,
-          tagIds: articleTags.map((t) => t.id),
           featured: generator.randomInt(0, 10) > 7,
           readingTime: generator.choice([3, 5, 7, 10, 15]),
           likes: generator.randomInt(0, 500),

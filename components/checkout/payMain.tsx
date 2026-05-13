@@ -41,7 +41,7 @@ const PayMain = () => {
           off,
           lastPrice,
           date:
-            "createdAt" in item
+            "createdAt" in item && item.createdAt
               ? new Date(item.createdAt).toLocaleDateString("fa-IR")
               : new Date().toLocaleDateString("fa-IR"),
         };

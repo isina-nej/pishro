@@ -39,7 +39,13 @@ const NewsList = () => {
   return (
     <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-x-[16px] xl:gap-x-[32px] gap-y-[12px] xl:gap-y-[20px]">
       {data.items.map((newsItem) => (
-        <NewsCard key={newsItem.id} data={newsItem} />
+        <NewsCard key={newsItem.id} data={{
+          ...newsItem,
+          coverImage: newsItem.coverImage ?? null,
+          author: newsItem.author ?? null,
+          publishedAt: newsItem.publishedAt ?? null,
+          createdAt: newsItem.createdAt ?? new Date(),
+        } as any} />
       ))}
     </div>
   );

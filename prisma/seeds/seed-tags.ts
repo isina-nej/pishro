@@ -295,7 +295,7 @@ export async function seedTags() {
         },
       });
 
-      if (result.createdAt.getTime() === result.updatedAt.getTime()) {
+      if ((result.createdAt?.getTime?.()) === (result.updatedAt?.getTime?.()) ) {
         created++;
       } else {
         updated++;

@@ -36,7 +36,7 @@ export async function GET() {
     ];
 
     // Create or update categories
-    const categories = [];
+    const categories: any[] = [];
     for (const cat of categoryData) {
       try {
         const created = await prisma.category.upsert({
@@ -62,7 +62,7 @@ export async function GET() {
     }
 
     // Course data with images
-    const courseData = [
+    const courseData: any = [
       {
         subject: "آموزش کامل بورس برای مبتدیان",
         price: 299000,
@@ -141,7 +141,7 @@ export async function GET() {
     ];
 
     // Create or update courses
-    const courses = [];
+    const courses: any[] = [];
     for (const course of courseData) {
       if (!categories || categories.length === 0) {
         console.error("No categories available");

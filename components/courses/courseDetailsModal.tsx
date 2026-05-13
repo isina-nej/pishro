@@ -92,7 +92,7 @@ export const CourseDetailsModal = ({
       try {
         await navigator.share({
           title: course.subject,
-          text: course.description,
+          text: course.description ?? undefined,
           url: window.location.href,
         });
       } catch (err) {

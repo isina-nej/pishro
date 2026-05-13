@@ -128,10 +128,10 @@ export async function getAllCourseSlugs() {
 
     return courses
       .filter(
-        (course) =>
+        (course: any) =>
           course.slug && course.category?.slug && course.category?.published
       )
-      .map((course) => ({
+      .map((course: any) => ({
         categorySlug: course.category!.slug,
         courseSlug: course.slug!,
       }));

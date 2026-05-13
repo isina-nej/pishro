@@ -1,0 +1,351 @@
+
+> pishro@0.1.0 lint
+> next lint
+
+`next lint` is deprecated and will be removed in Next.js 16.
+For new projects, use create-next-app to choose your preferred linter.
+For existing projects, migrate to the ESLint CLI:
+npx @next/codemod@canary next-lint-to-eslint-cli .
+
+
+./app/(routes)/courses/[categorySlug]/[courseSlug]/page.tsx
+71:43  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+295:56  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+315:58  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/(routes)/courses/[categorySlug]/page.tsx
+318:42  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/(routes)/courses/page.tsx
+65:26  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+66:23  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+70:25  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/(routes)/profile/orders/[orderId]/page.tsx
+35:20  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+42:17  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/admin/block-news/[id]/edit/page.tsx
+138:67  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+138:74  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+238:33  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/admin/block-news/create/page.tsx
+17:30  Error: 'useBlockNews' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+18:8  Error: 'BlockEditor' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/admin/block-news/page.tsx
+32:31  Error: 'Eye' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+52:9  Error: 'router' is assigned a value but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+54:17  Error: 'setLimit' is assigned a value but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/api/admin/block-news/[id]/blocks/[blockId]/route.ts
+15:10  Error: 'BlockInputSchema' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+24:13  Error: 'id' is assigned a value but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+24:17  Error: 'blockId' is assigned a value but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/api/admin/block-news/[id]/blocks/route.ts
+9:3  Error: 'validationError' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/api/admin/block-news/route.ts
+7:3  Error: 'successResponse' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+18:15  Error: 'NewsListResponse' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+18:52  Error: 'NewsDetailResponse' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/api/admin/books/finalize-pdf-upload/route.ts
+51:11  Error: 'session' is assigned a value but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/api/admin/books/upload-audio/route.ts
+58:11  Error: 'session' is assigned a value but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/api/admin/books/upload-cover/route.ts
+50:11  Error: 'session' is assigned a value but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/api/admin/books/upload-pdf/route.ts
+56:11  Error: 'session' is assigned a value but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/api/admin/books/upload-pdf-chunk/route.ts
+50:11  Error: 'session' is assigned a value but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/api/admin/dashboard/devices/route.ts
+7:23  Error: 'NextResponse' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/api/admin/dashboard/payments/monthly/route.ts
+7:23  Error: 'NextResponse' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/api/admin/dashboard/payments/route.ts
+17:11  Error: 'session' is assigned a value but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/api/admin/dashboard/profit/route.ts
+17:11  Error: 'session' is assigned a value but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/api/admin/dashboard/profit/weekly/route.ts
+7:23  Error: 'NextResponse' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/api/admin/dashboard/stats/route.ts
+7:23  Error: 'NextResponse' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/api/admin/investment-models/[id]/route.ts
+20:3  Error: 'noContentResponse' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/api/admin/investment-models/route.ts
+7:10  Error: 'NextRequest' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+12:3  Error: 'errorResponse' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+13:3  Error: 'createdResponse' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+14:3  Error: 'ErrorCodes' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+15:3  Error: 'validationError' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/api/admin/seed/quizzes/route.ts
+441:11  Error: 'session' is assigned a value but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/api/admin/skyroom-classes/[id]/route.ts
+13:3  Error: 'validationError' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/api/auth/forgot-password/request/route.ts
+30:31  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+46:30  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/auth/login/route.ts
+63:33  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/auth/login-debug/route.ts
+43:33  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+98:19  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/auth/signup/route.ts
+37:31  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+55:30  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+76:35  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/books/route.ts
+10:3  Error: 'successResponse' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+70:9  Error: 'orderBy' is assigned a value but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/api/cart/route.ts
+39:54  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/checkout/route.ts
+46:56  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+57:32  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+61:40  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/courses/[courseId]/lessons/route.ts
+39:46  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+63:46  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+75:52  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/courses/like/route.ts
+23:34  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/courses/save/route.ts
+23:34  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/debug/books/route.ts
+20:28  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/debug/category-columns/route.ts
+7:36  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+17:19  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/debug/check-admin/route.ts
+36:19  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/debug/check-courses/route.ts
+7:33  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/debug/courses-data/route.ts
+54:26  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+55:23  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+59:25  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+170:19  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/debug/db-status/route.ts
+6:36  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+10:33  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+14:42  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+18:39  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+34:19  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/debug/find-admin/route.ts
+6:33  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+28:19  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/debug/fix-images/route.ts
+44:33  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+56:19  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/debug/seed-courses/route.ts
+166:34  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+181:34  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/debug/seed-test/route.ts
+25:38  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+43:21  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+135:38  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+168:21  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+186:19  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/debug/test-db/route.ts
+19:19  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/library/route.ts
+72:7  Error: 'status' is assigned a value but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+73:7  Error: 'tags' is assigned a value but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+74:7  Error: 'readingTime' is assigned a value but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./app/api/newsletter/subscribe/route.ts
+25:24  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/orders/[id]/route.ts
+37:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+44:19  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+59:40  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/otp/send/route.ts
+33:30  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/otp/verify/route.ts
+25:30  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+43:35  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+58:39  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/payment/verify/route.ts
+92:30  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+93:32  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+124:30  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+125:31  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/user/enrolled-courses/route.ts
+59:63  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/user/orders/route.ts
+42:32  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+49:26  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+54:23  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+67:44  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/user/transactions/route.ts
+51:66  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./app/api/video/token/route.ts
+4:10  Error: 'prisma' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+71:39  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./components/BlockNews/BlockEditor.tsx
+43:3  Error: 'newsId' is defined but never used. Allowed unused args must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./components/BlockNews/BlockItem.tsx
+16:32  Error: 'ChevronDown' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+16:45  Error: 'ChevronUp' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./components/courses/CourseDetailModal.tsx
+6:10  Error: 'X' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+114:16  Error: 'err' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./components/courses/courseDetailsModal.tsx
+3:27  Error: 'useEffect' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./components/navbar/NavbarDesktop.tsx
+3:17  Error: 'useMemo' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./components/ui/alert.tsx
+4:18  Error: An interface declaring no members is equivalent to its supertype.  @typescript-eslint/no-empty-object-type
+5:18  Error: An interface declaring no members is equivalent to its supertype.  @typescript-eslint/no-empty-object-type
+
+./components/ui/card.tsx
+4:18  Error: An interface declaring no members is equivalent to its supertype.  @typescript-eslint/no-empty-object-type
+
+./components/ui/tabs.tsx
+4:18  Error: An interface declaring no members is equivalent to its supertype.  @typescript-eslint/no-empty-object-type
+5:18  Error: An interface declaring no members is equivalent to its supertype.  @typescript-eslint/no-empty-object-type
+
+./components/utils/CoursesSec.server.tsx
+8:36  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+23:48  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./components/utils/courseCard.tsx
+26:29  Error: 'link' is defined but never used. Allowed unused args must match /^_/u.  @typescript-eslint/no-unused-vars
+110:40  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./lib/contexts/LoadingContext.tsx
+19:9  Error: 'router' is assigned a value but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+23:11  Error: 'handleComplete' is assigned a value but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./lib/db.ts
+21:54  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+36:57  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+49:53  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+55:28  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+56:32  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./lib/prisma.ts
+17:26  Error: 'args' is defined but never used. Allowed unused args must match /^_/u.  @typescript-eslint/no-unused-vars
+17:32  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+34:44  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./lib/services/category-service.ts
+80:39  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+92:9  Error: 'contentData' is never reassigned. Use 'const' instead.  prefer-const
+93:9  Error: 'tagsData' is never reassigned. Use 'const' instead.  prefer-const
+94:9  Error: 'coursesData' is never reassigned. Use 'const' instead.  prefer-const
+96:9  Error: 'commentsData' is never reassigned. Use 'const' instead.  prefer-const
+100:33  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+112:16  Error: 'e' is defined but never used.  @typescript-eslint/no-unused-vars
+122:16  Error: 'e' is defined but never used.  @typescript-eslint/no-unused-vars
+132:16  Error: 'e' is defined but never used.  @typescript-eslint/no-unused-vars
+159:39  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+182:33  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./lib/services/comment-service.ts
+36:19  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+132:45  Error: 'commentId' is defined but never used. Allowed unused args must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./lib/services/investment-models-mysql.ts
+12:14  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+13:14  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+19:14  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./lib/services/investment-models-service.ts
+41:19  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+57:31  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+103:19  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+163:32  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./lib/services/landing-service.ts
+14:42  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+26:34  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+38:35  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+51:19  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+60:36  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+72:40  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+79:40  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+84:40  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+89:41  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+94:33  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+115:35  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+129:35  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+136:34  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+141:33  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./lib/services/library-mysql.ts
+46:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./lib/services/news-mysql.ts
+38:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./lib/services/skyroom-mysql.ts
+85:19  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./lib/services/skyroom-service.ts
+9:15  Error: 'SkyRoomClass' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./lib/types/block-news.ts
+5:15  Error: 'News' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+5:21  Error: 'ContentBlock' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
+./lib/types/db.ts
+168:10  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+232:12  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+312:12  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules

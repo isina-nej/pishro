@@ -47,7 +47,6 @@ if (!session?.user) {
 
     if (search) {
       where.OR = [
-        { title: { contains: search } },
         { subject: { contains: search } },
         { description: { contains: search } },
         { slug: { contains: search } },

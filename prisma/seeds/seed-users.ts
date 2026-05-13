@@ -42,7 +42,7 @@ export async function seedUsers() {
       }
     });
 
-    if (admin.createdAt.getTime() === admin.updatedAt.getTime()) {
+    if ((admin.createdAt?.getTime?.()) === (admin.updatedAt?.getTime?.()) ) {
       created++;
     } else {
       updated++;
@@ -75,7 +75,7 @@ export async function seedUsers() {
         }
       });
 
-      if (user.createdAt.getTime() === user.updatedAt.getTime()) {
+      if ((user.createdAt?.getTime?.()) === (user.updatedAt?.getTime?.()) ) {
         created++;
       } else {
         updated++;

@@ -21,7 +21,7 @@ export default function AddToCartButton({ course }: AddToCartButtonProps) {
       return;
     }
 
-    addToCart(course);
+    addToCart(course as any);
     toast.success(`«${course.subject}» به سبد خرید اضافه شد 🛒`);
   };
 

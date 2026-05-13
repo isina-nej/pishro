@@ -123,7 +123,10 @@ const NewsPageContent = () => {
             {filteredNews.length > 0 ? (
               <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-x-[16px] xl:gap-x-[32px] gap-y-[20px] xl:gap-y-[40px]">
                 {filteredNews.map((newsItem) => (
-                  <NewsCard key={newsItem.id} data={newsItem} />
+                  <NewsCard key={newsItem.id} data={{
+                    ...newsItem,
+                    tags: (Array.isArray(newsItem.tags) ? newsItem.tags : []) as string[],
+                  } as any} />
                 ))}
               </div>
             ) : (
