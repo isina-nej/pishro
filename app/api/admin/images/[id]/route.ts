@@ -6,6 +6,7 @@
  */
 
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import {
   errorResponse,
   successResponse,
@@ -18,7 +19,7 @@ import {
   deleteImage,
   updateImage
 } from "@/lib/services/image-service";
-import { ImageCategory } from "@/types/prisma";
+import { ImageCategory } from "@prisma/client";
 
 export async function GET(
   req: NextRequest,

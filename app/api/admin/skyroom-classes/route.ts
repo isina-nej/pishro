@@ -1,5 +1,6 @@
 // @/app/api/admin/skyroom-classes/route.ts
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import {
   getAllSkyRoomClassesForAdmin,
   createSkyRoomClass

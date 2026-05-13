@@ -4,7 +4,8 @@
  */
 
 import { NextRequest } from "next/server";
-import { Prisma } from "@/types/prisma";
+import { auth } from "@/auth";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import {
   errorResponse,
@@ -38,7 +39,7 @@ if (!session?.user) {
     const where: Prisma.NewsCommentWhereInput = {};
 
     if (search) {
-      where.content = { contains: search, mode: "insensitive" };
+      where.content = { contains: search };
     }
 
     if (articleId) {

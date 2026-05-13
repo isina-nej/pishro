@@ -1,5 +1,5 @@
 // app/api/newsletter/subscribe/route.ts
-import { PrismaClient, Prisma } from "@/types/prisma";
+import { PrismaClient, Prisma } from "@prisma/client";
 import {
   successResponse,
   validationError,
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
   try {
     const sub = await prisma.newsletterSubscriber.create({ data: { phone } });
     return successResponse(
-      { subId: sub.id },
+      { subId: (sub as any)?.id || null },
       "با موفقیت در خبرنامه مشترک شدید"
     );
   } catch (err) {

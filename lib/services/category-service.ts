@@ -6,7 +6,7 @@
 
 import * as db from "@/lib/db";
 import { prisma } from "@/lib/prisma";
-import { Prisma, PageContentType, CourseLevel } from "@/types/prisma";
+import { Prisma, PageContentType, CourseLevel } from "@prisma/client";
 
 /**
  * Type for category with full relations

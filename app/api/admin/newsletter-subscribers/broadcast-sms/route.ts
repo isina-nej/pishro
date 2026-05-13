@@ -4,6 +4,7 @@
  */
 
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { sendBulkSmsMelipayamak } from "@/lib/sms";
 import {
@@ -48,7 +49,7 @@ if (!session?.user) {
       select: {
         phone: true
       }
-    });
+    }) as Array<{ phone: string }>;
 
     if (subscribers.length === 0) {
       return errorResponse(
@@ -58,7 +59,7 @@ if (!session?.user) {
     }
 
     // Extract phone numbers
-    const phones = subscribers.map(s => s.phone);
+    const phones = subscribers.map((s: { phone: string }) => s.phone);
 
     // Send SMS to all subscribers using bulk sending
     // batchSize = 50 means 50 phones per API call

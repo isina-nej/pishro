@@ -36,7 +36,7 @@ export async function GET() {
     });
 
     // Calculate total
-    const total = orders.reduce((sum, order) => sum + order.total, 0);
+    const total = orders.reduce((sum: number, order: any) => sum + order.total, 0);
 
     return successResponse({
       orders,

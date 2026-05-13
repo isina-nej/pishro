@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import type { Lesson } from "@/types/prisma";
+import type { Lesson } from "@prisma/client";
 
 /**
  * دریافت تمام کلاس‌های یک دوره

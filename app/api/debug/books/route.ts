@@ -17,7 +17,7 @@ export async function GET(_req: NextRequest) {
 
     return Response.json({
       count: books.length,
-      books: books.map(b => ({
+      books: books.map((b: any) => ({
         id: b.id,
         title: b.title,
         slug: b.slug,

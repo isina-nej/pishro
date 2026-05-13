@@ -5,7 +5,7 @@
  */
 
 import { NextRequest } from "next/server";
-import { CourseLevel } from "@/types/prisma";
+import { CourseLevel } from "@prisma/client";
 import {
   successResponse,
   errorResponse,

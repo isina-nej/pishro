@@ -26,7 +26,7 @@ import {
 } from "@/lib/services/course.server";
 import RatingStars from "@/components/utils/RatingStars";
 import AddToCartButton from "@/components/utils/AddToCartButton";
-import { CourseLevel } from "@/types/prisma";
+import { CourseLevel } from "@prisma/client";
 import CtaSection from "@/components/courses/ctaSection";
 import DoctorExplanationVideo from "@/components/courses/doctorExplanationVideo";
 

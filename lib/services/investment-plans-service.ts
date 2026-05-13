@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import type { Prisma } from "@/types/prisma";
+import type { Prisma } from "@prisma/client";
 
 /**
  * دریافت تمام صفحات سبدهای سرمایه‌ گذاری منتشر شده

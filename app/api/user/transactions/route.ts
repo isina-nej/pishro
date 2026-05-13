@@ -7,7 +7,7 @@ import {
   errorResponse,
   ErrorCodes,
 } from "@/lib/api-response";
-import { Prisma, TransactionType, TransactionStatus } from "@/types/prisma";
+import { Prisma, TransactionType, TransactionStatus } from "@prisma/client";
 
 // ✅ Get user's transactions
 export async function GET(req: Request) {
@@ -48,7 +48,7 @@ export async function GET(req: Request) {
       prisma.transaction.count({ where }),
     ]);
 
-    const formattedTransactions = transactions.map((transaction) => ({
+    const formattedTransactions = transactions.map((transaction: any) => ({
       id: transaction.id,
       amount: transaction.amount,
       type: transaction.type,

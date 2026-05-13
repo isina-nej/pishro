@@ -5,6 +5,7 @@
  */
 
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import { revalidatePath, revalidateTag } from "next/cache";
 import {
   successResponse,

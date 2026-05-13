@@ -191,7 +191,7 @@ export default function BlockItem({
               placeholder="عنوان را وارد کنید..."
             />
             <select
-              value={(editContent as Record<string, unknown>).level || 'h2'}
+              value={String((editContent as Record<string, unknown>).level || 'h2')}
               onChange={(e) =>
                 setEditContent({ ...editContent, level: e.target.value })
               }
@@ -237,7 +237,7 @@ export default function BlockItem({
         {block.type === 'LIST' && (
           <>
             <select
-              value={(editContent as Record<string, unknown>).style || 'unordered'}
+              value={String((editContent as Record<string, unknown>).style || 'unordered')}
               onChange={(e) =>
                 setEditContent({ ...editContent, style: e.target.value })
               }

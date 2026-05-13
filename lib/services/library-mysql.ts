@@ -118,3 +118,47 @@ export async function getBookBySlug(slug: string) {
     return null;
   }
 }
+
+export async function createBook(data: Partial<DigitalBook> & { title: string; slug: string; author: string; year: number }) {
+  try {
+    const id = `book_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const now = new Date().toISOString();
+
+    const sql = `INSERT INTO DigitalBook (
+      id, title, slug, author, description, cover, publisher, year, pages, isbn, 
+      language, rating, votes, views, downloads, category, formats, isFeatured, price,
+      fileUrl, audioUrl, createdAt, updatedAt
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+    await query(sql, [
+      id,
+      data.title,
+      data.slug,
+      data.author,
+      data.description || null,
+      data.cover || null,
+      data.publisher || null,
+      data.year,
+      data.pages || null,
+      data.isbn || null,
+      data.language || 'فارسی',
+      0, // rating
+      0, // votes
+      0, // views
+      0, // downloads
+      data.category || null,
+      data.formats ? JSON.stringify(data.formats) : '[]',
+      data.isFeatured ? 1 : 0,
+      data.price || null,
+      data.fileUrl || null,
+      data.audioUrl || null,
+      now,
+      now
+    ]);
+
+    return { id, ...data, rating: 0, votes: 0, views: 0, downloads: 0, createdAt: now, updatedAt: now };
+  } catch (error) {
+    console.error("Error creating book:", error);
+    throw error;
+  }
+}

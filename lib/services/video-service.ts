@@ -4,7 +4,7 @@ import type {
   Video,
   VideoProcessingStatus,
   Prisma,
-} from "@/types/prisma";
+} from "@prisma/client";
 import type {
   CreateVideoInput,
   UpdateVideoInput,
@@ -180,8 +180,8 @@ export async function getVideos(
 
     if (search) {
       where.OR = [
-        { title: { contains: search, mode: "insensitive" } },
-        { description: { contains: search, mode: "insensitive" } },
+        { title: { contains: search } },
+        { description: { contains: search } },
       ];
     }
 

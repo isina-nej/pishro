@@ -1,5 +1,6 @@
 // @/app/api/admin/videos/upload-url/route.ts
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import {
   successResponse,
   errorResponse,

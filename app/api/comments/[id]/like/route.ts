@@ -37,13 +37,13 @@ export async function POST(
 
     if (hasLiked) {
       // Remove like
-      updatedLikes = userLikes.filter((id) => id !== session.user.id);
+      updatedLikes = userLikes.filter((id: string) => id !== session.user.id);
     } else {
       // Add like
       updatedLikes = [...userLikes, session.user.id];
       // Remove dislike if exists
       if (hasDisliked) {
-        updatedDislikes = userDislikes.filter((id) => id !== session.user.id);
+        updatedDislikes = userDislikes.filter((id: string) => id !== session.user.id);
       }
     }
 

@@ -6,7 +6,7 @@
  */
 
 import { prisma } from "@/lib/prisma";
-import { SiteSettings } from "@/types/prisma";
+import { SiteSettings } from "@prisma/client";
 
 /**
  * Type for updateable settings fields

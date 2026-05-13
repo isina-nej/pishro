@@ -4,6 +4,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -72,14 +73,13 @@ model Course {
   category   Category? @relation("CategoryCourses", fields: [categoryId], references: [id], onDelete: SetNull)
   categoryId String?  
 
-  relatedTags Tag[]    @relation("CourseTags", fields: [tagIds], references: [id])
-  tagIds      String[]
+  tags CourseTags[] @relation("CourseTags")
 
   slug          String?      @unique
   level         CourseLevel?
   language      Language     @default(FA)
-  prerequisites String[]     @default([])
-  learningGoals String[]     @default([])
+  prerequisites Json         @default("[]")
+  learningGoals Json         @default("[]")
   instructor    String?
   status        CourseStatus @default(ACTIVE)
   published     Boolean      @default(true)
@@ -120,8 +120,8 @@ model Comment {
   categoryId String?  
 
   // Engagement
-  likes    String[] @default([])
-  dislikes String[] @default([])
+  likes    Json @default("[]")
+  dislikes Json @default("[]")
 
   // Status & Visibility
   published Boolean @default(false)
@@ -242,7 +242,7 @@ model NewsArticle {
   coverImage  String?
   author      String?
   category    String
-  tags        String[]
+  tags        Json      @default("[]")
   published   Boolean   @default(false)
   publishedAt DateTime?
   views       Int       @default(0)
@@ -250,8 +250,7 @@ model NewsArticle {
   relatedCategory Category? @relation("CategoryNews", fields: [categoryId], references: [id], onDelete: SetNull)
   categoryId      String?  
 
-  relatedTags Tag[]    @relation("NewsTags", fields: [tagIds], references: [id])
-  tagIds      String[]
+  relatedTags NewsArticleTags[] @relation("NewsTags")
 
   featured    Boolean @default(false)
   readingTime Int?
@@ -277,7 +276,7 @@ model NewsComment {
   user      User?       @relation(fields: [userId], references: [id], name: "UserNewsComments", onDelete: SetNull)
   userId    String?    
   content   String
-  likes     String[]    @default([])
+  likes     Json        @default("[]")
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
 }
@@ -346,17 +345,16 @@ model DigitalBook {
   views       Int      @default(0)
   downloads   Int      @default(0)
   category    String
-  formats     String[]
-  status      String[] @default([])
-  tags        String[] @default([])
+  formats     Json     @default("[]")
+  status      Json     @default("[]")
+  tags        Json     @default("[]")
   readingTime String?
   isFeatured  Boolean  @default(false)
   price       Int?
   fileUrl     String?
   audioUrl    String?
 
-  relatedTags Tag[]    @relation("BookTags", fields: [tagIds], references: [id])
-  tagIds      String[]
+  relatedTags DigitalBookTags[] @relation("BookTags")
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
@@ -373,7 +371,7 @@ model Category {
 
   metaTitle       String?
   metaDescription String?
-  metaKeywords    String[] @default([])
+  metaKeywords    Json    @default("[]")
 
   // Hero/Landing section data
   heroTitle       String?
@@ -406,8 +404,7 @@ model Category {
   featured  Boolean @default(false)
   order     Int     @default(0)
 
-  tags   Tag[]    @relation("CategoryTags", fields: [tagIds], references: [id])
-  tagIds String[]
+  tags CategoryTags[] @relation("CategoryTags")
 
   courses  Course[]      @relation("CategoryCourses")
   content  PageContent[] @relation("CategoryContent")
@@ -432,17 +429,10 @@ model Tag {
   icon        String?
   published   Boolean? @default(false)
 
-  categories  Category[] @relation("CategoryTags", fields: [categoryIds], references: [id])
-  categoryIds String[]  
-
-  courses   Course[] @relation("CourseTags", fields: [courseIds], references: [id])
-  courseIds String[]
-
-  news    NewsArticle[] @relation("NewsTags", fields: [newsIds], references: [id])
-  newsIds String[]     
-
-  books   DigitalBook[] @relation("BookTags", fields: [bookIds], references: [id])
-  bookIds String[]     
+  categories CategoryTags[] @relation("CategoryTags")
+  courses    CourseTags[]   @relation("CourseTags")
+  news       NewsArticleTags[] @relation("NewsTags")
+  books      DigitalBookTags[] @relation("BookTags")
 
   usageCount Int @default(0)
   clicks     Int @default(0)
@@ -455,6 +445,54 @@ model Tag {
 
   @@index([usageCount])
 }
+
+// ===================== JUNCTION TABLES FOR MANY-TO-MANY RELATIONSHIPS =====================
+
+model CourseTags {
+  course   Course @relation("CourseTags", fields: [courseId], references: [id], onDelete: Cascade)
+  courseId String
+  tag      Tag    @relation("CourseTags", fields: [tagId], references: [id], onDelete: Cascade)
+  tagId    String
+
+  @@id([courseId, tagId])
+  @@index([courseId])
+  @@index([tagId])
+}
+
+model NewsArticleTags {
+  newsArticle   NewsArticle @relation("NewsTags", fields: [newsArticleId], references: [id], onDelete: Cascade)
+  newsArticleId String
+  tag           Tag         @relation("NewsTags", fields: [tagId], references: [id], onDelete: Cascade)
+  tagId         String
+
+  @@id([newsArticleId, tagId])
+  @@index([newsArticleId])
+  @@index([tagId])
+}
+
+model DigitalBookTags {
+  digitalBook   DigitalBook @relation("BookTags", fields: [digitalBookId], references: [id], onDelete: Cascade)
+  digitalBookId String
+  tag           Tag         @relation("BookTags", fields: [tagId], references: [id], onDelete: Cascade)
+  tagId         String
+
+  @@id([digitalBookId, tagId])
+  @@index([digitalBookId])
+  @@index([tagId])
+}
+
+model CategoryTags {
+  category   Category @relation("CategoryTags", fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId String
+  tag        Tag      @relation("CategoryTags", fields: [tagId], references: [id], onDelete: Cascade)
+  tagId      String
+
+  @@id([categoryId, tagId])
+  @@index([categoryId])
+  @@index([tagId])
+}
+
+// ===================== END JUNCTION TABLES =====================
 
 model PageContent {
   id         String   @id @default(cuid())
@@ -701,7 +739,7 @@ model HomeLanding {
   heroCta1Link    String?
 
   // Overlay Text Sections (متن‌های اسکرولی روی ویدیو)
-  overlayTexts String[] @default([])
+  overlayTexts Json @default("[]")
 
   // Stats (آمار و ارقام)
   // مثال: [{"label": "دانشجوی موفق", "value": 3000, "suffix": "+"}, ...]
@@ -735,7 +773,7 @@ model HomeLanding {
   // Meta tags
   metaTitle       String?
   metaDescription String?
-  metaKeywords    String[] @default([])
+  metaKeywords    Json    @default("[]")
 
   published Boolean @default(true)
   order     Int     @default(0)
@@ -809,7 +847,7 @@ model AboutPage {
   // Meta
   metaTitle       String?
   metaDescription String?
-  metaKeywords    String[] @default([])
+  metaKeywords    Json    @default("[]")
 
   published Boolean @default(true)
 
@@ -849,7 +887,7 @@ model TeamMember {
   image       String?
   education   String?
   description String?
-  specialties String[] @default([])
+  specialties Json    @default("[]")
 
   // Social Links
   linkedinUrl  String?
@@ -912,7 +950,7 @@ model BusinessConsulting {
   // Meta tags
   metaTitle       String?
   metaDescription String?
-  metaKeywords    String[] @default([])
+  metaKeywords    Json    @default("[]")
 
   published Boolean @default(true)
 
@@ -947,7 +985,7 @@ model InvestmentPlans {
   // Meta tags
   metaTitle       String?
   metaDescription String?
-  metaKeywords    String[] @default([])
+  metaKeywords    Json    @default("[]")
 
   published Boolean @default(true)
 
@@ -1158,7 +1196,7 @@ model Image {
   category ImageCategory @default(OTHER) // نوع کاربرد تصویر
 
   // تگ‌ها و دسته‌بندی
-  tags String[] @default([]) // تگ‌های دلخواه
+  tags Json @default("[]") // تگ‌های دلخواه
 
   // وضعیت
   published Boolean @default(true)
@@ -1235,8 +1273,8 @@ model InvestmentModel {
   // Example: [{"icon": "Users", "title": "مشاوره حضوری", "description": "..."}]
   features Json @default("[]")
 
-  // Benefits - String array
-  benefits String[] @default([])
+  // Benefits - JSON array
+  benefits Json @default("[]")
 
   // CTA
   ctaText     String

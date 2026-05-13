@@ -1,7 +1,8 @@
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { successResponse, errorResponse } from "@/lib/api-response";
-import { QuestionType } from "@/types/prisma";
+import { QuestionType } from "@prisma/client";
 
 export const dynamic = "force-dynamic";
 

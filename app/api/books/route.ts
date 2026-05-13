@@ -4,7 +4,7 @@
  */
 
 import { NextRequest } from "next/server";
-import { Prisma } from "@/types/prisma";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import {
   successResponse,
@@ -37,10 +37,10 @@ export async function GET(req: NextRequest) {
 
     if (search) {
       where.OR = [
-        { title: { contains: search, mode: "insensitive" } },
-        { author: { contains: search, mode: "insensitive" } },
-        { description: { contains: search, mode: "insensitive" } },
-        { publisher: { contains: search, mode: "insensitive" } },
+        { title: { contains: search } },
+        { author: { contains: search } },
+        { description: { contains: search } },
+        { publisher: { contains: search } },
       ];
     }
 

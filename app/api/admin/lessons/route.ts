@@ -1,5 +1,6 @@
 // @/app/api/admin/lessons/route.ts
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import { getAllLessons, createLesson } from "@/lib/services/lesson-service";
 import {
   successResponse,

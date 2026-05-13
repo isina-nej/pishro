@@ -20,18 +20,18 @@ export async function POST(req: NextRequest) {
     const userId = "test-user-1";
 
     // Check if like already exists
-    const existing = await query(
-      `SELECT id, type FROM CourseLike WHERE userId = ? AND courseId LIMIT 1`,
+    const existing = await query<any>(
+      `SELECT id, type FROM CourseLike WHERE userId = ? AND courseId = ? LIMIT 1`,
       [userId, courseId]
     );
 
-    if (existing.length > 0) {
+    if (existing && existing.length > 0) {
       if (existing[0].type === type) {
         // Remove like/dislike
         await query(`DELETE FROM CourseLike WHERE id = ?`, [existing[0].id]);
       } else {
         // Update type
-        await query(`UPDATE CourseLike SET type = ? WHERE id`, [type, existing[0].id]);
+        await query(`UPDATE CourseLike SET type = ? WHERE id = ?`, [type, existing[0].id]);
       }
     } else {
       // Create new like/dislike

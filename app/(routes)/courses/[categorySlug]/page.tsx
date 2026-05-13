@@ -8,7 +8,7 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 // Icons are now handled in the client component
-import { PageContent } from "@/types/prisma";
+import { PageContent } from "@prisma/client";
 import {
   getCategoryBySlug,
   getAllCategorySlugs,

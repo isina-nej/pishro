@@ -1,6 +1,6 @@
 // @/lib/services/image-service.ts
 import { prisma } from "@/lib/prisma";
-import { ImageCategory } from "@/types/prisma";
+import { ImageCategory } from "@prisma/client";
 import crypto from "crypto";
 import {
   saveFileToStorage,
@@ -193,9 +193,9 @@ export async function getUserImages(params: {
     uploadedById: string;
     category?: ImageCategory;
     OR?: Array<{
-      title?: { contains: string; mode: "insensitive" };
-      description?: { contains: string; mode: "insensitive" };
-      fileName?: { contains: string; mode: "insensitive" };
+      title?: { contains: string };
+      description?: { contains: string };
+      fileName?: { contains: string };
     }>;
   } = {
     uploadedById: userId,
@@ -207,9 +207,9 @@ export async function getUserImages(params: {
 
   if (search) {
     where.OR = [
-      { title: { contains: search, mode: "insensitive" } },
-      { description: { contains: search, mode: "insensitive" } },
-      { fileName: { contains: search, mode: "insensitive" } },
+      { title: { contains: search } },
+      { description: { contains: search } },
+      { fileName: { contains: search } },
     ];
   }
 

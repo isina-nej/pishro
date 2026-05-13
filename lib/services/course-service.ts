@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Course } from "@/types/prisma";
+import type { Course } from "@prisma/client";
 import { ApiSuccessResponse } from "@/lib/api-response";
 import { getBaseUrl } from "@/lib/get-base-url";
 

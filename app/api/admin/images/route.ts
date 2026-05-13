@@ -5,6 +5,7 @@
  */
 
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import {
   errorResponse,
   paginatedResponse,
@@ -13,7 +14,7 @@ import {
   validationError
 } from "@/lib/api-response";
 import { getUserImages, uploadImage } from "@/lib/services/image-service";
-import { ImageCategory } from "@/types/prisma";
+import { ImageCategory } from "@prisma/client";
 
 export async function GET(req: NextRequest) {
   try {

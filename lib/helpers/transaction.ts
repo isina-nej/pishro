@@ -1,6 +1,6 @@
 // @/lib/helpers/transaction.ts
 import { prisma } from "@/lib/prisma";
-import { TransactionType, TransactionStatus } from "@/types/prisma";
+import { TransactionType, TransactionStatus } from "@prisma/client";
 
 interface CreateTransactionParams {
   userId: string;

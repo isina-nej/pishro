@@ -6,6 +6,7 @@
  */
 
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import { unlink } from "fs/promises";
 import { prisma } from "@/lib/prisma";
 import {

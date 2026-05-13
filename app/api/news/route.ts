@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { getNews } from "@/lib/services/news-mysql";
+import { prisma } from "@/lib/prisma";
 import {
   successResponse,
   errorResponse,

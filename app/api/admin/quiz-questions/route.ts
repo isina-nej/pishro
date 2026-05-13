@@ -5,7 +5,8 @@
  */
 
 import { NextRequest } from "next/server";
-import { Prisma } from "@/types/prisma";
+import { auth } from "@/auth";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import {
   errorResponse,
@@ -44,7 +45,7 @@ if (!session?.user) {
     }
 
     if (search) {
-      where.question = { contains: search, mode: "insensitive" };
+      where.question = { contains: search };
     }
 
     // Fetch questions

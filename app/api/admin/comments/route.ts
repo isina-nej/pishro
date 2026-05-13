@@ -5,7 +5,8 @@
  */
 
 import { NextRequest } from "next/server";
-import { Prisma } from "@/types/prisma";
+import { auth } from "@/auth";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import {
   errorResponse,
@@ -45,8 +46,8 @@ if (!session?.user) {
 
     if (search) {
       where.OR = [
-        { text: { contains: search, mode: "insensitive" } },
-        { userName: { contains: search, mode: "insensitive" } },
+        { text: { contains: search } },
+        { userName: { contains: search } },
       ];
     }
 

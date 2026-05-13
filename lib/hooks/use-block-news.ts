@@ -186,10 +186,11 @@ export function useUpdateBlockNewsBlock(newsId: string, blockId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: ContentBlockUpdateRequest) => {
+    mutationFn: async (data: ContentBlockUpdateRequest & { blockId?: string }) => {
+      const actualBlockId = blockId || data.blockId || '';
       const response = await api.patch<ContentBlockResponse>(
-        `/admin/block-news/${newsId}/blocks/${blockId}`,
-        data
+        `/admin/block-news/${newsId}/blocks/${actualBlockId}`,
+        { content: data.content }
       );
       return response.data;
     },

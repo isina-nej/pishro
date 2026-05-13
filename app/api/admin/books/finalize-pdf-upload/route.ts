@@ -4,6 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/auth";
 import { readFile, rm, mkdir } from "fs/promises";
 import { createWriteStream, existsSync } from "fs";
 import path from "path";

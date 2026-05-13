@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { getBooks } from "@/lib/services/library-mysql";
+import { getBooks, getBookBySlug, createBook as createBookDb } from "@/lib/services/library-mysql";
 import {
   successResponse,
   errorResponse,
@@ -87,9 +87,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Check if slug already exists
-    const existingBook = await prisma.digitalBook.findUnique({
-      where: { slug },
-    });
+    const existingBook = await getBookBySlug(slug);
 
     if (existingBook) {
       return errorResponse(
@@ -99,28 +97,23 @@ export async function POST(req: NextRequest) {
     }
 
     // Create book
-    const book = await prisma.digitalBook.create({
-      data: {
-        title,
-        slug,
-        author,
-        description,
-        cover,
-        publisher,
-        year,
-        pages,
-        isbn,
-        language: language || "فارسی",
-        category,
-        formats: formats || [],
-        status: status || [],
-        tags: tags || [],
-        readingTime,
-        isFeatured: isFeatured || false,
-        price,
-        fileUrl,
-        audioUrl,
-      },
+    const book = await createBookDb({
+      title,
+      slug,
+      author,
+      description,
+      cover,
+      publisher,
+      year: parseInt(year),
+      pages: pages ? parseInt(pages) : undefined,
+      isbn,
+      language: language || "فارسی",
+      category,
+      formats: formats || [],
+      isFeatured: isFeatured || false,
+      price: price ? parseFloat(price) : undefined,
+      fileUrl,
+      audioUrl,
     });
 
     return successResponse(book, "کتاب با موفقیت ایجاد شد");

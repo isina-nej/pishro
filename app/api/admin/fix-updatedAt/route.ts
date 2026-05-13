@@ -1,9 +1,11 @@
 // Admin endpoint to fix null updatedAt values in the database
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   successResponse,
-  errorResponse
+  errorResponse,
+  ErrorCodes
 } from "@/lib/api-response";
 
 export async function POST(_req: NextRequest) {

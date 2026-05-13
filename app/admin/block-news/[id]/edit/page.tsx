@@ -246,7 +246,7 @@ export default function EditBlockNewsPage() {
                 });
               }}
               onUpdateBlock={async (blockId, content) => {
-                await updateBlockMutation.mutateAsync(content);
+                await updateBlockMutation.mutateAsync({ content, blockId });
               }}
               onDeleteBlock={async (blockId) => {
                 await deleteBlockMutation.mutateAsync(blockId);

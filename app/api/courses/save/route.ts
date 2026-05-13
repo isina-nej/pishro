@@ -20,12 +20,12 @@ export async function POST(req: NextRequest) {
     const userId = "test-user-1";
 
     // Check if already saved
-    const existing = await query(
-      `SELECT id FROM CourseSave WHERE userId = ? AND courseId LIMIT 1`,
+    const existing = await query<any>(
+      `SELECT id FROM CourseSave WHERE userId = ? AND courseId = ? LIMIT 1`,
       [userId, courseId]
     );
 
-    if (existing.length > 0) {
+    if (existing && existing.length > 0) {
       // Remove save
       await query(`DELETE FROM CourseSave WHERE id = ?`, [existing[0].id]);
       return successResponse({ saved: false });

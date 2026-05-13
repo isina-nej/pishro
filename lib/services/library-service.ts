@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { DigitalBook } from "@/types/prisma";
+import type { DigitalBook } from "@prisma/client";
 import { ApiResponse, PaginatedData } from "@/lib/api-response";
 
 export interface BookListParams {

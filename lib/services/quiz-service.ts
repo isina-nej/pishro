@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { QuestionType, QuizAttempt } from "@/types/prisma";
+import { QuestionType, QuizAttempt } from "@prisma/client";
 
 // ================== Types ==================
 export interface QuizWithQuestions {

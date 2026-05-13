@@ -41,7 +41,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ courseId }) => {
   const renderComment = (comment: Comment) => {
     // نام کاربر را تعیین کنید
     const userName = comment.user
-      ? `${comment.user.firstName || ""} ${comment.user.lastName`.trim() || "کاربر"
+      ? `${comment.user.firstName || ""} ${comment.user.lastName}`.trim() || "کاربر"
       : comment.userName || "کاربر مهمان";
 
     // آواتار کاربر
@@ -58,7 +58,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ courseId }) => {
             <div className="relative w-6 h-6">
               <Image
                 src={userAvatar}
-                alt={`${userName} profile`}
+                alt={userName + " profile"}
                 fill
                 className="rounded-full object-cover"
               />

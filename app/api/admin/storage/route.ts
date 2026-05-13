@@ -5,6 +5,7 @@
  */
 
 import { NextRequest } from "next/server";
+import { auth } from "@/auth";
 import { copyFile, readdir, mkdir } from "fs/promises";
 import { join } from "path";
 import {

@@ -36,7 +36,7 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
     if (!session?.user?.id) {
       // کاربر وارد نشده - لیست درس‌ها بدون لینک ویدیو
       const lessonsWithoutVideo = lessons.map(
-        ({ videoUrl: _videoUrl, ...lesson }) => ({
+        ({ videoUrl: _videoUrl, ...lesson }: any) => ({
           ...lesson,
           hasAccess: false,
         })
@@ -60,7 +60,7 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
     if (!enrollment) {
       // کاربر دسترسی ندارد - لیست درس‌ها بدون لینک ویدیو
       const lessonsWithoutVideo = lessons.map(
-        ({ videoUrl: _videoUrl, ...lesson }) => ({
+        ({ videoUrl: _videoUrl, ...lesson }: any) => ({
           ...lesson,
           hasAccess: false,
         })
@@ -72,7 +72,7 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
     }
 
     // کاربر دسترسی دارد - همه اطلاعات شامل لینک ویدیو
-    const lessonsWithAccess = lessons.map((lesson) => ({
+    const lessonsWithAccess = lessons.map((lesson: any) => ({
       ...lesson,
       hasAccess: true,
     }));

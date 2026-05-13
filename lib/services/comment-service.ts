@@ -4,6 +4,10 @@ import { query } from "@/lib/db";
 interface GetCommentsOptions {
   courseId?: string;
   userId?: string;
+  categoryId?: string;
+  published?: boolean;
+  verified?: boolean;
+  featured?: boolean;
   limit?: number;
 }
 
