@@ -3,9 +3,11 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Star, Clock, Users, Play } from "lucide-react";
+import { Star, Clock, Users, Play, ShoppingCart } from "lucide-react";
 import type { Course } from "@prisma/client";
 import { CourseDetailsModal } from "./courseDetailsModal";
+import { useCartStore } from "@/stores/cart-store";
+import toast from "react-hot-toast";
 
 interface CourseCardProps {
   course: Course;
@@ -13,10 +15,24 @@ interface CourseCardProps {
 
 export const CourseCard = ({ course }: CourseCardProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const addToCart = useCartStore((state) => state.addToCart);
+  const items = useCartStore((state) => state.items);
 
   const discountedPrice = course.price
     ? Math.round(course.price * (1 - (course.discountPercent || 0) / 100))
     : 0;
+
+  const isInCart = items.some((item) => item.id === course.id);
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isInCart) {
+      toast.success("این دوره قبلاً به سبد خرید اضافه شده است");
+      return;
+    }
+    addToCart(course as any);
+    toast.success(`«${course.subject}» به سبد خرید اضافه شد 🛒`);
+  };
 
   return (
     <>
@@ -75,6 +91,22 @@ export const CourseCard = ({ course }: CourseCardProps) => {
           <h3 className="line-clamp-2 font-semibold text-white transition group-hover:text-blue-400">
             {course.subject}
           </h3>
+
+          {/* Buy Button - Below Title */}
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileHover={{ opacity: 1, scale: 1 }}
+            onClick={handleAddToCart}
+            disabled={isInCart}
+            className={`w-full flex items-center justify-center gap-1 rounded-lg px-3 py-2 font-semibold text-sm transition ${
+              isInCart
+                ? "bg-gray-500/70 text-white cursor-not-allowed"
+                : "bg-mySecondary text-white hover:shadow-lg hover:scale-105"
+            }`}
+          >
+            <ShoppingCart className="h-4 w-4" />
+            {isInCart ? "افزوده شد" : "خرید"}
+          </motion.button>
 
           <p className="text-xs text-slate-400">
             مدرس: {course.instructor || "نامشخص"}

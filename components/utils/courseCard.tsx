@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Users, Video } from "lucide-react";
+import { Users, Video, ShoppingCart } from "lucide-react";
 import Price from "./price";
 import { FormatTime } from "./FormatTime";
 import RatingStars from "./RatingStars";
@@ -46,13 +46,25 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
             <span className="text-gray-400 dark:text-textSecondary text-sm">تصویر در دسترس نیست</span>
           </div>
         ) : (
-          <Image
-            src={data.img || "/images/default-course.jpg"}
-            alt={data.subject}
-            fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
-            onError={() => setImageError(true)}
-          />
+          <>
+            <Image
+              src={data.img || "/images/default-course.jpg"}
+              alt={data.subject}
+              fill
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              onError={() => setImageError(true)}
+            />
+            {/* Purchase Button - Bottom Right */}
+            <motion.button
+              onClick={handleAddToCart}
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileHover={{ scale: 1.05 }}
+              className="absolute bottom-2 right-2 bg-mySecondary text-white px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1 hover:shadow-lg transition"
+            >
+              <ShoppingCart size={14} />
+              خرید
+            </motion.button>
+          </>
         )}
       </motion.div>
 

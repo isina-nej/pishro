@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
       // Create new like/dislike
       const id = randomUUID();
       await query(
-        `INSERT INTO CourseLike (id, userId, courseId, type) VALUES (?, ?, ?)`,
+        `INSERT INTO CourseLike (id, userId, courseId, type) VALUES (?, ?, ?, ?)`,
         [id, userId, courseId, type]
       );
     }

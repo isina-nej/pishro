@@ -15,8 +15,11 @@ import {
   Users,
   BookOpen,
   BarChart3,
+  ShoppingCart,
 } from "lucide-react";
 import type { Course } from "@prisma/client";
+import { useCartStore } from "@/stores/cart-store";
+import toast from "react-hot-toast";
 
 interface CourseDetailsModalProps {
   course: Course | null;
@@ -33,8 +36,21 @@ export const CourseDetailsModal = ({
   const [liked, setLiked] = useState<"LIKE" | "DISLIKE" | null>(null);
   const [saved, setSaved] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const addToCart = useCartStore((state) => state.addToCart);
+  const items = useCartStore((state) => state.items);
 
   if (!course) return null;
+
+  const isInCart = items.some((item) => item.id === course.id);
+
+  const handleAddToCart = () => {
+    if (isInCart) {
+      toast.success("این دوره قبلاً به سبد خرید اضافه شده است");
+      return;
+    }
+    addToCart(course as any);
+    toast.success(`«${course.subject}» به سبد خرید اضافه شد 🛒`);
+  };
 
   const handleLike = async () => {
     setIsLoading(true);
@@ -218,6 +234,21 @@ export const CourseDetailsModal = ({
                 >
                   <Share2 className="h-5 w-5" />
                   اشتراک‌گذاری
+                </motion.button>
+
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleAddToCart}
+                  disabled={isInCart}
+                  className={`flex items-center gap-2 rounded-lg px-4 py-2 font-bold transition ${
+                    isInCart
+                      ? "bg-gray-600 dark:bg-gray-700 text-white cursor-not-allowed"
+                      : "bg-mySecondary text-white hover:shadow-lg"
+                  }`}
+                >
+                  <ShoppingCart className="h-5 w-5" />
+                  {isInCart ? "در سبد خرید" : "خرید این دوره"}
                 </motion.button>
               </div>
             </div>

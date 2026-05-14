@@ -10,6 +10,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import RatingStars from "@/components/utils/RatingStars";
+import { useCartStore } from "@/stores/cart-store";
+import toast from "react-hot-toast";
 import type { Course } from "@/lib/types/db";
 
 type CourseWithCategory = Course & {
@@ -34,6 +36,8 @@ export default function CourseDetailModal({ course, trigger }: Props) {
   const [liked, setLiked] = useState<"LIKE" | "DISLIKE" | null>(null);
   const [saved, setSaved] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const addToCart = useCartStore((state) => state.addToCart);
+  const items = useCartStore((state) => state.items);
 
   const finalPrice = course.discountPercent
     ? Math.round(course.price * (1 - course.discountPercent / 100))
@@ -127,6 +131,17 @@ export default function CourseDetailModal({ course, trigger }: Props) {
     }
   };
 
+  const isInCart = items.some((item) => item.id === course.id);
+
+  const handleAddToCart = () => {
+    if (isInCart) {
+      toast.success("این دوره قبلاً به سبد خرید اضافه شده است");
+      return;
+    }
+    addToCart(course as any);
+    toast.success(`«${course.subject}» به سبد خرید اضافه شد 🛒`);
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
@@ -160,14 +175,30 @@ export default function CourseDetailModal({ course, trigger }: Props) {
 
           {/* Title Overlay - Bottom of Video */}
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/70 to-transparent pt-8 pb-4 px-4 sm:px-6">
-            <h1 className="text-xl sm:text-2xl font-bold text-white line-clamp-2">
-              {course.subject}
-            </h1>
-            {course.category && (
-              <span className="inline-block mt-2 bg-mySecondary/40 text-mySecondary px-3 py-1 rounded-full text-xs sm:text-sm font-bold">
-                {course.category.title}
-              </span>
-            )}
+            <div className="flex flex-col items-start gap-3">
+              <div>
+                <h1 className="text-xl sm:text-2xl font-bold text-white line-clamp-2">
+                  {course.subject}
+                </h1>
+                {course.category && (
+                  <span className="inline-block mt-2 bg-mySecondary/40 text-mySecondary px-3 py-1 rounded-full text-xs sm:text-lg font-bold">
+                    {course.category.title}
+                  </span>
+                )}
+              </div>
+              <button
+                onClick={handleAddToCart}
+                disabled={isInCart}
+                className={`inline-flex items-center justify-center gap-5 px-2.5 py-15 rounded-lg font-sbold transition text-sm whitespace-nowrap ${
+                  isInCart
+                    ? "bg-gray-600 text-white cursor-not-allowed"
+                    : "bg-mySecondary text-white hover:opacity-90"
+                }`}
+              >
+                <ShoppingCart size={40} className="sm:w-55 sm:h-55" />
+                <span>{isInCart ? "به سبد اضافه شد" : "اضافه کردن به سبد"}</span>
+              </button>
+            </div>
           </div>
 
           {/* Frosted Glass Action Buttons Overlay - Top Right */}
@@ -251,7 +282,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
           </div>
 
           {/* Course Stats Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 mb-6 sm:mb-8 pb-6 sm:pb-8 border-b border-gray-800">
+          {/* <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 mb-6 sm:mb-8 pb-6 sm:pb-8 border-b border-gray-800">
             {course.time && (
               <div className="flex items-center gap-2 sm:gap-3">
                 <Clock size={18} className="text-mySecondary flex-shrink-0" />
@@ -290,7 +321,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                 </div>
               </div>
             )}
-          </div>
+          </div> */}
 
           {/* Tabs */}
           <div className="mb-6 sm:mb-8">
@@ -397,15 +428,6 @@ export default function CourseDetailModal({ course, trigger }: Props) {
             >
               <Heart size={20} fill={isFavorite ? "currentColor" : "none"} />
             </button>
-
-            <Link
-              href={courseLink}
-              className="flex-1 flex items-center justify-center gap-2 bg-mySecondary text-white px-4 sm:px-6 py-3 rounded-lg font-bold hover:opacity-90 transition text-sm sm:text-base"
-              onClick={() => setIsOpen(false)}
-            >
-              <ShoppingCart size={18} className="sm:w-5 sm:h-5" />
-              <span>مشاهده کامل</span>
-            </Link>
           </div>
         </div>
       </DialogContent>

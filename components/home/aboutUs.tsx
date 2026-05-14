@@ -65,22 +65,24 @@ const AboutUs: React.FC = () => {
           </div>
         </div>
 
-        <button className="bg-mySecondary rounded-full py-3 px-24 text-white mt-12 hover:scale-105 transition-transform">
-          <Link href={"/about-us"} className="size-full text-xl font-medium">
-            بیشتر
-          </Link>
-        </button>
       </div>
 
       {/* Left section */}
       <div className="flex-1 overflow-hidden">
-        <div className="relative w-full h-[620px] mr-10">
+        <div className="relative w-full h-[620px] mr-10 rounded-[2rem] overflow-hidden shadow-2xl">
           <Image
             src={aboutUsData.image.src}
             alt={aboutUsData.image.alt}
             fill
             className="object-cover"
           />
+
+          <Link
+            href="/about-us"
+            className="absolute left-6 bottom-6 inline-flex items-center justify-center rounded-full bg-mySecondary px-8 py-4 text-lg font-medium text-white shadow-2xl shadow-mySecondary/30 transition-transform duration-300 hover:-translate-y-1 hover:scale-105"
+          >
+            بیشتر
+          </Link>
         </div>
       </div>
       <AboutUsDecorations />
