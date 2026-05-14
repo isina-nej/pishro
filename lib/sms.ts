@@ -262,8 +262,8 @@ export async function sendSmsModirpayamak(phone: string, text: string) {
  * Falls back to other services or mock in development if primary fails
  */
 export async function sendSms(phone: string, text: string) {
-  // Use mock SMS in development for testing (no internet connectivity)
-  if (process.env.NODE_ENV === "development" && !process.env.SMS_USE_REAL_SERVICE) {
+  // Use mock SMS service if configured
+  if (SMS_SERVICE === "mock") {
     return sendSmsMock(phone, text);
   }
 

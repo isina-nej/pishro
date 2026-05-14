@@ -2,7 +2,7 @@
 import { query, execute } from "@/lib/db";
 import bcrypt from "bcryptjs";
 import { randomUUID } from "crypto";
-import { sendSms } from "@/lib/sms";
+import { sendOtpViaPattern } from "@/lib/sms";
 import {
   successResponse,
   validationError,
@@ -93,13 +93,10 @@ export async function POST(req: Request) {
       );
     }
 
-    // Prepare SMS text
-    const text = `کد تایید شما: ${code}\nاین تا ۲ دقیقه معتبر است.`;
-
-    // Send SMS asynchronously (don't block on it)
-    sendSms(phone, text).catch((err) => {
+    // Send OTP via IPPanel Pattern asynchronously (don't block on it)
+    sendOtpViaPattern(phone, code).catch((err) => {
       // Silent fail - user is already registered, SMS delay won't block their signup
-      console.error("SMS background send failed (will retry):", {
+      console.error("OTP send failed (will retry):", {
         phone,
         error: err instanceof Error ? err.message : String(err),
       });

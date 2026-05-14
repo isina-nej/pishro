@@ -1,7 +1,7 @@
 // app/api/otp/send/route.ts
 import { query, execute } from "@/lib/db";
 import { randomUUID } from "crypto";
-import { sendSms } from "@/lib/sms";
+import { sendOtpViaPattern } from "@/lib/sms";
 import {
   successResponse,
   validationError,
@@ -50,13 +50,10 @@ export async function POST(req: Request) {
       );
     }
 
-    // Prepare SMS text
-    const text = `کد تایید شما: ${code}\nاین تا ۲ دقیقه معتبر است.`;
-
-    // Send SMS asynchronously (don't block on it)
-    sendSms(phone, text).catch((err) => {
+    // Send OTP via IPPanel Pattern asynchronously (don't block on it)
+    sendOtpViaPattern(phone, code).catch((err) => {
       // Silent fail - user can always retry
-      console.error("SMS background send failed:", {
+      console.error("OTP send failed:", {
         phone,
         error: err instanceof Error ? err.message : String(err),
       });
