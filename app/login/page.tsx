@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { LuSquareChevronRight } from "react-icons/lu";
 import { AuthForm } from "@/components/auth/AuthForm";
 import { OtpForm } from "@/components/auth/OtpForm";
+import { TwoFactorForm } from "@/components/auth/TwoFactorForm";
 import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
 import { useOtpTimer } from "@/lib/hooks/useOtp";
 import { useAuthForm } from "@/lib/hooks/useAuthForm";
@@ -25,6 +26,13 @@ const LoginPage = () => {
     handleResendOtp,
     handleBackFromOtp,
     otpPhone,
+    // 2FA
+    twoFactorStep,
+    twoFactorMethod,
+    twoFactorToken,
+    handleVerify2FA,
+    handleBackFrom2FA,
+    handleRequestSMSOTP,
   } = useAuthForm();
 
   const handleResend = async () => {
@@ -71,11 +79,19 @@ const LoginPage = () => {
           <div className="relative overflow-hidden bg-gradient-to-r from-mySecondary/8 via-myBlue/5 to-mySecondary/8 dark:from-mySecondary/15 dark:via-myBlue/10 dark:to-mySecondary/15 px-8 pt-8 pb-6 border-b border-gray-200/60 dark:border-gray-700/50">
             <div className="relative z-10">
               <h1 className="text-3xl font-bold text-mySecondary dark:text-white mb-2">
-                {showForgotPassword ? "بازیابی رمز عبور" : "خوش آمدید"}
+                {showForgotPassword
+                  ? "بازیابی رمز عبور"
+                  : twoFactorStep
+                  ? `تأیید ${twoFactorMethod === "sms" ? "پیامک" : "رمزساز"}`
+                  : "خوش آمدید"}
               </h1>
               <p className="text-sm text-gray-700 dark:text-gray-400">
                 {showForgotPassword
                   ? "رمز عبور خود را بازیابی کنید"
+                  : twoFactorStep
+                  ? twoFactorMethod === "sms"
+                    ? "کد ارسال شده به پیامک را وارد کنید"
+                    : "کد رمزساز گوگل را وارد کنید"
                   : "برای ادامه وارد شوید یا حساب جدید بسازید"}
               </p>
             </div>
@@ -90,6 +106,16 @@ const LoginPage = () => {
               <ForgotPasswordForm
                 onBack={() => setShowForgotPassword(false)}
                 onSuccess={handleForgotPasswordSuccess}
+              />
+            ) : twoFactorStep && twoFactorMethod ? (
+              <TwoFactorForm
+                method={twoFactorMethod}
+                token={twoFactorToken}
+                onVerify={handleVerify2FA}
+                onBack={handleBackFrom2FA}
+                onRequestSMS={
+                  twoFactorMethod === "ga" ? handleRequestSMSOTP : undefined
+                }
               />
             ) : (
               <>
@@ -135,9 +161,14 @@ const LoginPage = () => {
           {/* Footer section */}
           <div className="px-8 py-6 bg-gradient-to-r from-gray-50/80 to-blue-50/80 dark:from-gray-800/50 dark:to-slate-800/50 border-t border-gray-200/60 dark:border-gray-700/50">
             <p className="text-xs text-center text-gray-700 dark:text-gray-400">
-              با ورود، شما <Link href="/terms" className="font-semibold text-myBlue hover:text-myPrimary dark:hover:text-myBlue transition-colors">
+              با ورود، شما{" "}
+              <Link
+                href="/terms"
+                className="font-semibold text-myBlue hover:text-myPrimary dark:hover:text-myBlue transition-colors"
+              >
                 شرایط استفاده
-              </Link> را می‌پذیرید
+              </Link>{" "}
+              را می‌پذیرید
             </p>
           </div>
         </div>
@@ -146,7 +177,10 @@ const LoginPage = () => {
         <div className="mt-8 text-center text-sm text-gray-700 dark:text-gray-400">
           <p>
             سوال دارید؟{" "}
-            <Link href="/contact" className="font-semibold text-myBlue hover:text-myPrimary dark:hover:text-myBlue transition-colors">
+            <Link
+              href="/contact"
+              className="font-semibold text-myBlue hover:text-myPrimary dark:hover:text-myBlue transition-colors"
+            >
               با ما تماس بگیرید
             </Link>
           </p>

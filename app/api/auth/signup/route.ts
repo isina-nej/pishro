@@ -60,14 +60,14 @@ export async function POST(req: Request) {
     if (otps && otps.length > 0) {
       // Update existing OTP
       await execute(
-        `UPDATE Otp SET code = ?, expiresAt createdAt NOW() WHERE phone ?`,
+        `UPDATE Otp SET code = ?, expiresAt = ?, createdAt = NOW() WHERE phone = ?`,
         [code, expiresAt, phone]
       );
     } else {
       // Create new OTP with ID
       const otpId = randomUUID();
       await execute(
-        `INSERT INTO Otp (id, phone, code, expiresAt, createdAt) VALUES (?, ?, NOW())`,
+        `INSERT INTO Otp (id, phone, code, expiresAt, createdAt) VALUES (?, ?, ?, ?, NOW())`,
         [otpId, phone, code, expiresAt]
       );
     }
@@ -81,14 +81,14 @@ export async function POST(req: Request) {
     if (tempUsers && tempUsers.length > 0) {
       // Update existing TempUser
       await execute(
-        `UPDATE TempUser SET passwordHash = ?, createdAt NOW() WHERE phone ?`,
+        `UPDATE TempUser SET passwordHash = ?, createdAt = NOW() WHERE phone = ?`,
         [hashedPassword, phone]
       );
     } else {
       // Create new TempUser with ID
       const tempUserId = randomUUID();
       await execute(
-        `INSERT INTO TempUser (id, phone, passwordHash, createdAt) VALUES (?, ?, NOW())`,
+        `INSERT INTO TempUser (id, phone, passwordHash, createdAt) VALUES (?, ?, ?, NOW())`,
         [tempUserId, phone, hashedPassword]
       );
     }
