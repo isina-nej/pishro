@@ -61,7 +61,7 @@ model Course {
   price           Int
   img             String?
   rating          Float?
-  description     String?
+  description     String?  @db.LongText
   discountPercent Int?
   time            String?
   students        Int?
@@ -237,8 +237,8 @@ model NewsArticle {
   id          String    @id @default(cuid())
   title       String
   slug        String    @unique
-  excerpt     String
-  content     String
+  excerpt     String    @db.LongText
+  content     String    @db.LongText
   coverImage  String?
   author      String?
   category    String
@@ -333,7 +333,7 @@ model DigitalBook {
   title       String
   slug        String   @unique
   author      String
-  description String
+  description String   @db.LongText
   cover       String?
   publisher   String?
   year        Int
@@ -422,7 +422,7 @@ model Category {
 
 model Tag {
   id          String   @id @default(cuid())
-  slug        String   @unique
+  slug        String   @unique @default("")
   title       String
   description String?
   color       String?
@@ -747,17 +747,17 @@ model HomeLanding {
 
   // Why Us Section
   whyUsTitle       String?
-  whyUsDescription String?
+  whyUsDescription String? @db.LongText
   // مثال: [{"label": "آموزش حرفه‌ای", "title": "...", "text": "...", "btnLabel": "...", "btnHref": "...", "imagePath": "..."}]
   whyUsItems       Json    @default("[]")
 
   // Newsletter/News Club Section
   newsClubTitle       String?
-  newsClubDescription String?
+  newsClubDescription String? @db.LongText
 
   // Calculator Section
   calculatorTitle               String?
-  calculatorDescription         String?
+  calculatorDescription         String? @db.LongText
   calculatorRateLow             Float?  @default(0.07)
   calculatorRateMedium          Float?  @default(0.08)
   calculatorRateHigh            Float?  @default(0.11)
@@ -808,7 +808,7 @@ model AboutPage {
   id String @id @default(cuid())
 
   // Hero Section
-  heroTitle          String
+  heroTitle          String @default("")
   heroSubtitle       String?
   heroDescription    String?
   heroBadgeText      String?
@@ -882,8 +882,8 @@ model TeamMember {
   aboutPage   AboutPage @relation("AboutTeamMembers", fields: [aboutPageId], references: [id], onDelete: Cascade)
   aboutPageId String   
 
-  name        String
-  role        String
+  name        String @default("")
+  role        String @default("")
   image       String?
   education   String?
   description String?

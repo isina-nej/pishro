@@ -9,6 +9,9 @@
     "start": "next start",
     "lint": "next lint",
     "svgr": "svgr ./public/icons --out-dir ./public/svgr-icons --icon",
+    "seed": "tsx prisma/seeds/seed-all.ts",
+    "seed:reset": "npx prisma migrate reset --force && npm run seed",
+    "db:studio": "npx prisma studio",
     "postinstall": "echo 'Setup complete'"
   },
   "dependencies": {
@@ -90,7 +93,7 @@
     "prisma": "^6.19.3",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
-    "tsx": "^4.20.6",
+    "tsx": "^4.22.0",
     "typescript": "^5.9.3"
   }
 }
