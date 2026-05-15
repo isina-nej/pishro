@@ -1,32 +1,86 @@
+/**
+ * CommentsSlider Component
+ *
+ * A responsive, auto-playing Swiper-based carousel component for displaying
+ * user comments and testimonials on the landing/home page.
+ *
+ * Features:
+ * - Autoplay: Automatically advances slides every 4 seconds
+ * - Infinite Loop: Seamlessly loops back to the first slide
+ * - Responsive: 1 slide on mobile (< 640px), 2 on tablet (640-1024px), 3 on desktop (> 1024px)
+ * - Navigation: Previous/Next buttons with arrow icons for manual navigation
+ * - Pagination: Clickable dots at the bottom to jump to any slide
+ * - Accessibility: Full keyboard navigation support and ARIA labels
+ * - Theming: Supports light/dark mode with Tailwind CSS
+ * - Touch Friendly: Swipe support on mobile devices
+ *
+ * Usage:
+ * ```tsx
+ * import CommentsSlider from "@/components/utils/CommentsSlider";
+ *
+ * const comments = [
+ *   {
+ *     id: "1",
+ *     userName: "علی احمدی",
+ *     userAvatar: "/images/avatar.jpg",
+ *     userRole: "دانشجو",
+ *     rating: 5,
+ *     content: "دوره خیلی عالی بود!",
+ *     date: "2024-01-15",
+ *     verified: true,
+ *     likes: 42,
+ *   },
+ * ];
+ *
+ * <CommentsSlider comments={comments} title="نظرات دوره آموزان" />
+ * ```
+ *
+ * Props:
+ * - comments: Comment[] - Array of comment objects to display
+ * - title: string - Optional title for the slider (default: "نظرات دوره آموزان")
+ *
+ * Data Persistence:
+ * Comments are seeded from the database and marked as featured=true to ensure
+ * they persist through seed operations and appear on the landing page.
+ */
+
 "use client";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination } from "swiper/modules";
+import { Autoplay, Pagination, Navigation, A11y } from "swiper/modules";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 import "swiper/css";
 import "swiper/css/pagination";
+import "swiper/css/navigation";
 
 import RatingStars from "./RatingStars";
 import LikeDislike from "./LikeDislike";
 import { formatDate } from "@/lib/utils";
 
+/**
+ * Comment data structure for the slider
+ * All fields are required for proper rendering
+ */
 type Comment = {
-  id: string;
-  userName: string;
-  userAvatar: string;
-  userRole: string;
-  rating: number;
-  content: string;
-  date: string;
-  verified: boolean;
-  likes: number;
+  id: string; // Unique comment identifier
+  userName: string; // Name of the commenter
+  userAvatar: string; // Avatar image URL
+  userRole: string; // Role of the user (e.g., "دانشجو", "تاجر")
+  rating: number; // Star rating (0-5)
+  content: string; // Comment text content
+  date: string; // ISO date string of comment creation
+  verified: boolean; // Whether the comment is verified
+  likes: number; // Number of likes on the comment
 };
 
+/**
+ * Props for the CommentsSlider component
+ */
 interface CommentSliderProps {
-  comments: Comment[];
-  title?: string;
+  comments: Comment[]; // Array of comments to display in the slider
+  title?: string; // Optional title for the slider section
 }
 
 const CommentsSlider = ({
@@ -34,6 +88,7 @@ const CommentsSlider = ({
   title = "نظرات دوره آموزان",
 }: CommentSliderProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const swiperRef = useRef(null);
 
   return (
     <section
@@ -46,22 +101,38 @@ const CommentsSlider = ({
         </h2>
 
         <div className="relative">
+          {/* Swiper carousel with all required features */}
           <Swiper
+            ref={swiperRef}
             id="comments-slider"
-            modules={[Autoplay, Pagination]}
+            // Core modules
+            modules={[Autoplay, Pagination, Navigation, A11y]}
+            // Layout
             className="!px-2"
             centeredSlides={true}
             slidesPerView={3}
             spaceBetween={0}
-            loop={true}
+            // Autoplay: 4000ms (4 seconds) as per specification
             autoplay={{
-              delay: 5000,
+              delay: 4000,
               disableOnInteraction: false,
             }}
+            // Infinite loop: after last slide, go back to first
+            loop={true}
+            // Pagination dots at the bottom
             pagination={{
               clickable: true,
               el: ".custom-pagination-opinion",
             }}
+            // Navigation arrows (prev/next buttons)
+            navigation={{
+              nextEl: ".swiper-button-next",
+              prevEl: ".swiper-button-prev",
+            }}
+            // Responsive breakpoints:
+            // - Mobile (< 640px): 1 slide
+            // - Tablet (640-1024px): 2 slides
+            // - Desktop (> 1024px): 3 slides
             breakpoints={{
               320: { slidesPerView: 1 },
               640: { slidesPerView: 2 },
@@ -117,7 +188,10 @@ const CommentsSlider = ({
         </div>
 
         {/* پیکان‌ها */}
-        <div className="absolute top-0 lg:top-12 right-0 sm:right-4 md:right-8 hidden sm:block">
+        <button
+          className="swiper-button-prev absolute top-0 lg:top-12 right-0 sm:right-4 md:right-8 hidden sm:flex items-center justify-center z-20 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24"
+          aria-label="اسلاید قبلی"
+        >
           <div className="relative w-[80px] sm:w-[120px] md:w-[180px] h-[45px] sm:h-[65px] md:h-[100px]">
             <Image
               src={"/icons/circle-arrow-left.svg"}
@@ -127,8 +201,11 @@ const CommentsSlider = ({
               sizes="(max-width: 640px) 80px, 768px) 120px, 180px"
             />
           </div>
-        </div>
-        <div className="absolute -bottom-2 sm:-bottom-6 md:-bottom-10 left-0 sm:left-4 md:left-8 hidden sm:block">
+        </button>
+        <button
+          className="swiper-button-next absolute -bottom-2 sm:-bottom-6 md:-bottom-10 left-0 sm:left-4 md:left-8 hidden sm:flex items-center justify-center z-20 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24"
+          aria-label="اسلاید بعدی"
+        >
           <div className="relative w-[80px] sm:w-[120px] md:w-[180px] h-[45px] sm:h-[65px] md:h-[100px]">
             <Image
               src={"/icons/circle-arrow-right.svg"}
@@ -138,7 +215,7 @@ const CommentsSlider = ({
               sizes="(max-width: 640px) 80px, 768px) 120px, 180px"
             />
           </div>
-        </div>
+        </button>
       </div>
     </section>
   );

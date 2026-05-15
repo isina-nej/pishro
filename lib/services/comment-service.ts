@@ -25,11 +25,12 @@ interface CommentRow {
  * Fetch comments with optional filters
  */
 export async function getComments(options: GetCommentsOptions = {}) {
-  const { courseId, userId, limit = 10 } = options;
+  const { courseId, userId, categoryId, published, verified, featured, limit = 10 } = options;
 
   try {
     let sql = `
-      SELECT id, text, rating, userId, courseId, createdAt, updatedAt
+      SELECT id, text, rating, userId, courseId, userName, userAvatar, userRole, userCompany, 
+             published, verified, featured, likes, dislikes, views, createdAt, updatedAt
       FROM Comment
       WHERE 1=1
     `;
@@ -43,20 +44,57 @@ export async function getComments(options: GetCommentsOptions = {}) {
       sql += ` AND userId = ?`;
       params.push(userId);
     }
+    if (categoryId) {
+      sql += ` AND categoryId = ?`;
+      params.push(categoryId);
+    }
+    if (published !== undefined) {
+      sql += ` AND published = ?`;
+      params.push(published ? 1 : 0);
+    }
+    if (verified !== undefined) {
+      sql += ` AND verified = ?`;
+      params.push(verified ? 1 : 0);
+    }
+    if (featured !== undefined) {
+      sql += ` AND featured = ?`;
+      params.push(featured ? 1 : 0);
+    }
 
     sql += ` ORDER BY createdAt DESC LIMIT ${Math.max(1, Math.min(limit || 10, 1000))}`;
 
-    const comments = await query<CommentRow>(sql, params);
+    const comments = await query<any>(sql, params);
 
     return comments.map((comment) => ({
       ...comment,
-      likes: [],
-      dislikes: [],
+      likes: tryParseJson(comment.likes, []),
+      dislikes: tryParseJson(comment.dislikes, []),
     }));
   } catch (error) {
     console.error("خطا در دریافت نظرات:", error);
     return [];
   }
+}
+
+/**
+ * Helper function to safely parse JSON
+ */
+function tryParseJson(value: any, defaultValue: any = null) {
+  if (!value) return defaultValue;
+  
+  // If it's already an object/array, return it
+  if (typeof value === 'object') return value;
+  
+  // Try to parse if it's a string
+  if (typeof value === 'string') {
+    try {
+      return JSON.parse(value);
+    } catch {
+      return defaultValue;
+    }
+  }
+  
+  return defaultValue;
 }
 
 /**
