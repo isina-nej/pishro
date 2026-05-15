@@ -118,7 +118,7 @@ export async function POST(req: Request) {
       lastName: user.lastName,
       name: user.firstName && user.lastName
         ? `${user.firstName} ${user.lastName}`
-        : null,
+        : undefined,
       email: user.email,
     };
 

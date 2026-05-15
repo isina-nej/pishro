@@ -1,4 +1,0 @@
-app/api/auth/forgot-password/request/route.ts(4,10): error TS2305: Module '"@/lib/sms"' has no exported member 'sendOtpViaPattern'.
-app/api/auth/signup/route.ts(5,10): error TS2305: Module '"@/lib/sms"' has no exported member 'sendOtpViaPattern'.
-app/api/otp/send/route.ts(4,10): error TS2305: Module '"@/lib/sms"' has no exported member 'sendOtpViaPattern'.
-app/api/sms/send-otp/route.ts(2,10): error TS2305: Module '"@/lib/sms"' has no exported member 'sendOtpViaPattern'.
