@@ -13,7 +13,7 @@ interface GetCommentsOptions {
 
 interface CommentRow {
   id: string;
-  content: string;
+  text: string;
   rating?: number;
   userId: string;
   courseId?: string;
@@ -29,7 +29,7 @@ export async function getComments(options: GetCommentsOptions = {}) {
 
   try {
     let sql = `
-      SELECT id, content, rating, userId, courseId, createdAt, updatedAt
+      SELECT id, text, rating, userId, courseId, createdAt, updatedAt
       FROM Comment
       WHERE 1=1
     `;
@@ -65,7 +65,7 @@ export async function getComments(options: GetCommentsOptions = {}) {
 export async function getCommentById(id: string) {
   try {
     const sql = `
-      SELECT id, content, rating, userId, courseId, createdAt, updatedAt
+      SELECT id, text, rating, userId, courseId, createdAt, updatedAt
       FROM Comment
       WHERE id = ?
       LIMIT 1
