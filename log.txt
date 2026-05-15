@@ -1,15 +1,4 @@
-app/api/auth/check-token-ippanel/route.ts(81,9): error TS2345: Argument of type 'Record<string, string[]> | undefined' is not assignable to parameter of type 'number | undefined'.
-  Type 'Record<string, string[]>' is not assignable to type 'number'.
-app/api/auth/forgot-password/route.ts(77,20): error TS2339: Property 'BAD_REQUEST' does not exist on type '{ readonly UNAUTHORIZED: "UNAUTHORIZED"; readonly TOKEN_EXPIRED: "TOKEN_EXPIRED"; readonly TOKEN_INVALID: "TOKEN_INVALID"; readonly FORBIDDEN: "FORBIDDEN"; readonly VALIDATION_ERROR: "VALIDATION_ERROR"; ... 15 more ...; readonly OTP_SEND_FAILED: "OTP_SEND_FAILED"; }'.
-app/api/auth/forgot-password/route.ts(79,9): error TS2345: Argument of type 'Record<string, string[]> | undefined' is not assignable to parameter of type 'number | undefined'.
-  Type 'Record<string, string[]>' is not assignable to type 'number'.
-app/api/auth/verify-otp/route.ts(87,9): error TS2345: Argument of type 'Record<string, string[]> | undefined' is not assignable to parameter of type 'number | undefined'.
-  Type 'Record<string, string[]>' is not assignable to type 'number'.
-components/auth/ForgotPasswordForm.tsx(79,25): error TS2554: Expected 2 arguments, but got 1.
-components/auth/ForgotPasswordForm.tsx(80,15): error TS2339: Property 'status' does not exist on type 'ForgotPasswordResponse'.
-components/auth/ForgotPasswordForm.tsx(86,25): error TS2339: Property 'message' does not exist on type 'ForgotPasswordResponse'.
-components/auth/ForgotPasswordForm.tsx(105,13): error TS2554: Expected 2 arguments, but got 1.
-components/profile/changePasswordModal.tsx(68,25): error TS2554: Expected 2 arguments, but got 1.
-components/profile/changePasswordModal.tsx(69,15): error TS2339: Property 'status' does not exist on type 'ForgotPasswordResponse'.
-components/profile/changePasswordModal.tsx(74,25): error TS2339: Property 'message' does not exist on type 'ForgotPasswordResponse'.
-components/profile/changePasswordModal.tsx(93,13): error TS2554: Expected 2 arguments, but got 1.
+app/api/auth/forgot-password/request/route.ts(4,10): error TS2305: Module '"@/lib/sms"' has no exported member 'sendOtpViaPattern'.
+app/api/auth/signup/route.ts(5,10): error TS2305: Module '"@/lib/sms"' has no exported member 'sendOtpViaPattern'.
+app/api/otp/send/route.ts(4,10): error TS2305: Module '"@/lib/sms"' has no exported member 'sendOtpViaPattern'.
+app/api/sms/send-otp/route.ts(2,10): error TS2305: Module '"@/lib/sms"' has no exported member 'sendOtpViaPattern'.

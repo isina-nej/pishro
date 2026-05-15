@@ -9,7 +9,11 @@ import {
 } from "@/lib/api-response";
 
 const PAYAMAK_API_URL = process.env.PAYAMAK_API_URL || "https://edge.ippanel.com/v1";
-const PAYAMAK_API_KEY = process.env.PAYAMAK_API_KEY;
+const PAYAMAK_API_KEY_RAW = process.env.PAYAMAK_API_KEY;
+// Decode base64 API key if it exists
+const PAYAMAK_API_KEY = PAYAMAK_API_KEY_RAW
+  ? Buffer.from(PAYAMAK_API_KEY_RAW, 'base64').toString('utf-8')
+  : undefined;
 
 export interface IPPanelCheckTokenResponse {
   data?: {

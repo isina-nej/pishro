@@ -1,116 +1,133 @@
 // app/api/auth/external-login/route.ts
-// External login via IPPanel Edge API
-// Docs: https://edge.ippanel.com/v1/api/acl/auth/login
+// Local database login (no external API)
 
-import {
-  successResponse,
-  validationError,
-  errorResponse,
-  ErrorCodes,
-} from "@/lib/api-response";
+import { queryOne } from "@/lib/db";
+import bcrypt from "bcryptjs";
+import { NextResponse } from "next/server";
 
-const PAYAMAK_API_URL = process.env.PAYAMAK_API_URL || "https://edge.ippanel.com/v1";
-const PAYAMAK_API_KEY = process.env.PAYAMAK_API_KEY;
-
-export interface IPPanelLoginResponse {
+export interface LocalLoginResponse {
   data?: {
-    method: "ga" | "sms" | "login"; // "ga" (Google Authenticator), "sms" (SMS OTP), "login" (direct)
-    token: string;
+    id: string;
+    phone: string;
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    name?: string;
+    role: string;
   };
   meta: {
     status: boolean;
     message: string;
-    message_code: string;
-    message_parameters?: string[];
   };
   errors?: Record<string, string[]>;
+}
+
+function successLoginResponse(data: LocalLoginResponse['data']) {
+  return NextResponse.json(
+    {
+      data,
+      meta: {
+        status: true,
+        message: "ورود با موفقیت انجام شد",
+      },
+    },
+    { status: 200 }
+  );
+}
+
+function errorLoginResponse(message: string, statusCode: number = 401, errors?: Record<string, string[]>) {
+  return NextResponse.json(
+    {
+      meta: {
+        status: false,
+        message,
+      },
+      ...(errors && { errors }),
+    },
+    { status: statusCode }
+  );
 }
 
 export async function POST(req: Request) {
   try {
     const body: { username?: string; password?: string } = await req.json();
-    const { username, password } = body;
+    const { username: phone, password } = body;
 
-    if (!username || !password) {
-      return validationError(
+    if (!phone || !password) {
+      return errorLoginResponse(
+        "اطلاعات ناقص است",
+        422,
         {
-          username: !username ? ["نام کاربری الزامی است"] : [],
+          username: !phone ? ["شماره تلفن الزامی است"] : [],
           password: !password ? ["رمز عبور الزامی است"] : [],
-        },
-        "اطلاعات ناقص است"
+        }
       );
     }
 
-    if (!PAYAMAK_API_KEY) {
-      console.error("PAYAMAK_API_KEY is not configured");
-      return errorResponse(
-        "خطایی در سیستم رخ داد",
-        ErrorCodes.INTERNAL_ERROR
+    // Validate phone format
+    if (!/^09\d{9}$/.test(phone)) {
+      return errorLoginResponse(
+        "فرمت شماره تلفن نامعتبر است",
+        422,
+        {
+          username: ["فرمت شماره تلفن نامعتبر است. باید 09XXXXXXXXX باشد"],
+        }
       );
     }
 
-    // Call IPPanel Edge API
-    console.log(`[External Login] Calling IPPanel API for user: ${username}`);
-    console.log(`[External Login] API URL: ${PAYAMAK_API_URL}/api/acl/auth/login`);
-    console.log(`[External Login] API Key present: ${!!PAYAMAK_API_KEY}`);
-    
-    const ipPanelResponse = await fetch(`${PAYAMAK_API_URL}/api/acl/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${PAYAMAK_API_KEY}`,
-      },
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-    });
+    console.log(`[Local Login] Authenticating user: ${phone}`);
 
-    const ipPanelData: IPPanelLoginResponse = await ipPanelResponse.json();
-    
-    console.log(`[External Login] IPPanel response:`, {
-      status: ipPanelResponse.status,
-      statusText: ipPanelResponse.statusText,
-      success: ipPanelData.meta?.status,
-      method: ipPanelData.data?.method,
-      message: ipPanelData.meta?.message,
-      fullData: JSON.stringify(ipPanelData, null, 2),
-    });
-
-    if (!ipPanelResponse.ok || !ipPanelData.meta?.status) {
-      console.error("[External Login] Authentication failed:", ipPanelData);
-      
-      return errorResponse(
-        ipPanelData.meta?.message || "نام کاربری یا رمز عبور اشتباه است",
-        ErrorCodes.UNAUTHORIZED,
-        ipPanelData.errors,
-        422
-      );
-    }
-
-    // Success - return the token and method from IPPanel
-    if (!ipPanelData.data?.token) {
-      console.error("[External Login] No token in response:", ipPanelData);
-      return errorResponse(
-        "خطایی در دریافت توکن رخ داد",
-        ErrorCodes.INTERNAL_ERROR
-      );
-    }
-
-    console.log(`[External Login] ✅ Login successful for user: ${username}, method: ${ipPanelData.data.method}`);
-
-    return successResponse(
-      {
-        token: ipPanelData.data.token,
-        method: ipPanelData.data.method, // "ga", "sms", or "login"
-      },
-      ipPanelData.meta.message
+    // Find user in database
+    const user = await queryOne<any>(
+      "SELECT id, phone, passwordHash, role, firstName, lastName, email, phoneVerified FROM `User` WHERE phone = ?",
+      [phone]
     );
+
+    if (!user) {
+      console.log(`[Local Login] User not found: ${phone}`);
+      return errorLoginResponse("شماره تلفن یا رمز عبور اشتباه است", 401);
+    }
+
+    // Verify password
+    const isValidPassword = await bcrypt.compare(password, user.passwordHash);
+    if (!isValidPassword) {
+      console.log(`[Local Login] Invalid password for user: ${phone}`);
+      return errorLoginResponse("شماره تلفن یا رمز عبور اشتباه است", 401);
+    }
+
+    // Check if phone is verified
+    if (!user.phoneVerified) {
+      console.log(`[Local Login] Phone not verified for user: ${phone}`);
+      return errorLoginResponse(
+        "لطفا ابتدا شماره تلفن خود را تایید کنید",
+        422,
+        {
+          username: ["شماره تلفن تایید نشده است"],
+        }
+      );
+    }
+
+    console.log(`[Local Login] ✅ Login successful for user: ${phone}`);
+
+    // Return user data
+    const userData = {
+      id: user.id,
+      phone: user.phone,
+      role: user.role,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      name: user.firstName && user.lastName
+        ? `${user.firstName} ${user.lastName}`
+        : null,
+      email: user.email,
+    };
+
+    return successLoginResponse(userData);
   } catch (error) {
-    console.error("[External Login] Error:", error);
-    return errorResponse(
-      "خطایی در ثبت‌نام رخ داد",
-      ErrorCodes.INTERNAL_ERROR
+    console.error("[Local Login] Error:", error);
+    return errorLoginResponse(
+      "خطایی در فرآیند ورود رخ داد",
+      500
     );
   }
 }

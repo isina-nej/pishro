@@ -37,13 +37,17 @@ export async function resetPassword(phone: string, code: string, newPassword: st
 // External API Login with 2FA support
 export interface ExternalLoginResponse {
   data?: {
-    method: "ga" | "sms" | "login"; // ga (Google Authenticator), sms, or direct login
-    token: string;
+    id: string;
+    phone: string;
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    name?: string | null;
+    role: string;
   };
   meta: {
     status: boolean;
     message: string;
-    message_code: string;
   };
   errors?: Record<string, string[]>;
 }
@@ -89,7 +93,6 @@ export async function externalApiLogin(username: string, password: string) {
       meta: {
         status: false,
         message: "خطا در ارتباط با سرور",
-        message_code: "500-1",
       },
     } as ExternalLoginResponse;
   }

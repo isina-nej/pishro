@@ -297,3 +297,80 @@ export async function sendSms(phone: string, text: string) {
     throw new Error(`Unknown SMS service: ${SMS_SERVICE}`);
   }
 }
+
+/**
+ * Send OTP via IPPanel Pattern API
+ * This API is optimized for OTP delivery - fast, instant, no approval needed
+ * Pattern templates must be pre-created in IPPanel dashboard
+ * 
+ * Docs: https://edge.ippanel.com/v1/api/send
+ */
+export async function sendOtpViaPattern(phone: string, code: string) {
+  const IPPANEL_API_KEY = process.env.IPPANEL_API_KEY;
+  const IPPANEL_FROM_NUMBER = process.env.IPPANEL_FROM_NUMBER || "+983000505";
+  const IPPANEL_PATTERN_CODE = process.env.IPPANEL_PATTERN_CODE;
+
+  if (!IPPANEL_API_KEY) {
+    console.error("IPPANEL_API_KEY is not configured");
+    throw new Error("IPPanel API key not configured");
+  }
+
+  if (!IPPANEL_PATTERN_CODE) {
+    console.error("IPPANEL_PATTERN_CODE is not configured");
+    throw new Error("IPPanel pattern code not configured");
+  }
+
+  // Convert phone from 09X to +98X format (E.164)
+  const phoneE164 = phone.startsWith("09") 
+    ? `+98${phone.slice(1)}` 
+    : phone.startsWith("+98")
+    ? phone
+    : `+98${phone}`;
+
+  const payload = {
+    sending_type: "pattern",
+    from_number: IPPANEL_FROM_NUMBER,
+    code: IPPANEL_PATTERN_CODE,
+    recipients: [phoneE164],
+    params: {
+      code: code, // This will be injected into the pattern template
+    },
+  };
+
+  console.log(`[OTP Pattern] 📱 Sending OTP to ${phoneE164}`);
+  console.log(`[OTP Pattern] Pattern: ${IPPANEL_PATTERN_CODE}`);
+  console.log(`[OTP Pattern] From: ${IPPANEL_FROM_NUMBER}`);
+  console.log(`[OTP Pattern] Code: ${code}`);
+
+  try {
+    const response = await fetch("https://edge.ippanel.com/v1/api/send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": IPPANEL_API_KEY,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.meta?.status) {
+      console.error("[OTP Pattern] ❌ Failed to send OTP:", {
+        status: response.status,
+        statusText: response.statusText,
+        message: data.meta?.message,
+        code: data.meta?.message_code,
+        errors: data.meta?.errors,
+      });
+      throw new Error(`IPPanel API error: ${data.meta?.message || "Unknown error"}`);
+    }
+
+    console.log(`[OTP Pattern] ✅ OTP sent successfully!`);
+    console.log(`[OTP Pattern] Message ID: ${data.data?.message_outbox_ids?.[0]}`);
+
+    return data;
+  } catch (error) {
+    console.error("[OTP Pattern] ❌ Error sending OTP:", error instanceof Error ? error.message : error);
+    throw error;
+  }
+}

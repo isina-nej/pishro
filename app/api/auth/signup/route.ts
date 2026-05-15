@@ -93,7 +93,8 @@ export async function POST(req: Request) {
       );
     }
 
-    // Send OTP via IPPanel Pattern asynchronously (don't block on it)
+    // Send OTP via IPPanel Pattern API asynchronously (don't block on it)
+    // Pattern templates are instant and don't need approval
     sendOtpViaPattern(phone, code).catch((err) => {
       // Silent fail - user is already registered, SMS delay won't block their signup
       console.error("OTP send failed (will retry):", {

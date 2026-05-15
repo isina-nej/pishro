@@ -74,26 +74,25 @@ export function useAuthForm() {
           return;
         }
 
-        if (loginRes.data?.method === "login") {
+        if (loginRes.data) {
           // Direct login - no 2FA needed
           toast.success("ورود موفقیت‌آمیز بود!");
-          // Store token and redirect
-          localStorage.setItem("auth_token", loginRes.data.token);
+          
+          // Create NextAuth session via signIn
+          const signInResult = await signIn("credentials", {
+            phone: data.username,
+            password: data.password,
+            redirect: false,
+          });
+          
+          if (signInResult?.error) {
+            console.error("NextAuth signIn error:", signInResult.error);
+            toast.error("خطا در ایجاد session");
+            return;
+          }
+          
+          // Redirect to profile
           router.push("/profile/acc");
-        } else if (loginRes.data?.method === "sms") {
-          // SMS 2FA required
-          toast.success("کد تایید به پیامک ارسال شد!");
-          setTwoFactorMethod("sms");
-          setTwoFactorToken(loginRes.data.token);
-          setTwoFactorUsername(data.username);
-          setTwoFactorStep(true);
-        } else if (loginRes.data?.method === "ga") {
-          // Google Authenticator 2FA required
-          toast.success("لطفاً کد رمزساز گوگل را وارد کنید");
-          setTwoFactorMethod("ga");
-          setTwoFactorToken(loginRes.data.token);
-          setTwoFactorUsername(data.username);
-          setTwoFactorStep(true);
         }
       }
     } catch (error) {
