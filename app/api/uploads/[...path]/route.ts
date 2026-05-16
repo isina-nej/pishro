@@ -62,37 +62,7 @@ export async function GET(
     const fileBuffer = await readFile(actualPath);
     console.log(`Serving file: ${actualPath}, size: ${fileBuffer.length} bytes`);
 
-    // Determine MIME type based on file extension
-    const ext = filePath.split(".").pop()?.toLowerCase();
-    let mimeType = "application/octet-stream";
-
-    switch (ext) {
-      case "jpg":
-      case "jpeg":
-        mimeType = "image/jpeg";
-        break;
-      case "png":
-        mimeType = "image/png";
-        break;
-      case "webp":
-        mimeType = "image/webp";
-        break;
-      case "gif":
-        mimeType = "image/gif";
-        break;
-      case "pdf":
-        mimeType = "application/pdf";
-        break;
-      case "mp3":
-        mimeType = "audio/mpeg";
-        break;
-      case "wav":
-        mimeType = "audio/wav";
-        break;
-      case "m4a":
-        mimeType = "audio/mp4";
-        break;
-    }
+    const mimeType = detectMimeType(fileBuffer, filePath);
 
     return new NextResponse(fileBuffer, {
       headers: {
@@ -103,5 +73,50 @@ export async function GET(
   } catch (error) {
     console.error("File serving error:", error);
     return new NextResponse("Internal Server Error", { status: 500 });
+  }
+}
+
+function detectMimeType(buffer: Buffer, filePath: string): string {
+  if (buffer.length >= 8 && buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4E && buffer[3] === 0x47) {
+    return "image/png";
+  }
+
+  if (buffer.length >= 3 && buffer[0] === 0xFF && buffer[1] === 0xD8 && buffer[2] === 0xFF) {
+    return "image/jpeg";
+  }
+
+  if (buffer.length >= 4 && buffer[0] === 0x52 && buffer[1] === 0x49 && buffer[2] === 0x46 && buffer[3] === 0x46) {
+    return "image/webp";
+  }
+
+  if (buffer.length >= 3 && buffer[0] === 0x47 && buffer[1] === 0x49 && buffer[2] === 0x46) {
+    return "image/gif";
+  }
+
+  if (buffer.length >= 4 && buffer[0] === 0x25 && buffer[1] === 0x50 && buffer[2] === 0x44 && buffer[3] === 0x46) {
+    return "application/pdf";
+  }
+
+  const ext = filePath.split(".").pop()?.toLowerCase();
+  switch (ext) {
+    case "jpg":
+    case "jpeg":
+      return "image/jpeg";
+    case "png":
+      return "image/png";
+    case "webp":
+      return "image/webp";
+    case "gif":
+      return "image/gif";
+    case "pdf":
+      return "application/pdf";
+    case "mp3":
+      return "audio/mpeg";
+    case "wav":
+      return "audio/wav";
+    case "m4a":
+      return "audio/mp4";
+    default:
+      return "application/octet-stream";
   }
 }

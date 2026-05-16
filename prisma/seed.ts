@@ -6,6 +6,7 @@ import {
   CourseStatus,
   UserRoleType,
 } from "@prisma/client";
+import { seedNews } from "./seeds/seed-news.js";
 
 const prisma = new PrismaClient();
 
@@ -412,35 +413,9 @@ async function main(): Promise<void> {
   // 📰 Insert News Articles
   // ==============================================
   console.log("📰 Creating news articles...");
-  for (const article of newsArticles) {
-    const created = await prisma.newsArticle.create({
-      data: {
-        ...article,
-        categoryId: createdCategories["cryptocurrency"].id,
-      },
-    });
+  const newsResult = await seedNews();
+  console.log(`✅ Inserted ${newsResult.created} articles`);
 
-    // Add fake comments to each article
-    const fakeComments: Prisma.NewsCommentCreateManyInput[] = [
-      {
-        content: "خیلی مقاله خوبی بود، دیدگاه جدیدی بهم داد.",
-        userId: null,
-        articleId: created.id,
-      },
-      {
-        content: "به نظرم می‌شد تحلیل عمیق‌تری هم ارائه بشه.",
-        userId: null,
-        articleId: created.id,
-      },
-    ];
-
-    for (const c of fakeComments) {
-      await prisma.newsComment.create({
-        data: c,
-      });
-    }
-  }
-  console.log(`✅ Inserted ${newsArticles.length} articles with comments`);
 
   // ==============================================
   // 🏠 Insert Home Landing Data

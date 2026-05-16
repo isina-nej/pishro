@@ -14,6 +14,9 @@ export function getCorsHeaders(origin?: string | null): HeadersInit {
   const allowedOrigins = [
     process.env.NEXT_PUBLIC_CMS_URL,
     "http://localhost:3001",
+    "http://localhost:3002",
+    "http://localhost:3003",
+    "http://localhost:3004",
     "http://localhost:3000",
     "https://pishro-admin.vercel.app",
     "https://pishro-0.vercel.app",

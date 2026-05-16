@@ -1,6 +1,9 @@
 // @/lib/services/landing-service.ts
 
 import * as db from "@/lib/db";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 /**
  * Service for fetching landing page data
@@ -91,9 +94,18 @@ export async function getAboutPageData() {
       [aboutPage.id]
     );
 
-    const news = await db.query<any>(
-      `SELECT * FROM News WHERE published = true ORDER BY publishedAt DESC LIMIT 3`
-    );
+    const news = await prisma.newsArticle.findMany({
+      where: { published: true },
+      orderBy: { publishedAt: "desc" },
+      take: 3,
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        excerpt: true,
+        category: true,
+      },
+    });
 
     return {
       ...aboutPage,

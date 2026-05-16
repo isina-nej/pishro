@@ -1,6 +1,8 @@
 import NewsDetail from "@/components/news/NewsDetail";
-import { prisma } from "@/lib/prisma";
+import { PrismaClient } from "@prisma/client";
 import { notFound } from "next/navigation";
+
+const prisma = new PrismaClient();
 
 interface NewsDetailPageProps {
   params: Promise<{

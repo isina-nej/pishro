@@ -1,10 +1,12 @@
 import { NextRequest } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { PrismaClient } from "@prisma/client";
 import {
   successResponse,
   errorResponse,
   ErrorCodes,
 } from "@/lib/api-response";
+
+const prisma = new PrismaClient();
 
 interface RouteParams {
   params: Promise<{

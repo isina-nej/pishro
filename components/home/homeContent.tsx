@@ -6,11 +6,11 @@ import MobileScrollSectionServer from "./mobileScrollSection.server";
 import CalculatorSection from "./calculatorSection";
 import CoursesSec from "@/components/utils/CoursesSec.server";
 import NewsClub from "./newsClub";
-import HomeComments from "./homeComments";
+import TestimonialsSection from "@/components/testimonials/TestimonialsSection.server";
 
 import FloatingNotificationManager from "@/components/utils/floatingNotificationManager";
 
-export default function HomePageContent() {
+export default async function HomePageContent() {
   return (
     <div className="w-full bg-white dark:bg-cardBg transition-colors">
       {/* Desktop Landing - hidden on mobile */}
@@ -35,11 +35,14 @@ export default function HomePageContent() {
         <CoursesSec />
       </div>
       
-      {/* <HomeComments /> */}
-            <div className="shadow-card">
-        <HomeComments />
-      </div>
-
+      {/* Premium Testimonials with Infinite Scroll - Using Database Comments */}
+      <TestimonialsSection 
+        title="نظرات و تجربیات کاربران"
+        subtitle="بهترین‌های بازار چرا ما را انتخاب می‌کنند"
+        speed={50}
+        limit={15}
+      />
+      
       <div className="shadow-card">
         <NewsClub />
       </div>

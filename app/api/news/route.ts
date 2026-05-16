@@ -1,12 +1,13 @@
 import { NextRequest } from "next/server";
-import { getNews } from "@/lib/services/news-mysql";
-import { prisma } from "@/lib/prisma";
+import { PrismaClient, Prisma } from "@prisma/client";
 import {
   successResponse,
   errorResponse,
   paginatedResponse,
   ErrorCodes,
 } from "@/lib/api-response";
+
+const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest) {
   try {
@@ -15,6 +16,7 @@ export async function GET(req: NextRequest) {
     // Pagination parameters
     const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
     const limit = Math.min(50, parseInt(searchParams.get("limit") || "12"));
+    const skip = (page - 1) * limit;
 
     // Filter parameters
     const category = searchParams.get("category") || undefined;
@@ -28,20 +30,37 @@ export async function GET(req: NextRequest) {
       publishedFilter = true;
     }
 
-    const result = await getNews({
-      page,
-      limit,
-      category,
-      search,
-      published: publishedFilter,
-    });
+    const where: Prisma.NewsArticleWhereInput = {};
 
-    return paginatedResponse(
-      result.items,
-      result.pagination.page,
-      result.pagination.limit,
-      result.pagination.total
-    );
+    if (publishedFilter !== undefined) {
+      where.published = publishedFilter;
+    }
+
+    if (category) {
+      where.category = category;
+    }
+
+    if (search) {
+      where.OR = [
+        { title: { contains: search, mode: "insensitive" } },
+        { content: { contains: search, mode: "insensitive" } },
+      ];
+    }
+
+    const [items, total] = await Promise.all([
+      prisma.newsArticle.findMany({
+        where,
+        orderBy: [
+          { publishedAt: "desc" },
+          { createdAt: "desc" },
+        ],
+        skip,
+        take: limit,
+      }),
+      prisma.newsArticle.count({ where }),
+    ]);
+
+    return paginatedResponse(items, page, limit, total);
   } catch (error) {
     console.error("Error fetching news:", error);
     return errorResponse(
@@ -99,7 +118,7 @@ export async function POST(req: NextRequest) {
         author,
         category,
         tags: tags || [],
-        published: published || false,
+        published: published ?? false,
         publishedAt: published ? publishedAt || new Date() : null,
       },
     });
