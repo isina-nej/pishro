@@ -1,6 +1,7 @@
 // @/app/api/admin/videos/route.ts
 import { NextRequest } from "next/server";
 import { auth } from "@/auth";
+import { getAdminAuth } from "@/lib/auth-simple";
 import {
   successResponse,
   errorResponse,
@@ -26,8 +27,9 @@ import type {
  */
 export async function GET(req: NextRequest) {
   try {
-    const session = await auth();
-if (!session?.user || session.user.role !== "ADMIN") {
+    // Unified authentication - supports NextAuth and Bearer token
+    const adminAuth = await getAdminAuth(req);
+    if (!adminAuth) {
       return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
@@ -68,8 +70,9 @@ if (!session?.user || session.user.role !== "ADMIN") {
  */
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
-if (!session?.user || session.user.role !== "ADMIN") {
+    // Unified authentication - supports NextAuth and Bearer token
+    const adminAuth = await getAdminAuth(req);
+    if (!adminAuth) {
       return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
     }
 

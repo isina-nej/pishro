@@ -5,6 +5,7 @@
 
 import { NextRequest } from "next/server";
 import { auth } from "@/auth";
+import { getAdminAuth } from "@/lib/auth-simple";
 import {
   errorResponse,
   successResponse,
@@ -12,14 +13,11 @@ import {
 } from "@/lib/api-response";
 import { getVideoStats } from "@/lib/services/video-service";
 
-export async function GET(_req: NextRequest) {
+export async function GET(req: NextRequest) {
   try {
-    const session = await auth();
-if (!session?.user) {
+    const adminAuth = await getAdminAuth(req);
+    if (!adminAuth) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
-    }
-    if (session.user.role !== "ADMIN") {
-      return errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
     const stats = await getVideoStats();

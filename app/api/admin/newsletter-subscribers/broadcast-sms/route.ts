@@ -4,9 +4,13 @@
  */
 
 import { NextRequest } from "next/server";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { auth } from "@/auth";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { prisma } from "@/lib/prisma";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { sendBulkSmsMelipayamak } from "@/lib/sms";
+import { getAdminAuth } from "@/lib/auth-simple";
 import {
   errorResponse,
   successResponse,
@@ -16,11 +20,11 @@ import {
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
+    const adminAuth = await getAdminAuth(req);
 if (!session?.user) {
       return errorResponse("لطفا ابتدا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
+    if (!adminAuth) {
       return errorResponse("دسترسی غیرمجاز. فقط ادمین‌ها اجازه دارند.", ErrorCodes.UNAUTHORIZED);
     }
 

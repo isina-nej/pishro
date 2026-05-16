@@ -5,24 +5,29 @@
  */
 
 import { NextRequest } from "next/server";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { auth } from "@/auth";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { copyFile, readdir, mkdir } from "fs/promises";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { join } from "path";
+import { getAdminAuth } from "@/lib/auth-simple";
 import {
   successResponse,
   errorResponse,
   ErrorCodes
 } from "@/lib/api-response";
 import { getAllUploadPaths } from "@/lib/upload-config";
+import { getAdminAuth } from "@/lib/auth-simple";
 
 export async function GET(_req: NextRequest) {
   try {
-    const session = await auth();
+    const adminAuth = await getAdminAuth(req);
 // فقط ادمین می‌تواند این endpoint را دیده‌ها را ببیند
     if (!session?.user) {
       return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
+    if (!adminAuth) {
       return errorResponse("فقط ادمین می‌تواند این اطلاعات را ببیند", ErrorCodes.UNAUTHORIZED);
     }
 
@@ -49,12 +54,12 @@ export async function GET(_req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
+    const adminAuth = await getAdminAuth(req);
 // فقط ادمین می‌تواند مهاجرت انجام دهد
     if (!session?.user) {
       return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
+    if (!adminAuth) {
       return errorResponse("فقط ادمین می‌تواند مهاجرت انجام دهد", ErrorCodes.UNAUTHORIZED);
     }
 

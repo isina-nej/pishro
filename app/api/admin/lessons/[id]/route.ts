@@ -1,6 +1,8 @@
 // @/app/api/admin/lessons/[id]/route.ts
 import { NextRequest } from "next/server";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { auth } from "@/auth";
+import { getAdminAuth } from "@/lib/auth-simple";
 import {
   getLessonById,
   updateLesson,
@@ -25,7 +27,7 @@ interface RouteParams {
  */
 export async function GET(req: NextRequest, { params }: RouteParams) {
   try {
-    const session = await auth();
+    const adminAuth = await getAdminAuth(req);
 if (!session?.user || session.user.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }
@@ -53,7 +55,7 @@ if (!session?.user || session.user.role !== "ADMIN") {
  */
 export async function PATCH(req: NextRequest, { params }: RouteParams) {
   try {
-    const session = await auth();
+    const adminAuth = await getAdminAuth(req);
 if (!session?.user || session.user.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }
@@ -79,7 +81,7 @@ if (!session?.user || session.user.role !== "ADMIN") {
  */
 export async function DELETE(req: NextRequest, { params }: RouteParams) {
   try {
-    const session = await auth();
+    const adminAuth = await getAdminAuth(req);
 if (!session?.user || session.user.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }

@@ -1,11 +1,14 @@
 import { NextRequest } from "next/server";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { auth } from "@/auth";
+import { getAdminAuth } from "@/lib/auth-simple";
 import {
   successResponse,
   errorResponse,
   ErrorCodes
 } from "@/lib/api-response";
 import { corsPreflightResponse, addCorsHeaders } from "@/lib/cors";
+import { getAdminAuth } from "@/lib/auth-simple";
 
 export async function OPTIONS(req: NextRequest) {
   return corsPreflightResponse(req.headers.get("origin"));
@@ -14,7 +17,7 @@ export async function OPTIONS(req: NextRequest) {
 export async function GET(req: NextRequest) {
   const origin = req.headers.get("origin");
   try {
-    const session = await auth();
+    const adminAuth = await getAdminAuth(req);
 // Return payment data
     const data = [
       { month: "Jan", revenue: 4000 },

@@ -13,8 +13,11 @@ import {
   deleteContentBlock
 } from '@/lib/services/block-news-service';
 import { BlockInputSchema } from '@/lib/schemas/block-news-schema';
+import { getAdminAuth } from "@/lib/auth-simple";
 import type { ContentBlockUpdateRequest } from '@/lib/types/block-news';
+import { getAdminAuth } from "@/lib/auth-simple";
 import { auth } from '@/auth';
+import { getAdminAuth } from "@/lib/auth-simple";
 
 export async function GET(
   req: Request,
@@ -22,7 +25,7 @@ export async function GET(
 ) {
   try {
     const { id, blockId } = await params;
-    const session = await auth();
+    const adminAuth = await getAdminAuth(req);
     if (!session?.user) {
       return errorResponse('ورود به سیستم الزامی است');
     }
@@ -45,7 +48,7 @@ export async function PATCH(
 ) {
   try {
     const { id, blockId } = await params;
-    const session = await auth();
+    const adminAuth = await getAdminAuth(req);
     if (!session?.user) {
       return errorResponse('ورود به سیستم الزامی است');
     }
@@ -75,7 +78,7 @@ export async function DELETE(
 ) {
   try {
     const { id, blockId } = await params;
-    const session = await auth();
+    const adminAuth = await getAdminAuth(req);
     if (!session?.user) {
       return errorResponse('ورود به سیستم الزامی است');
     }

@@ -1,6 +1,9 @@
 import { NextRequest } from "next/server";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { auth } from "@/auth";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { writeFile } from "fs/promises";
+import { getAdminAuth } from "@/lib/auth-simple";
 import {
   successResponse,
   validationError,
@@ -27,13 +30,13 @@ const ALLOWED_EXTENSIONS = ["mp4", "mov", "avi", "mkv", "webm"];
 export async function POST(req: NextRequest) {
   try {
 
-    const session = await auth();
+    const adminAuth = await getAdminAuth(req);
 // بررسی احراز هویت و نقش ادمین
     if (!session?.user) {
       return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
     }
 
-    if (session.user.role !== "ADMIN") {
+    if (!adminAuth) {
       return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
     }
 

@@ -1,7 +1,10 @@
 // Admin endpoint to fix null updatedAt values in the database
 import { NextRequest } from "next/server";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { auth } from "@/auth";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { prisma } from "@/lib/prisma";
+import { getAdminAuth } from "@/lib/auth-simple";
 import {
   successResponse,
   errorResponse,
@@ -10,7 +13,7 @@ import {
 
 export async function POST(_req: NextRequest) {
   try {
-    const session = await auth();
+    const adminAuth = await getAdminAuth(req);
 // Check authentication
     if (!session?.user) {
       return errorResponse("احراز هویت نشده است", ErrorCodes.UNAUTHORIZED);

@@ -1,8 +1,13 @@
 import { NextRequest } from "next/server";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { auth } from "@/auth";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { prisma } from "@/lib/prisma";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { successResponse, errorResponse } from "@/lib/api-response";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { QuestionType } from "@prisma/client";
+import { getAdminAuth } from "@/lib/auth-simple";
 
 export const dynamic = "force-dynamic";
 
@@ -438,7 +443,7 @@ const quizData = [
 
 export async function POST(_req: NextRequest) {
   try {
-    const session = await auth();
+    const adminAuth = await getAdminAuth(req);
 console.log("🌱 شروع Seed کردن آزمون‌های تعیین سطح...");
 
     const results = {

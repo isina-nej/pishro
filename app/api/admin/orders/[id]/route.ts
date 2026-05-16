@@ -5,8 +5,11 @@
  */
 
 import { NextRequest } from "next/server";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { auth } from "@/auth";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { prisma } from "@/lib/prisma";
+import { getAdminAuth } from "@/lib/auth-simple";
 import {
   successResponse,
   errorResponse,
@@ -19,11 +22,11 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
+    const adminAuth = await getAdminAuth(req);
 if (!session?.user) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
+    if (!adminAuth) {
       return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
     }
 
@@ -78,11 +81,11 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
+    const adminAuth = await getAdminAuth(req);
 if (!session?.user) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
+    if (!adminAuth) {
       return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
     }
 

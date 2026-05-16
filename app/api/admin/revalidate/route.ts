@@ -5,8 +5,11 @@
  */
 
 import { NextRequest } from "next/server";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { auth } from "@/auth";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { getAdminAuth } from "@/lib/auth-simple";
 import {
   successResponse,
   errorResponse,
@@ -37,7 +40,7 @@ import {
 export async function POST(req: NextRequest) {
   try {
 
-    const session = await auth();
+    const adminAuth = await getAdminAuth(req);
 if (!session?.user) {
       return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
     }
@@ -125,7 +128,7 @@ if (!session?.user) {
 export async function GET() {
   try {
 
-    const session = await auth();
+    const adminAuth = await getAdminAuth(req);
 if (!session?.user) {
       return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
     }

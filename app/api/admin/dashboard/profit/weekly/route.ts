@@ -4,7 +4,9 @@
  */
 
 import { auth } from "@/auth";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { NextRequest, NextResponse } from "next/server";
+import { getAdminAuth } from "@/lib/auth-simple";
 import {
   errorResponse,
   successResponse,
@@ -12,12 +14,14 @@ import {
   ErrorCodes
 } from "@/lib/api-response";
 import { corsPreflightResponse, addCorsHeaders } from "@/lib/cors";
+import { getAdminAuth } from "@/lib/auth-simple";
 import {
   getWeeklyProfit,
   getCachedData,
   setCachedData
 } from "@/lib/services/dashboard-service";
 import { WeeklyProfit } from "@/types/dashboard";
+import { getAdminAuth } from "@/lib/auth-simple";
 
 export async function OPTIONS(req: NextRequest) {
   return corsPreflightResponse(req.headers.get("origin"));
@@ -26,14 +30,14 @@ export async function OPTIONS(req: NextRequest) {
 export async function GET(req: NextRequest) {
   const origin = req.headers.get("origin");
   try {
-    const session = await auth();
+    const adminAuth = await getAdminAuth(req);
 // احراز هویت - فقط ادمین‌ها
     if (!session?.user) {
       const response = errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
       return addCorsHeaders(response, origin);
     }
 
-    if (session.user.role !== "ADMIN") {
+    if (!adminAuth) {
       const response = errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);
       return addCorsHeaders(response, origin);
     }

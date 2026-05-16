@@ -6,7 +6,9 @@
  */
 
 import { NextRequest } from "next/server";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { auth } from "@/auth";
+import { getAdminAuth } from "@/lib/auth-simple";
 import {
   getInvestmentModelById,
   // updateInvestmentModel, // TODO: Implement these functions
@@ -25,11 +27,11 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
+    const adminAuth = await getAdminAuth(req);
 if (!session?.user) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
+    if (!adminAuth) {
       return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
     }
 

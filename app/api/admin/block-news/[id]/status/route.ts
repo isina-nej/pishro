@@ -2,6 +2,7 @@
  * PATCH /api/admin/block-news/[id]/status - Change news status (publish/archive)
  */
 import { auth } from '@/auth';
+import { getAdminAuth } from "@/lib/auth-simple";
 
 import {
   successResponse,
@@ -19,7 +20,7 @@ export async function PATCH(
 ) {
   try {
     const { id } = await params;
-    const session = await auth();
+    const adminAuth = await getAdminAuth(req);
     if (!session?.user) {
       return errorResponse('ورود به سیستم الزامی است');
     }

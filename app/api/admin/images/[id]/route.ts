@@ -6,7 +6,9 @@
  */
 
 import { NextRequest } from "next/server";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { auth } from "@/auth";
+import { getAdminAuth } from "@/lib/auth-simple";
 import {
   errorResponse,
   successResponse,
@@ -20,17 +22,18 @@ import {
   updateImage
 } from "@/lib/services/image-service";
 import { ImageCategory } from "@prisma/client";
+import { getAdminAuth } from "@/lib/auth-simple";
 
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
+    const adminAuth = await getAdminAuth(req);
 if (!session?.user) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
+    if (!adminAuth) {
       return errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
@@ -57,11 +60,11 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
+    const adminAuth = await getAdminAuth(req);
 if (!session?.user) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
+    if (!adminAuth) {
       return errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
@@ -116,11 +119,11 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
+    const adminAuth = await getAdminAuth(req);
 if (!session?.user) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
+    if (!adminAuth) {
       return errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);
     }
 

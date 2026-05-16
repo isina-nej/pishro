@@ -15,12 +15,15 @@ import {
   createNews
 } from '@/lib/services/block-news-service';
 import { CreateNewsSchema } from '@/lib/schemas/block-news-schema';
+import { getAdminAuth } from "@/lib/auth-simple";
 import type { NewsListResponse, CreateNewsRequest, NewsDetailResponse } from '@/lib/types/block-news';
+import { getAdminAuth } from "@/lib/auth-simple";
 import { auth } from '@/auth';
+import { getAdminAuth } from "@/lib/auth-simple";
 
 export async function GET(req: Request) {
   try {
-    const session = await auth();
+    const adminAuth = await getAdminAuth(req);
     if (!session?.user) {
       return errorResponse('ورود به سیستم الزامی است');
     }
@@ -63,7 +66,7 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const session = await auth();
+    const adminAuth = await getAdminAuth(req);
     if (!session?.user) {
       return errorResponse('ورود به سیستم الزامی است');
     }

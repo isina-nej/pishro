@@ -7,6 +7,7 @@
 
 import { NextRequest } from "next/server";
 import { auth } from "@/auth";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { unlink } from "fs/promises";
 import { prisma } from "@/lib/prisma";
 import {
@@ -43,12 +44,9 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
-if (!session?.user) {
+    const adminAuth = await getAdminAuth(req);
+    if (!adminAuth) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
-    }
-    if (session.user.role !== "ADMIN") {
-      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
     }
 
     const { id } = await params;
@@ -90,12 +88,9 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
-if (!session?.user) {
+    const adminAuth = await getAdminAuth(req);
+    if (!adminAuth) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
-    }
-    if (session.user.role !== "ADMIN") {
-      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
     }
 
     const { id } = await params;

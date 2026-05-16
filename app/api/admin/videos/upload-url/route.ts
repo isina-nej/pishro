@@ -1,6 +1,7 @@
 // @/app/api/admin/videos/upload-url/route.ts
 import { NextRequest } from "next/server";
 import { auth } from "@/auth";
+import { getAdminAuth } from "@/lib/auth-simple";
 import {
   successResponse,
   errorResponse,
@@ -21,8 +22,8 @@ import type { RequestUploadUrlInput } from "@/types/video";
  */
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
-if (!session?.user || session.user.role !== "ADMIN") {
+    const adminAuth = await getAdminAuth(req);
+    if (!adminAuth) {
       return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
