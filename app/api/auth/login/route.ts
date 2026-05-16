@@ -86,6 +86,14 @@ export async function POST(req: NextRequest) {
       return addCorsHeaders(response, origin);
     }
 
+    // Check if user is ADMIN (required for this endpoint)
+    if (user.role !== 'ADMIN') {
+      const response = unauthorizedResponse(
+        "دسترسی فقط برای مدیران سیستم است"
+      );
+      return addCorsHeaders(response, origin);
+    }
+
     // Authenticate using Auth.js
     // try {
     //   await signIn("credentials", {
