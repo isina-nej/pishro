@@ -138,11 +138,18 @@ export default function AdminDashboardPage() {
                   {sidebarOpen && <span>Users</span>}
                 </a>
                 <a
-                  href="#"
+                  href="/admin/block-news"
                   className="flex items-center gap-3 px-4 py-3 rounded hover:bg-gray-700 transition"
                 >
                   <span className="text-lg">📝</span>
-                  {sidebarOpen && <span>Content</span>}
+                  {sidebarOpen && <span>اخبار</span>}
+                </a>
+                <a
+                  href="/admin/courses"
+                  className="flex items-center gap-3 px-4 py-3 rounded hover:bg-gray-700 transition"
+                >
+                  <span className="text-lg">🎓</span>
+                  {sidebarOpen && <span>دوره‌ها</span>}
                 </a>
               </>
             )}

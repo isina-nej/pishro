@@ -49,9 +49,9 @@ export function useChapters(courseId: string, enabled = true) {
     queryKey: chapterKeys.listByCourse(courseId),
     queryFn: async () => {
       const { data } = await axios.get(
-        `/api/admin/courses/${courseId}/chapters`
+        `/api/admin/courses/${courseId}/chapters?limit=100`
       );
-      return data.data as Chapter[];
+      return (data.data.items ?? data.data) as Chapter[];
     },
     enabled: enabled && !!courseId,
     staleTime: 5 * 60 * 1000,
@@ -212,6 +212,9 @@ export function useReorderLessons() {
       // Invalidate both chapter and course detail queries
       queryClient.invalidateQueries({
         queryKey: chapterKeys.listByCourse(courseId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["admin-lessons", "list", courseId],
       });
       toast.success("ترتیب درس‌ها با موفقیت به‌روز شد");
     },

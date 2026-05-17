@@ -1,7 +1,7 @@
 // @/components/admin/course-edit/ReorderableTable.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 
 interface Column {
@@ -32,6 +32,10 @@ export default function ReorderableTable<T extends { id: string }>({
 }: ReorderableTableProps<T>) {
   const [order, setOrder] = useState(items);
   const [isReordering, setIsReordering] = useState(false);
+
+  useEffect(() => {
+    setOrder(items);
+  }, [items]);
 
   const moveUp = async (index: number) => {
     if (index === 0) return;
@@ -114,18 +118,20 @@ export default function ReorderableTable<T extends { id: string }>({
               <td className="py-3 px-4">
                 <div className="flex gap-1 justify-center">
                   <button
+                    type="button"
                     onClick={() => moveUp(index)}
                     disabled={index === 0 || isReordering}
                     className="px-2 py-1 bg-gray-300 dark:bg-gray-600 text-black dark:text-white rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-400"
-                    title="بالا"
+                    aria-label={`انتقال ردیف ${index + 1} به بالا`}
                   >
                     ↑
                   </button>
                   <button
+                    type="button"
                     onClick={() => moveDown(index)}
                     disabled={index === order.length - 1 || isReordering}
                     className="px-2 py-1 bg-gray-300 dark:bg-gray-600 text-black dark:text-white rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-400"
-                    title="پایین"
+                    aria-label={`انتقال ردیف ${index + 1} به پایین`}
                   >
                     ↓
                   </button>

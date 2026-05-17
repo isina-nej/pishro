@@ -52,6 +52,7 @@ export async function GET(
               videoId: true,
               thumbnail: true,
               duration: true,
+              durationSeconds: true,
               order: true,
               published: true,
               views: true,
@@ -120,7 +121,7 @@ export async function POST(
       select: { position: true },
     });
 
-    const nextPosition = (maxPositionResult?.position ?? -1) + 1;
+    const nextPosition = (maxPositionResult?.position ?? 0) + 1;
 
     // Create chapter
     const chapter = await prisma.chapter.create({

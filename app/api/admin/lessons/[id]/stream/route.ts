@@ -1,15 +1,21 @@
-// @/app/api/admin/lessons/[id]/stream/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
 import { prisma } from "@/lib/prisma";
 import { errorResponse, ErrorCodes } from "@/lib/api-response";
+import {
+  generateSignedDownloadUrl,
+  downloadFileFromStorage,
+} from "@/lib/services/object-storage-service";
+import { getAbsoluteStoragePath } from "@/lib/services/storage-adapter";
+import { existsSync } from "fs";
 import { readFile } from "fs/promises";
-import { join } from "path";
+import { resolveLessonVideoRelativePath } from "@/lib/services/lesson-service";
+
+const STREAM_EXPIRES = 60;
 
 /**
  * GET /api/admin/lessons/[id]/stream
- * Stream video file for a lesson (secure endpoint)
- * The actual file path is never exposed to the client
+ * Proxied stream — storage URL never sent to client
  */
 export async function GET(
   req: NextRequest,
@@ -23,16 +29,10 @@ export async function GET(
 
     const { id: lessonId } = await params;
 
-    // Get lesson with video
     const lesson = await prisma.lesson.findUnique({
       where: { id: lessonId },
       include: {
-        video: {
-          select: {
-            originalPath: true,
-            fileFormat: true,
-          },
-        },
+        video: { select: { originalPath: true, fileFormat: true } },
       },
     });
 
@@ -40,63 +40,74 @@ export async function GET(
       return errorResponse("درس یافت نشد", ErrorCodes.NOT_FOUND);
     }
 
-    // Get video path (prefer video relation, fallback to legacy videoUrl)
-    let filePath: string | null = null;
-    let mimeType = "video/mp4";
-
-    if (lesson.video?.originalPath) {
-      filePath = lesson.video.originalPath;
-      // Determine MIME type from fileFormat
-      const format = lesson.video.fileFormat?.toLowerCase();
-      const mimeTypes: Record<string, string> = {
-        mp4: "video/mp4",
-        mov: "video/quicktime",
-        avi: "video/x-msvideo",
-        mkv: "video/x-matroska",
-        webm: "video/webm",
-      };
-      mimeType = mimeTypes[format || "mp4"] || "video/mp4";
-    } else if (lesson.videoUrl) {
-      // Legacy: if videoUrl is an absolute path, use it; otherwise, construct path
-      if (lesson.videoUrl.startsWith("/")) {
-        filePath = join(
-          process.env.UPLOAD_BASE_DIR || "D:/pishro_uploads",
-          lesson.videoUrl
-        );
-      } else {
-        filePath = lesson.videoUrl;
-      }
-    }
-
-    if (!filePath) {
+    const relativePath = resolveLessonVideoRelativePath(lesson);
+    if (!relativePath) {
       return errorResponse(
         "ویدیویی برای این درس یافت نشد",
         ErrorCodes.NOT_FOUND
       );
     }
 
-    // Read file from disk
     let fileContent: Buffer;
-    try {
-      fileContent = await readFile(filePath);
-    } catch (err) {
-      console.error(`[Stream] Failed to read file: ${filePath}`, err);
-      return errorResponse(
-        "خطا در خواندن فایل ویدیو",
-        ErrorCodes.SERVER_ERROR,
-        undefined,
-        500
-      );
+    const useS3 = !!process.env.S3_BUCKET_NAME;
+
+    if (useS3) {
+      try {
+        const signedUrl = await generateSignedDownloadUrl(
+          relativePath,
+          STREAM_EXPIRES
+        );
+        const fetchRes = await fetch(signedUrl);
+        if (!fetchRes.ok) {
+          console.error("[Stream] signed fetch failed:", fetchRes.status);
+          return errorResponse(
+            "خطا در دریافت ویدیو",
+            ErrorCodes.INTERNAL_ERROR,
+            undefined,
+            500
+          );
+        }
+        fileContent = Buffer.from(await fetchRes.arrayBuffer());
+      } catch (err) {
+        console.error("[Stream] signed URL generation/fetch failed:", err);
+        return errorResponse(
+          "خطا در تولید لینک پخش",
+          ErrorCodes.INTERNAL_ERROR,
+          undefined,
+          500
+        );
+      }
+    } else {
+      const absolutePath = getAbsoluteStoragePath(relativePath);
+      if (!existsSync(absolutePath)) {
+        try {
+          fileContent = await downloadFileFromStorage(relativePath);
+        } catch {
+          console.error(`[Stream] file not found: ${absolutePath}`);
+          return errorResponse(
+            "فایل ویدیو یافت نشد",
+            ErrorCodes.NOT_FOUND
+          );
+        }
+      } else {
+        try {
+          fileContent = await readFile(absolutePath);
+        } catch (err) {
+          console.error(`[Stream] read failed: ${absolutePath}`, err);
+          return errorResponse(
+            "خطا در خواندن فایل ویدیو",
+            ErrorCodes.INTERNAL_ERROR,
+            undefined,
+            500
+          );
+        }
+      }
     }
 
-    // Create response with streaming
-    const response = new NextResponse(fileContent);
-    response.headers.set("Content-Type", mimeType);
+    const response = new NextResponse(new Uint8Array(fileContent));
+    response.headers.set("Content-Type", "video/mp4");
     response.headers.set("Content-Length", fileContent.length.toString());
-    response.headers.set(
-      "Cache-Control",
-      "no-cache, no-store, must-revalidate"
-    );
+    response.headers.set("Cache-Control", "no-cache, no-store, must-revalidate");
     response.headers.set("Pragma", "no-cache");
     response.headers.set("Expires", "0");
     response.headers.set("Accept-Ranges", "bytes");
@@ -106,7 +117,7 @@ export async function GET(
     console.error("[GET /api/admin/lessons/[id]/stream] error:", error);
     return errorResponse(
       "خطا در پخش ویدیو",
-      ErrorCodes.SERVER_ERROR,
+      ErrorCodes.INTERNAL_ERROR,
       undefined,
       500
     );

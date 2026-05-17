@@ -81,9 +81,7 @@ export default function CourseEditPage() {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList>
           <TabsTrigger value="basic">اطلاعات پایه</TabsTrigger>
-          {course.hasChapters && (
-            <TabsTrigger value="chapters">فصل‌ها</TabsTrigger>
-          )}
+          <TabsTrigger value="chapters">فصل‌ها</TabsTrigger>
           <TabsTrigger value="lessons">درس‌ها</TabsTrigger>
         </TabsList>
 
@@ -91,11 +89,15 @@ export default function CourseEditPage() {
           <CourseBasicTab course={course} onUpdate={setCourse} />
         </TabsContent>
 
-        {course.hasChapters && (
-          <TabsContent value="chapters">
+        <TabsContent value="chapters">
+          {course.hasChapters ? (
             <CourseChaptersTab courseId={courseId} />
-          </TabsContent>
-        )}
+          ) : (
+            <p className="mt-6 text-gray-500 p-6 bg-white dark:bg-cardBg rounded-lg shadow">
+              برای استفاده از فصل‌ها، گزینه «استفاده از فصل‌ها» را در تب اطلاعات پایه فعال کنید.
+            </p>
+          )}
+        </TabsContent>
 
         <TabsContent value="lessons">
           <CourseLessonsTab courseId={courseId} hasChapters={course.hasChapters} />

@@ -1,12 +1,19 @@
-// @/components/admin/course-edit/CourseBasicTab.tsx
 'use client';
 
-import { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { toast } from 'react-hot-toast';
+import {
+  uploadTempFile,
+  useUpdateAdminCourse,
+} from '@/lib/hooks/useAdminCourses';
+import {
+  THUMBNAIL_MAX_BYTES,
+  ALLOWED_THUMBNAIL_TYPES,
+  ALLOWED_VIDEO_TYPE,
+  VIDEO_MAX_BYTES,
+} from '@/lib/schemas/course-management-schema';
 
-interface Course {
+export interface CourseBasicTabData {
   id: string;
   subject: string;
   price: number;
@@ -18,38 +25,101 @@ interface Course {
   published: boolean;
   featured: boolean;
   status: string;
+  likes?: number;
+  dislikes?: number;
   img?: string;
+  introVideoUrl?: string;
 }
 
 interface CourseBasicTabProps {
-  course: Course;
-  onUpdate: (course: Course) => void;
+  course: CourseBasicTabData;
+  onUpdate: React.Dispatch<React.SetStateAction<CourseBasicTabData | null>>;
 }
 
 export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps) {
   const [formData, setFormData] = useState(course);
-  const [isSaving, setIsSaving] = useState(false);
+  const [thumbnailTempPath, setThumbnailTempPath] = useState<string | null>(null);
+  const [trailerTempPath, setTrailerTempPath] = useState<string | null>(null);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const updateMutation = useUpdateAdminCourse();
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value, type } = e.target as any;
+    const { name, value, type } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
+      [name]:
+        type === 'checkbox'
+          ? (e.target as HTMLInputElement).checked
+          : type === 'number'
+            ? Number(value)
+            : value,
     }));
   };
 
+  const validate = () => {
+    const next: Record<string, string> = {};
+    if (!formData.subject?.trim()) next.subject = 'عنوان الزامی است';
+    if (formData.subject && formData.subject.length > 200) {
+      next.subject = 'عنوان نباید بیشتر از 200 کاراکتر باشد';
+    }
+    if (formData.price < 0) next.price = 'قیمت باید عدد نامنفی باشد';
+    setErrors(next);
+    return Object.keys(next).length === 0;
+  };
+
+  const handleThumbnail = async (file: File) => {
+    if (!ALLOWED_THUMBNAIL_TYPES.includes(file.type as 'image/jpeg' | 'image/png')) {
+      setErrors((e) => ({ ...e, thumbnail: 'فرمت JPEG یا PNG' }));
+      return;
+    }
+    if (file.size > THUMBNAIL_MAX_BYTES) {
+      setErrors((e) => ({ ...e, thumbnail: 'حداکثر 2MB' }));
+      return;
+    }
+    const path = await uploadTempFile(file, 'thumbnail');
+    setThumbnailTempPath(path);
+  };
+
+  const handleTrailer = async (file: File) => {
+    if (file.type !== ALLOWED_VIDEO_TYPE) {
+      setErrors((e) => ({ ...e, trailer: 'فقط MP4' }));
+      return;
+    }
+    if (file.size > VIDEO_MAX_BYTES) {
+      setErrors((e) => ({ ...e, trailer: 'حداکثر 500MB' }));
+      return;
+    }
+    const path = await uploadTempFile(file, 'video');
+    setTrailerTempPath(path);
+  };
+
   const handleSave = async () => {
+    if (!validate()) return;
     try {
-      setIsSaving(true);
-      const { data } = await axios.patch(`/api/admin/courses/${course.id}`, formData);
-      onUpdate(data.data);
-      toast.success('اطلاعات دوره با موفقیت ذخیره شد');
-    } catch (error: any) {
-      toast.error(error?.response?.data?.message || 'خطا در ذخیره تغییرات');
-    } finally {
-      setIsSaving(false);
+      const updated = await updateMutation.mutateAsync({
+        id: course.id,
+        data: {
+          title: formData.subject,
+          cost: formData.price,
+          description: formData.description,
+          categoryId: formData.categoryId,
+          instructor: formData.instructor,
+          hasChapters: formData.hasChapters,
+          published: formData.published,
+          featured: formData.featured,
+          likes: formData.likes ?? 0,
+          dislikes: formData.dislikes ?? 0,
+          ...(thumbnailTempPath ? { thumbnailTempPath } : {}),
+          ...(trailerTempPath ? { trailerTempPath } : {}),
+        },
+      });
+      onUpdate(updated);
+      setThumbnailTempPath(null);
+      setTrailerTempPath(null);
+    } catch {
+      // toast in hook
     }
   };
 
@@ -63,30 +133,50 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
             name="subject"
             value={formData.subject}
             onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 dark:border-borderColor rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            maxLength={200}
+            aria-label="نام دوره"
+            className="w-full px-4 py-2 border rounded-lg"
           />
+          {errors.subject && <p className="text-red-500 text-sm">{errors.subject}</p>}
         </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-2">قیمت</label>
-          <input
-            type="number"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 dark:border-borderColor rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-2">مدرس</label>
-          <input
-            type="text"
-            name="instructor"
-            value={formData.instructor || ''}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 dark:border-borderColor rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">قیمت</label>
+            <input
+              type="number"
+              name="price"
+              min={0}
+              value={formData.price}
+              onChange={handleChange}
+              aria-label="قیمت دوره"
+              className="w-full px-4 py-2 border rounded-lg"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">لایک</label>
+            <input
+              type="number"
+              name="likes"
+              min={0}
+              value={formData.likes ?? 0}
+              onChange={handleChange}
+              aria-label="تعداد لایک"
+              className="w-full px-4 py-2 border rounded-lg"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">دیسلایک</label>
+            <input
+              type="number"
+              name="dislikes"
+              min={0}
+              value={formData.dislikes ?? 0}
+              onChange={handleChange}
+              aria-label="تعداد دیسلایک"
+              className="w-full px-4 py-2 border rounded-lg"
+            />
+          </div>
         </div>
 
         <div>
@@ -96,50 +186,52 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
             value={formData.description || ''}
             onChange={handleChange}
             rows={4}
-            className="w-full px-4 py-2 border border-gray-300 dark:border-borderColor rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            aria-label="توضیحات دوره"
+            className="w-full px-4 py-2 border rounded-lg"
           />
         </div>
 
-        <div className="flex items-center gap-4">
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              name="hasChapters"
-              checked={formData.hasChapters}
-              onChange={handleChange}
-              className="w-4 h-4"
-            />
-            <span className="text-sm">استفاده از فصل‌ها</span>
-          </label>
-
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              name="published"
-              checked={formData.published}
-              onChange={handleChange}
-              className="w-4 h-4"
-            />
-            <span className="text-sm">منتشر شده</span>
-          </label>
-
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              name="featured"
-              checked={formData.featured}
-              onChange={handleChange}
-              className="w-4 h-4"
-            />
-            <span className="text-sm">پیشنهادی</span>
-          </label>
+        <div>
+          <label className="block text-sm font-medium mb-2">تصویر شاخص (JPEG/PNG, max 2MB)</label>
+          <input
+            type="file"
+            accept="image/jpeg,image/png"
+            aria-label="آپلود تصویر شاخص"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) handleThumbnail(f);
+            }}
+          />
+          {thumbnailTempPath && <p className="text-sm text-green-600">فایل آماده ذخیره</p>}
         </div>
 
-        <div className="pt-4 flex gap-2">
-          <Button onClick={handleSave} disabled={isSaving}>
-            {isSaving ? 'در حال ذخیره...' : 'ذخیره'}
-          </Button>
+        <div>
+          <label className="block text-sm font-medium mb-2">ویدیو معرفی (MP4, max 500MB)</label>
+          <input
+            type="file"
+            accept="video/mp4"
+            aria-label="آپلود ویدیو معرفی"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) handleTrailer(f);
+            }}
+          />
         </div>
+
+        <label className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            name="hasChapters"
+            checked={formData.hasChapters}
+            onChange={handleChange}
+            aria-label="استفاده از فصل‌ها"
+          />
+          <span className="text-sm">استفاده از فصل‌ها</span>
+        </label>
+
+        <Button onClick={handleSave} disabled={updateMutation.isPending} aria-label="ذخیره دوره">
+          {updateMutation.isPending ? 'در حال ذخیره...' : 'ذخیره'}
+        </Button>
       </div>
     </div>
   );

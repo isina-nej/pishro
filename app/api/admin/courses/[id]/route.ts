@@ -17,6 +17,13 @@ import {
   noContentResponse
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
+import { CourseUpdateSchema } from "@/lib/schemas/course-management-schema";
+import {
+  buildCourseThumbnailPath,
+  buildCourseTrailerPath,
+  replaceStorageFile,
+  safeDeleteStoragePath,
+} from "@/lib/course-media";
 
 export async function GET(
   req: NextRequest,
@@ -77,7 +84,15 @@ export async function PATCH(
     }
 
     const { id } = await params;
-    const body = await req.json();
+    const rawBody = await req.json();
+    const mapped = {
+      ...rawBody,
+      title: rawBody.title ?? rawBody.subject,
+      cost: rawBody.cost ?? rawBody.price,
+      thumbnailPath: rawBody.thumbnailPath ?? rawBody.img,
+      trailerVideoPath: rawBody.trailerVideoPath ?? rawBody.introVideoUrl,
+    };
+    const parsed = CourseUpdateSchema.safeParse(mapped);
 
     // Check if course exists
     const existingCourse = await prisma.course.findUnique({
@@ -88,10 +103,12 @@ export async function PATCH(
       return notFoundResponse("Course", "Course not found");
     }
 
+    const body = parsed.success ? parsed.data : rawBody;
+
     // If slug is being updated, check uniqueness
-    if (body.slug && body.slug !== existingCourse.slug) {
+    if (rawBody.slug && rawBody.slug !== existingCourse.slug) {
       const slugExists = await prisma.course.findUnique({
-        where: { slug: body.slug }
+        where: { slug: rawBody.slug }
       });
 
       if (slugExists) {
@@ -106,29 +123,56 @@ export async function PATCH(
     const updateData: Record<string, unknown> = {};
 
     // Only include fields that are provided
-    if (body.subject !== undefined) updateData.subject = body.subject;
-    if (body.price !== undefined) updateData.price = body.price;
-    if (body.img !== undefined) {
-      // Normalize img URL (extract original URL from Next.js optimization URLs)
-      updateData.img = normalizeImageUrl(body.img);
+    if (body.title !== undefined || rawBody.subject !== undefined) {
+      updateData.subject = body.title ?? rawBody.subject;
     }
-    if (body.rating !== undefined) updateData.rating = body.rating;
+    if (body.cost !== undefined || rawBody.price !== undefined) {
+      updateData.price = body.cost ?? rawBody.price;
+    }
+    if (body.likes !== undefined) updateData.likes = body.likes;
+    if (body.dislikes !== undefined) updateData.dislikes = body.dislikes;
+    if (body.hasChapters !== undefined) updateData.hasChapters = body.hasChapters;
+    if (rawBody.img !== undefined && !body.thumbnailTempPath) {
+      updateData.img = normalizeImageUrl(rawBody.img);
+    }
     if (body.description !== undefined) updateData.description = body.description;
-    if (body.discountPercent !== undefined) updateData.discountPercent = body.discountPercent;
-    if (body.time !== undefined) updateData.time = body.time;
-    if (body.students !== undefined) updateData.students = body.students;
-    if (body.videosCount !== undefined) updateData.videosCount = body.videosCount;
     if (body.categoryId !== undefined) updateData.categoryId = body.categoryId;
-        if (body.slug !== undefined) updateData.slug = body.slug;
-    if (body.level !== undefined) updateData.level = body.level;
-    if (body.language !== undefined) updateData.language = body.language;
-    if (body.prerequisites !== undefined) updateData.prerequisites = body.prerequisites;
-    if (body.learningGoals !== undefined) updateData.learningGoals = body.learningGoals;
-    if (body.instructor !== undefined) updateData.instructor = body.instructor;
-    if (body.status !== undefined) updateData.status = body.status;
-    if (body.published !== undefined) updateData.published = body.published;
-    if (body.featured !== undefined) updateData.featured = body.featured;
-    if (body.views !== undefined) updateData.views = body.views;
+    if (rawBody.rating !== undefined) updateData.rating = rawBody.rating;
+    if (rawBody.discountPercent !== undefined) updateData.discountPercent = rawBody.discountPercent;
+    if (rawBody.time !== undefined) updateData.time = rawBody.time;
+    if (rawBody.students !== undefined) updateData.students = rawBody.students;
+    if (rawBody.videosCount !== undefined) updateData.videosCount = rawBody.videosCount;
+    if (rawBody.slug !== undefined) updateData.slug = rawBody.slug;
+    if (rawBody.level !== undefined) updateData.level = rawBody.level;
+    if (rawBody.language !== undefined) updateData.language = rawBody.language;
+    if (rawBody.prerequisites !== undefined) updateData.prerequisites = rawBody.prerequisites;
+    if (rawBody.learningGoals !== undefined) updateData.learningGoals = rawBody.learningGoals;
+    if (rawBody.instructor !== undefined) updateData.instructor = rawBody.instructor;
+    if (rawBody.status !== undefined) updateData.status = rawBody.status;
+    if (rawBody.published !== undefined) updateData.published = rawBody.published;
+    if (rawBody.featured !== undefined) updateData.featured = rawBody.featured;
+    if (rawBody.views !== undefined) updateData.views = rawBody.views;
+
+    try {
+      if (body.thumbnailTempPath) {
+        updateData.img = await replaceStorageFile(
+          existingCourse.img,
+          body.thumbnailTempPath,
+          buildCourseThumbnailPath(id, "thumbnail.jpg")
+        );
+      }
+      if (body.trailerTempPath) {
+        updateData.introVideoUrl = await replaceStorageFile(
+          existingCourse.introVideoUrl,
+          body.trailerTempPath,
+          buildCourseTrailerPath(id, "trailer.mp4")
+        );
+      }
+    } catch (mediaError) {
+      console.error("[PATCH course] media error:", mediaError);
+      if (body.thumbnailTempPath) await safeDeleteStoragePath(body.thumbnailTempPath);
+      if (body.trailerTempPath) await safeDeleteStoragePath(body.trailerTempPath);
+    }
 
     const updatedCourse = await prisma.course.update({
       where: { id },
@@ -176,10 +220,19 @@ export async function DELETE(
       return notFoundResponse("Course", "Course not found");
     }
 
-    // Delete course (cascading deletes will handle related records)
-    await prisma.course.delete({
-      where: { id }
+    const lessons = await prisma.lesson.findMany({
+      where: { courseId: id },
+      select: { thumbnail: true, videoUrl: true },
     });
+
+    await prisma.course.delete({ where: { id } });
+
+    await safeDeleteStoragePath(existingCourse.img);
+    await safeDeleteStoragePath(existingCourse.introVideoUrl);
+    for (const lesson of lessons) {
+      await safeDeleteStoragePath(lesson.thumbnail);
+      await safeDeleteStoragePath(lesson.videoUrl);
+    }
 
     return noContentResponse();
   } catch (error) {

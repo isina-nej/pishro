@@ -4,9 +4,10 @@
  * این adapter از environment variables برای تنظیم مسیر ذخیره‌سازی استفاده می‌کند
  */
 
-import { writeFile, mkdir, unlink } from "fs/promises";
+import { writeFile, mkdir, unlink, rename } from "fs/promises";
 import { join } from "path";
 import { existsSync } from "fs";
+import crypto from "crypto";
 
 export interface StorageConfig {
   // مسیر فیزیکی ذخیره‌سازی فایل‌ها (در سرور)
@@ -104,4 +105,59 @@ export function getRelativePathFromUrl(url: string): string {
   const config = getStorageConfig();
   // حذف base URL از ابتدای لینک
   return url.replace(`${config.baseUrl}/`, "");
+}
+
+const TMP_PREFIX = "tmp";
+
+/**
+ * مسیر نسبی فایل موقت
+ */
+export function buildTempRelativePath(fileName: string): string {
+  return `${TMP_PREFIX}/${crypto.randomBytes(8).toString("hex")}/${fileName}`;
+}
+
+/**
+ * ذخیره فایل موقت (قبل از commit فرم)
+ */
+export async function saveTempFileToStorage(
+  buffer: Buffer,
+  fileName: string
+): Promise<string> {
+  const relativePath = buildTempRelativePath(fileName);
+  await saveFileToStorage(buffer, relativePath);
+  return relativePath;
+}
+
+/**
+ * انتقال فایل موقت به مسیر دائمی
+ */
+export async function promoteTempFileToStorage(
+  tempRelativePath: string,
+  permanentRelativePath: string
+): Promise<string> {
+  const config = getStorageConfig();
+  const tempFull = join(config.storagePath, tempRelativePath.replace(/\\/g, "/"));
+  const permanentFull = join(
+    config.storagePath,
+    permanentRelativePath.replace(/\\/g, "/")
+  );
+  const directory = permanentFull.substring(0, permanentFull.lastIndexOf("/"));
+  await mkdir(directory, { recursive: true });
+  await rename(tempFull, permanentFull);
+  return `${config.baseUrl}/${permanentRelativePath}`;
+}
+
+/**
+ * مسیر مطلق فایل در storage محلی
+ */
+export function getAbsoluteStoragePath(relativePath: string): string {
+  const config = getStorageConfig();
+  return join(config.storagePath, relativePath.replace(/\\/g, "/"));
+}
+
+/**
+ * آیا مسیر، فایل موقت است؟
+ */
+export function isTempStoragePath(relativePath: string): boolean {
+  return relativePath.startsWith(`${TMP_PREFIX}/`);
 }

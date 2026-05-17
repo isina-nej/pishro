@@ -82,7 +82,9 @@ model Course {
   time            String?
   students        Int?
   videosCount     Int?
-  introVideoUrl   String? // ویدیو معرفی دوره
+  introVideoUrl   String? // ویدیو معرفی دوره (trailer)
+  likes           Int      @default(0)
+  dislikes        Int      @default(0)
   hasChapters     Boolean  @default(false) // نشان‌دهنده وجود فصل‌های تنظیم شده
   createdAt       DateTime? @default(now())
   updatedAt       DateTime? @default(now())
@@ -252,10 +254,11 @@ model Lesson {
 
   // Legacy fields (for backward compatibility)
   videoUrl  String? // برای سازگاری با ویدیوهای قبلی
-  thumbnail String?
-  duration  String? // مدت زمان ویدیو (مثل "45:30")
+  thumbnail       String?
+  duration        String? // legacy display duration
+  durationSeconds Int?
 
-  order     Int     @default(0)
+  order     Int     @default(0) // position within course/chapter container
   published Boolean @default(true)
   views     Int     @default(0)
 

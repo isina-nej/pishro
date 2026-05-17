@@ -22,7 +22,7 @@ export const courseKeys = {
 export function useCourses() {
   return useQuery<Course[]>({
     queryKey: courseKeys.list(),
-    queryFn: () => getCourses() as Promise<Course[]>,
+    queryFn: () => getCourses(),
     staleTime: 10 * 60 * 1000, // 10 دقیقه fresh - دوره‌ها کمتر تغییر می‌کنند
     gcTime: 30 * 60 * 1000, // 30 دقیقه در cache
     retry: 2, // دوبار retry در صورت خطا
@@ -39,7 +39,7 @@ export function useCourse(courseId: string) {
   return useQuery<Course | undefined>({
     queryKey: courseKeys.detail(courseId),
     queryFn: async () => {
-      const courses = (await getCourses()) as Course[];
+      const courses = await getCourses();
       return courses.find((course) => course.id === courseId);
     },
     staleTime: 10 * 60 * 1000,

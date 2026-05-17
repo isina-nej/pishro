@@ -1,28 +1,23 @@
-// @/app/api/admin/lessons/[id]/route.ts
 import { NextRequest } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
 import {
   getLessonById,
   updateLesson,
-  deleteLesson
+  deleteLesson,
 } from "@/lib/services/lesson-service";
 import {
   successResponse,
   errorResponse,
   notFoundResponse,
-  ErrorCodes
+  ErrorCodes,
 } from "@/lib/api-response";
+import { LessonUpdateSchema } from "@/lib/schemas/course-management-schema";
+import { prisma } from "@/lib/prisma";
 
 interface RouteParams {
-  params: Promise<{
-    id: string;
-  }>;
+  params: Promise<{ id: string }>;
 }
 
-/**
- * GET /api/admin/lessons/[id]
- * دریافت یک کلاس (برای ادمین)
- */
 export async function GET(req: NextRequest, { params }: RouteParams) {
   try {
     const adminAuth = await getAdminAuth(req);
@@ -47,10 +42,6 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
   }
 }
 
-/**
- * PATCH /api/admin/lessons/[id]
- * به‌روزرسانی یک کلاس (برای ادمین)
- */
 export async function PATCH(req: NextRequest, { params }: RouteParams) {
   try {
     const adminAuth = await getAdminAuth(req);
@@ -60,12 +51,42 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
 
     const { id } = await params;
     const body = await req.json();
+    const parsed = LessonUpdateSchema.safeParse(body);
 
-    const lesson = await updateLesson(id, body);
+    if (!parsed.success) {
+      return errorResponse(
+        "خطای اعتبارسنجی",
+        ErrorCodes.VALIDATION_ERROR,
+        Object.fromEntries(
+          parsed.error.errors.map((e) => [String(e.path[0]), e.message])
+        )
+      );
+    }
 
+    const existing = await prisma.lesson.findUnique({ where: { id } });
+    if (!existing) {
+      return notFoundResponse("کلاس مورد نظر یافت نشد");
+    }
+
+    if (parsed.data.chapterId && existing.courseId) {
+      const course = await prisma.course.findUnique({
+        where: { id: existing.courseId },
+      });
+      if (course && !course.hasChapters) {
+        return errorResponse(
+          "این دوره از فصل پشتیبانی نمی‌کند",
+          ErrorCodes.VALIDATION_ERROR
+        );
+      }
+    }
+
+    const lesson = await updateLesson(id, parsed.data);
     return successResponse(lesson, "کلاس با موفقیت به‌روزرسانی شد");
   } catch (error) {
     console.error("[PATCH /api/admin/lessons/[id]] error:", error);
+    if (error instanceof Error && error.message === "POSITION_CONFLICT") {
+      return errorResponse("تضاد در ترتیب", ErrorCodes.CONFLICT, undefined, 409);
+    }
     return errorResponse(
       "خطایی در به‌روزرسانی کلاس رخ داد",
       ErrorCodes.DATABASE_ERROR
@@ -73,10 +94,6 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
   }
 }
 
-/**
- * DELETE /api/admin/lessons/[id]
- * حذف یک کلاس (برای ادمین)
- */
 export async function DELETE(req: NextRequest, { params }: RouteParams) {
   try {
     const adminAuth = await getAdminAuth(req);
@@ -85,9 +102,7 @@ export async function DELETE(req: NextRequest, { params }: RouteParams) {
     }
 
     const { id } = await params;
-
     await deleteLesson(id);
-
     return successResponse(null, "کلاس با موفقیت حذف شد");
   } catch (error) {
     console.error("[DELETE /api/admin/lessons/[id]] error:", error);

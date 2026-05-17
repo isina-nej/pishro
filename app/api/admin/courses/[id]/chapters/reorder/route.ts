@@ -1,5 +1,4 @@
-// @/app/api/admin/courses/[id]/chapters/reorder/route.ts
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
 import { prisma } from "@/lib/prisma";
 import {
@@ -7,12 +6,9 @@ import {
   errorResponse,
   ErrorCodes,
 } from "@/lib/api-response";
+import { ReorderSchema } from "@/lib/schemas/course-management-schema";
+import { reorderChapters } from "@/lib/course-order";
 
-/**
- * POST /api/admin/courses/[id]/chapters/reorder
- * Reorder chapters by updating positions
- * Payload: { order: ["chapter-id-1", "chapter-id-2", ...] }
- */
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -24,73 +20,40 @@ export async function POST(
     }
 
     const { id: courseId } = await params;
-    const { order } = await req.json();
+    const body = await req.json();
+    const parsed = ReorderSchema.safeParse(body);
 
-    // Validation
-    if (!Array.isArray(order) || order.length === 0) {
-      return errorResponse(
-        "لیست ترتیب نامعتبر است",
-        ErrorCodes.VALIDATION_ERROR
-      );
+    if (!parsed.success) {
+      return errorResponse("لیست ترتیب نامعتبر است", ErrorCodes.VALIDATION_ERROR);
     }
 
-    // Verify course exists
-    const course = await prisma.course.findUnique({
-      where: { id: courseId },
-    });
+    const { order } = parsed.data;
 
+    const course = await prisma.course.findUnique({ where: { id: courseId } });
     if (!course) {
       return errorResponse("دوره یافت نشد", ErrorCodes.NOT_FOUND);
     }
 
-    // Verify all chapter IDs belong to this course
     const existingChapters = await prisma.chapter.findMany({
       where: { courseId },
       select: { id: true },
     });
 
-    const existingIds = new Set(existingChapters.map((c) => c.id));
-    const allValid = order.every((id: string) => existingIds.has(id));
-
-    if (!allValid) {
+    if (
+      order.length !== existingChapters.length ||
+      !order.every((id) => existingChapters.some((c) => c.id === id))
+    ) {
       return errorResponse(
         "برخی از فصل‌ها معتبر نیستند",
         ErrorCodes.VALIDATION_ERROR
       );
     }
 
-    // Update positions in transaction
-    await prisma.$transaction(
-      order.map((id: string, index: number) =>
-        prisma.chapter.update({
-          where: { id },
-          data: { position: index },
-        })
-      )
-    );
+    await reorderChapters(courseId, order);
 
-    return successResponse(
-      { success: true },
-      "ترتیب فصل‌ها با موفقیت به‌روز شد"
-    );
+    return successResponse({ success: true }, "ترتیب فصل‌ها با موفقیت به‌روز شد");
   } catch (error) {
-    console.error(
-      "[POST /api/admin/courses/[id]/chapters/reorder] error:",
-      error
-    );
-
-    if (error instanceof Error && error.message.includes("Unique constraint")) {
-      return errorResponse(
-        "تضاد در ترتیب فصل‌ها",
-        ErrorCodes.CONFLICT,
-        undefined,
-        409
-      );
-    }
-
-    return errorResponse(
-      "خطا در بروزرسانی ترتیب",
-      ErrorCodes.DATABASE_ERROR
-    );
+    console.error("[POST chapters/reorder] error:", error);
+    return errorResponse("تضاد در ترتیب فصل‌ها", ErrorCodes.CONFLICT, undefined, 409);
   }
 }
