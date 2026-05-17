@@ -92,11 +92,15 @@ export async function GET(req: NextRequest) {
               title: true
             }
           },
-          relatedTags: {
-            select: {
-              id: true,
-              slug: true,
-              title: true
+          tags: {
+            include: {
+              tag: {
+                select: {
+                  id: true,
+                  slug: true,
+                  title: true
+                }
+              }
             }
           },
           _count: {

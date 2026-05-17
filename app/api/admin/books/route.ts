@@ -70,10 +70,14 @@ export async function GET(req: NextRequest) {
         orderBy: { createdAt: "desc" },
         include: {
           relatedTags: {
-            select: {
-              id: true,
-              slug: true,
-              title: true
+            include: {
+              tag: {
+                select: {
+                  id: true,
+                  slug: true,
+                  title: true
+                }
+              }
             }
           }
         }

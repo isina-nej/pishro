@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { writeFile, mkdir } from "fs/promises";
 import { existsSync } from "fs";
 import path from "path";
@@ -47,8 +48,11 @@ export async function OPTIONS(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
-console.log("📦 PDF chunk upload request received");
+    const adminAuth = await getAdminAuth(req);
+    if (!adminAuth) {
+      return errorResponse("دسترسی غیرمجاز", "Unauthorized");
+    }
+    console.log("📦 PDF chunk upload request received");
 
     // Ensure chunks directory exists
     if (!existsSync(CHUNKS_DIR)) {

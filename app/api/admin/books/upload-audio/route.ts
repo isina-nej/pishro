@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { writeFile } from "fs/promises";
 import {
   successResponse,
@@ -55,8 +56,11 @@ export async function OPTIONS(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
-const formData = await req.formData();
+    const adminAuth = await getAdminAuth(req);
+    if (!adminAuth) {
+      return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
+    }
+    const formData = await req.formData();
     const file = formData.get("audio") as File | null;
 
     if (!file) {

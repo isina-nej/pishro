@@ -40,6 +40,22 @@ model User {
   images               Image[]                   @relation("UserImages")
 }
 
+// Admin Users Model - Separate from regular users for admin panel access
+model AdminUser {
+  id            String      @id @default(cuid())
+  email         String      @unique
+  passwordHash  String
+  name          String
+  role          AdminRole   @default(ADMIN)
+  status        AdminStatus @default(ACTIVE)
+  lastLoginAt   DateTime?
+  createdAt     DateTime?   @default(now())
+  updatedAt     DateTime?   @updatedAt
+  
+  @@index([email])
+  @@index([status])
+}
+
 model TempUser {
   id           String   @id @default(cuid())
   phone        String   @unique
@@ -714,6 +730,19 @@ enum BlockType {
   GALLERY
   QUOTE
   LIST
+}
+
+// Admin Panel Enums
+enum AdminRole {
+  ADMIN
+  MODERATOR
+  VIEWER
+}
+
+enum AdminStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
 }
 
 //

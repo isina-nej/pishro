@@ -212,12 +212,9 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
-if (!session?.user) {
+    const adminAuth = await getAdminAuth(req);
+    if (!adminAuth) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
-    }
-    if (session.user.role !== "ADMIN") {
-      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
     }
 
     const { id } = await params;

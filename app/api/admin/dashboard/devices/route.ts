@@ -3,8 +3,6 @@
  * GET /api/admin/dashboard/devices?period=monthly|yearly - دریافت آمار دستگاه‌ها
  */
 
-import { auth } from "@/auth";
-import { getAdminAuth } from "@/lib/auth-simple";
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
 import {
@@ -14,14 +12,12 @@ import {
   ErrorCodes
 } from "@/lib/api-response";
 import { corsPreflightResponse, addCorsHeaders } from "@/lib/cors";
-import { getAdminAuth } from "@/lib/auth-simple";
 import {
   getDeviceStats,
   getCachedData,
   setCachedData
 } from "@/lib/services/dashboard-service";
 import { DeviceStats } from "@/types/dashboard";
-import { getAdminAuth } from "@/lib/auth-simple";
 
 export async function OPTIONS(req: NextRequest) {
   return corsPreflightResponse(req.headers.get("origin"));
@@ -31,11 +27,6 @@ export async function GET(req: NextRequest) {
   const origin = req.headers.get("origin");
   try {
     const adminAuth = await getAdminAuth(req);
-// احراز هویت - فقط ادمین‌ها
-    if (!session?.user) {
-      const response = errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
-      return addCorsHeaders(response, origin);
-    }
 
     if (!adminAuth) {
       const response = errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);

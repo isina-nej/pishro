@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { writeFile } from "fs/promises";
 import {
   successResponse,
@@ -53,8 +54,10 @@ export async function OPTIONS(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
-// Note: Auth is handled by the admin panel - this endpoint receives already-authenticated requests
+    const adminAuth = await getAdminAuth(req);
+    if (!adminAuth) {
+      return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
+    }
 
     const formData = await req.formData();
     const file = formData.get("pdf") as File | null;

@@ -1,14 +1,11 @@
 import { NextRequest } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
-import { auth } from "@/auth";
-import { getAdminAuth } from "@/lib/auth-simple";
 import {
   successResponse,
   errorResponse,
   ErrorCodes
 } from "@/lib/api-response";
 import { corsPreflightResponse, addCorsHeaders } from "@/lib/cors";
-import { getAdminAuth } from "@/lib/auth-simple";
 
 export async function OPTIONS(req: NextRequest) {
   return corsPreflightResponse(req.headers.get("origin"));
@@ -18,6 +15,12 @@ export async function GET(req: NextRequest) {
   const origin = req.headers.get("origin");
   try {
     const adminAuth = await getAdminAuth(req);
+
+    if (!adminAuth) {
+      const response = errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);
+      return addCorsHeaders(response, origin);
+    }
+
 // Return profit data
     const data = [
       { month: "Jan", profit: 2400 },

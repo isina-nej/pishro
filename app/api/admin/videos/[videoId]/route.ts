@@ -21,12 +21,12 @@ import type { UpdateVideoInput } from "@/types/video";
  * دریافت اطلاعات یک ویدیو
  */
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ videoId: string }> }
 ) {
   try {
-    const session = await auth();
-if (!session?.user || session.user.role !== "ADMIN") {
+    const adminAuth = await getAdminAuth(req);
+    if (!adminAuth) {
       return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
@@ -57,8 +57,8 @@ export async function PUT(
   { params }: { params: Promise<{ videoId: string }> }
 ) {
   try {
-    const session = await auth();
-if (!session?.user || session.user.role !== "ADMIN") {
+    const adminAuth = await getAdminAuth(req);
+    if (!adminAuth) {
       return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
@@ -90,12 +90,12 @@ if (!session?.user || session.user.role !== "ADMIN") {
  * حذف یک ویدیو
  */
 export async function DELETE(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ videoId: string }> }
 ) {
   try {
-    const session = await auth();
-if (!session?.user || session.user.role !== "ADMIN") {
+    const adminAuth = await getAdminAuth(req);
+    if (!adminAuth) {
       return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
     }
 

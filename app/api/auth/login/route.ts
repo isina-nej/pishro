@@ -9,6 +9,7 @@
 import { NextRequest } from "next/server";
 import { queryOne } from "@/lib/db";
 import bcrypt from "bcryptjs";
+import { createToken } from "@/lib/auth-simple";
 import {
   successResponse,
   validationError,
@@ -110,7 +111,7 @@ export async function POST(req: NextRequest) {
     //   return addCorsHeaders(response, origin);
     // }
 
-    // Return user data (excluding sensitive info)
+    // Return user data with JWT token (excluding sensitive info)
     const userData = {
       id: user.id,
       phone: user.phone,
@@ -124,8 +125,15 @@ export async function POST(req: NextRequest) {
       phoneVerified: user.phoneVerified,
     };
 
+    // Generate JWT token for Bearer authentication
+    const token = createToken({
+      id: user.id,
+      phone: user.phone,
+      role: user.role,
+    });
+
     const response = successResponse(
-      userData,
+      { ...userData, token },
       "ورود با موفقیت انجام شد"
     );
     return addCorsHeaders(response, origin);
