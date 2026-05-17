@@ -3,11 +3,11 @@
  * GET /api/admin/courses - List all courses with pagination and filters
  * POST /api/admin/courses - Create a new course
  * 
- * Authentication: Supports both NextAuth session and Bearer token
+ * Authentication: JWT Bearer token from admin login
  */
 
 import { NextRequest } from "next/server";
-import { getAdminAuth } from "@/lib/auth-simple";
+import { verifyAdminAccessToken } from "@/lib/admin-auth";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import {
@@ -20,11 +20,22 @@ import {
 import { normalizeImageUrl } from "@/lib/utils";
 import { CourseCreateSchema } from "@/lib/schemas/course-management-schema";
 
+// Helper to get admin auth from request
+function getAdminUserFromRequest(req: NextRequest) {
+  const authHeader = req.headers.get('Authorization');
+  if (!authHeader?.startsWith('Bearer ')) {
+    return null;
+  }
+  
+  const token = authHeader.slice(7);
+  return verifyAdminAccessToken(token);
+}
+
 export async function GET(req: NextRequest) {
   try {
-    // Unified authentication - supports NextAuth and Bearer token
-    const adminAuth = await getAdminAuth(req);
-    if (!adminAuth) {
+    // Admin authentication via JWT token
+    const adminUser = getAdminUserFromRequest(req);
+    if (!adminUser) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
 
@@ -129,9 +140,9 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    // Unified authentication - supports NextAuth and Bearer token
-    const adminAuth = await getAdminAuth(req);
-    if (!adminAuth) {
+    // Admin authentication via JWT token
+    const adminUser = getAdminUserFromRequest(req);
+    if (!adminUser) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
 

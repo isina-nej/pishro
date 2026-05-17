@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   uploadTempFile,
@@ -12,6 +13,7 @@ import {
   ALLOWED_VIDEO_TYPE,
   VIDEO_MAX_BYTES,
 } from '@/lib/schemas/course-management-schema';
+import { toast } from 'react-hot-toast';
 
 export interface CourseBasicTabData {
   id: string;
@@ -37,6 +39,7 @@ interface CourseBasicTabProps {
 }
 
 export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps) {
+  const router = useRouter();
   const [formData, setFormData] = useState(course);
   const [thumbnailTempPath, setThumbnailTempPath] = useState<string | null>(null);
   const [trailerTempPath, setTrailerTempPath] = useState<string | null>(null);
@@ -118,8 +121,14 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
       onUpdate(updated);
       setThumbnailTempPath(null);
       setTrailerTempPath(null);
-    } catch {
-      // toast in hook
+      toast.success('دوره با موفقیت ذخیره شد');
+      // برگشت به لیست دوره‌ها بعد از 1 ثانیه
+      setTimeout(() => {
+        router.push('/admin/courses');
+      }, 1000);
+    } catch (error) {
+      toast.error('خطا در ذخیره دوره');
+      console.error('Save error:', error);
     }
   };
 

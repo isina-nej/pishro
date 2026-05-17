@@ -19,7 +19,7 @@ const BOOK_COUNT = 25;
  */
 function createBookCover(fileName: string, subfolder: string): void {
   try {
-    const uploadBaseDir = process.env.UPLOAD_BASE_DIR || "/opt/pishro_uploads";
+    const uploadBaseDir = process.env.UPLOAD_BASE_DIR || join(process.cwd(), "uploads");
     const dir = join(uploadBaseDir, subfolder);
     mkdirSync(dir, { recursive: true });
     
@@ -54,7 +54,7 @@ function createBookCover(fileName: string, subfolder: string): void {
  */
 function createPDF(fileName: string, subfolder: string): void {
   try {
-    const uploadBaseDir = process.env.UPLOAD_BASE_DIR || "/opt/pishro_uploads";
+    const uploadBaseDir = process.env.UPLOAD_BASE_DIR || join(process.cwd(), "uploads");
     const dir = join(uploadBaseDir, subfolder);
     mkdirSync(dir, { recursive: true });
     
@@ -106,7 +106,7 @@ startxref
  */
 function createAudioFile(fileName: string, subfolder: string): void {
   try {
-    const uploadBaseDir = process.env.UPLOAD_BASE_DIR || "/opt/pishro_uploads";
+    const uploadBaseDir = process.env.UPLOAD_BASE_DIR || join(process.cwd(), "uploads");
     const dir = join(uploadBaseDir, subfolder);
     mkdirSync(dir, { recursive: true });
     

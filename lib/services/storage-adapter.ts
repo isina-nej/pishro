@@ -8,6 +8,7 @@ import { writeFile, mkdir, unlink, rename } from "fs/promises";
 import { join } from "path";
 import { existsSync } from "fs";
 import crypto from "crypto";
+import { tmpdir } from "os";
 
 export interface StorageConfig {
   // مسیر فیزیکی ذخیره‌سازی فایل‌ها (در سرور)
@@ -22,10 +23,11 @@ export interface StorageConfig {
 export function getStorageConfig(): StorageConfig {
   // مسیر پیش‌فرض: UPLOAD_BASE_DIR برای local development
   // یا UPLOAD_STORAGE_PATH برای production
+  // اگر environment variable تنظیم نشود، از ./uploads استفاده می‌کند
   const storagePath =
     process.env.UPLOAD_BASE_DIR ||
     process.env.UPLOAD_STORAGE_PATH ||
-    "/var/www/uploads";
+    join(process.cwd(), "uploads");
 
   // URL پایه پیش‌فرض: استفاده از /api/uploads endpoint
   // این endpoint فایل‌ها را از UPLOAD_BASE_DIR سرو می‌کند

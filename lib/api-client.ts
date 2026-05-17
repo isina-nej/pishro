@@ -10,13 +10,23 @@ export const api = axios.create({
 
 // Add request interceptor to include auth token if available
 api.interceptors.request.use(
-  async (config) => {
-    // Get token from cookie (browser environment only)
+  (config) => {
+    // Get token from localStorage or cookie (browser environment only)
     if (typeof window !== 'undefined') {
-      const token = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('admin_access_token='))
-        ?.split('=')[1];
+      let token: string | undefined;
+      
+      // Try localStorage first (more reliable in browser)
+      const storageToken = localStorage.getItem('admin_access_token');
+      if (storageToken) {
+        token = storageToken;
+      } else {
+        // Fallback to cookie
+        const cookieToken = document.cookie
+          .split('; ')
+          .find(row => row.startsWith('admin_access_token='))
+          ?.split('=')[1];
+        token = cookieToken;
+      }
       
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;

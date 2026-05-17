@@ -3,11 +3,12 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import axios from 'axios';
+import { api } from '@/lib/api-client';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CourseBasicTab from '@/components/admin/course-edit/CourseBasicTab';
 import CourseChaptersTab from '@/components/admin/course-edit/CourseChaptersTab';
 import CourseLessonsTab from '@/components/admin/course-edit/CourseLessonsTab';
+import AdminSidebar from '@/components/admin/AdminSidebar';
 import { toast } from 'react-hot-toast';
 
 interface CourseData {
@@ -25,23 +26,55 @@ interface CourseData {
   img?: string;
 }
 
+interface AdminUser {
+  id: string;
+  email: string;
+  name: string;
+  role: 'ADMIN' | 'MODERATOR' | 'VIEWER';
+}
+
 export default function CourseEditPage() {
   const router = useRouter();
   const params = useParams();
   const courseId = params.id as string;
 
   const [course, setCourse] = useState<CourseData | null>(null);
+  const [user, setUser] = useState<AdminUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('basic');
 
   useEffect(() => {
-    const fetchCourse = async () => {
+    const fetchData = async () => {
       try {
-        const { data } = await axios.get(`/api/admin/courses/${courseId}`);
-        setCourse(data.data);
+        const token = localStorage.getItem('admin_access_token');
+        
+        if (!token) {
+          router.push('/admin/login');
+          return;
+        }
+
+        // Fetch current user
+        const userResponse = await fetch('/api/admin/auth/me', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!userResponse.ok) {
+          localStorage.removeItem('admin_access_token');
+          router.push('/admin/login');
+          return;
+        }
+
+        const userData = await userResponse.json();
+        setUser(userData.user);
+
+        // Fetch course data
+        const courseResponse = await api.get(`/api/admin/courses/${courseId}`);
+        setCourse(courseResponse.data.data);
       } catch (error) {
-        console.error('Failed to fetch course:', error);
-        toast.error('خطا در دریافت اطلاعات دوره');
+        console.error('Failed to fetch data:', error);
+        toast.error('خطا در دریافت اطلاعات');
         router.push('/admin/dashboard');
       } finally {
         setLoading(false);

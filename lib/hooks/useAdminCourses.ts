@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import { api } from "@/lib/api-client";
 import { toast } from "react-hot-toast";
 
 export const adminCourseKeys = {
@@ -24,7 +24,7 @@ export function useAdminCoursesList(
       });
       if (filters?.search) params.set("search", filters.search);
       if (filters?.categoryId) params.set("categoryId", filters.categoryId);
-      const { data } = await axios.get(`/api/admin/courses?${params}`);
+      const { data } = await api.get(`/api/admin/courses?${params}`);
       return data.data as {
         items: Array<{
           id: string;
@@ -52,7 +52,7 @@ export function useAdminCourse(id: string, enabled = true) {
   return useQuery({
     queryKey: adminCourseKeys.detail(id),
     queryFn: async () => {
-      const { data } = await axios.get(`/api/admin/courses/${id}`);
+      const { data } = await api.get(`/api/admin/courses/${id}`);
       return data.data;
     },
     enabled: enabled && !!id,
@@ -69,7 +69,7 @@ export function useUpdateAdminCourse() {
       id: string;
       data: Record<string, unknown>;
     }) => {
-      const { data: res } = await axios.patch(`/api/admin/courses/${id}`, data);
+      const { data: res } = await api.patch(`/api/admin/courses/${id}`, data);
       return res.data;
     },
     onSuccess: (_data, { id }) => {
@@ -87,7 +87,7 @@ export function useCreateAdminCourse() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: Record<string, unknown>) => {
-      const { data: res } = await axios.post(`/api/admin/courses`, data);
+      const { data: res } = await api.post(`/api/admin/courses`, data);
       return res.data;
     },
     onSuccess: () => {
@@ -107,6 +107,6 @@ export async function uploadTempFile(
   const formData = new FormData();
   formData.append("file", file);
   formData.append("kind", kind);
-  const { data } = await axios.post("/api/admin/uploads/temp", formData);
+  const { data } = await api.post("/api/admin/uploads/temp", formData);
   return data.data.tempPath as string;
 }

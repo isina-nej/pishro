@@ -97,6 +97,7 @@ export default function AdminLoginForm({ onError, onSuccess }: AdminLoginFormPro
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           email: formData.email,
           password: formData.password,
@@ -114,7 +115,7 @@ export default function AdminLoginForm({ onError, onSuccess }: AdminLoginFormPro
         return;
       }
 
-      // Store token in localStorage
+      // Store token in localStorage as backup
       if (data.accessToken) {
         localStorage.setItem('admin_access_token', data.accessToken);
         localStorage.setItem('admin_user', JSON.stringify(data.user));

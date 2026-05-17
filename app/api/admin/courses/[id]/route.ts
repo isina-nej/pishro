@@ -6,7 +6,7 @@
  */
 
 import { NextRequest } from "next/server";
-import { getAdminAuth } from "@/lib/auth-simple";
+import { verifyAdminAccessToken } from "@/lib/admin-auth";
 
 import { prisma } from "@/lib/prisma";
 import {
@@ -25,13 +25,24 @@ import {
   safeDeleteStoragePath,
 } from "@/lib/course-media";
 
+// Helper to get admin auth from request
+function getAdminUserFromRequest(req: NextRequest) {
+  const authHeader = req.headers.get('Authorization');
+  if (!authHeader?.startsWith('Bearer ')) {
+    return null;
+  }
+  
+  const token = authHeader.slice(7);
+  return verifyAdminAccessToken(token);
+}
+
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const adminAuth = await getAdminAuth(req);
-    if (!adminAuth) {
+    const adminUser = getAdminUserFromRequest(req);
+    if (!adminUser) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
 
@@ -40,22 +51,7 @@ export async function GET(
     const course = await prisma.course.findUnique({
       where: { id },
       include: {
-        category: {
-          select: {
-            id: true,
-            slug: true,
-            title: true
-          }
-        },
-        tags: { include: { tag: true } },
-        _count: {
-          select: {
-            comments: true,
-            enrollments: true,
-            orderItems: true,
-            quizzes: true
-          }
-        }
+        category: true,
       }
     });
 
@@ -66,8 +62,9 @@ export async function GET(
     return successResponse(course);
   } catch (error) {
     console.error("Error fetching course:", error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
     return errorResponse(
-      "Error fetching course",
+      `Error fetching course: ${errorMsg}`,
       ErrorCodes.DATABASE_ERROR
     );
   }
@@ -78,8 +75,8 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const adminAuth = await getAdminAuth(req);
-    if (!adminAuth) {
+    const adminUser = getAdminUserFromRequest(req);
+    if (!adminUser) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
 
@@ -204,8 +201,8 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const adminAuth = await getAdminAuth(req);
-    if (!adminAuth) {
+    const adminUser = getAdminUserFromRequest(req);
+    if (!adminUser) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
 

@@ -19,7 +19,7 @@ const NEWS_COUNT = 30;
  */
 function createNewsImage(fileName: string, subfolder: string): void {
   try {
-    const uploadBaseDir = process.env.UPLOAD_BASE_DIR || "/opt/pishro_uploads";
+    const uploadBaseDir = process.env.UPLOAD_BASE_DIR || join(process.cwd(), "uploads");
     const dir = join(uploadBaseDir, subfolder);
     mkdirSync(dir, { recursive: true });
     

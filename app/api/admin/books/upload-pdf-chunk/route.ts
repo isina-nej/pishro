@@ -14,7 +14,7 @@ import {
   errorResponse
 } from "@/lib/api-response";
 
-const UPLOAD_DIR = process.env.UPLOAD_BASE_DIR || "/opt/pishro_uploads";
+const UPLOAD_DIR = process.env.UPLOAD_BASE_DIR || path.join(process.cwd(), "uploads");
 const CHUNKS_DIR = path.join(UPLOAD_DIR, "chunks");
 
 // CORS headers

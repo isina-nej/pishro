@@ -20,7 +20,7 @@ export async function GET(
     }
 
     // Path to the centralized uploads directory
-    let uploadBaseDir = process.env.UPLOAD_BASE_DIR || join("D:", "pishro_uploads");
+    let uploadBaseDir = process.env.UPLOAD_BASE_DIR || join(process.cwd(), "uploads");
     uploadBaseDir = resolve(uploadBaseDir);
     
     console.log("Resolved upload base dir:", uploadBaseDir);
