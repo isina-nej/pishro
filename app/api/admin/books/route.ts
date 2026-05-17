@@ -5,7 +5,6 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import { getAdminAuth } from "@/lib/auth-simple";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -123,8 +122,7 @@ export async function POST(req: NextRequest) {
       formats = [],
       status = [],
       tags = [],
-      tagIds = [],
-      readingTime,
+            readingTime,
       isFeatured = false,
       price,
       fileUrl,
@@ -143,17 +141,6 @@ export async function POST(req: NextRequest) {
     if (Object.keys(validationErrors).length > 0) {
       return validationError(validationErrors);
     }
-
-    // Validate and filter tagIds to only valid MongoDB ObjectIds
-    let validTagIds: string[] = [];
-    if (Array.isArray(tagIds) && tagIds.length > 0) {
-      validTagIds = tagIds.filter((id) => {
-        // MongoDB ObjectId is a 24-character hex string
-        return typeof id === "string" && /^[a-f\d]{24}$/i.test(id);
-      });
-    }
-
-    console.log("Creating book with tagIds:", { provided: tagIds, validated: validTagIds });
 
     // Check if slug already exists
     const existingBook = await prisma.digitalBook.findUnique({
@@ -183,8 +170,7 @@ export async function POST(req: NextRequest) {
       formats,
       status,
       tags,
-      tagIds: validTagIds,
-      fileUrl,
+            fileUrl,
       audioUrl
     });
 
@@ -213,9 +199,7 @@ export async function POST(req: NextRequest) {
         isFeatured,
         price,
         fileUrl,
-        audioUrl,
-        // Set tagIds for the relation
-        ...(validTagIds.length > 0 && { tagIds: validTagIds })
+        audioUrl
       }
     });
 
@@ -226,10 +210,8 @@ export async function POST(req: NextRequest) {
       where: { id: book.id },
       include: {
         relatedTags: {
-          select: {
-            id: true,
-            slug: true,
-            title: true
+          include: {
+            tag: true
           }
         }
       }

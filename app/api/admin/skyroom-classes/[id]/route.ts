@@ -1,8 +1,6 @@
 // @/app/api/admin/skyroom-classes/[id]/route.ts
 import { NextRequest } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
-import { auth } from "@/auth";
-import { getAdminAuth } from "@/lib/auth-simple";
 import {
   getSkyRoomClassById,
   // updateSkyRoomClass, // TODO: Implement
@@ -29,7 +27,7 @@ interface RouteParams {
 export async function GET(req: NextRequest, { params }: RouteParams) {
   try {
     const adminAuth = await getAdminAuth(req);
-if (!session?.user || session.user.role !== "ADMIN") {
+if (!adminAuth || adminAuth.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }
 

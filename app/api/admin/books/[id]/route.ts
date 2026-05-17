@@ -6,7 +6,6 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import { getAdminAuth } from "@/lib/auth-simple";
 import { unlink } from "fs/promises";
 import { prisma } from "@/lib/prisma";
@@ -64,10 +63,8 @@ export async function GET(
       where: { id },
       include: {
         relatedTags: {
-          select: {
-            id: true,
-            slug: true,
-            title: true
+          include: {
+            tag: true
           }
         }
       }
@@ -171,8 +168,7 @@ export async function PATCH(
     if (body.formats !== undefined) updateData.formats = body.formats;
     if (body.status !== undefined) updateData.status = body.status;
     if (body.tags !== undefined) updateData.tags = body.tags;
-    if (body.tagIds !== undefined) updateData.tagIds = body.tagIds;
-    if (body.readingTime !== undefined) updateData.readingTime = body.readingTime;
+        if (body.readingTime !== undefined) updateData.readingTime = body.readingTime;
     if (body.isFeatured !== undefined) updateData.isFeatured = body.isFeatured;
     if (body.price !== undefined) updateData.price = body.price;
     if (body.fileUrl !== undefined) updateData.fileUrl = body.fileUrl;
@@ -188,10 +184,8 @@ export async function PATCH(
       where: { id },
       include: {
         relatedTags: {
-          select: {
-            id: true,
-            slug: true,
-            title: true
+          include: {
+            tag: true
           }
         }
       }

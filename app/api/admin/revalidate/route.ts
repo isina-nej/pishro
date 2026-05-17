@@ -6,10 +6,7 @@
 
 import { NextRequest } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
-import { auth } from "@/auth";
-import { getAdminAuth } from "@/lib/auth-simple";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { getAdminAuth } from "@/lib/auth-simple";
 import {
   successResponse,
   errorResponse,
@@ -41,12 +38,12 @@ export async function POST(req: NextRequest) {
   try {
 
     const adminAuth = await getAdminAuth(req);
-if (!session?.user) {
+if (!adminAuth) {
       return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
     }
 
     // Check if user is admin (assuming role field exists in user model)
-    if (session.user.role !== "admin") {
+    if (adminAuth.role !== "ADMIN") {
       return errorResponse("شما دسترسی به این عملیات ندارید", ErrorCodes.UNAUTHORIZED);
     }
 
@@ -125,15 +122,15 @@ if (!session?.user) {
  * GET request to check revalidation status and get available paths
  * Useful for admin dashboard
  */
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
 
     const adminAuth = await getAdminAuth(req);
-if (!session?.user) {
+    if (!adminAuth) {
       return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
     }
 
-    if (session.user.role !== "admin") {
+    if (adminAuth.role !== "ADMIN") {
       return errorResponse("شما دسترسی به این عملیات ندارید", ErrorCodes.UNAUTHORIZED);
     }
 

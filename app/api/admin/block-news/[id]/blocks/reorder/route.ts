@@ -10,11 +10,7 @@ import {
 import { reorderBlocks } from '@/lib/services/block-news-service';
 import { getAdminAuth } from "@/lib/auth-simple";
 import { ReorderBlocksSchema } from '@/lib/schemas/block-news-schema';
-import { getAdminAuth } from "@/lib/auth-simple";
 import type { ReorderBlocksRequest } from '@/lib/types/block-news';
-import { getAdminAuth } from "@/lib/auth-simple";
-import { auth } from '@/auth';
-import { getAdminAuth } from "@/lib/auth-simple";
 
 export async function PATCH(
   req: Request,
@@ -23,12 +19,8 @@ export async function PATCH(
   try {
     const { id } = await params;
     const adminAuth = await getAdminAuth(req);
-    if (!session?.user) {
-      return errorResponse('ورود به سیستم الزامی است');
-    }
-
-    if (session.user.role !== 'ADMIN') {
-      return errorResponse('دسترسی منحصر به مدیران است');
+    if (!adminAuth) {
+      return errorResponse('دسترسی محدود. فقط ادمین.');
     }
 
     const body = (await req.json()) as ReorderBlocksRequest;

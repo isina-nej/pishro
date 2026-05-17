@@ -16,9 +16,6 @@ import {
 import { BlockInputSchema } from '@/lib/schemas/block-news-schema';
 import { getAdminAuth } from "@/lib/auth-simple";
 import type { ContentBlockCreateRequest } from '@/lib/types/block-news';
-import { getAdminAuth } from "@/lib/auth-simple";
-import { auth } from '@/auth';
-import { getAdminAuth } from "@/lib/auth-simple";
 
 export async function GET(
   req: Request,
@@ -27,12 +24,8 @@ export async function GET(
   try {
     const { id } = await params;
     const adminAuth = await getAdminAuth(req);
-    if (!session?.user) {
-      return errorResponse('ورود به سیستم الزامی است');
-    }
-
-    if (session.user.role !== 'ADMIN') {
-      return errorResponse('دسترسی منحصر به مدیران است');
+    if (!adminAuth) {
+      return errorResponse('دسترسی محدود. فقط ادمین.');
     }
 
     const news = await getNews(id);
@@ -53,12 +46,8 @@ export async function POST(
   try {
     const { id } = await params;
     const adminAuth = await getAdminAuth(req);
-    if (!session?.user) {
-      return errorResponse('ورود به سیستم الزامی است');
-    }
-
-    if (session.user.role !== 'ADMIN') {
-      return errorResponse('دسترسی منحصر به مدیران است');
+    if (!adminAuth) {
+      return errorResponse('دسترسی محدود. فقط ادمین.');
     }
 
     const body = (await req.json()) as ContentBlockCreateRequest;

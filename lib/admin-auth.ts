@@ -3,13 +3,14 @@
  * JWT-based authentication for admin users with separate token handling
  */
 
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
+import type { StringValue } from 'ms';
 import bcrypt from 'bcryptjs';
 import { prisma } from './prisma';
 
-const ADMIN_SECRET = process.env.ADMIN_JWT_SECRET || process.env.NEXTAUTH_SECRET || 'admin-secret-key';
-const ADMIN_TOKEN_EXPIRY = process.env.ADMIN_TOKEN_EXPIRY || '24h';
-const REFRESH_TOKEN_EXPIRY = process.env.ADMIN_REFRESH_TOKEN_EXPIRY || '7d';
+const ADMIN_SECRET: string = (process.env.ADMIN_JWT_SECRET || process.env.NEXTAUTH_SECRET || 'admin-secret-key') as string;
+const ADMIN_TOKEN_EXPIRY = (process.env.ADMIN_TOKEN_EXPIRY || '24h') as StringValue;
+const REFRESH_TOKEN_EXPIRY = (process.env.ADMIN_REFRESH_TOKEN_EXPIRY || '7d') as StringValue;
 
 export interface AdminUser {
   id: string;
@@ -36,9 +37,10 @@ export function createAdminAccessToken(user: AdminUser): string {
     type: 'access',
   };
 
-  return jwt.sign(payload, ADMIN_SECRET, {
+  const options: SignOptions = {
     expiresIn: ADMIN_TOKEN_EXPIRY,
-  });
+  };
+  return jwt.sign(payload, ADMIN_SECRET as string, options);
 }
 
 /**
@@ -50,9 +52,10 @@ export function createAdminRefreshToken(userId: string): string {
     type: 'refresh',
   };
 
-  return jwt.sign(payload, ADMIN_SECRET, {
+  const options: SignOptions = {
     expiresIn: REFRESH_TOKEN_EXPIRY,
-  });
+  };
+  return jwt.sign(payload, ADMIN_SECRET as string, options);
 }
 
 /**

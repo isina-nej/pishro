@@ -83,13 +83,15 @@ model Course {
   students        Int?
   videosCount     Int?
   introVideoUrl   String? // ویدیو معرفی دوره
+  hasChapters     Boolean  @default(false) // نشان‌دهنده وجود فصل‌های تنظیم شده
   createdAt       DateTime? @default(now())
   updatedAt       DateTime? @default(now())
 
   category   Category? @relation("CategoryCourses", fields: [categoryId], references: [id], onDelete: SetNull)
   categoryId String?  
 
-  tags CourseTags[] @relation("CourseTags")
+  tags      CourseTags[] @relation("CourseTags")
+  chapters  Chapter[]    @relation("CourseChapters")
 
   slug          String?      @unique
   level         CourseLevel?
@@ -110,6 +112,20 @@ model Course {
 
   @@index([categoryId])
   @@index([published, featured])
+}
+
+model Chapter {
+  id        String    @id @default(cuid())
+  courseId  String
+  course    Course    @relation("CourseChapters", fields: [courseId], references: [id], onDelete: Cascade)
+  title     String    @db.VarChar(200)
+  position  Int       @default(0)
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  lessons   Lesson[]  @relation("ChapterLessons")
+
+  @@unique([courseId, position])
+  @@index([courseId])
 }
 
 model Comment {
@@ -225,6 +241,8 @@ model Lesson {
   id          String  @id @default(cuid())
   course      Course  @relation("CourseLessons", fields: [courseId], references: [id], onDelete: Cascade)
   courseId    String 
+  chapter     Chapter? @relation("ChapterLessons", fields: [chapterId], references: [id], onDelete: SetNull)
+  chapterId   String?
   title       String
   description String?
 
@@ -246,6 +264,7 @@ model Lesson {
 
   @@index([courseId, order])
   @@index([courseId, published])
+  @@index([chapterId])
   @@index([videoId])
 }
 

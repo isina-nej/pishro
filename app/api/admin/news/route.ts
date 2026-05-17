@@ -6,12 +6,8 @@
 
 import { NextRequest } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
-import { auth } from "@/auth";
-import { getAdminAuth } from "@/lib/auth-simple";
 import { Prisma } from "@prisma/client";
-import { getAdminAuth } from "@/lib/auth-simple";
 import { prisma } from "@/lib/prisma";
-import { getAdminAuth } from "@/lib/auth-simple";
 import {
   errorResponse,
   paginatedResponse,
@@ -20,12 +16,11 @@ import {
   validationError
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
-import { getAdminAuth } from "@/lib/auth-simple";
 
 export async function GET(req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(req);
-if (!session?.user) {
+if (!adminAuth) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
     if (!adminAuth) {
@@ -88,13 +83,7 @@ if (!session?.user) {
               title: true
             }
           },
-          relatedTags: {
-            select: {
-              id: true,
-              slug: true,
-              title: true
-            }
-          },
+          relatedTags: { include: { tag: true } },
           _count: {
             select: {
               comments: true
@@ -118,7 +107,7 @@ if (!session?.user) {
 export async function POST(req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(req);
-if (!session?.user) {
+if (!adminAuth) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
     if (!adminAuth) {
@@ -136,8 +125,7 @@ if (!session?.user) {
       category,
       tags = [],
       categoryId,
-      tagIds = [],
-      published = false,
+            published = false,
       publishedAt,
       featured = false,
       readingTime
@@ -180,7 +168,6 @@ if (!session?.user) {
         category: category || "",
         tags,
         categoryId,
-        tagIds,
         published,
         publishedAt: published ? (publishedAt ? new Date(publishedAt) : new Date()) : null,
         featured,
@@ -194,13 +181,7 @@ if (!session?.user) {
             title: true
           }
         },
-        relatedTags: {
-          select: {
-            id: true,
-            slug: true,
-            title: true
-          }
-        }
+        relatedTags: { include: { tag: true } }
       }
     });
 

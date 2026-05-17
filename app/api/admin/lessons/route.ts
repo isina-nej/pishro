@@ -1,10 +1,7 @@
 // @/app/api/admin/lessons/route.ts
 import { NextRequest } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
-import { auth } from "@/auth";
-import { getAdminAuth } from "@/lib/auth-simple";
 import { getAllLessons, createLesson } from "@/lib/services/lesson-service";
-import { getAdminAuth } from "@/lib/auth-simple";
 import {
   successResponse,
   errorResponse,
@@ -17,8 +14,8 @@ import {
  */
 export async function GET(_req: NextRequest) {
   try {
-    const adminAuth = await getAdminAuth(req);
-if (!session?.user || session.user.role !== "ADMIN") {
+    const adminAuth = await getAdminAuth(_req);
+    if (!adminAuth) {
       return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }
 
@@ -41,7 +38,7 @@ if (!session?.user || session.user.role !== "ADMIN") {
 export async function POST(req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(req);
-if (!session?.user || session.user.role !== "ADMIN") {
+    if (!adminAuth) {
       return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }
 
@@ -54,6 +51,7 @@ if (!session?.user || session.user.role !== "ADMIN") {
       thumbnail,
       duration,
       order,
+      chapterId,
       published
     } = body;
 
@@ -73,6 +71,7 @@ if (!session?.user || session.user.role !== "ADMIN") {
       thumbnail,
       duration,
       order,
+      chapterId,
       published
     });
 

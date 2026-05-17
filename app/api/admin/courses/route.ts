@@ -146,8 +146,7 @@ export async function POST(req: NextRequest) {
       students,
       videosCount,
       categoryId,
-      tagIds = [],
-      slug,
+            slug,
       level,
       language = "FA",
       prerequisites = [],
@@ -196,7 +195,6 @@ export async function POST(req: NextRequest) {
         students,
         videosCount,
         categoryId,
-        tagIds,
         slug,
         level,
         language,
@@ -215,13 +213,7 @@ export async function POST(req: NextRequest) {
             title: true
           }
         },
-        relatedTags: {
-          select: {
-            id: true,
-            slug: true,
-            title: true
-          }
-        }
+        tags: { include: { tag: true } }
       }
     });
 

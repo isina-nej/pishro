@@ -392,9 +392,9 @@ export async function getCategoryCourses(
               color: true,
             },
           },
-          relatedTags: {
-            where: {
-              published: true,
+          tags: {
+            include: {
+              tag: true,
             },
             take: 5,
           },

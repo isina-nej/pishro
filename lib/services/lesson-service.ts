@@ -122,6 +122,7 @@ export async function createLesson(data: {
   thumbnail?: string;
   duration?: string;
   order?: number;
+  chapterId?: string;
   published?: boolean;
 }) {
   try {
@@ -134,6 +135,7 @@ export async function createLesson(data: {
         thumbnail: data.thumbnail,
         duration: data.duration,
         order: data.order ?? 0,
+        chapterId: data.chapterId,
         published: data.published ?? true,
       },
     });

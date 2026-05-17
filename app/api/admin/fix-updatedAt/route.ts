@@ -1,10 +1,7 @@
 // Admin endpoint to fix null updatedAt values in the database
 import { NextRequest } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
-import { auth } from "@/auth";
-import { getAdminAuth } from "@/lib/auth-simple";
 import { prisma } from "@/lib/prisma";
-import { getAdminAuth } from "@/lib/auth-simple";
 import {
   successResponse,
   errorResponse,
@@ -13,59 +10,22 @@ import {
 
 export async function POST(_req: NextRequest) {
   try {
-    const adminAuth = await getAdminAuth(req);
-// Check authentication
-    if (!session?.user) {
+    const adminAuth = await getAdminAuth(_req);
+    if (!adminAuth) {
       return errorResponse("احراز هویت نشده است", ErrorCodes.UNAUTHORIZED);
-    }
-
-    // Check if user is admin
-    const user = await prisma.user.findUnique({
-      where: { phone: session.user.phone as string },
-      select: { role: true }
-    });
-
-    if (user?.role !== "ADMIN") {
-      return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
     console.log("🔧 Starting database fix for null updatedAt values...");
 
-    // Fix null updatedAt in Course collection
-    const courseUpdateResult = await prisma.$runCommandRaw({
-      update: "Course",
-      updates: [
-        {
-          q: {
-            $or: [{ updatedAt: null }, { updatedAt: { $exists: false } }]
-          },
-          u: {
-            $set: {
-              updatedAt: new Date()
-            }
-          },
-          multi: true
-        },
-      ]
-    });
+    // Fix null updatedAt in Course table using SQL
+    const courseUpdateResult = await prisma.$executeRawUnsafe(
+      `UPDATE Course SET updatedAt = NOW() WHERE updatedAt IS NULL`
+    );
 
-    // Fix null updatedAt in User collection
-    const userUpdateResult = await prisma.$runCommandRaw({
-      update: "User",
-      updates: [
-        {
-          q: {
-            $or: [{ updatedAt: null }, { updatedAt: { $exists: false } }]
-          },
-          u: {
-            $set: {
-              updatedAt: new Date()
-            }
-          },
-          multi: true
-        },
-      ]
-    });
+    // Fix null updatedAt in User table using SQL
+    const userUpdateResult = await prisma.$executeRawUnsafe(
+      `UPDATE User SET updatedAt = NOW() WHERE updatedAt IS NULL`
+    );
 
     console.log("✅ Database fix completed successfully!");
 

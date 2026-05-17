@@ -7,10 +7,7 @@
 
 import { NextRequest } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
-import { auth } from "@/auth";
-import { getAdminAuth } from "@/lib/auth-simple";
 import { prisma } from "@/lib/prisma";
-import { getAdminAuth } from "@/lib/auth-simple";
 import {
   successResponse,
   errorResponse,
@@ -19,7 +16,6 @@ import {
   noContentResponse
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
-import { getAdminAuth } from "@/lib/auth-simple";
 
 export async function GET(
   req: NextRequest,
@@ -27,7 +23,7 @@ export async function GET(
 ) {
   try {
     const adminAuth = await getAdminAuth(req);
-if (!session?.user) {
+if (!adminAuth) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
     if (!adminAuth) {
@@ -40,10 +36,8 @@ if (!session?.user) {
       where: { id },
       include: {
         tags: {
-          select: {
-            id: true,
-            slug: true,
-            title: true
+          include: {
+            tag: true
           }
         },
         _count: {
@@ -79,7 +73,7 @@ export async function PATCH(
 ) {
   try {
     const adminAuth = await getAdminAuth(req);
-if (!session?.user) {
+if (!adminAuth) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
     if (!adminAuth) {
@@ -155,17 +149,14 @@ if (!session?.user) {
     if (body.published !== undefined) updateData.published = body.published;
     if (body.featured !== undefined) updateData.featured = body.featured;
     if (body.order !== undefined) updateData.order = body.order;
-    if (body.tagIds !== undefined) updateData.tagIds = body.tagIds;
 
     const updatedCategory = await prisma.category.update({
       where: { id },
       data: updateData,
       include: {
         tags: {
-          select: {
-            id: true,
-            slug: true,
-            title: true
+          include: {
+            tag: true
           }
         }
       }
@@ -187,7 +178,7 @@ export async function DELETE(
 ) {
   try {
     const adminAuth = await getAdminAuth(req);
-if (!session?.user) {
+if (!adminAuth) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
     if (!adminAuth) {

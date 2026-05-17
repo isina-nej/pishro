@@ -4,7 +4,6 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/auth";
 import { getAdminAuth } from "@/lib/auth-simple";
 import { readFile, rm, mkdir } from "fs/promises";
 import { createWriteStream, existsSync } from "fs";

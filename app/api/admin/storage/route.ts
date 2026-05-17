@@ -6,25 +6,20 @@
 
 import { NextRequest } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
-import { auth } from "@/auth";
-import { getAdminAuth } from "@/lib/auth-simple";
 import { copyFile, readdir, mkdir } from "fs/promises";
-import { getAdminAuth } from "@/lib/auth-simple";
 import { join } from "path";
-import { getAdminAuth } from "@/lib/auth-simple";
 import {
   successResponse,
   errorResponse,
   ErrorCodes
 } from "@/lib/api-response";
 import { getAllUploadPaths } from "@/lib/upload-config";
-import { getAdminAuth } from "@/lib/auth-simple";
 
 export async function GET(_req: NextRequest) {
   try {
-    const adminAuth = await getAdminAuth(req);
+    const adminAuth = await getAdminAuth(_req);
 // فقط ادمین می‌تواند این endpoint را دیده‌ها را ببیند
-    if (!session?.user) {
+    if (!adminAuth) {
       return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (!adminAuth) {
@@ -56,7 +51,7 @@ export async function POST(req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(req);
 // فقط ادمین می‌تواند مهاجرت انجام دهد
-    if (!session?.user) {
+    if (!adminAuth) {
       return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (!adminAuth) {

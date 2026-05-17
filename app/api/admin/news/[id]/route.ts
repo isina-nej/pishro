@@ -7,11 +7,8 @@
 
 import { NextRequest } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
-import { auth } from "@/auth";
-import { getAdminAuth } from "@/lib/auth-simple";
 
 import { prisma } from "@/lib/prisma";
-import { getAdminAuth } from "@/lib/auth-simple";
 import {
   successResponse,
   errorResponse,
@@ -20,7 +17,6 @@ import {
   noContentResponse
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
-import { getAdminAuth } from "@/lib/auth-simple";
 
 export async function GET(
   req: NextRequest,
@@ -28,7 +24,7 @@ export async function GET(
 ) {
   try {
     const adminAuth = await getAdminAuth(req);
-if (!session?.user) {
+if (!adminAuth) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
     if (!adminAuth) {
@@ -47,13 +43,7 @@ if (!session?.user) {
             title: true
           }
         },
-        relatedTags: {
-          select: {
-            id: true,
-            slug: true,
-            title: true
-          }
-        },
+        relatedTags: { include: { tag: true } },
         _count: {
           select: {
             comments: true
@@ -82,7 +72,7 @@ export async function PATCH(
 ) {
   try {
     const adminAuth = await getAdminAuth(req);
-if (!session?.user) {
+if (!adminAuth) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
     if (!adminAuth) {
@@ -131,8 +121,7 @@ if (!session?.user) {
     if (body.category !== undefined) updateData.category = body.category;
     if (body.tags !== undefined) updateData.tags = body.tags;
     if (body.categoryId !== undefined) updateData.categoryId = body.categoryId;
-    if (body.tagIds !== undefined) updateData.tagIds = body.tagIds;
-    if (body.published !== undefined) {
+        if (body.published !== undefined) {
       updateData.published = body.published;
       // Auto-set publishedAt when publishing
       if (body.published && !existingArticle.publishedAt) {
@@ -156,13 +145,7 @@ if (!session?.user) {
             title: true
           }
         },
-        relatedTags: {
-          select: {
-            id: true,
-            slug: true,
-            title: true
-          }
-        }
+        relatedTags: { include: { tag: true } }
       }
     });
 
@@ -182,7 +165,7 @@ export async function DELETE(
 ) {
   try {
     const adminAuth = await getAdminAuth(req);
-if (!session?.user) {
+if (!adminAuth) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
     if (!adminAuth) {

@@ -26,8 +26,8 @@ export async function POST(
     }
 
     // Check if user has already liked
-    const userLikes = comment.likes || [];
-    const userDislikes = comment.dislikes || [];
+    const userLikes = (comment.likes as string[]) || [];
+    const userDislikes = (comment.dislikes as string[]) || [];
 
     const hasLiked = userLikes.includes(session.user.id);
     const hasDisliked = userDislikes.includes(session.user.id);

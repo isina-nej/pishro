@@ -1,7 +1,6 @@
 /**
  * PATCH /api/admin/block-news/[id]/status - Change news status (publish/archive)
  */
-import { auth } from '@/auth';
 import { getAdminAuth } from "@/lib/auth-simple";
 
 import {
@@ -21,11 +20,11 @@ export async function PATCH(
   try {
     const { id } = await params;
     const adminAuth = await getAdminAuth(req);
-    if (!session?.user) {
+    if (!adminAuth) {
       return errorResponse('ورود به سیستم الزامی است');
     }
 
-    if (session.user.role !== 'ADMIN') {
+    if (adminAuth.role !== 'ADMIN') {
       return errorResponse('دسترسی منحصر به مدیران است');
     }
 

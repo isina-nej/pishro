@@ -67,7 +67,7 @@ export default async function OrderPage({ params }: OrderPageProps) {
     total: order.total,
     status: order.status,
     paymentRef: order.paymentRef,
-    createdAt: order.createdAt.toISOString(),
+    createdAt: (order.createdAt || new Date()).toISOString(),
     user: order.user,
     items,
   };

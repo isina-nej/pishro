@@ -15,9 +15,6 @@ import {
 import { BlockInputSchema } from '@/lib/schemas/block-news-schema';
 import { getAdminAuth } from "@/lib/auth-simple";
 import type { ContentBlockUpdateRequest } from '@/lib/types/block-news';
-import { getAdminAuth } from "@/lib/auth-simple";
-import { auth } from '@/auth';
-import { getAdminAuth } from "@/lib/auth-simple";
 
 export async function GET(
   req: Request,
@@ -26,12 +23,8 @@ export async function GET(
   try {
     const { id, blockId } = await params;
     const adminAuth = await getAdminAuth(req);
-    if (!session?.user) {
-      return errorResponse('ورود به سیستم الزامی است');
-    }
-
-    if (session.user.role !== 'ADMIN') {
-      return errorResponse('دسترسی منحصر به مدیران است');
+    if (!adminAuth) {
+      return errorResponse('دسترسی محدود. فقط ادمین.');
     }
 
     // TODO: Implement getContentBlock service function
@@ -49,12 +42,8 @@ export async function PATCH(
   try {
     const { id, blockId } = await params;
     const adminAuth = await getAdminAuth(req);
-    if (!session?.user) {
-      return errorResponse('ورود به سیستم الزامی است');
-    }
-
-    if (session.user.role !== 'ADMIN') {
-      return errorResponse('دسترسی منحصر به مدیران است');
+    if (!adminAuth) {
+      return errorResponse('دسترسی محدود. فقط ادمین.');
     }
 
     const body = (await req.json()) as ContentBlockUpdateRequest;
@@ -79,12 +68,8 @@ export async function DELETE(
   try {
     const { id, blockId } = await params;
     const adminAuth = await getAdminAuth(req);
-    if (!session?.user) {
-      return errorResponse('ورود به سیستم الزامی است');
-    }
-
-    if (session.user.role !== 'ADMIN') {
-      return errorResponse('دسترسی منحصر به مدیران است');
+    if (!adminAuth) {
+      return errorResponse('دسترسی محدود. فقط ادمین.');
     }
 
     const result = await deleteContentBlock(id, blockId);

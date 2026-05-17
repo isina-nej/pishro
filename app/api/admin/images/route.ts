@@ -6,8 +6,6 @@
 
 import { NextRequest } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
-import { auth } from "@/auth";
-import { getAdminAuth } from "@/lib/auth-simple";
 import {
   errorResponse,
   paginatedResponse,
@@ -16,14 +14,12 @@ import {
   validationError
 } from "@/lib/api-response";
 import { getUserImages, uploadImage } from "@/lib/services/image-service";
-import { getAdminAuth } from "@/lib/auth-simple";
 import { ImageCategory } from "@prisma/client";
-import { getAdminAuth } from "@/lib/auth-simple";
 
 export async function GET(req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(req);
-if (!session?.user) {
+if (!adminAuth) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (!adminAuth) {
@@ -42,7 +38,7 @@ if (!session?.user) {
 
     // Fetch images
     const result = await getUserImages({
-      userId: session.user.id,
+      userId: adminAuth.id,
       category,
       search,
       page,
@@ -67,7 +63,7 @@ if (!session?.user) {
 export async function POST(req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(req);
-if (!session?.user) {
+if (!adminAuth) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (!adminAuth) {
@@ -100,7 +96,7 @@ if (!session?.user) {
     // Upload image
     try {
       const result = await uploadImage({
-        userId: session.user.id,
+        userId: adminAuth.id,
         file,
         category,
         title,

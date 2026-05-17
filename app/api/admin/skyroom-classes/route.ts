@@ -1,8 +1,6 @@
 // @/app/api/admin/skyroom-classes/route.ts
 import { NextRequest } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
-import { auth } from "@/auth";
-import { getAdminAuth } from "@/lib/auth-simple";
 import {
   getAllSkyRoomClassesForAdmin,
   createSkyRoomClass
@@ -20,8 +18,8 @@ import {
  */
 export async function GET(_req: NextRequest) {
   try {
-    const adminAuth = await getAdminAuth(req);
-if (!session?.user || session.user.role !== "ADMIN") {
+    const adminAuth = await getAdminAuth(_req);
+if (!adminAuth || adminAuth.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }
 
@@ -44,7 +42,7 @@ if (!session?.user || session.user.role !== "ADMIN") {
 export async function POST(req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(req);
-if (!session?.user || session.user.role !== "ADMIN") {
+if (!adminAuth || adminAuth.role !== "ADMIN") {
       return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }
 

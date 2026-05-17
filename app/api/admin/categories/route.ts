@@ -6,12 +6,8 @@
 
 import { NextRequest } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
-import { auth } from "@/auth";
-import { getAdminAuth } from "@/lib/auth-simple";
 import { Prisma } from "@prisma/client";
-import { getAdminAuth } from "@/lib/auth-simple";
 import { prisma } from "@/lib/prisma";
-import { getAdminAuth } from "@/lib/auth-simple";
 import {
   errorResponse,
   paginatedResponse,
@@ -20,12 +16,11 @@ import {
   validationError
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
-import { getAdminAuth } from "@/lib/auth-simple";
 
 export async function GET(req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(req);
-if (!session?.user) {
+if (!adminAuth) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
     if (!adminAuth) {
@@ -75,13 +70,7 @@ if (!session?.user) {
         take: limit,
         orderBy: { order: "asc" },
         include: {
-          tags: {
-            select: {
-              id: true,
-              slug: true,
-              title: true
-            }
-          },
+          tags: { include: { tag: true } },
           _count: {
             select: {
               courses: true,
@@ -110,7 +99,7 @@ if (!session?.user) {
 export async function POST(req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(req);
-if (!session?.user) {
+if (!adminAuth) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
     if (!adminAuth) {
@@ -149,8 +138,7 @@ if (!session?.user) {
       published = true,
       featured = false,
       order = 0,
-      tagIds = []
-    } = body;
+          } = body;
 
     // Validation
     if (!slug || !title) {
@@ -209,17 +197,10 @@ if (!session?.user) {
         enableUserLevelSection,
         published,
         featured,
-        order,
-        tagIds
+        order
       },
       include: {
-        tags: {
-          select: {
-            id: true,
-            slug: true,
-            title: true
-          }
-        }
+        tags: { include: { tag: true } }
       }
     });
 

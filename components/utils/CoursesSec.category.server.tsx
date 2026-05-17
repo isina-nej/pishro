@@ -49,16 +49,16 @@ export default async function CoursesSectionCategory({
   });
 
   // Serialize dates to strings for client component
-  const serializedCourses: SerializedCourse[] = coursesData.courses.map((course) => ({
+  const serializedCourses: SerializedCourse[] = (coursesData.courses as any[]).map((course) => ({
     ...course,
-    createdAt: course.createdAt.toISOString(),
-    updatedAt: course.updatedAt.toISOString(),
-    relatedTags: course.relatedTags.map((tag) => ({
-      ...tag,
-      createdAt: tag.createdAt.toISOString(),
-      updatedAt: tag.updatedAt.toISOString(),
+    createdAt: (course.createdAt || new Date()).toISOString(),
+    updatedAt: (course.updatedAt || new Date()).toISOString(),
+    relatedTags: (course.tags || []).map((tagRelation: any) => ({
+      ...tagRelation.tag,
+      createdAt: (tagRelation.tag?.createdAt || new Date()).toISOString(),
+      updatedAt: (tagRelation.tag?.updatedAt || new Date()).toISOString(),
     })),
-  }));
+  })) as SerializedCourse[];
 
   return (
     <CoursesGridCategoryClient

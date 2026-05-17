@@ -1,6 +1,5 @@
 // @/app/api/admin/videos/[videoId]/route.ts
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import { getAdminAuth } from "@/lib/auth-simple";
 import {
   successResponse,

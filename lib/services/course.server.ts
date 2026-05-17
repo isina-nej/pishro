@@ -54,13 +54,17 @@ export async function getCourseBySlug(
             icon: true,
           },
         },
-        relatedTags: {
-          select: {
-            id: true,
-            slug: true,
-            title: true,
-            color: true,
-            icon: true,
+        tags: {
+          include: {
+            tag: {
+              select: {
+                id: true,
+                slug: true,
+                title: true,
+                color: true,
+                icon: true,
+              },
+            },
           },
         },
         comments: {

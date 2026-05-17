@@ -5,27 +5,24 @@
 
 import { NextRequest } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
-import { auth } from "@/auth";
-import { getAdminAuth } from "@/lib/auth-simple";
 import {
   errorResponse,
   successResponse,
   ErrorCodes
 } from "@/lib/api-response";
 import { getUserImageStats } from "@/lib/services/image-service";
-import { getAdminAuth } from "@/lib/auth-simple";
 
 export async function GET(_req: NextRequest) {
   try {
-    const adminAuth = await getAdminAuth(req);
-if (!session?.user) {
+    const adminAuth = await getAdminAuth(_req);
+if (!adminAuth) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (!adminAuth) {
       return errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
-    const stats = await getUserImageStats(session.user.id);
+    const stats = await getUserImageStats(adminAuth.id);
 
     return successResponse(stats);
   } catch (error) {

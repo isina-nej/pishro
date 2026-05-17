@@ -7,8 +7,6 @@
 
 import { NextRequest } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
-import { auth } from "@/auth";
-import { getAdminAuth } from "@/lib/auth-simple";
 import {
   errorResponse,
   successResponse,
@@ -22,7 +20,6 @@ import {
   updateImage
 } from "@/lib/services/image-service";
 import { ImageCategory } from "@prisma/client";
-import { getAdminAuth } from "@/lib/auth-simple";
 
 export async function GET(
   req: NextRequest,
@@ -30,7 +27,7 @@ export async function GET(
 ) {
   try {
     const adminAuth = await getAdminAuth(req);
-if (!session?.user) {
+if (!adminAuth) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (!adminAuth) {
@@ -39,7 +36,7 @@ if (!session?.user) {
 
     const { id } = await params;
 
-    const image = await getImageById(id, session.user.id);
+    const image = await getImageById(id, adminAuth.id);
 
     if (!image) {
       return notFoundResponse("Image", "تصویر یافت نشد");
@@ -61,7 +58,7 @@ export async function PATCH(
 ) {
   try {
     const adminAuth = await getAdminAuth(req);
-if (!session?.user) {
+if (!adminAuth) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (!adminAuth) {
@@ -83,7 +80,7 @@ if (!session?.user) {
     try {
       const updatedImage = await updateImage({
         imageId: id,
-        userId: session.user.id,
+        userId: adminAuth.id,
         title,
         description,
         alt,
@@ -120,7 +117,7 @@ export async function DELETE(
 ) {
   try {
     const adminAuth = await getAdminAuth(req);
-if (!session?.user) {
+if (!adminAuth) {
       return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
     if (!adminAuth) {
@@ -130,7 +127,7 @@ if (!session?.user) {
     const { id } = await params;
 
     try {
-      await deleteImage(id, session.user.id);
+      await deleteImage(id, adminAuth.id);
       return successResponse(
         { deleted: true },
         "تصویر با موفقیت حذف شد"

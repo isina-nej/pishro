@@ -17,18 +17,15 @@ import {
 import { CreateNewsSchema } from '@/lib/schemas/block-news-schema';
 import { getAdminAuth } from "@/lib/auth-simple";
 import type { NewsListResponse, CreateNewsRequest, NewsDetailResponse } from '@/lib/types/block-news';
-import { getAdminAuth } from "@/lib/auth-simple";
-import { auth } from '@/auth';
-import { getAdminAuth } from "@/lib/auth-simple";
 
 export async function GET(req: Request) {
   try {
     const adminAuth = await getAdminAuth(req);
-    if (!session?.user) {
+    if (!adminAuth) {
       return errorResponse('ورود به سیستم الزامی است');
     }
 
-    if (session.user.role !== 'ADMIN') {
+    if (adminAuth.role !== 'ADMIN') {
       return errorResponse('دسترسی منحصر به مدیران است');
     }
 
@@ -67,11 +64,11 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const adminAuth = await getAdminAuth(req);
-    if (!session?.user) {
+    if (!adminAuth) {
       return errorResponse('ورود به سیستم الزامی است');
     }
 
-    if (session.user.role !== 'ADMIN') {
+    if (adminAuth.role !== 'ADMIN') {
       return errorResponse('دسترسی منحصر به مدیران است');
     }
 
@@ -80,7 +77,7 @@ export async function POST(req: Request) {
     // Validate input
     const validated = CreateNewsSchema.parse({
       ...body,
-      authorId: session.user.id
+      authorId: adminAuth.id
     });
 
     const news = await createNews(validated);

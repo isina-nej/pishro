@@ -6,7 +6,6 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
 import { getAdminAuth } from "@/lib/auth-simple";
 
 import { prisma } from "@/lib/prisma";
@@ -41,13 +40,7 @@ export async function GET(
             title: true
           }
         },
-        relatedTags: {
-          select: {
-            id: true,
-            slug: true,
-            title: true
-          }
-        },
+        tags: { include: { tag: true } },
         _count: {
           select: {
             comments: true,
@@ -126,8 +119,7 @@ export async function PATCH(
     if (body.students !== undefined) updateData.students = body.students;
     if (body.videosCount !== undefined) updateData.videosCount = body.videosCount;
     if (body.categoryId !== undefined) updateData.categoryId = body.categoryId;
-    if (body.tagIds !== undefined) updateData.tagIds = body.tagIds;
-    if (body.slug !== undefined) updateData.slug = body.slug;
+        if (body.slug !== undefined) updateData.slug = body.slug;
     if (body.level !== undefined) updateData.level = body.level;
     if (body.language !== undefined) updateData.language = body.language;
     if (body.prerequisites !== undefined) updateData.prerequisites = body.prerequisites;
@@ -149,13 +141,7 @@ export async function PATCH(
             title: true
           }
         },
-        relatedTags: {
-          select: {
-            id: true,
-            slug: true,
-            title: true
-          }
-        }
+        tags: { include: { tag: true } }
       }
     });
 

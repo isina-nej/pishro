@@ -67,8 +67,8 @@ export async function generateMetadata({
       description: course.description || `آموزش ${course.subject}`,
       keywords: [
         course.subject,
-        course.category?.title || "",
-        ...(course.relatedTags?.map((tag: any) => tag.title) || []),
+        (course as any).category?.title || "",
+        ...((course as any).relatedTags?.map((tag: any) => tag.title) || []),
       ],
       openGraph: {
         title: course.subject,
@@ -158,7 +158,7 @@ export default async function CourseDetailPage({
                 href={`/courses/${categorySlug}`}
                 className="hover:text-myPrimary transition"
               >
-                {course.category?.title || "دسته‌بندی"}
+                {(course as any).category?.title || "دسته‌بندی"}
               </Link>
               <span>/</span>
               <span className="text-gray-900 dark:text-textPrimary font-bold">{course.subject}</span>
@@ -173,16 +173,16 @@ export default async function CourseDetailPage({
               {/* Left: Course Info */}
               <div className="space-y-6">
                 {/* Category Badge */}
-                {course.category && (
+                {(course as any).category && (
                   <div className="flex items-center gap-2">
                     <span
                       className="px-4 py-1.5 rounded-full text-sm font-bold"
                       style={{
-                        backgroundColor: course.category.color || "#F3F4F6",
-                        color: course.category.color ? "#FFFFFF" : "#1F2937",
+                        backgroundColor: (course as any).category.color || "#F3F4F6",
+                        color: (course as any).category.color ? "#FFFFFF" : "#1F2937",
                       }}
                     >
-                      {course.category.title}
+                      {(course as any).category.title}
                     </span>
                   </div>
                 )}
@@ -207,7 +207,7 @@ export default async function CourseDetailPage({
                   <div className="flex items-center gap-2 text-gray-600 dark:text-textSecondary">
                     <LuUsers className="text-myPrimary" size={20} />
                     <span className="text-sm font-bold">
-                      {course._count?.enrollments || course.students || 0}{""}
+                      {(course as any)._count?.enrollments || course.students || 0}{""}
                       دانشجو
                     </span>
                   </div>
@@ -285,14 +285,14 @@ export default async function CourseDetailPage({
               {/* Main Content */}
               <div className="lg:col-span-2 space-y-8">
                 {/* What You'll Learn */}
-                {course.learningGoals && course.learningGoals.length > 0 && (
+                {Array.isArray(course.learningGoals) && course.learningGoals.length > 0 && (
                   <div className="bg-white dark:bg-cardBg rounded-2xl shadow-md p-6 sm:p-8">
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-textPrimary mb-6 flex items-center gap-2">
                       <LuBookOpen className="text-myPrimary" size={28} />
                       چه چیزهایی یاد می‌گیرید؟
                     </h2>
                     <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {course.learningGoals.map((goal: any, idx: number) => (
+                      {(course.learningGoals as any[]).map((goal: any, idx: number) => (
                         <li key={idx} className="flex items-start gap-3">
                           <BsCheckCircleFill
                             className="text-green-500 flex-shrink-0 mt-1"
@@ -306,13 +306,13 @@ export default async function CourseDetailPage({
                 )}
 
                 {/* Prerequisites */}
-                {course.prerequisites && course.prerequisites.length > 0 && (
+                {Array.isArray(course.prerequisites) && course.prerequisites.length > 0 && (
                   <div className="bg-white dark:bg-cardBg rounded-2xl shadow-md p-6 sm:p-8">
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-textPrimary mb-6">
                       پیش‌نیازهای دوره
                     </h2>
                     <ul className="space-y-3">
-                      {course.prerequisites.map((prereq: any, idx: number) => (
+                      {(course.prerequisites as any[]).map((prereq: any, idx: number) => (
                         <li key={idx} className="flex items-start gap-3">
                           <BsCheckCircleFill
                             className="text-myPrimary flex-shrink-0 mt-1"
@@ -385,7 +385,7 @@ export default async function CourseDetailPage({
                         <span className="text-sm">دانشجویان</span>
                       </div>
                       <span className="font-bold text-gray-900 dark:text-textPrimary">
-                        {course._count?.enrollments || course.students || 0} نفر
+                        {(course as any)._count?.enrollments || course.students || 0} نفر
                       </span>
                     </div>
                   </div>

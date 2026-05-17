@@ -1,9 +1,6 @@
 import { NextRequest } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
-import { auth } from "@/auth";
-import { getAdminAuth } from "@/lib/auth-simple";
 import { writeFile } from "fs/promises";
-import { getAdminAuth } from "@/lib/auth-simple";
 import {
   successResponse,
   validationError,
@@ -32,7 +29,7 @@ export async function POST(req: NextRequest) {
 
     const adminAuth = await getAdminAuth(req);
 // بررسی احراز هویت و نقش ادمین
-    if (!session?.user) {
+    if (!adminAuth) {
       return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
     }
 
