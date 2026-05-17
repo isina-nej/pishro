@@ -98,6 +98,7 @@ export default function CreateCoursePage() {
             type="number"
             name="price"
             min={0}
+            max={2147483647}
             value={formData.price}
             onChange={handleInputChange}
             placeholder="قیمت دوره را وارد کنید..."

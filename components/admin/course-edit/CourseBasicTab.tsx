@@ -156,6 +156,7 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
               type="number"
               name="price"
               min={0}
+              max={2147483647}
               value={formData.price}
               onChange={handleChange}
               aria-label="قیمت دوره"

@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import { api } from "@/lib/api-client";
 import { toast } from "react-hot-toast";
 import { adminCourseKeys } from "./useAdminCourses";
 import { chapterKeys } from "./useChapters";
@@ -14,7 +14,7 @@ export function useCourseLessons(courseId: string) {
   return useQuery({
     queryKey: lessonKeys.listByCourse(courseId),
     queryFn: async () => {
-      const { data } = await axios.get(
+      const { data } = await api.get(
         `/api/admin/courses/${courseId}/lessons?limit=100`
       );
       return data.data.items as Array<{
@@ -36,7 +36,7 @@ export function useCreateLesson(courseId: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (payload: Record<string, unknown>) => {
-      const { data } = await axios.post(
+      const { data } = await api.post(
         `/api/admin/courses/${courseId}/lessons`,
         payload
       );
@@ -70,7 +70,7 @@ export function useUpdateLesson(courseId: string) {
       id: string;
       data: Record<string, unknown>;
     }) => {
-      const { data: res } = await axios.patch(`/api/admin/lessons/${id}`, data);
+      const { data: res } = await api.patch(`/api/admin/lessons/${id}`, data);
       return res.data;
     },
     onSuccess: () => {
@@ -92,7 +92,7 @@ export function useDeleteLesson(courseId: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
-      await axios.delete(`/api/admin/lessons/${id}`);
+      await api.delete(`/api/admin/lessons/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({

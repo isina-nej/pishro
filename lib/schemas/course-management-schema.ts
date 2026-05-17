@@ -9,7 +9,10 @@ const titleSchema = z
 export const CourseCreateSchema = z.object({
   title: titleSchema,
   description: z.string().optional(),
-  cost: z.number().min(0, "هزینه باید عدد نامنفی باشد"),
+  cost: z.number()
+    .int("قیمت باید عدد صحیح باشد")
+    .min(0, "هزینه باید عدد نامنفی باشد")
+    .max(2147483647, "قیمت نمی‌تواند بیشتر از 2,147,483,647 باشد"),
   likes: z.number().int().min(0).optional(),
   dislikes: z.number().int().min(0).optional(),
   categoryId: z.string().optional().nullable(),

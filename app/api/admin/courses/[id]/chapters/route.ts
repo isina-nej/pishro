@@ -1,6 +1,6 @@
 // @/app/api/admin/courses/[id]/chapters/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { getAdminAuth } from "@/lib/auth-simple";
+import { verifyAdminAccessToken } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 import {
   successResponse,
@@ -9,6 +9,17 @@ import {
   ErrorCodes,
   paginatedResponse,
 } from "@/lib/api-response";
+
+// Helper to get admin auth from request
+function getAdminUserFromRequest(req: NextRequest) {
+  const authHeader = req.headers.get('Authorization');
+  if (!authHeader?.startsWith('Bearer ')) {
+    return null;
+  }
+  
+  const token = authHeader.slice(7);
+  return verifyAdminAccessToken(token);
+}
 
 /**
  * GET /api/admin/courses/[id]/chapters
@@ -19,8 +30,8 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const adminAuth = await getAdminAuth(req);
-    if (!adminAuth) {
+    const adminUser = getAdminUserFromRequest(req);
+    if (!adminUser) {
       return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }
 
@@ -85,8 +96,8 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const adminAuth = await getAdminAuth(req);
-    if (!adminAuth) {
+    const adminUser = getAdminUserFromRequest(req);
+    if (!adminUser) {
       return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }
 

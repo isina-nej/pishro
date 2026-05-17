@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { getAdminAuth } from "@/lib/auth-simple";
+import { verifyAdminAccessToken } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 import {
   errorResponse,
@@ -10,6 +10,17 @@ import {
 import { LessonCreateSchema } from "@/lib/schemas/course-management-schema";
 import { createLessonForCourse } from "@/lib/services/lesson-service";
 
+// Helper to get admin auth from request
+function getAdminUserFromRequest(req: NextRequest) {
+  const authHeader = req.headers.get('Authorization');
+  if (!authHeader?.startsWith('Bearer ')) {
+    return null;
+  }
+  
+  const token = authHeader.slice(7);
+  return verifyAdminAccessToken(token);
+}
+
 /**
  * GET /api/admin/courses/[id]/lessons
  * POST /api/admin/courses/[id]/lessons
@@ -19,8 +30,8 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const adminAuth = await getAdminAuth(req);
-    if (!adminAuth) {
+    const adminUser = getAdminUserFromRequest(req);
+    if (!adminUser) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
 
@@ -63,8 +74,8 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const adminAuth = await getAdminAuth(req);
-    if (!adminAuth) {
+    const adminUser = getAdminUserFromRequest(req);
+    if (!adminUser) {
       return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
 

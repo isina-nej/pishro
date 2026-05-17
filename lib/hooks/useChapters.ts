@@ -1,6 +1,6 @@
 // @/lib/hooks/useChapters.ts
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import { api } from "@/lib/api-client";
 import { toast } from "react-hot-toast";
 
 interface Chapter {
@@ -48,7 +48,7 @@ export function useChapters(courseId: string, enabled = true) {
   return useQuery({
     queryKey: chapterKeys.listByCourse(courseId),
     queryFn: async () => {
-      const { data } = await axios.get(
+      const { data } = await api.get(
         `/api/admin/courses/${courseId}/chapters?limit=100`
       );
       return (data.data.items ?? data.data) as Chapter[];
@@ -76,7 +76,7 @@ export function useCreateChapter() {
       courseId: string;
       data: CreateChapterInput;
     }) => {
-      const { data: response } = await axios.post(
+      const { data: response } = await api.post(
         `/api/admin/courses/${courseId}/chapters`,
         data
       );
@@ -110,7 +110,7 @@ export function useUpdateChapter() {
       id: string;
       data: UpdateChapterInput;
     }) => {
-      const { data: response } = await axios.patch(
+      const { data: response } = await api.patch(
         `/api/admin/chapters/${id}`,
         data
       );
@@ -138,7 +138,7 @@ export function useDeleteChapter() {
 
   return useMutation({
     mutationFn: async ({ id, courseId }: { id: string; courseId: string }) => {
-      await axios.delete(`/api/admin/chapters/${id}`);
+      await api.delete(`/api/admin/chapters/${id}`);
     },
     onSuccess: (_, { courseId }) => {
       queryClient.invalidateQueries({
@@ -168,7 +168,7 @@ export function useReorderChapters() {
       courseId: string;
       order: string[];
     }) => {
-      const { data } = await axios.post(
+      const { data } = await api.post(
         `/api/admin/courses/${courseId}/chapters/reorder`,
         { order }
       );
@@ -202,7 +202,7 @@ export function useReorderLessons() {
       courseId: string;
       order: string[];
     }) => {
-      const { data } = await axios.post(
+      const { data } = await api.post(
         `/api/admin/courses/${courseId}/lessons/reorder`,
         { order }
       );

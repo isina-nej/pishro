@@ -81,27 +81,30 @@ export default function CourseEditPage() {
       }
     };
 
-    fetchCourse();
+    fetchData();
   }, [courseId, router]);
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="w-12 h-12 border-4 border-blue-200 rounded-full animate-spin border-t-blue-600"></div>
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading...</p>
+        </div>
       </div>
     );
   }
 
-  if (!course) {
+  if (!user || !course) {
     return (
-      <div className="text-center py-12">
-        <p className="text-gray-500">دوره یافت نشد</p>
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+        <p className="text-gray-600 dark:text-gray-400">دوره یافت نشد</p>
       </div>
     );
   }
 
-  return (
-    <div className="container-xl mt-8">
+  const content = (
+    <div className="w-full">
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-textPrimary">
           {course.subject}
@@ -138,4 +141,6 @@ export default function CourseEditPage() {
       </Tabs>
     </div>
   );
+
+  return <AdminSidebar user={user} currentPage="courses">{content}</AdminSidebar>;
 }
