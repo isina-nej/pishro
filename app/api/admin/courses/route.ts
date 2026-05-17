@@ -18,6 +18,7 @@ import {
   validationError
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
+import { CourseCreateSchema } from "@/lib/schemas/course-management-schema";
 
 export async function GET(req: NextRequest) {
   try {
@@ -135,75 +136,61 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
+    
+    // Map field names to schema expectations and normalize
+    const mapped = {
+      ...body,
+      title: body.title ?? body.subject,
+      cost: body.cost ?? body.price,
+      thumbnailPath: body.thumbnailPath ?? body.img,
+      trailerVideoPath: body.trailerVideoPath ?? body.introVideoUrl,
+    };
+
+    // Validate against schema
+    const parsed = CourseCreateSchema.safeParse(mapped);
+    if (!parsed.success) {
+      const errors: Record<string, string> = {};
+      parsed.error.errors.forEach(err => {
+        const path = err.path.join('.');
+        errors[path] = err.message;
+      });
+      return validationError(errors);
+    }
+
     const {
-      subject,
-      price,
-      img,
-      rating,
+      title,
+      cost,
       description,
-      discountPercent,
-      time,
-      students,
-      videosCount,
       categoryId,
-            slug,
-      level,
-      language = "FA",
-      prerequisites = [],
-      learningGoals = [],
-      instructor,
-      status = "ACTIVE",
-      published = true,
-      featured = false
-    } = body;
+      likes,
+      dislikes,
+      hasChapters,
+      thumbnailPath,
+      trailerVideoPath,
+    } = parsed.data;
 
-    // Validation
-    if (!subject || price === undefined) {
-      return validationError({
-        subject: !subject ? "Subject is required" : "",
-        price: price === undefined ? "Price is required" : ""
-      });
-    }
+    // Normalize image paths
+    const normalizedThumbnail = normalizeImageUrl(thumbnailPath);
+    const normalizedTrailer = normalizeImageUrl(trailerVideoPath);
 
-    // If slug is provided, check uniqueness
-    if (slug) {
-      const existingCourse = await prisma.course.findUnique({
-        where: { slug }
-      });
-
-      if (existingCourse) {
-        return errorResponse(
-          "Course with this slug already exists",
-          ErrorCodes.ALREADY_EXISTS
-        );
-      }
-    }
-
-    // Normalize img URL (extract original URL from Next.js optimization URLs)
-    const normalizedImg = normalizeImageUrl(img);
-
-    // Create course
+    // Create course with validated data
     const course = await prisma.course.create({
       data: {
-        subject,
-        price,
-        img: normalizedImg,
-        rating,
+        subject: title,
+        price: cost,
         description,
-        discountPercent,
-        time,
-        students,
-        videosCount,
         categoryId,
-        slug,
-        level,
-        language,
-        prerequisites,
-        learningGoals,
-        instructor,
-        status,
-        published,
-        featured
+        likes: likes ?? 0,
+        dislikes: dislikes ?? 0,
+        hasChapters: hasChapters ?? false,
+        img: normalizedThumbnail,
+        introVideoUrl: normalizedTrailer,
+        language: "FA",
+        status: "ACTIVE",
+        published: true,
+        featured: false,
+        prerequisites: [],
+        learningGoals: [],
       },
       include: {
         category: {

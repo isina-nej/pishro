@@ -79,11 +79,7 @@ const EnrolledCourses = () => {
             )}
             <div className="p-4">
               <Link
-                href={
-                  enrollment.course.lessons && enrollment.course.lessons.length > 0
-                    ? `/class/${enrollment.course.lessons[0].id}`
-                    : `/class/${enrollment.course.id}`
-                }
+                href={`/courses/view/${enrollment.course.id}`}
                 className="text-sm font-medium text-gray-900 dark:text-textPrimary hover:text-blue-600 line-clamp-1"
               >
                 {enrollment.course.subject}

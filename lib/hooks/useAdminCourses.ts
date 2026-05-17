@@ -83,6 +83,23 @@ export function useUpdateAdminCourse() {
   });
 }
 
+export function useCreateAdminCourse() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: Record<string, unknown>) => {
+      const { data: res } = await axios.post(`/api/admin/courses`, data);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: adminCourseKeys.lists() });
+      toast.success("دوره با موفقیت ایجاد شد");
+    },
+    onError: (error: { response?: { data?: { message?: string } } }) => {
+      toast.error(error?.response?.data?.message || "خطا در ایجاد دوره");
+    },
+  });
+}
+
 export async function uploadTempFile(
   file: File,
   kind: "thumbnail" | "video"

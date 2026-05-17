@@ -11,7 +11,17 @@ export const api = axios.create({
 // Add request interceptor to include auth token if available
 api.interceptors.request.use(
   async (config) => {
-    // Auth token can be added here if needed
+    // Get token from cookie (browser environment only)
+    if (typeof window !== 'undefined') {
+      const token = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('admin_access_token='))
+        ?.split('=')[1];
+      
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    }
     return config;
   },
   (error) => Promise.reject(error)
@@ -24,7 +34,7 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       // Handle unauthorized - redirect to login
       if (typeof window !== 'undefined') {
-        window.location.href = '/login';
+        window.location.href = '/admin/login';
       }
     }
     return Promise.reject(error);

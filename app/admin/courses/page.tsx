@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Plus } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -30,6 +31,12 @@ export default function AdminCoursesPage() {
     <div className="container-xl mt-8 p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">مدیریت دوره‌ها</h1>
+        <Link href="/admin/courses/create">
+          <Button>
+            <Plus className="h-4 w-4 mr-2" />
+            افزودن دوره جدید
+          </Button>
+        </Link>
       </div>
 
       <div className="flex gap-2 mb-4">
@@ -72,7 +79,7 @@ export default function AdminCoursesPage() {
                 <TableCell>{course.dislikes ?? 0}</TableCell>
                 <TableCell>{course.hasChapters ? 'بله' : 'خیر'}</TableCell>
                 <TableCell>
-                  <Link href={`/admin/courses/${course.id}`}>
+                  <Link href={`/admin/courses/${course.id}/edit`}>
                     <Button
                       variant="outline"
                       size="sm"
