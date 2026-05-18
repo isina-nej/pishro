@@ -113,6 +113,11 @@ export const CreateNewsSchema = z.object({
   description: z.string()
     .max(2000, 'توضیح نمی‌تواند بیش از 2000 کاراکتر باشد')
     .optional(),
+  thumbnail: z.string()
+    .url('آدرس تصویر معتبر نیست')
+    .optional()
+    .nullable()
+    .transform((val) => val === null ? undefined : val),
   categoryId: z.string()
     .trim()
     .refine((val) => val === '' || /^[a-f\d]{24}$/i.test(val), {

@@ -79,6 +79,7 @@ export interface ContentBlockResponse {
 export interface CreateNewsRequest {
   title: string;
   description?: string;
+  thumbnail?: string;
   categoryId?: string;
 }
 

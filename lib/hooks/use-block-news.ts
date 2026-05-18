@@ -49,8 +49,8 @@ export function useBlockNewsList(
       if (filters?.categoryId) params.set('categoryId', filters.categoryId);
       if (filters?.search) params.set('search', filters.search);
 
-      const response = await api.get<NewsListResponse>(`/admin/block-news?${params.toString()}`);
-      return response.data;
+      const response = await api.get<{ status: string; data: NewsListResponse }>(`/admin/block-news?${params.toString()}`);
+      return response.data.data;
     },
   });
 }
@@ -62,8 +62,8 @@ export function useBlockNews(id: string) {
   return useQuery({
     queryKey: blockNewsKeys.detail(id),
     queryFn: async () => {
-      const response = await api.get<NewsDetailResponse>(`/admin/block-news/${id}`);
-      return response.data;
+      const response = await api.get<{ status: string; data: NewsDetailResponse }>(`/admin/block-news/${id}`);
+      return response.data.data;
     },
     enabled: !!id,
   });
@@ -77,8 +77,8 @@ export function useCreateBlockNews() {
 
   return useMutation({
     mutationFn: async (data: CreateNewsRequest) => {
-      const response = await api.post<NewsDetailResponse>('/admin/block-news', data);
-      return response.data;
+      const response = await api.post<{ status: string; data: NewsDetailResponse }>('/admin/block-news', data);
+      return response.data.data;
     },
     onSuccess: () => {
       // Invalidate list to refresh
@@ -95,8 +95,8 @@ export function useUpdateBlockNews(id: string) {
 
   return useMutation({
     mutationFn: async (data: UpdateNewsRequest) => {
-      const response = await api.patch<NewsDetailResponse>(`/admin/block-news/${id}`, data);
-      return response.data;
+      const response = await api.patch<{ status: string; data: NewsDetailResponse }>(`/admin/block-news/${id}`, data);
+      return response.data.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: blockNewsKeys.detail(id) });
@@ -129,11 +129,11 @@ export function useChangeBlockNewsStatus(id: string) {
 
   return useMutation({
     mutationFn: async (status: 'PUBLISHED' | 'ARCHIVED') => {
-      const response = await api.patch<NewsDetailResponse>(
+      const response = await api.patch<{ status: string; data: NewsDetailResponse }>(
         `/admin/block-news/${id}/status`,
         { status }
       );
-      return response.data;
+      return response.data.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: blockNewsKeys.detail(id) });
@@ -149,10 +149,10 @@ export function useBlockNewsBlocks(newsId: string) {
   return useQuery({
     queryKey: blockNewsKeys.blocks(newsId),
     queryFn: async () => {
-      const response = await api.get<ContentBlockResponse[]>(
+      const response = await api.get<{ status: string; data: ContentBlockResponse[] }>(
         `/admin/block-news/${newsId}/blocks`
       );
-      return response.data;
+      return response.data.data;
     },
     enabled: !!newsId,
   });
@@ -166,11 +166,11 @@ export function useAddBlockNewsBlock(newsId: string) {
 
   return useMutation({
     mutationFn: async (data: ContentBlockCreateRequest) => {
-      const response = await api.post<ContentBlockResponse>(
+      const response = await api.post<{ status: string; data: ContentBlockResponse }>(
         `/admin/block-news/${newsId}/blocks`,
         data
       );
-      return response.data;
+      return response.data.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: blockNewsKeys.blocks(newsId) });
@@ -188,11 +188,11 @@ export function useUpdateBlockNewsBlock(newsId: string, blockId: string) {
   return useMutation({
     mutationFn: async (data: ContentBlockUpdateRequest & { blockId?: string }) => {
       const actualBlockId = blockId || data.blockId || '';
-      const response = await api.patch<ContentBlockResponse>(
+      const response = await api.patch<{ status: string; data: ContentBlockResponse }>(
         `/admin/block-news/${newsId}/blocks/${actualBlockId}`,
         { content: data.content }
       );
-      return response.data;
+      return response.data.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: blockNewsKeys.blocks(newsId) });
@@ -226,11 +226,11 @@ export function useReorderBlockNewsBlocks(newsId: string) {
 
   return useMutation({
     mutationFn: async (request: ReorderBlocksRequest) => {
-      const response = await api.patch<ContentBlockResponse[]>(
+      const response = await api.patch<{ status: string; data: ContentBlockResponse[] }>(
         `/admin/block-news/${newsId}/blocks/reorder`,
         request
       );
-      return response.data;
+      return response.data.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: blockNewsKeys.blocks(newsId) });

@@ -7,16 +7,15 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowRight, Save, Send, Archive, Calendar, Clock, Newspaper, AlertCircle } from 'lucide-react';
+import { ArrowRight, Save, Send, Archive, Calendar, Clock, Newspaper, AlertCircle, Upload, X } from 'lucide-react';
 import {
   useBlockNews,
   useBlockNewsBlocks,
@@ -41,6 +40,7 @@ export default function EditBlockNewsPage() {
   const router = useRouter();
   const params = useParams();
   const newsId = params.id as string;
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { data: news, isLoading: isLoadingNews, error: newsError } = useBlockNews(newsId);
   const { data: blocks, isLoading: isLoadingBlocks } = useBlockNewsBlocks(newsId);
@@ -59,6 +59,8 @@ export default function EditBlockNewsPage() {
     categoryId: news?.categoryId || '',
     publishedAt: news?.publishedAt || '',
   });
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [uploadError, setUploadError] = useState<string>('');
 
   React.useEffect(() => {
     if (news) {
@@ -75,6 +77,54 @@ export default function EditBlockNewsPage() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setUploadError('فقط فایل‌های تصویری قابل آپلود هستند');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setUploadError('حجم فایل نباید بیشتر از 5 مگابایت باشد');
+      return;
+    }
+
+    setIsUploadingImage(true);
+    setUploadError('');
+
+    try {
+      const formDataForUpload = new FormData();
+      formDataForUpload.append('file', file);
+      formDataForUpload.append('kind', 'thumbnail');
+
+      const response = await fetch('/api/admin/uploads/temp', {
+        method: 'POST',
+        body: formDataForUpload,
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'خطا در آپلود فایل');
+      }
+
+      const data = await response.json();
+      setFormData((prev) => ({ ...prev, thumbnail: data.data.tempPath }));
+    } catch (error) {
+      setUploadError(error instanceof Error ? error.message : 'خطا در آپلود فایل');
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setFormData((prev) => ({ ...prev, thumbnail: '' }));
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   const handleSaveMetadata = async () => {
@@ -220,20 +270,68 @@ export default function EditBlockNewsPage() {
 
             <div className="space-y-2">
               <label className="text-sm font-medium">تصویر شاخص (کاور)</label>
-              <Input
-                type="url"
-                name="thumbnail"
-                value={formData.thumbnail}
-                onChange={handleInputChange}
-                placeholder="https://example.com/image.jpg"
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                disabled={isUploadingImage}
+                className="hidden"
               />
-              {formData.thumbnail && (
-                <div className="mt-2 relative w-full h-40 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
-                  <img
-                    src={formData.thumbnail}
-                    alt="Preview"
-                    className="w-full h-full object-cover"
-                  />
+              
+              {!formData.thumbnail ? (
+                <div>
+                  <Button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploadingImage}
+                    variant="outline"
+                    className="w-full h-40 border-2 border-dashed flex flex-col items-center justify-center gap-3 hover:bg-purple-50 dark:hover:bg-purple-950/20"
+                  >
+                    <Upload className="w-8 h-8 text-purple-600" />
+                    <div className="text-center">
+                      <p className="font-semibold text-purple-600">{isUploadingImage ? 'درحال آپلود...' : 'انتخاب تصویر'}</p>
+                      <p className="text-xs text-muted-foreground mt-1">یا اینجا رها کنید</p>
+                    </div>
+                  </Button>
+                  <p className="text-xs text-muted-foreground mt-3">
+                    فرمت‌های پشتیبانی‌شده: JPG, PNG, WebP (حداکثر 5MB)
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <div className="relative w-full h-40 rounded-lg overflow-hidden shadow-md ring-2 ring-purple-200 dark:ring-purple-900">
+                    <img
+                      src={formData.thumbnail}
+                      alt="Preview"
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleRemoveImage}
+                      disabled={isUploadingImage}
+                      className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg shadow-lg transition-all"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                  <Button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploadingImage}
+                    variant="outline"
+                    className="w-full"
+                  >
+                    <Upload className="w-4 h-4 ml-2" />
+                    تغییر تصویر
+                  </Button>
+                </div>
+              )}
+
+              {uploadError && (
+                <div className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/50 rounded-lg p-3 flex items-start gap-2">
+                  <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                  <p className="text-sm text-red-600 dark:text-red-400">{uploadError}</p>
                 </div>
               )}
             </div>

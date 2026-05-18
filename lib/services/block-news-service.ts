@@ -18,6 +18,7 @@ import { CreateNewsSchema, UpdateNewsSchema, BlockInputSchema, ReorderBlocksSche
 export async function createNews(data: {
   title: string;
   description?: string;
+  thumbnail?: string;
   categoryId?: string;
   authorId: string;
 }) {
@@ -37,6 +38,7 @@ export async function createNews(data: {
       title: validated.title,
       slug,
       description: validated.description || '',
+      thumbnail: validated.thumbnail || null,
       categoryId: validated.categoryId,
       authorId: validated.authorId,
       status: 'DRAFT',
