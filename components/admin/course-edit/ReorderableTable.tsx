@@ -67,7 +67,7 @@ export default function ReorderableTable<T extends { id: string }>({
     <div className="overflow-x-auto">
       <table className="w-full border-collapse">
         <thead>
-          <tr className="border-b border-gray-300 dark:border-borderColor">
+          <tr className="border-b border-gray-300 dark:border-borderColor text-right">
             <th className="text-right py-3 px-4 w-12">#</th>
             {columns.map((col) => (
               <th
@@ -98,7 +98,7 @@ export default function ReorderableTable<T extends { id: string }>({
               ))}
               {actions.length > 0 && (
                 <td className="py-3 px-4">
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-row-reverse">
                     {actions.map((action, idx) => (
                       <button
                         key={idx}

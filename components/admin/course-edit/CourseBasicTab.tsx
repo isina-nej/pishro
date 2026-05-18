@@ -133,7 +133,7 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
   };
 
   return (
-    <div className="bg-white dark:bg-cardBg rounded-lg shadow p-6 mt-6">
+    <div className="bg-white dark:bg-cardBg rounded-lg shadow p-6 mt-6 text-right">
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium mb-2">نام دوره</label>

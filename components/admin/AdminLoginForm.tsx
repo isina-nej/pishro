@@ -162,12 +162,12 @@ export default function AdminLoginForm({ onError, onSuccess }: AdminLoginFormPro
   return (
     <div className="w-full max-w-md">
       {/* Header */}
-      <div className="mb-8 text-center">
+      <div className="mb-8 text-right">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-          Admin Panel
+          پنل ادمین
         </h1>
         <p className="text-gray-600 dark:text-gray-400">
-          Sign in to your admin account
+          وارد حساب ادمین خود شوید
         </p>
       </div>
 
@@ -190,7 +190,7 @@ export default function AdminLoginForm({ onError, onSuccess }: AdminLoginFormPro
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Login Type Toggle */}
-        <div className="flex gap-2 mb-6">
+        <div className="flex gap-2 mb-6 flex-row-reverse">
           <button
             type="button"
             onClick={() => {
@@ -199,14 +199,14 @@ export default function AdminLoginForm({ onError, onSuccess }: AdminLoginFormPro
               setFieldErrors({ ...fieldErrors, phone: '' });
             }}
             className={cn(
-              'flex-1 py-2 px-4 rounded-lg font-medium transition',
+              'flex-1 py-2 px-4 rounded-lg font-medium transition flex items-center justify-center gap-2',
               loginType === 'email'
                 ? 'bg-blue-600 text-white'
                 : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'
             )}
           >
-            <Mail className="inline-block mr-2 size-4" />
-            Email
+            <Mail className="size-4" />
+            ایمیل
           </button>
           <button
             type="button"
@@ -216,24 +216,24 @@ export default function AdminLoginForm({ onError, onSuccess }: AdminLoginFormPro
               setFieldErrors({ ...fieldErrors, email: '' });
             }}
             className={cn(
-              'flex-1 py-2 px-4 rounded-lg font-medium transition',
+              'flex-1 py-2 px-4 rounded-lg font-medium transition flex items-center justify-center gap-2',
               loginType === 'phone'
                 ? 'bg-blue-600 text-white'
                 : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'
             )}
           >
-            📱 Phone
+            📱 موبایل
           </button>
         </div>
 
         {/* Email Input */}
         {loginType === 'email' && (
           <div>
-            <label htmlFor="email" className="block text-sm font-bold text-gray-900 dark:text-white mb-3">
-              Email Address
+            <label htmlFor="email" className="block text-sm font-bold text-gray-900 dark:text-white mb-3 text-right">
+              آدرس ایمیل
             </label>
             <div className="relative">
-              <Mail className="absolute right-3 top-3 size-5 text-gray-400 dark:text-gray-500" />
+              <Mail className="absolute left-3 top-3 size-5 text-gray-400 dark:text-gray-500" />
               <Input
                 id="email"
                 type="email"
@@ -243,13 +243,13 @@ export default function AdminLoginForm({ onError, onSuccess }: AdminLoginFormPro
                 onChange={handleChange}
                 disabled={isLoading}
                 className={cn(
-                  'pr-10 pl-4 py-2 block w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:border-transparent transition',
+                  'pl-10 pr-4 py-2 block w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:border-transparent transition text-right',
                   fieldErrors.email && 'border-red-500 dark:border-red-500'
                 )}
               />
             </div>
             {fieldErrors.email && (
-              <p className="text-red-500 text-xs mt-2">{fieldErrors.email}</p>
+              <p className="text-red-500 text-xs mt-2 text-right">{fieldErrors.email}</p>
             )}
           </div>
         )}
@@ -257,11 +257,11 @@ export default function AdminLoginForm({ onError, onSuccess }: AdminLoginFormPro
         {/* Phone Input */}
         {loginType === 'phone' && (
           <div>
-            <label htmlFor="phone" className="block text-sm font-bold text-gray-900 dark:text-white mb-3">
-              Phone Number
+            <label htmlFor="phone" className="block text-sm font-bold text-gray-900 dark:text-white mb-3 text-right">
+              شماره موبایل
             </label>
             <div className="relative">
-              <span className="absolute right-3 top-3 text-gray-400 dark:text-gray-500">📱</span>
+              <span className="absolute left-3 top-3 text-gray-400 dark:text-gray-500">📱</span>
               <Input
                 id="phone"
                 type="tel"
@@ -271,13 +271,13 @@ export default function AdminLoginForm({ onError, onSuccess }: AdminLoginFormPro
                 onChange={handleChange}
                 disabled={isLoading}
                 className={cn(
-                  'pr-10 pl-4 py-2 block w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:border-transparent transition',
+                  'pl-10 pr-4 py-2 block w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:border-transparent transition text-right',
                   fieldErrors.phone && 'border-red-500 dark:border-red-500'
                 )}
               />
             </div>
             {fieldErrors.phone && (
-              <p className="text-red-500 text-xs mt-2">{fieldErrors.phone}</p>
+              <p className="text-red-500 text-xs mt-2 text-right">{fieldErrors.phone}</p>
             )}
           </div>
         )}
@@ -285,14 +285,14 @@ export default function AdminLoginForm({ onError, onSuccess }: AdminLoginFormPro
         {/* Password Input */}
         <div>
           <label htmlFor="password" className="block text-sm font-bold text-gray-900 dark:text-white mb-3">
-            Password
+            \u0631\u0645\u0632 \u0639\u0628\u0648\u0631
           </label>
           <div className="relative">
-            <Lock className="absolute right-10 top-3 size-5 text-gray-400 dark:text-gray-500" />
+            <Lock className="absolute left-10 top-3 size-5 text-gray-400 dark:text-gray-500" />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-3 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400"
+              className="absolute left-3 top-3 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400"
               disabled={isLoading}
             >
               {showPassword ? (
@@ -305,23 +305,23 @@ export default function AdminLoginForm({ onError, onSuccess }: AdminLoginFormPro
               id="password"
               type={showPassword ? 'text' : 'password'}
               name="password"
-              placeholder="Enter your password"
+              placeholder="کلمه عبور را وارد کنید"
               value={formData.password}
               onChange={handleChange}
               disabled={isLoading}
               className={cn(
-                'pr-10 pl-4 py-2 block w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:border-transparent transition',
+                'pl-10 pr-4 py-2 block w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:border-transparent transition text-right',
                 fieldErrors.password && 'border-red-500 dark:border-red-500'
               )}
             />
           </div>
           {fieldErrors.password && (
-            <p className="text-red-500 text-xs mt-2">{fieldErrors.password}</p>
+            <p className="text-red-500 text-xs mt-2 text-right">{fieldErrors.password}</p>
           )}
         </div>
 
         {/* Remember Me */}
-        <div className="flex items-center">
+        <div className="flex items-center flex-row-reverse">
           <input
             id="rememberMe"
             type="checkbox"
@@ -330,8 +330,8 @@ export default function AdminLoginForm({ onError, onSuccess }: AdminLoginFormPro
             disabled={isLoading}
             className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600 cursor-pointer"
           />
-          <label htmlFor="rememberMe" className="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
-            Remember me for 30 days
+          <label htmlFor="rememberMe" className="mr-2 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
+            مرا 30 روز به مرور بسپار
           </label>
         </div>
 
@@ -340,19 +340,19 @@ export default function AdminLoginForm({ onError, onSuccess }: AdminLoginFormPro
           type="submit"
           disabled={isLoading}
           className={cn(
-            'w-full py-2 px-4 rounded-lg font-bold transition',
+            'w-full py-2 px-4 rounded-lg font-bold transition flex items-center justify-center gap-2',
             isLoading
               ? 'bg-gray-400 dark:bg-gray-600 text-white cursor-not-allowed'
               : 'bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white'
           )}
         >
           {isLoading ? (
-            <span className="flex items-center justify-center gap-2">
+            <>
               <Loader2 className="size-4 animate-spin" />
-              Signing in...
-            </span>
+              درحال ورود...
+            </>
           ) : (
-            'Sign In'
+            'ورود'
           )}
         </button>
       </form>

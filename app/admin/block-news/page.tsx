@@ -93,29 +93,22 @@ export default function BlockNewsListPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="flex items-center justify-between flex-row-reverse">
+        <div className="text-right">
           <h1 className="text-3xl font-bold">خبرهای بلاک‌بر</h1>
           <p className="text-muted-foreground mt-1">مدیریت خبرهای بلاک‌بر</p>
         </div>
         <Link href="/admin/block-news/create">
           <Button>
-            <Plus className="h-4 w-4 mr-2" />
             خبر جدید
+            <Plus className="h-4 w-4 ml-2" />
           </Button>
         </Link>
       </div>
 
       {/* Filters */}
       <Card className="p-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <Input
-            placeholder="جستجو برای خبر..."
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-          />
-
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 flex-row-reverse">
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger>
               <SelectValue placeholder="تمام وضعیت‌ها" />
@@ -131,6 +124,13 @@ export default function BlockNewsListPage() {
           <Button onClick={handleSearch} variant="outline">
             جستجو
           </Button>
+
+          <Input
+            placeholder="جستجو برای خبر..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+          />
         </div>
       </Card>
 
@@ -177,12 +177,7 @@ export default function BlockNewsListPage() {
                       <TableCell className="text-sm text-muted-foreground">
                         {new Date(news.createdAt).toLocaleDateString('fa-IR')}
                       </TableCell>
-                      <TableCell className="text-right space-x-2">
-                        <Link href={`/admin/block-news/${news.id}/edit`}>
-                          <Button variant="ghost" size="sm">
-                            <Edit2 className="h-4 w-4" />
-                          </Button>
-                        </Link>
+                      <TableCell className="text-right space-x-2 flex flex-row-reverse gap-2">
                         <Button
                           variant="ghost"
                           size="sm"
@@ -191,6 +186,11 @@ export default function BlockNewsListPage() {
                         >
                           <Trash2 className="h-4 w-4 text-destructive" />
                         </Button>
+                        <Link href={`/admin/block-news/${news.id}/edit`}>
+                          <Button variant="ghost" size="sm">
+                            <Edit2 className="h-4 w-4" />
+                          </Button>
+                        </Link>
                         {news.status === DRAFT && (
                           <Button
                             variant="ghost"

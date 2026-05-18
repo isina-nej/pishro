@@ -68,9 +68,9 @@ export default function ChapterModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="text-right">
         <DialogHeader>
-          <DialogTitle>
+          <DialogTitle className="text-right">
             {chapter ? 'ویرایش فصل' : 'فصل جدید'}
           </DialogTitle>
         </DialogHeader>
@@ -97,7 +97,7 @@ export default function ChapterModal({
             </p>
           </div>
 
-          <div className="flex gap-2 justify-end pt-4">
+          <div className="flex gap-2 justify-end pt-4 flex-row-reverse">
             <Button variant="outline" onClick={onClose} disabled={isLoading}>
               انصراف
             </Button>

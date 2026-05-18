@@ -93,23 +93,17 @@ export default function AdminCoursesPage() {
 
   const content = (
     <div className="w-full">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-6 flex-row-reverse">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-textPrimary">مدیریت دوره‌ها</h1>
         <Link href="/admin/courses/create">
           <Button>
-            <Plus className="h-4 w-4 mr-2" />
             افزودن دوره جدید
+            <Plus className="h-4 w-4 ml-2" />
           </Button>
         </Link>
       </div>
 
-      <div className="flex gap-2 mb-4">
-        <Input
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-          placeholder="جستجو..."
-          aria-label="جستجوی دوره"
-        />
+      <div className="flex gap-2 mb-4 flex-row-reverse">
         <Button
           onClick={() => {
             setPage(1);
@@ -118,6 +112,12 @@ export default function AdminCoursesPage() {
         >
           جستجو
         </Button>
+        <Input
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          placeholder="جستجو..."
+          aria-label="جستجوی دوره"
+        />
       </div>
 
       {isCoursesLoading ? (
@@ -162,18 +162,7 @@ export default function AdminCoursesPage() {
       )}
 
       {pagination && pagination.totalPages > 1 && (
-        <div className="flex gap-2 mt-4 justify-center">
-          <Button
-            variant="outline"
-            disabled={!pagination.hasPrevPage}
-            onClick={() => setPage((p) => p - 1)}
-            aria-label="صفحه قبل"
-          >
-            قبلی
-          </Button>
-          <span className="py-2 px-4 text-gray-700 dark:text-textSecondary">
-            {pagination.page} / {pagination.totalPages}
-          </span>
+        <div className="flex gap-2 mt-4 justify-center flex-row-reverse">
           <Button
             variant="outline"
             disabled={!pagination.hasNextPage}
@@ -181,6 +170,17 @@ export default function AdminCoursesPage() {
             aria-label="صفحه بعد"
           >
             بعدی
+          </Button>
+          <span className="py-2 px-4 text-gray-700 dark:text-textSecondary">
+            {pagination.page} / {pagination.totalPages}
+          </span>
+          <Button
+            variant="outline"
+            disabled={!pagination.hasPrevPage}
+            onClick={() => setPage((p) => p - 1)}
+            aria-label="صفحه قبل"
+          >
+            قبلی
           </Button>
         </div>
       )}

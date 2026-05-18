@@ -62,7 +62,7 @@ export default function CreateBlockNewsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 flex-row-reverse">
         <Button
           variant="ghost"
           size="sm"
@@ -70,11 +70,11 @@ export default function CreateBlockNewsPage() {
         >
           <ArrowRight className="h-4 w-4" />
         </Button>
-        <h1 className="text-3xl font-bold">خبر جدید</h1>
+        <h1 className="text-3xl font-bold text-right">خبر جدید</h1>
       </div>
 
       {/* Form */}
-      <Card className="p-6 space-y-4">
+      <Card className="p-6 space-y-4 text-right">
         <div className="space-y-2">
           <label className="text-sm font-medium">عنوان خبر *</label>
           <Input
@@ -110,7 +110,7 @@ export default function CreateBlockNewsPage() {
           <p className="text-xs text-muted-foreground">اختیاری - می‌توانید بعدا تغییر دهید</p>
         </div>
 
-        <div className="flex gap-2 justify-end pt-4">
+        <div className="flex gap-2 justify-end pt-4 flex-row-reverse">
           <Button
             variant="outline"
             onClick={() => router.back()}

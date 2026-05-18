@@ -104,9 +104,9 @@ export default function LessonModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto text-right">
         <DialogHeader>
-          <DialogTitle>{lesson ? 'ویرایش درس' : 'درس جدید'}</DialogTitle>
+          <DialogTitle className="text-right">{lesson ? 'ویرایش درس' : 'درس جدید'}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <div>

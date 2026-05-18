@@ -69,7 +69,7 @@ export default function CourseLessonsTab({
 
   return (
     <div className="bg-white dark:bg-cardBg rounded-lg shadow p-6 mt-6">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-6 flex-row-reverse">
         <h2 className="text-xl font-bold">درس‌ها</h2>
         <Button onClick={() => setIsModalOpen(true)} aria-label="ایجاد درس جدید">
           درس جدید

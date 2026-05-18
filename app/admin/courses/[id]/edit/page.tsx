@@ -105,7 +105,7 @@ export default function CourseEditPage() {
 
   const content = (
     <div className="w-full">
-      <div className="mb-6">
+      <div className="mb-6 text-right">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-textPrimary">
           {course.subject}
         </h1>

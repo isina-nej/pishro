@@ -116,8 +116,8 @@ export default function EditBlockNewsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between flex-row-reverse">
+        <div className="flex items-center gap-3 flex-row-reverse">
           <Button
             variant="ghost"
             size="sm"
@@ -125,7 +125,7 @@ export default function EditBlockNewsPage() {
           >
             <ArrowRight className="h-4 w-4" />
           </Button>
-          <div>
+          <div className="text-right">
             <h1 className="text-3xl font-bold">ویرایش خبر</h1>
             <p className="text-sm text-muted-foreground">{news.title}</p>
           </div>
@@ -150,7 +150,7 @@ export default function EditBlockNewsPage() {
         </TabsList>
 
         {/* Metadata Tab */}
-        <TabsContent value="metadata" className="space-y-4">
+        <TabsContent value="metadata" className="space-y-4 text-right">
           <Card className="p-6 space-y-4">
             <div className="space-y-2">
               <label className="text-sm font-medium">عنوان خبر</label>
@@ -183,7 +183,7 @@ export default function EditBlockNewsPage() {
               />
             </div>
 
-            <div className="flex gap-2 justify-end pt-4">
+            <div className="flex gap-2 justify-end pt-4 flex-row-reverse">
               <Button
                 variant="outline"
                 onClick={() => router.back()}
@@ -194,7 +194,7 @@ export default function EditBlockNewsPage() {
                 onClick={handleSaveMetadata}
                 disabled={updateNewsMutation.isPending}
               >
-                <Save className="h-4 w-4 mr-2" />
+                <Save className="h-4 w-4 ml-2" />
                 {updateNewsMutation.isPending ? 'درحال ذخیره...' : 'ذخیره'}
               </Button>
             </div>

@@ -65,9 +65,9 @@ export default function CreateCoursePage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-right">
       {/* Header */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 flex-row-reverse">
         <Button
           variant="ghost"
           size="sm"
@@ -129,7 +129,7 @@ export default function CreateCoursePage() {
           />
         </div>
 
-        <div className="flex gap-2 pt-4">
+        <div className="flex gap-2 pt-4 flex-row-reverse justify-end">
           <Button
             onClick={handleSubmit}
             disabled={isSubmitting || createCourseMutation.isPending}
