@@ -51,6 +51,34 @@ async function seedAll() {
       process.exit(1);
     }
 
+    // 🧹 Clean up old data first to avoid unique constraint violations
+    console.log('🧹 Cleaning up old data...\n');
+    try {
+      await prisma.newsletterSubscriber.deleteMany({});
+      await prisma.pageContent.deleteMany({});
+      await prisma.fAQ.deleteMany({});
+      await prisma.landingPageFeature.deleteMany({});
+      await prisma.landingPage.deleteMany({});
+      await prisma.digitalBook.deleteMany({});
+      await prisma.transaction.deleteMany({});
+      await prisma.orderItem.deleteMany({});
+      await prisma.order.deleteMany({});
+      await prisma.enrollment.deleteMany({});
+      await prisma.question.deleteMany({});
+      await prisma.quiz.deleteMany({});
+      await prisma.comment.deleteMany({});
+      await prisma.courseOnTag.deleteMany({});
+      await prisma.course.deleteMany({});
+      await prisma.newsArticle.deleteMany({});
+      await prisma.user.deleteMany({});
+      await prisma.tag.deleteMany({});
+      await prisma.category.deleteMany({});
+      console.log('✅ Old data cleaned up!\n');
+    } catch (error) {
+      console.warn('⚠️  Cleanup warning:', (error as Error).message);
+      console.log('Continuing with seed...\n');
+    }
+
     console.log('📋 Execution Order:');
     console.log('   1. Admin Users (base)');
     console.log('   2. Categories (base)');

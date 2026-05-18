@@ -162,67 +162,129 @@ export async function seedBooks() {
         // Non-critical
       }
 
-      const _book = await prisma.digitalBook.create({
-        data: {
-          title,
-          slug,
-          author: `${firstName} ${lastName}`,
-          description: generator.generateParagraphs(3),
-          cover: coverPath,
-          publisher: generator.choice([
-            "انتشارات پیشرو",
-            "نشر علم و دانش",
-            "انتشارات بورس",
-            "نشر سرمایه",
-          ]),
-          year: generator.randomInt(2018, 2026),
-          pages: generator.randomInt(150, 500),
-          isbn: `978-600-${generator.randomInt(
-            1000,
-            9999
-          )}-${generator.randomInt(100, 999)}-${generator.randomInt(1, 9)}`,
-          language: "فارسی",
-          rating: generator.generateRating(),
-          votes: generator.randomInt(50, 3000),
-          views: generator.randomInt(100, 15000),
-          downloads: generator.randomInt(50, 10000),
-          category: generator.choice([
-            "بورس و سهام",
-            "ارز دیجیتال",
-            "سرمایه‌ گذاری",
-            "کسب و کار",
-            "اقتصاد",
-            "تحلیل تکنیکال",
-            "مدیریت مالی",
-          ]),
-          formats: generator.choice([
-            ["الکترونیکی"],
-            ["الکترونیکی", "صوتی"],
-            ["جلد نرم", "الکترونیکی"],
-            ["جلد سخت", "الکترونیکی", "صوتی"],
-          ]),
-          status:
-            generator.randomInt(0, 10) > 7
-              ? ["جدید"]
-              : generator.randomInt(0, 10) > 5
-              ? ["پرفروش"]
-              : [],
-          tags: bookTags.map((t) => t.title),
-          readingTime: `${generator.randomInt(5, 20)} ساعت`,
-          isFeatured: generator.randomInt(0, 10) > 7,
-          price:
-            generator.randomInt(0, 10) > 5
-              ? generator.generatePrice(50000, 300000)
-              : null,
-          fileUrl: pdfPath,
-          audioUrl:
-            generator.randomInt(0, 10) > 6
-              ? audioPath
-              : null,
-        },
-      });
+      try {
+        const _book = await prisma.digitalBook.upsert({
+          where: { slug },
+          update: {
+            title,
+            author: `${firstName} ${lastName}`,
+            description: generator.generateParagraphs(3),
+            cover: coverPath,
+            publisher: generator.choice([
+              "انتشارات پیشرو",
+              "نشر علم و دانش",
+              "انتشارات بورس",
+              "نشر سرمایه",
+            ]),
+            year: generator.randomInt(2018, 2026),
+            pages: generator.randomInt(150, 500),
+            isbn: `978-600-${generator.randomInt(
+              1000,
+              9999
+            )}-${generator.randomInt(100, 999)}-${generator.randomInt(1, 9)}`,
+            language: "فارسی",
+            rating: generator.generateRating(),
+            votes: generator.randomInt(50, 3000),
+            views: generator.randomInt(100, 15000),
+            downloads: generator.randomInt(50, 10000),
+            category: generator.choice([
+              "بورس و سهام",
+              "ارز دیجیتال",
+              "سرمایه‌ گذاری",
+              "کسب و کار",
+              "اقتصاد",
+              "تحلیل تکنیکال",
+              "مدیریت مالی",
+            ]),
+            formats: generator.choice([
+              ["الکترونیکی"],
+              ["الکترونیکی", "صوتی"],
+              ["جلد نرم", "الکترونیکی"],
+              ["جلد سخت", "الکترونیکی", "صوتی"],
+            ]),
+            status:
+              generator.randomInt(0, 10) > 7
+                ? ["جدید"]
+                : generator.randomInt(0, 10) > 5
+                ? ["پرفروش"]
+                : [],
+            tags: bookTags.map((t) => t.title),
+            readingTime: `${generator.randomInt(5, 20)} ساعت`,
+            isFeatured: generator.randomInt(0, 10) > 7,
+            price:
+              generator.randomInt(0, 10) > 5
+                ? generator.generatePrice(50000, 300000)
+                : null,
+            fileUrl: pdfPath,
+            audioUrl:
+              generator.randomInt(0, 10) > 6
+                ? audioPath
+                : null,
+          },
+          create: {
+            title,
+            slug,
+            author: `${firstName} ${lastName}`,
+            description: generator.generateParagraphs(3),
+            cover: coverPath,
+            publisher: generator.choice([
+              "انتشارات پیشرو",
+              "نشر علم و دانش",
+              "انتشارات بورس",
+              "نشر سرمایه",
+            ]),
+            year: generator.randomInt(2018, 2026),
+            pages: generator.randomInt(150, 500),
+            isbn: `978-600-${generator.randomInt(
+              1000,
+              9999
+            )}-${generator.randomInt(100, 999)}-${generator.randomInt(1, 9)}`,
+            language: "فارسی",
+            rating: generator.generateRating(),
+            votes: generator.randomInt(50, 3000),
+            views: generator.randomInt(100, 15000),
+            downloads: generator.randomInt(50, 10000),
+            category: generator.choice([
+              "بورس و سهام",
+              "ارز دیجیتال",
+              "سرمایه‌ گذاری",
+              "کسب و کار",
+              "اقتصاد",
+              "تحلیل تکنیکال",
+              "مدیریت مالی",
+            ]),
+            formats: generator.choice([
+              ["الکترونیکی"],
+              ["الکترونیکی", "صوتی"],
+              ["جلد نرم", "الکترونیکی"],
+              ["جلد سخت", "الکترونیکی", "صوتی"],
+            ]),
+            status:
+              generator.randomInt(0, 10) > 7
+                ? ["جدید"]
+                : generator.randomInt(0, 10) > 5
+                ? ["پرفروش"]
+                : [],
+            tags: bookTags.map((t) => t.title),
+            readingTime: `${generator.randomInt(5, 20)} ساعت`,
+            isFeatured: generator.randomInt(0, 10) > 7,
+            price:
+              generator.randomInt(0, 10) > 5
+                ? generator.generatePrice(50000, 300000)
+                : null,
+            fileUrl: pdfPath,
+            audioUrl:
+              generator.randomInt(0, 10) > 6
+                ? audioPath
+                : null,
+          },
+        });
 
-      created++;
+        created++;
+      } catch (error: any) {
+        // Skip on constraint violation
+        continue;
+      }
 
       if ((i + 1) % 10 === 0) {
         console.log(`  ✓ Created ${i + 1}/${BOOK_COUNT} books...`);

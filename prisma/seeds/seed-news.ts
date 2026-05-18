@@ -91,29 +91,53 @@ export async function seedNews() {
         // Non-critical
       }
 
-      const _article = await prisma.newsArticle.create({
-        data: {
-          title,
-          slug,
-          excerpt: generator.generateParagraph(),
-          content: generator.generateParagraphs(5),
-          coverImage: coverImagePath,
-          author: `${firstName} ${lastName}`,
-          category: category.title,
-          tags: articleTags.map((t) => t.title),
-          published: generator.choice([true, true, true, false]),
-          publishedAt: generator.choice([true, true, false])
-            ? generator.generatePastDate(180)
-            : null,
-          views: generator.randomInt(0, 10000),
-          categoryId: category.id,
-          featured: generator.randomInt(0, 10) > 7,
-          readingTime: generator.choice([3, 5, 7, 10, 15]),
-          likes: generator.randomInt(0, 500),
-        },
-      });
+      try {
+        const _article = await prisma.newsArticle.upsert({
+          where: { slug },
+          update: {
+            title,
+            excerpt: generator.generateParagraph(),
+            content: generator.generateParagraphs(5),
+            coverImage: coverImagePath,
+            author: `${firstName} ${lastName}`,
+            category: category.title,
+            tags: articleTags.map((t) => t.title),
+            published: generator.choice([true, true, true, false]),
+            publishedAt: generator.choice([true, true, false])
+              ? generator.generatePastDate(180)
+              : null,
+            views: generator.randomInt(0, 10000),
+            categoryId: category.id,
+            featured: generator.randomInt(0, 10) > 7,
+            readingTime: generator.choice([3, 5, 7, 10, 15]),
+            likes: generator.randomInt(0, 500),
+          },
+          create: {
+            title,
+            slug,
+            excerpt: generator.generateParagraph(),
+            content: generator.generateParagraphs(5),
+            coverImage: coverImagePath,
+            author: `${firstName} ${lastName}`,
+            category: category.title,
+            tags: articleTags.map((t) => t.title),
+            published: generator.choice([true, true, true, false]),
+            publishedAt: generator.choice([true, true, false])
+              ? generator.generatePastDate(180)
+              : null,
+            views: generator.randomInt(0, 10000),
+            categoryId: category.id,
+            featured: generator.randomInt(0, 10) > 7,
+            readingTime: generator.choice([3, 5, 7, 10, 15]),
+            likes: generator.randomInt(0, 500),
+          },
+        });
 
-      created++;
+        created++;
+      } catch (error: any) {
+        // Skip on constraint violation
+        continue;
+      }
 
       if ((i + 1) % 10 === 0) {
         console.log(`  ✓ Created ${i + 1}/${NEWS_COUNT} news articles...`);
