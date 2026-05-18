@@ -146,6 +146,10 @@ export const UpdateNewsSchema = z.object({
   thumbnail: z.string()
     .url('آدرس تصویر بندانگشتی معتبر نیست')
     .optional(),
+  publishedAt: z.string()
+    .datetime('تاریخ انتشار باید یک ISO datetime معتبر باشد')
+    .nullable()
+    .optional(),
 }).strict();
 
 /**

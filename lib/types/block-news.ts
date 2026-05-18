@@ -88,6 +88,7 @@ export interface UpdateNewsRequest {
   description?: string;
   categoryId?: string | null;
   thumbnail?: string;
+  publishedAt?: string | null;
 }
 
 export interface ContentBlockCreateRequest {

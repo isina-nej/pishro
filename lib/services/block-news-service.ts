@@ -128,7 +128,7 @@ export async function getNewsList(
 }
 
 /**
- * Update news article metadata (title, slug, description, category, thumbnail)
+ * Update news article metadata (title, slug, description, category, thumbnail, publishedAt)
  * Does NOT update blocks or status
  */
 export async function updateNewsMetadata(
@@ -139,6 +139,7 @@ export async function updateNewsMetadata(
     description?: string;
     categoryId?: string | null;
     thumbnail?: string;
+    publishedAt?: string | null;
   }
 ) {
   const validated = UpdateNewsSchema.parse(data);
@@ -161,6 +162,7 @@ export async function updateNewsMetadata(
       ...(validated.description !== undefined && { description: validated.description }),
       ...(validated.categoryId !== undefined && { categoryId: validated.categoryId }),
       ...(validated.thumbnail !== undefined && { thumbnail: validated.thumbnail }),
+      ...(validated.publishedAt !== undefined && { publishedAt: validated.publishedAt ? new Date(validated.publishedAt) : null }),
     },
     include: {
       author: {
@@ -175,14 +177,25 @@ export async function updateNewsMetadata(
 }
 
 /**
- * Publish a news article (change status from DRAFT to PUBLISHED, set publishedAt)
+ * Publish a news article (change status from DRAFT to PUBLISHED, set publishedAt if not already set)
  */
 export async function publishNews(id: string) {
+  // First, get the current news to check if publishedAt is already set
+  const currentNews = await prisma.news.findUnique({
+    where: { id },
+    select: { publishedAt: true },
+  });
+
+  if (!currentNews) {
+    throw new Error('خبر یافت نشد');
+  }
+
   const news = await prisma.news.update({
     where: { id },
     data: {
       status: 'PUBLISHED',
-      publishedAt: new Date(),
+      // Only set publishedAt to now if it wasn't already scheduled
+      publishedAt: currentNews.publishedAt || new Date(),
     },
     include: {
       author: { select: { id: true, firstName: true, lastName: true } },

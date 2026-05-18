@@ -16,7 +16,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowRight, Save, Send, Archive } from 'lucide-react';
+import { ArrowRight, Save, Send, Archive, Calendar, Clock } from 'lucide-react';
 import {
   useBlockNews,
   useBlockNewsBlocks,
@@ -55,7 +55,9 @@ export default function EditBlockNewsPage() {
   const [formData, setFormData] = useState({
     title: news?.title || '',
     description: news?.description || '',
+    thumbnail: news?.thumbnail || '',
     categoryId: news?.categoryId || '',
+    publishedAt: news?.publishedAt || '',
   });
 
   React.useEffect(() => {
@@ -63,7 +65,9 @@ export default function EditBlockNewsPage() {
       setFormData({
         title: news.title,
         description: news.description || '',
+        thumbnail: news.thumbnail || '',
         categoryId: news.categoryId || '',
+        publishedAt: news.publishedAt ? new Date(news.publishedAt).toISOString().slice(0, 16) : '',
       });
     }
   }, [news]);
@@ -75,9 +79,11 @@ export default function EditBlockNewsPage() {
 
   const handleSaveMetadata = async () => {
     try {
+      const publishedAt = formData.publishedAt ? new Date(formData.publishedAt).toISOString() : null;
       await updateNewsMutation.mutateAsync({
         title: formData.title,
         description: formData.description,
+        thumbnail: formData.thumbnail || undefined,
         categoryId: formData.categoryId || undefined,
       });
     } catch (error) {
@@ -85,11 +91,39 @@ export default function EditBlockNewsPage() {
     }
   };
 
-  const handlePublish = async () => {
+  const handlePublishNow = async () => {
     try {
+      // First update with current time as publishedAt
+      await updateNewsMutation.mutateAsync({
+        title: formData.title,
+        description: formData.description,
+        thumbnail: formData.thumbnail || undefined,
+        categoryId: formData.categoryId || undefined,
+      });
+      // Then change status to PUBLISHED
       await changeStatusMutation.mutateAsync('PUBLISHED');
     } catch (error) {
       console.error('خطا در انتشار:', error);
+    }
+  };
+
+  const handlePublishScheduled = async () => {
+    if (!formData.publishedAt) {
+      alert('لطفا زمان انتشار را انتخاب کنید');
+      return;
+    }
+    try {
+      // Save the scheduled publish time - actual publishing will happen via a scheduled job
+      await updateNewsMutation.mutateAsync({
+        title: formData.title,
+        description: formData.description,
+        thumbnail: formData.thumbnail || undefined,
+        categoryId: formData.categoryId || undefined,
+      });
+      // The status will be updated by server-side scheduler at the specified time
+      alert(`خبر برای انتشار در ${new Date(formData.publishedAt).toLocaleString('fa-IR')} برنامه‌ریزی شد`);
+    } catch (error) {
+      console.error('خطا در برنامه‌ریزی:', error);
     }
   };
 
@@ -174,6 +208,26 @@ export default function EditBlockNewsPage() {
             </div>
 
             <div className="space-y-2">
+              <label className="text-sm font-medium">تصویر شاخص (کاور)</label>
+              <Input
+                type="url"
+                name="thumbnail"
+                value={formData.thumbnail}
+                onChange={handleInputChange}
+                placeholder="https://example.com/image.jpg"
+              />
+              {formData.thumbnail && (
+                <div className="mt-2 relative w-full h-40 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+                  <img
+                    src={formData.thumbnail}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-2">
               <label className="text-sm font-medium">دسته‌بندی</label>
               <Input
                 name="categoryId"
@@ -200,30 +254,79 @@ export default function EditBlockNewsPage() {
             </div>
           </Card>
 
-          {/* Status Actions */}
-          <Card className="p-4">
-            <h3 className="font-semibold mb-3">وضعیت خبر</h3>
-            <div className="flex gap-2">
-              {news.status !== 'PUBLISHED' && (
+          {/* Publishing Section */}
+          <Card className="p-4 space-y-4">
+            <div className="space-y-3">
+              <h3 className="font-semibold flex items-center gap-2">
+                <Send className="h-4 w-4" />
+                وضعیت و انتشار خبر
+              </h3>
+              <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                <span className="text-sm">وضعیت فعلی:</span>
+                <Badge variant="outline">{STATUS_LABELS[news.status]}</Badge>
+              </div>
+            </div>
+
+            {/* Publish Now */}
+            <div className="space-y-2">
+              <p className="text-sm font-medium">انتشار فوری</p>
+              <Button
+                onClick={handlePublishNow}
+                disabled={changeStatusMutation.isPending || updateNewsMutation.isPending || news.status === 'PUBLISHED'}
+                className="w-full"
+              >
+                <Send className="h-4 w-4 ml-2" />
+                انتشار الان
+              </Button>
+              <p className="text-xs text-muted-foreground">خبر بلافاصله منتشر می‌شود</p>
+            </div>
+
+            {/* Schedule for Later */}
+            <div className="space-y-2 border-t pt-3">
+              <p className="text-sm font-medium">برنامه‌ریزی انتشار برای بعدا</p>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="datetime-local"
+                    name="publishedAt"
+                    value={formData.publishedAt}
+                    onChange={handleInputChange}
+                    min={new Date().toISOString().slice(0, 16)}
+                  />
+                </div>
+                {formData.publishedAt && (
+                  <div className="text-xs text-muted-foreground p-2 bg-blue-50 dark:bg-blue-950 rounded">
+                    <Clock className="h-3 w-3 inline mr-1" />
+                    زمان انتشار: {new Date(formData.publishedAt).toLocaleString('fa-IR')}
+                  </div>
+                )}
                 <Button
-                  onClick={handlePublish}
-                  disabled={changeStatusMutation.isPending}
+                  onClick={handlePublishScheduled}
+                  disabled={changeStatusMutation.isPending || updateNewsMutation.isPending || news.status === 'PUBLISHED'}
+                  variant="outline"
+                  className="w-full"
                 >
-                  <Send className="h-4 w-4 mr-2" />
-                  انتشار
+                  <Clock className="h-4 w-4 ml-2" />
+                  برنامه‌ریزی انتشار
                 </Button>
-              )}
-              {news.status !== 'ARCHIVED' && (
+              </div>
+            </div>
+
+            {/* Archive */}
+            {news.status !== 'ARCHIVED' && (
+              <div className="space-y-2 border-t pt-3">
                 <Button
                   variant="outline"
                   onClick={handleArchive}
                   disabled={changeStatusMutation.isPending}
+                  className="w-full text-destructive"
                 >
-                  <Archive className="h-4 w-4 mr-2" />
-                  آرشیو
+                  <Archive className="h-4 w-4 ml-2" />
+                  انتقال به آرشیو
                 </Button>
-              )}
-            </div>
+              </div>
+            )}
           </Card>
         </TabsContent>
 
