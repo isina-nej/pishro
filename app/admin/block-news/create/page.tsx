@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowRight, AlertCircle } from 'lucide-react';
+import { ArrowRight, AlertCircle, FileText, Image as ImageIcon, Tag, Zap } from 'lucide-react';
 import { useCreateBlockNews, useBlockNews } from '@/lib/hooks/use-block-news';
 import BlockEditor from '@/components/BlockNews/BlockEditor';
 
@@ -61,110 +61,182 @@ export default function CreateBlockNewsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-screen space-y-6">
       {/* Header */}
       <div className="flex items-center gap-3 flex-row-reverse">
         <Button
           variant="ghost"
-          size="sm"
+          size="icon"
           onClick={() => router.back()}
+          className="hover:bg-gray-100 dark:hover:bg-gray-800"
         >
-          <ArrowRight className="h-4 w-4" />
+          <ArrowRight className="h-5 w-5" />
         </Button>
-        <h1 className="text-3xl font-bold text-right">خبر جدید</h1>
+        <h1 className="text-4xl font-bold text-right">خبر جدید</h1>
       </div>
 
-      {/* Form */}
-      <Card className="p-6 space-y-4 text-right">
-        <div className="space-y-2">
-          <label className="text-sm font-medium">عنوان خبر *</label>
-          <Input
-            name="title"
-            value={formData.title}
-            onChange={handleInputChange}
-            placeholder="عنوان خبر را وارد کنید..."
-            disabled={isSubmitting}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm font-medium">توضیح کوتاه</label>
-          <Textarea
-            name="description"
-            value={formData.description}
-            onChange={handleInputChange}
-            placeholder="توضیح کوتاهی برای نمایش در لیست..."
-            rows={3}
-            disabled={isSubmitting}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm font-medium">تصویر شاخص (کاور)</label>
-          <Input
-            type="url"
-            name="thumbnail"
-            value={formData.thumbnail}
-            onChange={handleInputChange}
-            placeholder="https://example.com/image.jpg"
-            disabled={isSubmitting}
-          />
-          {formData.thumbnail && (
-            <div className="mt-2 relative w-full h-40 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
-              <img
-                src={formData.thumbnail}
-                alt="Preview"
-                className="w-full h-full object-cover"
-              />
+      {/* Main Form Card */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Form Section */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Basic Information */}
+          <Card className="p-8 border-0 shadow-lg">
+            <div className="flex items-center gap-3 mb-6">
+              <FileText className="w-5 h-5 text-blue-600" />
+              <h2 className="text-xl font-bold">اطلاعات پایه‌ای</h2>
             </div>
-          )}
-          <p className="text-xs text-muted-foreground">برای نمایش در لیست اخبار</p>
+
+            <div className="space-y-6">
+              <div className="space-y-3">
+                <label className="text-sm font-semibold flex items-center gap-2">
+                  <span className="text-red-500">*</span>
+                  عنوان خبر
+                </label>
+                <Input
+                  name="title"
+                  value={formData.title}
+                  onChange={handleInputChange}
+                  placeholder="عنوان جذاب و توصیفی برای خبر..."
+                  disabled={isSubmitting}
+                  className="h-11 text-base bg-gray-50 dark:bg-gray-900 border-2"
+                />
+                <p className="text-xs text-muted-foreground">این عنوان در لیست اخبار و صفحه اصلی نمایش داده می‌شود</p>
+              </div>
+
+              <div className="space-y-3">
+                <label className="text-sm font-semibold">توضیح کوتاه (خلاصه)</label>
+                <Textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  placeholder="یک خلاصه کوتاه برای جذب توجه خواننده..."
+                  rows={4}
+                  disabled={isSubmitting}
+                  className="text-base bg-gray-50 dark:bg-gray-900 border-2 resize-none"
+                />
+                <p className="text-xs text-muted-foreground">حداکثر 200 کاراکتر برای بهترین نمایش</p>
+              </div>
+            </div>
+          </Card>
+
+          {/* Cover Image */}
+          <Card className="p-8 border-0 shadow-lg">
+            <div className="flex items-center gap-3 mb-6">
+              <ImageIcon className="w-5 h-5 text-purple-600" />
+              <h2 className="text-xl font-bold">تصویر شاخص (کاور)</h2>
+            </div>
+
+            <div className="space-y-4">
+              <Input
+                type="url"
+                name="thumbnail"
+                value={formData.thumbnail}
+                onChange={handleInputChange}
+                placeholder="https://example.com/image.jpg"
+                disabled={isSubmitting}
+                className="h-11 text-base bg-gray-50 dark:bg-gray-900 border-2"
+              />
+              <p className="text-xs text-muted-foreground">لینک مستقیم تصویر در اینترنت</p>
+
+              {formData.thumbnail && (
+                <div className="mt-4 relative w-full h-48 rounded-lg overflow-hidden shadow-md ring-2 ring-purple-200 dark:ring-purple-900">
+                  <img
+                    src={formData.thumbnail}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+            </div>
+          </Card>
+
+          {/* Category */}
+          <Card className="p-8 border-0 shadow-lg">
+            <div className="flex items-center gap-3 mb-6">
+              <Tag className="w-5 h-5 text-green-600" />
+              <h2 className="text-xl font-bold">دسته‌بندی</h2>
+            </div>
+
+            <Input
+              name="categoryId"
+              value={formData.categoryId}
+              onChange={handleInputChange}
+              placeholder="شناسه دسته‌بندی (اختیاری)"
+              disabled={isSubmitting}
+              className="h-11 text-base bg-gray-50 dark:bg-gray-900 border-2"
+            />
+            <p className="text-xs text-muted-foreground mt-3">می‌توانید بعدا تغییر دهید</p>
+          </Card>
         </div>
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium">دسته‌بندی</label>
-          <Input
-            name="categoryId"
-            value={formData.categoryId}
-            onChange={handleInputChange}
-            placeholder="شناسه دسته‌بندی"
-            disabled={isSubmitting}
-          />
-          <p className="text-xs text-muted-foreground">اختیاری - می‌توانید بعدا تغییر دهید</p>
-        </div>
+        {/* Sidebar */}
+        <div className="space-y-6">
+          {/* Action Buttons */}
+          <Card className="p-6 border-0 shadow-lg bg-gradient-to-b from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30">
+            <div className="space-y-3">
+              <Button
+                onClick={handleSubmit}
+                disabled={isSubmitting || !formData.title.trim()}
+                className="w-full h-12 bg-gradient-to-l from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg text-base font-semibold"
+              >
+                <Zap className="h-5 w-5 ml-2" />
+                {isSubmitting ? 'درحال ایجاد...' : 'ایجاد خبر'}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => router.back()}
+                disabled={isSubmitting}
+                className="w-full h-11 text-base border-2"
+              >
+                انصراف
+              </Button>
+            </div>
+          </Card>
 
-        <div className="flex gap-2 justify-end pt-4 flex-row-reverse">
-          <Button
-            variant="outline"
-            onClick={() => router.back()}
-            disabled={isSubmitting}
-          >
-            انصراف
-          </Button>
-          <Button
-            onClick={handleSubmit}
-            disabled={isSubmitting || !formData.title.trim()}
-          >
-            {isSubmitting ? 'درحال ایجاد...' : 'ایجاد خبر'}
-          </Button>
-        </div>
-      </Card>
+          {/* Requirements */}
+          <Card className="p-6 border-0 shadow-lg bg-blue-50 dark:bg-blue-950/20 border-l-4 border-l-blue-600">
+            <div className="space-y-4">
+              <div className="flex items-start gap-3">
+                <Zap className="w-5 h-5 text-blue-600 flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="font-bold text-sm mb-2">نکات مهم:</h3>
+                  <ul className="text-xs text-foreground/80 space-y-2">
+                    <li className="flex items-start gap-2">
+                      <span className="text-blue-600 mt-1">•</span>
+                      <span>عنوان <span className="font-semibold">الزامی</span> است</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-blue-600 mt-1">•</span>
+                      <span>پس از ایجاد می‌توانید محتوا اضافه کنید</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-blue-600 mt-1">•</span>
+                      <span>تصویر کاور در لیست نمایش داده می‌شود</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-blue-600 mt-1">•</span>
+                      <span>خبر به صورت پیش‌نویس ذخیره می‌شود</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </Card>
 
-      {/* Requirements Card */}
-      <Card className="p-4 border-blue-200 bg-blue-50">
-        <div className="flex gap-3">
-          <AlertCircle className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
-          <div className="space-y-1">
-            <p className="text-sm font-medium text-blue-900">نکات مهم برای ایجاد خبر:</p>
-            <ul className="text-xs text-blue-800 space-y-1 list-disc list-inside">
-              <li>عنوان خبر الزامی است</li>
-              <li>پس از ایجاد، می‌توانید محتوا و بلاک‌ها را اضافه کنید</li>
-              <li>تصویر شاخص در لیست اخبار نمایش داده می‌شود</li>
-              <li>می‌توانید خبر را به صورت پیش‌نویس ذخیره و بعدا منتشر کنید</li>
-            </ul>
-          </div>
+          {/* Info Card */}
+          <Card className="p-6 border-0 shadow-lg bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20">
+            <div className="flex gap-3">
+              <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="font-bold text-sm text-amber-900 dark:text-amber-200">راهنما</h3>
+                <p className="text-xs text-amber-800 dark:text-amber-300 mt-2">
+                  برای افزودن تصویرها، متن‌های فرمت‌شده و دیگر محتوا، پس از ایجاد خبر به صفحه ویرایش بروید.
+                </p>
+              </div>
+            </div>
+          </Card>
         </div>
-      </Card>
+      </div>
     </div>
   );
 }

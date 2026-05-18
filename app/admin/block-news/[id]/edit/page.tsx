@@ -16,7 +16,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowRight, Save, Send, Archive, Calendar, Clock } from 'lucide-react';
+import { ArrowRight, Save, Send, Archive, Calendar, Clock, Newspaper, AlertCircle } from 'lucide-react';
 import {
   useBlockNews,
   useBlockNewsBlocks,
@@ -148,39 +148,50 @@ export default function EditBlockNewsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-screen space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between flex-row-reverse">
-        <div className="flex items-center gap-3 flex-row-reverse">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => router.back()}
-          >
-            <ArrowRight className="h-4 w-4" />
-          </Button>
-          <div className="text-right">
-            <h1 className="text-3xl font-bold">ویرایش خبر</h1>
-            <p className="text-sm text-muted-foreground">{news.title}</p>
+      <div className="bg-gradient-to-l from-blue-600/10 to-purple-600/10 dark:from-blue-900/20 dark:to-purple-900/20 rounded-2xl p-6 border border-blue-200/50 dark:border-blue-900/50">
+        <div className="flex items-start justify-between flex-row-reverse gap-4">
+          <div className="flex items-start gap-3 flex-row-reverse flex-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => router.back()}
+              className="hover:bg-gray-100 dark:hover:bg-gray-800"
+            >
+              <ArrowRight className="h-5 w-5" />
+            </Button>
+            <div className="text-right">
+              <h1 className="text-3xl font-bold">ویرایش خبر</h1>
+              <p className="text-muted-foreground line-clamp-1">{news.title}</p>
+            </div>
           </div>
+          <Badge className="bg-gradient-to-l from-blue-600 to-purple-600 text-white text-sm px-4 py-1.5">
+            {STATUS_LABELS[news.status]}
+          </Badge>
         </div>
-        <Badge variant="outline">{STATUS_LABELS[news.status]}</Badge>
       </div>
 
       {/* Status Alert */}
       {news.status === 'DRAFT' && (
-        <Alert>
-          <AlertDescription>
-            این خبر در حال پیش‌نویس است. برای انتشار، بر روی دکمه "انتشار" کلیک کنید.
-          </AlertDescription>
-        </Alert>
+        <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/50 rounded-lg p-4 flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+          <div className="text-right">
+            <p className="font-semibold text-amber-900 dark:text-amber-200">این خبر هنوز منتشر نشده است</p>
+            <p className="text-sm text-amber-800 dark:text-amber-300 mt-1">برای انتشار، از دکمه‌های انتشار در پایین استفاده کنید</p>
+          </div>
+        </div>
       )}
 
       {/* Tabs */}
       <Tabs defaultValue="metadata" className="w-full">
-        <TabsList>
-          <TabsTrigger value="metadata">اطلاعات</TabsTrigger>
-          <TabsTrigger value="blocks">بلاک‌ها ({blocks?.length || 0})</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 bg-gray-100 dark:bg-gray-900 p-1">
+          <TabsTrigger value="metadata" className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800">
+            📝 اطلاعات
+          </TabsTrigger>
+          <TabsTrigger value="blocks" className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800">
+            🧩 بلاک‌ها ({blocks?.length || 0})
+          </TabsTrigger>
         </TabsList>
 
         {/* Metadata Tab */}

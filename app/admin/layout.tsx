@@ -20,13 +20,13 @@ export const metadata: Metadata = {
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="fa" dir="rtl">
-      <body className="bg-gray-50 dark:bg-gray-900">
-        <ReactQueryProvider>
+    <>
+      <ReactQueryProvider>
+        <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
           {children}
           <Toaster position="top-center" toastOptions={{ duration: 3000, style: { direction: 'rtl' } }} />
-        </ReactQueryProvider>
-      </body>
-    </html>
+        </div>
+      </ReactQueryProvider>
+    </>
   );
 }
