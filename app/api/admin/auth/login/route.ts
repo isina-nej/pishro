@@ -2,16 +2,22 @@
  * Admin Login API Route
  * POST /api/admin/auth/login
  * 
- * Request body:
+ * Request body (one of email or phone):
  * {
  *   "email": "admin@example.com",
+ *   "password": "password123",
+ *   "rememberMe": false
+ * }
+ * OR
+ * {
+ *   "phone": "09123456789",
  *   "password": "password123",
  *   "rememberMe": false
  * }
  * 
  * Response:
  * {
- *   "user": { "id", "email", "name", "role" },
+ *   "user": { "id", "email", "phone", "name", "role" },
  *   "accessToken": "jwt-token",
  *   "refreshToken": "jwt-refresh-token",
  *   "expiresIn": 86400
@@ -61,14 +67,26 @@ function recordLoginAttempt(identifier: string) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { email, password, rememberMe } = body;
+    const { email, phone, password, rememberMe } = body;
 
-    // Validation
-    if (!email || typeof email !== 'string') {
+    // Validation - must have either email or phone
+    if (!email && !phone) {
       return NextResponse.json(
         {
-          error: 'Email is required',
-          code: 'invalid_email',
+          error: 'Email or phone is required',
+          code: 'invalid_credentials',
+        },
+        { status: 400 }
+      );
+    }
+
+    const identifier = email || phone;
+
+    if (typeof identifier !== 'string') {
+      return NextResponse.json(
+        {
+          error: 'Email or phone must be a string',
+          code: 'invalid_format',
         },
         { status: 400 }
       );
@@ -85,7 +103,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Check rate limit
-    const rateLimitCheck = checkRateLimit(email);
+    const rateLimitCheck = checkRateLimit(identifier);
     if (!rateLimitCheck.allowed) {
       return NextResponse.json(
         {
@@ -97,7 +115,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Authenticate user
-    const { user, error, code } = await authenticateAdminUser(email, password);
+    const { user, error, code } = await authenticateAdminUser(email || phone, password);
 
     if (!user) {
       recordLoginAttempt(email);

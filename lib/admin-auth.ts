@@ -15,6 +15,7 @@ const REFRESH_TOKEN_EXPIRY = (process.env.ADMIN_REFRESH_TOKEN_EXPIRY || '7d') as
 export interface AdminUser {
   id: string;
   email: string;
+  phone?: string;
   name: string;
   role: 'ADMIN' | 'MODERATOR' | 'VIEWER';
 }
@@ -130,10 +131,10 @@ export async function verifyAdminPassword(password: string, hash: string): Promi
 }
 
 /**
- * Authenticate admin user with email and password
+ * Authenticate admin user with email or phone and password
  */
 export async function authenticateAdminUser(
-  email: string,
+  emailOrPhone: string,
   password: string
 ): Promise<{
   user: AdminUser | null;
@@ -141,9 +142,12 @@ export async function authenticateAdminUser(
   code?: string;
 }> {
   try {
-    // Find admin user
+    // Determine if it's email or phone
+    const isEmail = emailOrPhone.includes('@');
+    
+    // Find admin user by email or phone
     const adminUser = await prisma.adminUser.findUnique({
-      where: { email },
+      where: isEmail ? { email: emailOrPhone } : { phone: emailOrPhone },
     });
 
     if (!adminUser) {
@@ -193,6 +197,7 @@ export async function authenticateAdminUser(
       user: {
         id: adminUser.id,
         email: adminUser.email,
+        phone: adminUser.phone || undefined,
         name: adminUser.name,
         role: adminUser.role as 'ADMIN' | 'MODERATOR' | 'VIEWER',
       },

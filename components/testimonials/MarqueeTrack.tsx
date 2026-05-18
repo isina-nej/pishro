@@ -11,7 +11,7 @@ interface MarqueeTrackProps {
 
 const MarqueeTrack: React.FC<MarqueeTrackProps> = ({
   testimonials,
-  speed = 60,
+  speed = 100,
   pauseOnHover = true,
 }) => {
   const [isPaused, setIsPaused] = useState(false);
@@ -25,17 +25,15 @@ const MarqueeTrack: React.FC<MarqueeTrackProps> = ({
   const cardWidth = 408;
   const scrollDistance = testimonials.length * cardWidth;
 
-  // CSS animation style - seamless loop
+  // CSS animation style - seamless loop with no pause
+  // Animates smoothly from 0% to 100%, then resets instantly when it loops
   const animationStyle = `
     @keyframes scroll {
       0% {
-        transform: translateX(0);
-      }
-      66.66% {
-        transform: translateX(calc(-${scrollDistance * 2}px));
+        transform: translateX(calc(${scrollDistance * 2}px));
       }
       100% {
-        transform: translateX(calc(-${scrollDistance * 2}px));
+        transform: translateX(0);
       }
     }
     

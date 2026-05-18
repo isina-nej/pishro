@@ -18,20 +18,29 @@ export default function AdminLoginForm({ onError, onSuccess }: AdminLoginFormPro
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [loginType, setLoginType] = useState<'email' | 'phone'>('email');
   
   const [formData, setFormData] = useState({
     email: '',
+    phone: '',
     password: '',
   });
 
   const [fieldErrors, setFieldErrors] = useState({
     email: '',
+    phone: '',
     password: '',
   });
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
+  };
+
+  const validatePhone = (phone: string): boolean => {
+    // فارسی و انگلیسی: 0912345678 یا 0-912-345-678
+    const phoneRegex = /^(\+?98|0)?9\d{9}$/;
+    return phoneRegex.test(phone.replace(/\D/g, ''));
   };
 
   const validatePassword = (password: string): boolean => {
@@ -62,13 +71,22 @@ export default function AdminLoginForm({ onError, onSuccess }: AdminLoginFormPro
   const validateForm = (): boolean => {
     const errors = {
       email: '',
+      phone: '',
       password: '',
     };
 
-    if (!formData.email) {
-      errors.email = 'Email is required';
-    } else if (!validateEmail(formData.email)) {
-      errors.email = 'Please enter a valid email';
+    if (loginType === 'email') {
+      if (!formData.email) {
+        errors.email = 'Email is required';
+      } else if (!validateEmail(formData.email)) {
+        errors.email = 'Please enter a valid email';
+      }
+    } else {
+      if (!formData.phone) {
+        errors.phone = 'Phone is required';
+      } else if (!validatePhone(formData.phone)) {
+        errors.phone = 'Please enter a valid phone (09xxxxxxxxx)';
+      }
     }
 
     if (!formData.password) {
@@ -78,7 +96,7 @@ export default function AdminLoginForm({ onError, onSuccess }: AdminLoginFormPro
     }
 
     setFieldErrors(errors);
-    return !errors.email && !errors.password;
+    return !(loginType === 'email' ? errors.email : errors.phone) && !errors.password;
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -99,7 +117,8 @@ export default function AdminLoginForm({ onError, onSuccess }: AdminLoginFormPro
         },
         credentials: 'include',
         body: JSON.stringify({
-          email: formData.email,
+          email: loginType === 'email' ? formData.email : undefined,
+          phone: loginType === 'phone' ? formData.phone : undefined,
           password: formData.password,
           rememberMe,
         }),
@@ -122,7 +141,7 @@ export default function AdminLoginForm({ onError, onSuccess }: AdminLoginFormPro
       }
 
       setSuccess(true);
-      setFormData({ email: '', password: '' });
+      setFormData({ email: '', phone: '', password: '' });
       
       // Call success callback
       onSuccess?.();
@@ -170,31 +189,98 @@ export default function AdminLoginForm({ onError, onSuccess }: AdminLoginFormPro
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Email Input */}
-        <div>
-          <label htmlFor="email" className="block text-sm font-bold text-gray-900 dark:text-white mb-3">
-            Email Address
-          </label>
-          <div className="relative">
-            <Mail className="absolute right-3 top-3 size-5 text-gray-400 dark:text-gray-500" />
-            <Input
-              id="email"
-              type="email"
-              name="email"
-              placeholder="admin@pishrosarmaye.com"
-              value={formData.email}
-              onChange={handleChange}
-              disabled={isLoading}
-              className={cn(
-                'pr-10 pl-4 py-2 block w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:border-transparent transition',
-                fieldErrors.email && 'border-red-500 dark:border-red-500'
-              )}
-            />
-          </div>
-          {fieldErrors.email && (
-            <p className="text-red-500 text-xs mt-2">{fieldErrors.email}</p>
-          )}
+        {/* Login Type Toggle */}
+        <div className="flex gap-2 mb-6">
+          <button
+            type="button"
+            onClick={() => {
+              setLoginType('email');
+              setFormData({ ...formData, phone: '' });
+              setFieldErrors({ ...fieldErrors, phone: '' });
+            }}
+            className={cn(
+              'flex-1 py-2 px-4 rounded-lg font-medium transition',
+              loginType === 'email'
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'
+            )}
+          >
+            <Mail className="inline-block mr-2 size-4" />
+            Email
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setLoginType('phone');
+              setFormData({ ...formData, email: '' });
+              setFieldErrors({ ...fieldErrors, email: '' });
+            }}
+            className={cn(
+              'flex-1 py-2 px-4 rounded-lg font-medium transition',
+              loginType === 'phone'
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'
+            )}
+          >
+            📱 Phone
+          </button>
         </div>
+
+        {/* Email Input */}
+        {loginType === 'email' && (
+          <div>
+            <label htmlFor="email" className="block text-sm font-bold text-gray-900 dark:text-white mb-3">
+              Email Address
+            </label>
+            <div className="relative">
+              <Mail className="absolute right-3 top-3 size-5 text-gray-400 dark:text-gray-500" />
+              <Input
+                id="email"
+                type="email"
+                name="email"
+                placeholder="admin@pishrosarmaye.com"
+                value={formData.email}
+                onChange={handleChange}
+                disabled={isLoading}
+                className={cn(
+                  'pr-10 pl-4 py-2 block w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:border-transparent transition',
+                  fieldErrors.email && 'border-red-500 dark:border-red-500'
+                )}
+              />
+            </div>
+            {fieldErrors.email && (
+              <p className="text-red-500 text-xs mt-2">{fieldErrors.email}</p>
+            )}
+          </div>
+        )}
+
+        {/* Phone Input */}
+        {loginType === 'phone' && (
+          <div>
+            <label htmlFor="phone" className="block text-sm font-bold text-gray-900 dark:text-white mb-3">
+              Phone Number
+            </label>
+            <div className="relative">
+              <span className="absolute right-3 top-3 text-gray-400 dark:text-gray-500">📱</span>
+              <Input
+                id="phone"
+                type="tel"
+                name="phone"
+                placeholder="09123456789"
+                value={formData.phone}
+                onChange={handleChange}
+                disabled={isLoading}
+                className={cn(
+                  'pr-10 pl-4 py-2 block w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:border-transparent transition',
+                  fieldErrors.phone && 'border-red-500 dark:border-red-500'
+                )}
+              />
+            </div>
+            {fieldErrors.phone && (
+              <p className="text-red-500 text-xs mt-2">{fieldErrors.phone}</p>
+            )}
+          </div>
+        )}
 
         {/* Password Input */}
         <div>

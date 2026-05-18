@@ -17,7 +17,7 @@ interface TestimonialCardProps {
 
 const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
   return (
-    <div className="flex-shrink-0 w-96 px-4 h-80">
+    <div className="flex-shrink-0 w-96 px-4 h-48">
       <div className="h-full bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-shadow duration-300 flex flex-col justify-between">
         {/* Star Rating */}
         <div className="flex gap-1 mb-4">
