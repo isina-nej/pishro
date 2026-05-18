@@ -56,7 +56,7 @@ async function seedAll() {
     try {
       await prisma.newsletterSubscriber.deleteMany({});
       await prisma.pageContent.deleteMany({});
-      await prisma.faq.deleteMany({});
+      await prisma.fAQ.deleteMany({});
       await prisma.homeLanding.deleteMany({});
       await prisma.digitalBook.deleteMany({});
       await prisma.transaction.deleteMany({});
