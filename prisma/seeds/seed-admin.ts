@@ -46,6 +46,7 @@ export async function seedAdminUsers() {
     return {
       created: 1,
       updated: 0,
+      total: 1,
     };
   } catch (error) {
     console.error('  ❌ Error seeding admin users:', error);
