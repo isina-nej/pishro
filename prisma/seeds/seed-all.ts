@@ -6,6 +6,7 @@
 import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
 import { fileURLToPath } from 'url';
+import { seedAdminUsers } from './seed-admin';
 import { seedCategories } from './seed-categories';
 import { seedTags } from './seed-tags';
 import { seedUsers } from './seed-users';
@@ -51,90 +52,96 @@ async function seedAll() {
     }
 
     console.log('📋 Execution Order:');
-    console.log('   1. Categories (base)');
-    console.log('   2. Tags (base)');
-    console.log('   3. Users (base)');
-    console.log('   4. Courses (depends on: Categories, Tags)');
-    console.log('   5. Comments (depends on: Users, Courses, Categories)');
-    console.log('   6. Quizzes & Questions (depends on: Courses)');
-    console.log('   7. Enrollments (depends on: Users, Courses)');
-    console.log('   8. Orders & Transactions (depends on: Users, Courses)');
-    console.log('   9. News Articles (depends on: Categories, Tags)');
-    console.log('   10. Digital Books (depends on: Tags)');
-    console.log('   11. FAQs (depends on: Categories)');
-    console.log('   12. Page Content (depends on: Categories)');
-    console.log('   13. Landing Pages (independent)');
-    console.log('   14. Newsletter Subscribers (independent)\n');
+    console.log('   1. Admin Users (base)');
+    console.log('   2. Categories (base)');
+    console.log('   3. Tags (base)');
+    console.log('   4. Users (base)');
+    console.log('   5. Courses (depends on: Categories, Tags)');
+    console.log('   6. Comments (depends on: Users, Courses, Categories)');
+    console.log('   7. Quizzes & Questions (depends on: Courses)');
+    console.log('   8. Enrollments (depends on: Users, Courses)');
+    console.log('   9. Orders & Transactions (depends on: Users, Courses)');
+    console.log('   10. News Articles (depends on: Categories, Tags)');
+    console.log('   11. Digital Books (depends on: Tags)');
+    console.log('   12. FAQs (depends on: Categories)');
+    console.log('   13. Page Content (depends on: Categories)');
+    console.log('   14. Landing Pages (independent)');
+    console.log('   15. Newsletter Subscribers (independent)\n');
 
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
-    // 1. Seed Categories
-    console.log('📁 [1/13] Categories');
+    // 1. Seed Admin Users
+    console.log('👑 [1/15] Admin Users');
+    summary.adminUsers = await seedAdminUsers();
+    console.log('');
+
+    // 2. Seed Categories
+    console.log('📁 [2/15] Categories');
     summary.categories = await seedCategories();
     console.log('');
 
-    // 2. Seed Tags
-    console.log('🏷️  [2/13] Tags');
+    // 3. Seed Tags
+    console.log('🏷️  [3/15] Tags');
     summary.tags = await seedTags();
     console.log('');
 
-    // 3. Seed Users
-    console.log('👥 [3/13] Users');
+    // 4. Seed Users
+    console.log('👥 [4/15] Users');
     summary.users = await seedUsers();
     console.log('');
 
-    // 4. Seed Courses
-    console.log('📚 [4/13] Courses');
+    // 5. Seed Courses
+    console.log('📚 [5/15] Courses');
     summary.courses = await seedCourses();
     console.log('');
 
-    // 5. Seed Comments
-    console.log('💬 [5/13] Comments');
+    // 6. Seed Comments
+    console.log('💬 [6/15] Comments');
     summary.comments = await seedComments();
     console.log('');
 
-    // 6. Seed Quizzes and Questions
-    console.log('❓ [6/13] Quizzes & Questions');
+    // 7. Seed Quizzes and Questions
+    console.log('❓ [7/15] Quizzes & Questions');
     summary.quizzes = await seedQuizzes();
     console.log('');
 
-    // 7. Seed Enrollments
-    console.log('✍️  [7/13] Enrollments');
+    // 8. Seed Enrollments
+    console.log('✍️  [8/15] Enrollments');
     summary.enrollments = await seedEnrollments();
     console.log('');
 
-    // 8. Seed Orders and Transactions
-    console.log('🛒 [8/13] Orders & Transactions');
+    // 9. Seed Orders and Transactions
+    console.log('🛒 [9/15] Orders & Transactions');
     summary.orders = await seedOrders();
     console.log('');
 
     // 9. Seed News Articles
-    console.log('📰 [9/13] News Articles');
+    console.log('📰 [10/15] News Articles');
     summary.news = await seedNews();
     console.log('');
 
     // 10. Seed Digital Books
-    console.log('📖 [10/13] Digital Books');
+    console.log('📖 [11/15] Digital Books');
     summary.books = await seedBooks();
     console.log('');
 
     // 11. Seed FAQs
-    console.log('❔ [11/13] FAQs');
+    console.log('❔ [12/15] FAQs');
     summary.faqs = await seedFAQs();
     console.log('');
 
     // 12. Seed Page Content
-    console.log('📄 [12/13] Page Content');
+    console.log('📄 [13/15] Page Content');
     summary.pageContent = await seedPageContent();
     console.log('');
 
     // 13. Seed Landing Pages
-    console.log('🏠 [13/14] Landing Pages');
+    console.log('🏠 [14/15] Landing Pages');
     summary.landing = await seedLandingPages();
     console.log('');
 
     // 14. Seed Newsletter Subscribers
-    console.log('📧 [14/14] Newsletter Subscribers');
+    console.log('📧 [15/15] Newsletter Subscribers');
     summary.newsletter = await seedNewsletter();
     console.log('');
 
