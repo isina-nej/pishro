@@ -56,18 +56,17 @@ async function seedAll() {
     try {
       await prisma.newsletterSubscriber.deleteMany({});
       await prisma.pageContent.deleteMany({});
-      await prisma.fAQ.deleteMany({});
-      await prisma.landingPageFeature.deleteMany({});
-      await prisma.landingPage.deleteMany({});
+      await prisma.faq.deleteMany({});
+      await prisma.homeLanding.deleteMany({});
       await prisma.digitalBook.deleteMany({});
       await prisma.transaction.deleteMany({});
       await prisma.orderItem.deleteMany({});
       await prisma.order.deleteMany({});
       await prisma.enrollment.deleteMany({});
-      await prisma.question.deleteMany({});
+      await prisma.quizQuestion.deleteMany({});
       await prisma.quiz.deleteMany({});
       await prisma.comment.deleteMany({});
-      await prisma.courseOnTag.deleteMany({});
+      await prisma.courseTags.deleteMany({});
       await prisma.course.deleteMany({});
       await prisma.newsArticle.deleteMany({});
       await prisma.user.deleteMany({});
