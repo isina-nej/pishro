@@ -124,12 +124,24 @@ export const CreateNewsSchema = z.object({
     .optional(),
   // Accept both coverImage and thumbnail
   coverImage: z.string()
-    .url('آدرس تصویر معتبر نیست')
+    .refine(
+      (val) => {
+        // Accept relative paths (starting with /) or absolute URLs
+        return val.startsWith('/') || val.match(/^https?:\/\//);
+      },
+      'آدرس تصویر معتبر نیست'
+    )
     .optional()
     .nullable()
     .transform((val) => val === null ? undefined : val),
   thumbnail: z.string()
-    .url('آدرس تصویر معتبر نیست')
+    .refine(
+      (val) => {
+        // Accept relative paths (starting with /) or absolute URLs
+        return val.startsWith('/') || val.match(/^https?:\/\//);
+      },
+      'آدرس تصویر معتبر نیست'
+    )
     .optional()
     .nullable()
     .transform((val) => val === null ? undefined : val),
@@ -180,12 +192,24 @@ export const UpdateNewsSchema = z.object({
     .transform((val) => val === '' ? undefined : val),
   // Accept both coverImage and thumbnail
   coverImage: z.string()
-    .url('آدرس تصویر معتبر نیست')
+    .refine(
+      (val) => {
+        // Accept relative paths (starting with /) or absolute URLs
+        return val.startsWith('/') || val.match(/^https?:\/\//);
+      },
+      'آدرس تصویر معتبر نیست'
+    )
     .optional()
     .nullable()
     .transform((val) => val === null ? undefined : val),
   thumbnail: z.string()
-    .url('آدرس تصویر معتبر نیست')
+    .refine(
+      (val) => {
+        // Accept relative paths (starting with /) or absolute URLs
+        return val.startsWith('/') || val.match(/^https?:\/\//);
+      },
+      'آدرس تصویر معتبر نیست'
+    )
     .optional()
     .nullable()
     .transform((val) => val === null ? undefined : val),

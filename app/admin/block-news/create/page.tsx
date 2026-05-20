@@ -16,6 +16,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { ArrowRight, AlertCircle, FileText, Image as ImageIcon, Tag, Zap, Upload, X } from 'lucide-react';
 import { useCreateBlockNews } from '@/lib/hooks/use-block-news';
 import AdminSidebar from '@/components/admin/AdminSidebar';
+import RichNewsEditor from '@/components/admin/news/RichNewsEditor';
 
 export const dynamic = 'force-dynamic';
 
@@ -252,16 +253,16 @@ export default function CreateBlockNewsPage() {
 
               <div className="space-y-2 md:space-y-3">
                 <label className="text-sm font-semibold">محتوای کامل خبر</label>
-                <Textarea
-                  name="content"
-                  value={formData.content}
-                  onChange={handleInputChange}
-                  placeholder="محتوای کامل خبر را اینجا وارد کنید..."
-                  rows={6}
+                <RichNewsEditor
+                  initialContent="<p>محتوای خبر را اینجا شروع کنید...</p>"
+                  placeholder="محتوای کامل خبر را اینجا بنویسید..."
+                  onContentChange={(json, html) => {
+                    setFormData((prev) => ({ ...prev, content: json }));
+                  }}
                   disabled={isSubmitting}
-                  className="text-sm md:text-base bg-gray-50 dark:bg-gray-900 border-2 resize-none"
+                  rtl={true}
                 />
-                <p className="text-xs text-muted-foreground">محتوای کامل و جزئیات خبر</p>
+                <p className="text-xs text-muted-foreground">از ابزارهای زیر برای ویرایش استفاده کنید: عنوان، بولد، ایتالیک، لیست، عکس، و موارد دیگر</p>
               </div>
             </div>
           </Card>
