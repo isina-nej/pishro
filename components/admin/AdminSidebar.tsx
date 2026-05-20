@@ -18,9 +18,19 @@ interface AdminSidebarProps {
   currentPage?: string;
 }
 
+const menuItems = [
+  { href: '/admin/dashboard', label: 'داشبورد', icon: '📊', key: 'dashboard', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
+  { href: '#', label: 'کاربران', icon: '👥', key: 'users', roles: ['ADMIN', 'MODERATOR'] },
+  { href: '/admin/block-news', label: 'اخبار', icon: '📝', key: 'block-news', roles: ['ADMIN', 'MODERATOR'] },
+  { href: '/admin/courses', label: 'دوره‌ها', icon: '🎓', key: 'courses', roles: ['ADMIN', 'MODERATOR'] },
+  { href: '#', label: 'گزارش‌ها', icon: '📈', key: 'reports', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
+  { href: '#', label: 'تنظیمات', icon: '⚙️', key: 'settings', roles: ['ADMIN'] },
+];
+
 export default function AdminSidebar({ user, children, currentPage }: AdminSidebarProps) {
   const router = useRouter();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [desktopSidebarOpen, setDesktopSidebarOpen] = useState(true);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -36,125 +46,159 @@ export default function AdminSidebar({ user, children, currentPage }: AdminSideb
     }
   };
 
-  const isActive = (path: string) => currentPage === path;
+  const isActive = (key: string) => currentPage === key;
+  const visibleMenuItems = menuItems.filter(item => item.roles.includes(user.role));
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Sidebar */}
+    <div className="flex h-screen bg-gray-50 dark:bg-gray-900 overflow-hidden">
+      {/* Desktop Sidebar */}
       <aside
-        className={`${
-          sidebarOpen ? 'w-64' : 'w-20'
-        } bg-gray-800 dark:bg-gray-900 text-white transition-all duration-300 flex flex-col border-r border-gray-700`}
+        className={`hidden md:flex md:flex-col ${
+          desktopSidebarOpen ? 'md:w-64' : 'md:w-20'
+        } bg-gradient-to-b from-gray-800 to-gray-900 dark:from-gray-900 dark:to-gray-950 text-white transition-all duration-300 border-r border-gray-700 shadow-lg`}
       >
         {/* Logo/Header */}
-        <div className="h-16 flex items-center justify-between px-4 border-b border-gray-700">
+        <div className="h-16 flex items-center justify-between px-4 border-b border-gray-700/50">
           <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
+            onClick={() => setDesktopSidebarOpen(!desktopSidebarOpen)}
             className="p-2 hover:bg-gray-700 rounded transition"
+            aria-label="Toggle sidebar"
           >
-            {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+            {desktopSidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
-          {sidebarOpen && <h1 className="text-xl font-bold">پیشرو</h1>}
+          {desktopSidebarOpen && (
+            <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              پیشرو
+            </h1>
+          )}
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-4 py-6">
+        <nav className="flex-1 px-4 py-6 overflow-y-auto">
           <div className="space-y-2">
-            <Link
-              href="/admin/dashboard"
-              className={`flex items-center justify-end gap-3 px-4 py-3 rounded transition ${
-                isActive('dashboard')
-                  ? 'bg-blue-600 hover:bg-blue-700'
-                  : 'hover:bg-gray-700'
-              }`}
-            >
-              {sidebarOpen && <span>Dashboard</span>}
-              <span className="text-lg">📊</span>
-            </Link>
-
-            {(user.role === 'ADMIN' || user.role === 'MODERATOR') && (
-              <>
-                <a
-                  href="#"
-                  className="flex items-center justify-end gap-3 px-4 py-3 rounded hover:bg-gray-700 transition"
-                >
-                  {sidebarOpen && <span>Users</span>}
-                  <span className="text-lg">👥</span>
-                </a>
-                <a
-                  href="/admin/block-news"
-                  className={`flex items-center justify-end gap-3 px-4 py-3 rounded transition ${
-                    isActive('block-news')
-                      ? 'bg-blue-600 hover:bg-blue-700'
-                      : 'hover:bg-gray-700'
-                  }`}
-                >
-                  {sidebarOpen && <span>اخبار</span>}
-                  <span className="text-lg">📝</span>
-                </a>
-                <Link
-                  href="/admin/courses"
-                  className={`flex items-center justify-end gap-3 px-4 py-3 rounded transition ${
-                    isActive('courses')
-                      ? 'bg-blue-600 hover:bg-blue-700'
-                      : 'hover:bg-gray-700'
-                  }`}
-                >
-                  {sidebarOpen && <span>دوره‌ها</span>}
-                  <span className="text-lg">🎓</span>
-                </Link>
-              </>
-            )}
-
-            {user.role === 'ADMIN' && (
-              <a
-                href="#"
-                className="flex items-center justify-end gap-3 px-4 py-3 rounded hover:bg-gray-700 transition"
+            {visibleMenuItems.map((item) => (
+              <Link
+                key={item.key}
+                href={item.href}
+                className={`flex items-center justify-end gap-3 px-4 py-3 rounded-lg transition duration-200 ${
+                  isActive(item.key)
+                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md'
+                    : 'hover:bg-gray-700/50 text-gray-200 hover:text-white'
+                }`}
               >
-                {sidebarOpen && <span>Settings</span>}
-                <span className="text-lg">⚙️</span>
-              </a>
-            )}
-
-            <a
-              href="#"
-              className="flex items-center justify-end gap-3 px-4 py-3 rounded hover:bg-gray-700 transition"
-            >
-              {sidebarOpen && <span>Reports</span>}
-              <span className="text-lg">📈</span>
-            </a>
+                {desktopSidebarOpen && <span className="text-sm font-medium">{item.label}</span>}
+                <span className="text-lg">{item.icon}</span>
+              </Link>
+            ))}
           </div>
         </nav>
 
         {/* User Section */}
-        <div className="border-t border-gray-700 p-4">
+        <div className="border-t border-gray-700/50 p-4 space-y-3">
+          {desktopSidebarOpen && (
+            <div className="px-2 py-2">
+              <p className="text-xs text-gray-400">کاربر فعلی</p>
+              <p className="text-sm font-semibold truncate">{user.name}</p>
+              <p className="text-xs text-gray-500">{user.email}</p>
+            </div>
+          )}
           <button
             onClick={handleLogout}
-            className="flex items-center justify-end gap-3 w-full px-4 py-2 rounded hover:bg-gray-700 transition text-red-400 hover:text-red-300"
+            className="flex items-center justify-end gap-3 w-full px-4 py-2 rounded-lg hover:bg-red-600/20 transition text-red-400 hover:text-red-300"
           >
-            {sidebarOpen && <span>Logout</span>}
+            {desktopSidebarOpen && <span className="text-sm font-medium">خروج</span>}
+            <LogOut size={20} />
+          </button>
+        </div>
+      </aside>
+
+      {/* Mobile Sidebar Overlay */}
+      {mobileSidebarOpen && (
+        <div
+          className="fixed inset-0 md:hidden bg-black/50 z-40"
+          onClick={() => setMobileSidebarOpen(false)}
+        />
+      )}
+
+      {/* Mobile Sidebar */}
+      <aside
+        className={`fixed top-0 right-0 h-screen w-64 bg-gradient-to-b from-gray-800 to-gray-900 dark:from-gray-900 dark:to-gray-950 text-white transition-transform duration-300 transform z-50 md:hidden ${
+          mobileSidebarOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        {/* Mobile Logo/Header */}
+        <div className="h-16 flex items-center justify-between px-4 border-b border-gray-700/50">
+          <button
+            onClick={() => setMobileSidebarOpen(false)}
+            className="p-2 hover:bg-gray-700 rounded transition"
+            aria-label="Close sidebar"
+          >
+            <X size={20} />
+          </button>
+          <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            پیشرو
+          </h1>
+        </div>
+
+        {/* Mobile Navigation */}
+        <nav className="flex-1 px-4 py-6 overflow-y-auto">
+          <div className="space-y-2">
+            {visibleMenuItems.map((item) => (
+              <Link
+                key={item.key}
+                href={item.href}
+                onClick={() => setMobileSidebarOpen(false)}
+                className={`flex items-center justify-end gap-3 px-4 py-3 rounded-lg transition duration-200 ${
+                  isActive(item.key)
+                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md'
+                    : 'hover:bg-gray-700/50 text-gray-200 hover:text-white'
+                }`}
+              >
+                <span className="text-sm font-medium">{item.label}</span>
+                <span className="text-lg">{item.icon}</span>
+              </Link>
+            ))}
+          </div>
+        </nav>
+
+        {/* Mobile User Section */}
+        <div className="border-t border-gray-700/50 p-4 space-y-3">
+          <div className="px-2 py-2">
+            <p className="text-xs text-gray-400">کاربر فعلی</p>
+            <p className="text-sm font-semibold truncate">{user.name}</p>
+            <p className="text-xs text-gray-500">{user.email}</p>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="flex items-center justify-end gap-3 w-full px-4 py-2 rounded-lg hover:bg-red-600/20 transition text-red-400 hover:text-red-300"
+          >
+            <span className="text-sm font-medium">خروج</span>
             <LogOut size={20} />
           </button>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto flex flex-col">
-        {/* Header */}
-        <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 h-16 flex items-center justify-between px-6 flex-row-reverse">
-          <div className="flex items-center gap-4 flex-row-reverse">
-            <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
-              {user.name.charAt(0)}
-            </div>
-            <div className="text-right">
-              <p className="text-sm font-medium text-gray-900 dark:text-white">{user.name}</p>
-              <p className="text-xs text-gray-600 dark:text-gray-400">{user.role}</p>
-            </div>
-          </div>
+      <main className="flex-1 flex flex-col overflow-hidden">
+        {/* Mobile Header */}
+        <header className="md:hidden bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 h-16 flex items-center justify-between px-4 shadow-md">
+          <button
+            onClick={() => setMobileSidebarOpen(true)}
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition"
+            aria-label="Open sidebar"
+          >
+            <Menu size={24} />
+          </button>
+          <h1 className="text-lg font-bold text-gray-900 dark:text-white">پیشرو</h1>
+          <div className="w-10" />
         </header>
 
-        {/* Content */}
-        <div className="flex-1 overflow-auto p-6">{children}</div>
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-auto w-full">
+          <div className="w-full p-4 md:p-6">
+            {children}
+          </div>
+        </div>
       </main>
     </div>
   );

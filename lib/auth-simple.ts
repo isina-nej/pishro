@@ -20,8 +20,10 @@ export interface AuthSession {
 export function verifyToken(token: string): AuthUser | null {
   try {
     const decoded = jwt.verify(token, SECRET) as AuthUser;
+    console.log('[verifyToken] Successfully verified token for user:', decoded.id);
     return decoded;
-  } catch {
+  } catch (error) {
+    console.error('[verifyToken] Token verification failed:', error instanceof Error ? error.message : error);
     return null;
   }
 }

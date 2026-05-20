@@ -1,69 +1,31 @@
 /**
- * GET /api/admin/block-news/[id]/blocks - List all blocks for a news article
- * POST /api/admin/block-news/[id]/blocks - Add new content block to news article
+ * GET /api/admin/block-news/[id]/blocks - List all blocks for a news article (NOT SUPPORTED - NewsArticle doesn't use blocks)
+ * POST /api/admin/block-news/[id]/blocks - Add new content block to news article (NOT SUPPORTED)
  */
 
-import {
-  successResponse,
-  errorResponse,
-  validationError,
-  createdResponse
-} from '@/lib/api-response';
-import {
-  getNews,
-  addContentBlock
-} from '@/lib/services/block-news-service';
-import { BlockInputSchema } from '@/lib/schemas/block-news-schema';
+import { errorResponse } from '@/lib/api-response';
 import { getAdminAuth } from "@/lib/auth-simple";
-import type { ContentBlockCreateRequest } from '@/lib/types/block-news';
 
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const { id } = await params;
-    const adminAuth = await getAdminAuth(req);
-    if (!adminAuth) {
-      return errorResponse('دسترسی محدود. فقط ادمین.');
-    }
-
-    const news = await getNews(id);
-    return successResponse(news.contentBlocks);
-  } catch (error: unknown) {
-    console.error('Error fetching blocks:', error);
-    if (error instanceof Error && error.message.includes('یافت نشد')) {
-      return errorResponse(error.message, 'NOT_FOUND');
-    }
-    return errorResponse('خطا در بارگیری بلاک‌ها');
+  const adminAuth = await getAdminAuth(req);
+  if (!adminAuth) {
+    return errorResponse('دسترسی محدود. فقط ادمین.');
   }
+
+  return errorResponse('مدل جدید اخبار از بلاک‌ها پشتیبانی نمی‌کند', 'NOT_SUPPORTED');
 }
 
 export async function POST(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const { id } = await params;
-    const adminAuth = await getAdminAuth(req);
-    if (!adminAuth) {
-      return errorResponse('دسترسی محدود. فقط ادمین.');
-    }
-
-    const body = (await req.json()) as ContentBlockCreateRequest;
-
-    // Validate input
-    const validated = BlockInputSchema.parse(body);
-
-    const block = await addContentBlock(id, validated);
-    return createdResponse(block, 'بلاک با موفقیت اضافه شد');
-  } catch (error: unknown) {
-    console.error('Error adding block:', error);
-
-    if (error instanceof Error && error.message.includes('یافت نشد')) {
-      return errorResponse(error.message, 'NOT_FOUND');
-    }
-
-    return errorResponse('خطا در افزودن بلاک');
+  const adminAuth = await getAdminAuth(req);
+  if (!adminAuth) {
+    return errorResponse('دسترسی محدود. فقط ادمین.');
   }
+
+  return errorResponse('مدل جدید اخبار از بلاک‌ها پشتیبانی نمی‌کند', 'NOT_SUPPORTED');
 }

@@ -29,7 +29,7 @@ async function main(){
   await safeCount('pageContent', ()=>prisma.pageContent.count())
   await safeCount('users', ()=>prisma.user.count())
   await safeCount('courses', ()=>prisma.course.count())
-  await safeCount('news', ()=>prisma.news.count())
+  await safeCount('newsArticles', ()=>prisma.newsArticle.count())
 }
 
 main()

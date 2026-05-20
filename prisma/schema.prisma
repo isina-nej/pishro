@@ -34,7 +34,6 @@ model User {
   enrollments          Enrollment[]              @relation("UserEnrollments")
   transactions         Transaction[]             @relation("UserTransactions")
   newsComments         NewsComment[]             @relation("UserNewsComments")
-  news                 News[]                    @relation("NewsAuthor")
   quizAttempts         QuizAttempt[]             @relation("UserQuizAttempts")
   investmentPortfolios UserInvestmentPortfolio[] @relation("UserInvestmentPortfolios")
   images               Image[]                   @relation("UserImages")
@@ -321,52 +320,7 @@ model NewsComment {
   updatedAt DateTime? @updatedAt
 }
 
-// ===================== BLOCK-BASED NEWS CMS =====================
-// New News model with block-based content system (replacing fixed NewsArticle format)
-// This model supports modern drag-and-drop editor with polymorphic content blocks
-
-model News {
-  id            String   @id @default(cuid())
-  title         String   // عنوان اصلی خبر
-  slug          String   @unique // آدرس سئو
-  description   String? // توضیح مختصر برای SEO
-  thumbnail     String? // تصویر شاخص خبر
-  status        NewsStatus @default(DRAFT) // وضعیت: پیش‌نویس / منتشر / آرشیو
-  
-  categoryId    String? 
-  category      Category? @relation("CategoryBlockNews", fields: [categoryId], references: [id], onDelete: SetNull)
-  
-  authorId      String  
-  author        User     @relation("NewsAuthor", fields: [authorId], references: [id], onDelete: Cascade)
-  
-  contentBlocks ContentBlock[] @relation("NewsBlocks")
-  
-  createdAt     DateTime? @default(now())
-  updatedAt     DateTime? @updatedAt
-  publishedAt   DateTime? // تاریخ انتشار
-  
-  @@index([status, publishedAt])
-  @@index([categoryId])
-  @@index([authorId])
-}
-
-model ContentBlock {
-  id       String   @id @default(cuid())
-  newsId   String  
-  news     News     @relation("NewsBlocks", fields: [newsId], references: [id], onDelete: Cascade)
-  
-  type     BlockType // نوع بلوک: متن، عکس، گالری، نقل‌قول، لیست، عنوان
-  content  Json      // محتوای چندشکلی بر اساس نوع بلوک
-  sortOrder Int       // ترتیب نمایش
-  
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
-  
-  @@unique([newsId, sortOrder])
-  @@index([newsId])
-}
-
-// ===================== END BLOCK-BASED NEWS CMS =====================
+// ===================== END COMMENTS =====================
 
 model DigitalBook {
   id          String   @id @default(cuid())
@@ -449,7 +403,6 @@ model Category {
   courses  Course[]      @relation("CategoryCourses")
   content  PageContent[] @relation("CategoryContent")
   news     NewsArticle[] @relation("CategoryNews")
-  blockNews News[]        @relation("CategoryBlockNews") // Block-based news articles
   faqs     FAQ[]         @relation("CategoryFAQs")
   comments Comment[]     @relation("CategoryComments")
   quizzes  Quiz[]        @relation("CategoryQuizzes")
@@ -739,21 +692,6 @@ enum QuestionType {
   MULTIPLE_SELECT // چند گزینه‌ای (چند جواب صحیح)
   TRUE_FALSE // صحیح/غلط
   SHORT_ANSWER // پاسخ کوتاه
-}
-
-enum NewsStatus {
-  DRAFT
-  PUBLISHED
-  ARCHIVED
-}
-
-enum BlockType {
-  TEXT
-  HEADING
-  IMAGE
-  GALLERY
-  QUOTE
-  LIST
 }
 
 // Admin Panel Enums

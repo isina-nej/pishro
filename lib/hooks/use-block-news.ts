@@ -9,12 +9,8 @@ import { api } from '@/lib/api-client';
 import type {
   NewsListResponse,
   NewsDetailResponse,
-  ContentBlockResponse,
   CreateNewsRequest,
   UpdateNewsRequest,
-  ContentBlockCreateRequest,
-  ContentBlockUpdateRequest,
-  ReorderBlocksRequest,
 } from '@/lib/types/block-news';
 
 /**
@@ -49,8 +45,20 @@ export function useBlockNewsList(
       if (filters?.categoryId) params.set('categoryId', filters.categoryId);
       if (filters?.search) params.set('search', filters.search);
 
-      const response = await api.get<{ status: string; data: NewsListResponse }>(`/admin/block-news?${params.toString()}`);
-      return response.data.data;
+      const response = await api.get<any>(`/api/admin/block-news?${params.toString()}`);
+      const data = response.data;
+      
+      // Extract the actual data from the API response wrapper
+      if (data && data.data && 'items' in data.data && 'pagination' in data.data) {
+        return data.data as NewsListResponse;
+      }
+      
+      // Fallback: if it already has items/pagination structure
+      if (data && 'items' in data && 'pagination' in data) {
+        return data as NewsListResponse;
+      }
+      
+      throw new Error('Invalid API response structure - missing pagination data');
     },
   });
 }
@@ -62,8 +70,14 @@ export function useBlockNews(id: string) {
   return useQuery({
     queryKey: blockNewsKeys.detail(id),
     queryFn: async () => {
-      const response = await api.get<{ status: string; data: NewsDetailResponse }>(`/admin/block-news/${id}`);
-      return response.data.data;
+      const response = await api.get<{ status: string; data: NewsDetailResponse; message?: string }>(`/api/admin/block-news/${id}`);
+      const data = response.data;
+      
+      if (data && typeof data === 'object' && 'data' in data) {
+        return (data as any).data as NewsDetailResponse;
+      }
+      
+      return data as unknown as NewsDetailResponse;
     },
     enabled: !!id,
   });
@@ -77,11 +91,36 @@ export function useCreateBlockNews() {
 
   return useMutation({
     mutationFn: async (data: CreateNewsRequest) => {
-      const response = await api.post<{ status: string; data: NewsDetailResponse }>('/admin/block-news', data);
-      return response.data.data;
+      try {
+        console.log('[useCreateBlockNews] Sending request with data:', data);
+        const response = await api.post<any>('/api/admin/block-news', data);
+        const responseData = response.data;
+        console.log('[useCreateBlockNews] Response data:', responseData);
+        
+        if (typeof responseData === 'string') {
+          console.error('[useCreateBlockNews] ERROR: Response is HTML string, not JSON');
+          throw new Error(`API Error: Received HTML instead of JSON. Status: ${response.status}`);
+        }
+        
+        if (responseData && responseData.data && typeof responseData.data === 'object' && 'id' in responseData.data) {
+          console.log('[useCreateBlockNews] Extracted from nested data.data:', responseData.data);
+          return responseData.data as NewsDetailResponse;
+        }
+        
+        // Fallback: return the response as-is if it already has an id
+        if (responseData && 'id' in responseData) {
+          console.log('[useCreateBlockNews] Extracted from flat response:', responseData);
+          return responseData as NewsDetailResponse;
+        }
+        
+        console.log('[useCreateBlockNews] ERROR: Could not extract news from response');
+        throw new Error('Invalid API response structure - missing news data');
+      } catch (error) {
+        console.error('[useCreateBlockNews] Caught error:', error);
+        throw error;
+      }
     },
     onSuccess: () => {
-      // Invalidate list to refresh
       queryClient.invalidateQueries({ queryKey: blockNewsKeys.lists() });
     },
   });
@@ -95,8 +134,14 @@ export function useUpdateBlockNews(id: string) {
 
   return useMutation({
     mutationFn: async (data: UpdateNewsRequest) => {
-      const response = await api.patch<{ status: string; data: NewsDetailResponse }>(`/admin/block-news/${id}`, data);
-      return response.data.data;
+      const response = await api.patch<{ status: string; data: NewsDetailResponse; message?: string }>(`/api/admin/block-news/${id}`, data);
+      const respData = response.data;
+      
+      if (respData && typeof respData === 'object' && 'data' in respData) {
+        return (respData as any).data as NewsDetailResponse;
+      }
+      
+      return respData as unknown as NewsDetailResponse;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: blockNewsKeys.detail(id) });
@@ -113,7 +158,7 @@ export function useDeleteBlockNews() {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      await api.delete(`/admin/block-news/${id}`);
+      await api.delete(`/api/admin/block-news/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: blockNewsKeys.lists() });
@@ -124,19 +169,27 @@ export function useDeleteBlockNews() {
 /**
  * PATCH /api/admin/block-news/[id]/status - Change news status
  */
-export function useChangeBlockNewsStatus(id: string) {
+export function useChangeBlockNewsStatus() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (status: 'PUBLISHED' | 'ARCHIVED') => {
-      const response = await api.patch<{ status: string; data: NewsDetailResponse }>(
-        `/admin/block-news/${id}/status`,
-        { status }
+    mutationFn: async (params: { id: string; status: 'PUBLISHED' | 'ARCHIVED' }) => {
+      const response = await api.patch<{ status: string; data: NewsDetailResponse; message?: string }>(
+        `/api/admin/block-news/${params.id}/status`,
+        { status: params.status }
       );
-      return response.data.data;
+      const respData = response.data;
+      
+      if (respData && typeof respData === 'object' && 'data' in respData) {
+        return (respData as any).data as NewsDetailResponse;
+      }
+      
+      return respData as unknown as NewsDetailResponse;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: blockNewsKeys.detail(id) });
+    onSuccess: (data) => {
+      if (data?.id) {
+        queryClient.invalidateQueries({ queryKey: blockNewsKeys.detail(data.id) });
+      }
       queryClient.invalidateQueries({ queryKey: blockNewsKeys.lists() });
     },
   });
@@ -144,97 +197,30 @@ export function useChangeBlockNewsStatus(id: string) {
 
 /**
  * GET /api/admin/block-news/[id]/blocks - Get all blocks for article
+ * @deprecated - This hook is deprecated and will be removed. Use MarkdownEditor component instead.
  */
-export function useBlockNewsBlocks(newsId: string) {
-  return useQuery({
-    queryKey: blockNewsKeys.blocks(newsId),
-    queryFn: async () => {
-      const response = await api.get<{ status: string; data: ContentBlockResponse[] }>(
-        `/admin/block-news/${newsId}/blocks`
-      );
-      return response.data.data;
-    },
-    enabled: !!newsId,
-  });
-}
+// export function useBlockNewsBlocks(newsId: string) { ... }
 
 /**
  * POST /api/admin/block-news/[id]/blocks - Add new content block
+ * @deprecated - This hook is deprecated and will be removed. Use MarkdownEditor component instead.
  */
-export function useAddBlockNewsBlock(newsId: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (data: ContentBlockCreateRequest) => {
-      const response = await api.post<{ status: string; data: ContentBlockResponse }>(
-        `/admin/block-news/${newsId}/blocks`,
-        data
-      );
-      return response.data.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: blockNewsKeys.blocks(newsId) });
-      queryClient.invalidateQueries({ queryKey: blockNewsKeys.detail(newsId) });
-    },
-  });
-}
+// export function useAddBlockNewsBlock(newsId: string) { ... }
 
 /**
  * PATCH /api/admin/block-news/[id]/blocks/[blockId] - Update block content
+ * @deprecated - This hook is deprecated and will be removed. Use MarkdownEditor component instead.
  */
-export function useUpdateBlockNewsBlock(newsId: string, blockId: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (data: ContentBlockUpdateRequest & { blockId?: string }) => {
-      const actualBlockId = blockId || data.blockId || '';
-      const response = await api.patch<{ status: string; data: ContentBlockResponse }>(
-        `/admin/block-news/${newsId}/blocks/${actualBlockId}`,
-        { content: data.content }
-      );
-      return response.data.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: blockNewsKeys.blocks(newsId) });
-      queryClient.invalidateQueries({ queryKey: blockNewsKeys.detail(newsId) });
-    },
-  });
-}
+// export function useUpdateBlockNewsBlock(newsId: string, blockId: string) { ... }
 
 /**
  * DELETE /api/admin/block-news/[id]/blocks/[blockId] - Delete content block
+ * @deprecated - This hook is deprecated and will be removed. Use MarkdownEditor component instead.
  */
-export function useDeleteBlockNewsBlock(newsId: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (blockId: string) => {
-      await api.delete(`/admin/block-news/${newsId}/blocks/${blockId}`);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: blockNewsKeys.blocks(newsId) });
-      queryClient.invalidateQueries({ queryKey: blockNewsKeys.detail(newsId) });
-    },
-  });
-}
+// export function useDeleteBlockNewsBlock(newsId: string) { ... }
 
 /**
  * PATCH /api/admin/block-news/[id]/blocks/reorder - Reorder blocks
+ * @deprecated - This hook is deprecated and will be removed. Use MarkdownEditor component instead.
  */
-export function useReorderBlockNewsBlocks(newsId: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (request: ReorderBlocksRequest) => {
-      const response = await api.patch<{ status: string; data: ContentBlockResponse[] }>(
-        `/admin/block-news/${newsId}/blocks/reorder`,
-        request
-      );
-      return response.data.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: blockNewsKeys.blocks(newsId) });
-      queryClient.invalidateQueries({ queryKey: blockNewsKeys.detail(newsId) });
-    },
-  });
-}
+// export function useReorderBlockNewsBlocks(newsId: string) { ... }

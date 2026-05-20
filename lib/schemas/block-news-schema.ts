@@ -105,14 +105,29 @@ export const BlockInputSchema = BlockContentSchema;
 
 /**
  * Schema for News article creation
+ * Accepts both old naming (description/thumbnail) and new naming (excerpt/coverImage)
  */
 export const CreateNewsSchema = z.object({
   title: z.string()
     .min(3, 'عنوان باید حداقل 3 کاراکتر باشد')
     .max(500, 'عنوان نمی‌تواند بیش از 500 کاراکتر باشد'),
+  // Accept both excerpt and description
+  excerpt: z.string()
+    .max(2000, 'خلاصه نمی‌تواند بیش از 2000 کاراکتر باشد')
+    .optional(),
   description: z.string()
     .max(2000, 'توضیح نمی‌تواند بیش از 2000 کاراکتر باشد')
     .optional(),
+  // Accept both content and full text
+  content: z.string()
+    .max(50000, 'محتوا نمی‌تواند بیش از 50000 کاراکتر باشد')
+    .optional(),
+  // Accept both coverImage and thumbnail
+  coverImage: z.string()
+    .url('آدرس تصویر معتبر نیست')
+    .optional()
+    .nullable()
+    .transform((val) => val === null ? undefined : val),
   thumbnail: z.string()
     .url('آدرس تصویر معتبر نیست')
     .optional()
@@ -120,17 +135,23 @@ export const CreateNewsSchema = z.object({
     .transform((val) => val === null ? undefined : val),
   categoryId: z.string()
     .trim()
-    .refine((val) => val === '' || /^[a-f\d]{24}$/i.test(val), {
+    .refine((val) => val === '' || val.length > 0, {
       message: 'شناسه دسته‌بندی معتبر نیست'
     })
     .transform((val) => val === '' ? undefined : val)
     .optional(),
   authorId: z.string()
-    .regex(/^[a-f\d]{24}$/i, 'شناسه نویسنده معتبر نیست'),
-});
+    .min(1, 'شناسه نویسنده الزامی است'),
+}).transform((data) => ({
+  // Normalize: description → excerpt, thumbnail → coverImage
+  ...data,
+  excerpt: data.excerpt || data.description,
+  coverImage: data.coverImage || data.thumbnail,
+}));
 
 /**
  * Schema for updating News article metadata
+ * Accepts both old naming (description/thumbnail) and new naming (excerpt/coverImage)
  */
 export const UpdateNewsSchema = z.object({
   title: z.string()
@@ -141,21 +162,43 @@ export const UpdateNewsSchema = z.object({
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'آدرس باید شامل حروف انگلیسی، اعداد و خط‌فاصله باشد')
     .max(500, 'آدرس نمی‌تواند بیش از 500 کاراکتر باشد')
     .optional(),
+  // Accept both excerpt and description
+  excerpt: z.string()
+    .max(2000, 'خلاصه نمی‌تواند بیش از 2000 کاراکتر باشد')
+    .optional(),
   description: z.string()
     .max(2000, 'توضیح نمی‌تواند بیش از 2000 کاراکتر باشد')
+    .optional(),
+  content: z.string()
+    .max(50000, 'محتوا نمی‌تواند بیش از 50000 کاراکتر باشد')
     .optional(),
   categoryId: z.string()
     .regex(/^[a-f\d]{24}$/i, 'شناسه دسته‌بندی معتبر نیست')
     .nullable()
-    .optional(),
+    .optional()
+    .or(z.literal(''))  // Allow empty string
+    .transform((val) => val === '' ? undefined : val),
+  // Accept both coverImage and thumbnail
+  coverImage: z.string()
+    .url('آدرس تصویر معتبر نیست')
+    .optional()
+    .nullable()
+    .transform((val) => val === null ? undefined : val),
   thumbnail: z.string()
-    .url('آدرس تصویر بندانگشتی معتبر نیست')
-    .optional(),
+    .url('آدرس تصویر معتبر نیست')
+    .optional()
+    .nullable()
+    .transform((val) => val === null ? undefined : val),
   publishedAt: z.string()
     .datetime('تاریخ انتشار باید یک ISO datetime معتبر باشد')
     .nullable()
     .optional(),
-}).strict();
+}).transform((data) => ({
+  // Normalize: description → excerpt, thumbnail → coverImage
+  ...data,
+  excerpt: data.excerpt || data.description,
+  coverImage: data.coverImage || data.thumbnail,
+}));
 
 /**
  * Schema for reordering blocks

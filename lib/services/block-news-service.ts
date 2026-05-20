@@ -1,24 +1,25 @@
 /**
- * Block-Based News Service Layer
+ * News Article Service Layer
  * 
- * Service for managing block-based news articles (News model) with CRUD operations,
- * block management, and validation logic. All Prisma operations happen here.
+ * Service for managing news articles (NewsArticle model) with CRUD operations,
+ * and validation logic. All Prisma operations happen here.
  * 
  * API routes should call these functions, never access Prisma directly.
- * 
- * This is separate from the legacy news-service.ts which handles NewsArticle.
  */
 
 import { prisma } from '@/lib/prisma';
-import { CreateNewsSchema, UpdateNewsSchema, BlockInputSchema, ReorderBlocksSchema } from '@/lib/schemas/block-news-schema';
+import { CreateNewsSchema, UpdateNewsSchema } from '@/lib/schemas/block-news-schema';
 
 /**
- * Create a new news article with DRAFT status
+ * Create a new news article with published=false (draft status)
  */
 export async function createNews(data: {
   title: string;
-  description?: string;
-  thumbnail?: string;
+  excerpt?: string;
+  description?: string;  // Accept old naming
+  content?: string;
+  coverImage?: string;
+  thumbnail?: string;  // Accept old naming
   categoryId?: string;
   authorId: string;
 }) {
@@ -28,27 +29,26 @@ export async function createNews(data: {
   const slug = generateSlug(validated.title);
   
   // Check if slug already exists
-  const existing = await prisma.news.findUnique({ where: { slug } });
+  const existing = await prisma.newsArticle.findUnique({ where: { slug } });
   if (existing) {
     throw new Error(`مقاله با این آدرس قبلا ایجاد شده است: ${slug}`);
   }
 
-  const news = await prisma.news.create({
+  const news = await prisma.newsArticle.create({
     data: {
       title: validated.title,
       slug,
-      description: validated.description || '',
-      thumbnail: validated.thumbnail || null,
+      excerpt: validated.excerpt || '',
+      content: validated.content || '',
+      coverImage: validated.coverImage || null,
       categoryId: validated.categoryId,
-      authorId: validated.authorId,
-      status: 'DRAFT',
+      author: validated.authorId,
+      category: validated.categoryId || 'عمومی',
+      published: false,
+      publishedAt: null,
     },
     include: {
-      author: {
-        select: { id: true, firstName: true, lastName: true, email: true, phone: true },
-      },
-      category: { select: { id: true, title: true, slug: true } },
-      contentBlocks: true,
+      relatedCategory: { select: { id: true, title: true, slug: true } },
     },
   });
 
@@ -56,19 +56,14 @@ export async function createNews(data: {
 }
 
 /**
- * Fetch a single news article with all blocks
+ * Fetch a single news article with all details
  */
 export async function getNews(id: string) {
-  const news = await prisma.news.findUnique({
+  const news = await prisma.newsArticle.findUnique({
     where: { id },
     include: {
-      author: {
-        select: { id: true, firstName: true, lastName: true, email: true, phone: true },
-      },
-      category: { select: { id: true, title: true, slug: true } },
-      contentBlocks: {
-        orderBy: { sortOrder: 'asc' },
-      },
+      relatedCategory: { select: { id: true, title: true, slug: true } },
+      relatedTags: { include: { tag: true } },
     },
   });
 
@@ -93,32 +88,37 @@ export async function getNewsList(
 ) {
   const skip = (page - 1) * limit;
 
+  // Convert status filter to published boolean
+  let published: boolean | undefined;
+  if (filters.status === 'PUBLISHED') {
+    published = true;
+  } else if (filters.status === 'DRAFT' || filters.status === 'ARCHIVED') {
+    published = false;
+  }
+
   // Build where clause
   const where: Record<string, unknown> = {};
-  if (filters.status) where.status = filters.status;
+  if (published !== undefined) where.published = published;
   if (filters.categoryId) where.categoryId = filters.categoryId;
   if (filters.search) {
     where.OR = [
       { title: { contains: filters.search, mode: 'insensitive' } },
-      { description: { contains: filters.search, mode: 'insensitive' } },
+      { excerpt: { contains: filters.search, mode: 'insensitive' } },
+      { content: { contains: filters.search, mode: 'insensitive' } },
     ];
   }
 
   const [items, total] = await Promise.all([
-    prisma.news.findMany({
+    prisma.newsArticle.findMany({
       where,
       skip,
       take: limit,
       include: {
-        author: {
-          select: { id: true, firstName: true, lastName: true, email: true },
-        },
-        category: { select: { id: true, title: true } },
-        _count: { select: { contentBlocks: true } },
+        relatedCategory: { select: { id: true, title: true } },
       },
       orderBy: { createdAt: 'desc' },
     }),
-    prisma.news.count({ where }),
+    prisma.newsArticle.count({ where }),
   ]);
 
   const totalPages = Math.ceil(total / limit);
@@ -130,17 +130,17 @@ export async function getNewsList(
 }
 
 /**
- * Update news article metadata (title, slug, description, category, thumbnail, publishedAt)
- * Does NOT update blocks or status
+ * Update news article metadata (title, slug, excerpt, content, category, coverImage, publishedAt)
  */
 export async function updateNewsMetadata(
   id: string,
   data: {
     title?: string;
     slug?: string;
-    description?: string;
+    excerpt?: string;
+    content?: string;
     categoryId?: string | null;
-    thumbnail?: string;
+    coverImage?: string;
     publishedAt?: string | null;
   }
 ) {
@@ -148,7 +148,7 @@ export async function updateNewsMetadata(
 
   // If slug is provided, check uniqueness
   if (validated.slug) {
-    const existing = await prisma.news.findUnique({
+    const existing = await prisma.newsArticle.findUnique({
       where: { slug: validated.slug },
     });
     if (existing && existing.id !== id) {
@@ -156,22 +156,19 @@ export async function updateNewsMetadata(
     }
   }
 
-  const news = await prisma.news.update({
+  const news = await prisma.newsArticle.update({
     where: { id },
     data: {
       ...(validated.title && { title: validated.title }),
       ...(validated.slug && { slug: validated.slug }),
-      ...(validated.description !== undefined && { description: validated.description }),
+      ...(validated.excerpt !== undefined && { excerpt: validated.excerpt }),
+      ...(validated.content !== undefined && { content: validated.content }),
       ...(validated.categoryId !== undefined && { categoryId: validated.categoryId }),
-      ...(validated.thumbnail !== undefined && { thumbnail: validated.thumbnail }),
+      ...(validated.coverImage !== undefined && { coverImage: validated.coverImage }),
       ...(validated.publishedAt !== undefined && { publishedAt: validated.publishedAt ? new Date(validated.publishedAt) : null }),
     },
     include: {
-      author: {
-        select: { id: true, firstName: true, lastName: true },
-      },
-      category: { select: { id: true, title: true } },
-      contentBlocks: { orderBy: { sortOrder: 'asc' } },
+      relatedCategory: { select: { id: true, title: true } },
     },
   });
 
@@ -179,11 +176,11 @@ export async function updateNewsMetadata(
 }
 
 /**
- * Publish a news article (change status from DRAFT to PUBLISHED, set publishedAt if not already set)
+ * Publish a news article (set published=true, set publishedAt if not already set)
  */
 export async function publishNews(id: string) {
   // First, get the current news to check if publishedAt is already set
-  const currentNews = await prisma.news.findUnique({
+  const currentNews = await prisma.newsArticle.findUnique({
     where: { id },
     select: { publishedAt: true },
   });
@@ -192,17 +189,15 @@ export async function publishNews(id: string) {
     throw new Error('خبر یافت نشد');
   }
 
-  const news = await prisma.news.update({
+  const news = await prisma.newsArticle.update({
     where: { id },
     data: {
-      status: 'PUBLISHED',
+      published: true,
       // Only set publishedAt to now if it wasn't already scheduled
       publishedAt: currentNews.publishedAt || new Date(),
     },
     include: {
-      author: { select: { id: true, firstName: true, lastName: true } },
-      category: { select: { id: true, title: true } },
-      contentBlocks: { orderBy: { sortOrder: 'asc' } },
+      relatedCategory: { select: { id: true, title: true } },
     },
   });
 
@@ -210,16 +205,14 @@ export async function publishNews(id: string) {
 }
 
 /**
- * Archive a news article (change status to ARCHIVED)
+ * Archive a news article (set published=false)
  */
 export async function archiveNews(id: string) {
-  const news = await prisma.news.update({
+  const news = await prisma.newsArticle.update({
     where: { id },
-    data: { status: 'ARCHIVED' },
+    data: { published: false },
     include: {
-      author: { select: { id: true, firstName: true, lastName: true } },
-      category: { select: { id: true, title: true } },
-      contentBlocks: { orderBy: { sortOrder: 'asc' } },
+      relatedCategory: { select: { id: true, title: true } },
     },
   });
 
@@ -227,186 +220,48 @@ export async function archiveNews(id: string) {
 }
 
 /**
- * Delete a news article (cascade deletes all blocks)
+ * Delete a news article
  */
 export async function deleteNews(id: string) {
-  await prisma.news.delete({
+  await prisma.newsArticle.delete({
     where: { id },
   });
 
-  return { message: 'مقاله و تمام بلاک‌های آن حذف شدند' };
-}
-
-/**
- * Add a new content block to an article
- * Auto-assigns sortOrder as max existing + 1
- */
-export async function addContentBlock(
-  newsId: string,
-  data: {
-    type: 'TEXT' | 'HEADING' | 'IMAGE' | 'GALLERY' | 'QUOTE' | 'LIST';
-    content: Record<string, unknown>;
-  }
-) {
-  // Validate block input
-  const validated = BlockInputSchema.parse(data);
-
-  // Get max sortOrder
-  const maxBlock = await prisma.contentBlock.findFirst({
-    where: { newsId },
-    orderBy: { sortOrder: 'desc' },
-    select: { sortOrder: true },
-  });
-
-  const nextSortOrder = (maxBlock?.sortOrder ?? -1) + 1;
-
-  const block = await prisma.contentBlock.create({
-    data: {
-      newsId,
-      type: validated.type,
-      content: validated.content,
-      sortOrder: nextSortOrder,
-    },
-  });
-
-  return block;
-}
-
-/**
- * Update a content block's content (type is immutable)
- */
-export async function updateContentBlock(
-  newsId: string,
-  blockId: string,
-  data: { content: Record<string, unknown> }
-) {
-  // Fetch existing block to verify it belongs to this article
-  const block = await prisma.contentBlock.findUnique({
-    where: { id: blockId },
-  });
-
-  if (!block || block.newsId !== newsId) {
-    throw new Error('بلاک مورد نظر در این مقاله یافت نشد');
-  }
-
-  // Validate content against block type
-  const validated = BlockInputSchema.parse({
-    type: block.type,
-    content: data.content,
-  });
-
-  const updated = await prisma.contentBlock.update({
-    where: { id: blockId },
-    data: {
-      content: validated.content,
-    },
-  });
-
-  return updated;
-}
-
-/**
- * Delete a content block and reorder remaining blocks
- */
-export async function deleteContentBlock(newsId: string, blockId: string) {
-  // Fetch block to verify it belongs to this article
-  const block = await prisma.contentBlock.findUnique({
-    where: { id: blockId },
-  });
-
-  if (!block || block.newsId !== newsId) {
-    throw new Error('بلاک مورد نظر در این مقاله یافت نشد');
-  }
-
-  // Delete block
-  await prisma.contentBlock.delete({
-    where: { id: blockId },
-  });
-
-  // Reorder remaining blocks (compact sortOrder)
-  const remainingBlocks = await prisma.contentBlock.findMany({
-    where: { newsId },
-    orderBy: { sortOrder: 'asc' },
-    select: { id: true },
-  });
-
-  // Update sortOrder for all remaining blocks
-  await Promise.all(
-    remainingBlocks.map((b: { id: string }, i: number) =>
-      prisma.contentBlock.update({
-        where: { id: b.id },
-        data: { sortOrder: i },
-      })
-    )
-  );
-
-  return { message: 'بلاک حذف شد و ترتیب بلاک‌ها به‌روز شد' };
-}
-
-/**
- * Reorder blocks atomically
- * Validates all blockIds belong to newsId, then updates sortOrder in transaction
- */
-export async function reorderBlocks(
-  newsId: string,
-  newOrder: Array<{ blockId: string; sortOrder: number }>
-) {
-  // Validate input
-  const validated = ReorderBlocksSchema.parse(newOrder);
-
-  // Verify all blockIds belong to this news article
-  const blocks = await prisma.contentBlock.findMany({
-    where: { newsId },
-    select: { id: true },
-  });
-
-  const blockIds = new Set(blocks.map((b: { id: string }) => b.id));
-  const orderBlockIds = new Set(validated.map((o) => o.blockId));
-
-  // Check all requested blocks exist in this article
-  for (const blockId of orderBlockIds) {
-    if (!blockIds.has(blockId)) {
-      throw new Error(`بلاک ${blockId} در این مقاله وجود ندارد`);
-    }
-  }
-
-  // Check no extra blocks in article (all blocks must be reordered)
-  if (blockIds.size !== orderBlockIds.size) {
-    throw new Error('تعداد بلاک‌های ارائه شده با تعداد بلاک‌های موجود تطابق ندارد');
-  }
-
-  // Check sortOrder is contiguous (0, 1, 2, ..., n-1)
-  const sortOrders = validated.map((o) => o.sortOrder).sort((a, b) => a - b);
-  for (let i = 0; i < sortOrders.length; i++) {
-    if (sortOrders[i] !== i) {
-      throw new Error('ترتیب بلاک‌ها باید پی‌درپی باشند (0, 1, 2, ...)');
-    }
-  }
-
-  // Update all sortOrders in atomic transaction
-  await prisma.$transaction(
-    validated.map((o) =>
-      prisma.contentBlock.update({
-        where: { id: o.blockId },
-        data: { sortOrder: o.sortOrder },
-      })
-    )
-  );
-
-  // Fetch updated blocks in order
-  const updatedBlocks = await prisma.contentBlock.findMany({
-    where: { newsId },
-    orderBy: { sortOrder: 'asc' },
-  });
-
-  return updatedBlocks;
+  return { message: 'مقاله حذف شدند' };
 }
 
 /**
  * Helper: Generate URL-friendly slug from title
  */
 function generateSlug(title: string): string {
-  return title
+  // Convert Persian/Farsi digits to English
+  let slug = title
+    .replace(/۰/g, '0')
+    .replace(/۱/g, '1')
+    .replace(/۲/g, '2')
+    .replace(/۳/g, '3')
+    .replace(/۴/g, '4')
+    .replace(/۵/g, '5')
+    .replace(/۶/g, '6')
+    .replace(/۷/g, '7')
+    .replace(/۸/g, '8')
+    .replace(/۹/g, '9');
+
+  // Use a transliteration map for common Persian characters
+  const persianToLatin: Record<string, string> = {
+    'آ': 'a', 'ا': 'a', 'ب': 'b', 'پ': 'p', 'ت': 't', 'ث': 's',
+    'ج': 'j', 'چ': 'ch', 'ح': 'h', 'خ': 'kh', 'د': 'd', 'ذ': 'z',
+    'ر': 'r', 'ز': 'z', 'ژ': 'zh', 'س': 's', 'ش': 'sh', 'ص': 's',
+    'ض': 'z', 'ط': 't', 'ظ': 'z', 'ع': 'a', 'غ': 'gh', 'ف': 'f',
+    'ق': 'q', 'ک': 'k', 'گ': 'g', 'ل': 'l', 'م': 'm', 'ن': 'n',
+    'و': 'v', 'ه': 'h', 'ی': 'y', 'ئ': 'e', 'ء': '',
+  };
+
+  // Transliterate Persian characters
+  slug = slug.split('').map(char => persianToLatin[char.toLowerCase()] || char).join('');
+
+  // Convert to lowercase and handle spaces and special characters
+  return slug
     .toLowerCase()
     .trim()
     .replace(/[^\w\s-]/g, '') // Remove non-alphanumeric except space and hyphen
@@ -414,3 +269,4 @@ function generateSlug(title: string): string {
     .replace(/-+/g, '-') // Collapse multiple hyphens
     .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
 }
+

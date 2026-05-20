@@ -52,11 +52,20 @@ export async function saveFileToStorage(
   const normalizedPath = relativePath.replace(/\\/g, "/");
   const fullPath = join(config.storagePath, normalizedPath).replace(/\\/g, "/");
 
+  console.log("[saveFileToStorage] Config:", { storagePath: config.storagePath, baseUrl: config.baseUrl });
+  console.log("[saveFileToStorage] Input relativePath:", relativePath);
+  console.log("[saveFileToStorage] Normalized path:", normalizedPath);
+  console.log("[saveFileToStorage] Full path:", fullPath);
+
   // ایجاد دایرکتوری اگر وجود ندارد
   const directory = fullPath.substring(0, fullPath.lastIndexOf("/"));
 
+  console.log("[saveFileToStorage] Target directory:", directory);
+
   try {
+    console.log("[saveFileToStorage] Creating directory recursively...");
     await mkdir(directory, { recursive: true });
+    console.log("[saveFileToStorage] Directory created successfully");
   } catch (err) {
     console.error("Error creating directory:", err);
     throw new Error(
@@ -66,7 +75,9 @@ export async function saveFileToStorage(
 
   // ذخیره فایل
   try {
+    console.log("[saveFileToStorage] Writing file, size:", buffer.length);
     await writeFile(fullPath, buffer);
+    console.log("[saveFileToStorage] File written successfully");
   } catch (err) {
     console.error("Error writing file:", err);
     throw new Error(
@@ -75,7 +86,9 @@ export async function saveFileToStorage(
   }
 
   // برگرداندن URL کامل
-  return `${config.baseUrl}/${relativePath}`;
+  const resultUrl = `${config.baseUrl}/${relativePath}`;
+  console.log("[saveFileToStorage] Returning URL:", resultUrl);
+  return resultUrl;
 }
 
 /**
@@ -125,9 +138,12 @@ export async function saveTempFileToStorage(
   buffer: Buffer,
   fileName: string
 ): Promise<string> {
+  console.log("[saveTempFileToStorage] Called with fileName:", fileName);
   const relativePath = buildTempRelativePath(fileName);
-  await saveFileToStorage(buffer, relativePath);
-  return relativePath;
+  console.log("[saveTempFileToStorage] Built relative path:", relativePath);
+  const fullUrl = await saveFileToStorage(buffer, relativePath);
+  console.log("[saveTempFileToStorage] File saved successfully");
+  return fullUrl;
 }
 
 /**

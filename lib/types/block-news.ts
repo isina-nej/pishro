@@ -1,8 +1,6 @@
 /**
- * Type Definitions for Block-Based News API Responses
+ * Type Definitions for News Article API Responses
  */
-
-import type { News, ContentBlock } from '@/lib/types/db';
 
 /**
  * API Response Types
@@ -12,24 +10,23 @@ export interface NewsDetailResponse {
   id: string;
   title: string;
   slug: string;
-  description: string | null;
-  thumbnail: string | null;
-  status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
+  excerpt: string;
+  content: string;
+  coverImage: string | null;
+  published: boolean;
   categoryId: string | null;
-  category: {
+  category: string;
+  relatedCategory: {
     id: string;
     title: string;
     slug: string;
   } | null;
-  authorId: string;
-  author: {
-    id: string;
-    firstName: string | null;
-    lastName: string | null;
-    email: string;
-    phone: string;
-  };
-  contentBlocks: ContentBlockResponse[];
+  author: string | null;
+  tags: any[];
+  featured: boolean;
+  readingTime: number | null;
+  likes: number;
+  views: number;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -39,20 +36,19 @@ export interface NewsListItem {
   id: string;
   title: string;
   slug: string;
-  description: string | null;
-  thumbnail: string | null;
-  status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
-  category: {
+  excerpt: string;
+  content: string;
+  coverImage: string | null;
+  published: boolean;
+  category: string;
+  relatedCategory: {
     id: string;
     title: string;
   } | null;
-  author: {
-    id: string;
-    firstName: string | null;
-    lastName: string | null;
-    email: string;
-  };
-  blockCount: number;
+  author: string | null;
+  featured: boolean;
+  likes: number;
+  views: number;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -68,37 +64,26 @@ export interface NewsListResponse {
   };
 }
 
-export interface ContentBlockResponse {
-  id: string;
-  newsId: string;
-  type: 'TEXT' | 'HEADING' | 'IMAGE' | 'GALLERY' | 'QUOTE' | 'LIST';
-  content: Record<string, unknown>;
-  sortOrder: number;
-}
-
 export interface CreateNewsRequest {
   title: string;
-  description?: string;
-  thumbnail?: string;
+  excerpt?: string;
+  description?: string;  // Old naming - will be converted to excerpt
+  content?: string;
+  coverImage?: string;
+  thumbnail?: string;   // Old naming - will be converted to coverImage
   categoryId?: string;
 }
 
 export interface UpdateNewsRequest {
   title?: string;
   slug?: string;
-  description?: string;
+  excerpt?: string;
+  description?: string;  // Old naming - will be converted to excerpt
+  content?: string;
   categoryId?: string | null;
-  thumbnail?: string;
+  coverImage?: string;
+  thumbnail?: string;   // Old naming - will be converted to coverImage
   publishedAt?: string | null;
-}
-
-export interface ContentBlockCreateRequest {
-  type: 'TEXT' | 'HEADING' | 'IMAGE' | 'GALLERY' | 'QUOTE' | 'LIST';
-  content: Record<string, unknown>;
-}
-
-export interface ContentBlockUpdateRequest {
-  content: Record<string, unknown>;
 }
 
 export interface ReorderBlocksRequest {
