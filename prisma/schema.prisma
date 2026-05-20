@@ -272,12 +272,24 @@ model Lesson {
   @@index([videoId])
 }
 
+enum ContentType {
+  TEXT
+  HTML
+  MARKDOWN
+}
+
 model NewsArticle {
   id          String    @id @default(cuid())
   title       String
   slug        String    @unique
   excerpt     String    @db.LongText
   content     String    @db.LongText
+  contentType ContentType @default(HTML) // Support for rich HTML content
+  
+  // Draft management
+  draft         Boolean   @default(false)
+  draftContent  String?   @db.LongText // Auto-saved version
+  
   coverImage  String?
   author      String?
   category    String
@@ -295,9 +307,11 @@ model NewsArticle {
   readingTime Int?
   likes       Int     @default(0)
 
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
-  comments  NewsComment[] @relation("NewsArticleComments")
+  // Audit fields
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
+  lastEditedAt DateTime? @updatedAt // Track last edit time
+  comments    NewsComment[] @relation("NewsArticleComments")
 
   // Relation with AboutPage
   aboutPageId String?   
@@ -306,6 +320,7 @@ model NewsArticle {
   @@index([categoryId])
   @@index([published, featured])
   @@index([publishedAt])
+  @@index([draft])
 }
 
 model NewsComment {

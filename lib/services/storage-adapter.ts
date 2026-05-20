@@ -24,15 +24,26 @@ export function getStorageConfig(): StorageConfig {
   // مسیر پیش‌فرض: UPLOAD_BASE_DIR برای local development
   // یا UPLOAD_STORAGE_PATH برای production
   // اگر environment variable تنظیم نشود، از ./uploads استفاده می‌کند
-  const storagePath =
+  let storagePath =
     process.env.UPLOAD_BASE_DIR ||
     process.env.UPLOAD_STORAGE_PATH ||
-    join(process.cwd(), "uploads");
+    "./uploads";
+
+  console.log("[getStorageConfig] Raw UPLOAD_BASE_DIR:", process.env.UPLOAD_BASE_DIR);
+  console.log("[getStorageConfig] Raw storagePath:", storagePath);
+
+  // اگر relative path است، آن را نسبت به project root resolve کن
+  if (!storagePath.startsWith("/")) {
+    storagePath = join(process.cwd(), storagePath);
+    console.log("[getStorageConfig] Resolved to absolute path:", storagePath);
+  }
 
   // URL پایه پیش‌فرض: استفاده از /api/uploads endpoint
   // این endpoint فایل‌ها را از UPLOAD_BASE_DIR سرو می‌کند
   const baseUrl =
     process.env.UPLOAD_BASE_URL || "/api/uploads";
+
+  console.log("[getStorageConfig] Final config:", { storagePath, baseUrl });
 
   return {
     storagePath,
