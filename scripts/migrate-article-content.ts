@@ -7,7 +7,7 @@
  * Usage: npx ts-node scripts/migrate-article-content.ts
  */
 
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import { sanitizeContent, extractPlainText } from '@/lib/sanitize-content';
 
 interface MigrationStats {

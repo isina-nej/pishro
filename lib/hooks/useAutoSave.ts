@@ -34,7 +34,7 @@ export function useAutoSave(options: UseAutoSaveOptions) {
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
   const [error, setError] = useState<Error | null>(null);
 
-  const debounceTimer = useRef<NodeJS.Timeout>();
+  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
   const lastContentRef = useRef(content);
   const isSavingRef = useRef(false);
 

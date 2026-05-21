@@ -74,12 +74,20 @@ export const SANITIZATION_CONFIG = {
 export function sanitizeHtmlContent(dirtyHtml: string): string {
   if (!dirtyHtml) return '';
 
-  return sanitizeHtml(dirtyHtml, {
-    allowedTags: SANITIZATION_CONFIG.ALLOWED_TAGS,
-    allowedAttributes: SANITIZATION_CONFIG.ALLOWED_ATTRIBUTES,
-    disallowedTagsMode: 'discard',
-    enforceHtmlBoundary: true,
-  });
+  let html = dirtyHtml;
+  
+  // Remove script tags
+  html = html.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+  
+  // Remove event handlers
+  html = html.replace(/\s*on\w+\s*=\s*["'][^"']*["']/gi, '');
+  html = html.replace(/\s*on\w+\s*=\s*[^\s>]*/gi, '');
+  
+  // Remove dangerous protocols
+  html = html.replace(/href\s*=\s*["']?javascript:/gi, 'href="#"');
+  html = html.replace(/src\s*=\s*["']?javascript:/gi, 'src=""');
+  
+  return html;
 }
 
 /**

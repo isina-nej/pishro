@@ -6,7 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import { sanitizeHtmlContent } from '@/lib/editor-config';
 import { auth } from '@/auth';
 import { checkRateLimit, getClientIp, addSecurityHeaders } from '@/lib/api-security';

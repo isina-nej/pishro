@@ -1,11 +1,7 @@
-'use server';
-
 /**
  * Sanitize Content Utility
  * Server-side HTML content sanitization for XSS prevention
  */
-
-import sanitizeHtml from 'sanitize-html';
 
 export interface SanitizationOptions {
   allowedTags?: string[];
@@ -36,19 +32,9 @@ const DEFAULT_ALLOWED_TAGS = [
   'img',
 ];
 
-const DEFAULT_ALLOWED_ATTRIBUTES: Record<string, string[]> = {
-  a: ['href', 'title', 'target', 'rel'],
-  img: ['src', 'alt', 'width', 'height', 'title'],
-  h1: ['id'],
-  h2: ['id'],
-  h3: ['id'],
-  pre: ['class'],
-  code: ['class'],
-};
-
 /**
- * Sanitize HTML content to prevent XSS attacks
- * Uses whitelist approach for maximum security
+ * Basic HTML content sanitization to prevent XSS attacks
+ * Removes dangerous scripts and event handlers
  */
 export function sanitizeContent(
   html: string,
@@ -58,21 +44,29 @@ export function sanitizeContent(
     return '';
   }
 
-  const allowedTags = options?.allowedTags || DEFAULT_ALLOWED_TAGS;
-  const allowedAttributes = options?.allowedAttributes || DEFAULT_ALLOWED_ATTRIBUTES;
-
   try {
-    return sanitizeHtml(html, {
-      allowedTags,
-      allowedAttributes,
-      disallowedTagsMode: 'discard',
-      enforceHtmlBoundary: true,
-      transformTags: {
-        a: sanitizeHtml.simpleTransform('a', {
-          rel: 'noopener noreferrer nofollow',
-        }),
-      },
-    });
+    let sanitized = html;
+
+    // Remove script tags and content
+    sanitized = sanitized.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+
+    // Remove style tags and content
+    sanitized = sanitized.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
+
+    // Remove event handlers (onclick, onload, etc.)
+    sanitized = sanitized.replace(/\s*on\w+\s*=\s*["'][^"']*["']/gi, '');
+    sanitized = sanitized.replace(/\s*on\w+\s*=\s*[^\s>]*/gi, '');
+
+    // Remove dangerous protocols in href and src
+    sanitized = sanitized.replace(/href\s*=\s*["']?javascript:/gi, 'href="#"');
+    sanitized = sanitized.replace(/href\s*=\s*["']?data:/gi, 'href="#"');
+    sanitized = sanitized.replace(/src\s*=\s*["']?javascript:/gi, 'src=""');
+    sanitized = sanitized.replace(/src\s*=\s*["']?data:/gi, 'src=""');
+
+    // Remove iframes
+    sanitized = sanitized.replace(/<iframe[^>]*>[\s\S]*?<\/iframe>/gi, '');
+
+    return sanitized;
   } catch (error) {
     console.error('Sanitization error:', error);
     return '';

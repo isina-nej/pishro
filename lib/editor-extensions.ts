@@ -24,16 +24,12 @@ export function createEditorExtensions() {
         keepAttributes: false,
       },
       orderedList: {
-        keepMarks: true,
-        keepAttributes: false,
+        HTMLAttributes: {
+          class: 'ordered-list',
+        },
       },
-      listItem: {
-        keepMarks: true,
-        keepAttributes: false,
-      },
-      hardBreak: {
-        keepMarks: true,
-      },
+      listItem: {},
+      hardBreak: {},
       horizontalRule: {},
       blockquote: {},
       bold: {},
@@ -61,7 +57,7 @@ export function createEditorExtensions() {
         color: '#0d8abc',
         width: 2,
       },
-      gapcursor: {},
+      gapcursor: true,
     }),
 
     // Image extension for inserting images
