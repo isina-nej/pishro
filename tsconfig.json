@@ -31,5 +31,5 @@
     ".next/types/**/*.ts",
     "src"
 , "prisma/seed-categories.js", "prisma/seed-simple.js"  ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "tests/**/*"]
 }
