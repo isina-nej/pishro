@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { title, content, draft = true, published = false } = body;
+    const { title, content, category = 'General', draft = true, published = false } = body;
 
     // Validate required fields
     if (!title || !content) {
@@ -70,8 +70,9 @@ export async function POST(request: NextRequest) {
         slug,
         content: content,
         excerpt: title.substring(0, 160),
-        author: session.user.email || session.user.name,
+        author: session.user.name,
         contentType: 'HTML',
+        category: category,
         draft: draft,
         published: published,
         publishedAt: published ? new Date() : null,
