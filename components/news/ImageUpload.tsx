@@ -33,7 +33,7 @@ export function ImageUpload({
     if (!file) return;
 
     // Validate file type
-    if (!IMAGE_UPLOAD_CONFIG.allowedFormats.includes(file.type)) {
+    if (!IMAGE_UPLOAD_CONFIG.allowedFormats.includes(file.type as any)) {
       setError('Invalid file type. Please use JPEG, PNG, WebP, or GIF.');
       return;
     }

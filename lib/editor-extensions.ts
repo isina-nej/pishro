@@ -49,15 +49,10 @@ export function createEditorExtensions() {
           target: '_blank',
         },
       },
-      history: {
-        depth: 50,
-        newGroupDelay: 500,
-      },
       dropcursor: {
         color: '#0d8abc',
         width: 2,
       },
-      gapcursor: true,
     }),
 
     // Image extension for inserting images
