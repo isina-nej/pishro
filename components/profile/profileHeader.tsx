@@ -44,12 +44,12 @@ const ProfileHeader = () => {
       </p>
       <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto justify-end">
         {/* date */}
-        <div className="flex gap-2 md:gap-4 items-center bg-white rounded-sm px-2 h-[26px]">
+        <div className="flex gap-2 md:gap-4 items-center bg-white dark:bg-cardBg rounded-sm px-2 h-[26px]">
           <CiCalendarDate className="size-4 md:size-5 text-[#130F26]" />
           <span className="text-xs md:text-sm text-[#333]">{today}</span>
         </div>
         {/* notification */}
-        <button className="flex justify-center items-center bg-white rounded-sm px-1 h-[26px] relative">
+        <button className="flex justify-center items-center bg-white dark:bg-cardBg rounded-sm px-1 h-[26px] relative">
           <IoIosNotificationsOutline className="size-5 text-[#130F26]" />
           <div className="absolute top-1.5 left-1.5 size-1.5 bg-[#D52A16] rounded full z-10"></div>
         </button>

@@ -57,78 +57,80 @@ const NewsCard = ({ data }: NewsCardProps) => {
   const readingTime = getReadingTime(data.content || data.excerpt);
 
   return (
-    <div className="group h-[270px] border border-gray-200 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-mySecondary/10 hover:border-mySecondary/30 transition-all duration-500 bg-white relative">
+    <div className="group border border-gray-200 dark:border-borderColor rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-mySecondary/10 hover:border-mySecondary/30 transition-all duration-500 bg-white dark:bg-cardBg">
       <Link
-        className="size-full flex flex-col md:flex-row md:justify-between "
+        className="flex flex-col md:flex-row h-full"
         href={`/news/${data.slug}`}
       >
         {/* Gradient accent line */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-mySecondary to-mySecondary/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="h-1 bg-gradient-to-r from-mySecondary to-mySecondary/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-        {/* تصویر */}
-        <div className="relative flex-shrink-0 w-full md:w-[220px] xl:w-[250px] h-[200px] md:min-h-[240px] md:h-full overflow-hidden">
+        {/* تصویر - Fixed Width on Desktop, Full Width on Mobile */}
+        <div className="relative w-full md:w-[280px] lg:w-[320px] h-[200px] sm:h-[240px] md:h-[220px] lg:h-[240px] flex-shrink-0 overflow-hidden">
           <Image
             src={data.coverImage ?? "/images/default-news.jpg"}
             alt={data.title}
             fill
-            className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-            sizes="(max-width: 768px) 100vw, 260px"
+            className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out w-full h-full"
+            sizes="(max-width: 640px) 100vw, 768px) 1024px) 280px, 320px"
             priority={false}
           />
 
           {/* Category badge */}
-          <div className="absolute top-4 right-4 z-10">
+          <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10">
             <span
               className={`${getCategoryColor(
                 data.category
-              )} text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg backdrop-blur-sm`}
+              )} text-white text-xs sm:text-sm font-bold px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full shadow-lg backdrop-blur-sm`}
             >
               {data.category}
             </span>
           </div>
         </div>
 
-        {/* محتوا */}
-        <div className="px-4 md:px-4 xl:px-6 py-4 md:py-6 flex flex-col justify-between flex-1">
-          <div className="flex flex-col justify-between h-full">
-            <div className="space-y-2 md:space-y-3">
-              <h5 className="font-bold text-base md:text-lg xl:text-xl text-[#131b22] line-clamp-2 leading-relaxed group-hover:text-mySecondary transition-colors duration-300">
-                {data.title}
-              </h5>
+        {/* محتوا - Flexible Layout with Proper Spacing */}
+        <div className="flex flex-col justify-between flex-1 px-3 sm:px-4 md:px-4 lg:px-6 py-3 sm:py-4 md:py-5 lg:py-6">
+          {/* Title and Excerpt */}
+          <div className="space-y-2 sm:space-y-2.5 md:space-y-2">
+            <h5 className="font-bold text-sm sm:text-base md:text-base lg:text-lg text-[#131b22] leading-snug sm:leading-relaxed group-hover:text-mySecondary transition-colors duration-300">
+              {data.title}
+            </h5>
 
-              <p className="font-normal text-sm xl:text-base text-gray-600 line-clamp-2 md:line-clamp-3 leading-relaxed">
-                {data.excerpt}
-              </p>
-            </div>
-            <div className="space-y-2 md:space-y-3">
-              {data.author && (
-                <div className="flex items-center gap-2 pt-1">
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-mySecondary to-mySecondary/70 flex items-center justify-center text-white text-xs font-bold">
-                    {data.author.charAt(0)}
-                  </div>
-                  <p className="text-xs text-gray-600 font-medium">
-                    {data.author}
-                  </p>
+            <p className="font-normal text-xs sm:text-sm md:text-sm text-gray-600 dark:text-textSecondary leading-relaxed line-clamp-2 md:line-clamp-3">
+              {data.excerpt}
+            </p>
+          </div>
+
+          {/* Author and Meta Information */}
+          <div className="space-y-2 sm:space-y-2.5 pt-2 sm:pt-3 border-t border-gray-100 dark:border-borderColor mt-2 sm:mt-3">
+            {data.author && (
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-mySecondary to-mySecondary/70 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                  {data.author.charAt(0)}
+                </div>
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-textSecondary font-medium truncate">
+                  {data.author}
+                </p>
+              </div>
+            )}
+
+            {/* Meta information - Responsive */}
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-2">
+              {data.publishedAt && (
+                <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-textSecondary">
+                  <Calendar className="w-4 h-4 flex-shrink-0" />
+                  <span className="truncate">{formatDate(data.publishedAt)}</span>
                 </div>
               )}
-              {/* Meta information */}
-              <div className="flex flex-wrap items-center gap-3 md:gap-4 pt-1 md:pt-2">
-                {data.publishedAt && (
-                  <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                    <Calendar className="w-3.5 h-3.5" />
-                    <span>{formatDate(data.publishedAt)}</span>
-                  </div>
-                )}
 
-                <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                  <Eye className="w-3.5 h-3.5" />
-                  <span>{data.views.toLocaleString("fa-IR")} بازدید</span>
-                </div>
+              <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-textSecondary">
+                <Eye className="w-4 h-4 flex-shrink-0" />
+                <span className="truncate">{(data.views ?? 0).toLocaleString("fa-IR")} بازدید</span>
+              </div>
 
-                <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                  <Clock className="w-3.5 h-3.5" />
-                  <span>{readingTime} دقیقه مطالعه</span>
-                </div>
+              <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-textSecondary">
+                <Clock className="w-4 h-4 flex-shrink-0" />
+                <span className="truncate">{readingTime} دقیقه</span>
               </div>
             </div>
           </div>

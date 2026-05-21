@@ -7,6 +7,8 @@
 import { writeFile, mkdir, unlink, rename } from "fs/promises";
 import { join } from "path";
 import { existsSync } from "fs";
+import crypto from "crypto";
+import { tmpdir } from "os";
 
 export interface StorageConfig {
   // مسیر فیزیکی ذخیره‌سازی فایل‌ها (در سرور)
@@ -19,13 +21,29 @@ export interface StorageConfig {
  * دریافت تنظیمات storage از environment variables
  */
 export function getStorageConfig(): StorageConfig {
-  // مسیر پیش‌فرض: /var/www/uploads
-  const storagePath =
-    process.env.UPLOAD_STORAGE_PATH || "/var/www/uploads";
+  // مسیر پیش‌فرض: UPLOAD_BASE_DIR برای local development
+  // یا UPLOAD_STORAGE_PATH برای production
+  // اگر environment variable تنظیم نشود، از ./uploads استفاده می‌کند
+  let storagePath =
+    process.env.UPLOAD_BASE_DIR ||
+    process.env.UPLOAD_STORAGE_PATH ||
+    "./uploads";
 
-  // URL پایه پیش‌فرض: از domain اصلی با prefix /uploads
+  console.log("[getStorageConfig] Raw UPLOAD_BASE_DIR:", process.env.UPLOAD_BASE_DIR);
+  console.log("[getStorageConfig] Raw storagePath:", storagePath);
+
+  // اگر relative path است، آن را نسبت به project root resolve کن
+  if (!storagePath.startsWith("/")) {
+    storagePath = join(process.cwd(), storagePath);
+    console.log("[getStorageConfig] Resolved to absolute path:", storagePath);
+  }
+
+  // URL پایه پیش‌فرض: استفاده از /api/uploads endpoint
+  // این endpoint فایل‌ها را از UPLOAD_BASE_DIR سرو می‌کند
   const baseUrl =
-    process.env.UPLOAD_BASE_URL || "https://www.pishrosarmaye.com/uploads";
+    process.env.UPLOAD_BASE_URL || "/api/uploads";
+
+  console.log("[getStorageConfig] Final config:", { storagePath, baseUrl });
 
   return {
     storagePath,
@@ -41,13 +59,24 @@ export async function saveFileToStorage(
   relativePath: string
 ): Promise<string> {
   const config = getStorageConfig();
-  const fullPath = join(config.storagePath, relativePath);
+  // Normalize path to use forward slashes consistently
+  const normalizedPath = relativePath.replace(/\\/g, "/");
+  const fullPath = join(config.storagePath, normalizedPath).replace(/\\/g, "/");
+
+  console.log("[saveFileToStorage] Config:", { storagePath: config.storagePath, baseUrl: config.baseUrl });
+  console.log("[saveFileToStorage] Input relativePath:", relativePath);
+  console.log("[saveFileToStorage] Normalized path:", normalizedPath);
+  console.log("[saveFileToStorage] Full path:", fullPath);
 
   // ایجاد دایرکتوری اگر وجود ندارد
   const directory = fullPath.substring(0, fullPath.lastIndexOf("/"));
 
+  console.log("[saveFileToStorage] Target directory:", directory);
+
   try {
+    console.log("[saveFileToStorage] Creating directory recursively...");
     await mkdir(directory, { recursive: true });
+    console.log("[saveFileToStorage] Directory created successfully");
   } catch (err) {
     console.error("Error creating directory:", err);
     throw new Error(
@@ -57,7 +86,9 @@ export async function saveFileToStorage(
 
   // ذخیره فایل
   try {
+    console.log("[saveFileToStorage] Writing file, size:", buffer.length);
     await writeFile(fullPath, buffer);
+    console.log("[saveFileToStorage] File written successfully");
   } catch (err) {
     console.error("Error writing file:", err);
     throw new Error(
@@ -66,7 +97,9 @@ export async function saveFileToStorage(
   }
 
   // برگرداندن URL کامل
-  return `${config.baseUrl}/${relativePath}`;
+  const resultUrl = `${config.baseUrl}/${relativePath}`;
+  console.log("[saveFileToStorage] Returning URL:", resultUrl);
+  return resultUrl;
 }
 
 /**
@@ -100,36 +133,60 @@ export function getRelativePathFromUrl(url: string): string {
   return url.replace(`${config.baseUrl}/`, "");
 }
 
+const TMP_PREFIX = "tmp";
+
 /**
- * انتقال یا تغییر نام فایل در storage
+ * مسیر نسبی فایل موقت
  */
-export async function moveFileInStorage(
-  oldRelativePath: string,
-  newRelativePath: string
+export function buildTempRelativePath(fileName: string): string {
+  return `${TMP_PREFIX}/${crypto.randomBytes(8).toString("hex")}/${fileName}`;
+}
+
+/**
+ * ذخیره فایل موقت (قبل از commit فرم)
+ */
+export async function saveTempFileToStorage(
+  buffer: Buffer,
+  fileName: string
+): Promise<string> {
+  console.log("[saveTempFileToStorage] Called with fileName:", fileName);
+  const relativePath = buildTempRelativePath(fileName);
+  console.log("[saveTempFileToStorage] Built relative path:", relativePath);
+  const fullUrl = await saveFileToStorage(buffer, relativePath);
+  console.log("[saveTempFileToStorage] File saved successfully");
+  return fullUrl;
+}
+
+/**
+ * انتقال فایل موقت به مسیر دائمی
+ */
+export async function promoteTempFileToStorage(
+  tempRelativePath: string,
+  permanentRelativePath: string
 ): Promise<string> {
   const config = getStorageConfig();
-  const oldFullPath = join(config.storagePath, oldRelativePath);
-  const newFullPath = join(config.storagePath, newRelativePath);
+  const tempFull = join(config.storagePath, tempRelativePath.replace(/\\/g, "/"));
+  const permanentFull = join(
+    config.storagePath,
+    permanentRelativePath.replace(/\\/g, "/")
+  );
+  const directory = permanentFull.substring(0, permanentFull.lastIndexOf("/"));
+  await mkdir(directory, { recursive: true });
+  await rename(tempFull, permanentFull);
+  return `${config.baseUrl}/${permanentRelativePath}`;
+}
 
-  // ایجاد دایرکتوری مقصد در صورت عدم وجود
-  const newDirectory = newFullPath.substring(0, newFullPath.lastIndexOf("/"));
-  try {
-    await mkdir(newDirectory, { recursive: true });
-  } catch (err) {
-    console.error("Error creating directory for move:", err);
-    throw new Error(
-      `خطا در ایجاد پوشه مقصد هنگام جابجایی فایل: ${err instanceof Error ? err.message : "خطای نامشخص"}`
-    );
-  }
+/**
+ * مسیر مطلق فایل در storage محلی
+ */
+export function getAbsoluteStoragePath(relativePath: string): string {
+  const config = getStorageConfig();
+  return join(config.storagePath, relativePath.replace(/\\/g, "/"));
+}
 
-  try {
-    await rename(oldFullPath, newFullPath);
-  } catch (err) {
-    console.error("Error moving file:", err);
-    throw new Error(
-      `خطا در جابجایی فایل: ${err instanceof Error ? err.message : "خطای نامشخص"}`
-    );
-  }
-
-  return `${config.baseUrl}/${newRelativePath}`;
+/**
+ * آیا مسیر، فایل موقت است؟
+ */
+export function isTempStoragePath(relativePath: string): boolean {
+  return relativePath.startsWith(`${TMP_PREFIX}/`);
 }

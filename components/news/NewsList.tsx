@@ -11,7 +11,7 @@ const NewsList = () => {
       <div className="mt-8 flex justify-center items-center min-h-[400px]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-gray-600">در حال بارگذاری اخبار...</p>
+          <p className="mt-4 text-gray-600 dark:text-textSecondary">در حال بارگذاری اخبار...</p>
         </div>
       </div>
     );
@@ -31,7 +31,7 @@ const NewsList = () => {
   if (!data?.items || data.items.length === 0) {
     return (
       <div className="mt-8 flex justify-center items-center min-h-[400px]">
-        <p className="text-gray-500">هیچ خبری یافت نشد</p>
+        <p className="text-gray-500 dark:text-textSecondary">هیچ خبری یافت نشد</p>
       </div>
     );
   }
@@ -39,7 +39,13 @@ const NewsList = () => {
   return (
     <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-x-[16px] xl:gap-x-[32px] gap-y-[12px] xl:gap-y-[20px]">
       {data.items.map((newsItem) => (
-        <NewsCard key={newsItem.id} data={newsItem} />
+        <NewsCard key={newsItem.id} data={{
+          ...newsItem,
+          coverImage: newsItem.coverImage ?? null,
+          author: newsItem.author ?? null,
+          publishedAt: newsItem.publishedAt ?? null,
+          createdAt: newsItem.createdAt ?? new Date(),
+        } as any} />
       ))}
     </div>
   );

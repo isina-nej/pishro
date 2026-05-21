@@ -71,7 +71,7 @@ const LibraryPageContent = () => {
 
           <section className="relative -mt-16 z-10">
             <div className="container-xl space-y-12">
-              <div className="rounded-3xl border border-white/30 bg-white/85 px-5 py-8 shadow-lg backdrop-blur">
+              <div className="rounded-3xl border border-white/30 bg-white dark:bg-cardBg px-5 py-8 shadow-lg backdrop-blur">
                 <FilterControls
                   categories={categories}
                   selectedCategory={selectedCategory}

@@ -5,29 +5,24 @@
  */
 
 import { NextRequest } from "next/server";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { Prisma } from "@prisma/client";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   errorResponse,
-  unauthorizedResponse,
   paginatedResponse,
   createdResponse,
   ErrorCodes,
-  forbiddenResponse,
-  validationError,
+  validationError
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
 
 export async function GET(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
-    if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
-    }
-    if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+    // Unified authentication - supports NextAuth and Bearer token
+    const adminAuth = await getAdminAuth(req);
+    if (!adminAuth) {
+      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -47,10 +42,10 @@ export async function GET(req: NextRequest) {
 
     if (search) {
       where.OR = [
-        { title: { contains: search, mode: "insensitive" } },
-        { author: { contains: search, mode: "insensitive" } },
-        { description: { contains: search, mode: "insensitive" } },
-        { publisher: { contains: search, mode: "insensitive" } },
+        { title: { contains: search } },
+        { author: { contains: search } },
+        { description: { contains: search } },
+        { publisher: { contains: search } },
         { isbn: { contains: search } },
       ];
     }
@@ -74,13 +69,17 @@ export async function GET(req: NextRequest) {
         orderBy: { createdAt: "desc" },
         include: {
           relatedTags: {
-            select: {
-              id: true,
-              slug: true,
-              title: true,
-            },
-          },
-        },
+            include: {
+              tag: {
+                select: {
+                  id: true,
+                  slug: true,
+                  title: true
+                }
+              }
+            }
+          }
+        }
       }),
       prisma.digitalBook.count({ where }),
     ]);
@@ -97,13 +96,10 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
-    if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
-    }
-    if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+    // Unified authentication - supports NextAuth and Bearer token
+    const adminAuth = await getAdminAuth(req);
+    if (!adminAuth) {
+      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
 
     const body = await req.json();
@@ -126,29 +122,29 @@ export async function POST(req: NextRequest) {
       formats = [],
       status = [],
       tags = [],
-      tagIds = [],
-      readingTime,
+            readingTime,
       isFeatured = false,
       price,
       fileUrl,
-      audioUrl,
+      audioUrl
     } = body;
 
     // Validation
-    if (!title || !slug || !author || !description || !year || !category) {
-      return validationError({
-        title: !title ? "Title is required" : "",
-        slug: !slug ? "Slug is required" : "",
-        author: !author ? "Author is required" : "",
-        description: !description ? "Description is required" : "",
-        year: !year ? "Year is required" : "",
-        category: !category ? "Category is required" : "",
-      });
+    const validationErrors: { [key: string]: string } = {};
+    if (!title) validationErrors.title = "Title is required";
+    if (!slug) validationErrors.slug = "Slug is required";
+    if (!author) validationErrors.author = "Author is required";
+    if (!description) validationErrors.description = "Description is required";
+    if (!year) validationErrors.year = "Year is required";
+    if (!category) validationErrors.category = "Category is required";
+
+    if (Object.keys(validationErrors).length > 0) {
+      return validationError(validationErrors);
     }
 
     // Check if slug already exists
     const existingBook = await prisma.digitalBook.findUnique({
-      where: { slug },
+      where: { slug }
     });
 
     if (existingBook) {
@@ -160,6 +156,23 @@ export async function POST(req: NextRequest) {
 
     // Normalize cover URL (extract original URL from Next.js optimization URLs)
     const normalizedCover = normalizeImageUrl(cover);
+
+    // Log request data for debugging
+    console.log("Creating book with data:", {
+      title,
+      slug,
+      author,
+      description,
+      cover: normalizedCover,
+      year,
+      pages,
+      category,
+      formats,
+      status,
+      tags,
+            fileUrl,
+      audioUrl
+    });
 
     // Create book
     const book = await prisma.digitalBook.create({
@@ -182,29 +195,40 @@ export async function POST(req: NextRequest) {
         formats,
         status,
         tags,
-        tagIds,
         readingTime,
         isFeatured,
         price,
         fileUrl,
-        audioUrl,
-      },
-      include: {
-        relatedTags: {
-          select: {
-            id: true,
-            slug: true,
-            title: true,
-          },
-        },
-      },
+        audioUrl
+      }
     });
 
-    return createdResponse(book, "Book created successfully");
+    console.log("Book created successfully:", { bookId: book.id, fileUrl: book.fileUrl, cover: book.cover });
+
+    // Fetch the book with related tags included
+    const bookWithTags = await prisma.digitalBook.findUnique({
+      where: { id: book.id },
+      include: {
+        relatedTags: {
+          include: {
+            tag: true
+          }
+        }
+      }
+    });
+
+    console.log("Book with tags:", bookWithTags);
+    return createdResponse(bookWithTags, "Book created successfully");
   } catch (error) {
-    console.error("Error creating book:", error);
+    console.error("Error creating book - Full error:", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    console.error("Error details:", {
+      name: error instanceof Error ? error.name : "Unknown",
+      message: errorMessage,
+      cause: error instanceof Error && error.cause ? String(error.cause) : undefined
+    });
     return errorResponse(
-      "Error creating book",
+      `Error creating book: ${errorMessage}`,
       ErrorCodes.DATABASE_ERROR
     );
   }

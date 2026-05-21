@@ -5,29 +5,26 @@
  */
 
 import { NextRequest } from "next/server";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { Prisma } from "@prisma/client";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   errorResponse,
-  unauthorizedResponse,
   paginatedResponse,
   createdResponse,
   ErrorCodes,
-  forbiddenResponse,
-  validationError,
+  validationError
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
 
 export async function GET(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
-    if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+    const adminAuth = await getAdminAuth(req);
+if (!adminAuth) {
+      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+    if (!adminAuth) {
+      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -48,10 +45,10 @@ export async function GET(req: NextRequest) {
 
     if (search) {
       where.OR = [
-        { title: { contains: search, mode: "insensitive" } },
-        { excerpt: { contains: search, mode: "insensitive" } },
-        { content: { contains: search, mode: "insensitive" } },
-        { author: { contains: search, mode: "insensitive" } },
+        { title: { contains: search } },
+        { excerpt: { contains: search } },
+        { content: { contains: search } },
+        { author: { contains: search } },
       ];
     }
 
@@ -83,22 +80,16 @@ export async function GET(req: NextRequest) {
             select: {
               id: true,
               slug: true,
-              title: true,
-            },
+              title: true
+            }
           },
-          relatedTags: {
-            select: {
-              id: true,
-              slug: true,
-              title: true,
-            },
-          },
+          relatedTags: { include: { tag: true } },
           _count: {
             select: {
-              comments: true,
-            },
-          },
-        },
+              comments: true
+            }
+          }
+        }
       }),
       prisma.newsArticle.count({ where }),
     ]);
@@ -115,13 +106,12 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
-    if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+    const adminAuth = await getAdminAuth(req);
+if (!adminAuth) {
+      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+    if (!adminAuth) {
+      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
     }
 
     const body = await req.json();
@@ -135,11 +125,10 @@ export async function POST(req: NextRequest) {
       category,
       tags = [],
       categoryId,
-      tagIds = [],
-      published = false,
+            published = false,
       publishedAt,
       featured = false,
-      readingTime,
+      readingTime
     } = body;
 
     // Validation
@@ -148,13 +137,13 @@ export async function POST(req: NextRequest) {
         title: !title ? "Title is required" : "",
         slug: !slug ? "Slug is required" : "",
         excerpt: !excerpt ? "Excerpt is required" : "",
-        content: !content ? "Content is required" : "",
+        content: !content ? "Content is required" : ""
       });
     }
 
     // Check if slug already exists
     const existingArticle = await prisma.newsArticle.findUnique({
-      where: { slug },
+      where: { slug }
     });
 
     if (existingArticle) {
@@ -179,28 +168,21 @@ export async function POST(req: NextRequest) {
         category: category || "",
         tags,
         categoryId,
-        tagIds,
         published,
         publishedAt: published ? (publishedAt ? new Date(publishedAt) : new Date()) : null,
         featured,
-        readingTime,
+        readingTime
       },
       include: {
         relatedCategory: {
           select: {
             id: true,
             slug: true,
-            title: true,
-          },
+            title: true
+          }
         },
-        relatedTags: {
-          select: {
-            id: true,
-            slug: true,
-            title: true,
-          },
-        },
-      },
+        relatedTags: { include: { tag: true } }
+      }
     });
 
     return createdResponse(article, "News article created successfully");

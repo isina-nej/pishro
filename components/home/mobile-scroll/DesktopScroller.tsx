@@ -63,7 +63,7 @@ export function DesktopScroller({
       <div className="sticky top-0 h-screen flex items-center justify-center container-xl py-8">
         <div className="w-full px-40 flex flex-col items-start justify-start absolute top-[6%] z-10">
           <h4 className="text-6xl font-bold mb-2">سامانه پیشرو</h4>
-          <p className="text-base text-gray-500">
+          <p className="text-base text-gray-500 dark:text-textSecondary">
             سامانه <span className="text-myPrimary">پیشرو</span>، مشاور و همراه
             مالی شما در مسیر پیشرفت
           </p>
@@ -98,7 +98,7 @@ export function DesktopScroller({
                           className={clsx(
                             "size-2 rounded-full border transition-all",
                             i === index
-                              ? "bg-white border-white"
+                              ? "bg-white dark:bg-cardBg border-white"
                               : "bg-gray-600 border-gray-500"
                           )}
                         />
@@ -107,7 +107,7 @@ export function DesktopScroller({
                             "text-base transition-all",
                             i === index
                               ? "text-white font-semibold"
-                              : "text-gray-400"
+                              : "text-gray-400 dark:text-textSecondary"
                           )}
                         >
                           {step.text}
@@ -120,12 +120,12 @@ export function DesktopScroller({
                     {steps[index].link ? (
                       <a
                         href={steps[index].link}
-                        className="inline-block px-10 py-3 bg-white/10 text-white rounded-full shadow-md hover:bg-white/5 transition"
+                        className="inline-block px-10 py-3 bg-white dark:bg-cardBg text-white rounded-full shadow-md hover:bg-white transition"
                       >
                         اطلاعات بیشتر
                       </a>
                     ) : (
-                      <button className="px-10 py-3 bg-white/10 text-white rounded-full shadow-md hover:bg-white/5 transition cursor-default">
+                      <button className="px-10 py-3 bg-white dark:bg-cardBg text-white rounded-full shadow-md hover:bg-white transition cursor-default">
                         اطلاعات بیشتر
                       </button>
                     )}

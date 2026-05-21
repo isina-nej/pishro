@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { Course, Category } from "@prisma/client";
+import type { Course, Category } from "@/lib/types/db";
 
 export type CourseSortOption = "جدیدترین" | "محبوب‌ترین" | "پرفروش‌ترین";
 
@@ -94,7 +94,7 @@ export const useCoursesFilters = (
         normalizedQuery
           ? [course.subject, course.description, course.instructor]
               .filter(Boolean)
-              .join(" ")
+              .join("")
               .toLowerCase()
               .includes(normalizedQuery.toLowerCase())
           : true

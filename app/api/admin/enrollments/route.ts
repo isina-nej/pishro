@@ -5,28 +5,25 @@
  */
 
 import { NextRequest } from "next/server";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { Prisma } from "@prisma/client";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   errorResponse,
-  unauthorizedResponse,
   paginatedResponse,
   createdResponse,
   ErrorCodes,
-  forbiddenResponse,
-  validationError,
+  validationError
 } from "@/lib/api-response";
 
 export async function GET(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
-    if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+    const adminAuth = await getAdminAuth(req);
+if (!adminAuth) {
+      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+    if (!adminAuth) {
+      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -71,18 +68,18 @@ export async function GET(req: NextRequest) {
               id: true,
               phone: true,
               firstName: true,
-              lastName: true,
-            },
+              lastName: true
+            }
           },
           course: {
             select: {
               id: true,
               subject: true,
               slug: true,
-              img: true,
-            },
-          },
-        },
+              img: true
+            }
+          }
+        }
       }),
       prisma.enrollment.count({ where }),
     ]);
@@ -99,27 +96,26 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
-    if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+    const adminAuth = await getAdminAuth(req);
+if (!adminAuth) {
+      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+    if (!adminAuth) {
+      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
     }
 
     const body = await req.json();
     const {
       userId,
       courseId,
-      progress = 0,
+      progress = 0
     } = body;
 
     // Validation
     if (!userId || !courseId) {
       return validationError({
         userId: !userId ? "User ID is required" : "",
-        courseId: !courseId ? "Course ID is required" : "",
+        courseId: !courseId ? "Course ID is required" : ""
       });
     }
 
@@ -128,9 +124,9 @@ export async function POST(req: NextRequest) {
       where: {
         userId_courseId: {
           userId,
-          courseId,
-        },
-      },
+          courseId
+        }
+      }
     });
 
     if (existingEnrollment) {
@@ -145,7 +141,7 @@ export async function POST(req: NextRequest) {
       data: {
         userId,
         courseId,
-        progress,
+        progress
       },
       include: {
         user: {
@@ -153,17 +149,17 @@ export async function POST(req: NextRequest) {
             id: true,
             phone: true,
             firstName: true,
-            lastName: true,
-          },
+            lastName: true
+          }
         },
         course: {
           select: {
             id: true,
             subject: true,
-            slug: true,
-          },
-        },
-      },
+            slug: true
+          }
+        }
+      }
     });
 
     return createdResponse(enrollment, "Enrollment created successfully");

@@ -78,18 +78,18 @@ const PlansList = ({ investmentPlansData }: PlansListProps) => {
         {PlansListData.map((item, idx) => (
           <Drawer key={idx}>
             <DrawerTrigger asChild>
-              <button className="group relative w-full sm:w-auto px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium backdrop-blur-sm shadow-lg transition-all flex items-center justify-center gap-2">
+              <button className="group relative w-full sm:w-auto px-6 py-3 rounded-xl bg-white dark:bg-cardBg hover:bg-white text-white font-medium backdrop-blur-sm shadow-lg transition-all flex items-center justify-center gap-2">
                 <item.Icon className="h-5 w-5 text-white/80 group-hover:scale-110 transition-transform" />
                 {item.label}
               </button>
             </DrawerTrigger>
 
-            <DrawerContent className="rounded-t-2xl px-6 pb-8 pt-4 bg-gray-50 shadow-2xl border-t border-gray-200">
-              <DrawerHeader className="text-center border-b pb-4 border-gray-200">
-                <DrawerTitle className="text-2xl font-bold text-gray-800">
+            <DrawerContent className="rounded-t-2xl px-6 pb-8 pt-4 bg-gray-50 dark:bg-darkBgHidden shadow-2xl border-t border-gray-200 dark:border-borderColor">
+              <DrawerHeader className="text-center border-b pb-4 border-gray-200 dark:border-borderColor">
+                <DrawerTitle className="text-2xl font-bold text-gray-800 dark:text-textPrimary">
                   ساخت سبد سرمایه‌ گذاری ({item.label})
                 </DrawerTitle>
-                <DrawerDescription className="text-gray-600 mt-1">
+                <DrawerDescription className="text-gray-600 dark:text-textSecondary mt-1">
                   لطفاً اطلاعات زیر را وارد کنید:
                 </DrawerDescription>
               </DrawerHeader>
@@ -99,7 +99,7 @@ const PlansList = ({ investmentPlansData }: PlansListProps) => {
                 <div className="space-y-8 mt-6 w-full max-w-2xl">
                   {/* Amount */}
                   <div className="w-full">
-                    <label className="block mb-2 text-sm font-medium text-gray-700">
+                    <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-textPrimary">
                       میزان سرمایه (میلیون تومان)
                     </label>
                     <Slider
@@ -109,22 +109,22 @@ const PlansList = ({ investmentPlansData }: PlansListProps) => {
                       value={[amount]}
                       onValueChange={([val]) => setAmount(val)}
                       className="h-3"
-                      trackClassName="bg-gray-200"
+                      trackClassName="bg-gray-200 dark:bg-darkBgHidden"
                       rangeClassName="bg-green-600"
                       thumbClassName="border-green-600"
                     />
-                    <div className="ltr flex justify-between text-xs text-gray-500 mt-1 font-medium">
+                    <div className="ltr flex justify-between text-xs text-gray-500 dark:text-textSecondary mt-1 font-medium">
                       <span>۱۰ میلیون</span>
                       <span>۱۰ میلیارد</span>
                     </div>
-                    <div className="text-center mt-2 text-lg font-semibold text-green-700">
+                    <div className="text-center mt-2 text-lg font-semibold text-green-700 dark:text-green-300">
                       {formatAmount(amount)}
                     </div>
                   </div>
 
                   {/* Risk */}
                   <div>
-                    <label className="block mb-2 text-sm font-medium text-gray-700">
+                    <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-textPrimary">
                       میزان ریسک
                     </label>
                     <Slider
@@ -134,7 +134,7 @@ const PlansList = ({ investmentPlansData }: PlansListProps) => {
                       value={[risk]}
                       onValueChange={([val]) => setRisk(val)}
                       className="h-3"
-                      trackClassName="bg-gray-200"
+                      trackClassName="bg-gray-200 dark:bg-darkBgHidden"
                       rangeClassName={clsx(
                         risk === 0
                           ? "bg-green-500"
@@ -157,11 +157,11 @@ const PlansList = ({ investmentPlansData }: PlansListProps) => {
                           className={clsx(
                             index === risk
                               ? risk === 0
-                                ? "text-green-600 font-bold"
+                                ? "text-green-600 dark:text-green-400 font-bold"
                                 : risk === 1
                                 ? "text-yellow-600 font-bold"
                                 : "text-red-600 font-bold"
-                              : "text-gray-500"
+                              : "text-gray-500 dark:text-textSecondary"
                           )}
                         >
                           {level}
@@ -172,7 +172,7 @@ const PlansList = ({ investmentPlansData }: PlansListProps) => {
 
                   {/* Duration */}
                   <div>
-                    <label className="block mb-2 text-sm font-medium text-gray-700">
+                    <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-textPrimary">
                       مدت سرمایه‌ گذاری
                     </label>
                     <Slider
@@ -185,14 +185,14 @@ const PlansList = ({ investmentPlansData }: PlansListProps) => {
                       rangeClassName="bg-indigo-500"
                       thumbClassName="border-indigo-600"
                     />
-                    <div className="flex ltr justify-between text-xs text-gray-600 px-1 mt-2 font-medium">
+                    <div className="flex ltr justify-between text-xs text-gray-600 dark:text-textSecondary px-1 mt-2 font-medium">
                       {durations.map((d, i) => (
                         <span
                           key={i}
                           className={clsx(
                             i === duration
                               ? "text-indigo-600 font-bold"
-                              : "text-gray-500"
+                              : "text-gray-500 dark:text-textSecondary"
                           )}
                         >
                           {d}
@@ -211,7 +211,7 @@ const PlansList = ({ investmentPlansData }: PlansListProps) => {
                   سبد شخصی من را بساز
                 </button>
 
-                <DrawerClose className="text-sm text-gray-400 underline mt-2 hover:text-gray-600 transition-colors">
+                <DrawerClose className="text-sm text-gray-400 dark:text-textSecondary underline mt-2 hover:text-gray-600 dark:hover:text-textSecondary transition-colors">
                   <XIcon />
                 </DrawerClose>
               </div>

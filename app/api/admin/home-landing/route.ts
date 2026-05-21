@@ -5,28 +5,25 @@
  */
 
 import { NextRequest } from "next/server";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { Prisma } from "@prisma/client";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   errorResponse,
-  unauthorizedResponse,
   paginatedResponse,
   createdResponse,
   ErrorCodes,
-  forbiddenResponse,
-  validationError,
+  validationError
 } from "@/lib/api-response";
 
 export async function GET(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
-    if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+    const adminAuth = await getAdminAuth(req);
+if (!adminAuth) {
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود. فقط ادمین.");
+    if (!adminAuth) {
+      return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -54,7 +51,7 @@ export async function GET(req: NextRequest) {
         where,
         skip,
         take: limit,
-        orderBy: { order: "asc" },
+        orderBy: { order: "asc" }
       }),
       prisma.homeLanding.count({ where }),
     ]);
@@ -71,13 +68,12 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
-    if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+    const adminAuth = await getAdminAuth(req);
+if (!adminAuth) {
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود. فقط ادمین.");
+    if (!adminAuth) {
+      return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
     }
 
     const body = await req.json();
@@ -116,13 +112,13 @@ export async function POST(req: NextRequest) {
       metaDescription,
       metaKeywords = [],
       published = false,
-      order = 0,
+      order = 0
     } = body;
 
     // Validation
     if (!heroTitle) {
       return validationError({
-        heroTitle: "عنوان Hero الزامی است",
+        heroTitle: "عنوان Hero الزامی است"
       });
     }
 
@@ -163,8 +159,8 @@ export async function POST(req: NextRequest) {
         metaDescription,
         metaKeywords,
         published,
-        order,
-      },
+        order
+      }
     });
 
     return createdResponse(item, "صفحه لندینگ با موفقیت ایجاد شد");

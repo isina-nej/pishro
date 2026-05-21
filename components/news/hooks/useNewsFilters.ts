@@ -84,9 +84,9 @@ export const useNewsFilters = (news: NewsArticle[]): NewsFiltersHook => {
       })
       .filter((item) =>
         normalizedQuery
-          ? [item.title, item.excerpt, item.author, ...item.tags]
+          ? [item.title, item.excerpt, item.author, ...(Array.isArray(item.tags) ? item.tags : [])]
               .filter(Boolean)
-              .join(" ")
+              .join("")
               .toLowerCase()
               .includes(normalizedQuery.toLowerCase())
           : true

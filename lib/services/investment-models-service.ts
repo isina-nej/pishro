@@ -1,120 +1,92 @@
-import { prisma } from "@/lib/prisma";
-import type { Prisma } from "@prisma/client";
+import { query } from "@/lib/db";
+import { 
+  getInvestmentModelsPage as getPageMySQL, 
+  getInvestmentModelsPageById as getPageByIdMySQL 
+} from "./investment-models-mysql";
+
+interface InvestmentModelsPageInput {
+  additionalInfoTitle?: string;
+  additionalInfoContent?: string;
+  published?: boolean;
+}
 
 /**
  * دریافت صفحه Investment Models با تمام مدل‌های منتشر شده
  */
 export async function getInvestmentModelsPage() {
-  try {
-    const page = await prisma.investmentModelsPage.findFirst({
-      where: {
-        published: true,
-      },
-      include: {
-        models: {
-          where: { published: true },
-          orderBy: { order: "asc" },
-        },
-      },
-      orderBy: { createdAt: "desc" },
-    });
-
-    return page;
-  } catch (error) {
-    console.error("Error fetching investment models page:", error);
-    return null;
-  }
+  return await getPageMySQL();
 }
 
 /**
  * دریافت یک صفحه Investment Models خاص (برای ادمین)
  */
 export async function getInvestmentModelsPageById(id: string) {
-  try {
-    const page = await prisma.investmentModelsPage.findUnique({
-      where: { id },
-      include: {
-        models: {
-          orderBy: { order: "asc" },
-        },
-      },
-    });
-
-    return page;
-  } catch (error) {
-    console.error("Error fetching investment models page by ID:", error);
-    return null;
-  }
+  return await getPageByIdMySQL(id);
 }
 
 /**
- * دریافت تمام صفحات Investment Models (برای ادمین)
+ * دریافت تمام صفحات Investment Models برای ادمین
  */
-export async function getAllInvestmentModelsPagesForAdmin(params?: {
-  page?: number;
-  limit?: number;
+export async function getAllInvestmentModelsPagesForAdmin(options: {
+  page: number;
+  limit: number;
   published?: boolean | null;
 }) {
   try {
-    const page = params?.page ?? 1;
-    const limit = params?.limit ?? 20;
-    const skip = (page - 1) * limit;
+    const { page, limit, published } = options;
+    const offset = (page - 1) * limit;
 
-    const where: Prisma.InvestmentModelsPageWhereInput = {};
+    let whereClause = "";
+    let countWhereClause = "";
+    const params: any[] = [];
 
-    if (params?.published !== undefined && params?.published !== null) {
-      where.published = params.published;
+    if (published !== null && published !== undefined) {
+      whereClause = "WHERE published = ?";
+      countWhereClause = "WHERE published = ?";
+      params.push(published ? 1 : 0);
     }
 
-    const [items, total] = await Promise.all([
-      prisma.investmentModelsPage.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy: { createdAt: "desc" },
-        include: {
-          models: {
-            orderBy: { order: "asc" },
-          },
-        },
-      }),
-      prisma.investmentModelsPage.count({ where }),
-    ]);
+    // Get total count
+    const countResult = await query<{ count: number }>(
+      `SELECT COUNT(*) as count FROM InvestmentModelsPage ${countWhereClause}`,
+      params
+    );
+    const total = countResult?.[0]?.count || 0;
+
+    // Get paginated results
+    const items = await query<any>(
+      `SELECT * FROM InvestmentModelsPage ${whereClause} ORDER BY createdAt DESC LIMIT ? OFFSET ?`,
+      [...params, limit, offset]
+    );
 
     return {
-      items,
+      items: items || [],
       total,
       page,
       limit,
-      totalPages: Math.ceil(total / limit),
+      totalPages: Math.ceil(total / limit)
     };
   } catch (error) {
     console.error("Error fetching investment models pages for admin:", error);
-    throw error;
+    return { items: [], total: 0, page: options.page, limit: options.limit, totalPages: 0 };
   }
 }
 
 /**
- * ایجاد صفحه Investment Models جدید (برای ادمین)
+ * ایجاد یک صفحه Investment Models جدید
  */
-export async function createInvestmentModelsPage(data: {
-  additionalInfoTitle?: string;
-  additionalInfoContent?: string;
-  published?: boolean;
-}) {
+export async function createInvestmentModelsPage(data: InvestmentModelsPageInput) {
   try {
-    const page = await prisma.investmentModelsPage.create({
-      data: {
-        additionalInfoTitle: data.additionalInfoTitle,
-        additionalInfoContent: data.additionalInfoContent,
-        published: data.published ?? true,
-      },
-      include: {
-        models: true,
-      },
-    });
+    const id = `imp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const now = new Date().toISOString();
 
-    return page;
+    await query(
+      `INSERT INTO InvestmentModelsPage (id, additionalInfoTitle, additionalInfoContent, published, createdAt, updatedAt) 
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [id, data.additionalInfoTitle || null, data.additionalInfoContent || null, data.published ? 1 : 0, now, now]
+    );
+
+    return { id, ...data, createdAt: now, updatedAt: now };
   } catch (error) {
     console.error("Error creating investment models page:", error);
     throw error;
@@ -122,24 +94,37 @@ export async function createInvestmentModelsPage(data: {
 }
 
 /**
- * به‌روزرسانی صفحه Investment Models (برای ادمین)
+ * بروزرسانی یک صفحه Investment Models
  */
-export async function updateInvestmentModelsPage(
-  id: string,
-  data: Prisma.InvestmentModelsPageUpdateInput
-) {
+export async function updateInvestmentModelsPage(id: string, data: InvestmentModelsPageInput) {
   try {
-    const page = await prisma.investmentModelsPage.update({
-      where: { id },
-      data,
-      include: {
-        models: {
-          orderBy: { order: "asc" },
-        },
-      },
-    });
+    const now = new Date().toISOString();
+    const updates: string[] = [];
+    const params: any[] = [];
 
-    return page;
+    if (data.additionalInfoTitle !== undefined) {
+      updates.push("additionalInfoTitle = ?");
+      params.push(data.additionalInfoTitle || null);
+    }
+    if (data.additionalInfoContent !== undefined) {
+      updates.push("additionalInfoContent = ?");
+      params.push(data.additionalInfoContent || null);
+    }
+    if (data.published !== undefined) {
+      updates.push("published = ?");
+      params.push(data.published ? 1 : 0);
+    }
+
+    updates.push("updatedAt = ?");
+    params.push(now);
+    params.push(id);
+
+    await query(
+      `UPDATE InvestmentModelsPage SET ${updates.join(", ")} WHERE id = ?`,
+      params
+    );
+
+    return { id, ...data, updatedAt: now };
   } catch (error) {
     console.error("Error updating investment models page:", error);
     throw error;
@@ -147,119 +132,52 @@ export async function updateInvestmentModelsPage(
 }
 
 /**
- * حذف صفحه Investment Models (برای ادمین)
+ * حذف یک صفحه Investment Models
  */
 export async function deleteInvestmentModelsPage(id: string) {
   try {
-    await prisma.investmentModelsPage.delete({
-      where: { id },
-    });
+    // Delete associated models first
+    await query(
+      `DELETE FROM InvestmentModel WHERE investmentModelsPageId = ?`,
+      [id]
+    );
+
+    // Delete the page
+    await query(
+      `DELETE FROM InvestmentModelsPage WHERE id = ?`,
+      [id]
+    );
+
+    return { success: true };
   } catch (error) {
     console.error("Error deleting investment models page:", error);
     throw error;
   }
 }
 
-// ==================== Investment Model CRUD ====================
-
 /**
  * دریافت یک مدل سرمایه‌گذاری خاص
  */
 export async function getInvestmentModelById(id: string) {
   try {
-    const model = await prisma.investmentModel.findUnique({
-      where: { id },
-    });
+    const result = await query<any>(
+      `SELECT * FROM InvestmentModel WHERE id = ? LIMIT 1`,
+      [id]
+    );
 
-    return model;
+    if (!result || result.length === 0) {
+      return null;
+    }
+
+    const model = result[0];
+    return {
+      ...model,
+      features: model.features ? JSON.parse(String(model.features)) : [],
+      benefits: model.benefits ? JSON.parse(String(model.benefits)) : [],
+      contacts: model.contacts ? JSON.parse(String(model.contacts)) : [],
+    };
   } catch (error) {
     console.error("Error fetching investment model by ID:", error);
     return null;
-  }
-}
-
-/**
- * ایجاد مدل سرمایه‌گذاری جدید (برای ادمین)
- */
-export async function createInvestmentModel(data: {
-  investmentModelsPageId: string;
-  type: string;
-  title: string;
-  description: string;
-  icon: string;
-  color: string;
-  gradient: string;
-  features?: Prisma.InputJsonValue;
-  benefits?: string[];
-  ctaText: string;
-  ctaLink?: string;
-  ctaIsScroll?: boolean;
-  contactTitle?: string;
-  contactDescription?: string;
-  contacts?: Prisma.InputJsonValue;
-  order?: number;
-  published?: boolean;
-}) {
-  try {
-    const model = await prisma.investmentModel.create({
-      data: {
-        investmentModelsPageId: data.investmentModelsPageId,
-        type: data.type,
-        title: data.title,
-        description: data.description,
-        icon: data.icon,
-        color: data.color,
-        gradient: data.gradient,
-        features: data.features ?? [],
-        benefits: data.benefits ?? [],
-        ctaText: data.ctaText,
-        ctaLink: data.ctaLink,
-        ctaIsScroll: data.ctaIsScroll ?? false,
-        contactTitle: data.contactTitle,
-        contactDescription: data.contactDescription,
-        contacts: data.contacts ?? [],
-        order: data.order ?? 0,
-        published: data.published ?? true,
-      },
-    });
-
-    return model;
-  } catch (error) {
-    console.error("Error creating investment model:", error);
-    throw error;
-  }
-}
-
-/**
- * به‌روزرسانی مدل سرمایه‌گذاری (برای ادمین)
- */
-export async function updateInvestmentModel(
-  id: string,
-  data: Prisma.InvestmentModelUpdateInput
-) {
-  try {
-    const model = await prisma.investmentModel.update({
-      where: { id },
-      data,
-    });
-
-    return model;
-  } catch (error) {
-    console.error("Error updating investment model:", error);
-    throw error;
-  }
-}
-
-/**
- * حذف مدل سرمایه‌گذاری (برای ادمین)
- */
-export async function deleteInvestmentModel(id: string) {
-  try {
-    await prisma.investmentModel.delete({
-      where: { id },
-    });
-  } catch (error) {
-    console.error("Error deleting investment model:", error);
-    throw error;
   }
 }

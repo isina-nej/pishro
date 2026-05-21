@@ -7,8 +7,9 @@
  */
 
 import { NextRequest } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { queryOne } from "@/lib/db";
 import bcrypt from "bcryptjs";
+import { createToken } from "@/lib/auth-simple";
 import {
   successResponse,
   validationError,
@@ -16,7 +17,6 @@ import {
   unauthorizedResponse,
   ErrorCodes,
 } from "@/lib/api-response";
-import { signIn } from "@/auth";
 import { corsPreflightResponse, addCorsHeaders } from "@/lib/cors";
 
 // Handle CORS preflight
@@ -61,20 +61,10 @@ export async function POST(req: NextRequest) {
     }
 
     // Find user
-    const user = await prisma.user.findUnique({
-      where: { phone },
-      select: {
-        id: true,
-        phone: true,
-        passwordHash: true,
-        role: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        phoneVerified: true,
-        avatarUrl: true,
-      },
-    });
+    const user = await queryOne<any>(
+      "SELECT id, phone, passwordHash, role, firstName, lastName, email, phoneVerified FROM `User` WHERE phone = ?",
+      [phone]
+    );
 
     if (!user) {
       const response = unauthorizedResponse("شماره تلفن یا رمز عبور اشتباه است");
@@ -97,23 +87,31 @@ export async function POST(req: NextRequest) {
       return addCorsHeaders(response, origin);
     }
 
-    // Authenticate using Auth.js
-    try {
-      await signIn("credentials", {
-        phone,
-        password,
-        redirect: false,
-      });
-    } catch (authError) {
-      console.error("Auth.js sign-in error:", authError);
-      const response = errorResponse(
-        "خطا در احراز هویت",
-        ErrorCodes.INTERNAL_ERROR
+    // Check if user is ADMIN (required for this endpoint)
+    if (user.role !== 'ADMIN') {
+      const response = unauthorizedResponse(
+        "دسترسی فقط برای مدیران سیستم است"
       );
       return addCorsHeaders(response, origin);
     }
 
-    // Return user data (excluding sensitive info)
+    // Authenticate using Auth.js
+    // try {
+    //   await signIn("credentials", {
+    //     phone,
+    //     password,
+    //     redirect: false,
+    //   });
+    // } catch (authError) {
+    //   console.error("Auth.js sign-in error:", authError);
+    //   const response = errorResponse(
+    //     "خطا در احراز هویت",
+    //     ErrorCodes.INTERNAL_ERROR
+    //   );
+    //   return addCorsHeaders(response, origin);
+    // }
+
+    // Return user data with JWT token (excluding sensitive info)
     const userData = {
       id: user.id,
       phone: user.phone,
@@ -125,11 +123,17 @@ export async function POST(req: NextRequest) {
         : null,
       email: user.email,
       phoneVerified: user.phoneVerified,
-      avatarUrl: user.avatarUrl,
     };
 
+    // Generate JWT token for Bearer authentication
+    const token = createToken({
+      id: user.id,
+      phone: user.phone,
+      role: user.role,
+    });
+
     const response = successResponse(
-      userData,
+      { ...userData, token },
       "ورود با موفقیت انجام شد"
     );
     return addCorsHeaders(response, origin);

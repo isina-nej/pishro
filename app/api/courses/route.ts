@@ -1,11 +1,11 @@
-import { prisma } from "@/lib/prisma";
+import { query } from "@/lib/db";
 import { successResponse, errorResponse, ErrorCodes } from "@/lib/api-response";
 
 export async function GET() {
   try {
-    const courses = await prisma.course.findMany({
-      orderBy: { createdAt: "desc" },
-    });
+    const courses = await query(
+      `SELECT * FROM Course ORDER BY createdAt DESC`
+    );
 
     return successResponse(courses);
   } catch (error) {

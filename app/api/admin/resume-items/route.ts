@@ -5,28 +5,25 @@
  */
 
 import { NextRequest } from "next/server";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { Prisma } from "@prisma/client";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   errorResponse,
-  unauthorizedResponse,
   paginatedResponse,
   createdResponse,
   ErrorCodes,
-  forbiddenResponse,
-  validationError,
+  validationError
 } from "@/lib/api-response";
 
 export async function GET(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
-    if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+    const adminAuth = await getAdminAuth(req);
+if (!adminAuth) {
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود. فقط ادمین.");
+    if (!adminAuth) {
+      return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -64,10 +61,10 @@ export async function GET(req: NextRequest) {
           aboutPage: {
             select: {
               id: true,
-              heroTitle: true,
-            },
-          },
-        },
+              heroTitle: true
+            }
+          }
+        }
       }),
       prisma.resumeItem.count({ where }),
     ]);
@@ -84,13 +81,12 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
-    if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+    const adminAuth = await getAdminAuth(req);
+if (!adminAuth) {
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود. فقط ادمین.");
+    if (!adminAuth) {
+      return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
     }
 
     const body = await req.json();
@@ -102,7 +98,7 @@ export async function POST(req: NextRequest) {
       color,
       bgColor,
       order = 0,
-      published = false,
+      published = false
     } = body;
 
     // Validation
@@ -110,13 +106,13 @@ export async function POST(req: NextRequest) {
       return validationError({
         aboutPageId: !aboutPageId ? "شناسه صفحه درباره ما الزامی است" : "",
         title: !title ? "عنوان الزامی است" : "",
-        description: !description ? "توضیحات الزامی است" : "",
+        description: !description ? "توضیحات الزامی است" : ""
       });
     }
 
     // Check if about page exists
     const aboutPage = await prisma.aboutPage.findUnique({
-      where: { id: aboutPageId },
+      where: { id: aboutPageId }
     });
 
     if (!aboutPage) {
@@ -136,16 +132,16 @@ export async function POST(req: NextRequest) {
         color,
         bgColor,
         order,
-        published,
+        published
       },
       include: {
         aboutPage: {
           select: {
             id: true,
-            heroTitle: true,
-          },
-        },
-      },
+            heroTitle: true
+          }
+        }
+      }
     });
 
     return createdResponse(item, "آیتم رزومه با موفقیت ایجاد شد");

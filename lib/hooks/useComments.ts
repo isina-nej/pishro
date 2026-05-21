@@ -4,8 +4,6 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-import { ApiSuccessResponse } from "@/lib/api-response";
 
 /**
  * Comment data type matching API response
@@ -76,15 +74,22 @@ export function useComments(options: CommentsOptions & { enabled?: boolean } = {
       if (filters.featured !== undefined) params.append("featured", String(filters.featured));
       if (filters.limit) params.append("limit", String(filters.limit));
 
-      const response = await axios.get<ApiSuccessResponse<Comment[]>>(
-        `/api/comments?${params.toString()}`
+      const response = await fetch(
+        `/api/comments?${params.toString()}`,
+        { cache: "no-store" }
       );
 
-      if (response.data.status !== "success") {
-        throw new Error(response.data.message || "خطا در دریافت نظرات");
+      if (!response.ok) {
+        throw new Error("خطا در دریافت نظرات");
       }
 
-      return response.data.data;
+      const data = await response.json();
+      
+      if (data.status !== "success") {
+        throw new Error(data.message || "خطا در دریافت نظرات");
+      }
+
+      return data.data as Comment[];
     },
     enabled,
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -143,15 +148,22 @@ export function useLikeComment() {
 
   return useMutation({
     mutationFn: async (commentId: string) => {
-      const response = await axios.post<ApiSuccessResponse<unknown>>(
-        `/api/comments/${commentId}/like`
-      );
+      const response = await fetch(`/api/comments/${commentId}/like`, {
+        method: "POST",
+        cache: "no-store",
+      });
 
-      if (response.data.status !== "success") {
-        throw new Error(response.data.message || "خطا در ثبت لایک");
+      if (!response.ok) {
+        throw new Error("خطا در ثبت لایک");
       }
 
-      return response.data.data;
+      const data = await response.json();
+      
+      if (data.status !== "success") {
+        throw new Error(data.message || "خطا در ثبت لایک");
+      }
+
+      return data.data;
     },
     onSuccess: () => {
       // Invalidate all comment queries to refetch fresh data
@@ -169,15 +181,22 @@ export function useDislikeComment() {
 
   return useMutation({
     mutationFn: async (commentId: string) => {
-      const response = await axios.post<ApiSuccessResponse<unknown>>(
-        `/api/comments/${commentId}/dislike`
-      );
+      const response = await fetch(`/api/comments/${commentId}/dislike`, {
+        method: "POST",
+        cache: "no-store",
+      });
 
-      if (response.data.status !== "success") {
-        throw new Error(response.data.message || "خطا در ثبت دیسلایک");
+      if (!response.ok) {
+        throw new Error("خطا در ثبت دیسلایک");
       }
 
-      return response.data.data;
+      const data = await response.json();
+      
+      if (data.status !== "success") {
+        throw new Error(data.message || "خطا در ثبت دیسلایک");
+      }
+
+      return data.data;
     },
     onSuccess: () => {
       // Invalidate all comment queries to refetch fresh data
@@ -207,13 +226,23 @@ export function usePrefetchComments() {
         if (options.featured !== undefined) params.append("featured", String(options.featured));
         if (options.limit) params.append("limit", String(options.limit));
 
-        const response = await axios.get<ApiSuccessResponse<Comment[]>>(
-          `/api/comments?${params.toString()}`
+        const response = await fetch(
+          `/api/comments?${params.toString()}`,
+          { cache: "no-store" }
         );
 
-        return response.data.data;
+        if (!response.ok) {
+          throw new Error("خطا در دریافت نظرات");
+        }
+
+        const data = await response.json();
+        
+        if (data.status !== "success") {
+          throw new Error(data.message || "خطا در دریافت نظرات");
+        }
+
+        return data.data as Comment[];
       },
-      staleTime: 5 * 60 * 1000,
     });
   };
 }

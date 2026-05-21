@@ -1,5 +1,5 @@
 // @/types/video.ts
-import type { Video, VideoProcessingStatus } from "@prisma/client";
+import type { Video, VideoProcessingStatus } from "@/lib/types/db";
 
 /**
  * تایپ پایه ویدیو از Prisma

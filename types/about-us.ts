@@ -1,6 +1,6 @@
 // Shared TypeScript types for About Us page components
-
-import type { Prisma } from "@prisma/client";
+import type { Prisma } from '@prisma/client';
+// Type definitions for about page
 
 export interface StatItem {
   label: string;

@@ -38,7 +38,7 @@ export async function seedOrders() {
       for (let i = 0; i < numOrders; i++) {
         // Select 1-3 courses for this order
         const numCourses = generator.randomInt(1, 4);
-        const orderCourses = [];
+        const orderCourses: any[] = [];
         let total = 0;
 
         for (let c = 0; c < numCourses; c++) {

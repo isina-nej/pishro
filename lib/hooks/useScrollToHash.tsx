@@ -8,7 +8,7 @@ const useScrollToSection = () => {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const section = searchParams.get("section"); // دریافت مقدار `section`
+    const section = searchParams?.get("section"); // دریافت مقدار `section`
     if (section) {
       const targetElement = document.getElementById(section);
       if (targetElement) {

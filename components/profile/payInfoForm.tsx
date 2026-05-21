@@ -97,7 +97,7 @@ const PayInfoForm = forwardRef((props, ref) => {
                 disabled={loading}
                 placeholder="1234567812345678"
                 maxLength={16}
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2 text-left"
+                className="mt-1 block w-full border border-gray-300 dark:border-borderColor rounded-md p-2 text-left"
                 dir="ltr"
               />
             </div>
@@ -115,7 +115,7 @@ const PayInfoForm = forwardRef((props, ref) => {
                 شماره شبا
               </label>
               <div className="flex-1 flex items-center">
-                <span className="text-sm font-medium text-gray-600 ml-2">
+                <span className="text-sm font-medium text-gray-600 dark:text-textSecondary ml-2">
                   IR
                 </span>
                 <input
@@ -124,7 +124,7 @@ const PayInfoForm = forwardRef((props, ref) => {
                   disabled={loading}
                   placeholder="012345678901234567890123"
                   maxLength={24}
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2 text-left"
+                  className="mt-1 block w-full border border-gray-300 dark:border-borderColor rounded-md p-2 text-left"
                   dir="ltr"
                 />
               </div>
@@ -146,8 +146,8 @@ const PayInfoForm = forwardRef((props, ref) => {
                 type="text"
                 {...register("accountOwner")}
                 disabled={loading}
-                placeholder="نام و نام خانوادگی"
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                placeholder="نام و خانوادگی"
+                className="mt-1 block w-full border border-gray-300 dark:border-borderColor rounded-md p-2"
               />
             </div>
             {errors.accountOwner && (

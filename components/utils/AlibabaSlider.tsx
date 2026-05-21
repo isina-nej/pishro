@@ -76,7 +76,7 @@ const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({ src }) => {
           onError={() => setError(true)}
         />
       ) : (
-        <div className="w-full h-full flex flex-col items-center justify-center bg-gray-200 text-gray-600 rounded-3xl shadow-inner text-xs">
+        <div className="w-full h-full flex flex-col items-center justify-center bg-gray-200 dark:bg-darkBgHidden text-gray-600 dark:text-textSecondary rounded-3xl shadow-inner text-xs">
           <ImageOff className="h-6 w-6 mb-1" />
           تصویر لود نشد
         </div>

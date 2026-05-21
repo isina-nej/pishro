@@ -40,11 +40,11 @@ const StepItem = ({
       className="relative min-w-[220px] min-h-[200px] p-6"
     >
       {/* Circle + pulse animation */}
-      <div className="absolute -top-6 right-8 bg-gray-50/50 rounded-full size-16 flex justify-center items-center">
+      <div className="absolute -top-6 right-8 bg-gray-50 dark:bg-darkBgHidden rounded-full size-16 flex justify-center items-center">
         <div
           className={clsx(
             "size-8 rounded-full transition",
-            isActive ? "bg-yellow-300" : "bg-gray-300"
+            isActive ? "bg-yellow-300" : "bg-gray-300 dark:bg-darkBgHidden"
           )}
         />
 
@@ -72,10 +72,10 @@ const StepItem = ({
         transition={{ duration: 0.6 }}
         className="relative size-full flex flex-col items-start justify-start pt-8"
       >
-        <h3 className="text-[22px] font-bold text-gray-900 mb-2 mt-1">
+        <h3 className="text-[22px] font-bold text-gray-900 dark:text-textPrimary mb-2 mt-1">
           {step.title}
         </h3>
-        <p className="text-gray-600 mb-4 leading-7 max-w-[240px]">
+        <p className="text-gray-600 dark:text-textSecondary mb-4 leading-7 max-w-[240px]">
           {step.description}
         </p>
 
@@ -170,13 +170,13 @@ const StepsSection = ({
               <p className="text-myPrimary font-bold text-sm mb-2">
                 {sectionQuote}
               </p>
-              <h2 className="text-5xl leading-tight font-extrabold text-gray-800 max-w-[700px]">
+              <h2 className="text-5xl leading-tight font-extrabold text-gray-800 dark:text-textPrimary max-w-[700px]">
                 {sectionTitle}
               </h2>
-              <p className="mt-4 max-w-[620px] text-gray-600 leading-7">
+              <p className="mt-4 max-w-[620px] text-gray-600 dark:text-textSecondary leading-7">
                 {sectionSubtitle}
               </p>
-              <button className="rounded-full hover:text-[#344052] text-white bg-[#344052] hover:bg-white transition-all duration-300 font-bold px-4 py-2.5 border-2 border-[#344052] flex items-center justify-center w-fit mt-8">
+              <button className="rounded-full hover:text-[#344052] text-white bg-[#344052] hover:bg-white dark:bg-cardBg transition-all duration-300 font-bold px-4 py-2.5 border-2 border-[#344052] flex items-center justify-center w-fit mt-8">
                 {sectionCta}
               </button>
             </div>
@@ -186,7 +186,7 @@ const StepsSection = ({
                 <svg
                   width="100%"
                   height="100%"
-                  viewBox="0 0 1071 449"
+                  viewBox="0 1071 449"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                   preserveAspectRatio="xMidYMid meet"

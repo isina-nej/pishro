@@ -2,32 +2,41 @@
  * Admin Courses Management API
  * GET /api/admin/courses - List all courses with pagination and filters
  * POST /api/admin/courses - Create a new course
+ * 
+ * Authentication: JWT Bearer token from admin login
  */
 
 import { NextRequest } from "next/server";
+import { verifyAdminAccessToken } from "@/lib/admin-auth";
 import { Prisma } from "@prisma/client";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   errorResponse,
-  unauthorizedResponse,
   paginatedResponse,
   createdResponse,
   ErrorCodes,
-  forbiddenResponse,
-  validationError,
+  validationError
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
+import { CourseCreateSchema } from "@/lib/schemas/course-management-schema";
+
+// Helper to get admin auth from request
+function getAdminUserFromRequest(req: NextRequest) {
+  const authHeader = req.headers.get('Authorization');
+  if (!authHeader?.startsWith('Bearer ')) {
+    return null;
+  }
+  
+  const token = authHeader.slice(7);
+  return verifyAdminAccessToken(token);
+}
 
 export async function GET(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
-    if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
-    }
-    if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+    // Admin authentication via JWT token
+    const adminUser = getAdminUserFromRequest(req);
+    if (!adminUser) {
+      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -50,10 +59,9 @@ export async function GET(req: NextRequest) {
 
     if (search) {
       where.OR = [
-        { subject: { contains: search, mode: "insensitive" } },
-        { description: { contains: search, mode: "insensitive" } },
-        { instructor: { contains: search, mode: "insensitive" } },
-        { slug: { contains: search, mode: "insensitive" } },
+        { subject: { contains: search } },
+        { description: { contains: search } },
+        { slug: { contains: search } },
       ];
     }
 
@@ -93,25 +101,29 @@ export async function GET(req: NextRequest) {
             select: {
               id: true,
               slug: true,
-              title: true,
-            },
+              title: true
+            }
           },
-          relatedTags: {
-            select: {
-              id: true,
-              slug: true,
-              title: true,
-            },
+          tags: {
+            include: {
+              tag: {
+                select: {
+                  id: true,
+                  slug: true,
+                  title: true
+                }
+              }
+            }
           },
           _count: {
             select: {
               comments: true,
               enrollments: true,
               orderItems: true,
-              quizzes: true,
-            },
-          },
-        },
+              quizzes: true
+            }
+          }
+        }
       }),
       prisma.course.count({ where }),
     ]);
@@ -128,104 +140,79 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
-    if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
-    }
-    if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+    // Admin authentication via JWT token
+    const adminUser = getAdminUserFromRequest(req);
+    if (!adminUser) {
+      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
 
     const body = await req.json();
+    
+    // Map field names to schema expectations and normalize
+    const mapped = {
+      ...body,
+      title: body.title ?? body.subject,
+      cost: body.cost ?? body.price,
+      thumbnailPath: body.thumbnailPath ?? body.img,
+      trailerVideoPath: body.trailerVideoPath ?? body.introVideoUrl,
+    };
+
+    // Validate against schema
+    const parsed = CourseCreateSchema.safeParse(mapped);
+    if (!parsed.success) {
+      const errors: Record<string, string> = {};
+      parsed.error.errors.forEach(err => {
+        const path = err.path.join('.');
+        errors[path] = err.message;
+      });
+      return validationError(errors);
+    }
+
     const {
-      subject,
-      price,
-      img,
-      rating,
+      title,
+      cost,
       description,
-      discountPercent,
-      time,
-      students,
-      videosCount,
       categoryId,
-      tagIds = [],
-      slug,
-      level,
-      language = "FA",
-      prerequisites = [],
-      learningGoals = [],
-      instructor,
-      status = "ACTIVE",
-      published = true,
-      featured = false,
-    } = body;
+      likes,
+      dislikes,
+      hasChapters,
+      thumbnailPath,
+      trailerVideoPath,
+    } = parsed.data;
 
-    // Validation
-    if (!subject || price === undefined) {
-      return validationError({
-        subject: !subject ? "Subject is required" : "",
-        price: price === undefined ? "Price is required" : "",
-      });
-    }
+    // Normalize image paths
+    const normalizedThumbnail = normalizeImageUrl(thumbnailPath);
+    const normalizedTrailer = normalizeImageUrl(trailerVideoPath);
 
-    // If slug is provided, check uniqueness
-    if (slug) {
-      const existingCourse = await prisma.course.findUnique({
-        where: { slug },
-      });
-
-      if (existingCourse) {
-        return errorResponse(
-          "Course with this slug already exists",
-          ErrorCodes.ALREADY_EXISTS
-        );
-      }
-    }
-
-    // Normalize img URL (extract original URL from Next.js optimization URLs)
-    const normalizedImg = normalizeImageUrl(img);
-
-    // Create course
+    // Create course with validated data
     const course = await prisma.course.create({
       data: {
-        subject,
-        price,
-        img: normalizedImg,
-        rating,
+        subject: title,
+        price: cost,
         description,
-        discountPercent,
-        time,
-        students,
-        videosCount,
         categoryId,
-        tagIds,
-        slug,
-        level,
-        language,
-        prerequisites,
-        learningGoals,
-        instructor,
-        status,
-        published,
-        featured,
+        likes: likes ?? 0,
+        dislikes: dislikes ?? 0,
+        hasChapters: hasChapters ?? false,
+        img: normalizedThumbnail,
+        introVideoUrl: normalizedTrailer,
+        language: "FA",
+        status: "ACTIVE",
+        published: true,
+        featured: false,
+        prerequisites: [],
+        learningGoals: [],
       },
       include: {
         category: {
           select: {
             id: true,
             slug: true,
-            title: true,
-          },
+            title: true
+          }
         },
-        relatedTags: {
-          select: {
-            id: true,
-            slug: true,
-            title: true,
-          },
-        },
-      },
+        tags: { include: { tag: true } }
+      }
     });
 
     return createdResponse(course, "Course created successfully");

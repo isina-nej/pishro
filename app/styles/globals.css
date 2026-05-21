@@ -41,6 +41,12 @@ h3 {
 
 @layer base {
   :root {
+    /* Set principal writing mode for RTL language */
+    direction: rtl;
+    writing-mode: horizontal-tb;
+    text-orientation: mixed;
+    
+    /* Light Mode Colors */
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
@@ -66,32 +72,70 @@ h3 {
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+
+    /* Pishro Brand Colors */
+    --brand-color: #F9AD03;
+    --body-background: #151515;
+    --header-background: rgba(0, 0, 0, 0.8);
+    --text-primary: #EAEAEA;
+    --text-secondary: #A1A1A1;
+    --btn-primary-bg: #1CB561;
+    --btn-primary-hover: #17924E;
+    --btn-secondary-bg: #363636;
+    --btn-secondary-hover: #434242;
+    --card-background: #282828;
+    --border-color: #FFFFFF1F;
+    --footer-background: #191919;
+    --text-muted: #6D7176;
+    --dark-bg-hidden: #1A1A1A;
+    --neutral-button-bg: #606060;
+    --neutral-button-hover: #6F6E6E;
   }
+
   .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
+    /* Dark Mode Theme */
+    --background: 8 8% 8.5%;
+    --foreground: 0 0% 92%;
+    --card: 8 8% 11%;
+    --card-foreground: 0 0% 92%;
+    --popover: 8 8% 11%;
+    --popover-foreground: 0 0% 92%;
+    --primary: 37 100% 49%;
     --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
+    --secondary: 8 8% 18%;
+    --secondary-foreground: 0 0% 92%;
+    --muted: 8 8% 20%;
+    --muted-foreground: 0 0% 63%;
+    --accent: 37 100% 49%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
+    --border: 8 8% 18%;
+    --input: 8 8% 18%;
+    --ring: 37 100% 49%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+
+    /* Pishro Dark Mode Colors */
+    --brand-color: #F9AD03;
+    --body-background: #151515;
+    --header-background: rgba(0, 0, 0, 0.8);
+    --text-primary: #EAEAEA;
+    --text-secondary: #A1A1A1;
+    --btn-primary-bg: #1CB561;
+    --btn-primary-hover: #17924E;
+    --btn-secondary-bg: #363636;
+    --btn-secondary-hover: #434242;
+    --card-background: #282828;
+    --border-color: #FFFFFF1F;
+    --footer-background: #191919;
+    --text-muted: #6D7176;
+    --dark-bg-hidden: #1A1A1A;
+    --neutral-button-bg: #606060;
+    --neutral-button-hover: #6F6E6E;
   }
 }
 
@@ -127,6 +171,37 @@ h3 {
 
 /* my classes */
 
+/* Dark Mode & Shadow Styles */
+.shadow-backdrop {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.dark .shadow-backdrop {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.shadow-card {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.dark .shadow-card {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+}
+
+.shadow-hover {
+  transition: box-shadow 0.3s ease;
+}
+
+.shadow-hover:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.dark .shadow-hover:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* RTL & LTR */
 .rtl {
   direction: rtl;
   text-align: right;
@@ -215,6 +290,16 @@ h3 {
     margin-left: auto;
     margin-right: auto;
   }
+}
+
+/* Hide Scrollbar */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
 }
 
 /* swiper opinion */

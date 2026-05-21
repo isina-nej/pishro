@@ -61,7 +61,7 @@ const NavbarLinks: React.FC<NavbarLinksProps> = ({
                   <li key={subIdx} className="py-1">
                     <Link
                       href={subItem.link}
-                      className="block py-2 px-2 rounded transition-colors hover:bg-white/10"
+                      className="block py-2 px-2 rounded transition-colors hover:bg-white dark:bg-cardBg"
                       onClick={onClick}
                     >
                       {subItem.label}

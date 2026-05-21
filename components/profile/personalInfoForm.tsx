@@ -87,7 +87,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
         <h6 className="font-irsans text-xs text-[#4d4d4d] mb-3 md:mb-5 flex items-start md:items-center flex-col md:flex-row gap-2 md:gap-0">
           <ProfileIcon className="size-4 stroke-[#2F2F2F]" />
           <span className="md:mr-3">
-            مشخصات فردی (شخصیت حقوقی هستید؟{" "}
+            مشخصات فردی (شخصیت حقوقی هستید؟{""}
             <button className="text-[#2B93F3]">کلید کنید</button>)
           </span>
         </h6>
@@ -106,7 +106,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
                 type="text"
                 {...register("firstName")}
                 disabled={loading}
-                className="block w-full border border-gray-300 rounded-md p-2 text-sm"
+                className="block w-full border border-gray-300 dark:border-borderColor rounded-md p-2 text-sm"
               />
             </div>
             {errors.firstName && (
@@ -126,7 +126,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
                 type="text"
                 {...register("lastName")}
                 disabled={loading}
-                className="block w-full border border-gray-300 rounded-md p-2 text-sm"
+                className="block w-full border border-gray-300 dark:border-borderColor rounded-md p-2 text-sm"
               />
             </div>
             {errors.lastName && (
@@ -146,7 +146,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
                 type="tel"
                 {...register("phone")}
                 disabled={loading}
-                className="block w-full border border-gray-300 rounded-md p-2 text-sm"
+                className="block w-full border border-gray-300 dark:border-borderColor rounded-md p-2 text-sm"
               />
             </div>
             {errors.phone && (
@@ -166,7 +166,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
                 type="email"
                 {...register("email")}
                 disabled={loading}
-                className="block w-full border border-gray-300 rounded-md p-2 text-sm"
+                className="block w-full border border-gray-300 dark:border-borderColor rounded-md p-2 text-sm"
               />
             </div>
             {errors.email && (
@@ -186,7 +186,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
                 type="text"
                 {...register("nationalCode")}
                 disabled={loading}
-                className="block w-full border border-gray-300 rounded-md p-2 text-sm"
+                className="block w-full border border-gray-300 dark:border-borderColor rounded-md p-2 text-sm"
               />
             </div>
             {errors.nationalCode && (
@@ -213,7 +213,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
                     locale={persian_fa}
                     calendarPosition="bottom-right"
                     placeholder="انتخاب تاریخ"
-                    inputClass="block w-full border border-gray-300 rounded-md p-2 text-sm"
+                    inputClass="block w-full border border-gray-300 dark:border-borderColor rounded-md p-2 text-sm"
                     containerClassName="w-full"
                     disabled={loading}
                   />

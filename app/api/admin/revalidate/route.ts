@@ -5,14 +5,13 @@
  */
 
 import { NextRequest } from "next/server";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { auth } from "@/auth";
 import {
   successResponse,
   errorResponse,
-  unauthorizedResponse,
   failResponse,
-  ErrorCodes,
+  ErrorCodes
 } from "@/lib/api-response";
 
 /**
@@ -37,16 +36,15 @@ import {
  */
 export async function POST(req: NextRequest) {
   try {
-    // Auth check - only admins can revalidate
-    const session = await auth();
 
-    if (!session?.user) {
-      return unauthorizedResponse("لطفاً وارد حساب کاربری خود شوید");
+    const adminAuth = await getAdminAuth(req);
+if (!adminAuth) {
+      return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
     }
 
     // Check if user is admin (assuming role field exists in user model)
-    if (session.user.role !== "admin") {
-      return unauthorizedResponse("شما دسترسی به این عملیات ندارید");
+    if (adminAuth.role !== "ADMIN") {
+      return errorResponse("شما دسترسی به این عملیات ندارید", ErrorCodes.UNAUTHORIZED);
     }
 
     // Parse request body
@@ -107,7 +105,7 @@ export async function POST(req: NextRequest) {
       message: "فرآیند بازخوانی کش با موفقیت انجام شد",
       revalidated,
       failed: failed.length > 0 ? failed : undefined,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toISOString()
     };
 
     return successResponse(response);
@@ -124,17 +122,16 @@ export async function POST(req: NextRequest) {
  * GET request to check revalidation status and get available paths
  * Useful for admin dashboard
  */
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    // Auth check
-    const session = await auth();
 
-    if (!session?.user) {
-      return unauthorizedResponse("لطفاً وارد حساب کاربری خود شوید");
+    const adminAuth = await getAdminAuth(req);
+    if (!adminAuth) {
+      return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
     }
 
-    if (session.user.role !== "admin") {
-      return unauthorizedResponse("شما دسترسی به این عملیات ندارید");
+    if (adminAuth.role !== "ADMIN") {
+      return errorResponse("شما دسترسی به این عملیات ندارید", ErrorCodes.UNAUTHORIZED);
     }
 
     // Return available paths and tags that can be revalidated
@@ -153,14 +150,14 @@ export async function GET() {
         "/api/categories/stock-market",
         "/api/categories/metaverse",
       ],
-      tags: ["category", "courses", "tags", "faqs", "comments"],
+      tags: ["category", "courses", "tags", "faqs", "comments"]
     };
 
     const response = {
       message: "لیست مسیرهای قابل بازخوانی",
       paths: availablePaths,
       revalidateInterval: 3600, // 1 hour in seconds
-      lastRevalidation: new Date().toISOString(),
+      lastRevalidation: new Date().toISOString()
     };
 
     return successResponse(response);

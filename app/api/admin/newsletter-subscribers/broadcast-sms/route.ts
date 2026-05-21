@@ -4,27 +4,24 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { prisma } from "@/lib/prisma";
 import { sendBulkSmsMelipayamak } from "@/lib/sms";
 import {
   errorResponse,
-  unauthorizedResponse,
   successResponse,
   validationError,
-  forbiddenResponse,
-  ErrorCodes,
+  ErrorCodes
 } from "@/lib/api-response";
 
 export async function POST(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
-    if (!session?.user) {
-      return unauthorizedResponse("لطفا ابتدا وارد شوید");
+    const adminAuth = await getAdminAuth(req);
+if (!adminAuth) {
+      return errorResponse("لطفا ابتدا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی غیرمجاز. فقط ادمین‌ها اجازه دارند.");
+    if (!adminAuth) {
+      return errorResponse("دسترسی غیرمجاز. فقط ادمین‌ها اجازه دارند.", ErrorCodes.UNAUTHORIZED);
     }
 
     // Get message text from request body
@@ -50,9 +47,9 @@ export async function POST(req: NextRequest) {
     // Get all newsletter subscribers
     const subscribers = await prisma.newsletterSubscriber.findMany({
       select: {
-        phone: true,
-      },
-    });
+        phone: true
+      }
+    }) as Array<{ phone: string }>;
 
     if (subscribers.length === 0) {
       return errorResponse(
@@ -62,7 +59,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Extract phone numbers
-    const phones = subscribers.map(s => s.phone);
+    const phones = subscribers.map((s: { phone: string }) => s.phone);
 
     // Send SMS to all subscribers using bulk sending
     // batchSize = 50 means 50 phones per API call
@@ -77,7 +74,7 @@ export async function POST(req: NextRequest) {
         failedPhones: results.failedPhones,
         message: `پیامک با موفقیت به ${results.success} نفر از ${results.total} عضو ارسال شد${
           results.failed > 0 ? `. ${results.failed} مورد با خطا مواجه شد` : ""
-        }`,
+        }`
       },
       `ارسال پیامک به ${results.success} نفر انجام شد`
     );

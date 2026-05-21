@@ -1,6 +1,7 @@
 // app/api/auth/forgot-password/request/route.ts
-import { prisma } from "@/lib/prisma";
-import { sendSmsMelipayamak } from "@/lib/sms";
+import { query, execute } from "@/lib/db";
+import { randomUUID } from "crypto";
+import { sendOtpViaPattern } from "@/lib/sms";
 import {
   successResponse,
   validationError,
@@ -25,10 +26,13 @@ export async function POST(req: Request) {
       );
     }
 
-    // بررسی اینکه کاربر با این شماره وجود دارد یا نه
-    const user = await prisma.user.findUnique({ where: { phone } });
+    // Check if user with this phone exists
+    const users = await query<any>(
+      `SELECT id FROM User WHERE phone = ? LIMIT 1`,
+      [phone]
+    );
 
-    if (!user) {
+    if (!users || users.length === 0) {
       return validationError(
         { phone: "کاربری با این شماره یافت نشد" },
         "کاربری با این شماره یافت نشد"
@@ -38,35 +42,37 @@ export async function POST(req: Request) {
     const code = generateOtpDigits(4);
     const expiresAt = new Date(Date.now() + 2 * 60 * 1000); // 2 minutes
 
-    // ذخیره یا بروزرسانی OTP
-    const existingOtp = await prisma.otp.findFirst({ where: { phone } });
+    // Check if OTP exists for this phone
+    const otps = await query<any>(
+      `SELECT id FROM Otp WHERE phone = ? LIMIT 1`,
+      [phone]
+    );
 
-    if (existingOtp) {
-      await prisma.otp.update({
-        where: { id: existingOtp.id },
-        data: { code, expiresAt, createdAt: new Date() },
-      });
+    if (otps && otps.length > 0) {
+      // Update existing OTP
+      await execute(
+        `UPDATE Otp SET code = ?, expiresAt createdAt NOW() WHERE phone ?`,
+        [code, expiresAt, phone]
+      );
     } else {
-      await prisma.otp.create({
-        data: { phone, code, expiresAt },
-      });
-    }
-    console.log("code: ", code);
-
-    // Prepare SMS text
-    const text = `کد بازیابی رمز عبور: ${code}\nاین کد تا ۲ دقیقه معتبر است.`;
-
-    // Send SMS
-    try {
-      const response = await sendSmsMelipayamak(phone, text);
-      console.log("SMS sent:", response);
-    } catch (err) {
-      console.error("SMS send failed:", err);
-      return errorResponse(
-        "ارسال پیامک با خطا مواجه شد",
-        ErrorCodes.SMS_SEND_FAILED
+      // Create new OTP with ID
+      const otpId = randomUUID();
+      await execute(
+        `INSERT INTO Otp (id, phone, code, expiresAt, createdAt) VALUES (?, ?, NOW())`,
+        [otpId, phone, code, expiresAt]
       );
     }
+
+    console.log("code:", code);
+
+    // Send OTP via IPPanel Pattern asynchronously (don't block on it)
+    sendOtpViaPattern(phone, code).catch((err) => {
+      // Silent fail - user can always retry
+      console.error("OTP send failed:", {
+        phone,
+        error: err instanceof Error ? err.message : String(err),
+      });
+    });
 
     return successResponse({ expiresAt }, "کد بازیابی با موفقیت ارسال شد");
   } catch (err) {

@@ -22,7 +22,7 @@ export async function POST(req: Request) {
   try {
     const sub = await prisma.newsletterSubscriber.create({ data: { phone } });
     return successResponse(
-      { subId: sub.id },
+      { subId: (sub as any)?.id || null },
       "با موفقیت در خبرنامه مشترک شدید"
     );
   } catch (err) {

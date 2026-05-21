@@ -66,7 +66,7 @@ const NewsClub = () => {
                   پیشرو
                 </span>
               </h4>
-              <p className="mt-4 md:mt-6 text-center md:text-right text-sm sm:text-base md:text-lg text-gray-400 leading-relaxed md:pl-[60px] xl:pl-[128px] pr-1">
+              <p className="mt-4 md:mt-6 text-center md:text-right text-sm sm:text-base md:text-lg text-gray-400 dark:text-textSecondary leading-relaxed md:pl-[60px] xl:pl-[128px] pr-1">
                 با عضویت در باشگاه خبری پیشرو، از تازه‌ترین مقالات آموزشی، نکات
                 تخصصی و تحلیل‌های روز دنیای دیجیتال باخبر شوید و همیشه یک گام
                 جلوتر از رقبا بمانید. جدیدترین مطالب مستقیماً در تلفن همراه شما

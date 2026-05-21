@@ -89,25 +89,20 @@ const Landing3 = ({ data }: Landing3Props) => {
             )}
           </h4>
 
-          <p className="text-gray-600 text-sm sm:text-base md:text-lg leading-relaxed max-w-xl">
+          <p className="text-gray-600 dark:text-textSecondary text-sm sm:text-base md:text-lg leading-relaxed max-w-xl">
             {description}
           </p>
 
           {/* 🔘 دکمه‌ها */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 sm:pt-5">
             <button
-              className="px-5 sm:px-6 py-2.5 sm:py-3 bg-mySecondary text-white border border-mySecondary 
-                font-semibold rounded-xl shadow-md transition-transform duration-300 ease-in-out 
-                text-sm sm:text-base hover:scale-105 hover:-rotate-1 active:scale-95
-              "
+              className="px-5 sm:px-6 py-2.5 sm:py-3 bg-mySecondary text-white border border-mySecondary font-semibold rounded-xl shadow-md transition-transform duration-300 ease-in-out text-sm sm:text-base hover:scale-105 hover:-rotate-1 active:scale-95"
             >
               {button1}
             </button>
 
             <button
-              className="px-5 sm:px-6 py-2.5 sm:py-3 border border-mySecondary text-mySecondary 
-    font-semibold rounded-xl transition-transform duration-300 ease-in-out 
-    text-sm sm:text-base hover:scale-105 hover:rotate-1 active:scale-95"
+              className="px-5 sm:px-6 py-2.5 sm:py-3 border border-mySecondary text-mySecondary font-semibold rounded-xl transition-transform duration-300 ease-in-out text-sm sm:text-base hover:scale-105 hover:rotate-1 active:scale-95"
             >
               {button2}
             </button>
@@ -119,12 +114,12 @@ const Landing3 = ({ data }: Landing3Props) => {
               {features.map((item, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-2.5 sm:gap-3 bg-gray-50 sm:bg-transparent rounded-lg sm:rounded-none px-3 py-2.5 sm:px-0 sm:py-0"
+                  className="flex items-center gap-2.5 sm:gap-3 bg-gray-50 dark:bg-darkBgHidden sm:bg-transparent rounded-lg sm:rounded-none px-3 py-2.5 sm:px-0 sm:py-0"
                 >
                   <div className="text-xl sm:text-2xl lg:text-3xl flex-shrink-0">
                     {item.icon}
                   </div>
-                  <p className="text-gray-700 font-medium text-sm sm:text-base">
+                  <p className="text-gray-700 dark:text-textPrimary font-medium text-sm sm:text-base">
                     {item.text}
                   </p>
                 </div>
@@ -161,7 +156,7 @@ const Landing3 = ({ data }: Landing3Props) => {
                   ease: "easeInOut",
                 }}
                 className={clsx(
-                  "absolute bg-white/95 backdrop-blur-sm p-1.5 sm:p-3 md:p-4 lg:p-5 rounded-lg sm:rounded-xl shadow-xl border border-gray-100 flex items-center gap-0.5 sm:gap-2 cursor-default z-10",
+                  "absolute bg-white dark:bg-cardBg dark:bg-cardBg/95 backdrop-blur-sm p-1.5 sm:p-3 md:p-4 lg:p-5 rounded-lg sm:rounded-xl shadow-xl border border-gray-100 dark:border-borderColor flex items-center gap-0.5 sm:gap-2 cursor-default z-10",
                   // برای موبایل: باکس‌ها را کوچکتر و در لبه‌ها قرار بده تا از کادر خارج نشوند
                   "max-w-[85px] sm:max-w-none",
                   box.col
@@ -201,7 +196,7 @@ const Landing3 = ({ data }: Landing3Props) => {
                   <span className="text-mySecondary font-bold text-sm sm:text-lg md:text-xl lg:text-2xl">
                     {box.number}
                   </span>
-                  <p className="text-gray-800 font-medium text-[10px] sm:text-xs md:text-sm lg:whitespace-nowrap break-words sm:whitespace-nowrap">
+                  <p className="text-gray-800 dark:text-textPrimary font-medium text-[10px] sm:text-xs md:text-sm lg:whitespace-nowrap break-words sm:whitespace-nowrap">
                     {box.text}
                   </p>
                 </div>
@@ -226,7 +221,7 @@ const Landing3 = ({ data }: Landing3Props) => {
                     alt={"decor"}
                     fill
                     className="object-cover scale-x-[-1]"
-                    sizes="(max-width: 768px) 140px, (max-width: 1024px) 180px, 220px"
+                    sizes="(max-width: 768px) 140px, 1024px) 180px, 220px"
                   />
                 </div>
               </div>
@@ -246,7 +241,7 @@ const Landing3 = ({ data }: Landing3Props) => {
                     alt={"decor"}
                     fill
                     className="object-cover"
-                    sizes="(max-width: 640px) 28px, (max-width: 768px) 35px, 42px"
+                    sizes="(max-width: 640px) 28px, 768px) 35px, 42px"
                   />
                 </div>
               </div>
@@ -266,7 +261,7 @@ const Landing3 = ({ data }: Landing3Props) => {
                     alt={"decor"}
                     fill
                     className="object-cover"
-                    sizes="(max-width: 768px) 60px, (max-width: 1024px) 70px, 82px"
+                    sizes="(max-width: 768px) 60px, 1024px) 70px, 82px"
                   />
                 </div>
               </div>
@@ -295,7 +290,7 @@ const Landing3 = ({ data }: Landing3Props) => {
                 )}
                 {item.suffix}
               </span>
-              <p className="text-gray-600 mt-1 sm:mt-2 font-medium text-xs sm:text-sm md:text-base lg:text-lg text-center">
+              <p className="text-gray-600 dark:text-textSecondary mt-1 sm:mt-2 font-medium text-xs sm:text-sm md:text-base lg:text-lg text-center">
                 {item.label}
               </p>
             </motion.div>

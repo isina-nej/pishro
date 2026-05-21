@@ -1,16 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Users, Video } from "lucide-react";
+import { Users, Video, ShoppingCart } from "lucide-react";
 import Price from "./price";
 import { FormatTime } from "./FormatTime";
 import RatingStars from "./RatingStars";
 import { useCartStore } from "@/stores/cart-store";
+import CourseDetailModal from "@/components/courses/CourseDetailModal";
 import toast from "react-hot-toast";
-import { Course } from "@prisma/client";
+import type { Course } from "@/lib/types/db";
 
 // Accept both Course and serialized versions (with string dates)
 type CourseData = Course | (Omit<Course, "createdAt" | "updatedAt"> & {
@@ -28,15 +28,13 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
   const addToCart = useCartStore((state) => state.addToCart);
 
   const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault(); // جلوگیری از ریدایرکت Link
+    e.stopPropagation();
     addToCart(data);
     toast.success(`«${data.subject}» به سبد خرید اضافه شد 🛒`);
   };
 
-  return (
-    <Link
-      href={link}
-      className="group w-full shadow-md transition-shadow rounded-xl p-3 pb-8 bg-white flex flex-col relative hover:shadow-lg"
+  const cardContent = (
+    <div className="w-full shadow-md transition-shadow rounded-xl p-3 pb-8 bg-white dark:bg-cardBg flex flex-col relative hover:shadow-lg group cursor-pointer"
     >
       {/* Image section */}
       <motion.div
@@ -45,16 +43,28 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
       >
         {imageError ? (
           <div className="w-full h-full bg-[#e5e5e5] flex items-center justify-center">
-            <span className="text-gray-400 text-sm">تصویر در دسترس نیست</span>
+            <span className="text-gray-400 dark:text-textSecondary text-sm">تصویر در دسترس نیست</span>
           </div>
         ) : (
-          <Image
-            src={data.img || "/images/default-course.jpg"}
-            alt={data.subject}
-            fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
-            onError={() => setImageError(true)}
-          />
+          <>
+            <Image
+              src={data.img || "/images/default-course.jpg"}
+              alt={data.subject}
+              fill
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              onError={() => setImageError(true)}
+            />
+            {/* Purchase Button - Bottom Right */}
+            <motion.button
+              onClick={handleAddToCart}
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileHover={{ scale: 1.05 }}
+              className="absolute bottom-2 right-2 bg-mySecondary text-white px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1 hover:shadow-lg transition"
+            >
+              <ShoppingCart size={14} />
+              خرید
+            </motion.button>
+          </>
         )}
       </motion.div>
 
@@ -71,7 +81,7 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
         </div>
 
         <div className="mt-1 flex flex-col">
-          <p className="font-bold text-sm sm:text-sm text-gray-800 line-clamp-2">
+          <p className="font-bold text-sm sm:text-sm text-gray-800 dark:text-textPrimary line-clamp-2">
             {data.description || "بدون توضیح"}
           </p>
 
@@ -85,11 +95,11 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
           className="mt-1 pt-1.5 flex justify-between text-[#ACACAC] font-bold text-xs sm:text-sm border-t border-dashed border-[#acacac]"
         >
           <span className="flex items-center gap-1">
-            <Users size={16} className="text-gray-900" />
+            <Users size={16} className="text-gray-900 dark:text-textPrimary" />
             {data.students ?? 1} دوره آموز
           </span>
           <span className="flex items-center gap-1">
-            <Video size={16} className="text-gray-900" />
+            <Video size={16} className="text-gray-900 dark:text-textPrimary" />
             {data.videosCount ?? 1} ویدئو تخصصی
           </span>
           <FormatTime time={data.time || "0:00"} />
@@ -105,7 +115,11 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
           افزودن به سبد خرید
         </button>
       </div>
-    </Link>
+    </div>
+  );
+
+  return (
+    <CourseDetailModal course={data as any} trigger={cardContent} />
   );
 };
 

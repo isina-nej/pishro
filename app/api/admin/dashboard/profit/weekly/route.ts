@@ -3,33 +3,34 @@
  * GET /api/admin/dashboard/profit/weekly?period=this_week|last_week - دریافت داده‌های سود هفتگی
  */
 
-import { NextRequest } from "next/server";
-import { auth } from "@/auth";
+import { NextRequest, NextResponse } from "next/server";
+import { getAdminAuth } from "@/lib/auth-simple";
 import {
   errorResponse,
-  unauthorizedResponse,
-  forbiddenResponse,
   successResponse,
   validationError,
-  ErrorCodes,
+  ErrorCodes
 } from "@/lib/api-response";
+import { corsPreflightResponse, addCorsHeaders } from "@/lib/cors";
 import {
   getWeeklyProfit,
   getCachedData,
-  setCachedData,
+  setCachedData
 } from "@/lib/services/dashboard-service";
 import { WeeklyProfit } from "@/types/dashboard";
 
-export async function GET(req: NextRequest) {
-  try {
-    // احراز هویت - فقط ادمین‌ها
-    const session = await auth();
-    if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
-    }
+export async function OPTIONS(req: NextRequest) {
+  return corsPreflightResponse(req.headers.get("origin"));
+}
 
-    if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود به ادمین");
+export async function GET(req: NextRequest) {
+  const origin = req.headers.get("origin");
+  try {
+    const adminAuth = await getAdminAuth(req);
+
+    if (!adminAuth) {
+      const response = errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);
+      return addCorsHeaders(response, origin);
     }
 
     // دریافت پارامترها
@@ -41,9 +42,10 @@ export async function GET(req: NextRequest) {
 
     // اعتبارسنجی
     if (!period || (period !== "this_week" && period !== "last_week")) {
-      return validationError({
-        period: "دوره زمانی باید this_week یا last_week باشد",
+      const response = validationError({
+        period: "دوره زمانی باید this_week یا last_week باشد"
       });
+      return addCorsHeaders(response, origin);
     }
 
     // بررسی کش
@@ -51,7 +53,8 @@ export async function GET(req: NextRequest) {
     const cachedData = getCachedData<WeeklyProfit>(cacheKey);
 
     if (cachedData) {
-      return successResponse(cachedData, "داده‌ها از کش بارگذاری شد");
+      const response = successResponse(cachedData, "داده‌ها از کش بارگذاری شد");
+      return addCorsHeaders(response, origin);
     }
 
     // دریافت داده‌ها
@@ -60,12 +63,14 @@ export async function GET(req: NextRequest) {
     // ذخیره در کش
     setCachedData(cacheKey, profit);
 
-    return successResponse(profit, "داده‌ها با موفقیت دریافت شد");
+    const response = successResponse(profit, "داده‌ها با موفقیت دریافت شد");
+    return addCorsHeaders(response, origin);
   } catch (error) {
     console.error("Error fetching weekly profit:", error);
-    return errorResponse(
+    const response = errorResponse(
       "خطا در دریافت داده‌های سود هفتگی",
       ErrorCodes.DATABASE_ERROR
     );
+    return addCorsHeaders(response, origin);
   }
 }

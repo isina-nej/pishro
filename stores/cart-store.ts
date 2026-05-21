@@ -1,6 +1,6 @@
 // @/stores/cart-store.ts
 
-import { Course } from "@prisma/client";
+import type { Course } from "@/lib/types/db";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 

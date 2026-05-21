@@ -60,7 +60,7 @@ const NewsPageContent = () => {
         <div className="flex min-h-[400px] items-center justify-center">
           <div className="text-center">
             <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-primary"></div>
-            <p className="mt-4 text-gray-600">در حال بارگذاری اخبار...</p>
+            <p className="mt-4 text-gray-600 dark:text-textSecondary">در حال بارگذاری اخبار...</p>
           </div>
         </div>
       </div>
@@ -73,7 +73,7 @@ const NewsPageContent = () => {
 
       <section className="relative -mt-16 z-10">
         <div className="container-xl space-y-12">
-          <div className="rounded-3xl border border-white/30 bg-white/85 px-5 py-8 shadow-lg backdrop-blur">
+          <div className="rounded-3xl border border-white/30 bg-white dark:bg-cardBg px-5 py-8 shadow-lg backdrop-blur">
             <NewsFilterControls
               categories={categories}
               selectedCategory={selectedCategory}
@@ -98,16 +98,16 @@ const NewsPageContent = () => {
                     <>
                       <span className="font-semibold text-slate-900">
                         {filteredNews.length}
-                      </span>{" "}
-                      خبر{" "}
+                      </span>{""}
+                      خبر{""}
                       {query && (
                         <>
-                          برای جستجوی{" "}
+                          برای جستجوی{""}
                           <span className="font-semibold text-slate-900">
                             &quot;{query}&quot;
                           </span>
                         </>
-                      )}{" "}
+                      )}{""}
                       یافت شد
                     </>
                   ) : (
@@ -123,7 +123,10 @@ const NewsPageContent = () => {
             {filteredNews.length > 0 ? (
               <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-x-[16px] xl:gap-x-[32px] gap-y-[20px] xl:gap-y-[40px]">
                 {filteredNews.map((newsItem) => (
-                  <NewsCard key={newsItem.id} data={newsItem} />
+                  <NewsCard key={newsItem.id} data={{
+                    ...newsItem,
+                    tags: (Array.isArray(newsItem.tags) ? newsItem.tags : []) as string[],
+                  } as any} />
                 ))}
               </div>
             ) : (
@@ -135,7 +138,7 @@ const NewsPageContent = () => {
                   {hasActiveFilters && (
                     <button
                       onClick={handleResetFilters}
-                      className="mt-4 rounded-full border border-slate-300 bg-white px-6 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
+                      className="mt-4 rounded-full border border-slate-300 bg-white dark:bg-cardBg px-6 py-2 text-sm font-medium text-slate-700 dark:text-textSecondary transition-colors hover:bg-slate-50"
                     >
                       پاک کردن فیلترها
                     </button>

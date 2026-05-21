@@ -17,7 +17,7 @@ export const LoadingPlaceholder = () => {
             {new Array(4).fill(null).map((_, i) => (
               <div
                 key={i}
-                className="flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 px-5 py-4"
+                className="flex items-center gap-3 rounded-2xl border border-white/20 bg-white dark:bg-cardBg px-5 py-4"
               >
                 <div className="h-10 w-10 rounded-full bg-slate-700/50" />
                 <div className="flex flex-col">
@@ -32,7 +32,7 @@ export const LoadingPlaceholder = () => {
 
       {/* skeleton filters and content */}
       <section className="container-xl -mt-16">
-        <div className="rounded-3xl border border-white/30 bg-white px-5 py-8 shadow-lg backdrop-blur">
+        <div className="rounded-3xl border border-white/30 bg-white dark:bg-cardBg px-5 py-8 shadow-lg backdrop-blur">
           <div className="flex flex-col gap-6 border-b border-slate-200 pb-8">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div className="flex flex-col gap-3 md:flex-row md:items-center">
@@ -77,7 +77,7 @@ export const LoadingPlaceholder = () => {
               {new Array(3).fill(null).map((_, i) => (
                 <div
                   key={i}
-                  className="min-w-[220px] rounded-3xl border bg-white p-4 shadow-sm"
+                  className="min-w-[220px] rounded-3xl border bg-white dark:bg-cardBg p-4 shadow-sm"
                 >
                   <div className="h-40 rounded-2xl bg-slate-200 mb-4" />
                   <div className="h-5 w-40 rounded bg-slate-200 mb-2" />
@@ -92,7 +92,7 @@ export const LoadingPlaceholder = () => {
               {new Array(6).fill(null).map((_, i) => (
                 <div
                   key={i}
-                  className="group relative overflow-hidden rounded-3xl border bg-white p-4 shadow-sm"
+                  className="group relative overflow-hidden rounded-3xl border bg-white dark:bg-cardBg p-4 shadow-sm"
                 >
                   <div className="h-72 rounded-2xl bg-slate-200 mb-4" />
                   <div className="h-5 w-3/4 rounded bg-slate-200 mb-2" />

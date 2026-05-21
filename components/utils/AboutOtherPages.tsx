@@ -36,13 +36,13 @@ const AboutOtherPages = ({ data }: AboutOtherPagesProps) => {
   return (
     <div className="min-h-[400px] sm:min-h-[500px] md:min-h-[650px] lg:min-h-[800px] relative mt-8 sm:mt-12 md:mt-16 lg:mt-20">
       {/* 🌄 پس‌زمینه */}
-      <div className="absolute bottom-0 left-0 w-full aspect-[1440/847] pointer-events-none !-z-10">
+      <div className="absolute bottom-0 left-0 w-full h-full pointer-events-none !-z-10">
         <div className="size-full relative">
           <Image
             src={image}
             alt="Background Image"
             fill
-            className="object-cover object-center"
+            className="object-contain object-bottom"
             priority
             sizes="100vw"
           />
@@ -54,7 +54,7 @@ const AboutOtherPages = ({ data }: AboutOtherPagesProps) => {
       <div className="container-xl flex pt-16 sm:pt-24 md:pt-32 lg:pt-40 justify-end h-full z-[999] px-4 sm:px-6 md:px-8">
         <div className="max-w-full sm:max-w-[550px] md:max-w-[650px] lg:max-w-[750px] text-right space-y-4 sm:space-y-5 md:space-y-6">
           <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[120px] leading-[1.1] font-extrabold">
-            <span className="text-[#214254]">{title1}</span>{" "}
+            <span className="text-[#214254]">{title1}</span>{""}
             <span className="text-[#FFA135] ml-1 sm:ml-2">{title2}</span>
           </h2>
 
@@ -89,7 +89,7 @@ const AboutOtherPages = ({ data }: AboutOtherPagesProps) => {
                 </div>
                 <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-black">
                   <video
-                    src="/uploads/videos/landing-vid.webm" // مسیر ویدیوی خودت رو اینجا بزار
+                    src="/videos/landing-vid.webm" // مسیر ویدیوی خودت رو اینجا بزار
                     controls
                     autoPlay
                     className="w-full h-full object-cover"

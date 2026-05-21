@@ -10,7 +10,7 @@ const SectionTwo = () => {
           {pishroBranding.description}
         </p>
       </div>
-      <div className="relative h-[500px] w-full max-w-[600px] rounded-[10px] overflow-hidden mt-16">
+      <div className="relative h-[300px] w-full max-w-[400px] rounded-[10px] overflow-hidden">
         <Image
           src={pishroBranding.image}
           alt="business"

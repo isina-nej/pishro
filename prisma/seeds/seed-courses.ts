@@ -11,8 +11,45 @@ import {
 } from "@prisma/client";
 import { PersianDataGenerator } from "./persian-data-generator";
 import { fileURLToPath } from "url";
+import { writeFileSync, mkdirSync } from "fs";
+import { join } from "path";
 
 const prisma = new PrismaClient();
+
+/**
+ * Create a valid PNG image (300x200px course thumbnail)
+ */
+function createCourseImage(fileName: string, subfolder: string): void {
+  try {
+    const uploadBaseDir = process.env.UPLOAD_BASE_DIR || join(process.cwd(), "uploads");
+    const dir = join(uploadBaseDir, subfolder);
+    mkdirSync(dir, { recursive: true });
+    
+    const filePath = join(dir, fileName);
+    
+    // Valid PNG for course thumbnail
+    const pngData = Buffer.from([
+      0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A,
+      0x00, 0x00, 0x00, 0x0D, 0x49, 0x48, 0x44, 0x52,
+      0x00, 0x00, 0x01, 0x2C, 0x00, 0x00, 0x00, 0xC8,
+      0x08, 0x02, 0x00, 0x00, 0x00, 0xD7, 0x1F, 0x3C,
+      0xA0, 0x00, 0x00, 0x02, 0x00, 0x49, 0x44, 0x41,
+      0x54, 0x78, 0x9C, 0xED, 0xDD, 0xB1, 0x0D, 0x00,
+      0x20, 0x08, 0x04, 0xB0, 0xB7, 0xFE, 0xFF, 0xFD,
+      0xE5, 0x2C, 0x42, 0x10, 0xA2, 0x28, 0x0A, 0xF4,
+      0xCE, 0x1E, 0x52, 0x48, 0x6B, 0xA4, 0x2E, 0x73,
+      0x19, 0x4F, 0xA8, 0x0D, 0x2A, 0x28, 0x98, 0xCD,
+      0x42, 0x4B, 0x59, 0x61, 0x97, 0x80, 0x8D, 0x00,
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0xE0, 0x7F, 0x00, 0x00, 0x00,
+      0x00, 0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82
+    ]);
+    writeFileSync(filePath, pngData);
+  } catch (error) {
+    // Silent fail
+  }
+}
 const generator = new PersianDataGenerator(12345);
 
 const COURSE_COUNT = 40;
@@ -43,80 +80,90 @@ export async function seedCourses() {
         (i % tags.length) + selectedTags
       );
 
-      let course = await prisma.course.findFirst({
-        where: { slug },
-      });
+      const imgFileName = `course-${i}-${slug}.jpg`;
+      const imgPath = `/api/uploads/courses/${imgFileName}`
+      
+      // Create course image file
+      try {
+        createCourseImage(imgFileName, "courses");
+      } catch (_) {
+        // Non-critical
+      }
 
-      if (!course) {
-        course = await prisma.course.create({
-          data: {
-            subject,
-            slug,
-            price: generator.generatePrice(200000, 3000000),
-            img: `/images/courses/placeholder.png`,
-            rating: generator.generateRating(),
-            description: generator.generateParagraphs(2),
-            discountPercent: generator.generateDiscount(),
-            time: generator.choice([
-              "2 ساعت",
-              "5 ساعت",
-              "10 ساعت",
-              "15 ساعت",
-              "20 ساعت",
-              "30 ساعت",
-            ]),
-            students: generator.randomInt(50, 2000),
-            videosCount: generator.randomInt(10, 80),
-            categoryId: category.id,
-            tagIds: courseTags.map((t) => t.id),
-            level: generator.choice([
-              CourseLevel.BEGINNER,
-              CourseLevel.INTERMEDIATE,
-              CourseLevel.ADVANCED,
-            ]),
-            language: Language.FA,
-            prerequisites:
-              generator.randomInt(0, 10) > 6
-                ? [
+      const course = await prisma.course.upsert({
+        where: { slug },
+        update: {},
+        create: {
+          subject,
+          slug,
+          price: generator.generatePrice(200000, 3000000),
+          img: imgPath,
+          rating: generator.generateRating(),
+          description: generator.generateParagraphs(2),
+          discountPercent: generator.generateDiscount(),
+          time: generator.choice([
+            "2 ساعت",
+            "5 ساعت",
+            "10 ساعت",
+            "15 ساعت",
+            "20 ساعت",
+            "30 ساعت",
+          ]),
+          students: generator.randomInt(50, 2000),
+          videosCount: generator.randomInt(10, 80),
+          categoryId: category.id,
+          level: generator.choice([
+            CourseLevel.BEGINNER,
+            CourseLevel.INTERMEDIATE,
+            CourseLevel.ADVANCED,
+          ]),
+          language: Language.FA,
+          prerequisites:
+            generator.randomInt(0, 10) > 6
+              ? [
                   "آشنایی با مفاهیم پایه",
                   "داشتن کامپیوتر یا گوشی هوشمند",
                   "اینترنت پایدار",
                 ]
-                : [],
-            learningGoals: [
-              generator.choice([
-                "تسلط بر تحلیل تکنیکال",
-                "شناخت بازار",
-                "مدیریت ریسک",
-                "استراتژی معاملاتی",
-              ]),
-              generator.choice([
-                "کسب درآمد",
-                "سرمایه‌ گذاری موفق",
-                "معامله‌گری حرفه‌ای",
-              ]),
-              generator.choice([
-                "یادگیری ابزارها",
-                "تحلیل نمودار",
-                "شناسایی الگوها",
-              ]),
-            ],
-            instructor:
-              generator.generateFullName().firstName +
-              " " +
-              generator.generateFullName().lastName,
-            status: generator.choice([
-              CourseStatus.ACTIVE,
-              CourseStatus.ACTIVE,
-              CourseStatus.ACTIVE,
-              CourseStatus.COMING_SOON,
+              : [],
+          learningGoals: [
+            generator.choice([
+              "تسلط بر تحلیل تکنیکال",
+              "شناخت بازار",
+              "مدیریت ریسک",
+              "استراتژی معاملاتی",
             ]),
-            published: generator.choice([true, true, true, false]),
-            featured: generator.randomInt(0, 10) > 7,
-            views: generator.randomInt(0, 5000),
-          },
-        });
+            generator.choice([
+              "کسب درآمد",
+              "سرمایه‌ گذاری موفق",
+              "معامله‌گری حرفه‌ای",
+            ]),
+            generator.choice([
+              "یادگیری ابزارها",
+              "تحلیل نمودار",
+              "شناسایی الگوها",
+            ]),
+          ],
+          instructor:
+            generator.generateFullName().firstName +
+            " " +
+            generator.generateFullName().lastName,
+          status: generator.choice([
+            CourseStatus.ACTIVE,
+            CourseStatus.ACTIVE,
+            CourseStatus.ACTIVE,
+            CourseStatus.COMING_SOON,
+          ]),
+          published: generator.choice([true, true, true, false]),
+          featured: generator.randomInt(0, 10) > 7,
+          views: generator.randomInt(0, 5000),
+        },
+      });
+
+      if ((course.createdAt?.getTime?.()) === (course.updatedAt?.getTime?.()) ) {
         created++;
+      } else {
+        updated++;
       }
 
       if ((i + 1) % 10 === 0) {

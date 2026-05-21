@@ -3,7 +3,7 @@ import ProfileHeader from "./header";
 
 const FavoritesList = () => {
   return (
-    <div className="bg-white rounded-md">
+    <div className="bg-white dark:bg-cardBg rounded-md">
       <ProfileHeader>
         <h4 className="font-medium text-sm text-[#131834]">
           لیست های محبوب شما

@@ -1,11 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Category, Course } from "@prisma/client";
+import type { Category, Course } from "@/lib/types/db";
 import CourseCard from "@/components/utils/courseCard";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
-import CtaSection from "./ctaSection";
 
 type CategoryWithCourses = Category & {
   courses: Course[];
@@ -21,10 +20,10 @@ export default function AllCoursesContent({
   if (categoriesWithCourses.length === 0) {
     return (
       <div className="container mx-auto px-4 py-20 text-center">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-textPrimary mb-4">
           هیچ دوره‌ای یافت نشد
         </h1>
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-textSecondary">
           در حال حاضر دوره‌ای برای نمایش وجود ندارد.
         </p>
       </div>
@@ -32,7 +31,7 @@ export default function AllCoursesContent({
   }
 
   return (
-    <div className="w-full min-h-screen bg-gray-50">
+    <div className="w-full min-h-screen bg-gray-50 dark:bg-darkBgHidden">
       {/* Hero Header */}
       <div className="bg-gradient-to-br from-myPrimary to-mySecondary text-white py-12 pt-24 sm:py-16 sm:pt-28 md:py-20 md:pt-32">
         <div className="container mx-auto px-4">
@@ -79,11 +78,11 @@ export default function AllCoursesContent({
                   </div>
                 )}
                 <div>
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800">
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 dark:text-textPrimary">
                     {category.title}
                   </h2>
                   {category.description && (
-                    <p className="text-sm sm:text-base text-gray-600 mt-1">
+                    <p className="text-sm sm:text-base text-gray-600 dark:text-textSecondary mt-1">
                       {category.description}
                     </p>
                   )}
@@ -127,19 +126,11 @@ export default function AllCoursesContent({
 
             {/* Divider */}
             {categoryIndex < categoriesWithCourses.length - 1 && (
-              <div className="mt-8 border-b-2 border-gray-200" />
+              <div className="mt-8 border-b-2 border-gray-200 dark:border-borderColor" />
             )}
           </motion.section>
         ))}
       </div>
-
-      {/* CTA Section */}
-      <CtaSection
-        title="آماده‌اید برای شروع یادگیری؟"
-        description="با ثبت‌نام در دوره‌های ما، دانش و مهارت‌های لازم برای موفقیت در بازارهای مالی را کسب کنید و به جمع هزاران دانشجوی موفق ما بپیوندید"
-        buttonText="درباره ما بیشتر بدانید"
-        buttonLink="/about-us"
-      />
     </div>
   );
 }

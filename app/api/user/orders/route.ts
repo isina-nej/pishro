@@ -39,19 +39,19 @@ export async function GET(req: Request) {
 
     // For each order, fetch course details from items JSON
     const ordersWithDetails = await Promise.all(
-      orders.map(async (order) => {
+      orders.map(async (order: any) => {
         // ✅ Validate items is an array before mapping
         const itemsArray = Array.isArray(order.items)
           ? order.items
           : [];
 
         const courseIds = itemsArray
-          .filter((item): item is { courseId: string } =>
+          .filter((item: any): item is { courseId: string } =>
             typeof item === 'object' &&
             item !== null &&
             'courseId' in item
           )
-          .map((item) => item.courseId);
+          .map((item: any) => item.courseId);
 
         const courses = await prisma.course.findMany({
           where: { id: { in: courseIds } },
@@ -64,7 +64,7 @@ export async function GET(req: Request) {
           },
         });
 
-        const items = courses.map((course) => ({
+        const items = courses.map((course: any) => ({
           courseId: course.id,
           title: course.subject,
           price: course.price,

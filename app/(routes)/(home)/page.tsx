@@ -6,10 +6,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const homeLanding = await getHomeLandingData();
 
   return {
-    title: "52392950",
+    title: "پیشرو سرمایه",
     description:
       homeLanding?.metaDescription ||
-      "آموزش تخصصی بورس، بازارهای مالی و سرمایه‌ گذاری. از آموزش اصولی تا مشاوره حرفه‌ای",
+      "آموزش تخصصی بورس، بازارهای مالی و سرمایه‌ گذاری. از اصولی تا مشاوره حرفه‌ای",
     keywords: homeLanding?.metaKeywords || [],
   };
 }
@@ -22,8 +22,8 @@ const Home = async () => {
   if (!homeLanding) {
     return (
       <div className="container-md py-20 text-center">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">صفحه اصلی</h1>
-        <p className="text-gray-600">
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-textPrimary mb-4">صفحه اصلی</h1>
+        <p className="text-gray-600 dark:text-textSecondary">
           اطلاعات صفحه اصلی در حال حاضر در دسترس نیست. لطفاً بعداً مراجعه کنید.
         </p>
       </div>

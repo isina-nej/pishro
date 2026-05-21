@@ -1,12 +1,13 @@
 import { NextRequest } from "next/server";
-import { Prisma } from "@prisma/client";
-import { prisma } from "@/lib/prisma";
+import { PrismaClient, Prisma } from "@prisma/client";
 import {
   successResponse,
   errorResponse,
   paginatedResponse,
   ErrorCodes,
 } from "@/lib/api-response";
+
+const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest) {
   try {
@@ -18,129 +19,45 @@ export async function GET(req: NextRequest) {
     const skip = (page - 1) * limit;
 
     // Filter parameters
-    const category = searchParams.get("category");
-    const search = searchParams.get("search");
-    const published = searchParams.get("published");
+    const category = searchParams.get("category") || undefined;
+    const search = searchParams.get("search") || undefined;
 
-    // Build where clause
-    const where: Prisma.NewsArticleWhereInput = {};
+    const where: Prisma.NewsArticleWhereInput = {
+      published: true, // Only show published articles
+    };
 
     if (category) {
-      where.category = category;
+      where.categoryId = category;
     }
 
     if (search) {
       where.OR = [
-        { title: { contains: search, mode: "insensitive" } },
-        { excerpt: { contains: search, mode: "insensitive" } },
-        { content: { contains: search, mode: "insensitive" } },
-        { author: { contains: search, mode: "insensitive" } },
+        { title: { contains: search } },
+        { excerpt: { contains: search } },
       ];
     }
 
-    // Only show published articles by default
-    if (published === "false") {
-      where.published = false;
-    } else if (published === "true" || published === null) {
-      where.published = true;
-    }
-
-    // Fetch articles
-    const [articles, total] = await Promise.all([
+    const [items, total] = await Promise.all([
       prisma.newsArticle.findMany({
         where,
+        orderBy: [
+          { publishedAt: "desc" },
+          { createdAt: "desc" },
+        ],
         skip,
         take: limit,
-        orderBy: { publishedAt: "desc" },
-        select: {
-          id: true,
-          title: true,
-          slug: true,
-          excerpt: true,
-          coverImage: true,
-          author: true,
-          category: true,
-          tags: true,
-          published: true,
-          publishedAt: true,
-          views: true,
-          createdAt: true,
-          _count: {
-            select: { comments: true },
-          },
+        include: {
+          relatedCategory: { select: { id: true, title: true } },
         },
       }),
       prisma.newsArticle.count({ where }),
     ]);
 
-    return paginatedResponse(articles, page, limit, total);
+    return paginatedResponse(items, page, limit, total);
   } catch (error) {
     console.error("Error fetching news:", error);
     return errorResponse(
       "خطایی در دریافت اخبار رخ داد",
-      ErrorCodes.DATABASE_ERROR
-    );
-  }
-}
-
-export async function POST(req: NextRequest) {
-  try {
-    const body = await req.json();
-
-    const {
-      title,
-      slug,
-      excerpt,
-      content,
-      coverImage,
-      author,
-      category,
-      tags,
-      published,
-      publishedAt,
-    } = body;
-
-    // Validation
-    if (!title || !slug || !excerpt || !content || !category) {
-      return errorResponse(
-        "فیلدهای الزامی را پر کنید",
-        ErrorCodes.VALIDATION_ERROR
-      );
-    }
-
-    // Check if slug already exists
-    const existingArticle = await prisma.newsArticle.findUnique({
-      where: { slug },
-    });
-
-    if (existingArticle) {
-      return errorResponse(
-        "این slug قبلاً استفاده شده است",
-        ErrorCodes.ALREADY_EXISTS
-      );
-    }
-
-    // Create article
-    const article = await prisma.newsArticle.create({
-      data: {
-        title,
-        slug,
-        excerpt,
-        content,
-        coverImage,
-        author,
-        category,
-        tags: tags || [],
-        published: published || false,
-        publishedAt: published ? publishedAt || new Date() : null,
-      },
-    });
-
-    return successResponse(article, "مقاله با موفقیت ایجاد شد");
-  } catch (error) {
-    console.error("Error creating news article:", error);
-    return errorResponse(
-      "خطایی در ایجاد مقاله رخ داد",
       ErrorCodes.DATABASE_ERROR
     );
   }

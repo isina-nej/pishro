@@ -20,7 +20,7 @@ export default async function LandingOverlayServer() {
   const slidesData = slides.map((slide) => ({
     src: slide.imageUrl,
     title: slide.title,
-    text: slide.description,
+    text: slide.description || "",
   }));
 
   const miniSlider1Data = miniSlider1.map((s) => s.imageUrl);
@@ -34,14 +34,14 @@ export default async function LandingOverlayServer() {
       }
       mainHeroSubtitle={homeLanding?.mainHeroSubtitle || "شروع مسیر موفقیت"}
       mainHeroCta1Link={homeLanding?.mainHeroCta1Link || "/business-consulting"}
-      heroVideoUrl={homeLanding?.heroVideoUrl || "/uploads/videos/aboutUs.webm"}
+      heroVideoUrl={homeLanding?.heroVideoUrl || "/videos/aboutUs.webm"}
       overlayTexts={
         homeLanding?.overlayTexts && homeLanding.overlayTexts.length > 0
           ? homeLanding.overlayTexts
           : [
               "پیشرو در مسیر سرمایه‌ گذاری هوشمند",
-              "ما در پیشرو با ارائه آموزش‌های تخصصی بورس، بازارهای مالی و سرمایه‌ گذاری، شما را در مسیر رشد مالی همراهی می‌کنیم.",
-              "از آموزش اصولی و گام‌به‌گام تا مشاوره‌های حرفه‌ای و همراهی در مسیر رشد سرمایه شما، همه و همه در پیشرو فراهم است.",
+              "ما در پیشرو با ارائه آموزش‌های تخصصی بورس، بازارهای مالی و سرمایه‌ گذاری، شما را مسیر رشد همراهی می‌کنیم.",
+              "از آموزش اصولی و گام‌به‌گام تا مشاوره‌های حرفه‌ای همراهی در مسیر رشد سرمایه شما، همه پیشرو فراهم است.",
               "پیشرو انتخابی مطمئن برای کسانی است که به دنبال امنیت مالی، رشد پایدار و آینده‌ای روشن هستند.",
             ]
       }

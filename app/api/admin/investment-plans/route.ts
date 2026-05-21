@@ -5,30 +5,27 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
+import { getAdminAuth } from "@/lib/auth-simple";
 import {
   getAllInvestmentPlansForAdmin,
-  createInvestmentPlans,
+  createInvestmentPlans
 } from "@/lib/services/investment-plans-service";
 import {
   errorResponse,
-  unauthorizedResponse,
   paginatedResponse,
   createdResponse,
   ErrorCodes,
-  forbiddenResponse,
-  validationError,
+  validationError
 } from "@/lib/api-response";
 
 export async function GET(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
-    if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+    const adminAuth = await getAdminAuth(req);
+if (!adminAuth) {
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود. فقط ادمین.");
+    if (!adminAuth) {
+      return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -51,7 +48,7 @@ export async function GET(req: NextRequest) {
     const result = await getAllInvestmentPlansForAdmin({
       page,
       limit,
-      published,
+      published
     });
 
     return paginatedResponse(result.items, page, limit, result.total);
@@ -66,13 +63,12 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
-    if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+    const adminAuth = await getAdminAuth(req);
+if (!adminAuth) {
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود. فقط ادمین.");
+    if (!adminAuth) {
+      return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
     }
 
     const body = await req.json();
@@ -87,7 +83,7 @@ export async function POST(req: NextRequest) {
       metaTitle,
       metaDescription,
       metaKeywords = [],
-      published = false,
+      published = false
     } = body;
 
     // Validation
@@ -106,7 +102,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (maxAmount <= minAmount) {
-      errors.maxAmount = "حداکثر مبلغ باید بیشتر از حداقل مبلغ باشد";
+      errors.maxAmount = "حداکثر مبلغ باید بیشتر از حداقل باشد";
     }
 
     if (amountStep <= 0) {
@@ -129,7 +125,7 @@ export async function POST(req: NextRequest) {
       metaTitle,
       metaDescription,
       metaKeywords,
-      published,
+      published
     });
 
     return createdResponse(

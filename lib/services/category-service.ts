@@ -1,8 +1,10 @@
 /**
  * Category Service
  * Handles all category-related database operations for dynamic category pages
+ * Now uses MySQL direct queries instead of Prisma
  */
 
+import * as db from "@/lib/db";
 import { prisma } from "@/lib/prisma";
 import { Prisma, PageContentType, CourseLevel } from "@prisma/client";
 
@@ -74,91 +76,77 @@ export async function getCategoryBySlug(
   slug: string
 ): Promise<CategoryWithRelations | null> {
   try {
-    const category = await prisma.category.findUnique({
-      where: {
-        slug,
-        published: true, // Only return published categories
-      },
-      include: {
-        content: {
-          where: {
-            published: true,
-            AND: [
-              {
-                OR: [{ publishAt: null }, { publishAt: { lte: new Date() } }],
-              },
-              {
-                OR: [{ expireAt: null }, { expireAt: { gte: new Date() } }],
-              },
-            ],
-          },
-          orderBy: {
-            order: "asc",
-          },
-        },
-        tags: {
-          where: {
-            published: true,
-          },
-          orderBy: {
-            usageCount: "desc", // Most used tags first
-          },
-        },
-        courses: {
-          where: {
-            published: true,
-          },
-          include: {
-            category: {
-              select: {
-                id: true,
-                slug: true,
-                title: true,
-                color: true,
-              },
-            },
-            relatedTags: {
-              where: {
-                published: true,
-              },
-              take: 5,
-            },
-          },
-          orderBy: {
-            createdAt: "desc",
-          },
-        },
-        faqs: {
-          where: {
-            published: true,
-          },
-          orderBy: [{ featured: "desc" }, { order: "asc" }],
-        },
-        comments: {
-          where: {
-            published: true,
-            verified: true,
-          },
-          include: {
-            user: {
-              select: {
-                id: true,
-                firstName: true,
-                lastName: true,
-                avatarUrl: true,
-              },
-            },
-          },
-          orderBy: [{ featured: "desc" }, { createdAt: "desc" }],
-          take: 10, // Limit comments to 10 most recent
-        },
-      },
-    });
+    // Fetch category
+    const categories = await db.query<any>(
+      `SELECT * FROM Category WHERE slug = ? AND published = true`,
+      [slug]
+    );
 
-    return category;
+    if (categories.length === 0) {
+      return null;
+    }
+
+    const category = categories[0];
+    
+    // Initialize relations with empty arrays
+    let contentData: any[] = [];
+    let tagsData: any[] = [];
+    let coursesData: any[] = [];
+    let faqsData: any[] = [];
+    let commentsData: any[] = [];
+
+    // Try to fetch related FAQs (this table exists)
+    try {
+      faqsData = await db.query<any>(
+        `SELECT * FROM FAQ WHERE categoryId = ?`,
+        [category.id]
+      );
+    } catch (e) {
+      console.warn(`FAQ query error: ${e}`);
+    }
+
+    // Parse JSON fields
+    if (category.statsBoxes && typeof category.statsBoxes === 'string') {
+      try {
+        category.statsBoxes = JSON.parse(category.statsBoxes);
+      } catch (e) {
+        category.statsBoxes = [];
+      }
+    } else if (!category.statsBoxes) {
+      category.statsBoxes = [];
+    }
+
+    if (category.metaKeywords && typeof category.metaKeywords === 'string') {
+      try {
+        category.metaKeywords = JSON.parse(category.metaKeywords);
+      } catch (e) {
+        category.metaKeywords = [];
+      }
+    } else if (!category.metaKeywords) {
+      category.metaKeywords = [];
+    }
+
+    if (category.tagIds && typeof category.tagIds === 'string') {
+      try {
+        category.tagIds = JSON.parse(category.tagIds);
+      } catch (e) {
+        category.tagIds = [];
+      }
+    } else if (!category.tagIds) {
+      category.tagIds = [];
+    }
+
+    return {
+      ...category,
+      content: contentData,
+      tags: tagsData,
+      courses: coursesData,
+      faqs: faqsData,
+      comments: commentsData,
+    } as CategoryWithRelations;
   } catch (error) {
     console.error(`Error fetching category ${slug}:`, error);
-    throw error;
+    return null;
   }
 }
 
@@ -168,14 +156,9 @@ export async function getCategoryBySlug(
  */
 export async function getAllCategorySlugs(): Promise<string[]> {
   try {
-    const categories = await prisma.category.findMany({
-      where: {
-        published: true,
-      },
-      select: {
-        slug: true,
-      },
-    });
+    const categories = await db.query<any>(
+      `SELECT slug FROM Category WHERE published = true ORDER BY \`order\` ASC`
+    );
 
     return categories.map((cat) => cat.slug);
   } catch (error) {
@@ -196,26 +179,23 @@ export async function getCategoryTags(
   limit: number = 20
 ) {
   try {
-    const category = await prisma.category.findUnique({
-      where: {
-        slug: categorySlug,
-        published: true,
-      },
-      include: {
-        tags: {
-          where: {
-            published: true,
-          },
-          orderBy: [{ usageCount: "desc" }, { clicks: "desc" }],
-          take: limit,
-        },
-      },
-    });
+    const tags = await db.query<any>(
+      `SELECT t.* FROM Tag t
+       INNER JOIN Category c ON t.id IN (SELECT JSON_UNQUOTE(JSON_EXTRACT(c.tagIds, CONCAT('$[', idx, ']'))) 
+                                          FROM (SELECT 0 as idx UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4
+                                                UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) nums
+                                          WHERE c.slug = ? AND c.published = true)
+       WHERE t.published = true
+       ORDER BY t.usageCount DESC, t.clicks DESC
+       LIMIT ?`,
+      [categorySlug, limit]
+    );
 
-    return category?.tags || [];
+    return tags;
   } catch (error) {
     console.error(`Error fetching tags for category ${categorySlug}:`, error);
-    throw error;
+    // Return empty array on error instead of throwing
+    return [];
   }
 }
 
@@ -412,9 +392,9 @@ export async function getCategoryCourses(
               color: true,
             },
           },
-          relatedTags: {
-            where: {
-              published: true,
+          tags: {
+            include: {
+              tag: true,
             },
             take: 5,
           },

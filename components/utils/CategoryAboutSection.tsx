@@ -36,7 +36,7 @@ const CategoryAboutSection = ({
   cta1Link = "#",
   cta2Text = "بیشتر بدانید",
   cta2Link,
-  videoUrl = "/uploads/videos/landing-vid.webm",
+  videoUrl = "/videos/landing-vid.webm",
 }: CategoryAboutSectionProps) => {
   const [open, setOpen] = useState(false);
   const [imageSrc, setImageSrc] = useState(image);
@@ -45,13 +45,13 @@ const CategoryAboutSection = ({
   return (
     <div className="min-h-[400px] sm:min-h-[500px] md:min-h-[650px] lg:min-h-[800px] relative mt-8 sm:mt-12 md:mt-16 lg:mt-20 overflow-hidden">
       {/* پس‌زمینه */}
-      <div className="absolute bottom-0 left-0 w-full aspect-[1440/1000] pointer-events-none !-z-10">
+      <div className="absolute bottom-0 left-0 w-full h-full pointer-events-none !-z-10">
         <div className="size-full relative">
           <Image
             src={imageSrc}
             alt="Background Image"
             fill
-            className="object-cover object-center"
+            className="object-contain object-bottom"
             priority
             sizes="100vw"
             onError={() => setImageSrc(defaultImage)}
@@ -65,7 +65,7 @@ const CategoryAboutSection = ({
         <div className="max-w-full sm:max-w-[550px] md:max-w-[650px] lg:max-w-[750px] text-right space-y-4 sm:space-y-5 md:space-y-6">
           {/* عنوان */}
           <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[120px] leading-[1.1] font-extrabold">
-            <span className="text-[#214254]">{title1}</span>{" "}
+            <span className="text-[#214254]">{title1}</span>{""}
             <span className="text-[#FFA135] ml-1 sm:ml-2">{title2}</span>
           </h2>
 

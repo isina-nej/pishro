@@ -29,10 +29,10 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
         transition={{ duration: 0.6 }}
         className="text-center mb-16"
       >
-        <h2 className="text-4xl font-bold mb-4 text-gray-800">
+        <h2 className="text-4xl font-bold mb-4 text-gray-800 dark:text-textPrimary">
           تیم <span className="text-myPrimary">پیشرو</span>
         </h2>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <p className="text-lg text-gray-600 dark:text-textSecondary max-w-2xl mx-auto">
           بنیانگذاران و رهبران آکادمی مالی پیشرو سرمایه
         </p>
       </motion.div>
@@ -45,7 +45,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
             initial={{ opacity: 0, y: 50 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: index * 0.2 }}
-            className="bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 group"
+            className="bg-white dark:bg-cardBg rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 group"
           >
             {/* Image Section */}
             {member.image && (
@@ -71,7 +71,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
               {/* Name (if no image) */}
               {!member.image && (
                 <div className="mb-6">
-                  <h3 className="text-2xl font-bold mb-1 text-gray-800">
+                  <h3 className="text-2xl font-bold mb-1 text-gray-800 dark:text-textPrimary">
                     {member.name}
                   </h3>
                   <p className="text-myPrimary font-medium">{member.role}</p>
@@ -83,7 +83,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
                 <div className="flex items-start gap-3 mb-6 bg-myPrimary/5 rounded-xl p-4">
                   <LuGraduationCap className="text-2xl text-myPrimary mt-1 flex-shrink-0" />
                   <div>
-                    <p className="font-medium text-gray-800">
+                    <p className="font-medium text-gray-800 dark:text-textPrimary">
                       {member.education}
                     </p>
                   </div>
@@ -92,7 +92,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
 
               {/* Description */}
               {member.description && (
-                <p className="text-gray-600 leading-relaxed mb-6">
+                <p className="text-gray-600 dark:text-textSecondary leading-relaxed mb-6">
                   {member.description}
                 </p>
               )}
@@ -100,7 +100,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
               {/* Specialties */}
               {member.specialties.length > 0 && (
                 <div className="mb-6">
-                  <h4 className="font-bold text-gray-800 mb-3 text-sm">
+                  <h4 className="font-bold text-gray-800 dark:text-textPrimary mb-3 text-sm">
                     تخصص‌های کلیدی:
                   </h4>
                   <div className="flex flex-wrap gap-2">
@@ -155,7 +155,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
                       href={member.whatsappUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 min-w-[120px] bg-green-100 hover:bg-green-500 text-green-600 hover:text-white py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
+                      className="flex-1 min-w-[120px] bg-green-100 dark:bg-green-950 hover:bg-green-500 text-green-600 dark:text-green-400 hover:text-white py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
                     >
                       <FaWhatsapp />
                       <span>واتساپ</span>

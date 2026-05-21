@@ -1,111 +1,57 @@
-import { prisma } from "@/lib/prisma";
+import {
+  getSkyRoomMeetingLink as getMeetingLinkMySQL,
+  getSkyRoomClassById as getClassByIdMySQL,
+  getAllSkyRoomClassesForAdmin as getAllClassesForAdminMySQL,
+  createSkyRoomClass as createClassMySQL,
+  updateSkyRoomClass as updateClassMySQL,
+  deleteSkyRoomClass as deleteClassMySQL,
+} from "./skyroom-mysql";
 import type { SkyRoomClass } from "@prisma/client";
 
 /**
  * دریافت لینک همایش منتشر شده
  */
 export async function getSkyRoomMeetingLink() {
-  try {
-    const skyroom = await prisma.skyRoomClass.findFirst({
-      where: {
-        published: true,
-      },
-      select: {
-        meetingLink: true,
-      },
-    });
-
-    return skyroom?.meetingLink || null;
-  } catch (error) {
-    console.error("Error fetching skyroom meeting link:", error);
-    return null;
-  }
+  return await getMeetingLinkMySQL();
 }
 
 /**
  * دریافت یک لینک همایش خاص (برای ادمین)
  */
 export async function getSkyRoomClassById(classId: string) {
-  try {
-    const skyRoomClass = await prisma.skyRoomClass.findUnique({
-      where: { id: classId },
-    });
-
-    return skyRoomClass;
-  } catch (error) {
-    console.error("Error fetching skyroom class by ID:", error);
-    return null;
-  }
+  return await getClassByIdMySQL(classId);
 }
 
 /**
  * دریافت تمام لینک‌های همایش (برای ادمین)
  */
 export async function getAllSkyRoomClassesForAdmin() {
-  try {
-    const classes = await prisma.skyRoomClass.findMany({
-      orderBy: { createdAt: "desc" },
-    });
-
-    return classes;
-  } catch (error) {
-    console.error("Error fetching skyroom classes for admin:", error);
-    return [];
-  }
+  return await getAllClassesForAdminMySQL();
 }
 
 /**
- * ایجاد لینک همایش جدید (برای ادمین)
+ * ایجاد یک لینک همایش جدید
  */
 export async function createSkyRoomClass(data: {
   meetingLink: string;
-  published?: boolean;
+  published: boolean;
 }) {
-  try {
-    const skyRoomClass = await prisma.skyRoomClass.create({
-      data: {
-        meetingLink: data.meetingLink,
-        published: data.published ?? true,
-      },
-    });
-
-    return skyRoomClass;
-  } catch (error) {
-    console.error("Error creating skyroom class:", error);
-    throw error;
-  }
+  return await createClassMySQL(data);
 }
 
 /**
- * به‌روزرسانی لینک همایش (برای ادمین)
+ * بروزرسانی یک لینک همایش
  */
 export async function updateSkyRoomClass(
   classId: string,
-  data: Partial<Omit<SkyRoomClass, "id" | "createdAt" | "updatedAt">>
+  data: Partial<{ meetingLink: string; published: boolean }>
 ) {
-  try {
-    const skyRoomClass = await prisma.skyRoomClass.update({
-      where: { id: classId },
-      data,
-    });
-
-    return skyRoomClass;
-  } catch (error) {
-    console.error("Error updating skyroom class:", error);
-    throw error;
-  }
+  return await updateClassMySQL(classId, data);
 }
 
 /**
- * حذف لینک همایش (برای ادمین)
+ * حذف یک لینک همایش
  */
 export async function deleteSkyRoomClass(classId: string) {
-  try {
-    await prisma.skyRoomClass.delete({
-      where: { id: classId },
-    });
-  } catch (error) {
-    console.error("Error deleting skyroom class:", error);
-    throw error;
-  }
+  return await deleteClassMySQL(classId);
 }

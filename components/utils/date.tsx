@@ -7,7 +7,7 @@ const Date = ({ date }: DateProps) => {
   const [_year, month, day] = date.split("/");
 
   return (
-    <div className="flex flex-col items-center bg-white px-1 py-1.5">
+    <div className="flex flex-col items-center bg-white dark:bg-cardBg px-1 py-1.5">
       {/* نمایش روز */}
       <div className="text-sm font-medium text-[#1a1a1a]">{day}</div>
 

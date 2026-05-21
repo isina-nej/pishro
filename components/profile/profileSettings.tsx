@@ -11,7 +11,7 @@ const ProfileSettings = () => {
   const [formType, setFormType] = useState<"personal" | "pay">("personal");
 
   return (
-    <div className="bg-white w-full md:max-w-[990px] rounded-md">
+    <div className="bg-white dark:bg-cardBg w-full md:max-w-[990px] rounded-md">
       <ProfileHeader>
         <div className="flex items-center gap-3 md:gap-5">
           <span className="bg-[#f5f5f5] rounded size-[26px] md:size-[30px] flex items-center justify-center">

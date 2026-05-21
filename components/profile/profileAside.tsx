@@ -96,7 +96,7 @@ const ProfileAside = () => {
       {/* لینک‌های ناوبری */}
       <div className="pt-6 md:pt-8 pb-6 md:pb-80 pr-2 flex flex-col items-start gap-3 md:gap-4 border-b border-dashed border-[#495157]">
         {sidebarLinks.map((item, idx) => {
-          const isActive = pathname.includes(item.link);
+          const isActive = pathname?.includes(item.link) || false;
           return (
             <button
               key={idx}
@@ -113,7 +113,7 @@ const ProfileAside = () => {
               >
                 <span
                   className={`transition text-base md:text-lg ${
-                    isActive ? "text-white" : "text-gray-400"
+                    isActive ? "text-white" : "text-gray-400 dark:text-textSecondary"
                   }`}
                 >
                   {isActive ? item.filledIcon : item.outlinedIcon}

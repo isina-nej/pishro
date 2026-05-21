@@ -18,7 +18,7 @@ interface DoctorExplanationVideoProps {
 }
 
 export default function DoctorExplanationVideo({
-  videoUrl = "/uploads/videos/doctor-explanation.mp4", // Default video URL
+  videoUrl = "/videos/doctor-explanation.mp4", // Default video URL
   posterUrl,
 }: DoctorExplanationVideoProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,10 +36,10 @@ export default function DoctorExplanationVideo({
       </DialogTrigger>
       <DialogContent className="max-w-4xl">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-gray-900 rtl">
+          <DialogTitle className="text-xl font-bold text-gray-900 dark:text-textPrimary rtl">
             توضیحات خانم دکتر
           </DialogTitle>
-          <DialogDescription className="text-gray-600 rtl">
+          <DialogDescription className="text-gray-600 dark:text-textSecondary rtl">
             ویدیو توضیحات تکمیلی دوره
           </DialogDescription>
         </DialogHeader>

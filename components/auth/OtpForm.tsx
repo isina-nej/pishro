@@ -120,7 +120,7 @@ export function OtpForm({
           variant="ghost"
           onClick={onBack}
           disabled={isLoading}
-          className="self-start -mt-4 text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+          className="self-start -mt-4 text-gray-600 dark:text-textSecondary hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-cardBg dark:bg-cardBg transition-colors"
         >
           <ArrowRight className="ml-2 h-4 w-4" />
           بازگشت
@@ -134,12 +134,12 @@ export function OtpForm({
         </div>
 
         <div className="text-center space-y-2">
-          <h2 className="text-xl font-bold text-gray-900">تأیید شماره تلفن</h2>
-          <p className="text-sm text-gray-600 leading-relaxed max-w-sm">
-            کد ۴ رقمی ارسال‌شده به شماره{" "}
-            <span className="font-bold text-gray-900 dir-ltr inline-block">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-textPrimary">تأیید شماره تلفن</h2>
+          <p className="text-sm text-gray-600 dark:text-textSecondary leading-relaxed max-w-sm">
+            کد ۴ رقمی ارسال‌شده به شماره{""}
+            <span className="font-bold text-gray-900 dark:text-textPrimary dir-ltr inline-block">
               {phone}
-            </span>{" "}
+            </span>{""}
             را وارد کنید
           </p>
         </div>
@@ -175,7 +175,7 @@ export function OtpForm({
 
         {/* Success Indicator */}
         {isComplete && (
-          <div className="flex items-center gap-2 text-green-600 animate-in fade-in slide-in-from-top-2 duration-300">
+          <div className="flex items-center gap-2 text-green-600 dark:text-green-400 animate-in fade-in slide-in-from-top-2 duration-300">
             <CheckCircle2 className="w-5 h-5" />
             <span className="text-sm font-medium">در حال تأیید...</span>
           </div>
@@ -186,14 +186,14 @@ export function OtpForm({
       <div className="flex flex-col items-center gap-3">
         {countdown > 0 ? (
           <div className="text-center space-y-1">
-            <p className="text-sm text-gray-600">زمان باقی‌مانده برای ارسال مجدد</p>
-            <p className="text-2xl font-bold text-gray-900 tabular-nums dir-ltr">
+            <p className="text-sm text-gray-600 dark:text-textSecondary">زمان باقی‌مانده برای ارسال مجدد</p>
+            <p className="text-2xl font-bold text-gray-900 dark:text-textPrimary tabular-nums dir-ltr">
               {minutes}:{seconds.toString().padStart(2, "0")}
             </p>
           </div>
         ) : (
           <Button
-            className="w-48 h-11 hover:bg-gray-50 border-2 border-gray-300 hover:border-[#3dc37b] transition-colors"
+            className="w-48 h-11 hover:bg-gray-50 dark:hover:bg-darkBgHidden dark:bg-darkBgHidden border-2 border-gray-300 dark:border-borderColor hover:border-[#3dc37b] transition-colors"
             variant="outline"
             onClick={handleResendClick}
             disabled={isLoading}
@@ -231,7 +231,7 @@ export function OtpForm({
       </Button>
 
       {/* Helper Text */}
-      <p className="text-xs text-center text-gray-500 -mt-4">
+      <p className="text-xs text-center text-gray-500 dark:text-textSecondary -mt-4">
         در صورت دریافت نکردن کد، پس از اتمام زمان می‌توانید مجدداً درخواست دهید
       </p>
     </div>

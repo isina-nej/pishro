@@ -4,25 +4,19 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
+import { getAdminAuth } from "@/lib/auth-simple";
 import {
   errorResponse,
-  unauthorizedResponse,
   successResponse,
-  ErrorCodes,
-  forbiddenResponse,
+  ErrorCodes
 } from "@/lib/api-response";
 import { getVideoStats } from "@/lib/services/video-service";
 
-export async function GET(_req: NextRequest) {
+export async function GET(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
-    if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
-    }
-    if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود به ادمین");
+    const adminAuth = await getAdminAuth(req);
+    if (!adminAuth) {
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
 
     const stats = await getVideoStats();

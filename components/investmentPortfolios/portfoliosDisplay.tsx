@@ -63,36 +63,36 @@ const PortfoliosDisplay = () => {
       case "green":
         return "border-green-200 hover:border-green-400";
       case "yellow":
-        return "border-orange-200 hover:border-orange-400";
+        return "border-orange-200 dark:border-orange-800 hover:border-orange-400";
       case "red":
         return "border-red-200 hover:border-red-400";
       default:
-        return "border-gray-200";
+        return "border-gray-200 dark:border-borderColor";
     }
   };
 
   const getTextColor = (color: string) => {
     switch (color) {
       case "green":
-        return "text-green-600";
+        return "text-green-600 dark:text-green-400";
       case "yellow":
-        return "text-orange-600";
+        return "text-orange-600 dark:text-orange-400";
       case "red":
         return "text-red-600";
       default:
-        return "text-gray-600";
+        return "text-gray-600 dark:text-textSecondary";
     }
   };
 
   return (
-    <section className="w-full bg-gray-50 py-16 md:py-24">
+    <section className="w-full bg-gray-50 dark:bg-darkBgHidden py-16 md:py-24">
       <div className="container-xl">
         {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-textPrimary mb-4">
             انتخاب سبد سرمایه‌ گذاری
           </h2>
-          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-600 dark:text-textSecondary max-w-3xl mx-auto">
             بر اساس میزان ریسک‌پذیری خود، یکی از سبدهای زیر را انتخاب کنید
           </p>
         </div>
@@ -104,7 +104,7 @@ const PortfoliosDisplay = () => {
             return (
               <div
                 key={portfolio.id}
-                className={`relative bg-white rounded-2xl border-2 ${getBorderColor(
+                className={`relative bg-white dark:bg-cardBg dark:bg-cardBg dark:bg-cardBg dark:bg-cardBg rounded-2xl border-2 ${getBorderColor(
                   portfolio.color
                 )} p-6 md:p-8 hover:shadow-xl transition-all duration-300 ${
                   portfolio.recommended ? "ring-2 ring-orange-400" : ""
@@ -125,14 +125,14 @@ const PortfoliosDisplay = () => {
                 </div>
 
                 {/* Title & Description */}
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-textPrimary mb-2 tracking-widest">
                   {portfolio.name}
                 </h3>
-                <p className="text-gray-600 mb-6">{portfolio.description}</p>
+                <p className="text-gray-600 dark:text-textSecondary mb-6">{portfolio.description}</p>
 
                 {/* Monthly Return */}
-                <div className="mb-6 p-4 bg-gray-50 rounded-xl">
-                  <p className="text-sm text-gray-500 mb-1">بازدهی ماهیانه</p>
+                <div className="mb-6 p-4 bg-gray-50 dark:bg-darkBgHidden rounded-xl">
+                  <p className="text-sm text-gray-500 dark:text-textSecondary mb-1">بازدهی ماهیانه</p>
                   <p
                     className={`text-3xl font-bold ${getTextColor(
                       portfolio.color
@@ -152,18 +152,18 @@ const PortfoliosDisplay = () => {
                         )}`}
                         size={20}
                       />
-                      <span className="text-gray-700 text-sm">{feature}</span>
+                      <span className="text-gray-700 dark:text-textPrimary text-sm">{feature}</span>
                     </li>
                   ))}
                 </ul>
 
                 {/* Price - اختیاری برای آینده */}
                 {portfolio.price && (
-                  <div className="mt-6 pt-6 border-t border-gray-200">
-                    <p className="text-sm text-gray-500 mb-1">هزینه سبد</p>
-                    <p className="text-2xl font-bold text-gray-900">
-                      {new Intl.NumberFormat("fa-IR").format(portfolio.price)}{" "}
-                      <span className="text-base font-normal text-gray-500">
+                  <div className="mt-6 pt-6 border-t border-gray-200 dark:border-borderColor">
+                    <p className="text-sm text-gray-500 dark:text-textSecondary mb-1">هزینه سبد</p>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-textPrimary">
+                      {new Intl.NumberFormat("fa-IR").format(portfolio.price)}{""}
+                      <span className="text-base font-normal text-gray-500 dark:text-textSecondary">
                         تومان
                       </span>
                     </p>
@@ -180,16 +180,16 @@ const PortfoliosDisplay = () => {
             <div className="flex-shrink-0 w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="w-6 h-6 text-blue-600"
+                className="w-6 h-6 text-blue-600 dark:text-blue-400"
                 fill="none"
-                viewBox="0 0 24 24"
+                viewBox="0 24"
                 stroke="currentColor"
                 strokeWidth={2}
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0118 0z"
                 />
               </svg>
             </div>

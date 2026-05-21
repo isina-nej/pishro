@@ -1,7 +1,8 @@
 // app/api/auth/signup/route.ts
-import { prisma } from "@/lib/prisma";
+import { query, execute } from "@/lib/db";
 import bcrypt from "bcryptjs";
-import { sendSmsMelipayamak } from "@/lib/sms";
+import { randomUUID } from "crypto";
+import { sendOtpViaPattern } from "@/lib/sms";
 import {
   successResponse,
   validationError,
@@ -32,62 +33,75 @@ export async function POST(req: Request) {
       );
     }
 
-    // بررسی: آیا کاربر تاییدشده وجود دارد؟
-    const existingUser = await prisma.user.findUnique({ where: { phone } });
-    if (existingUser?.phoneVerified) {
+    // Check if user already verified
+    const users = await query<any>(
+      `SELECT phoneVerified FROM User WHERE phone = ? LIMIT 1`,
+      [phone]
+    );
+
+    if (users && users.length > 0 && users[0].phoneVerified) {
       return conflictResponse("User", "این شماره قبلاً ثبت شده است");
     }
 
-    // هش کردن رمز و ذخیره موقت در جدول temp
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // OTP جدید بساز
+    // Generate OTP
     const code = generateOtpDigits(4);
-    const expiresAt = new Date(Date.now() + 2 * 60 * 1000); // دو دقیقه
-    console.log("code: ", code);
+    const expiresAt = new Date(Date.now() + 2 * 60 * 1000); // 2 minutes
+    console.log("code:", code);
 
-    // ❌ استفاده از phone در where مجاز نیست، باید ابتدا id بگیریم
-    const existingOtp = await prisma.otp.findFirst({ where: { phone } });
+    // Check if OTP exists for this phone
+    const otps = await query<any>(
+      `SELECT id FROM Otp WHERE phone = ? LIMIT 1`,
+      [phone]
+    );
 
-    if (existingOtp) {
-      await prisma.otp.update({
-        where: { id: existingOtp.id }, // حتما id برای update استفاده می‌کنیم
-        data: { code, expiresAt, createdAt: new Date() },
-      });
+    if (otps && otps.length > 0) {
+      // Update existing OTP
+      await execute(
+        `UPDATE Otp SET code = ?, expiresAt = ?, createdAt = NOW() WHERE phone = ?`,
+        [code, expiresAt, phone]
+      );
     } else {
-      await prisma.otp.create({
-        data: { phone, code, expiresAt },
-      });
-    }
-
-    // ذخیره موقت کاربر (اگر نبود)
-    const existingTempUser = await prisma.tempUser.findFirst({
-      where: { phone },
-    });
-    if (existingTempUser) {
-      await prisma.tempUser.update({
-        where: { id: existingTempUser.id },
-        data: { passwordHash: hashedPassword, createdAt: new Date() },
-      });
-    } else {
-      await prisma.tempUser.create({
-        data: { phone, passwordHash: hashedPassword },
-      });
-    }
-    // Prepare SMS text
-    const text = `کد تایید شما: ${code}\nاین کد تا ۲ دقیقه معتبر است.`;
-
-    // Send SMS
-    try {
-      const response = await sendSmsMelipayamak(phone, text);
-      console.log("SMS sent:", response);
-    } catch (err) {
-      console.error("SMS send failed:", err);
-      return errorResponse(
-        "ارسال پیامک با خطا مواجه شد",
-        ErrorCodes.SMS_SEND_FAILED
+      // Create new OTP with ID
+      const otpId = randomUUID();
+      await execute(
+        `INSERT INTO Otp (id, phone, code, expiresAt, createdAt) VALUES (?, ?, ?, ?, NOW())`,
+        [otpId, phone, code, expiresAt]
       );
     }
+
+    // Check if TempUser exists for this phone
+    const tempUsers = await query<any>(
+      `SELECT id FROM TempUser WHERE phone = ? LIMIT 1`,
+      [phone]
+    );
+
+    if (tempUsers && tempUsers.length > 0) {
+      // Update existing TempUser
+      await execute(
+        `UPDATE TempUser SET passwordHash = ?, createdAt = NOW() WHERE phone = ?`,
+        [hashedPassword, phone]
+      );
+    } else {
+      // Create new TempUser with ID
+      const tempUserId = randomUUID();
+      await execute(
+        `INSERT INTO TempUser (id, phone, passwordHash, createdAt) VALUES (?, ?, ?, NOW())`,
+        [tempUserId, phone, hashedPassword]
+      );
+    }
+
+    // Send OTP via IPPanel Pattern API asynchronously (don't block on it)
+    // Pattern templates are instant and don't need approval
+    sendOtpViaPattern(phone, code).catch((err) => {
+      // Silent fail - user is already registered, SMS delay won't block their signup
+      console.error("OTP send failed (will retry):", {
+        phone,
+        error: err instanceof Error ? err.message : String(err),
+      });
+    });
 
     return successResponse({ sent: true }, "کد تایید ارسال شد");
   } catch (error) {

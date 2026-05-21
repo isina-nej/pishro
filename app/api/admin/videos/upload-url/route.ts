@@ -1,18 +1,17 @@
 // @/app/api/admin/videos/upload-url/route.ts
-import { auth } from "@/auth";
 import { NextRequest } from "next/server";
+import { getAdminAuth } from "@/lib/auth-simple";
 import {
   successResponse,
   errorResponse,
-  unauthorizedResponse,
   validationError,
-  ErrorCodes,
+  ErrorCodes
 } from "@/lib/api-response";
 import {
   generateVideoId,
   generateUniqueFileName,
   generateSignedUploadUrl,
-  getVideoStoragePath,
+  getVideoStoragePath
 } from "@/lib/services/object-storage-service";
 import type { RequestUploadUrlInput } from "@/types/video";
 
@@ -22,9 +21,9 @@ import type { RequestUploadUrlInput } from "@/types/video";
  */
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user || session.user.role !== "ADMIN") {
-      return unauthorizedResponse("دسترسی غیرمجاز - فقط ادمین");
+    const adminAuth = await getAdminAuth(req);
+    if (!adminAuth) {
+      return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
     const body: RequestUploadUrlInput = await req.json();
@@ -36,7 +35,7 @@ export async function POST(req: NextRequest) {
         fileName: !fileName ? "نام فایل الزامی است" : "",
         fileSize: !fileSize ? "حجم فایل الزامی است" : "",
         fileFormat: !fileFormat ? "فرمت فایل الزامی است" : "",
-        title: !title ? "عنوان ویدیو الزامی است" : "",
+        title: !title ? "عنوان ویدیو الزامی است" : ""
       });
     }
 
@@ -44,7 +43,7 @@ export async function POST(req: NextRequest) {
     const allowedFormats = ["mp4", "mov", "avi", "mkv", "webm"];
     if (!allowedFormats.includes(fileFormat.toLowerCase())) {
       return validationError({
-        fileFormat: `فرمت فایل باید یکی از موارد زیر باشد: ${allowedFormats.join(", ")}`,
+        fileFormat: `فرمت فایل باید یکی از موارد زیر باشد: ${allowedFormats.join(",")}`
       });
     }
 
@@ -52,7 +51,7 @@ export async function POST(req: NextRequest) {
     const MAX_FILE_SIZE = 5 * 1024 * 1024 * 1024; // 5GB
     if (fileSize > MAX_FILE_SIZE) {
       return validationError({
-        fileSize: "حجم فایل نباید بیشتر از 5 گیگابایت باشد",
+        fileSize: "حجم فایل نباید بیشتر از 5 گیگابایت باشد"
       });
     }
 
@@ -89,8 +88,8 @@ export async function POST(req: NextRequest) {
           title,
           description,
           fileSize,
-          fileFormat,
-        },
+          fileFormat
+        }
       },
       "URL آپلود با موفقیت ایجاد شد"
     );

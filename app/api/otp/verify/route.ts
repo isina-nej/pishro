@@ -1,10 +1,11 @@
-import { prisma } from "@/lib/prisma";
+import { query, execute } from "@/lib/db";
 import {
   successResponse,
   validationError,
   errorResponse,
   ErrorCodes,
 } from "@/lib/api-response";
+import { randomUUID } from "crypto";
 
 export async function POST(req: Request) {
   try {
@@ -20,50 +21,64 @@ export async function POST(req: Request) {
       );
     }
 
-    const otp = await prisma.otp.findUnique({ where: { phone } });
+    // Get OTP from database
+    const otps = await query<any>(
+      `SELECT * FROM Otp WHERE phone = ? LIMIT 1`,
+      [phone]
+    );
 
-    if (!otp || otp.code !== code) {
+    if (!otps || otps.length === 0 || otps[0].code !== code) {
       return validationError(
         { code: "کد تایید نامعتبر است" },
         "کد تایید اشتباه است"
       );
     }
 
-    if (otp.expiresAt < new Date()) {
+    const otp = otps[0];
+    if (new Date(otp.expiresAt) < new Date()) {
       return errorResponse("کد تایید منقضی شده است", ErrorCodes.OTP_EXPIRED);
     }
 
-    // کاربر موقت را پیدا کن
-    const temp = await prisma.tempUser.findUnique({ where: { phone } });
+    // Get temp user
+    const tempUsers = await query<any>(
+      `SELECT * FROM TempUser WHERE phone = ? LIMIT 1`,
+      [phone]
+    );
 
-    if (!temp) {
+    if (!tempUsers || tempUsers.length === 0) {
       return validationError(
         { phone: "کاربر موقت یافت نشد" },
         "کاربر موقت یافت نشد"
       );
     }
 
-    // بررسی اینکه آیا کاربر واقعی قبلاً ساخته شده یا نه
-    const existingUser = await prisma.user.findUnique({ where: { phone } });
+    const tempUser = tempUsers[0];
 
-    if (!existingUser) {
-      await prisma.user.create({
-        data: {
-          phone,
-          passwordHash: temp.passwordHash,
-          phoneVerified: true,
-        },
-      });
+    // Check if user already exists
+    const existingUsers = await query<any>(
+      `SELECT id FROM User WHERE phone = ? LIMIT 1`,
+      [phone]
+    );
+
+    if (!existingUsers || existingUsers.length === 0) {
+      // Create new user
+      const userId = randomUUID();
+      await execute(
+        `INSERT INTO User (id, phone, passwordHash, phoneVerified, role, createdAt, updatedAt) 
+         VALUES (?, ?, ?, true, 'USER', NOW(), NOW())`,
+        [userId, phone, tempUser.passwordHash]
+      );
     } else {
-      await prisma.user.update({
-        where: { phone },
-        data: { phoneVerified: true },
-      });
+      // Update existing user to mark phone as verified
+      await execute(
+        `UPDATE User SET phoneVerified = true, updatedAt NOW() WHERE phone ?`,
+        [phone]
+      );
     }
 
-    // پاکسازی رکوردهای موقت
-    await prisma.otp.delete({ where: { phone } });
-    await prisma.tempUser.delete({ where: { phone } });
+    // Delete OTP and TempUser records
+    await execute(`DELETE FROM Otp WHERE phone = ?`, [phone]);
+    await execute(`DELETE FROM TempUser WHERE phone = ?`, [phone]);
 
     return successResponse({ verified: true }, "شماره تلفن با موفقیت تایید شد");
   } catch (err) {

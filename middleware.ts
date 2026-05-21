@@ -1,88 +1,119 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-
 /**
- * لیست دامنه‌های مجاز برای CORS
- * شامل محیط توسعه (localhost) و پروداکشن (vercel)
+ * Next.js Middleware for Admin Panel Route Protection
+ * Validates JWT tokens for protected /admin/* routes
+ * Redirects unauthenticated users to login page
  */
-const allowedOrigins = [
-  "http://localhost:3001",
-  "http://localhost:3000",
-  "https://pishro-admin.vercel.app",
-  "https://pishro-0.vercel.app",
-  "https://178.239.147.136:3001",
-  "http://178.239.147.136:3001",
-  "https://admin.pishrosarmaye.com",
-  "http://admin.pishrosarmaye.com",
-  "https://pishrosarmaye.com",
-  "http://pishrosarmaye.com",
-  "https://www.pishrosarmaye.com",
-  "http://www.pishrosarmaye.com",
-  "https://teh-1.s3.poshtiban.com",
-];
 
-/**
- * بررسی می‌کند که آیا origin درخواست در لیست مجاز است یا نه
- */
-function isAllowedOrigin(origin: string | null): boolean {
-  if (!origin) return false;
-  return allowedOrigins.some(
-    (allowed) => origin === allowed || origin.startsWith(allowed)
-  );
+import { NextRequest, NextResponse } from 'next/server';
+
+// Routes that don't require authentication
+const publicRoutes = ['/admin/login'];
+
+function verifyToken(token: string): boolean {
+  try {
+    // Basic token validation - check if it's a non-empty string
+    // Full verification is done in the backend API routes
+    if (!token || typeof token !== 'string') {
+      return false;
+    }
+    
+    // Check if token has valid JWT format (3 parts separated by dots)
+    const parts = token.split('.');
+    if (parts.length !== 3) {
+      return false;
+    }
+
+    return true;
+  } catch {
+    return false;
+  }
 }
 
-/**
- * افزودن هدرهای CORS به response
- */
-function addCorsHeaders(response: NextResponse, origin: string | null) {
-  if (origin && isAllowedOrigin(origin)) {
-    response.headers.set("Access-Control-Allow-Origin", origin);
-    response.headers.set("Access-Control-Allow-Credentials", "true");
-    response.headers.set(
-      "Access-Control-Allow-Methods",
-      "GET, POST, PUT, PATCH, DELETE, OPTIONS"
-    );
-    response.headers.set(
-      "Access-Control-Allow-Headers",
-      "Content-Type, Authorization, X-Requested-With"
-    );
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const method = request.method;
+  
+  console.log(`[Middleware] ${method} ${pathname}`);
+
+  // Don't process non-admin routes
+  if (!pathname.startsWith('/admin') && !pathname.startsWith('/api/admin')) {
+    console.log('[Middleware] Not an admin route, skipping');
+    return NextResponse.next();
   }
-  return response;
+
+  // Allow public routes
+  if (publicRoutes.some(route => pathname === route)) {
+    console.log('[Middleware] Public route, checking login redirect');
+    // If user is already logged in, redirect to dashboard
+    const token = request.cookies.get('admin_access_token')?.value;
+    
+    if (token && verifyToken(token)) {
+      const response = NextResponse.redirect(new URL('/admin/dashboard', request.url));
+      return response;
+    }
+
+    return NextResponse.next();
+  }
+
+  // Check for protected routes - include all /admin/block-news and /api/admin routes
+  const isProtectedRoute = 
+    pathname.startsWith('/admin/dashboard') ||
+    pathname.startsWith('/admin/block-news') ||
+    pathname.startsWith('/api/admin/auth/me') ||
+    pathname.startsWith('/api/admin/auth/refresh') ||
+    (pathname.startsWith('/api/admin') && !pathname.includes('/login') && !pathname.includes('/logout'));
+
+  if (isProtectedRoute) {
+    console.log(`[Middleware] Protected route detected: ${pathname}`);
+    
+    // Get token from cookies or Authorization header
+    let token = request.cookies.get('admin_access_token')?.value;
+    console.log('[Middleware] Cookie token:', token ? 'Present' : 'Missing');
+    
+    if (!token) {
+      const authHeader = request.headers.get('Authorization');
+      console.log('[Middleware] Authorization header:', authHeader ? `Bearer ${authHeader.slice(7, 20)}...` : 'Missing');
+      
+      if (authHeader?.startsWith('Bearer ')) {
+        token = authHeader.slice(7);
+        console.log('[Middleware] Token extracted from header');
+      }
+    }
+
+    // Verify token exists and has valid format
+    const isValidToken = token && verifyToken(token);
+    console.log('[Middleware] Token valid:', isValidToken);
+    
+    if (!isValidToken) {
+      console.warn(`[Middleware] Denying access - no valid token for ${pathname}`);
+      
+      // Redirect to login for page routes
+      if (pathname.startsWith('/admin/') && !pathname.startsWith('/api')) {
+        const loginUrl = new URL('/admin/login', request.url);
+        const response = NextResponse.redirect(loginUrl);
+        // Clear cookies
+        response.cookies.set('admin_access_token', '', { maxAge: 0 });
+        response.cookies.set('admin_refresh_token', '', { maxAge: 0 });
+        return response;
+      }
+
+      // Return 401 for API routes
+      console.log('[Middleware] Returning 401 for API route');
+      return NextResponse.json(
+        { error: 'Unauthorized', code: 'unauthorized' },
+        { status: 401 }
+      );
+    }
+    
+    console.log('[Middleware] Token validated, allowing request');
+  }
+
+  return NextResponse.next();
 }
 
-export function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
-  const origin = req.headers.get("origin");
-
-  // Handle preflight requests (OPTIONS)
-  if (req.method === "OPTIONS") {
-    const response = new NextResponse(null, { status: 204 });
-    return addCorsHeaders(response, origin);
-  }
-
-  // Handle API routes with CORS
-  if (pathname.startsWith("/api/")) {
-    const response = NextResponse.next();
-    return addCorsHeaders(response, origin);
-  }
-
-  // اگر مسیر دقیقا برابر /profile بود، به /profile/acc ریدایرکت کن
-  if (pathname === "/profile") {
-    const url = req.nextUrl.clone();
-    url.pathname = "/profile/acc";
-    const response = NextResponse.redirect(url);
-    return addCorsHeaders(response, origin);
-  }
-
-  // برای بقیه requestها، CORS headers اضافه کن
-  const response = NextResponse.next();
-  return addCorsHeaders(response, origin);
-}
-
-// مشخص کردن matcher برای اعمال middleware
 export const config = {
   matcher: [
-    "/profile/:path*",
-    "/api/:path*", // تمام API routes
+    '/admin/:path*',
+    '/api/admin/:path*',
   ],
 };

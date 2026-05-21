@@ -9,7 +9,7 @@ export function useFooter() {
   const hiddenPaths = ["/business-consulting", "/skyroom-classes"];
 
   // اگر در یکی از مسیرهای بالا هستیم، false برگردان
-  const showFooter = !hiddenPaths.includes(pathname);
+  const showFooter = pathname ? !hiddenPaths.includes(pathname) : true;
 
   return { showFooter };
 }

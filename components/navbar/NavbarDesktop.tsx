@@ -13,54 +13,9 @@ interface NavbarDesktopProps {
   )[];
 }
 
-const COURSE_LABELS = ["کریپتو", "بورس", "متاورس", "NFT", "ایردراپ"] as const;
-
-const isCourseLabel = (
-  label: string
-): label is (typeof COURSE_LABELS)[number] =>
-  COURSE_LABELS.includes(label as (typeof COURSE_LABELS)[number]);
-
 const NavbarDesktop = ({ isDark, navbarData }: NavbarDesktopProps) => {
   const [isIndicatorActive, setIsIndicatorActive] = useState(true);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
-
-  const desktopNavbarData = useMemo(() => {
-    const groupedItems = navbarData.filter((item) => isCourseLabel(item.label));
-
-    if (!groupedItems.length) {
-      return navbarData;
-    }
-
-    const coursesMenu: NavbarDesktopProps["navbarData"][number] = {
-      label: "دوره ها",
-      link: "/courses",
-      data: groupedItems.map((item) => ({
-        label: item.label,
-        link: item.link,
-      })),
-    };
-
-    const preparedNavbar: NavbarDesktopProps["navbarData"] = [];
-    let hasInsertedCourses = false;
-
-    navbarData.forEach((item) => {
-      if (isCourseLabel(item.label)) {
-        if (!hasInsertedCourses) {
-          preparedNavbar.push(coursesMenu);
-          hasInsertedCourses = true;
-        }
-        return;
-      }
-
-      preparedNavbar.push(item);
-    });
-
-    if (!hasInsertedCourses) {
-      preparedNavbar.push(coursesMenu);
-    }
-
-    return preparedNavbar;
-  }, [navbarData]);
 
   return (
     <div
@@ -74,7 +29,7 @@ const NavbarDesktop = ({ isDark, navbarData }: NavbarDesktopProps) => {
       {/* لیست منو */}
       <div className="relative w-full md:w-auto flex-1 flex justify-center md:justify-start">
         <ul className="h-full flex items-center gap-2 relative flex-wrap">
-          {desktopNavbarData.map((item, idx) => (
+          {navbarData.map((item, idx) => (
             <li
               key={idx}
               className="group relative h-full flex items-center pb-1"

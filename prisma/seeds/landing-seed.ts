@@ -7,12 +7,14 @@ const prisma = new PrismaClient();
 export async function seedLandingPages() {
   console.log("🌱 Seeding landing pages...");
 
+  // Clear existing data
+  await prisma.homeLanding.deleteMany({});
+  await prisma.mobileScrollerStep.deleteMany({});
+  await prisma.homeSlide.deleteMany({});
+
   // ==================== HOME LANDING ====================
-  const homeLanding = await prisma.homeLanding.upsert({
-    where: { id: "home-landing-1" },
-    update: {},
-    create: {
-      id: "home-landing-1",
+  const homeLanding = await prisma.homeLanding.create({
+    data: {
       // Main Hero
       mainHeroTitle: "پیشرو در مسیر سرمایه‌ گذاری هوشمند",
       mainHeroSubtitle: "آموزش تخصصی بورس و بازارهای مالی",
@@ -23,7 +25,7 @@ export async function seedLandingPages() {
       heroTitle: "پیشرو سرمایه",
       heroSubtitle: "بزرگترین مؤسسه سرمایه‌ گذاری در ایران",
       heroDescription: "از آموزش اصولی تا مشاوره حرفه‌ای در بازارهای مالی",
-      heroVideoUrl: "/uploads/videos/aboutUs.webm",
+      heroVideoUrl: "/videos/aboutUs.webm",
       heroCta1Text: "مشاهده دوره‌ها",
       heroCta1Link: "/courses",
 
@@ -117,11 +119,8 @@ export async function seedLandingPages() {
   console.log("✅ Home Landing created:", homeLanding.id);
 
   // ==================== MOBILE SCROLLER STEPS ====================
-  const _step1 = await prisma.mobileScrollerStep.upsert({
-    where: { id: "mobile-step-1" },
-    update: {},
-    create: {
-      id: "mobile-step-1",
+  const step1 = await prisma.mobileScrollerStep.create({
+    data: {
       stepNumber: 1,
       title: "قدم اول",
       description:
@@ -134,11 +133,8 @@ export async function seedLandingPages() {
     },
   });
 
-  const _step2 = await prisma.mobileScrollerStep.upsert({
-    where: { id: "mobile-step-2" },
-    update: {},
-    create: {
-      id: "mobile-step-2",
+  const step2 = await prisma.mobileScrollerStep.create({
+    data: {
       stepNumber: 2,
       title: "قدم دوم",
       description:
@@ -151,11 +147,8 @@ export async function seedLandingPages() {
     },
   });
 
-  const _step3 = await prisma.mobileScrollerStep.upsert({
-    where: { id: "mobile-step-3" },
-    update: {},
-    create: {
-      id: "mobile-step-3",
+  const step3 = await prisma.mobileScrollerStep.create({
+    data: {
       stepNumber: 3,
       title: "قدم سوم",
       description:
@@ -171,11 +164,9 @@ export async function seedLandingPages() {
   console.log("✅ Mobile Scroller Steps created");
 
   // ==================== ABOUT PAGE ====================
-  const aboutPage = await prisma.aboutPage.upsert({
-    where: { id: "about-page-1" },
-    update: {},
-    create: {
-      id: "about-page-1",
+  await prisma.aboutPage.deleteMany({});
+  const aboutPage = await prisma.aboutPage.create({
+    data: {
       // Hero
       heroTitle: "آکادمی مالی پیشرو سرمایه",
       heroSubtitle: "پیشرو در آموزش و سرمایه‌ گذاری",
@@ -224,11 +215,9 @@ export async function seedLandingPages() {
   console.log("✅ About Page created:", aboutPage.id);
 
   // ==================== INVESTMENT CONSULTING ====================
-  const businessConsulting = await prisma.businessConsulting.upsert({
-    where: { id: "business-consulting-1" },
-    update: {},
-    create: {
-      id: "business-consulting-1",
+  await prisma.businessConsulting.deleteMany({});
+  const businessConsulting = await prisma.businessConsulting.create({
+    data: {
       title: "مشاوره کسب وکار پیشرو",
       description:
         "در بخش مشاوره کسب‌وکار، همراه شماییم تا در هر حرفه‌ای که دارید، با استفاده از دانش و تجربه‌مان، کسب‌وکارتان را به سطح بالاتری برسانید.",
@@ -261,11 +250,9 @@ export async function seedLandingPages() {
   console.log("✅ Investment Consulting created:", businessConsulting.id);
 
   // ==================== INVESTMENT PLANS ====================
-  const investmentPlans = await prisma.investmentPlans.upsert({
-    where: { id: "investment-plans-1" },
-    update: {},
-    create: {
-      id: "investment-plans-1",
+  await prisma.investmentPlans.deleteMany({});
+  const investmentPlans = await prisma.investmentPlans.create({
+    data: {
       title: "سبد های سرمایه گذاری پیشرو",
       description:
         "هر سبد سرمایه‌ گذاری با تکیه بر تحلیل‌های کمّی و کیفی دقیق طراحی شده و برای هر سطح ریسک و بازده، گزینه‌های متنوعی در اختیار شما قرار می‌گیرد.",
@@ -309,16 +296,10 @@ export async function seedLandingPages() {
   console.log("✅ Investment Plans created:", investmentPlans.id);
 
   console.log("✅ All landing pages seeded successfully!");
-}
-
-// Run if called directly
-if (require.main === module) {
-  seedLandingPages()
-    .catch((e) => {
-      console.error("❌ Error seeding landing pages:", e);
-      process.exit(1);
-    })
-    .finally(async () => {
-      await prisma.$disconnect();
-    });
+  
+  return {
+    created: 5, // homeLanding + mobileScrollerStep + aboutPage + businessConsulting + investmentPlans
+    updated: 0,
+    total: 5,
+  };
 }

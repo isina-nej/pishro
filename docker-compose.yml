@@ -1,6 +1,31 @@
 version: '3.8'
 
 services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: pishro-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: pishro_password
+      MYSQL_DATABASE: pishro
+      MYSQL_USER: pishro_user
+      MYSQL_PASSWORD: pishro_password
+      MYSQL_ROOT_HOST: "%"
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./prisma/migrations:/docker-entrypoint-initdb.d
+    networks:
+      - pishro-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
   # Video Processing Worker
   video-processor:
     image: node:20-alpine
@@ -67,8 +92,14 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+    
+    depends_on:
+      mysql:
+        condition: service_healthy
 
 volumes:
+  mysql_data:
+    driver: local
   video_processor_node_modules:
     driver: local
   video_temp:

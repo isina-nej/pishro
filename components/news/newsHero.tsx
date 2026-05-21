@@ -34,7 +34,7 @@ export const NewsHero = ({ stats }: NewsHeroProps) => {
 
       <div className="container-xl relative z-10 flex flex-col gap-10">
         <div className="max-w-3xl space-y-6">
-          <span className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-4 py-1 text-sm font-medium text-slate-100">
+          <span className="inline-flex items-center rounded-full border border-white/20 bg-white dark:bg-cardBg px-4 py-1 text-sm font-medium text-slate-100">
             اخبار و رویدادهای پیشرو
           </span>
           <h1 className="text-4xl font-extrabold !leading-tight md:text-5xl">
@@ -75,13 +75,13 @@ export const NewsHero = ({ stats }: NewsHeroProps) => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
               viewport={{ once: true }}
-              className="flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 px-5 py-4 backdrop-blur"
+              className="flex items-center gap-3 rounded-2xl border border-white/20 bg-white dark:bg-cardBg px-5 py-4 backdrop-blur"
             >
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-white">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white dark:bg-cardBg text-white">
                 {item.icon}
               </span>
               <div className="flex flex-col">
-                <span className="text-lg font-semibold">{item.value}</span>
+              <span className="text-lg font-semibold">{Number.isFinite(item.value) ? item.value : 0}</span>
                 <span className="text-sm text-slate-200">{item.label}</span>
               </div>
             </motion.div>

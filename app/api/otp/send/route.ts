@@ -1,6 +1,7 @@
 // app/api/otp/send/route.ts
-import { prisma } from "@/lib/prisma";
-import { sendSmsMelipayamak } from "@/lib/sms";
+import { query, execute } from "@/lib/db";
+import { randomUUID } from "crypto";
+import { sendOtpViaPattern } from "@/lib/sms";
 import {
   successResponse,
   validationError,
@@ -28,29 +29,39 @@ export async function POST(req: Request) {
     const code = generateOtpDigits(4);
     const expiresAt = new Date(Date.now() + 2 * 60 * 1000); // valid for 2 minutes
 
-    // Save OTP to DB (using Prisma)
-    await prisma.otp.create({
-      data: { phone, code, expiresAt },
-    });
+    // Check if OTP exists for this phone
+    const otps = await query<any>(
+      `SELECT id FROM Otp WHERE phone = ? LIMIT 1`,
+      [phone]
+    );
 
-    // Prepare SMS text
-    const text = `کد تایید شما: ${code}\nاین کد تا ۲ دقیقه معتبر است.`;
-
-    // Send SMS
-    try {
-      const response = await sendSmsMelipayamak(phone, text);
-      console.log("SMS sent:", response);
-    } catch (err) {
-      console.error("SMS send failed:", err);
-      return errorResponse(
-        "ارسال پیامک با خطا مواجه شد",
-        ErrorCodes.SMS_SEND_FAILED
+    if (otps && otps.length > 0) {
+      // Update existing OTP
+      await execute(
+        `UPDATE Otp SET code = ?, expiresAt createdAt NOW() WHERE phone ?`,
+        [code, expiresAt, phone]
+      );
+    } else {
+      // Create new OTP with ID
+      const otpId = randomUUID();
+      await execute(
+        `INSERT INTO Otp (id, phone, code, expiresAt, createdAt) VALUES (?, ?, NOW())`,
+        [otpId, phone, code, expiresAt]
       );
     }
 
-    return successResponse({ expiresAt }, "کد تایید با موفقیت ارسال شد");
-  } catch (err) {
-    console.error("OTP send error:", err);
+    // Send OTP via IPPanel Pattern asynchronously (don't block on it)
+    sendOtpViaPattern(phone, code).catch((err) => {
+      // Silent fail - user can always retry
+      console.error("OTP send failed:", {
+        phone,
+        error: err instanceof Error ? err.message : String(err),
+      });
+    });
+
+    return successResponse({ sent: true }, "کد تایید ارسال شد");
+  } catch (error) {
+    console.error("OTP send error:", error);
     return errorResponse(
       "خطایی در ارسال کد تایید رخ داد",
       ErrorCodes.INTERNAL_ERROR

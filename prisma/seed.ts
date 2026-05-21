@@ -6,6 +6,7 @@ import {
   CourseStatus,
   UserRoleType,
 } from "@prisma/client";
+import { seedNews } from "./seeds/seed-news.js";
 
 const prisma = new PrismaClient();
 
@@ -300,7 +301,7 @@ async function main(): Promise<void> {
   // 🏷️ Insert Tags
   // ==============================================
   console.log("🏷️  Creating tags...");
-  const createdTags = [];
+  const createdTags: any[] = [];
   for (const tag of tags) {
     const created = await prisma.tag.create({
       data: tag,
@@ -318,7 +319,6 @@ async function main(): Promise<void> {
     const created = await prisma.category.create({
       data: {
         ...category,
-        tagIds: createdTags.slice(0, 3).map((t) => t.id),
       },
     });
     createdCategories[category.slug] = created;
@@ -331,7 +331,7 @@ async function main(): Promise<void> {
   // 📚 Insert Courses
   // ==============================================
   console.log("📚 Creating courses...");
-  const createdCourses = [];
+  const createdCourses: any[] = [];
   for (const course of courses) {
     // Find appropriate category
     let categoryId: string | null = null;
@@ -349,7 +349,6 @@ async function main(): Promise<void> {
       data: {
         ...course,
         categoryId,
-        tagIds: createdTags.slice(0, 5).map((t) => t.id),
       },
     });
     createdCourses.push(created);
@@ -405,7 +404,6 @@ async function main(): Promise<void> {
         audioUrl: book.formats.includes("صوتی")
           ? "https://example.com/audio.mp3"
           : null,
-        tagIds: createdTags.slice(0, 3).map((t) => t.id),
       },
     });
   }
@@ -415,36 +413,9 @@ async function main(): Promise<void> {
   // 📰 Insert News Articles
   // ==============================================
   console.log("📰 Creating news articles...");
-  for (const article of newsArticles) {
-    const created = await prisma.newsArticle.create({
-      data: {
-        ...article,
-        categoryId: createdCategories["cryptocurrency"].id,
-        tagIds: createdTags.slice(0, 3).map((t) => t.id),
-      },
-    });
+  const newsResult = await seedNews();
+  console.log(`✅ Inserted ${newsResult.created} articles`);
 
-    // Add fake comments to each article
-    const fakeComments: Prisma.NewsCommentCreateManyInput[] = [
-      {
-        content: "خیلی مقاله خوبی بود، دیدگاه جدیدی بهم داد.",
-        userId: null,
-        articleId: created.id,
-      },
-      {
-        content: "به نظرم می‌شد تحلیل عمیق‌تری هم ارائه بشه.",
-        userId: null,
-        articleId: created.id,
-      },
-    ];
-
-    for (const c of fakeComments) {
-      await prisma.newsComment.create({
-        data: c,
-      });
-    }
-  }
-  console.log(`✅ Inserted ${newsArticles.length} articles with comments`);
 
   // ==============================================
   // 🏠 Insert Home Landing Data
@@ -459,7 +430,7 @@ async function main(): Promise<void> {
       heroTitle: "پیشرو در مسیر سرمایه‌ گذاری هوشمند",
       heroSubtitle: "آموزش، مشاوره و همراهی در مسیر موفقیت مالی",
       heroDescription: null,
-      heroVideoUrl: "/uploads/videos/aboutUs.webm",
+      heroVideoUrl: "/videos/aboutUs.webm",
       heroCta1Text: null,
       heroCta1Link: null,
       overlayTexts: [
@@ -537,44 +508,9 @@ async function main(): Promise<void> {
       title: "شروع سرمایه‌ گذاری هوشمند",
       description:
         "با مشاوره‌های تخصصی و آموزش‌های کاربردی، اولین قدم مطمئن در بازار سرمایه را بردارید.",
-      imageUrl: "/images/home/mobile-scroll/mobile.webp",
+      imageUrl: "/images/home/mobile-scroll/in-mobile-1.svg",
+      coverImageUrl: "/images/home/mobile-scroll/mobile.webp",
       gradient: "from-blue-400/30 via-indigo-400/20 to-transparent",
-      cards: JSON.parse(
-        JSON.stringify([
-          {
-            id: 1,
-            title: "شروع",
-            desc: "ورود مطمئن",
-            icon: "LineChart",
-            top: "25%",
-            right: "-10%",
-          },
-          {
-            id: 2,
-            title: "آموزش",
-            desc: "مبتدی‌ها",
-            icon: "GraduationCap",
-            top: "26%",
-            left: "-10%",
-          },
-          {
-            id: 3,
-            title: "پشتیبانی",
-            desc: "کاربران",
-            icon: "Headphones",
-            top: "55%",
-            right: "-10%",
-          },
-          {
-            id: 4,
-            title: "پیشنهاد",
-            desc: "سرمایه‌ گذاری",
-            icon: "Lightbulb",
-            top: "55%",
-            left: "-10%",
-          },
-        ])
-      ),
       order: 1,
       published: true,
     },
@@ -583,44 +519,9 @@ async function main(): Promise<void> {
       title: "فرصت‌های نوین",
       description:
         "دسترسی به تحلیل‌های روزانه و فرصت‌های طلایی در بورس و بازارهای نوین.",
-      imageUrl: "/images/home/mobile-scroll/mobile.webp",
+      imageUrl: "/images/home/mobile-scroll/in-mobile-1.svg",
+      coverImageUrl: "/images/home/mobile-scroll/mobile.webp",
       gradient: "from-blue-400/30 via-mySecondary-400/20 to-transparent",
-      cards: JSON.parse(
-        JSON.stringify([
-          {
-            id: 1,
-            title: "تحلیل",
-            desc: "بازارها",
-            icon: "BarChart3",
-            top: "25%",
-            right: "-10%",
-          },
-          {
-            id: 2,
-            title: "فرصت",
-            desc: "سیگنال‌ها",
-            icon: "Lightbulb",
-            top: "25%",
-            left: "-10%",
-          },
-          {
-            id: 3,
-            title: "نمودار",
-            desc: "ابزارها",
-            icon: "Wrench",
-            top: "55%",
-            right: "-10%",
-          },
-          {
-            id: 4,
-            title: "یادآوری",
-            desc: "نوتیف‌ها",
-            icon: "Bell",
-            top: "55%",
-            left: "-10%",
-          },
-        ])
-      ),
       order: 2,
       published: true,
     },
@@ -629,44 +530,9 @@ async function main(): Promise<void> {
       title: "مدیریت سبد سرمایه",
       description:
         "با استراتژی‌های پیشرفته و ابزارهای مدرن، سبد سرمایه خود را حرفه‌ای مدیریت کنید.",
-      imageUrl: "/images/home/mobile-scroll/mobile.webp",
+      imageUrl: "/images/home/mobile-scroll/in-mobile-1.svg",
+      coverImageUrl: "/images/home/mobile-scroll/mobile.webp",
       gradient: "from-amber-400/30 via-orange-400/20 to-transparent",
-      cards: JSON.parse(
-        JSON.stringify([
-          {
-            id: 1,
-            title: "مدیریت",
-            desc: "سبد",
-            icon: "LineChart",
-            top: "25%",
-            right: "-10%",
-          },
-          {
-            id: 2,
-            title: "ابزار",
-            desc: "تحلیل",
-            icon: "Wrench",
-            top: "25%",
-            left: "-10%",
-          },
-          {
-            id: 3,
-            title: "امنیت",
-            desc: "اطلاعات",
-            icon: "Lock",
-            top: "55%",
-            right: "-10%",
-          },
-          {
-            id: 4,
-            title: "رشد",
-            desc: "سرمایه",
-            icon: "TrendingUp",
-            top: "55%",
-            left: "-10%",
-          },
-        ])
-      ),
       order: 3,
       published: true,
     },
@@ -963,7 +829,7 @@ async function main(): Promise<void> {
       title: "تحلیل تکنیکال حرفه‌ای",
       description:
         "یادگیری اصول و تکنیک‌های پیشرفته تحلیل تکنیکال برای معامله‌گری موفق در بازارهای مالی",
-      imageUrl: "/uploads/images/home/landing-slider/p01.webp",
+      imageUrl: "/images/home/landing-slider/p01.webp",
       order: 1,
       published: true,
     },
@@ -971,7 +837,7 @@ async function main(): Promise<void> {
       title: "مدیریت ریسک و سرمایه",
       description:
         "آموزش اصولی مدیریت سرمایه و کنترل ریسک برای حفظ و رشد پایدار پورتفولیو سرمایه‌ گذاری",
-      imageUrl: "/uploads/images/home/landing-slider/p02.webp",
+      imageUrl: "/images/home/landing-slider/p02.webp",
       order: 2,
       published: true,
     },
@@ -979,7 +845,7 @@ async function main(): Promise<void> {
       title: "استراتژی‌های معاملاتی",
       description:
         "آشنایی با استراتژی‌های معاملاتی موفق و کاربردی برای بازارهای ارز دیجیتال و بورس",
-      imageUrl: "/uploads/images/home/landing-slider/p03.webp",
+      imageUrl: "/images/home/landing-slider/p03.webp",
       order: 3,
       published: true,
     },
@@ -987,7 +853,7 @@ async function main(): Promise<void> {
       title: "روانشناسی معامله‌گری",
       description:
         "تسلط بر احساسات و تصمیم‌گیری‌های هوشمندانه در بازارهای پرنوسان مالی",
-      imageUrl: "/uploads/images/home/landing-slider/p04.webp",
+      imageUrl: "/images/home/landing-slider/p04.webp",
       order: 4,
       published: true,
     },
@@ -995,7 +861,7 @@ async function main(): Promise<void> {
       title: "تحلیل بنیادی بازارها",
       description:
         "شناخت عوامل بنیادی تأثیرگذار بر بازارهای مالی و تصمیم‌گیری آگاهانه در سرمایه‌ گذاری",
-      imageUrl: "/uploads/images/home/landing-slider/p05.jpg",
+      imageUrl: "/images/home/landing-slider/p05.jpg",
       order: 5,
       published: true,
     },
@@ -1003,7 +869,7 @@ async function main(): Promise<void> {
       title: "معامله‌گری الگوریتمی",
       description:
         "آموزش اصول معامله‌گری خودکار و استفاده از ابزارهای هوشمند برای بهینه‌سازی معاملات",
-      imageUrl: "/uploads/images/home/landing-slider/p06.jpg",
+      imageUrl: "/images/home/landing-slider/p06.jpg",
       order: 6,
       published: true,
     },
@@ -1011,7 +877,7 @@ async function main(): Promise<void> {
       title: "تحلیل تکنیکال پیشرفته",
       description:
         "یادگیری اندیکاتورها و الگوهای پیشرفته برای شناسایی فرصت‌های معاملاتی سودآور",
-      imageUrl: "/uploads/images/home/landing-slider/p07.jpg",
+      imageUrl: "/images/home/landing-slider/p07.jpg",
       order: 7,
       published: true,
     },
@@ -1019,7 +885,7 @@ async function main(): Promise<void> {
       title: "استراتژی نوسان‌گیری",
       description:
         "تکنیک‌های حرفه‌ای نوسان‌گیری در بازارهای کوتاه‌مدت و میان‌مدت برای کسب سود مستمر",
-      imageUrl: "/uploads/images/home/landing-slider/p08.jpg",
+      imageUrl: "/images/home/landing-slider/p08.jpg",
       order: 8,
       published: true,
     },
@@ -1027,7 +893,7 @@ async function main(): Promise<void> {
       title: "سرمایه‌ گذاری بلندمدت",
       description:
         "اصول و استراتژی‌های سرمایه‌ گذاری بلندمدت برای رشد پایدار و ایجاد ثروت",
-      imageUrl: "/uploads/images/home/landing-slider/p09.jpg",
+      imageUrl: "/images/home/landing-slider/p09.jpg",
       order: 9,
       published: true,
     },
@@ -1035,7 +901,7 @@ async function main(): Promise<void> {
       title: "تحلیل حجم معاملات",
       description:
         "آموزش تحلیل حجم و شناسایی حرکات اصلی بازار برای ورود و خروج به‌موقع",
-      imageUrl: "/uploads/images/home/landing-slider/p10.jpg",
+      imageUrl: "/images/home/landing-slider/p10.jpg",
       order: 10,
       published: true,
     },
@@ -1043,7 +909,7 @@ async function main(): Promise<void> {
       title: "استراتژی پرایس اکشن",
       description:
         "تسلط بر تحلیل حرکت قیمت و معامله‌گری بدون نیاز به اندیکاتورهای پیچیده",
-      imageUrl: "/uploads/images/home/landing-slider/p11.jpg",
+      imageUrl: "/images/home/landing-slider/p11.jpg",
       order: 11,
       published: true,
     },
@@ -1051,7 +917,7 @@ async function main(): Promise<void> {
       title: "مدیریت پورتفولیو",
       description:
         "آموزش تخصیص دارایی و متنوع‌سازی سبد سرمایه‌ گذاری برای کاهش ریسک و افزایش بازدهی",
-      imageUrl: "/uploads/images/home/landing-slider/p12.jpg",
+      imageUrl: "/images/home/landing-slider/p12.jpg",
       order: 12,
       published: true,
     },
@@ -1068,19 +934,19 @@ async function main(): Promise<void> {
   console.log("🎞️ Creating Home Mini Sliders...");
   const miniSliderImages = [
     // Row 1
-    "/uploads/images/home/landing-slider/p01.webp",
-    "/uploads/images/home/landing-slider/p02.webp",
-    "/uploads/images/home/landing-slider/p03.webp",
-    "/uploads/images/home/landing-slider/p04.webp",
-    "/uploads/images/home/landing-slider/p05.jpg",
-    "/uploads/images/home/landing-slider/p06.jpg",
+    "/images/home/landing-slider/p01.webp",
+    "/images/home/landing-slider/p02.webp",
+    "/images/home/landing-slider/p03.webp",
+    "/images/home/landing-slider/p04.webp",
+    "/images/home/landing-slider/p05.jpg",
+    "/images/home/landing-slider/p06.jpg",
     // Row 2
-    "/uploads/images/home/landing-slider/p07.jpg",
-    "/uploads/images/home/landing-slider/p08.jpg",
-    "/uploads/images/home/landing-slider/p09.jpg",
-    "/uploads/images/home/landing-slider/p10.jpg",
-    "/uploads/images/home/landing-slider/p11.jpg",
-    "/uploads/images/home/landing-slider/p12.jpg",
+    "/images/home/landing-slider/p07.jpg",
+    "/images/home/landing-slider/p08.jpg",
+    "/images/home/landing-slider/p09.jpg",
+    "/images/home/landing-slider/p10.jpg",
+    "/images/home/landing-slider/p11.jpg",
+    "/images/home/landing-slider/p12.jpg",
   ];
 
   let miniOrder = 1;

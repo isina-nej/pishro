@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { MdVideoLibrary } from "react-icons/md";
 import VideoPlayer from "./videoPlayer";
-import CommentsSection from "./comments";
 import type { Lesson } from "@/types/lesson";
 
 interface ClassPageContentProps {
@@ -34,17 +33,17 @@ const ClassPageContent: React.FC<ClassPageContentProps> = ({
         <div className="flex-1 w-full min-w-4xl">
           {selectedLesson ? (
             <VideoPlayer
-              videoId={selectedLesson.videoId}
+              videoId={selectedLesson.videoId as string | null}
               label={selectedLesson.title}
               description={selectedLesson.description}
               duration={selectedLesson.duration}
               views={selectedLesson.views}
-              createdAt={selectedLesson.createdAt}
+              createdAt={selectedLesson.createdAt as Date | undefined}
               thumbnail={selectedLesson.thumbnail}
             />
           ) : (
-            <div className="text-center py-12 bg-gray-50 rounded-lg">
-              <p className="text-gray-500">ویدیویی برای نمایش وجود ندارد</p>
+            <div className="text-center py-12 bg-gray-50 dark:bg-darkBgHidden rounded-lg">
+              <p className="text-gray-500 dark:text-textSecondary">ویدیویی برای نمایش وجود ندارد</p>
             </div>
           )}
         </div>
@@ -52,7 +51,7 @@ const ClassPageContent: React.FC<ClassPageContentProps> = ({
         {/* سایدبار لیست ویدیوها */}
         <div className="w-96 p-4 rounded-lg mt-8">
           <h3 className="text-sm font-semibold pb-3 border-b mb-4 flex items-center gap-3">
-            <MdVideoLibrary className="text-gray-600 dark:text-gray-300 text-lg" />
+            <MdVideoLibrary className="text-gray-600 dark:text-textSecondary text-lg" />
             ویدیو سایر جلسات
           </h3>
           <ul className="space-y-4 max-h-[500px] overflow-y-auto">
@@ -60,8 +59,8 @@ const ClassPageContent: React.FC<ClassPageContentProps> = ({
               <li
                 key={lesson.id}
                 className={`cursor-pointer rounded-md transition-all duration-200 ${
-                  lesson.id === selectedLesson?.id && "bg-gray-100"
-                } ${"hover:bg-gray-200 dark:hover:bg-gray-800"}`}
+                  lesson.id === selectedLesson?.id && "bg-gray-100 dark:bg-cardBg"
+                } ${"hover:bg-gray-200 dark:hover:bg-darkBgHidden dark:bg-darkBgHidden dark:hover:bg-cardBg"}`}
                 onClick={() => setSelectedLesson(lesson)}
               >
                 <Link
@@ -91,7 +90,7 @@ const ClassPageContent: React.FC<ClassPageContentProps> = ({
                       </span>
                     )}
                     {lesson.description && (
-                      <p className="text-xs text-gray-700 dark:text-gray-300 line-clamp-2">
+                      <p className="text-xs text-gray-700 dark:text-textPrimary line-clamp-2">
                         {lesson.description}
                       </p>
                     )}
@@ -102,11 +101,6 @@ const ClassPageContent: React.FC<ClassPageContentProps> = ({
           </ul>
         </div>
       </div>
-
-      {/* بخش نظرات - فقط اگر courseId موجود باشد */}
-      {selectedLesson?.courseId && (
-        <CommentsSection courseId={selectedLesson.courseId} />
-      )}
     </div>
   );
 };

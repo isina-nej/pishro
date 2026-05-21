@@ -5,29 +5,7 @@ export const navbarData = [
   },
   {
     label: "دوره ها",
-    link: "#courses", // Courses listing
-    data: [
-      {
-        label: "کریپتو",
-        link: "/courses/cryptocurrency",
-      },
-      {
-        label: "بورس",
-        link: "/courses/stock-market",
-      },
-      {
-        label: "متاورس",
-        link: "/courses/metaverse",
-      },
-      {
-        label: "NFT",
-        link: "/courses/nft",
-      },
-      {
-        label: "ایردراپ",
-        link: "/courses/airdrop",
-      },
-    ],
+    link: "/courses", // Courses listing page
   },
   {
     label: "مشاوره کسب و کار",
@@ -61,27 +39,27 @@ export const navbarData = [
 
 export const categoriesData = [
   {
-    src: "/uploads/images/home/landing-slider/p02.webp",
+    src: "/images/home/crypto.jpg",
     label: "کریپتو",
     link: "/cryptocurrency",
   },
   {
-    src: "/uploads/images/home/landing-slider/p01.webp",
+    src: "/images/home/stock.png",
     label: "بورس",
     link: "/stock-market",
   },
   {
-    src: "/uploads/images/home/landing-slider/p03.webp",
+    src: "/images/home/metaverse.png",
     label: "متاورس",
     link: "/metaverse",
   },
   {
-    src: "/uploads/images/home/landing-slider/p11.jpg",
+    src: "/images/home/nft.png",
     label: "NFT",
     link: "/nft",
   },
   {
-    src: "/uploads/images/home/landing-slider/p05.jpg",
+    src: "/images/home/airdrop.png",
     label: "ایردراپ",
     link: "/airdrop",
   },
@@ -445,8 +423,8 @@ export const videoList = [
     date: "1403/12/26",
     description:
       "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ است",
-    videoUrl: "/uploads/videos/nft.webm",
-    thumbnail: "/uploads/images/home/landing-slider/p02.webp",
+    videoUrl: "/videos/nft.webm",
+    thumbnail: "/images/home/c/crypto.jpg",
   },
   {
     id: "2",
@@ -454,8 +432,8 @@ export const videoList = [
     date: "1403/12/26",
     description:
       "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ است",
-    videoUrl: "/uploads/videos/metaverse.webm",
-    thumbnail: "/uploads/images/home/landing-slider/p02.webp",
+    videoUrl: "/videos/metaverse.webm",
+    thumbnail: "/images/home/c/crypto.jpg",
   },
   {
     id: "3",
@@ -463,8 +441,8 @@ export const videoList = [
     date: "1403/12/26",
     description:
       "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ است",
-    videoUrl: "/uploads/videos/stock.webm",
-    thumbnail: "/uploads/images/home/landing-slider/p02.webp",
+    videoUrl: "/videos/stock.webm",
+    thumbnail: "/images/home/c/crypto.jpg",
   },
 ];
 
@@ -623,7 +601,7 @@ export const investmentPlansData = {
 export const businessConsultingData = {
   title: "مشاوره کسب وکار پیشرو",
   text: `در بخش مشاوره کسب‌وکار، همراه شماییم تا در هر حرفه‌ای که دارید، مسیر رشد و توسعه را هموار کنیم. چه در فکر راه‌اندازی یک کسب‌وکار جدید باشید و چه بخواهید بیزنس فعلی‌تان را به مرحله‌ای بالاتر ببرید، کنار شما هستیم. با بررسی دقیق شرایط شخصی و بازار، راهکارهایی عملی برای سرمایه‌ گذاری درست منابع مالی در دسترس و حتی بودجه‌های جانبی ارائه می‌دهیم. مشاوره‌های ما بر پایه تجربه، تحلیل داده‌محور و شناخت واقعی از فضای کسب‌وکار امروز شکل گرفته‌اند. آینده‌ شغلی‌تان را هوشمندانه طراحی کنید..`,
-  image: "/images/business-consulting/landing.jpg",
+  image: "/images/investment-consulting/landing.jpg",
 };
 
 export const aboutItCardsData = [
@@ -888,33 +866,33 @@ export const advancedSteps = {
 };
 
 export const miniSliderData1 = [
-  "/uploads/images/home/landing-slider/p01.jpg",
-  "/uploads/images/home/landing-slider/p02.jpg",
-  "/uploads/images/home/landing-slider/p03.jpg",
-  "/uploads/images/home/landing-slider/p04.jpg",
-  "/uploads/images/home/landing-slider/p05.jpg",
-  "/uploads/images/home/landing-slider/p06.jpg",
-  "/uploads/images/home/landing-slider/p07.jpg",
-  "/uploads/images/home/landing-slider/p08.jpg",
-  "/uploads/images/home/landing-slider/p09.jpg",
-  "/uploads/images/home/landing-slider/p10.jpg",
-  "/uploads/images/home/landing-slider/p11.jpg",
-  "/uploads/images/home/landing-slider/p12.jpg",
+  "/images/home/landing-slider/p01.jpg",
+  "/images/home/landing-slider/p02.jpg",
+  "/images/home/landing-slider/p03.jpg",
+  "/images/home/landing-slider/p04.jpg",
+  "/images/home/landing-slider/p05.jpg",
+  "/images/home/landing-slider/p06.jpg",
+  "/images/home/landing-slider/p07.jpg",
+  "/images/home/landing-slider/p08.jpg",
+  "/images/home/landing-slider/p09.jpg",
+  "/images/home/landing-slider/p10.jpg",
+  "/images/home/landing-slider/p11.jpg",
+  "/images/home/landing-slider/p12.jpg",
 ];
 
 export const miniSliderData2 = [
-  "/uploads/images/home/landing-slider/p06.jpg",
-  "/uploads/images/home/landing-slider/p05.jpg",
-  "/uploads/images/home/landing-slider/p07.jpg",
-  "/uploads/images/home/landing-slider/p03.jpg",
-  "/uploads/images/home/landing-slider/p04.jpg",
-  "/uploads/images/home/landing-slider/p08.jpg",
-  "/uploads/images/home/landing-slider/p02.jpg",
-  "/uploads/images/home/landing-slider/p10.jpg",
-  "/uploads/images/home/landing-slider/p01.jpg",
-  "/uploads/images/home/landing-slider/p12.jpg",
-  "/uploads/images/home/landing-slider/p09.jpg",
-  "/uploads/images/home/landing-slider/p11.jpg",
+  "/images/home/landing-slider/p06.jpg",
+  "/images/home/landing-slider/p05.jpg",
+  "/images/home/landing-slider/p07.jpg",
+  "/images/home/landing-slider/p03.jpg",
+  "/images/home/landing-slider/p04.jpg",
+  "/images/home/landing-slider/p08.jpg",
+  "/images/home/landing-slider/p02.jpg",
+  "/images/home/landing-slider/p10.jpg",
+  "/images/home/landing-slider/p01.jpg",
+  "/images/home/landing-slider/p12.jpg",
+  "/images/home/landing-slider/p09.jpg",
+  "/images/home/landing-slider/p11.jpg",
 ];
 
 import { LuTarget, LuBookOpen, LuUsers } from "react-icons/lu";

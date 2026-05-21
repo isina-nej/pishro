@@ -5,33 +5,48 @@ import MobileLandingServer from "./mobileLanding.server";
 import MobileScrollSectionServer from "./mobileScrollSection.server";
 import CalculatorSection from "./calculatorSection";
 import CoursesSec from "@/components/utils/CoursesSec.server";
-import HomeComments from "./homeComments";
 import NewsClub from "./newsClub";
-import WhyUs from "./whyUs";
+import TestimonialsSection from "@/components/testimonials/TestimonialsSection.server";
+
 import FloatingNotificationManager from "@/components/utils/floatingNotificationManager";
 
-export default function HomePageContent() {
+export default async function HomePageContent() {
   return (
-    <div className="w-full">
+    <div className="w-full bg-white dark:bg-cardBg transition-colors">
       {/* Desktop Landing - hidden on mobile */}
-      <LandingOverlayServer />
-
-      {/* WhyUs - desktop */}
-      <WhyUs />
-
-      {/* Mobile Landing - hidden on desktop */}
-      <div className="lg:hidden">
-        <MobileLandingServer />
-
-        {/* WhyUs - mobile */}
-        <WhyUs />
+      <div className="shadow-backdrop">
+        <LandingOverlayServer />
       </div>
 
-      <MobileScrollSectionServer />
-      <CalculatorSection />
-      <CoursesSec />
-      <HomeComments />
-      <NewsClub />
+      {/* Mobile Landing - hidden on desktop */}
+      <div className="lg:hidden shadow-backdrop">
+        <MobileLandingServer />
+      </div>
+
+      <div className="shadow-card">
+        <MobileScrollSectionServer />
+      </div>
+      
+      <div className="shadow-card">
+        <CalculatorSection />
+      </div>
+      
+      <div className="shadow-card">
+        <CoursesSec />
+      </div>
+      
+      {/* Premium Testimonials with Infinite Scroll - Using Database Comments */}
+      <TestimonialsSection 
+        title="نظرات و تجربیات کاربران"
+        subtitle="بهترین‌های بازار چرا ما را انتخاب می‌کنند"
+        speed={50}
+        limit={15}
+      />
+      
+      <div className="shadow-card">
+        <NewsClub />
+      </div>
+      
       <FloatingNotificationManager />
     </div>
   );

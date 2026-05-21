@@ -151,21 +151,10 @@ export function ForgotPasswordForm({
   if (step === "reset") {
     return (
       <div className="mt-8 flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-        {/* Back Button */}
-        <Button
-          variant="ghost"
-          onClick={() => setStep("otp")}
-          disabled={isLoading}
-          className="self-start -mt-4 text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
-        >
-          <ArrowRight className="ml-2 h-4 w-4" />
-          بازگشت
-        </Button>
-
         {/* Header */}
         <div className="text-center space-y-2 mb-4">
-          <h2 className="text-xl font-bold text-gray-900">تنظیم رمز عبور جدید</h2>
-          <p className="text-sm text-gray-600">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-textPrimary">تنظیم رمز عبور جدید</h2>
+          <p className="text-sm text-gray-600 dark:text-textSecondary">
             لطفاً رمز عبور جدید خود را وارد کنید
           </p>
         </div>
@@ -226,23 +215,21 @@ export function ForgotPasswordForm({
   // Phone step (default)
   return (
     <div className="mt-8 flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      {/* Back Button */}
-      {onBack && (
-        <Button
-          variant="ghost"
-          onClick={onBack}
-          disabled={isLoading}
-          className="self-start -mt-4 text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
-        >
-          <ArrowRight className="ml-2 h-4 w-4" />
-          بازگشت
-        </Button>
-      )}
+      {/* Back Button - Navigate to login */}
+      <Button
+        variant="ghost"
+        onClick={onBack}
+        disabled={isLoading}
+        className="self-start -mt-4 text-gray-600 dark:text-textSecondary hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-cardBg dark:bg-cardBg transition-colors"
+      >
+        <ArrowRight className="ml-2 h-4 w-4" />
+        بازگشت
+      </Button>
 
       {/* Header */}
       <div className="text-center space-y-2 mb-4">
-        <h2 className="text-xl font-bold text-gray-900">فراموشی رمز عبور</h2>
-        <p className="text-sm text-gray-600">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-textPrimary">فراموشی رمز عبور</h2>
+        <p className="text-sm text-gray-600 dark:text-textSecondary">
           شماره موبایل خود را وارد کنید تا کد بازیابی برای شما ارسال شود
         </p>
       </div>

@@ -7,8 +7,8 @@ import {
   TrendingUp,
   Shield,
   BarChart3,
-  ArrowDown,
   Sparkles,
+  ArrowDown,
 } from "lucide-react";
 import { InvestmentPlans, InvestmentPlan, InvestmentTag } from "@prisma/client";
 import { Button } from "@/components/ui/button";
@@ -63,7 +63,6 @@ export const InvestmentPlansHero = ({
       y: 0,
       transition: {
         duration: 0.6,
-        ease: [0.22, 1, 0.36, 1],
       },
     },
   };
@@ -86,7 +85,7 @@ export const InvestmentPlansHero = ({
             className="h-full w-full object-cover"
           >
             <source
-              src="/uploads/videos/investment-plans/hero.webm"
+              src="/videos/investment-plans/hero.webm"
               type="video/webm"
             />
           </video>
@@ -178,10 +177,9 @@ export const InvestmentPlansHero = ({
               <Button
                 onClick={scrollToModels}
                 size="lg"
-                className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-xl shadow-emerald-500/25 hover:shadow-2xl hover:shadow-emerald-500/40 transition-all duration-300 px-8 py-6 text-lg font-semibold rounded-2xl group"
+                className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-xl shadow-emerald-500/25 hover:shadow-2xl hover:shadow-emerald-500/40 transition-all duration-300 px-8 py-6 text-lg font-semibold rounded-2xl"
               >
-                شروع سرمایه‌ گذاری
-                <ArrowDown className="mr-2 h-5 w-5 group-hover:translate-y-1 transition-transform" />
+                شروع سرمایه‌گذاری
               </Button>
             </motion.div>
           </div>
@@ -237,12 +235,12 @@ export const InvestmentPlansHero = ({
                       }
                     : undefined
                 }
-                className={`group relative overflow-hidden rounded-3xl border border-white/20 bg-white/10 p-6 ${
+                className={`group relative overflow-hidden rounded-3xl border border-white/20 bg-white dark:bg-cardBg dark:bg-cardBg dark:bg-cardBg dark:bg-cardBg/10 p-6 ${
                   isMobile ? "backdrop-blur-sm" : "backdrop-blur-xl"
-                } hover:bg-white/20 transition-all duration-300 shadow-xl`}
+                } hover:bg-white dark:bg-cardBg dark:bg-cardBg dark:bg-cardBg dark:bg-cardBg/20 transition-all duration-300 shadow-xl`}
               >
                 <div className="relative flex flex-col items-center text-center gap-4">
-                  <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 text-white shadow-lg backdrop-blur-sm">
+                  <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white dark:bg-cardBg text-white shadow-lg backdrop-blur-sm">
                     {item.icon}
                   </span>
 
@@ -296,7 +294,7 @@ export const InvestmentPlansHero = ({
                   repeat: Infinity,
                   ease: "easeInOut",
                 }}
-                className="h-2 w-2 rounded-full bg-white"
+                className="h-2 w-2 rounded-full bg-white dark:bg-cardBg"
               />
             </motion.div>
           </motion.div>

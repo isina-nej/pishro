@@ -5,29 +5,26 @@
  */
 
 import { NextRequest } from "next/server";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { Prisma } from "@prisma/client";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   errorResponse,
-  unauthorizedResponse,
   paginatedResponse,
   createdResponse,
   ErrorCodes,
-  forbiddenResponse,
-  validationError,
+  validationError
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
 
 export async function GET(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
-    if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+    const adminAuth = await getAdminAuth(req);
+if (!adminAuth) {
+      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+    if (!adminAuth) {
+      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -47,9 +44,9 @@ export async function GET(req: NextRequest) {
 
     if (search) {
       where.OR = [
-        { title: { contains: search, mode: "insensitive" } },
-        { slug: { contains: search, mode: "insensitive" } },
-        { description: { contains: search, mode: "insensitive" } },
+        { title: { contains: search } },
+        { slug: { contains: search } },
+        { description: { contains: search } },
       ];
     }
 
@@ -73,13 +70,7 @@ export async function GET(req: NextRequest) {
         take: limit,
         orderBy: { order: "asc" },
         include: {
-          tags: {
-            select: {
-              id: true,
-              slug: true,
-              title: true,
-            },
-          },
+          tags: { include: { tag: true } },
           _count: {
             select: {
               courses: true,
@@ -87,10 +78,10 @@ export async function GET(req: NextRequest) {
               news: true,
               faqs: true,
               comments: true,
-              quizzes: true,
-            },
-          },
-        },
+              quizzes: true
+            }
+          }
+        }
       }),
       prisma.category.count({ where }),
     ]);
@@ -107,13 +98,12 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
-    if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+    const adminAuth = await getAdminAuth(req);
+if (!adminAuth) {
+      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+    if (!adminAuth) {
+      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
     }
 
     const body = await req.json();
@@ -148,20 +138,19 @@ export async function POST(req: NextRequest) {
       published = true,
       featured = false,
       order = 0,
-      tagIds = [],
-    } = body;
+          } = body;
 
     // Validation
     if (!slug || !title) {
       return validationError({
         slug: !slug ? "Slug is required" : "",
-        title: !title ? "Title is required" : "",
+        title: !title ? "Title is required" : ""
       });
     }
 
     // Check if slug already exists
     const existingCategory = await prisma.category.findUnique({
-      where: { slug },
+      where: { slug }
     });
 
     if (existingCategory) {
@@ -208,18 +197,11 @@ export async function POST(req: NextRequest) {
         enableUserLevelSection,
         published,
         featured,
-        order,
-        tagIds,
+        order
       },
       include: {
-        tags: {
-          select: {
-            id: true,
-            slug: true,
-            title: true,
-          },
-        },
-      },
+        tags: { include: { tag: true } }
+      }
     });
 
     return createdResponse(category, "Category created successfully");

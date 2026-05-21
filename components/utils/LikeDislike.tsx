@@ -39,7 +39,7 @@ const LikeDislike = ({ likes: initialLikes = 0 }: LikeDislikeProps) => {
         whileTap={{ scale: 0.9 }}
         onClick={handleLike}
         className={`flex items-center gap-1 transition-colors duration-200 ${
-          liked ? "text-green-600" : "text-gray-500 hover:text-green-600"
+          liked ? "text-green-600 dark:text-green-400" : "text-gray-500 dark:text-textSecondary hover:text-green-600 dark:text-green-400"
         }`}
       >
         <AiFillLike size={20} />
@@ -53,7 +53,7 @@ const LikeDislike = ({ likes: initialLikes = 0 }: LikeDislikeProps) => {
         whileTap={{ scale: 0.9 }}
         onClick={handleDislike}
         className={`flex items-center gap-1 transition-colors duration-200 ${
-          disliked ? "text-red-500" : "text-gray-500 hover:text-red-500"
+          disliked ? "text-red-500" : "text-gray-500 dark:text-textSecondary hover:text-red-500"
         }`}
       >
         <AiFillDislike size={20} />

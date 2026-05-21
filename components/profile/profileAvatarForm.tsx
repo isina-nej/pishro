@@ -83,10 +83,10 @@ const ProfileAvatarForm = forwardRef((props, ref) => {
         </p>
       </div>
       <div className="p-5 w-full">
-        <div className="p-5 bg-white rounded flex flex-col md:flex-row gap-6 items-start">
+        <div className="p-5 bg-white dark:bg-cardBg rounded flex flex-col md:flex-row gap-6 items-start">
           {/* نمایش تصویر فعلی یا پیش‌نمایش */}
           <div className="relative">
-            <div className="size-[120px] rounded-full bg-[#edf4f8] relative overflow-hidden border-2 border-gray-200">
+            <div className="size-[120px] rounded-full bg-[#edf4f8] relative overflow-hidden border-2 border-gray-200 dark:border-borderColor">
               {previewUrl ? (
                 <Image
                   alt="پیش‌نمایش"
@@ -102,7 +102,7 @@ const ProfileAvatarForm = forwardRef((props, ref) => {
                   className="object-cover"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-400">
+                <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-textSecondary">
                   <Upload className="w-8 h-8" />
                 </div>
               )}
@@ -145,12 +145,12 @@ const ProfileAvatarForm = forwardRef((props, ref) => {
             </div>
 
             {selectedFile && (
-              <p className="text-xs text-gray-600">
+              <p className="text-xs text-gray-600 dark:text-textSecondary">
                 فایل انتخاب شده: {selectedFile.name} ({(selectedFile.size / 1024).toFixed(0)} KB)
               </p>
             )}
 
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 dark:text-textSecondary">
               فرمت‌های مجاز: JPG، PNG، WebP | حداکثر حجم: 2 مگابایت
             </p>
           </div>

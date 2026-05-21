@@ -32,7 +32,7 @@ export const categoriesData = [
 
 const Categories = () => {
   return (
-    <div className="mt-20 container-md ">
+    <div className="mt-20 container-md">
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
         {categoriesData.map((item, idx) => (
           // Using Link as a wrapper with group to manage hover effects

@@ -41,7 +41,7 @@ async function main() {
       heroTitle: "پیشرو در مسیر سرمایه‌ گذاری هوشمند",
       heroSubtitle: "آموزش، مشاوره و همراهی در مسیر موفقیت مالی",
       heroDescription: null,
-      heroVideoUrl: "/uploads/videos/aboutUs.webm",
+      heroVideoUrl: "/videos/aboutUs.webm",
       heroCta1Text: null,
       heroCta1Link: null,
       overlayTexts: [

@@ -9,7 +9,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: data?.metaTitle || "مشاوره کسب و کار | پیشرو",
     description:
       data?.metaDescription ||
-      "دریافت مشاوره تخصصی کسب و کار و راه‌اندازی استارتاپ از کارشناسان مجرب پیشرو",
+      "دریافت مشاوره تخصصی کسب و کار راه‌اندازی استارتاپ از کارشناسان مجرب پیشرو",
     keywords: data?.metaKeywords || [],
   };
 }
@@ -22,10 +22,10 @@ const BusinessConsultingPage = async () => {
   if (!businessConsultingData) {
     return (
       <div className="container-md py-20 text-center">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-textPrimary mb-4">
           صفحه مشاوره کسب و کار
         </h1>
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-textSecondary">
           اطلاعات صفحه مشاوره کسب و کار در حال حاضر در دسترس نیست. لطفاً بعداً
           مراجعه کنید.
         </p>

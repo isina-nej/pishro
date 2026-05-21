@@ -61,7 +61,7 @@ export async function getQuizById(
     if (!quiz) return null;
 
     // Map questions to response format
-    const questions: QuizQuestionResponse[] = quiz.questions.map((q) => ({
+    const questions: QuizQuestionResponse[] = quiz.questions.map((q: any) => ({
       id: q.id,
       question: q.question,
       questionType: q.questionType,
@@ -219,7 +219,7 @@ export async function submitQuiz(
       correctAnswer: string | string[];
     }[] = [];
 
-    quiz.questions.forEach((question) => {
+    quiz.questions.forEach((question: any) => {
       maxPoints += question.points;
       const userAnswer = submission.answers.find(
         (a) => a.questionId === question.id

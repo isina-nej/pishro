@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getCourses } from "@/lib/services/course-service";
-import type { Course } from "@prisma/client";
+import type { Course } from "@/lib/types/db";
 
 // ===========================
 // Query Keys
@@ -22,7 +22,7 @@ export const courseKeys = {
 export function useCourses() {
   return useQuery<Course[]>({
     queryKey: courseKeys.list(),
-    queryFn: getCourses,
+    queryFn: () => getCourses(),
     staleTime: 10 * 60 * 1000, // 10 دقیقه fresh - دوره‌ها کمتر تغییر می‌کنند
     gcTime: 30 * 60 * 1000, // 30 دقیقه در cache
     retry: 2, // دوبار retry در صورت خطا

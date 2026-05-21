@@ -1,14 +1,17 @@
 import { NextRequest } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
-import { auth } from "@/auth";
+import { getAdminAuth } from "@/lib/auth-simple";
+import { writeFile } from "fs/promises";
 import {
   successResponse,
-  unauthorizedResponse,
   validationError,
   errorResponse,
-  ErrorCodes,
+  ErrorCodes
 } from "@/lib/api-response";
+import {
+  VIDEOS_UPLOAD_PATHS,
+  ensureUploadDirExists,
+  generateFileUrl
+} from "@/lib/upload-config";
 
 // تنظیمات مجاز برای آپلود ویدیو
 const MAX_FILE_SIZE = 256 * 1024 * 1024; // 256MB
@@ -23,15 +26,15 @@ const ALLOWED_EXTENSIONS = ["mp4", "mov", "avi", "mkv", "webm"];
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
 
-    // بررسی احراز هویت و نقش ادمین
-    if (!session?.user) {
-      return unauthorizedResponse("لطفاً وارد حساب کاربری خود شوید");
+    const adminAuth = await getAdminAuth(req);
+// بررسی احراز هویت و نقش ادمین
+    if (!adminAuth) {
+      return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
     }
 
-    if (session.user.role !== "ADMIN") {
-      return unauthorizedResponse("دسترسی غیرمجاز - فقط ادمین");
+    if (!adminAuth) {
+      return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
     const formData = await req.formData();
@@ -80,28 +83,29 @@ export async function POST(req: NextRequest) {
     const filename = `video_${timestamp}_${randomString}.${extension}`;
 
     // مسیر ذخیره فایل
-    const uploadDir = join(process.cwd(), "public", "uploads", "videos");
-    const filepath = join(uploadDir, filename);
+    const uploadDir = VIDEOS_UPLOAD_PATHS.videos.dir;
+    const filepath = `${uploadDir}\\${filename}`;
 
     // ایجاد دایرکتوری اگر وجود ندارد
     try {
-      await mkdir(uploadDir, { recursive: true });
+      await ensureUploadDirExists(uploadDir);
     } catch (err) {
       console.error("Error creating directory:", err);
+      throw err;
     }
 
     // ذخیره فایل
     await writeFile(filepath, buffer);
 
     // URL نسبی فایل
-    const videoUrl = `/uploads/videos/${filename}`;
+    const videoUrl = generateFileUrl("video", filename);
 
     return successResponse(
       {
         videoUrl,
         filename,
         fileSize: file.size,
-        fileType: file.type,
+        fileType: file.type
       },
       "ویدیو با موفقیت آپلود شد"
     );

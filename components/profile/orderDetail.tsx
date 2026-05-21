@@ -29,7 +29,7 @@ const OrderDetail = ({ order }: OrderDetailProps) => {
   // handle not found
   if (!order) {
     return (
-      <div className="bg-white rounded-md">
+      <div className="bg-white dark:bg-cardBg rounded-md">
         <ProfileHeader>
           <h4 className="font-medium text-sm text-[#d52a16]">
             جزئیات سفارش پیدا نشد!
@@ -82,7 +82,7 @@ const OrderDetail = ({ order }: OrderDetailProps) => {
   const statusInfo = getStatusInfo(order.status);
 
   return (
-    <div className="bg-white rounded-md">
+    <div className="bg-white dark:bg-cardBg rounded-md">
       <ProfileHeader>
         <h4 className="font-medium text-sm text-[#131b22]">جزئیات سفارش</h4>
         <Link
@@ -106,22 +106,22 @@ const OrderDetail = ({ order }: OrderDetailProps) => {
       {/* Order Details */}
       <div className="flex flex-wrap gap-4 text-[#1a1a1a] text-xs max-w-[580px] p-5 leading-9">
         <p>
-          <strong className="font-medium text-[#879ca6]">شناسه سفارش:</strong>{" "}
+          <strong className="font-medium text-[#879ca6]">شناسه سفارش:</strong>{""}
           {order.id}
         </p>
         <p>
           <strong className="font-medium text-[#879ca6]">
             تاریخ ثبت سفارش:
-          </strong>{" "}
+          </strong>{""}
           {formattedDate}
         </p>
         <p>
-          <strong className="font-medium text-[#879ca6]">مبلغ سفارش:</strong>{" "}
+          <strong className="font-medium text-[#879ca6]">مبلغ سفارش:</strong>{""}
           {order.total.toLocaleString("fa-IR")} تومان
         </p>
         {order.user?.phone && (
           <p>
-            <strong className="font-medium text-[#879ca6]">شماره تماس:</strong>{" "}
+            <strong className="font-medium text-[#879ca6]">شماره تماس:</strong>{""}
             {order.user.phone}
           </p>
         )}
@@ -129,7 +129,7 @@ const OrderDetail = ({ order }: OrderDetailProps) => {
           <p>
             <strong className="font-medium text-[#879ca6]">
               شناسه پرداخت:
-            </strong>{" "}
+            </strong>{""}
             {order.paymentRef}
           </p>
         )}
@@ -145,7 +145,7 @@ const OrderDetail = ({ order }: OrderDetailProps) => {
             {order.items.map((item, index) => (
               <div
                 key={item.courseId}
-                className="flex justify-between items-center p-3 bg-gray-50 rounded-md text-xs"
+                className="flex justify-between items-center p-3 bg-gray-50 dark:bg-darkBgHidden rounded-md text-xs"
               >
                 <div>
                   <p className="font-medium text-[#131b22]">
@@ -155,14 +155,14 @@ const OrderDetail = ({ order }: OrderDetailProps) => {
                 <div className="text-left">
                   {item.discountPercent && item.discountPercent > 0 ? (
                     <div>
-                      <p className="text-gray-400 line-through">
+                      <p className="text-gray-400 dark:text-textSecondary line-through">
                         {item.price?.toLocaleString("fa-IR")} تومان
                       </p>
-                      <p className="text-green-600 font-medium">
+                      <p className="text-green-600 dark:text-green-400 font-medium">
                         {(
                           (item.price || 0) *
                           (1 - item.discountPercent / 100)
-                        ).toLocaleString("fa-IR")}{" "}
+                        ).toLocaleString("fa-IR")}{""}
                         تومان
                       </p>
                     </div>

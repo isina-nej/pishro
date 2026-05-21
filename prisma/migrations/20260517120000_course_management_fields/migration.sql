@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE `Course` ADD COLUMN `likes` INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE `Course` ADD COLUMN `dislikes` INTEGER NOT NULL DEFAULT 0;
+
+-- AlterTable
+ALTER TABLE `Lesson` ADD COLUMN `durationSeconds` INTEGER NULL;

@@ -36,8 +36,22 @@ export async function seedEnrollments() {
         const course = courses[(users.indexOf(user) + i) % courses.length];
 
         try {
-          const _enrollment = await prisma.enrollment.create({
-            data: {
+          // Use upsert to avoid duplicate key errors
+          const _enrollment = await prisma.enrollment.upsert({
+            where: {
+              userId_courseId: {
+                userId: user.id,
+                courseId: course.id,
+              },
+            },
+            update: {
+              progress: generator.randomInt(0, 101),
+              lastAccessAt:
+                generator.randomInt(0, 10) > 3
+                  ? generator.generatePastDate(7)
+                  : null,
+            },
+            create: {
               userId: user.id,
               courseId: course.id,
               enrolledAt: generator.generatePastDate(180),
@@ -53,9 +67,8 @@ export async function seedEnrollments() {
             },
           });
           created++;
-        } catch (error) {
-          console.log(error);
-          // Skip if enrollment already exists (unique constraint)
+        } catch (error: any) {
+          // Skip silently for any constraint violations
           continue;
         }
       }

@@ -1,16 +1,15 @@
 // @/app/api/admin/skyroom-classes/route.ts
-import { auth } from "@/auth";
 import { NextRequest } from "next/server";
+import { getAdminAuth } from "@/lib/auth-simple";
 import {
   getAllSkyRoomClassesForAdmin,
-  createSkyRoomClass,
+  createSkyRoomClass
 } from "@/lib/services/skyroom-service";
 import {
   successResponse,
   errorResponse,
-  unauthorizedResponse,
   validationError,
-  ErrorCodes,
+  ErrorCodes
 } from "@/lib/api-response";
 
 /**
@@ -19,9 +18,9 @@ import {
  */
 export async function GET(_req: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user || session.user.role !== "ADMIN") {
-      return unauthorizedResponse("دسترسی غیرمجاز");
+    const adminAuth = await getAdminAuth(_req);
+if (!adminAuth || adminAuth.role !== "ADMIN") {
+      return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }
 
     const classes = await getAllSkyRoomClassesForAdmin();
@@ -42,9 +41,9 @@ export async function GET(_req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user || session.user.role !== "ADMIN") {
-      return unauthorizedResponse("دسترسی غیرمجاز");
+    const adminAuth = await getAdminAuth(req);
+if (!adminAuth || adminAuth.role !== "ADMIN") {
+      return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }
 
     const body = await req.json();
@@ -70,7 +69,7 @@ export async function POST(req: NextRequest) {
 
     const skyRoomClass = await createSkyRoomClass({
       meetingLink: meetingLink.trim(),
-      published,
+      published
     });
 
     return successResponse(skyRoomClass, "لینک همایش با موفقیت ایجاد شد");

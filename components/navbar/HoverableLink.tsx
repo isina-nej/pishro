@@ -22,7 +22,7 @@ const HoverableLink = ({ label, href }: HoverableLinkProps) => {
       onMouseLeave={() => setIsHovered(false)}
       className={clsx(
         "relative px-2 py-1 text-sm transition duration-300",
-        isDark ? " text-[#fff]" : " text-[#111]"
+        isDark ? "text-[#fff]" : "text-[#111]"
       )}
     >
       {/* Make the label span relative and inline-block */}

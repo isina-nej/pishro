@@ -8,8 +8,8 @@ import { Loader2, ShieldCheck, CreditCard, ArrowLeft } from "lucide-react";
 const PaymentProcessing = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const payUrl = searchParams.get("payUrl");
-  const orderId = searchParams.get("orderId");
+  const payUrl = searchParams?.get("payUrl");
+  const orderId = searchParams?.get("orderId");
   const [countdown, setCountdown] = useState(3);
 
   useEffect(() => {
@@ -44,7 +44,7 @@ const PaymentProcessing = () => {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-white rounded-2xl shadow-2xl p-8 md:p-12 max-w-md w-full text-center"
+        className="bg-white dark:bg-cardBg rounded-2xl shadow-2xl p-8 md:p-12 max-w-md w-full text-center"
       >
         {/* Animated Icon */}
         <motion.div
@@ -68,12 +68,12 @@ const PaymentProcessing = () => {
         </motion.div>
 
         {/* Title */}
-        <h1 className="text-3xl font-bold text-gray-900 mb-3">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-textPrimary mb-3">
           در حال انتقال به درگاه پرداخت
         </h1>
 
         {/* Description */}
-        <p className="text-gray-600 mb-8">
+        <p className="text-gray-600 dark:text-textSecondary mb-8">
           لطفاً صبر کنید. شما به درگاه امن پرداخت منتقل می‌شوید...
         </p>
 
@@ -87,26 +87,26 @@ const PaymentProcessing = () => {
           <div className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
             {countdown}
           </div>
-          <p className="text-sm text-gray-500 mt-2">ثانیه تا انتقال</p>
+          <p className="text-sm text-gray-500 dark:text-textSecondary mt-2">ثانیه تا انتقال</p>
         </motion.div>
 
         {/* Loading Spinner */}
         <div className="flex justify-center mb-6">
-          <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+          <Loader2 className="w-8 h-8 animate-spin text-blue-600 dark:text-blue-400" />
         </div>
 
         {/* Security Badge */}
-        <div className="flex items-center justify-center gap-2 text-sm text-gray-500 mb-6">
-          <ShieldCheck className="w-5 h-5 text-green-600" />
+        <div className="flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-textSecondary mb-6">
+          <ShieldCheck className="w-5 h-5 text-green-600 dark:text-green-400" />
           <span>اتصال امن و رمزنگاری شده</span>
         </div>
 
         {/* Order Info */}
         {orderId && (
-          <div className="bg-gray-50 rounded-lg p-4 text-right">
+          <div className="bg-gray-50 dark:bg-darkBgHidden rounded-lg p-4 text-right">
             <div className="flex justify-between items-center text-sm">
-              <span className="text-gray-600">شماره سفارش:</span>
-              <span className="font-mono font-semibold text-gray-900">
+              <span className="text-gray-600 dark:text-textSecondary">شماره سفارش:</span>
+              <span className="font-mono font-semibold text-gray-900 dark:text-textPrimary">
                 {orderId.substring(0, 8)}...
               </span>
             </div>
@@ -127,7 +127,7 @@ const PaymentProcessing = () => {
         {/* Back to cart link */}
         <button
           onClick={() => router.push("/checkout")}
-          className="mt-4 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+          className="mt-4 text-sm text-gray-500 dark:text-textSecondary hover:text-gray-700 transition-colors"
         >
           بازگشت به سبد خرید
         </button>

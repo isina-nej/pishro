@@ -4,26 +4,23 @@
  */
 
 import { NextRequest } from "next/server";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { Prisma } from "@prisma/client";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   errorResponse,
-  unauthorizedResponse,
   paginatedResponse,
-  ErrorCodes,
-  forbiddenResponse,
+  ErrorCodes
 } from "@/lib/api-response";
 
 export async function GET(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
-    if (!session?.user) {
-      return unauthorizedResponse("Please login to continue");
+    const adminAuth = await getAdminAuth(req);
+if (!adminAuth) {
+      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("Access denied. Admin only.");
+    if (!adminAuth) {
+      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -66,18 +63,18 @@ export async function GET(req: NextRequest) {
           quiz: {
             select: {
               id: true,
-              title: true,
-            },
+              title: true
+            }
           },
           user: {
             select: {
               id: true,
               phone: true,
               firstName: true,
-              lastName: true,
-            },
-          },
-        },
+              lastName: true
+            }
+          }
+        }
       }),
       prisma.quizAttempt.count({ where }),
     ]);

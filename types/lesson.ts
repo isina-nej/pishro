@@ -1,4 +1,4 @@
-import type { Lesson } from "@prisma/client";
+import type { Lesson } from "@/lib/types/db";
 
 export type { Lesson };
 

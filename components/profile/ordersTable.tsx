@@ -20,7 +20,7 @@ const OrdersTable = () => {
     switch (status) {
       case "paid":
         return (
-          <span className="px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">
+          <span className="px-3 py-1 text-xs font-medium rounded-full bg-green-100 dark:bg-green-950 text-green-700 dark:text-green-300">
             پرداخت شده
           </span>
         );
@@ -38,7 +38,7 @@ const OrdersTable = () => {
         );
       default:
         return (
-          <span className="px-3 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600">
+          <span className="px-3 py-1 text-xs font-medium rounded-full bg-gray-100 dark:bg-cardBg text-gray-600 dark:text-textSecondary">
             {status}
           </span>
         );
@@ -57,7 +57,7 @@ const OrdersTable = () => {
   // ====== Loading State ======
   if (loading) {
     return (
-      <div className="bg-white rounded-md mb-8 shadow p-10 flex justify-center items-center">
+      <div className="bg-white dark:bg-cardBg rounded-md mb-8 shadow p-10 flex justify-center items-center">
         <div className="relative">
           <div className="w-10 h-10 border-4 border-blue-200 rounded-full"></div>
           <div className="absolute top-0 left-0 w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -69,11 +69,11 @@ const OrdersTable = () => {
   // ====== Empty State ======
   if (orders.length === 0) {
     return (
-      <div className="bg-white rounded-md mb-8 shadow">
+      <div className="bg-white dark:bg-cardBg rounded-md mb-8 shadow">
         <ProfileHeader>
           <h4 className="font-medium text-sm text-[#131834]">آخرین سفارشات</h4>
         </ProfileHeader>
-        <div className="p-12 text-center text-gray-500">
+        <div className="p-12 text-center text-gray-500 dark:text-textSecondary">
           هنوز سفارشی ثبت نشده است
         </div>
       </div>
@@ -82,7 +82,7 @@ const OrdersTable = () => {
 
   // ====== Table ======
   return (
-    <div className="bg-white rounded-md mb-8 shadow">
+    <div className="bg-white dark:bg-cardBg rounded-md mb-8 shadow">
       <ProfileHeader>
         <h4 className="font-medium text-sm text-[#131834]">
           آخرین سفارشات ({total})
@@ -91,38 +91,38 @@ const OrdersTable = () => {
 
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-[#f5f5f5]">
-          <thead className="bg-gray-50">
+          <thead className="bg-gray-50 dark:bg-darkBgHidden">
             <tr>
-              <th className="px-3 md:px-5 py-2 md:py-3 text-xs font-medium text-gray-500 text-right">
+              <th className="px-3 md:px-5 py-2 md:py-3 text-xs font-medium text-gray-500 dark:text-textSecondary text-right">
                 دوره‌ها
               </th>
-              <th className="px-3 md:px-5 py-2 md:py-3 text-xs font-medium text-gray-500 text-right">
+              <th className="px-3 md:px-5 py-2 md:py-3 text-xs font-medium text-gray-500 dark:text-textSecondary text-right">
                 تاریخ
               </th>
-              <th className="px-3 md:px-5 py-2 md:py-3 text-xs font-medium text-gray-500 text-right">
+              <th className="px-3 md:px-5 py-2 md:py-3 text-xs font-medium text-gray-500 dark:text-textSecondary text-right">
                 مبلغ کل
               </th>
-              <th className="px-3 md:px-5 py-2 md:py-3 text-xs font-medium text-gray-500 text-right">
+              <th className="px-3 md:px-5 py-2 md:py-3 text-xs font-medium text-gray-500 dark:text-textSecondary text-right">
                 وضعیت پرداخت
               </th>
-              <th className="px-3 md:px-5 py-2 md:py-3 text-xs font-medium text-gray-500 text-left">
+              <th className="px-3 md:px-5 py-2 md:py-3 text-xs font-medium text-gray-500 dark:text-textSecondary text-left">
                 جزییات
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-[#f5f5f5]">
+          <tbody className="bg-white dark:bg-cardBg divide-y divide-[#f5f5f5]">
             {orders.map((order) => (
               <tr
                 key={order.id}
-                className="hover:bg-gray-50 transition-colors duration-150"
+                className="hover:bg-gray-50 dark:hover:bg-darkBgHidden dark:bg-darkBgHidden transition-colors duration-150"
               >
-                <td className="px-3 md:px-5 py-3 md:py-4 whitespace-nowrap text-xs text-gray-900">
+                <td className="px-3 md:px-5 py-3 md:py-4 whitespace-nowrap text-xs text-gray-900 dark:text-textPrimary">
                   {order.itemCount} دوره
                 </td>
-                <td className="px-3 md:px-5 py-3 md:py-4 whitespace-nowrap text-xs font-irsans text-gray-600">
+                <td className="px-3 md:px-5 py-3 md:py-4 whitespace-nowrap text-xs font-irsans text-gray-600 dark:text-textSecondary">
                   {formatDate(order.createdAt)}
                 </td>
-                <td className="px-3 md:px-5 py-3 md:py-4 whitespace-nowrap text-xs text-gray-900">
+                <td className="px-3 md:px-5 py-3 md:py-4 whitespace-nowrap text-xs text-gray-900 dark:text-textPrimary">
                   {order.total.toLocaleString("fa-IR")} تومان
                 </td>
                 <td className="px-3 md:px-5 py-3 md:py-4 whitespace-nowrap">
@@ -131,7 +131,7 @@ const OrdersTable = () => {
                 <td className="px-3 md:px-5 py-3 md:py-4 whitespace-nowrap text-xs flex justify-end">
                   <Link
                     href={`/profile/orders/${order.id}`}
-                    className="flex items-center gap-1 text-[#214254] hover:text-blue-600 transition-colors"
+                    className="flex items-center gap-1 text-[#214254] hover:text-blue-600 dark:text-blue-400 transition-colors"
                   >
                     <span className="text-xs">مشاهده</span>
                     <LuSquareChevronLeft className="size-4 md:size-5" />
@@ -145,7 +145,7 @@ const OrdersTable = () => {
 
       {/* Pagination */}
       {total > pageSize && (
-        <div className="flex justify-center items-center gap-3 py-5 border-t border-gray-100">
+        <div className="flex justify-center items-center gap-3 py-5 border-t border-gray-100 dark:border-borderColor">
           <Button
             variant="outline"
             size="sm"
@@ -154,7 +154,7 @@ const OrdersTable = () => {
           >
             قبلی
           </Button>
-          <span className="text-sm text-gray-600">
+          <span className="text-sm text-gray-600 dark:text-textSecondary">
             صفحه {page} از {Math.ceil(total / pageSize)}
           </span>
           <Button

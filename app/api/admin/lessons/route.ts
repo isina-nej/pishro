@@ -1,27 +1,23 @@
-// @/app/api/admin/lessons/route.ts
-import { auth } from "@/auth";
 import { NextRequest } from "next/server";
-import { getAllLessons, createLesson } from "@/lib/services/lesson-service";
+import { getAdminAuth } from "@/lib/auth-simple";
+import { getAllLessons, createLessonForCourse } from "@/lib/services/lesson-service";
 import {
   successResponse,
   errorResponse,
-  unauthorizedResponse,
   ErrorCodes,
+  createdResponse,
 } from "@/lib/api-response";
+import { LessonCreateSchema } from "@/lib/schemas/course-management-schema";
+import { prisma } from "@/lib/prisma";
 
-/**
- * GET /api/admin/lessons
- * دریافت تمام کلاس‌ها (برای ادمین)
- */
 export async function GET(_req: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user || session.user.role !== "ADMIN") {
-      return unauthorizedResponse("دسترسی غیرمجاز");
+    const adminAuth = await getAdminAuth(_req);
+    if (!adminAuth) {
+      return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }
 
     const lessons = await getAllLessons();
-
     return successResponse(lessons, "کلاس‌ها با موفقیت دریافت شدند");
   } catch (error) {
     console.error("[GET /api/admin/lessons] error:", error);
@@ -32,51 +28,46 @@ export async function GET(_req: NextRequest) {
   }
 }
 
-/**
- * POST /api/admin/lessons
- * ایجاد کلاس جدید (برای ادمین)
- */
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user || session.user.role !== "ADMIN") {
-      return unauthorizedResponse("دسترسی غیرمجاز");
+    const adminAuth = await getAdminAuth(req);
+    if (!adminAuth) {
+      return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
     }
 
     const body = await req.json();
-    const {
-      courseId,
-      title,
-      description,
-      videoUrl,
-      thumbnail,
-      duration,
-      order,
-      published,
-    } = body;
+    const parsed = LessonCreateSchema.safeParse(body);
 
-    // Validation
-    if (!courseId || !title || !videoUrl) {
+    if (!parsed.success) {
       return errorResponse(
-        "شناسه دوره، عنوان و آدرس ویدیو الزامی است",
+        "خطای اعتبارسنجی",
+        ErrorCodes.VALIDATION_ERROR,
+        Object.fromEntries(
+          parsed.error.errors.map((e) => [String(e.path[0]), e.message])
+        )
+      );
+    }
+
+    const course = await prisma.course.findUnique({
+      where: { id: parsed.data.courseId },
+    });
+    if (!course) {
+      return errorResponse("دوره یافت نشد", ErrorCodes.NOT_FOUND);
+    }
+    if (parsed.data.chapterId && !course.hasChapters) {
+      return errorResponse(
+        "این دوره از فصل پشتیبانی نمی‌کند",
         ErrorCodes.VALIDATION_ERROR
       );
     }
 
-    const lesson = await createLesson({
-      courseId,
-      title,
-      description,
-      videoUrl,
-      thumbnail,
-      duration,
-      order,
-      published,
-    });
-
-    return successResponse(lesson, "کلاس با موفقیت ایجاد شد");
+    const lesson = await createLessonForCourse(parsed.data.courseId, parsed.data);
+    return createdResponse(lesson, "کلاس با موفقیت ایجاد شد");
   } catch (error) {
     console.error("[POST /api/admin/lessons] error:", error);
+    if (error instanceof Error && error.message === "POSITION_CONFLICT") {
+      return errorResponse("تضاد در ترتیب", ErrorCodes.CONFLICT, undefined, 409);
+    }
     return errorResponse(
       "خطایی در ایجاد کلاس رخ داد",
       ErrorCodes.DATABASE_ERROR

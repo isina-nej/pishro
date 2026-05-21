@@ -5,29 +5,26 @@
  */
 
 import { NextRequest } from "next/server";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { Prisma } from "@prisma/client";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   errorResponse,
-  unauthorizedResponse,
   paginatedResponse,
   createdResponse,
   ErrorCodes,
-  forbiddenResponse,
-  validationError,
+  validationError
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
 
 export async function GET(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
-    if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+    const adminAuth = await getAdminAuth(req);
+if (!adminAuth) {
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود. فقط ادمین.");
+    if (!adminAuth) {
+      return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -55,7 +52,7 @@ export async function GET(req: NextRequest) {
         where,
         skip,
         take: limit,
-        orderBy: { order: "asc" },
+        orderBy: { order: "asc" }
       }),
       prisma.mobileScrollerStep.count({ where }),
     ]);
@@ -72,13 +69,12 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
-    if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+    const adminAuth = await getAdminAuth(req);
+if (!adminAuth) {
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود. فقط ادمین.");
+    if (!adminAuth) {
+      return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
     }
 
     const body = await req.json();
@@ -90,7 +86,7 @@ export async function POST(req: NextRequest) {
       coverImageUrl,
       gradient,
       order = 0,
-      published = false,
+      published = false
     } = body;
 
     // Validation
@@ -98,7 +94,7 @@ export async function POST(req: NextRequest) {
       return validationError({
         stepNumber: !stepNumber ? "شماره مرحله الزامی است" : "",
         title: !title ? "عنوان الزامی است" : "",
-        description: !description ? "توضیحات الزامی است" : "",
+        description: !description ? "توضیحات الزامی است" : ""
       });
     }
 
@@ -116,8 +112,8 @@ export async function POST(req: NextRequest) {
         coverImageUrl: normalizedCoverImageUrl,
         gradient,
         order,
-        published,
-      },
+        published
+      }
     });
 
     return createdResponse(item, "مرحله اسکرولر موبایل با موفقیت ایجاد شد");

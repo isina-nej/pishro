@@ -2,12 +2,27 @@
 import { prisma } from "@/lib/prisma";
 import { ImageCategory } from "@prisma/client";
 import crypto from "crypto";
-// Sharp is optional - will be loaded dynamically if available
 import {
   saveFileToStorage,
   deleteFileFromStorage,
   getRelativePathFromUrl,
 } from "./storage-adapter";
+
+// Lazy load sharp to avoid issues on incompatible CPU architectures
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let sharpModule: any = null;
+
+async function getSharp() {
+  if (!sharpModule) {
+    try {
+      sharpModule = (await import("sharp")).default;
+    } catch {
+      console.warn("Sharp module not available, image dimension detection will be skipped");
+      return null;
+    }
+  }
+  return sharpModule;
+}
 
 const IMAGES_FOLDER = "images"; // پوشه اصلی تصاویر
 
@@ -68,21 +83,22 @@ export function isValidImageSize(
 
 /**
  * دریافت ابعاد تصویر
- * Note: Sharp is optional - returns null if not available (e.g., on CPUs without AVX)
  */
 export async function getImageDimensions(
   buffer: Buffer
 ): Promise<{ width: number; height: number } | null> {
   try {
-    // Dynamically import sharp - this allows the build to succeed even if sharp fails
-    const sharp = (await import("sharp")).default;
-    const metadata = await sharp(buffer).metadata();
+    const sharpModule = await getSharp();
+    if (!sharpModule) {
+      return null;
+    }
+    const metadata = await sharpModule(buffer).metadata();
     if (metadata.width && metadata.height) {
       return { width: metadata.width, height: metadata.height };
     }
     return null;
   } catch (error) {
-    console.warn("Sharp not available or failed - skipping dimension extraction:", error instanceof Error ? error.message : String(error));
+    console.error("Error getting image dimensions:", error);
     return null;
   }
 }
@@ -177,9 +193,9 @@ export async function getUserImages(params: {
     uploadedById: string;
     category?: ImageCategory;
     OR?: Array<{
-      title?: { contains: string; mode: "insensitive" };
-      description?: { contains: string; mode: "insensitive" };
-      fileName?: { contains: string; mode: "insensitive" };
+      title?: { contains: string };
+      description?: { contains: string };
+      fileName?: { contains: string };
     }>;
   } = {
     uploadedById: userId,
@@ -191,9 +207,9 @@ export async function getUserImages(params: {
 
   if (search) {
     where.OR = [
-      { title: { contains: search, mode: "insensitive" } },
-      { description: { contains: search, mode: "insensitive" } },
-      { fileName: { contains: search, mode: "insensitive" } },
+      { title: { contains: search } },
+      { description: { contains: search } },
+      { fileName: { contains: search } },
     ];
   }
 
@@ -225,7 +241,7 @@ export async function getUserImages(params: {
   ]);
 
   // حالا filePath همان URL کامل است
-  const imagesWithUrls = images.map((image) => {
+  const imagesWithUrls = images.map((image: any) => {
     return {
       ...image,
       url: image.filePath, // filePath حالا URL کامل است
@@ -376,7 +392,7 @@ export async function getUserImageStats(userId: string) {
 
   return {
     total,
-    byCategory: byCategory.map((item) => ({
+    byCategory: byCategory.map((item: any) => ({
       category: item.category,
       count: item._count,
     })),

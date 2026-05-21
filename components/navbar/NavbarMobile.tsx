@@ -61,7 +61,7 @@ const NavbarMobile = ({
           isHidden ? "-translate-y-full" : "translate-y-0",
           isOpen
             ? "bg-transparent text-white border-b border-white/20"
-            : "bg-white shadow-md"
+            : "bg-white dark:bg-cardBg shadow-md"
         )}
       >
         <div className="flex justify-between items-center w-full relative">

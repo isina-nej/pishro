@@ -56,7 +56,11 @@ export const useLibraryFilters = (books: LibraryBook[]): LibraryFiltersHook => {
 
   const formatOptions = useMemo<(BookFormat | "همه")[]>(() => {
     const unique = new Set<BookFormat>();
-    books.forEach((book) => book.formats.forEach((format) => unique.add(format)));
+    books.forEach((book) => {
+      if (book.formats && Array.isArray(book.formats)) {
+        book.formats.forEach((format) => unique.add(format));
+      }
+    });
     return ["همه", ...Array.from(unique)];
   }, [books]);
 
@@ -72,12 +76,14 @@ export const useLibraryFilters = (books: LibraryBook[]): LibraryFiltersHook => {
       .filter((book) =>
         selectedFormat === "همه"
           ? true
-          : book.formats.some((format) => format === selectedFormat)
+          : book.formats &&
+            Array.isArray(book.formats) &&
+            book.formats.some((format) => format === selectedFormat)
       )
       .filter((book) =>
         normalizedQuery
           ? [book.title, book.author, ...book.tags]
-              .join(" ")
+              .join("")
               .toLowerCase()
               .includes(normalizedQuery.toLowerCase())
           : true

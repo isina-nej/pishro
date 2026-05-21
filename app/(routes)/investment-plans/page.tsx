@@ -22,10 +22,10 @@ const InvestmentPage = async () => {
   if (!investmentPlansData) {
     return (
       <div className="container-md py-20 text-center">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-textPrimary mb-4">
           سبدهای سرمایه‌ گذاری
         </h1>
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-textSecondary">
           اطلاعات سبدهای سرمایه‌ گذاری در حال حاضر در دسترس نیست. لطفاً بعداً
           مراجعه کنید.
         </p>

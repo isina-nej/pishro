@@ -14,7 +14,7 @@ const AboutUsContent = ({ aboutPageData }: AboutUsContentProps) => {
   if (!aboutPageData) {
     return (
       <div className="container-md py-20 text-center">
-        <p className="text-gray-600">اطلاعات صفحه درباره ما در دسترس نیست</p>
+        <p className="text-gray-600 dark:text-textSecondary">اطلاعات صفحه درباره ما در دسترس نیست</p>
       </div>
     );
   }

@@ -56,7 +56,7 @@ export async function GET(req: Request) {
       }),
     ]);
 
-    const formattedEnrollments = enrollments.map((enrollment) => ({
+    const formattedEnrollments = enrollments.map((enrollment: any) => ({
       id: enrollment.id,
       enrolledAt: enrollment.enrolledAt,
       progress: enrollment.progress,

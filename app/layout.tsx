@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Toaster } from "react-hot-toast";
 
 import "@/app/styles/globals.css";
 import ReactQueryProvider from "@/lib/providers/ReactQueryProvider";
+import ThemeProvider from "@/lib/providers/ThemeProvider";
 
 const charismaExtraBold = localFont({
   src: "../public/font/CharismaTF-ExtraBold.woff2",
@@ -26,9 +27,25 @@ const montserrat = localFont({
   variable: "--font-montserrat",
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  viewportFit: "cover",
+};
+
 export const metadata: Metadata = {
-  title: "52392950",
-  description: "پیشرو",
+  title: "پیشرو سرمایه",
+  description: "پیشرو - آموزش و سرمایه‌گذاری",
+  icons: {
+    icon: "/favicon.ico",
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "پیشرو سرمایه",
+  },
 };
 
 export default function RootLayout({
@@ -37,23 +54,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fa">
+    <html lang="fa" suppressHydrationWarning>
       <body
-        className={`font-yekan ${charismaExtraBold.variable} ${charismaRegular.variable} ${montserrat.variable} rtl`}
+        className={`font-yekan ${charismaExtraBold.variable} ${charismaRegular.variable} ${montserrat.variable} rtl bg-white dark:bg-cardBg dark:bg-bodyBg text-slate-900 dark:text-textPrimary transition-colors duration-300 ease-in-out`}
       >
-        <ReactQueryProvider>
-          {children}
-          <Toaster
-            position="top-center" // می‌تونی تغییر بدی
-            toastOptions={{
-              duration: 3000,
-              style: {
-                fontSize: "14px",
-                direction: "rtl",
-              },
-            }}
-          />
-        </ReactQueryProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange={false}>
+          <ReactQueryProvider>
+            {children}
+            <Toaster
+              position="top-center"
+              toastOptions={{
+                duration: 3000,
+                style: {
+                  fontSize: "14px",
+                  direction: "rtl",
+                },
+              }}
+            />
+          </ReactQueryProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

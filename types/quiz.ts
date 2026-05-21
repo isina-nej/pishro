@@ -1,4 +1,4 @@
-import { QuestionType } from "@prisma/client";
+import { QuestionType } from "@/lib/types/db";
 
 export interface QuizQuestion {
   id: string;

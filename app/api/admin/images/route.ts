@@ -5,28 +5,25 @@
  */
 
 import { NextRequest } from "next/server";
-import { auth } from "@/auth";
+import { getAdminAuth } from "@/lib/auth-simple";
 import {
   errorResponse,
-  unauthorizedResponse,
   paginatedResponse,
   createdResponse,
   ErrorCodes,
-  forbiddenResponse,
-  validationError,
+  validationError
 } from "@/lib/api-response";
 import { getUserImages, uploadImage } from "@/lib/services/image-service";
 import { ImageCategory } from "@prisma/client";
 
 export async function GET(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
-    if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+    const adminAuth = await getAdminAuth(req);
+if (!adminAuth) {
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود به ادمین");
+    if (!adminAuth) {
+      return errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -41,11 +38,11 @@ export async function GET(req: NextRequest) {
 
     // Fetch images
     const result = await getUserImages({
-      userId: session.user.id,
+      userId: adminAuth.id,
       category,
       search,
       page,
-      limit,
+      limit
     });
 
     return paginatedResponse(
@@ -65,13 +62,12 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    // Auth check - only admins
-    const session = await auth();
-    if (!session?.user) {
-      return unauthorizedResponse("لطفا وارد شوید");
+    const adminAuth = await getAdminAuth(req);
+if (!adminAuth) {
+      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
     }
-    if (session.user.role !== "ADMIN") {
-      return forbiddenResponse("دسترسی محدود به ادمین");
+    if (!adminAuth) {
+      return errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);
     }
 
     // Parse multipart form data
@@ -87,26 +83,26 @@ export async function POST(req: NextRequest) {
     // Validation
     if (!file) {
       return validationError({
-        file: "فایل الزامی است",
+        file: "فایل الزامی است"
       });
     }
 
     if (!Object.values(ImageCategory).includes(category)) {
       return validationError({
-        category: "دسته‌بندی نامعتبر است",
+        category: "دسته‌بندی نامعتبر است"
       });
     }
 
     // Upload image
     try {
       const result = await uploadImage({
-        userId: session.user.id,
+        userId: adminAuth.id,
         file,
         category,
         title,
         description,
         alt,
-        tags,
+        tags
       });
 
       return createdResponse(result, "تصویر با موفقیت آپلود شد");
