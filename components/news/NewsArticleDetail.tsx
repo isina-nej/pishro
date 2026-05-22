@@ -210,6 +210,9 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
     return () => window.removeEventListener('scroll', calculateProgress);
   }, []);
 
+  // Determine which content to display
+  const contentToDisplay = article.contentHtml || article.content || '';
+
   return (
     <>
       {/* Sticky Progress Bar */}
@@ -268,7 +271,13 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
         <div className="rounded-[2rem] border border-slate-200/60 bg-gradient-to-b from-white/95 to-slate-50/95 p-8 md:p-12 shadow-[0_40px_90px_rgba(15,23,42,0.08)] dark:border-slate-800/60 dark:from-slate-950/95 dark:to-slate-900/95">
           
           {/* Auto-detect and render content based on type */}
-          {article.contentType === 'MARKDOWN' ? (
+          {article.contentHtml ? (
+            /* Pre-rendered HTML from markdown (RECOMMENDED) - Fastest load time */
+            <div
+              className="space-y-6 text-right text-base md:text-lg leading-[1.85] text-slate-800 dark:text-slate-200 [&_p]:text-slate-800 [&_p]:dark:text-slate-200 [&_p]:mb-6 [&_h1]:text-4xl [&_h1]:md:text-5xl [&_h1]:font-black [&_h1]:text-slate-900 [&_h1]:dark:text-slate-100 [&_h1]:mb-8 [&_h1]:mt-10 [&_h2]:text-3xl [&_h2]:md:text-4xl [&_h2]:font-bold [&_h2]:text-slate-900 [&_h2]:dark:text-slate-100 [&_h2]:mb-7 [&_h2]:mt-9 [&_h3]:text-2xl [&_h3]:md:text-3xl [&_h3]:font-bold [&_h3]:text-slate-900 [&_h3]:dark:text-slate-100 [&_h3]:mb-6 [&_h3]:mt-8 [&_strong]:font-bold [&_em]:italic [&_code]:bg-slate-100 [&_code]:dark:bg-slate-800 [&_code]:px-2 [&_code]:py-1 [&_code]:rounded [&_code]:font-mono [&_code]:text-sm [&_pre]:bg-slate-950 [&_pre]:text-slate-100 [&_pre]:p-4 [&_pre]:rounded-3xl [&_pre]:overflow-x-auto [&_pre]:my-8 [&_blockquote]:border-r-4 [&_blockquote]:rtl:border-r-0 [&_blockquote]:rtl:border-l-4 [&_blockquote]:border-slate-400/90 [&_blockquote]:bg-slate-50 [&_blockquote]:dark:bg-slate-950/70 [&_blockquote]:p-6 [&_blockquote]:rounded-3xl [&_blockquote]:italic [&_blockquote]:text-slate-700 [&_blockquote]:dark:text-slate-200 [&_blockquote]:shadow-sm [&_blockquote]:my-10 [&_ul]:space-y-3 [&_ul]:list-disc [&_ul]:list-inside [&_ul]:mr-6 [&_ul]:my-8 [&_ol]:space-y-3 [&_ol]:list-decimal [&_ol]:list-inside [&_ol]:mr-6 [&_ol]:my-8 [&_li]:leading-relaxed [&_a]:text-blue-600 [&_a]:dark:text-blue-400 [&_a]:hover:underline"
+              dangerouslySetInnerHTML={{ __html: contentToDisplay }}
+            />
+          ) : article.contentType === 'MARKDOWN' ? (
             /* Native Markdown - Best for automatic formatting */
             <MarkdownPreview
               content={article.content}

@@ -2,7 +2,7 @@
 
 /**
  * API Route: POST /api/news/draft
- * Save article draft with auto-save support
+ * Save article draft with auto-save support for both markdown and HTML
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -10,6 +10,7 @@ import { prisma } from '@/lib/prisma';
 import { sanitizeHtmlContent } from '@/lib/editor-config';
 import { auth } from '@/auth';
 import { checkRateLimit, getClientIp, addSecurityHeaders } from '@/lib/api-security';
+import { parseMarkdown, sanitizeMarkdown, validateMarkdown } from '@/lib/markdown-processor';
 
 export async function POST(request: NextRequest) {
   try {
@@ -35,10 +36,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { articleId, title, content, excerpt } = await request.json();
+    const { articleId, title, content, contentMarkdown, contentHtml, excerpt } = await request.json();
 
     // Validate input
-    if (!title || !content) {
+    if (!title || (!content && !contentMarkdown && !contentHtml)) {
       return addSecurityHeaders(
         NextResponse.json(
           { error: 'Title and content are required' },
@@ -48,15 +49,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Check length limits
-    if (content.length > 1_000_000) {
+    if ((contentMarkdown?.length || 0) > 1_000_000 || (contentHtml?.length || 0) > 1_000_000 || (content?.length || 0) > 1_000_000) {
       return NextResponse.json(
         { error: 'Content exceeds maximum length (1MB)' },
         { status: 400 }
       );
     }
-
-    // Sanitize content
-    const sanitizedContent = sanitizeHtmlContent(content);
 
     // Check user permissions
     const isAdmin = session.user.role === 'ADMIN' || session.user.role === 'SUPERADMIN';
@@ -67,6 +65,35 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Process markdown and HTML
+    let finalMarkdown = '';
+    let finalHtml = '';
+
+    if (contentMarkdown) {
+      // If markdown is provided, validate and parse it
+      const validation = validateMarkdown(contentMarkdown);
+      if (!validation.valid) {
+        return NextResponse.json(
+          { error: `Invalid markdown: ${validation.error}` },
+          { status: 400 }
+        );
+      }
+
+      // Sanitize markdown
+      finalMarkdown = sanitizeMarkdown(contentMarkdown);
+
+      // Parse markdown to HTML
+      finalHtml = parseMarkdown(finalMarkdown);
+    } else if (contentHtml) {
+      // If HTML is provided, sanitize it
+      finalHtml = sanitizeHtmlContent(contentHtml);
+      finalMarkdown = '';
+    } else if (content) {
+      // Fallback to legacy content field (assume it's HTML)
+      finalHtml = sanitizeHtmlContent(content);
+      finalMarkdown = '';
+    }
+
     let article;
 
     if (articleId) {
@@ -75,9 +102,14 @@ export async function POST(request: NextRequest) {
         where: { id: articleId },
         data: {
           title,
-          content: sanitizedContent,
+          content: finalHtml, // Keep backward compatibility
+          contentMarkdown: finalMarkdown,
+          contentHtml: finalHtml,
           excerpt: excerpt || '',
+          draftMarkdown: contentMarkdown || finalMarkdown,
+          draftContent: finalHtml,
           updatedAt: new Date(),
+          lastEditedAt: new Date(),
         },
       });
     } else {
@@ -94,10 +126,16 @@ export async function POST(request: NextRequest) {
         data: {
           title,
           slug: `${slug}-${Date.now()}`,
-          content: sanitizedContent,
+          content: finalHtml,
+          contentMarkdown: finalMarkdown,
+          contentHtml: finalHtml,
           excerpt: excerpt || '',
+          draftMarkdown: contentMarkdown || finalMarkdown,
+          draftContent: finalHtml,
           published: false,
+          draft: true,
           category: 'general',
+          contentType: contentMarkdown ? 'MARKDOWN' : 'HTML',
         },
       });
     }

@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Plus, Edit2, Trash2, Send, Search, Filter, Newspaper, Clock } from 'lucide-react';
+import { Plus, Edit2, Trash2, Send, Search, Filter, Newspaper, Clock, Archive } from 'lucide-react';
 import { useBlockNewsList, useDeleteBlockNews, useChangeBlockNewsStatus } from '@/lib/hooks/use-block-news';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 
@@ -270,11 +270,23 @@ export default function BlockNewsListPage() {
                         ویرایش
                       </Button>
                     </Link>
-                    {!news.published && (
+                    {news.published ? (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleChangeStatus(news.id, 'ARCHIVED')}
+                        disabled={changeStatusMutation.isPending}
+                        className="border-orange-200 text-orange-700 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-950/20 text-xs md:text-sm h-8 md:h-9"
+                      >
+                        <Archive className="h-3 md:h-4 w-3 md:w-4 ml-1" />
+                        بایگانی
+                      </Button>
+                    ) : (
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => handleChangeStatus(news.id, 'PUBLISHED')}
+                        disabled={changeStatusMutation.isPending}
                         className="border-green-200 text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-950/20 text-xs md:text-sm h-8 md:h-9"
                       >
                         <Send className="h-3 md:h-4 w-3 md:w-4 ml-1" />

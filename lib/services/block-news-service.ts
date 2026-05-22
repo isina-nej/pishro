@@ -9,6 +9,7 @@
 
 import { prisma } from '@/lib/prisma';
 import { CreateNewsSchema, UpdateNewsSchema } from '@/lib/schemas/block-news-schema';
+import { deleteFileFromStorage, getRelativePathFromUrl } from '@/lib/services/storage-adapter';
 
 /**
  * Create a new news article with published=false (draft status)
@@ -220,14 +221,36 @@ export async function archiveNews(id: string) {
 }
 
 /**
- * Delete a news article
+ * Delete a news article (and associated files from storage)
  */
 export async function deleteNews(id: string) {
+  // Fetch the news article first to get coverImage path
+  const news = await prisma.newsArticle.findUnique({
+    where: { id },
+  });
+
+  if (!news) {
+    throw new Error('خبر مورد نظر یافت نشد');
+  }
+
+  // Delete coverImage file from storage if it exists
+  if (news.coverImage) {
+    try {
+      const relativePath = getRelativePathFromUrl(news.coverImage);
+      await deleteFileFromStorage(relativePath);
+      console.log(`[deleteNews] Deleted cover image: ${relativePath}`);
+    } catch (error) {
+      console.error('[deleteNews] Error deleting cover image:', error);
+      // Continue with deletion even if image deletion fails
+    }
+  }
+
+  // Delete the news article from database
   await prisma.newsArticle.delete({
     where: { id },
   });
 
-  return { message: 'مقاله حذف شدند' };
+  return { message: 'مقاله و فایل‌های مرتبط حذف شدند' };
 }
 
 /**

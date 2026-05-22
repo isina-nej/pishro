@@ -286,9 +286,14 @@ model NewsArticle {
   content     String    @db.LongText
   contentType ContentType @default(HTML) // Support for rich HTML content
   
+  // Markdown and HTML content storage
+  contentMarkdown  String?  @db.LongText // Raw markdown source for editing
+  contentHtml      String?  @db.LongText // Rendered and sanitized HTML for display
+  
   // Draft management
   draft         Boolean   @default(false)
   draftContent  String?   @db.LongText // Auto-saved version
+  draftMarkdown String?   @db.LongText // Auto-saved markdown version
   
   coverImage  String?
   author      String?

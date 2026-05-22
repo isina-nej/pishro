@@ -1,20 +1,19 @@
 /**
- * Create News Page
+ * Edit News Page
  * 
- * Page: /admin/block-news/create
- * Create a new block-based news article
+ * Page: /admin/block-news/[id]/edit
+ * Edit an existing block-based news article
  */
 
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { ArrowRight, AlertCircle, FileText, Image as ImageIcon, Tag, Zap, Upload, X } from 'lucide-react';
-import { useCreateBlockNews } from '@/lib/hooks/use-block-news';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import CKEditor5Wrapper from '@/components/admin/news/CKEditor5Wrapper';
 
@@ -27,11 +26,27 @@ interface AdminUser {
   role: 'ADMIN' | 'MODERATOR' | 'VIEWER';
 }
 
-export default function CreateBlockNewsPage() {
+interface NewsArticle {
+  id: string;
+  title: string;
+  excerpt?: string;
+  content?: string;
+  coverImage?: string;
+  categoryId?: string;
+  status?: string;
+}
+
+export default function EditBlockNewsPage() {
   const router = useRouter();
+  const params = useParams();
+  const articleId = params.id as string;
   const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [user, setUser] = useState<AdminUser | null>(null);
   const [isLoadingUser, setIsLoadingUser] = useState(true);
+  const [isLoadingArticle, setIsLoadingArticle] = useState(true);
+  const [article, setArticle] = useState<NewsArticle | null>(null);
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -39,11 +54,11 @@ export default function CreateBlockNewsPage() {
     thumbnail: '',
     categoryId: '',
   });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [uploadError, setUploadError] = useState<string>('');
-
-  const createNewsMutation = useCreateBlockNews();
+  const [error, setError] = useState<string>('');
 
   // Get current user
   useEffect(() => {
@@ -77,6 +92,51 @@ export default function CreateBlockNewsPage() {
 
     fetchCurrentUser();
   }, [router]);
+
+  // Get article data
+  useEffect(() => {
+    const fetchArticle = async () => {
+      if (!user || !articleId) return;
+
+      try {
+        const token = localStorage.getItem('admin_access_token');
+        if (!token) {
+          router.push('/admin/login');
+          return;
+        }
+
+        const response = await fetch(`/api/news/${articleId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response.ok) {
+          setError('خبر یافت نشد');
+          return;
+        }
+
+        const data = await response.json();
+        const newsArticle = data.data || data;
+
+        setArticle(newsArticle);
+        setFormData({
+          title: newsArticle.title || '',
+          description: newsArticle.excerpt || '',
+          content: newsArticle.content || '',
+          thumbnail: newsArticle.coverImage || '',
+          categoryId: newsArticle.categoryId || '',
+        });
+      } catch (error) {
+        console.error('Error fetching article:', error);
+        setError('خطا در بارگذاری خبر');
+      } finally {
+        setIsLoadingArticle(false);
+      }
+    };
+
+    if (user) {
+      fetchArticle();
+    }
+  }, [user, articleId, router]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -131,7 +191,6 @@ export default function CreateBlockNewsPage() {
 
       const data = await response.json();
       let imageUrl = data.data.tempPath;
-      // Ensure URL is absolute and uses /api/uploads/
       if (!imageUrl.startsWith('/')) {
         imageUrl = '/' + imageUrl;
       }
@@ -159,30 +218,51 @@ export default function CreateBlockNewsPage() {
 
   const handleSubmit = async () => {
     if (!formData.title.trim()) {
-      alert('عنوان خبر الزامی است');
+      setError('عنوان خبر الزامی است');
       return;
     }
 
     setIsSubmitting(true);
+    setError('');
+
     try {
-      await createNewsMutation.mutateAsync({
-        title: formData.title,
-        description: formData.description || undefined,
-        content: formData.content || undefined,
-        thumbnail: formData.thumbnail || undefined,
-        categoryId: formData.categoryId || undefined,
+      const token = localStorage.getItem('admin_access_token');
+      if (!token) {
+        router.push('/admin/login');
+        return;
+      }
+
+      const response = await fetch(`/api/news/${articleId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title: formData.title,
+          description: formData.description || undefined,
+          content: formData.content || undefined,
+          thumbnail: formData.thumbnail || undefined,
+          categoryId: formData.categoryId || undefined,
+        }),
       });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'خطا در به‌روزرسانی خبر');
+      }
 
       router.push('/admin/block-news');
     } catch (error) {
-      console.error('خطا در ایجاد خبر:', error);
-      alert('خطایی رخ داده است');
+      const errorMessage = error instanceof Error ? error.message : 'خطایی رخ داده است';
+      console.error('Update error:', errorMessage);
+      setError(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (isLoadingUser) {
+  if (isLoadingUser || isLoadingArticle) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
@@ -192,7 +272,7 @@ export default function CreateBlockNewsPage() {
     );
   }
 
-  if (!user) return null;
+  if (!user || !article) return null;
 
   const content = (
     <div className="w-full space-y-6">
@@ -206,8 +286,16 @@ export default function CreateBlockNewsPage() {
         >
           <ArrowRight className="h-5 w-5" />
         </Button>
-        <h1 className="text-2xl md:text-4xl font-bold text-right">خبر جدید</h1>
+        <h1 className="text-2xl md:text-4xl font-bold text-right">ویرایش خبر</h1>
       </div>
+
+      {/* Error Alert */}
+      {error && (
+        <div className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/50 rounded-lg p-4 flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+          <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+        </div>
+      )}
 
       {/* Main Form Card */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
@@ -254,7 +342,7 @@ export default function CreateBlockNewsPage() {
               <div className="space-y-2 md:space-y-3">
                 <label className="text-sm font-semibold">محتوای کامل خبر</label>
                 <CKEditor5Wrapper
-                  initialContent=""
+                  initialContent={formData.content}
                   placeholder="محتوای خبر را بنویسید..."
                   onContentChange={(html) => {
                     setFormData((prev) => ({ ...prev, content: html }));
@@ -372,7 +460,7 @@ export default function CreateBlockNewsPage() {
                 className="w-full h-10 md:h-12 bg-gradient-to-l from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg text-sm md:text-base font-semibold"
               >
                 <Zap className="h-4 md:h-5 w-4 md:w-5 ml-2" />
-                {isSubmitting ? 'درحال ایجاد...' : 'ایجاد خبر'}
+                {isSubmitting ? 'درحال ذخیره...' : 'ذخیره تغییرات'}
               </Button>
               <Button
                 variant="outline"
@@ -385,7 +473,7 @@ export default function CreateBlockNewsPage() {
             </div>
           </Card>
 
-          {/* Requirements */}
+          {/* Info Card */}
           <Card className="p-4 md:p-6 border-0 shadow-lg bg-blue-50 dark:bg-blue-950/20 border-l-4 border-l-blue-600">
             <div className="space-y-3 md:space-y-4">
               <div className="flex items-start gap-3">
@@ -399,31 +487,10 @@ export default function CreateBlockNewsPage() {
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-blue-600 mt-1">•</span>
-                      <span>پس از ایجاد می‌توانید محتوا اضافه کنید</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-blue-600 mt-1">•</span>
-                      <span>تصویر کاور در لیست نمایش داده می‌شود</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-blue-600 mt-1">•</span>
-                      <span>خبر به صورت پیش‌نویس ذخیره می‌شود</span>
+                      <span>تغییرات به فوری ذخیره می‌شوند</span>
                     </li>
                   </ul>
                 </div>
-              </div>
-            </div>
-          </Card>
-
-          {/* Info Card */}
-          <Card className="p-4 md:p-6 border-0 shadow-lg bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20">
-            <div className="flex gap-3">
-              <AlertCircle className="w-4 md:w-5 h-4 md:h-5 text-amber-600 flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="font-bold text-xs md:text-sm text-amber-900 dark:text-amber-200">راهنما</h3>
-                <p className="text-xs text-amber-800 dark:text-amber-300 mt-2">
-                  برای افزودن تصویرها، متن‌های فرمت‌شده و دیگر محتوا، پس از ایجاد خبر به صفحه ویرایش بروید.
-                </p>
               </div>
             </div>
           </Card>
@@ -432,5 +499,12 @@ export default function CreateBlockNewsPage() {
     </div>
   );
 
-  return <AdminSidebar user={user} currentPage="block-news">{content}</AdminSidebar>;
+  return (
+    <div className="flex h-screen bg-gray-50 dark:bg-gray-950" dir="rtl">
+      <AdminSidebar user={user} />
+      <main className="flex-1 overflow-auto">
+        <div className="p-4 md:p-8">{content}</div>
+      </main>
+    </div>
+  );
 }

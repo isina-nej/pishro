@@ -1,11 +1,13 @@
 /**
  * API Route: POST /api/news/create
- * Create a new article with rich HTML content
+ * Create a new article with rich HTML content or markdown
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
+import { sanitizeContent } from '@/lib/sanitize-content';
+import { parseMarkdown, sanitizeMarkdown, validateMarkdown } from '@/lib/markdown-processor';
 
 // Simple slug generator
 function generateSlug(text: string): string {
@@ -32,18 +34,60 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { title, content, category = 'General', draft = true, published = false } = body;
+    const { 
+      title, 
+      content, 
+      contentMarkdown,
+      contentHtml,
+      category = 'General', 
+      draft = true, 
+      published = false 
+    } = body;
 
     // Validate required fields
-    if (!title || !content) {
+    if (!title) {
       return NextResponse.json(
-        { error: 'Missing required fields: title and content' },
+        { error: 'Missing required field: title' },
         { status: 400 }
       );
     }
 
-    // Validate content length (max 1MB)
-    if (content.length > 1048576) {
+    // Determine which content format to use
+    let finalMarkdown = '';
+    let finalHtml = '';
+
+    if (contentMarkdown) {
+      // If markdown is provided, validate and parse it
+      const validation = validateMarkdown(contentMarkdown);
+      if (!validation.valid) {
+        return NextResponse.json(
+          { error: `Invalid markdown: ${validation.error}` },
+          { status: 400 }
+        );
+      }
+
+      // Sanitize markdown
+      finalMarkdown = sanitizeMarkdown(contentMarkdown);
+
+      // Parse markdown to HTML
+      finalHtml = parseMarkdown(finalMarkdown);
+    } else if (contentHtml) {
+      // If HTML is provided, sanitize it
+      finalHtml = sanitizeContent(contentHtml);
+      finalMarkdown = ''; // Will be regenerated or left empty
+    } else if (content) {
+      // Fallback to legacy content field (assume it's HTML)
+      finalHtml = sanitizeContent(content);
+      finalMarkdown = '';
+    } else {
+      return NextResponse.json(
+        { error: 'Missing content: provide contentMarkdown, contentHtml, or content' },
+        { status: 400 }
+      );
+    }
+
+    // Validate content length (max 1MB each)
+    if (finalHtml.length > 1048576 || finalMarkdown.length > 1048576) {
       return NextResponse.json(
         { error: 'Content exceeds maximum size of 1MB' },
         { status: 400 }
@@ -68,10 +112,12 @@ export async function POST(request: NextRequest) {
       data: {
         title,
         slug,
-        content: content,
+        content: finalHtml, // Keep backward compatibility
+        contentMarkdown: finalMarkdown,
+        contentHtml: finalHtml,
         excerpt: title.substring(0, 160),
         author: session.user.name,
-        contentType: 'HTML',
+        contentType: contentMarkdown ? 'MARKDOWN' : 'HTML',
         category: category,
         draft: draft,
         published: published,
