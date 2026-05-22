@@ -29,8 +29,8 @@ export const dynamic = 'force-dynamic';
 
 const STATUS_LABELS: Record<string, string> = {
   'DRAFT': 'پیش‌نویس',
-  'PUBLISHED': 'منتشر',
-  'ARCHIVED': 'آرشیو',
+  'PUBLISHED': 'منتشرشده',
+  'ARCHIVED': 'بایگانی شده',
 };
 
 interface AdminUser {
@@ -165,8 +165,8 @@ export default function BlockNewsListPage() {
                 <SelectContent>
                   <SelectItem value="all">تمام وضعیت‌ها</SelectItem>
                   <SelectItem value="DRAFT">📝 پیش‌نویس</SelectItem>
-                  <SelectItem value="PUBLISHED">✓ منتشر</SelectItem>
-                  <SelectItem value="ARCHIVED">📦 آرشیو</SelectItem>
+                  <SelectItem value="PUBLISHED">✓ منتشرشده</SelectItem>
+                  <SelectItem value="ARCHIVED">📦 بایگانی شده</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -224,16 +224,20 @@ export default function BlockNewsListPage() {
                   <div className="p-4 md:p-6 bg-gradient-to-l from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 border-b border-blue-100 dark:border-blue-900/50">
                     <div className="flex items-start justify-between flex-row-reverse gap-3 mb-3">
                       <Badge className={`text-xs font-semibold px-3 py-1 flex-shrink-0 ${
-                        news.published
+                        news.draft
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : news.published
                           ? 'bg-green-100 dark:bg-green-950 text-green-800'
-                          : 'bg-yellow-100 text-yellow-800'
+                          : 'bg-orange-100 dark:bg-orange-950 text-orange-800'
                       }`}>
-                        {news.published ? '✓ منتشر' : '📝 پیش‌نویس'}
+                        {news.draft ? '📝 پیش‌نویس' : news.published ? '✓ منتشرشده' : '📦 بایگانی شده'}
                       </Badge>
                       <div className="text-right flex-1 min-w-0">
-                        <h3 className="font-bold text-base md:text-lg line-clamp-2 group-hover:text-blue-600 transition-colors">
-                          {news.title}
-                        </h3>
+                        <Link href={`/admin/block-news/${news.id}/preview`}>
+                          <h3 className="font-bold text-base md:text-lg line-clamp-2 group-hover:text-blue-600 transition-colors cursor-pointer hover:underline">
+                            {news.title}
+                          </h3>
+                        </Link>
                       </div>
                     </div>
                   </div>

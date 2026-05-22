@@ -1,4 +1,6 @@
 /**
+ * GET /api/admin/block-news/[id] - Fetch a single news article
+ * PATCH /api/admin/block-news/[id] - Update a news article metadata
  * DELETE /api/admin/block-news/[id] - Delete a news article
  */
 
@@ -9,7 +11,122 @@ import {
   HttpStatus,
 } from '@/lib/api-response';
 import { getAdminAuth } from '@/lib/auth-simple';
-import { deleteNews } from '@/lib/services/block-news-service';
+import { deleteNews, getNews, updateNewsMetadata } from '@/lib/services/block-news-service';
+import { UpdateNewsSchema } from '@/lib/schemas/block-news-schema';
+import type { UpdateNewsRequest } from '@/lib/types/block-news';
+
+export async function GET(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const adminAuth = await getAdminAuth(req);
+    if (!adminAuth) {
+      return errorResponse(
+        'ورود به سیستم الزامی است',
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
+    }
+
+    if (adminAuth.role !== 'ADMIN') {
+      return errorResponse(
+        'دسترسی منحصر به مدیران است',
+        ErrorCodes.FORBIDDEN,
+        undefined,
+        HttpStatus.FORBIDDEN
+      );
+    }
+
+    const { id } = await params;
+    const news = await getNews(id);
+    
+    return successResponse(news, 'خبر با موفقیت بارگذاری شد');
+  } catch (error: unknown) {
+    console.error('[GET /admin/block-news/:id] Error:', error);
+    
+    if (error instanceof Error && error.message.includes('یافت نشد')) {
+      return errorResponse(
+        'خبر مورد نظر یافت نشد',
+        ErrorCodes.NOT_FOUND,
+        undefined,
+        HttpStatus.NOT_FOUND
+      );
+    }
+
+    return errorResponse(
+      'خطا در بارگیری خبر',
+      ErrorCodes.INTERNAL_ERROR,
+      undefined,
+      HttpStatus.INTERNAL_SERVER_ERROR
+    );
+  }
+}
+
+export async function PATCH(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    console.log('[PATCH /admin/block-news/:id] Request start');
+
+    const adminAuth = await getAdminAuth(req);
+    if (!adminAuth) {
+      return errorResponse(
+        'ورود به سیستم الزامی است',
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
+    }
+
+    if (adminAuth.role !== 'ADMIN') {
+      return errorResponse(
+        'دسترسی منحصر به مدیران است',
+        ErrorCodes.FORBIDDEN,
+        undefined,
+        HttpStatus.FORBIDDEN
+      );
+    }
+
+    const { id } = await params;
+    const body = (await req.json()) as UpdateNewsRequest;
+    console.log('[PATCH /admin/block-news/:id] Received body:', JSON.stringify(body, null, 2));
+
+    const news = await updateNewsMetadata(id, body);
+    console.log('[PATCH /admin/block-news/:id] Updated news:', JSON.stringify(news, null, 2));
+
+    return successResponse(news, 'خبر با موفقیت به‌روزرسانی شد');
+  } catch (error: unknown) {
+    console.error('[PATCH /admin/block-news/:id] Error:', error);
+    
+    if (error instanceof Error) {
+      if (error.message.includes('یافت نشد') || error.message.includes('not found')) {
+        return errorResponse(
+          'خبر مورد نظر یافت نشد',
+          ErrorCodes.NOT_FOUND,
+          undefined,
+          HttpStatus.NOT_FOUND
+        );
+      }
+      
+      return errorResponse(
+        error.message || 'خطا در به‌روزرسانی خبر',
+        ErrorCodes.INTERNAL_ERROR,
+        undefined,
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+
+    return errorResponse(
+      'خطا در به‌روزرسانی خبر',
+      ErrorCodes.INTERNAL_ERROR,
+      undefined,
+      HttpStatus.INTERNAL_SERVER_ERROR
+    );
+  }
+}
 
 export async function DELETE(
   req: Request,

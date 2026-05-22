@@ -22,7 +22,9 @@ export async function createNews(data: {
   coverImage?: string;
   thumbnail?: string;  // Accept old naming
   categoryId?: string;
-  authorId: string;
+  author?: string;
+  authorId?: string;
+  publishedAt?: string | null;
 }) {
   const validated = CreateNewsSchema.parse(data);
   
@@ -35,6 +37,9 @@ export async function createNews(data: {
     throw new Error(`مقاله با این آدرس قبلا ایجاد شده است: ${slug}`);
   }
 
+  // If publishedAt is provided, article is being scheduled for future publication
+  const isScheduled = validated.publishedAt && validated.publishedAt !== '';
+  
   const news = await prisma.newsArticle.create({
     data: {
       title: validated.title,
@@ -43,10 +48,11 @@ export async function createNews(data: {
       content: validated.content || '',
       coverImage: validated.coverImage || null,
       categoryId: validated.categoryId,
-      author: validated.authorId,
+      author: validated.author,
       category: validated.categoryId || 'عمومی',
+      draft: !isScheduled,
       published: false,
-      publishedAt: null,
+      publishedAt: isScheduled ? new Date(validated.publishedAt) : null,
     },
     include: {
       relatedCategory: { select: { id: true, title: true, slug: true } },
@@ -89,17 +95,19 @@ export async function getNewsList(
 ) {
   const skip = (page - 1) * limit;
 
-  // Convert status filter to published boolean
-  let published: boolean | undefined;
+  // Build where clause based on status filter
+  const where: Record<string, unknown> = {};
+  
   if (filters.status === 'PUBLISHED') {
-    published = true;
-  } else if (filters.status === 'DRAFT' || filters.status === 'ARCHIVED') {
-    published = false;
+    where.published = true;
+  } else if (filters.status === 'DRAFT') {
+    where.published = false;
+    where.draft = true;
+  } else if (filters.status === 'ARCHIVED') {
+    where.published = false;
+    where.draft = false;
   }
 
-  // Build where clause
-  const where: Record<string, unknown> = {};
-  if (published !== undefined) where.published = published;
   if (filters.categoryId) where.categoryId = filters.categoryId;
   if (filters.search) {
     where.OR = [
@@ -131,7 +139,7 @@ export async function getNewsList(
 }
 
 /**
- * Update news article metadata (title, slug, excerpt, content, category, coverImage, publishedAt)
+ * Update news article metadata (title, slug, excerpt, content, category, coverImage, author, publishedAt)
  */
 export async function updateNewsMetadata(
   id: string,
@@ -139,9 +147,12 @@ export async function updateNewsMetadata(
     title?: string;
     slug?: string;
     excerpt?: string;
+    description?: string;
     content?: string;
     categoryId?: string | null;
     coverImage?: string;
+    thumbnail?: string;
+    author?: string;
     publishedAt?: string | null;
   }
 ) {
@@ -166,6 +177,7 @@ export async function updateNewsMetadata(
       ...(validated.content !== undefined && { content: validated.content }),
       ...(validated.categoryId !== undefined && { categoryId: validated.categoryId }),
       ...(validated.coverImage !== undefined && { coverImage: validated.coverImage }),
+      ...(validated.author !== undefined && { author: validated.author }),
       ...(validated.publishedAt !== undefined && { publishedAt: validated.publishedAt ? new Date(validated.publishedAt) : null }),
     },
     include: {
@@ -194,6 +206,7 @@ export async function publishNews(id: string) {
     where: { id },
     data: {
       published: true,
+      draft: false,
       // Only set publishedAt to now if it wasn't already scheduled
       publishedAt: currentNews.publishedAt || new Date(),
     },
@@ -206,12 +219,15 @@ export async function publishNews(id: string) {
 }
 
 /**
- * Archive a news article (set published=false)
+ * Archive a news article (set published=false, draft=false)
  */
 export async function archiveNews(id: string) {
   const news = await prisma.newsArticle.update({
     where: { id },
-    data: { published: false },
+    data: { 
+      published: false,
+      draft: false,
+    },
     include: {
       relatedCategory: { select: { id: true, title: true } },
     },

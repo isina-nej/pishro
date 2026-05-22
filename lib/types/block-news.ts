@@ -72,6 +72,8 @@ export interface CreateNewsRequest {
   coverImage?: string;
   thumbnail?: string;   // Old naming - will be converted to coverImage
   categoryId?: string;
+  author?: string;
+  publishedAt?: string;
 }
 
 export interface UpdateNewsRequest {
@@ -83,6 +85,7 @@ export interface UpdateNewsRequest {
   categoryId?: string | null;
   coverImage?: string;
   thumbnail?: string;   // Old naming - will be converted to coverImage
+  author?: string;
   publishedAt?: string | null;
 }
 

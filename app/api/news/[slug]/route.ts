@@ -24,6 +24,7 @@ export async function GET(
           content: true,
           coverImage: true,
           categoryId: true,
+          author: true,
           slug: true,
           published: true,
           createdAt: true,
@@ -57,7 +58,7 @@ export async function PUT(
   try {
     const { slug } = await params;
     const body = await request.json();
-    const { title, description, content, thumbnail, categoryId } = body;
+    const { title, description, content, thumbnail, categoryId, author } = body;
 
     if (!title || title.trim().length === 0) {
       return errorResponse('عنوان الزامی است', ErrorCodes.VALIDATION_ERROR, undefined, 400);
@@ -72,6 +73,7 @@ export async function PUT(
         content,
         coverImage: thumbnail,
         categoryId,
+        author,
         updatedAt: new Date(),
       },
       select: {
@@ -81,6 +83,7 @@ export async function PUT(
         content: true,
         coverImage: true,
         categoryId: true,
+        author: true,
         slug: true,
         published: true,
         createdAt: true,

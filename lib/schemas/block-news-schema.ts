@@ -152,8 +152,16 @@ export const CreateNewsSchema = z.object({
     })
     .transform((val) => val === '' ? undefined : val)
     .optional(),
+  author: z.string()
+    .max(255, 'نام نویسنده نمی‌تواند بیش از 255 کاراکتر باشد')
+    .optional(),
   authorId: z.string()
-    .min(1, 'شناسه نویسنده الزامی است'),
+    .min(1, 'شناسه نویسنده الزامی است')
+    .optional(),
+  publishedAt: z.string()
+    .datetime('تاریخ انتشار معتبر نیست')
+    .optional()
+    .nullable(),
 }).transform((data) => ({
   // Normalize: description → excerpt, thumbnail → coverImage
   ...data,
@@ -216,6 +224,9 @@ export const UpdateNewsSchema = z.object({
   publishedAt: z.string()
     .datetime('تاریخ انتشار باید یک ISO datetime معتبر باشد')
     .nullable()
+    .optional(),
+  author: z.string()
+    .max(255, 'نام نویسنده نمی‌تواند بیش از 255 کاراکتر باشد')
     .optional(),
 }).transform((data) => ({
   // Normalize: description → excerpt, thumbnail → coverImage

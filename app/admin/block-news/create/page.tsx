@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowRight, AlertCircle, FileText, Image as ImageIcon, Tag, Zap, Upload, X } from 'lucide-react';
+import { ArrowRight, AlertCircle, FileText, Image as ImageIcon, Tag, Zap, Upload, X, Clock } from 'lucide-react';
 import { useCreateBlockNews } from '@/lib/hooks/use-block-news';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import CKEditor5Wrapper from '@/components/admin/news/CKEditor5Wrapper';
@@ -38,6 +38,10 @@ export default function CreateBlockNewsPage() {
     content: '',
     thumbnail: '',
     categoryId: '',
+    author: '',
+    publishOption: 'manual',
+    scheduledDate: '',
+    scheduledTime: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
@@ -163,14 +167,27 @@ export default function CreateBlockNewsPage() {
       return;
     }
 
+    if (formData.publishOption === 'scheduled') {
+      if (!formData.scheduledDate || !formData.scheduledTime) {
+        alert('برای انتشار تایم دار، تاریخ و ساعت را مشخص کنید');
+        return;
+      }
+    }
+
     setIsSubmitting(true);
     try {
+      const publishedAtTime = formData.publishOption === 'scheduled'
+        ? new Date(`${formData.scheduledDate}T${formData.scheduledTime}`).toISOString()
+        : undefined;
+
       await createNewsMutation.mutateAsync({
         title: formData.title,
         description: formData.description || undefined,
         content: formData.content || undefined,
         thumbnail: formData.thumbnail || undefined,
         categoryId: formData.categoryId || undefined,
+        author: formData.author || undefined,
+        publishedAt: publishedAtTime,
       });
 
       router.push('/admin/block-news');
@@ -358,6 +375,95 @@ export default function CreateBlockNewsPage() {
               className="h-10 md:h-11 text-sm md:text-base bg-gray-50 dark:bg-gray-900 border-2"
             />
             <p className="text-xs text-muted-foreground mt-3">می‌توانید بعدا تغییر دهید</p>
+          </Card>
+
+          {/* Author */}
+          <Card className="p-4 md:p-8 border-0 shadow-lg">
+            <div className="flex items-center gap-3 mb-6">
+              <FileText className="w-5 h-5 text-orange-600 flex-shrink-0" />
+              <h2 className="text-lg md:text-xl font-bold">نویسنده</h2>
+            </div>
+
+            <Input
+              name="author"
+              value={formData.author}
+              onChange={handleInputChange}
+              placeholder="نام نویسنده (اختیاری)"
+              disabled={isSubmitting}
+              className="h-10 md:h-11 text-sm md:text-base bg-gray-50 dark:bg-gray-900 border-2"
+            />
+            <p className="text-xs text-muted-foreground mt-3">نام نویسنده خبر</p>
+          </Card>
+
+          {/* Scheduled Publish */}
+          <Card className="p-4 md:p-8 border-0 shadow-lg">
+            <div className="flex items-center gap-3 mb-6">
+              <Clock className="w-5 h-5 text-indigo-600 flex-shrink-0" />
+              <h2 className="text-lg md:text-xl font-bold">انتشار تایم دار</h2>
+            </div>
+
+            <div className="space-y-4">
+              {/* Publish Option Toggle */}
+              <div className="flex items-center gap-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="publishOption"
+                    value="manual"
+                    checked={formData.publishOption === 'manual'}
+                    onChange={handleInputChange}
+                    className="w-4 h-4"
+                  />
+                  <span className="text-sm font-medium">فوری</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="publishOption"
+                    value="scheduled"
+                    checked={formData.publishOption === 'scheduled'}
+                    onChange={handleInputChange}
+                    className="w-4 h-4"
+                  />
+                  <span className="text-sm font-medium">تایم دار</span>
+                </label>
+              </div>
+
+              {/* Scheduled Date and Time */}
+              {formData.publishOption === 'scheduled' && (
+                <div className="space-y-3 p-4 rounded-lg bg-indigo-50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-900/50">
+                  <div>
+                    <label className="text-sm font-semibold block mb-2">تاریخ انتشار</label>
+                    <Input
+                      type="date"
+                      name="scheduledDate"
+                      value={formData.scheduledDate}
+                      onChange={handleInputChange}
+                      disabled={isSubmitting}
+                      className="h-10 md:h-11 text-sm md:text-base bg-white dark:bg-gray-900 border-2"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold block mb-2">ساعت انتشار</label>
+                    <Input
+                      type="time"
+                      name="scheduledTime"
+                      value={formData.scheduledTime}
+                      onChange={handleInputChange}
+                      disabled={isSubmitting}
+                      className="h-10 md:h-11 text-sm md:text-base bg-white dark:bg-gray-900 border-2"
+                    />
+                  </div>
+                  <p className="text-xs text-indigo-600 dark:text-indigo-400">خبر در تاریخ و ساعت مشخص شده به صورت خودکار منتشر خواهد شد</p>
+                </div>
+              )}
+
+              {formData.publishOption === 'manual' && (
+                <p className="text-xs text-muted-foreground p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
+                  خبر فوری منتشر خواهد شد
+                </p>
+              )}
+            </div>
           </Card>
         </div>
 
