@@ -23,6 +23,7 @@ export interface MarkdownBlock {
   language?: string; // For code blocks
   src?: string; // For images
   alt?: string; // For images
+  title?: string; // For image captions
 }
 
 export function parseMarkdown(text: string): MarkdownBlock[] {
@@ -129,12 +130,13 @@ export function parseMarkdown(text: string): MarkdownBlock[] {
     }
     
     // Image
-    const imageMatch = trimmed.match(/^!\[(.+?)\]\((.+?)\)$/);
+    const imageMatch = trimmed.match(/^!\[(.+?)\]\((\S+?)(?:\s+"(.+?)")?\)$/);
     if (imageMatch) {
       blocks.push({
         type: 'image',
         alt: imageMatch[1],
-        src: imageMatch[2]
+        src: imageMatch[2],
+        title: imageMatch[3]
       });
       i++;
       continue;

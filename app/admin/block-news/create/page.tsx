@@ -165,7 +165,7 @@ export default function CreateBlockNewsPage() {
 
     setIsSubmitting(true);
     try {
-      const result = await createNewsMutation.mutateAsync({
+      await createNewsMutation.mutateAsync({
         title: formData.title,
         description: formData.description || undefined,
         content: formData.content || undefined,
@@ -173,7 +173,7 @@ export default function CreateBlockNewsPage() {
         categoryId: formData.categoryId || undefined,
       });
 
-      router.push(`/admin/block-news/${result.id}/edit`);
+      router.push('/admin/block-news');
     } catch (error) {
       console.error('خطا در ایجاد خبر:', error);
       alert('خطایی رخ داده است');
@@ -256,8 +256,8 @@ export default function CreateBlockNewsPage() {
                 <RichNewsEditor
                   initialContent="<p>محتوای خبر را اینجا شروع کنید...</p>"
                   placeholder="محتوای کامل خبر را اینجا بنویسید..."
-                  onContentChange={(json, html) => {
-                    setFormData((prev) => ({ ...prev, content: json }));
+                  onContentChange={(_, html) => {
+                    setFormData((prev) => ({ ...prev, content: html }));
                   }}
                   disabled={isSubmitting}
                   rtl={true}

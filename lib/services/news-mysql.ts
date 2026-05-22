@@ -6,6 +6,7 @@ interface NewsArticle {
   slug: string;
   excerpt?: string;
   content: string;
+  contentType?: 'TEXT' | 'HTML' | 'MARKDOWN';
   coverImage?: string;
   author?: string;
   category: string;
@@ -34,7 +35,7 @@ export async function getNews(params?: GetNewsParams) {
     const limit = Math.min(50, params?.limit || 12);
     const skip = (page - 1) * limit;
 
-    let sql = `SELECT * FROM News WHERE 1=1`;
+    let sql = `SELECT * FROM NewsArticle WHERE 1=1`;
     const sqlParams: any[] = [];
 
     // Default to published only if not specified
@@ -85,13 +86,13 @@ export async function getNews(params?: GetNewsParams) {
 export async function getNewsBySlug(slug: string) {
   try {
     const articles = await query<NewsArticle>(
-      `SELECT * FROM News WHERE slug = ? AND published = 1 LIMIT 1`,
+      `SELECT * FROM NewsArticle WHERE slug = ? AND published = 1 LIMIT 1`,
       [slug]
     );
     
     if (articles.length > 0) {
       // Increment views
-      await query(`UPDATE News SET views = views + 1 WHERE id = ?`, [
+      await query(`UPDATE NewsArticle SET views = views + 1 WHERE id = ?`, [
         articles[0].id,
       ]);
       return articles[0];
@@ -106,7 +107,7 @@ export async function getNewsBySlug(slug: string) {
 export async function getFeaturedNews(limit: number = 3) {
   try {
     const news = await query<NewsArticle>(
-      `SELECT * FROM News WHERE published = 1 AND featured = 1 ORDER BY publishedAt DESC LIMIT ${limit}`,
+      `SELECT * FROM NewsArticle WHERE published = 1 AND featured = 1 ORDER BY publishedAt DESC LIMIT ${limit}`,
       []
     );
     return news;

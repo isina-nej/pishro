@@ -66,18 +66,17 @@ const NewsCard = ({ data }: NewsCardProps) => {
         <div className="h-1 bg-gradient-to-r from-mySecondary to-mySecondary/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
         {/* تصویر - Fixed Width on Desktop, Full Width on Mobile */}
-        <div className="relative w-full md:w-[280px] lg:w-[320px] h-[200px] sm:h-[240px] md:h-[220px] lg:h-[240px] flex-shrink-0 overflow-hidden">
+        <div className="relative w-full md:w-[280px] lg:w-[320px] aspect-[4/3] md:aspect-[5/3] flex-shrink-0 overflow-hidden">
           <Image
             src={data.coverImage ?? "/images/default-news.jpg"}
             alt={data.title}
             fill
-            className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out w-full h-full"
-            sizes="(max-width: 640px) 100vw, 768px) 1024px) 280px, 320px"
+            className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 280px, 320px"
             priority={false}
           />
 
-          {/* Category badge */}
-          <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10">
+          <div className="absolute top-3 right-3 z-10">
             <span
               className={`${getCategoryColor(
                 data.category
@@ -88,7 +87,6 @@ const NewsCard = ({ data }: NewsCardProps) => {
           </div>
         </div>
 
-        {/* محتوا - Flexible Layout with Proper Spacing */}
         <div className="flex flex-col justify-between flex-1 px-3 sm:px-4 md:px-4 lg:px-6 py-3 sm:py-4 md:py-5 lg:py-6">
           {/* Title and Excerpt */}
           <div className="space-y-2 sm:space-y-2.5 md:space-y-2">
@@ -96,12 +94,24 @@ const NewsCard = ({ data }: NewsCardProps) => {
               {data.title}
             </h5>
 
-            <p className="font-normal text-xs sm:text-sm md:text-sm text-gray-600 dark:text-textSecondary leading-relaxed line-clamp-2 md:line-clamp-3">
+            <p className="font-normal text-xs sm:text-sm md:text-sm text-gray-600 dark:text-textSecondary leading-relaxed line-clamp-3">
               {data.excerpt}
             </p>
+
+            {data.tags.length > 0 && (
+              <div className="mt-3 flex flex-wrap gap-2">
+                {data.tags.slice(0, 3).map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-medium text-slate-600"
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Author and Meta Information */}
           <div className="space-y-2 sm:space-y-2.5 pt-2 sm:pt-3 border-t border-gray-100 dark:border-borderColor mt-2 sm:mt-3">
             {data.author && (
               <div className="flex items-center gap-2">

@@ -68,6 +68,28 @@ export async function getNewsById(id: string): Promise<NewsArticle> {
   }
 }
 
+export async function getNewsBySlug(slug: string): Promise<NewsArticle | null> {
+  try {
+    const baseUrl =
+      process.env.NODE_ENV === "production"
+        ? process.env.NEXT_PUBLIC_BASE_URL || window.location.origin
+        : "http://localhost:3000";
+
+    const { data } = await axios.get<ApiResponse<NewsArticle>>(
+      `${baseUrl}/api/news/${slug}`
+    );
+
+    if (data.status === "success") {
+      return data.data as NewsArticle;
+    }
+
+    return null;
+  } catch (error) {
+    console.error("Error fetching news article by slug:", error);
+    return null;
+  }
+}
+
 export async function createNewsArticle(
   articleData: Partial<NewsArticle>
 ): Promise<NewsArticle> {

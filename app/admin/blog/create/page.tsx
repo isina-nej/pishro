@@ -172,7 +172,7 @@ export default function CreateBlogPage() {
 
     setIsSubmitting(true);
     try {
-      const result = await createNewsMutation.mutateAsync({
+      await createNewsMutation.mutateAsync({
         title: formData.title,
         description: formData.description || undefined,
         content: formData.content,
@@ -180,7 +180,7 @@ export default function CreateBlogPage() {
         categoryId: formData.categoryId || 'blog',
       });
 
-      router.push(`/admin/block-news/${result.id}/edit`);
+      router.push('/admin/block-news');
     } catch (error) {
       console.error('خطا در ایجاد بلاگ:', error);
       alert('خطایی رخ داده است');
