@@ -50,11 +50,11 @@ export const CoursesFilterControls = ({
   disabled = false,
 }: CoursesFilterControlsProps) => {
   return (
-    <div className="flex flex-col gap-6 border-b border-slate-200 pb-8">
+    <div className="flex flex-col gap-6 border-b border-slate-200 pb-8 dark:border-borderColor">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-col gap-3 md:flex-row md:items-center">
-          <h2 className="text-xl font-bold text-slate-900">دوره‌های آموزشی</h2>
-          <p className="text-sm text-slate-500">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-textPrimary">دوره‌های آموزشی</h2>
+          <p className="text-sm text-slate-500 dark:text-textSecondary">
             دوره‌ها را بر اساس دسته‌بندی، سطح دشواری و موضوع مورد نظر خود فیلتر کنید.
           </p>
         </div>
@@ -66,7 +66,7 @@ export const CoursesFilterControls = ({
           >
             <SelectTrigger
               className={cn(
-                "w-full min-w-[180px] rounded-2xl border-slate-200 bg-white dark:bg-cardBg",
+                "w-full min-w-[180px] rounded-2xl border-slate-200 bg-white text-slate-700 dark:border-borderColor dark:bg-darkBgHidden dark:text-textPrimary",
                 disabled && "opacity-60"
               )}
               aria-disabled={disabled}
@@ -89,7 +89,7 @@ export const CoursesFilterControls = ({
           >
             <SelectTrigger
               className={cn(
-                "w-full min-w-[180px] rounded-2xl border-slate-200 bg-white dark:bg-cardBg",
+                "w-full min-w-[180px] rounded-2xl border-slate-200 bg-white text-slate-700 dark:border-borderColor dark:bg-darkBgHidden dark:text-textPrimary",
                 disabled && "opacity-60"
               )}
               aria-disabled={disabled}
@@ -110,7 +110,7 @@ export const CoursesFilterControls = ({
       <div className="flex flex-col gap-4">
         <div
           className={cn(
-            "flex items-center gap-3 rounded-2xl border border-slate-200 bg-white dark:bg-cardBg p-3 shadow-sm",
+            "flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-borderColor dark:bg-darkBgHidden",
             disabled && "opacity-60"
           )}
         >
@@ -118,7 +118,7 @@ export const CoursesFilterControls = ({
           <input
             value={query}
             onChange={(event) => onQueryChange(event.target.value)}
-            className="w-full bg-transparent text-sm text-slate-600 outline-none"
+            className="w-full bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400 dark:text-textPrimary dark:placeholder:text-textSecondary"
             placeholder="جستجوی سریع در بین دوره‌ها"
             disabled={disabled}
             aria-disabled={disabled}
@@ -126,7 +126,7 @@ export const CoursesFilterControls = ({
           {hasActiveFilters && (
             <button
               onClick={onResetFilters}
-              className="whitespace-nowrap text-xs font-semibold text-slate-500 transition-colors hover:text-slate-800"
+              className="whitespace-nowrap text-xs font-semibold text-slate-500 transition-colors hover:text-slate-800 dark:text-textSecondary dark:hover:text-textPrimary"
               disabled={disabled}
             >
               حذف فیلترها
@@ -142,8 +142,8 @@ export const CoursesFilterControls = ({
               className={cn(
                 "whitespace-nowrap rounded-full border px-4 py-2 text-sm font-medium transition-all",
                 selectedCategory === category
-                  ? "border-slate-900 bg-slate-900 text-white shadow"
-                  : "border-slate-200 bg-white dark:bg-cardBg text-slate-600 hover:bg-slate-100",
+                  ? "border-mySecondary bg-mySecondary text-white shadow"
+                  : "border-slate-200 bg-white text-slate-700 hover:border-mySecondary/40 hover:bg-slate-50 dark:border-borderColor dark:bg-darkBgHidden dark:text-textSecondary dark:hover:bg-cardBg",
                 disabled && "pointer-events-none opacity-60"
               )}
               aria-pressed={selectedCategory === category}

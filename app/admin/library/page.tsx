@@ -16,6 +16,7 @@ interface DigitalBook {
   views: number;
   downloads: number;
   isFeatured: boolean;
+  bookStatus: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
   createdAt: string;
   updatedAt: string;
 }
@@ -37,6 +38,8 @@ export default function LibraryManagementPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [deleting, setDeleting] = useState<string | null>(null);
   const [filterCategory, setFilterCategory] = useState<string>('همه');
+  const [filterStatus, setFilterStatus] = useState<string>('همه');
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
 
   const categories = [
     'همه',
@@ -131,14 +134,76 @@ export default function LibraryManagementPage() {
     }
   };
 
+  const handlePublish = async (bookId: string) => {
+    try {
+      setActionLoading(bookId);
+      const response = await fetch(`/api/library/${bookId}/publish`, {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        throw new Error('خطا در منتشر کردن کتاب');
+      }
+
+      const data = await response.json();
+      setBooks(books.map((book) => (book.id === bookId ? data.data : book)));
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'خطایی رخ داد');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleArchive = async (bookId: string) => {
+    try {
+      setActionLoading(bookId);
+      const response = await fetch(`/api/library/${bookId}/archive`, {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        throw new Error('خطا در آرشیو کردن کتاب');
+      }
+
+      const data = await response.json();
+      setBooks(books.map((book) => (book.id === bookId ? data.data : book)));
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'خطایی رخ داد');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleRestore = async (bookId: string) => {
+    try {
+      setActionLoading(bookId);
+      const response = await fetch(`/api/library/${bookId}/restore`, {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        throw new Error('خطا در بیرون آوردن کتاب از آرشیو');
+      }
+
+      const data = await response.json();
+      setBooks(books.map((book) => (book.id === bookId ? data.data : book)));
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'خطایی رخ داد');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   const filteredBooks = books.filter((book) => {
     const matchesSearch =
       book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       book.author.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesCategory = filterCategory === 'همه' || book.category === filterCategory;
+    
+    const matchesStatus = filterStatus === 'همه' || book.bookStatus === filterStatus;
 
-    return matchesSearch && matchesCategory;
+    return matchesSearch && matchesCategory && matchesStatus;
   });
 
   if (isLoadingUser) {
@@ -209,6 +274,23 @@ export default function LibraryManagementPage() {
               ))}
             </select>
           </div>
+
+          {/* Status Filter */}
+          <div>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              وضعیت:
+            </label>
+            <select
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white outline-none focus:border-blue-500"
+            >
+              <option value="همه">همه</option>
+              <option value="DRAFT">پیشنویس</option>
+              <option value="PUBLISHED">منتشر شده</option>
+              <option value="ARCHIVED">آرشیو شده</option>
+            </select>
+          </div>
         </div>
 
         {/* Error Message */}
@@ -263,6 +345,9 @@ export default function LibraryManagementPage() {
                       دانلود
                     </th>
                     <th className="px-4 py-3 text-center text-sm font-semibold text-slate-900 dark:text-white">
+                      وضعیت
+                    </th>
+                    <th className="px-4 py-3 text-center text-sm font-semibold text-slate-900 dark:text-white">
                       عملیات
                     </th>
                   </tr>
@@ -303,26 +388,82 @@ export default function LibraryManagementPage() {
                       <td className="px-4 py-3 text-center text-sm text-slate-600 dark:text-slate-300">
                         {book.downloads.toLocaleString('fa-IR')}
                       </td>
+                      <td className="px-4 py-3 text-center">
+                        {book.bookStatus === 'DRAFT' && (
+                          <span className="px-3 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 text-xs rounded-full font-medium">
+                            پیشنویس
+                          </span>
+                        )}
+                        {book.bookStatus === 'PUBLISHED' && (
+                          <span className="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs rounded-full font-medium">
+                            منتشر شده
+                          </span>
+                        )}
+                        {book.bookStatus === 'ARCHIVED' && (
+                          <span className="px-3 py-1 bg-gray-100 dark:bg-gray-900/30 text-gray-800 dark:text-gray-300 text-xs rounded-full font-medium">
+                            آرشیو شده
+                          </span>
+                        )}
+                      </td>
                       <td className="px-4 py-3">
-                        <div className="flex items-center justify-center gap-2">
-                          <Link
-                            href={`/admin/library/${book.id}`}
-                            className="inline-flex items-center gap-1 px-2 py-1 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded text-sm transition"
-                          >
-                            <Edit2 className="w-4 h-4" />
-                            ویرایش
-                          </Link>
+                        <div className="flex items-center justify-center gap-1 flex-wrap">
+                          {book.bookStatus === 'DRAFT' && (
+                            <button
+                              onClick={() => handlePublish(book.id)}
+                              disabled={actionLoading === book.id}
+                              className="px-2 py-1 bg-green-50 dark:bg-green-900/30 hover:bg-green-100 dark:hover:bg-green-900/50 text-green-700 dark:text-green-300 rounded text-xs transition disabled:opacity-50"
+                            >
+                              {actionLoading === book.id ? (
+                                <Loader2 className="w-3 h-3 animate-spin inline" />
+                              ) : (
+                                'منتشر'
+                              )}
+                            </button>
+                          )}
+                          {book.bookStatus === 'PUBLISHED' && (
+                            <>
+                              <Link
+                                href={`/admin/library/${book.id}`}
+                                className="px-2 py-1 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded text-xs transition"
+                              >
+                                ویرایش
+                              </Link>
+                              <button
+                                onClick={() => handleArchive(book.id)}
+                                disabled={actionLoading === book.id}
+                                className="px-2 py-1 bg-orange-50 dark:bg-orange-900/30 hover:bg-orange-100 dark:hover:bg-orange-900/50 text-orange-700 dark:text-orange-300 rounded text-xs transition disabled:opacity-50"
+                              >
+                                {actionLoading === book.id ? (
+                                  <Loader2 className="w-3 h-3 animate-spin inline" />
+                                ) : (
+                                  'آرشیو'
+                                )}
+                              </button>
+                            </>
+                          )}
+                          {book.bookStatus === 'ARCHIVED' && (
+                            <button
+                              onClick={() => handleRestore(book.id)}
+                              disabled={actionLoading === book.id}
+                              className="px-2 py-1 bg-purple-50 dark:bg-purple-900/30 hover:bg-purple-100 dark:hover:bg-purple-900/50 text-purple-700 dark:text-purple-300 rounded text-xs transition disabled:opacity-50"
+                            >
+                              {actionLoading === book.id ? (
+                                <Loader2 className="w-3 h-3 animate-spin inline" />
+                              ) : (
+                                'بیرون آوردن'
+                              )}
+                            </button>
+                          )}
                           <button
                             onClick={() => handleDelete(book.id, book.title)}
                             disabled={deleting === book.id}
-                            className="inline-flex items-center gap-1 px-2 py-1 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50 text-red-700 dark:text-red-300 rounded text-sm transition disabled:opacity-50"
+                            className="px-2 py-1 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50 text-red-700 dark:text-red-300 rounded text-xs transition disabled:opacity-50"
                           >
                             {deleting === book.id ? (
-                              <Loader2 className="w-4 h-4 animate-spin" />
+                              <Loader2 className="w-3 h-3 animate-spin inline" />
                             ) : (
-                              <Trash2 className="w-4 h-4" />
+                              'حذف'
                             )}
-                            حذف
                           </button>
                         </div>
                       </td>

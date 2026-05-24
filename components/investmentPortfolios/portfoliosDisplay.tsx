@@ -85,7 +85,7 @@ const PortfoliosDisplay = () => {
   };
 
   return (
-    <section className="w-full bg-gray-50 dark:bg-darkBgHidden py-16 md:py-24">
+    <section className="w-full bg-slate-50 py-16 md:py-24 dark:bg-darkBgHidden">
       <div className="container-xl">
         {/* Header */}
         <div className="text-center mb-12">
@@ -104,7 +104,7 @@ const PortfoliosDisplay = () => {
             return (
               <div
                 key={portfolio.id}
-                className={`relative bg-white dark:bg-cardBg dark:bg-cardBg dark:bg-cardBg dark:bg-cardBg rounded-2xl border-2 ${getBorderColor(
+                className={`relative rounded-2xl border-2 bg-white shadow-sm shadow-slate-200/70 dark:bg-cardBg dark:shadow-none ${getBorderColor(
                   portfolio.color
                 )} p-6 md:p-8 hover:shadow-xl transition-all duration-300 ${
                   portfolio.recommended ? "ring-2 ring-orange-400" : ""
@@ -175,9 +175,9 @@ const PortfoliosDisplay = () => {
         </div>
 
         {/* Info Box */}
-        <div className="mt-12 bg-blue-50 border border-blue-200 rounded-2xl p-6 md:p-8">
+        <div className="mt-12 rounded-2xl border border-blue-200 bg-blue-50 p-6 md:p-8 dark:border-blue-900/60 dark:bg-blue-950/30">
           <div className="flex items-start gap-4">
-            <div className="flex-shrink-0 w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+            <div className="flex-shrink-0 w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center dark:bg-blue-900/50">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="w-6 h-6 text-blue-600 dark:text-blue-400"
@@ -194,8 +194,8 @@ const PortfoliosDisplay = () => {
               </svg>
             </div>
             <div>
-              <h4 className="text-lg font-bold text-blue-900 mb-2">نکته مهم</h4>
-              <p className="text-blue-800 leading-relaxed">
+              <h4 className="text-lg font-bold text-blue-900 dark:text-blue-200 mb-2">نکته مهم</h4>
+              <p className="text-blue-800 dark:text-blue-100 leading-relaxed">
                 تمامی سبدهای سرمایه‌ گذاری پیشرو با تضمین اصل سرمایه ارائه
                 می‌شوند. هزینه هر سبد متناسب با مبلغ سرمایه‌ گذاری و مدت زمان
                 انتخابی شما محاسبه خواهد شد.

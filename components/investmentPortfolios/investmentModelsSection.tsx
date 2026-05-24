@@ -287,7 +287,7 @@ const InvestmentModelsSection = () => {
   // Loading state
   if (isLoading) {
     return (
-      <section className="w-full bg-gradient-to-br from-gray-50 via-white to-gray-50 py-16 md:py-24 mt-24">
+      <section className="w-full bg-gradient-to-br from-slate-50 via-white to-slate-100 py-16 md:py-24 mt-24 dark:from-bodyBg dark:via-cardBg dark:to-bodyBg">
         <div className="container-xl">
           <div className="text-center">در حال بارگذاری...</div>
         </div>
@@ -296,7 +296,7 @@ const InvestmentModelsSection = () => {
   }
 
   return (
-    <section className="w-full bg-gradient-to-br from-gray-50 via-white to-gray-50 py-16 md:py-24 mt-24">
+    <section className="w-full bg-gradient-to-br from-slate-50 via-white to-slate-100 py-16 md:py-24 mt-24 dark:from-bodyBg dark:via-cardBg dark:to-bodyBg">
       <div className="container-xl">
         {/* Models Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
@@ -305,14 +305,14 @@ const InvestmentModelsSection = () => {
             return (
               <div
                 key={model.id}
-                className="flex flex-col bg-white dark:bg-cardBg rounded-3xl shadow-xl border border-gray-200 dark:border-borderColor overflow-hidden hover:shadow-2xl transition-shadow duration-300"
+                className="flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-200/70 transition-shadow duration-300 hover:shadow-2xl dark:border-borderColor dark:bg-cardBg dark:shadow-none"
               >
                 {/* Header با gradient - با ارتفاع یکسان */}
                 <div
                   className={`bg-gradient-to-br ${model.gradient} p-8 text-white min-h-[200px] md:min-h-[220px] flex flex-col justify-center`}
                 >
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="w-16 h-16 rounded-2xl bg-white dark:bg-cardBg backdrop-blur-sm flex items-center justify-center">
+                    <div className="w-16 h-16 rounded-2xl bg-white/15 text-white backdrop-blur-sm flex items-center justify-center">
                       <Icon size={32} />
                     </div>
                     <div>

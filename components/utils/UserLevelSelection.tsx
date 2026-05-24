@@ -128,7 +128,7 @@ const UserLevelSection = ({ categorySlug }: UserLevelSectionProps) => {
               </p>
               <button
                 onClick={handleOpenDialog}
-                className="mt-4 sm:mt-5 md:mt-6 px-8 sm:px-10 md:px-12 py-3 sm:py-3.5 md:py-4 bg-white dark:bg-cardBg text-mySecondary text-sm sm:text-base md:text-lg font-semibold rounded-full hover:scale-105 transition-all w-full sm:w-auto"
+                className="mt-4 sm:mt-5 md:mt-6 px-8 sm:px-10 md:px-12 py-3 sm:py-3.5 md:py-4 bg-white dark:bg-cardBg text-mySecondary dark:text-textPrimary text-sm sm:text-base md:text-lg font-semibold rounded-full hover:scale-105 transition-all w-full sm:w-auto"
                 aria-label={`شروع آزمون ${levelItem.title}`}
               >
                 آزمون تعیین سطح

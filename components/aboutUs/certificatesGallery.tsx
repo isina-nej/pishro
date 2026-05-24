@@ -23,7 +23,7 @@ const CertificatesGallery = ({ certificates }: CertificatesGalleryProps) => {
 
   return (
     <>
-      <div ref={ref} className="bg-gradient-to-b from-white to-gray-50 py-20">
+      <div ref={ref} className="bg-gradient-to-b from-white to-slate-50 py-20 dark:from-bodyBg dark:to-darkBgHidden">
         <div className="container-md">
           {/* Header */}
           <motion.div
@@ -116,7 +116,7 @@ const CertificatesGallery = ({ certificates }: CertificatesGalleryProps) => {
           {/* Close Button */}
           <button
             onClick={() => setSelectedImage(null)}
-            className="absolute top-4 left-4 bg-white dark:bg-cardBg hover:bg-white text-white p-3 rounded-full backdrop-blur-sm transition-all z-10"
+            className="absolute top-4 left-4 rounded-full bg-white/90 p-3 text-slate-900 backdrop-blur-sm transition-all hover:bg-white z-10"
           >
             <HiXMark className="text-2xl" />
           </button>
@@ -136,12 +136,12 @@ const CertificatesGallery = ({ certificates }: CertificatesGalleryProps) => {
           </motion.div>
 
           {/* Info */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-white dark:bg-cardBg backdrop-blur-md text-white px-8 py-4 rounded-2xl max-w-2xl text-center">
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 rounded-2xl bg-white/90 px-8 py-4 text-center text-slate-900 backdrop-blur-md max-w-2xl">
             <h3 className="font-bold text-xl mb-2">
               {certificates[selectedImage].title}
             </h3>
             {certificates[selectedImage].description && (
-              <p className="text-gray-200">
+              <p className="text-slate-600">
                 {certificates[selectedImage].description}
               </p>
             )}

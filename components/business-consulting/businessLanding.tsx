@@ -51,8 +51,8 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
           {/* 📍 مشاوره حضوری */}
           <Drawer>
             <DrawerTrigger asChild>
-              <button className="group relative w-full sm:w-auto px-6 py-3 rounded-xl bg-white dark:bg-cardBg hover:bg-white text-white font-medium backdrop-blur-sm shadow-lg transition-all flex items-center justify-center gap-2">
-                <PhoneCall className="h-5 w-5 text-green-400 group-hover:scale-110 transition-transform" />
+              <button className="group relative flex w-full items-center justify-center gap-2 rounded-xl border border-green-200 bg-white px-6 py-3 font-medium !text-[#214254] shadow-lg transition-all hover:border-green-400 hover:bg-green-50 sm:w-auto dark:border-borderColor dark:bg-cardBg dark:!text-textPrimary dark:hover:bg-darkBgHidden">
+                <PhoneCall className="h-5 w-5 text-green-600 transition-transform group-hover:scale-110 dark:text-green-400" />
                 رزرو مشاوره حضوری
               </button>
             </DrawerTrigger>
@@ -94,8 +94,8 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
           {/* 💻 مشاوره آنلاین */}
           <Drawer>
             <DrawerTrigger asChild>
-              <button className="group relative w-full sm:w-auto px-6 py-3 rounded-xl bg-white dark:bg-cardBg hover:bg-white text-white font-medium backdrop-blur-sm shadow-lg transition-all flex items-center justify-center gap-2">
-                <Send className="h-5 w-5 text-blue-400 group-hover:scale-110 transition-transform" />
+              <button className="group relative flex w-full items-center justify-center gap-2 rounded-xl border border-blue-200 bg-white px-6 py-3 font-medium !text-[#214254] shadow-lg transition-all hover:border-blue-400 hover:bg-blue-50 sm:w-auto dark:border-borderColor dark:bg-cardBg dark:!text-textPrimary dark:hover:bg-darkBgHidden">
+                <Send className="h-5 w-5 text-blue-600 transition-transform group-hover:scale-110 dark:text-blue-400" />
                 رزرو مشاوره آنلاین
               </button>
             </DrawerTrigger>
@@ -138,8 +138,8 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
           {/* 🎓 دوره‌ها */}
           <Drawer>
             <DrawerTrigger asChild>
-              <button className="group relative w-full sm:w-auto px-6 py-3 rounded-xl bg-white dark:bg-cardBg hover:bg-white text-white font-medium backdrop-blur-sm shadow-lg transition-all flex items-center justify-center gap-2">
-                <GraduationCap className="h-5 w-5 text-yellow-400 group-hover:scale-110 transition-transform" />
+              <button className="group relative flex w-full items-center justify-center gap-2 rounded-xl border border-yellow-200 bg-white px-6 py-3 font-medium !text-[#214254] shadow-lg transition-all hover:border-yellow-400 hover:bg-yellow-50 sm:w-auto dark:border-borderColor dark:bg-cardBg dark:!text-textPrimary dark:hover:bg-darkBgHidden">
+                <GraduationCap className="h-5 w-5 text-yellow-600 transition-transform group-hover:scale-110 dark:text-yellow-400" />
                 دوره‌ها
               </button>
             </DrawerTrigger>

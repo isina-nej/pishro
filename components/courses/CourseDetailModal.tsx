@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
-import { X, Clock, Users, Video, ShoppingCart, Heart, ThumbsUp, ThumbsDown, Bookmark, Share2 } from "lucide-react";
+import { ShoppingCart, Heart, ThumbsUp, ThumbsDown, Bookmark, Share2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -14,7 +13,12 @@ import { useCartStore } from "@/stores/cart-store";
 import toast from "react-hot-toast";
 import type { Course } from "@/lib/types/db";
 
-type CourseWithCategory = Course & {
+type CourseData = Course | (Omit<Course, "createdAt" | "updatedAt"> & {
+  createdAt: string | Date;
+  updatedAt: string | Date;
+});
+
+type CourseWithCategory = CourseData & {
   category?: {
     id: string;
     slug: string;
@@ -42,11 +46,6 @@ export default function CourseDetailModal({ course, trigger }: Props) {
   const finalPrice = course.discountPercent
     ? Math.round(course.price * (1 - course.discountPercent / 100))
     : course.price;
-
-  const courseLink =
-    course.slug && course.category?.slug
-      ? `/courses/${course.category.slug}/${course.slug}`
-      : "/courses";
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("fa-IR", {
@@ -115,7 +114,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
           text: course.description ?? undefined,
           url: window.location.href,
         });
-      } catch (err) {
+      } catch {
         // User cancelled share
       }
     } else {
@@ -138,14 +137,14 @@ export default function CourseDetailModal({ course, trigger }: Props) {
       toast.success("این دوره قبلاً به سبد خرید اضافه شده است");
       return;
     }
-    addToCart(course as any);
+    addToCart(course);
     toast.success(`«${course.subject}» به سبد خرید اضافه شد 🛒`);
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="max-w-4xl w-full sm:w-[95vw] max-h-screen sm:max-h-[90vh] overflow-y-auto p-0 bg-gray-950 rounded-none sm:rounded-lg flex flex-col">
+      <DialogContent className="max-w-4xl w-full sm:w-[95vw] max-h-screen sm:max-h-[90vh] overflow-y-auto p-0 bg-white text-slate-900 dark:bg-gray-950 dark:text-textPrimary rounded-none sm:rounded-lg flex flex-col">
         {/* Header with Video Player */}
         <div className="relative w-full h-64 sm:h-80 bg-black flex items-center justify-center overflow-hidden flex-shrink-0 group">
           {/* Video or Image */}
@@ -181,7 +180,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                   {course.subject}
                 </h1>
                 {course.category && (
-                  <span className="inline-block mt-2 bg-mySecondary/40 text-mySecondary px-3 py-1 rounded-full text-xs sm:text-lg font-bold">
+                  <span className="inline-block mt-2 rounded-full border border-white/20 bg-white/15 px-3 py-1 text-xs sm:text-lg font-bold text-white backdrop-blur">
                     {course.category.title}
                   </span>
                 )}
@@ -211,7 +210,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
               className={`p-2 sm:p-2.5 rounded-lg font-medium transition flex items-center justify-center ${
                 liked === "LIKE"
                   ? "bg-blue-600 text-white"
-                  : "text-white hover:bg-white dark:bg-cardBg dark:bg-cardBg/20"
+                  : "bg-black/20 text-white hover:bg-white/20 dark:bg-cardBg/20"
               }`}
             >
               <ThumbsUp size={18} />
@@ -225,7 +224,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
               className={`p-2 sm:p-2.5 rounded-lg font-medium transition flex items-center justify-center ${
                 liked === "DISLIKE"
                   ? "bg-red-600 text-white"
-                  : "text-white hover:bg-white dark:bg-cardBg dark:bg-cardBg/20"
+                  : "bg-black/20 text-white hover:bg-white/20 dark:bg-cardBg/20"
               }`}
             >
               <ThumbsDown size={18} />
@@ -239,7 +238,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
               className={`p-2 sm:p-2.5 rounded-lg font-medium transition flex items-center justify-center ${
                 saved
                   ? "bg-purple-600 text-white"
-                  : "text-white hover:bg-white dark:bg-cardBg dark:bg-cardBg/20"
+                  : "bg-black/20 text-white hover:bg-white/20 dark:bg-cardBg/20"
               }`}
             >
               <Bookmark size={18} fill={saved ? "currentColor" : "none"} />
@@ -249,7 +248,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
             <button
               onClick={handleShare}
               title="اشتراک"
-              className="p-2 sm:p-2.5 rounded-lg font-medium text-white hover:bg-white dark:bg-cardBg transition flex items-center justify-center"
+              className="p-2 sm:p-2.5 rounded-lg font-medium bg-black/20 text-white hover:bg-white/20 dark:bg-cardBg/20 transition flex items-center justify-center"
             >
               <Share2 size={18} />
             </button>
@@ -270,14 +269,14 @@ export default function CourseDetailModal({ course, trigger }: Props) {
             {course.rating && (
               <div className="flex items-center gap-2 mb-3">
                 <RatingStars rating={course.rating} />
-                <span className="text-xs sm:text-sm text-gray-400 dark:text-textSecondary">
+                <span className="text-xs sm:text-sm text-slate-500 dark:text-textSecondary">
                   ({course.rating.toFixed(1)})
                 </span>
               </div>
             )}
 
             {course.description && (
-              <p className="text-gray-400 dark:text-textSecondary text-sm sm:text-base">{course.description}</p>
+              <p className="text-slate-600 dark:text-textSecondary text-sm sm:text-base">{course.description}</p>
             )}
           </div>
 
@@ -325,7 +324,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
 
           {/* Tabs */}
           <div className="mb-6 sm:mb-8">
-            <div className="flex gap-3 sm:gap-4 border-b border-gray-800 mb-4 sm:mb-6 overflow-x-auto">
+            <div className="flex gap-3 sm:gap-4 border-b border-slate-200 dark:border-gray-800 mb-4 sm:mb-6 overflow-x-auto">
               {["about", "lessons", "reviews"].map((tab) => (
                 <button
                   key={tab}
@@ -333,7 +332,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                   className={`pb-3 font-bold border-b-2 transition text-sm sm:text-base whitespace-nowrap ${
                     activeTab === tab
                       ? "border-mySecondary text-mySecondary"
-                      : "border-transparent text-gray-400 dark:text-textSecondary hover:text-gray-300"
+                      : "border-transparent text-slate-500 dark:text-textSecondary hover:text-slate-800 dark:hover:text-gray-300"
                   }`}
                 >
                   {tab === "about" && "درباره"}
@@ -349,8 +348,8 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                 <div className="space-y-3 sm:space-y-4">
                   {course.description && (
                     <div>
-                      <h3 className="font-bold text-base sm:text-lg mb-2 text-white">توضیحات</h3>
-                      <p className="text-gray-400 dark:text-textSecondary leading-relaxed text-sm sm:text-base">
+                      <h3 className="font-bold text-base sm:text-lg mb-2 text-slate-900 dark:text-white">توضیحات</h3>
+                      <p className="text-slate-600 dark:text-textSecondary leading-relaxed text-sm sm:text-base">
                         {course.description}
                       </p>
                     </div>
@@ -358,12 +357,12 @@ export default function CourseDetailModal({ course, trigger }: Props) {
 
                   {course.learningGoals && course.learningGoals.length > 0 && (
                     <div>
-                      <h3 className="font-bold text-base sm:text-lg mb-2 text-white">اهداف یادگیری</h3>
+                      <h3 className="font-bold text-base sm:text-lg mb-2 text-slate-900 dark:text-white">اهداف یادگیری</h3>
                       <ul className="space-y-2">
                         {course.learningGoals.map((goal, idx) => (
                           <li key={idx} className="flex items-start gap-2">
                             <span className="text-mySecondary mt-1 flex-shrink-0">✓</span>
-                            <span className="text-gray-400 dark:text-textSecondary text-sm sm:text-base">{goal}</span>
+                            <span className="text-slate-600 dark:text-textSecondary text-sm sm:text-base">{goal}</span>
                           </li>
                         ))}
                       </ul>
@@ -374,10 +373,10 @@ export default function CourseDetailModal({ course, trigger }: Props) {
 
               {activeTab === "lessons" && (
                 <div className="space-y-2">
-                  <p className="text-gray-400 dark:text-textSecondary text-sm sm:text-base">
+                  <p className="text-slate-600 dark:text-textSecondary text-sm sm:text-base">
                     این دوره دارای {course.videosCount} درس است.
                   </p>
-                  <p className="text-xs sm:text-sm text-gray-500 dark:text-textSecondary">
+                  <p className="text-xs sm:text-sm text-slate-500 dark:text-textSecondary">
                     برای مشاهده درس‌ها صفحه کامل دوره را باز کنید.
                   </p>
                 </div>
@@ -388,14 +387,14 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                   {course.rating && (
                     <div className="flex items-center gap-4">
                       <div>
-                        <div className="text-3xl sm:text-4xl font-bold text-white">
+                        <div className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">
                           {course.rating.toFixed(1)}
                         </div>
                         <RatingStars rating={course.rating} />
                       </div>
                     </div>
                   )}
-                  <p className="text-gray-400 dark:text-textSecondary text-xs sm:text-sm">
+                  <p className="text-slate-600 dark:text-textSecondary text-xs sm:text-sm">
                     برای مشاهده تمام نظرات کاربران صفحه کامل دوره را باز کنید.
                   </p>
                 </div>
@@ -404,7 +403,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
           </div>
 
           {/* Price & Action Buttons */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 pt-6 sm:pt-8 border-t border-gray-800">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 pt-6 sm:pt-8 border-t border-slate-200 dark:border-gray-800">
             <div className="flex-1">
               <div className="flex items-baseline gap-2">
                 <span className="text-2xl sm:text-3xl font-bold text-mySecondary">
@@ -423,7 +422,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
               className={`p-3 rounded-lg transition flex-shrink-0 ${
                 isFavorite
                   ? "bg-red-500 text-white"
-                  : "bg-gray-800 text-gray-400 dark:text-textSecondary hover:bg-gray-700 hover:text-gray-300"
+                  : "bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-gray-800 dark:text-textSecondary dark:hover:bg-gray-700 dark:hover:text-gray-300"
               }`}
             >
               <Heart size={20} fill={isFavorite ? "currentColor" : "none"} />

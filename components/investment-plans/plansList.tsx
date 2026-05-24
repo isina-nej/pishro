@@ -78,8 +78,8 @@ const PlansList = ({ investmentPlansData }: PlansListProps) => {
         {PlansListData.map((item, idx) => (
           <Drawer key={idx}>
             <DrawerTrigger asChild>
-              <button className="group relative w-full sm:w-auto px-6 py-3 rounded-xl bg-white dark:bg-cardBg hover:bg-white text-white font-medium backdrop-blur-sm shadow-lg transition-all flex items-center justify-center gap-2">
-                <item.Icon className="h-5 w-5 text-white/80 group-hover:scale-110 transition-transform" />
+              <button className="group relative flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-200 bg-white px-6 py-3 font-medium text-mySecondary shadow-lg shadow-emerald-950/5 transition-all hover:border-emerald-400 hover:bg-emerald-50 sm:w-auto dark:border-borderColor dark:bg-cardBg dark:text-textPrimary dark:hover:bg-darkBgHidden">
+                <item.Icon className="h-5 w-5 text-emerald-700 transition-transform group-hover:scale-110 dark:text-emerald-300" />
                 {item.label}
               </button>
             </DrawerTrigger>

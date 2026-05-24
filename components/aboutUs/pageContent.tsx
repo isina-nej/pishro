@@ -20,7 +20,7 @@ const AboutUsContent = ({ aboutPageData }: AboutUsContentProps) => {
   }
 
   return (
-    <div>
+    <div className="bg-white text-slate-900 dark:bg-bodyBg dark:text-textPrimary">
       {/* Hero با دیزاین مدرن */}
       <HeroSection
         title={aboutPageData.heroTitle}

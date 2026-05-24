@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { signOut } from "next-auth/react"; // ← import signOut
 import { useCurrentUser } from "@/lib/hooks/useUser";
+import { cn } from "@/lib/utils";
 
 // Heroicons
 import {
@@ -13,11 +14,14 @@ import {
   HiHome,
   HiOutlineShoppingCart,
   HiShoppingCart,
+  HiOutlineAcademicCap,
+  HiAcademicCap,
   HiOutlineClipboardList,
   HiClipboardList,
   HiOutlineUser,
   HiUser,
 } from "react-icons/hi";
+import { LogOut } from "lucide-react";
 
 const ProfileAside = () => {
   const pathname = usePathname();
@@ -40,6 +44,12 @@ const ProfileAside = () => {
       outlinedIcon: <HiOutlineHome />,
       filledIcon: <HiHome />,
       link: "/profile/acc",
+    },
+    {
+      label: "دوره‌های من",
+      outlinedIcon: <HiOutlineAcademicCap />,
+      filledIcon: <HiAcademicCap />,
+      link: "/profile/courses",
     },
     {
       label: "سفارش ها",
@@ -70,68 +80,70 @@ const ProfileAside = () => {
   };
 
   return (
-    <aside className="rounded-md bg-[#131B22] text-white w-full md:w-[286px] md:min-w-[286px]">
+    <aside className="w-full overflow-hidden rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-sm dark:border-borderColor dark:bg-cardBg dark:text-textPrimary md:w-[264px] md:min-w-[264px]">
       {/* بخش پروفایل کاربر */}
-      <div className="w-full flex flex-col justify-center items-center pt-6 md:pt-8 pb-8 md:pb-16 border-b border-dashed border-[#495157]">
-        <div className="relative rounded-full overflow-hidden w-16 h-16 md:w-20 md:h-20 mb-2 bg-gray-700">
-          <Image
-            alt="user-profile"
-            src={user?.avatarUrl || "/images/profile/profile-1.png"}
-            fill
-            className="object-cover"
-          />
+      <div className="w-full border-b border-slate-100 p-5 dark:border-borderColor">
+        <div className="flex items-center gap-3">
+          <div className="relative h-14 w-14 overflow-hidden rounded-2xl bg-slate-100 ring-4 ring-slate-50 dark:bg-darkBgHidden dark:ring-darkBgHidden">
+            <Image
+              alt="user-profile"
+              src={user?.avatarUrl || "/images/profile/profile-1.png"}
+              fill
+              className="object-cover"
+            />
+          </div>
+          <div className="min-w-0">
+            {loading ? (
+              <p className="h-4 w-28 animate-pulse rounded bg-slate-200 dark:bg-darkBgHidden">
+                <span className="sr-only">در حال بارگذاری...</span>
+              </p>
+            ) : (
+              <>
+                <p className="truncate text-sm font-bold text-slate-950 dark:text-textPrimary">
+                  {getUserName()}
+                </p>
+                <p className="mt-1 text-xs text-slate-500 dark:text-textSecondary">
+                  {user?.phone}
+                </p>
+              </>
+            )}
+          </div>
         </div>
-        {loading ? (
-          <p className="font-medium text-xs md:text-sm animate-pulse">
-            در حال بارگذاری...
-          </p>
-        ) : (
-          <>
-            <p className="font-medium text-xs md:text-sm">{user?.phone}</p>
-            <p className="font-medium text-xs md:text-sm">{getUserName()}</p>
-          </>
-        )}
       </div>
 
       {/* لینک‌های ناوبری */}
-      <div className="pt-6 md:pt-8 pb-6 md:pb-80 pr-2 flex flex-col items-start gap-3 md:gap-4 border-b border-dashed border-[#495157]">
+      <div className="flex gap-2 overflow-x-auto border-b border-slate-100 p-3 dark:border-borderColor md:flex-col md:overflow-visible">
         {sidebarLinks.map((item, idx) => {
           const isActive = pathname?.includes(item.link) || false;
           return (
-            <button
-              key={idx}
-              className="relative w-full text-left hover:bg-blue-500/5"
-            >
-              {isActive && (
-                <span className="absolute left-0 top-0 h-full w-1 bg-red-500 rounded-r-md"></span>
-              )}
+            <div key={idx} className="min-w-fit md:w-full">
               <Link
                 href={item.link}
-                className={`text-xs md:text-sm flex gap-3 md:gap-5 items-center pl-4 pr-2 py-2 transition ${
-                  isActive ? "font-bold" : "font-medium"
-                }`}
+                className={cn(
+                  "flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold transition",
+                  isActive
+                    ? "bg-mySecondary text-white shadow-sm dark:bg-myGolden dark:text-slate-950"
+                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-950 dark:text-textSecondary dark:hover:bg-darkBgHidden dark:hover:text-textPrimary"
+                )}
               >
-                <span
-                  className={`transition text-base md:text-lg ${
-                    isActive ? "text-white" : "text-gray-400 dark:text-textSecondary"
-                  }`}
-                >
+                <span className="text-lg">
                   {isActive ? item.filledIcon : item.outlinedIcon}
                 </span>
                 <span>{item.label}</span>
               </Link>
-            </button>
+            </div>
           );
         })}
       </div>
 
       {/* دکمه خروج */}
-      <div className="flex justify-center items-center w-full py-6 md:py-8">
+      <div className="p-3">
         <Button
-          variant="destructive"
-          className="text-xs py-1.5 px-6 md:px-8"
+          variant="outline"
+          className="flex w-full items-center justify-center gap-2 rounded-xl border-red-200 bg-red-50 text-sm font-bold text-red-700 hover:bg-red-100 dark:border-red-900 dark:bg-red-950/30 dark:text-red-300 dark:hover:bg-red-950/50"
           onClick={handleLogout} // ← تابع خروج
         >
+          <LogOut className="size-4" />
           خروج از حساب
         </Button>
       </div>

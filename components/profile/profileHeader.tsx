@@ -1,18 +1,25 @@
 "use client";
 
-import { CiCalendarDate } from "react-icons/ci";
-import { IoIosNotificationsOutline } from "react-icons/io";
+import { useEffect, useState } from "react";
+import { Bell, CalendarDays } from "lucide-react";
 import { useCurrentUser } from "@/lib/hooks/useUser";
 
 const ProfileHeader = () => {
   const { data: userResponse, isLoading: loading } = useCurrentUser();
   const user = userResponse?.data;
+  const [mounted, setMounted] = useState(false);
 
-  const today = new Date().toLocaleDateString("fa-IR", {
-    day: "numeric",
-    month: "numeric",
-    year: "numeric",
-  });
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const today = mounted
+    ? new Date().toLocaleDateString("fa-IR", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : "";
 
   const getUserName = () => {
     if (!user) return "کاربر گرامی";
@@ -24,6 +31,7 @@ const ProfileHeader = () => {
   };
 
   const getGreeting = () => {
+    if (!mounted) return "روز";
     const hour = new Date().getHours();
     if (hour >= 5 && hour < 11) return "صبح";
     if (hour >= 11 && hour < 16) return "ظهر";
@@ -32,26 +40,29 @@ const ProfileHeader = () => {
   };
 
   return (
-    <div className="container-xl flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-3 px-4 md:px-0">
-      <p className="font-semibold text-sm md:text-base text-[#333] truncate max-w-full">
-        {loading ? (
-          <span className="animate-pulse">در حال بارگذاری...</span>
-        ) : (
-          <>
-            {getGreeting()} بخیر <span className="hidden sm:inline">{getUserName()}</span>
-          </>
-        )}
-      </p>
-      <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto justify-end">
-        {/* date */}
-        <div className="flex gap-2 md:gap-4 items-center bg-white dark:bg-cardBg rounded-sm px-2 h-[26px]">
-          <CiCalendarDate className="size-4 md:size-5 text-[#130F26]" />
-          <span className="text-xs md:text-sm text-[#333]">{today}</span>
+    <div className="container-xl mb-5 flex flex-col gap-3 px-4 md:flex-row md:items-center md:justify-between md:px-0">
+      <div>
+        <p className="text-xs font-medium text-slate-500 dark:text-textSecondary">
+          داشبورد کاربری پیشرو
+        </p>
+        <h1 className="mt-1 text-xl font-extrabold text-slate-950 dark:text-textPrimary md:text-2xl">
+          {loading ? (
+            <span className="inline-block h-7 w-44 animate-pulse rounded bg-slate-200 dark:bg-darkBgHidden" />
+          ) : (
+            <>
+              {getGreeting()} بخیر، <span>{getUserName()}</span>
+            </>
+          )}
+        </h1>
+      </div>
+      <div className="flex w-full items-center justify-end gap-2 md:w-auto">
+        <div className="inline-flex h-10 items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 shadow-sm dark:border-borderColor dark:bg-cardBg dark:text-textPrimary">
+          <CalendarDays className="size-4 text-mySecondary dark:text-myGolden" />
+          <span>{today || "..."}</span>
         </div>
-        {/* notification */}
-        <button className="flex justify-center items-center bg-white dark:bg-cardBg rounded-sm px-1 h-[26px] relative">
-          <IoIosNotificationsOutline className="size-5 text-[#130F26]" />
-          <div className="absolute top-1.5 left-1.5 size-1.5 bg-[#D52A16] rounded full z-10"></div>
+        <button className="relative inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:bg-slate-50 dark:border-borderColor dark:bg-cardBg dark:text-textPrimary dark:hover:bg-darkBgHidden">
+          <Bell className="size-5" />
+          <span className="absolute right-2 top-2 size-2 rounded-full bg-myPrimary" />
         </button>
       </div>
     </div>

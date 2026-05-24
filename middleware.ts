@@ -59,6 +59,7 @@ export async function middleware(request: NextRequest) {
   const isProtectedRoute = 
     pathname.startsWith('/admin/dashboard') ||
     pathname.startsWith('/admin/block-news') ||
+    pathname.startsWith('/admin/library') ||
     pathname.startsWith('/api/admin/auth/me') ||
     pathname.startsWith('/api/admin/auth/refresh') ||
     (pathname.startsWith('/api/admin') && !pathname.includes('/login') && !pathname.includes('/logout'));

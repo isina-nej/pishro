@@ -68,9 +68,6 @@ const LoginPage = () => {
               بازگشت
             </Button>
           </Link>
-          <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-myBlue to-myPrimary flex items-center justify-center text-white font-bold text-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-            P
-          </div>
         </div>
 
         {/* Main card */}

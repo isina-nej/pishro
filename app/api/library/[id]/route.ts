@@ -8,13 +8,14 @@ import {
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = (await params).id;
+    const { id } = await params;
 
     // Try to get by ID first, then by slug
     let book = await getBookById(id);
+    const foundById = Boolean(book);
     
     if (!book) {
       book = await getBookBySlug(id);
@@ -23,6 +24,13 @@ export async function GET(
     if (!book) {
       return errorResponse(
         "کتاب یافت نشد",
+        ErrorCodes.NOT_FOUND
+      );
+    }
+
+    if (!foundById && book.bookStatus && book.bookStatus !== "PUBLISHED") {
+      return errorResponse(
+        "این کتاب در دسترس عموم نیست",
         ErrorCodes.NOT_FOUND
       );
     }
@@ -39,10 +47,10 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = (await params).id;
+    const { id } = await params;
     const body = await req.json();
 
     const {
@@ -58,7 +66,6 @@ export async function PUT(
       language,
       category,
       formats,
-      status,
       tags,
       readingTime,
       isFeatured,
@@ -109,10 +116,10 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = (await params).id;
+    const { id } = await params;
 
     // Delete book
     await deleteBook(id);

@@ -37,7 +37,7 @@ export default async function SkyRoomClassesPage() {
           <p className="text-white/80 mb-6">متأسفانه مشکلی در بارگذاری همایش پیش آمد</p>
           <Link
             href="/"
-            className="px-8 py-3 bg-white dark:bg-cardBg text-blue-900 rounded-lg font-semibold hover:bg-gray-100 dark:hover:bg-cardBg transition inline-block"
+            className="px-8 py-3 bg-white dark:bg-cardBg text-blue-900 dark:text-textPrimary rounded-lg font-semibold hover:bg-gray-100 dark:hover:bg-darkBgHidden transition inline-block"
           >
             بازگشت به صفحه اصلی
           </Link>

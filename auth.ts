@@ -4,6 +4,16 @@ import Credentials from "next-auth/providers/credentials";
 import { query } from "@/lib/db";
 import bcryptjs from "bcryptjs";
 
+interface DbAuthUser {
+  id: string;
+  firstName: string | null;
+  lastName: string | null;
+  email: string | null;
+  phone: string;
+  role: string;
+  passwordHash: string | null;
+}
+
 export const { auth, handlers, signIn, signOut } = NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
@@ -20,7 +30,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         }
 
         try {
-          const users = await query<any>(
+          const users = await query<DbAuthUser>(
             'SELECT * FROM User WHERE phone = ?',
             [credentials.phone as string]
           );

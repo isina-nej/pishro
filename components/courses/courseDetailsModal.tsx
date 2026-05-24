@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -48,7 +48,7 @@ export const CourseDetailsModal = ({
       toast.success("این دوره قبلاً به سبد خرید اضافه شده است");
       return;
     }
-    addToCart(course as any);
+    addToCart(course as unknown as Parameters<typeof addToCart>[0]);
     toast.success(`«${course.subject}» به سبد خرید اضافه شد 🛒`);
   };
 
@@ -189,7 +189,7 @@ export const CourseDetailsModal = ({
                   className={`flex items-center gap-2 rounded-lg px-4 py-2 font-medium transition ${
                     liked === "LIKE"
                       ? "bg-blue-600 text-white"
-                      : "bg-white dark:bg-cardBg dark:bg-cardBg/10 text-slate-300 hover:bg-white dark:bg-cardBg/20"
+                      : "bg-white dark:bg-cardBg/10 text-mySecondary dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-cardBg/20"
                   }`}
                 >
                   <ThumbsUp className="h-5 w-5" />
@@ -204,7 +204,7 @@ export const CourseDetailsModal = ({
                   className={`flex items-center gap-2 rounded-lg px-4 py-2 font-medium transition ${
                     liked === "DISLIKE"
                       ? "bg-red-600 text-white"
-                      : "bg-white dark:bg-cardBg dark:bg-cardBg/10 text-slate-300 hover:bg-white dark:bg-cardBg/20"
+                      : "bg-white dark:bg-cardBg/10 text-mySecondary dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-cardBg/20"
                   }`}
                 >
                   <ThumbsDown className="h-5 w-5" />
@@ -219,7 +219,7 @@ export const CourseDetailsModal = ({
                   className={`flex items-center gap-2 rounded-lg px-4 py-2 font-medium transition ${
                     saved
                       ? "bg-purple-600 text-white"
-                      : "bg-white dark:bg-cardBg dark:bg-cardBg/10 text-slate-300 hover:bg-white dark:bg-cardBg/20"
+                      : "bg-white dark:bg-cardBg/10 text-mySecondary dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-cardBg/20"
                   }`}
                 >
                   <Bookmark className={`h-5 w-5 ${saved ? "fill-current" : ""}`} />
@@ -230,7 +230,7 @@ export const CourseDetailsModal = ({
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleShare}
-                  className="flex items-center gap-2 rounded-lg bg-white dark:bg-cardBg px-4 py-2 font-medium text-slate-300 transition hover:bg-white"
+                  className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 font-medium text-mySecondary transition hover:bg-slate-50 dark:bg-cardBg/10 dark:text-slate-300 dark:hover:bg-cardBg/20"
                 >
                   <Share2 className="h-5 w-5" />
                   اشتراک‌گذاری

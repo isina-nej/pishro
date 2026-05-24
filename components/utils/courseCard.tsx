@@ -23,7 +23,7 @@ interface CourseCardProps {
   link: string;
 }
 
-const CourseCard = ({ data, link }: CourseCardProps) => {
+const CourseCard = ({ data, link: _link }: CourseCardProps) => {
   const [imageError, setImageError] = useState(false);
   const addToCart = useCartStore((state) => state.addToCart);
 
@@ -34,7 +34,7 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
   };
 
   const cardContent = (
-    <div className="w-full shadow-md transition-shadow rounded-xl p-3 pb-8 bg-white dark:bg-cardBg flex flex-col relative hover:shadow-lg group cursor-pointer"
+    <div className="w-full rounded-xl border border-slate-200 bg-white p-3 pb-8 shadow-md shadow-slate-200/60 transition-shadow hover:shadow-lg dark:border-borderColor dark:bg-cardBg dark:shadow-none flex flex-col relative group cursor-pointer"
     >
       {/* Image section */}
       <motion.div
@@ -74,7 +74,7 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
         className="flex-1 flex flex-col justify-between mt-2"
       >
         <div className="flex justify-between items-center">
-          <h4 className="text-xs sm:text-sm text-[#ACACAC] font-bold">
+          <h4 className="text-xs sm:text-sm text-slate-500 dark:text-textSecondary font-bold">
             {data.subject}
           </h4>
           <RatingStars rating={data.rating || 2.5} />
@@ -92,7 +92,7 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
 
         <motion.div
           initial={{ opacity: 1 }}
-          className="mt-1 pt-1.5 flex justify-between text-[#ACACAC] font-bold text-xs sm:text-sm border-t border-dashed border-[#acacac]"
+          className="mt-1 pt-1.5 flex justify-between text-slate-500 dark:text-textSecondary font-bold text-xs sm:text-sm border-t border-dashed border-slate-200 dark:border-borderColor"
         >
           <span className="flex items-center gap-1">
             <Users size={16} className="text-gray-900 dark:text-textPrimary" />
@@ -118,9 +118,7 @@ const CourseCard = ({ data, link }: CourseCardProps) => {
     </div>
   );
 
-  return (
-    <CourseDetailModal course={data as any} trigger={cardContent} />
-  );
+  return <CourseDetailModal course={data} trigger={cardContent} />;
 };
 
 export default CourseCard;

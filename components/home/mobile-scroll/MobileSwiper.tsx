@@ -62,12 +62,12 @@ export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
                   {step.link ? (
                     <a
                       href={step.link}
-                      className="inline-block px-6 sm:px-8 py-2 sm:py-2.5 bg-white dark:bg-cardBg text-white rounded-full shadow-md hover:bg-white transition text-xs sm:text-sm"
+                      className="inline-block px-6 sm:px-8 py-2 sm:py-2.5 bg-white dark:bg-cardBg text-mySecondary dark:text-textPrimary rounded-full shadow-md hover:bg-slate-50 dark:hover:bg-darkBgHidden transition text-xs sm:text-sm"
                     >
                       اطلاعات بیشتر
                     </a>
                   ) : (
-                    <button className="px-6 sm:px-8 py-2 sm:py-2.5 bg-white dark:bg-cardBg text-white rounded-full shadow-md hover:bg-white transition text-xs sm:text-sm cursor-default">
+                    <button className="px-6 sm:px-8 py-2 sm:py-2.5 bg-white dark:bg-cardBg text-mySecondary dark:text-textPrimary rounded-full shadow-md hover:bg-slate-50 dark:hover:bg-darkBgHidden transition text-xs sm:text-sm cursor-default">
                       اطلاعات بیشتر
                     </button>
                   )}

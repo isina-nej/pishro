@@ -235,12 +235,12 @@ export const InvestmentPlansHero = ({
                       }
                     : undefined
                 }
-                className={`group relative overflow-hidden rounded-3xl border border-white/20 bg-white dark:bg-cardBg dark:bg-cardBg dark:bg-cardBg dark:bg-cardBg/10 p-6 ${
+                className={`group relative overflow-hidden rounded-3xl border border-white/20 bg-white/10 p-6 text-white ${
                   isMobile ? "backdrop-blur-sm" : "backdrop-blur-xl"
-                } hover:bg-white dark:bg-cardBg dark:bg-cardBg dark:bg-cardBg dark:bg-cardBg/20 transition-all duration-300 shadow-xl`}
+                } shadow-xl transition-all duration-300 hover:bg-white/15`}
               >
                 <div className="relative flex flex-col items-center text-center gap-4">
-                  <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white dark:bg-cardBg text-white shadow-lg backdrop-blur-sm">
+                  <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15 text-white shadow-lg backdrop-blur-sm">
                     {item.icon}
                   </span>
 
@@ -294,7 +294,7 @@ export const InvestmentPlansHero = ({
                   repeat: Infinity,
                   ease: "easeInOut",
                 }}
-                className="h-2 w-2 rounded-full bg-white dark:bg-cardBg"
+                className="h-2 w-2 rounded-full bg-white"
               />
             </motion.div>
           </motion.div>

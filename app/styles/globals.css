@@ -169,6 +169,30 @@ h3 {
   }
 }
 
+html:not(.dark)
+  :where(button, a, [role="button"])[class~="bg-white"][class~="text-white"],
+html:not(.dark)
+  :where(button, a, [role="button"])[class~="bg-white"][class~="text-slate-100"],
+html:not(.dark)
+  :where(button, a, [role="button"])[class~="bg-white"][class~="text-slate-200"],
+html:not(.dark)
+  :where(button, a, [role="button"])[class~="bg-white"][class~="text-slate-300"] {
+  color: #214254;
+}
+
+html.dark
+  :where(button, a, [role="button"])[class~="dark:bg-cardBg"][class~="text-black"],
+html.dark
+  :where(button, a, [role="button"])[class~="dark:bg-cardBg"][class~="text-blue-900"],
+html.dark
+  :where(button, a, [role="button"])[class~="dark:bg-cardBg"][class~="text-mySecondary"],
+html.dark
+  :where(button, a, [role="button"])[class~="dark:bg-cardBg"][class~="text-slate-900"],
+html.dark
+  :where(button, a, [role="button"])[class~="dark:bg-cardBg"][class~="text-gray-900"] {
+  color: #eaeaea;
+}
+
 /* my classes */
 
 /* Dark Mode & Shadow Styles */

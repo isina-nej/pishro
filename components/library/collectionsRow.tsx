@@ -54,7 +54,7 @@ export const CollectionsRow = () => {
           {/* Content */}
           <div className="relative z-10 space-y-4 p-6 h-full flex flex-col">
             <motion.span
-              className="inline-flex items-center gap-1.5 rounded-full bg-white dark:bg-cardBg backdrop-blur-md px-3 py-1 text-xs font-semibold text-white/90 border border-white/20 w-fit"
+              className="inline-flex items-center gap-1.5 rounded-full bg-white/10 backdrop-blur-md px-3 py-1 text-xs font-semibold text-white/90 border border-white/20 w-fit"
               whileHover={{ scale: 1.05 }}
             >
               <span className="h-2 w-2 rounded-full bg-gradient-to-r from-blue-400 to-purple-400" />
@@ -84,4 +84,3 @@ export const CollectionsRow = () => {
     </motion.div>
   );
 };
-

@@ -24,11 +24,11 @@ export default async function ProfileLayout({
   }
 
   return (
-    <div className="w-full bg-[#F5F8FA] py-6 md:py-10 mt-16 md:mt-20">
+    <div className="min-h-screen w-full bg-slate-50 py-6 text-slate-900 dark:bg-bodyBg dark:text-textPrimary md:py-8 mt-16 md:mt-20">
       <ProfileHeader />
-      <div className="container-xl w-full flex flex-col md:flex-row gap-4 md:gap-5 mt-4 px-4 md:px-0">
+      <div className="container-xl w-full flex flex-col gap-5 px-4 md:flex-row md:px-0">
         <ProfileAside />
-        <main className="w-full md:max-w-[990px]">{children}</main>
+        <main className="w-full min-w-0">{children}</main>
       </div>
     </div>
   );

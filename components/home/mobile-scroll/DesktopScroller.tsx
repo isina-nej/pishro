@@ -120,12 +120,12 @@ export function DesktopScroller({
                     {steps[index].link ? (
                       <a
                         href={steps[index].link}
-                        className="inline-block px-10 py-3 bg-white dark:bg-cardBg text-white rounded-full shadow-md hover:bg-white transition"
+                        className="inline-block px-10 py-3 bg-white dark:bg-cardBg text-mySecondary dark:text-textPrimary rounded-full shadow-md hover:bg-slate-50 dark:hover:bg-darkBgHidden transition"
                       >
                         اطلاعات بیشتر
                       </a>
                     ) : (
-                      <button className="px-10 py-3 bg-white dark:bg-cardBg text-white rounded-full shadow-md hover:bg-white transition cursor-default">
+                      <button className="px-10 py-3 bg-white dark:bg-cardBg text-mySecondary dark:text-textPrimary rounded-full shadow-md hover:bg-slate-50 dark:hover:bg-darkBgHidden transition cursor-default">
                         اطلاعات بیشتر
                       </button>
                     )}

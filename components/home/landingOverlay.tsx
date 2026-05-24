@@ -219,7 +219,7 @@ const OverlayMainText = ({
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       href={ctaLink || "/business-consulting"}
-      className="bg-white dark:bg-cardBg text-black dark:text-textPrimary font-bold px-6 py-3 sm:px-8 sm:py-4 rounded-full text-base sm:text-lg shadow-lg hover:bg-white transition-all"
+      className="bg-white dark:bg-cardBg text-black dark:text-textPrimary font-bold px-6 py-3 sm:px-8 sm:py-4 rounded-full text-base sm:text-lg shadow-lg hover:bg-gray-100 dark:hover:bg-darkBgHidden transition-all"
     >
       {subtitle || "شروع مسیر موفقیت"}
     </motion.a>

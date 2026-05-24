@@ -18,7 +18,7 @@ interface DigitalBook {
   downloads: number;
   category: string;
   formats?: string[];
-  status?: string[] | object;
+  bookStatus?: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
   tags?: string[] | object;
   readingTime?: string;
   isFeatured: boolean;
@@ -37,6 +37,8 @@ interface GetBooksParams {
   search?: string;
   sort?: "newest" | "oldest" | "rating" | "popular" | "downloads";
   featured?: boolean;
+  status?: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
+  publicOnly?: boolean; // Only show PUBLISHED books
 }
 
 export async function getBooks(params?: GetBooksParams) {
@@ -61,6 +63,15 @@ export async function getBooks(params?: GetBooksParams) {
 
     if (params?.featured) {
       sql += ` AND isFeatured = 1`;
+    }
+
+    // Filter by status
+    if (params?.publicOnly) {
+      // Only show PUBLISHED books for public view
+      sql += ` AND bookStatus = 'PUBLISHED'`;
+    } else if (params?.status) {
+      sql += ` AND bookStatus = ?`;
+      sqlParams.push(params.status);
     }
 
     // Build order clause
@@ -144,7 +155,7 @@ export async function createBook(data: Partial<DigitalBook> & { title: string; s
 
     const sql = `INSERT INTO DigitalBook (
       id, title, slug, author, description, cover, publisher, year, pages, isbn, 
-      language, rating, votes, views, downloads, category, formats, status, tags, readingTime, isFeatured, price,
+      language, rating, votes, views, downloads, category, formats, bookStatus, tags, readingTime, isFeatured, price,
       fileUrl, audioUrl, createdAt, updatedAt
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
@@ -166,7 +177,7 @@ export async function createBook(data: Partial<DigitalBook> & { title: string; s
       0, // downloads
       data.category || null,
       data.formats ? JSON.stringify(data.formats) : '[]',
-      data.status ? JSON.stringify(data.status) : '[]',
+      'DRAFT', // bookStatus - always start as DRAFT
       data.tags ? JSON.stringify(Array.isArray(data.tags) ? data.tags : []) : '[]',
       data.readingTime || null,
       data.isFeatured ? 1 : 0,
@@ -207,7 +218,7 @@ export async function updateBook(id: string, data: Partial<DigitalBook>) {
       'language',
       'category',
       'formats',
-      'status',
+      'bookStatus',
       'tags',
       'readingTime',
       'isFeatured',
@@ -222,8 +233,6 @@ export async function updateBook(id: string, data: Partial<DigitalBook>) {
         const value = data[field as keyof DigitalBook];
         
         if (field === 'formats' && Array.isArray(value)) {
-          updateValues.push(JSON.stringify(value));
-        } else if (field === 'status' && (Array.isArray(value) || typeof value === 'object')) {
           updateValues.push(JSON.stringify(value));
         } else if (field === 'tags' && (Array.isArray(value) || typeof value === 'object')) {
           updateValues.push(JSON.stringify(Array.isArray(value) ? value : []));
@@ -258,6 +267,52 @@ export async function deleteBook(id: string) {
     return { success: true };
   } catch (error) {
     console.error("Error deleting book:", error);
+    throw error;
+  }
+}
+
+// Status transition functions
+export async function publishBook(id: string) {
+  try {
+    const now = new Date();
+    const mysqlDateTime = now.toISOString().slice(0, 19).replace('T', ' ');
+    
+    const sql = `UPDATE DigitalBook SET bookStatus = ?, updatedAt = ? WHERE id = ?`;
+    await query(sql, ['PUBLISHED', mysqlDateTime, id]);
+    
+    return getBookById(id);
+  } catch (error) {
+    console.error("Error publishing book:", error);
+    throw error;
+  }
+}
+
+export async function archiveBook(id: string) {
+  try {
+    const now = new Date();
+    const mysqlDateTime = now.toISOString().slice(0, 19).replace('T', ' ');
+    
+    const sql = `UPDATE DigitalBook SET bookStatus = ?, updatedAt = ? WHERE id = ? AND bookStatus = ?`;
+    await query(sql, ['ARCHIVED', mysqlDateTime, id, 'PUBLISHED']);
+    
+    return getBookById(id);
+  } catch (error) {
+    console.error("Error archiving book:", error);
+    throw error;
+  }
+}
+
+export async function restoreBook(id: string) {
+  try {
+    const now = new Date();
+    const mysqlDateTime = now.toISOString().slice(0, 19).replace('T', ' ');
+    
+    const sql = `UPDATE DigitalBook SET bookStatus = ?, updatedAt = ? WHERE id = ? AND bookStatus = ?`;
+    await query(sql, ['PUBLISHED', mysqlDateTime, id, 'ARCHIVED']);
+    
+    return getBookById(id);
+  } catch (error) {
+    console.error("Error restoring book:", error);
     throw error;
   }
 }

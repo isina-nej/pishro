@@ -230,6 +230,12 @@ export default function CreateBookPage() {
           </div>
         )}
 
+        {/* Information Box */}
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6 text-blue-700 dark:text-blue-300">
+          <p className="font-medium mb-1">📝 توجه:</p>
+          <p>کتاب‌ها به طور پیش‌فرض با وضعیت <strong>پیشنویس</strong> ایجاد می‌شوند. بعد از تکمیل اطلاعات، می‌توانید کتاب را منتشر کنید.</p>
+        </div>
+
         {/* Form */}
         <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 md:p-8 space-y-8">
           {/* Basic Information */}

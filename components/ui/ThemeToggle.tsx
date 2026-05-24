@@ -13,13 +13,7 @@ export default function ThemeToggle() {
     setMounted(true);
   }, []);
 
-  if (!mounted) {
-    return (
-      <button className="p-2 rounded-lg bg-gray-200 dark:bg-darkBgHidden">
-        <Sun className="w-5 h-5" />
-      </button>
-    );
-  }
+  if (!mounted) return null;
 
   const toggleTheme = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark');

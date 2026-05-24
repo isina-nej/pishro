@@ -4,7 +4,7 @@ interface ProfileHeaderProps {
 
 const ProfileHeader = ({ children }: ProfileHeaderProps) => {
   return (
-    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center px-4 md:px-5 py-4 md:py-6 border-b border-[#f5f5f5] gap-3 sm:gap-0">
+    <div className="flex flex-col gap-3 border-b border-slate-100 px-4 py-4 dark:border-borderColor sm:flex-row sm:items-center sm:justify-between md:px-5">
       {children}
     </div>
   );

@@ -360,7 +360,7 @@ model DigitalBook {
   downloads   Int      @default(0)
   category    String
   formats     Json     @default("[]")
-  status      Json     @default("[]")
+  bookStatus  DigitalBookStatus @default(DRAFT)
   tags        Json     @default("[]")
   readingTime String?
   isFeatured  Boolean  @default(false)
@@ -725,6 +725,13 @@ enum AdminStatus {
   ACTIVE
   INACTIVE
   SUSPENDED
+}
+
+// Digital Book Status Enum
+enum DigitalBookStatus {
+  DRAFT       // پیشنویس - هنوز منتشر نشده
+  PUBLISHED   // منتشر شده
+  ARCHIVED    // آرشیو شده
 }
 
 //

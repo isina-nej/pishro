@@ -35,6 +35,7 @@ export async function GET(req: NextRequest) {
       search,
       sort,
       featured: isFeatured,
+      publicOnly: true, // Only show PUBLISHED books on public API
     });
 
     return paginatedResponse(

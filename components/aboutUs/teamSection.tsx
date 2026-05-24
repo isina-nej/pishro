@@ -45,7 +45,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
             initial={{ opacity: 0, y: 50 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: index * 0.2 }}
-            className="bg-white dark:bg-cardBg rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 group"
+            className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-200/70 transition-all duration-300 hover:shadow-2xl dark:border-borderColor dark:bg-cardBg dark:shadow-none group"
           >
             {/* Image Section */}
             {member.image && (
@@ -80,7 +80,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
 
               {/* Education */}
               {member.education && (
-                <div className="flex items-start gap-3 mb-6 bg-myPrimary/5 rounded-xl p-4">
+                <div className="flex items-start gap-3 mb-6 rounded-xl border border-myPrimary/10 bg-myPrimary/5 p-4 dark:border-myPrimary/20">
                   <LuGraduationCap className="text-2xl text-myPrimary mt-1 flex-shrink-0" />
                   <div>
                     <p className="font-medium text-gray-800 dark:text-textPrimary">
@@ -118,7 +118,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
 
               {/* Social Links */}
               {(member.linkedinUrl || member.emailUrl || member.twitterUrl || member.whatsappUrl || member.telegramUrl) && (
-                <div className="flex flex-wrap gap-3 pt-6 border-t">
+                <div className="flex flex-wrap gap-3 pt-6 border-t border-slate-200 dark:border-borderColor">
                   {member.linkedinUrl && (
                     <a
                       href={member.linkedinUrl}

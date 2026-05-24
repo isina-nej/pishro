@@ -58,12 +58,12 @@ const CoursesPageContent = ({
   };
 
   return (
-    <div className="w-full pb-24">
+    <div className="w-full bg-slate-50 pb-24 dark:bg-bodyBg">
       <CoursesHero stats={stats} />
 
       <section className="relative -mt-16 z-10">
         <div className="container-xl space-y-12">
-          <div className="rounded-3xl border border-white/30 bg-white dark:bg-cardBg px-5 py-8 shadow-lg backdrop-blur">
+          <div className="rounded-3xl border border-slate-200/80 bg-white px-5 py-8 shadow-lg shadow-slate-200/70 backdrop-blur dark:border-borderColor dark:bg-cardBg dark:shadow-none">
             <CoursesFilterControls
               categories={categories}
               selectedCategory={selectedCategory}
@@ -83,17 +83,17 @@ const CoursesPageContent = ({
             {/* Results Summary */}
             {hasActiveFilters && (
               <div className="mb-6 mt-8">
-                <p className="text-sm text-slate-600">
+                <p className="text-sm text-slate-600 dark:text-textSecondary">
                   {filteredCourses.length > 0 ? (
                     <>
-                      <span className="font-semibold text-slate-900">
+                      <span className="font-semibold text-slate-900 dark:text-textPrimary">
                         {filteredCourses.length}
                       </span>{""}
                       دوره{""}
                       {query && (
                         <>
                           برای جستجوی{""}
-                          <span className="font-semibold text-slate-900">
+                          <span className="font-semibold text-slate-900 dark:text-textPrimary">
                             &quot;{query}&quot;
                           </span>
                         </>
@@ -101,7 +101,7 @@ const CoursesPageContent = ({
                       یافت شد
                     </>
                   ) : (
-                    <span className="text-slate-500">
+                    <span className="text-slate-500 dark:text-textSecondary">
                       هیچ دوره‌ای با این فیلترها یافت نشد
                     </span>
                   )}
@@ -132,13 +132,13 @@ const CoursesPageContent = ({
             ) : (
               <div className="flex min-h-[300px] items-center justify-center">
                 <div className="text-center">
-                  <p className="text-lg text-slate-500">
+                  <p className="text-lg text-slate-500 dark:text-textSecondary">
                     هیچ دوره‌ای برای نمایش وجود ندارد
                   </p>
                   {hasActiveFilters && (
                     <button
                       onClick={handleResetFilters}
-                      className="mt-4 rounded-full border border-slate-300 bg-white dark:bg-cardBg px-6 py-2 text-sm font-medium text-slate-700 dark:text-textSecondary transition-colors hover:bg-slate-50"
+                      className="mt-4 rounded-full border border-slate-300 bg-white px-6 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:border-borderColor dark:bg-cardBg dark:text-textSecondary dark:hover:bg-darkBgHidden"
                     >
                       پاک کردن فیلترها
                     </button>

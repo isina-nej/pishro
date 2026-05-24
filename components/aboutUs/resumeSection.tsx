@@ -86,7 +86,7 @@ const ResumeSection = ({ resumeItems }: ResumeSectionProps) => {
               initial={{ opacity: 0, y: 50 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className={`${bgColor} rounded-3xl p-8 hover:shadow-2xl transition-all duration-300 group relative overflow-hidden`}
+              className={`${bgColor} rounded-3xl border border-slate-200 p-8 shadow-sm shadow-slate-200/60 transition-all duration-300 hover:shadow-2xl dark:border-borderColor dark:shadow-none group relative overflow-hidden`}
             >
               {/* Gradient Background */}
               <div
