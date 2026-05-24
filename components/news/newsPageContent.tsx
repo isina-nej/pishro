@@ -1,12 +1,14 @@
 "use client";
 
 import React from "react";
+import { motion } from "framer-motion";
 import { useNewsList } from "@/lib/hooks/useNews";
 import type { NewsArticle } from "@prisma/client";
 import { useNewsFilters } from "./hooks/useNewsFilters";
 import { NewsHero } from "./newsHero";
 import { NewsFilterControls } from "./newsFilterControls";
 import NewsCard from "./newsCard";
+import { Sparkles } from "lucide-react";
 
 type NewsQueryReturn = {
   data?: {
@@ -59,8 +61,12 @@ const NewsPageContent = () => {
       <div className="w-full pb-24">
         <div className="flex min-h-[400px] items-center justify-center">
           <div className="text-center">
-            <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-primary"></div>
-            <p className="mt-4 text-gray-600 dark:text-textSecondary">در حال بارگذاری اخبار...</p>
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+              className="mx-auto h-12 w-12 rounded-full border-4 border-slate-200 dark:border-slate-700 border-t-mySecondary"
+            />
+            <p className="mt-4 text-sm text-gray-600 dark:text-textSecondary">در حال بارگذاری اخبار...</p>
           </div>
         </div>
       </div>
@@ -71,10 +77,16 @@ const NewsPageContent = () => {
     <div className="w-full pb-24">
       <NewsHero stats={stats} />
 
-      <section className="container-xl -mt-20 pb-12">
-        <div className="grid gap-8 xl:grid-cols-[320px_minmax(0,1fr)]">
+      <section className="container-xl -mt-32 pb-16 relative z-10">
+        <div className="grid gap-10 lg:gap-12 xl:grid-cols-[340px_minmax(0,1fr)]">
+          {/* Sidebar */}
           <aside className="self-start">
-            <div className="sticky top-24 rounded-3xl border border-white/30 bg-white dark:bg-cardBg p-6 shadow-lg shadow-slate-200/10">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+              className="sticky top-28 rounded-3xl border border-slate-200/50 dark:border-borderColor/50 bg-white dark:bg-cardBg p-6 sm:p-8 shadow-lg dark:shadow-slate-900/30 backdrop-blur"
+            >
               <NewsFilterControls
                 categories={categories}
                 selectedCategory={selectedCategory}
@@ -90,73 +102,120 @@ const NewsPageContent = () => {
                 onResetFilters={handleResetFilters}
                 disabled={false}
               />
-            </div>
+            </motion.div>
           </aside>
 
-          <div className="space-y-7">
-            <div className="rounded-3xl border border-white/30 bg-white dark:bg-cardBg p-6 shadow-lg shadow-slate-200/10">
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <p className="text-sm text-slate-500">
-                    نمایش {filteredNews.length} خبر از بین {news.length} خبر موجود
-                  </p>
-                  <h2 className="mt-2 text-2xl font-semibold text-slate-900">
-                    آخرین اخبار پیشرو
-                  </h2>
+          {/* Main Content */}
+          <div className="space-y-8">
+            {/* Header Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="rounded-3xl border border-slate-200/50 dark:border-borderColor/50 bg-white dark:bg-cardBg p-6 sm:p-8 shadow-lg dark:shadow-slate-900/30 backdrop-blur"
+            >
+              <div className="flex flex-col gap-4 sm:gap-6">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">
+                      نمایش <span className="font-semibold text-slate-700 dark:text-slate-300">{filteredNews.length}</span> از <span className="font-semibold text-slate-700 dark:text-slate-300">{news.length}</span> خبر
+                    </p>
+                    <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+                      آخرین اخبار پیشرو
+                    </h2>
+                  </div>
+                  <div className="flex flex-col gap-2 items-end">
+                    {stats.featured > 0 && (
+                      <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-mySecondary/20 to-mySecondary/10 px-4 py-2">
+                        <Sparkles className="w-4 h-4 text-mySecondary" />
+                        <span className="text-xs sm:text-sm font-semibold text-mySecondary">
+                          {stats.featured} خبر ویژه
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className="flex flex-wrap items-center gap-3">
-                  {hasActiveFilters && (
-                    <button
-                      onClick={handleResetFilters}
-                      className="rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
-                    >
-                      حذف فیلترها
-                    </button>
-                  )}
-                  <span className="rounded-full bg-mySecondary/10 px-3 py-2 text-xs font-semibold text-mySecondary">
-                    {stats.featured} خبر ویژه
-                  </span>
-                </div>
+
+                {/* Search results info */}
+                {query.trim().length > 0 && (
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="text-sm text-slate-600 dark:text-slate-400 pt-2 border-t border-slate-200/50 dark:border-slate-700/50"
+                  >
+                    نتایج جستجو برای: <span className="font-semibold text-slate-900 dark:text-white">«{query}»</span>
+                  </motion.p>
+                )}
               </div>
+            </motion.div>
 
-              {query.trim().length > 0 && (
-                <p className="mt-4 text-sm text-slate-600">
-                  نتایج جستجو برای «<span className="font-semibold text-slate-900">{query}</span>»
-                </p>
-              )}
-            </div>
-
+            {/* News Grid */}
             {filteredNews.length > 0 ? (
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                {filteredNews.map((newsItem) => (
-                  <NewsCard
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
+              >
+                {filteredNews.map((newsItem, index) => (
+                  <motion.div
                     key={newsItem.id}
-                    data={{
-                      ...newsItem,
-                      tags: (Array.isArray(newsItem.tags) ? newsItem.tags : []) as string[],
-                    } as any}
-                  />
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: index * 0.05 }}
+                  >
+                    <NewsCard
+                      data={{
+                        ...newsItem,
+                        tags: (Array.isArray(newsItem.tags) ? newsItem.tags : []) as string[],
+                      } as any}
+                    />
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
             ) : (
-              <div className="rounded-3xl border border-white/30 bg-white dark:bg-cardBg p-10 shadow-lg shadow-slate-200/10">
-                <div className="flex min-h-[260px] flex-col items-center justify-center gap-4 text-center">
-                  <p className="text-lg font-medium text-slate-600">
-                    هیچ خبری مطابق با فیلترهای شما پیدا نشد.
-                  </p>
-                  <p className="max-w-md text-sm text-slate-500">
-                    می‌توانید فیلترها را تغییر دهید یا روی دکمه زیر کلیک کنید تا همه اخبار را ببینید.
-                  </p>
-                  {hasActiveFilters && (
-                    <button
-                      onClick={handleResetFilters}
-                      className="rounded-full border border-slate-300 bg-white px-6 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4 }}
+                className="rounded-3xl border border-slate-200/50 dark:border-borderColor/50 bg-white dark:bg-cardBg p-12 sm:p-16 shadow-lg dark:shadow-slate-900/30"
+              >
+                <div className="flex min-h-[320px] flex-col items-center justify-center gap-6 text-center">
+                  <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                    <svg
+                      className="w-8 h-8 text-slate-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
                     >
-                      بازنشانی فیلترها
-                    </button>
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-lg font-semibold text-slate-700 dark:text-slate-200">
+                      هیچ خبری پیدا نشد
+                    </p>
+                    <p className="max-w-sm text-sm text-slate-500 dark:text-slate-400 mt-2">
+                      متأسفانه با فیلترهای فعلی خبری برای نمایش وجود ندارد. سعی کنید فیلترها را تغییر دهید.
+                    </p>
+                  </div>
+                  {hasActiveFilters && (
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={handleResetFilters}
+                      className="mt-4 px-6 py-3 rounded-full bg-gradient-to-r from-mySecondary to-mySecondary/80 text-white font-medium text-sm transition-all duration-200 shadow-lg shadow-mySecondary/30 hover:shadow-xl hover:shadow-mySecondary/40"
+                    >
+                      حذف تمام فیلترها
+                    </motion.button>
                   )}
                 </div>
-              </div>
+              </motion.div>
             )}
           </div>
         </div>

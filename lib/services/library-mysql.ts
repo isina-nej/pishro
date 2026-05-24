@@ -18,6 +18,9 @@ interface DigitalBook {
   downloads: number;
   category: string;
   formats?: string[];
+  status?: string[] | object;
+  tags?: string[] | object;
+  readingTime?: string;
   isFeatured: boolean;
   price?: number;
   fileUrl?: string;
@@ -119,16 +122,31 @@ export async function getBookBySlug(slug: string) {
   }
 }
 
+export async function getBookById(id: string) {
+  try {
+    const books = await query<DigitalBook>(
+      `SELECT * FROM DigitalBook WHERE id = ? LIMIT 1`,
+      [id]
+    );
+    return books[0] || null;
+  } catch (error) {
+    console.error("Error fetching book by id:", error);
+    return null;
+  }
+}
+
 export async function createBook(data: Partial<DigitalBook> & { title: string; slug: string; author: string; year: number }) {
   try {
     const id = `book_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    const now = new Date().toISOString();
+    const now = new Date();
+    // Format as MySQL datetime: YYYY-MM-DD HH:MM:SS
+    const mysqlDateTime = now.toISOString().slice(0, 19).replace('T', ' ');
 
     const sql = `INSERT INTO DigitalBook (
       id, title, slug, author, description, cover, publisher, year, pages, isbn, 
-      language, rating, votes, views, downloads, category, formats, isFeatured, price,
+      language, rating, votes, views, downloads, category, formats, status, tags, readingTime, isFeatured, price,
       fileUrl, audioUrl, createdAt, updatedAt
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     await query(sql, [
       id,
@@ -148,17 +166,98 @@ export async function createBook(data: Partial<DigitalBook> & { title: string; s
       0, // downloads
       data.category || null,
       data.formats ? JSON.stringify(data.formats) : '[]',
+      data.status ? JSON.stringify(data.status) : '[]',
+      data.tags ? JSON.stringify(Array.isArray(data.tags) ? data.tags : []) : '[]',
+      data.readingTime || null,
       data.isFeatured ? 1 : 0,
       data.price || null,
       data.fileUrl || null,
       data.audioUrl || null,
-      now,
-      now
+      mysqlDateTime,
+      mysqlDateTime
     ]);
 
-    return { id, ...data, rating: 0, votes: 0, views: 0, downloads: 0, createdAt: now, updatedAt: now };
+    return { id, ...data, rating: 0, votes: 0, views: 0, downloads: 0, createdAt: mysqlDateTime, updatedAt: mysqlDateTime };
   } catch (error) {
     console.error("Error creating book:", error);
+    throw error;
+  }
+}
+
+export async function updateBook(id: string, data: Partial<DigitalBook>) {
+  try {
+    const now = new Date();
+    // Format as MySQL datetime: YYYY-MM-DD HH:MM:SS
+    const mysqlDateTime = now.toISOString().slice(0, 19).replace('T', ' ');
+
+    const updateFields: string[] = [];
+    const updateValues: any[] = [];
+
+    // Build dynamic UPDATE query
+    const fieldsToUpdate = [
+      'title',
+      'slug',
+      'author',
+      'description',
+      'cover',
+      'publisher',
+      'year',
+      'pages',
+      'isbn',
+      'language',
+      'category',
+      'formats',
+      'status',
+      'tags',
+      'readingTime',
+      'isFeatured',
+      'price',
+      'fileUrl',
+      'audioUrl',
+    ];
+
+    fieldsToUpdate.forEach((field) => {
+      if (field in data) {
+        updateFields.push(`${field} = ?`);
+        const value = data[field as keyof DigitalBook];
+        
+        if (field === 'formats' && Array.isArray(value)) {
+          updateValues.push(JSON.stringify(value));
+        } else if (field === 'status' && (Array.isArray(value) || typeof value === 'object')) {
+          updateValues.push(JSON.stringify(value));
+        } else if (field === 'tags' && (Array.isArray(value) || typeof value === 'object')) {
+          updateValues.push(JSON.stringify(Array.isArray(value) ? value : []));
+        } else if (field === 'isFeatured') {
+          updateValues.push(value ? 1 : 0);
+        } else {
+          updateValues.push(value || null);
+        }
+      }
+    });
+
+    updateFields.push('updatedAt = ?');
+    updateValues.push(mysqlDateTime);
+    updateValues.push(id); // WHERE clause
+
+    const sql = `UPDATE DigitalBook SET ${updateFields.join(', ')} WHERE id = ?`;
+
+    await query(sql, updateValues);
+
+    // Fetch and return updated book
+    return getBookById(id);
+  } catch (error) {
+    console.error("Error updating book:", error);
+    throw error;
+  }
+}
+
+export async function deleteBook(id: string) {
+  try {
+    const sql = `DELETE FROM DigitalBook WHERE id = ?`;
+    await query(sql, [id]);
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting book:", error);
     throw error;
   }
 }

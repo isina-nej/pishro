@@ -212,47 +212,22 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
 
   // Determine which content to display
   const contentToDisplay = article.contentHtml || article.content || '';
+  const readingTime = Math.ceil(article.content.split(/\s+/).length / 200);
 
   return (
     <>
-      {/* Sticky Progress Bar */}
-      <div className="sticky top-0 z-40 bg-white dark:bg-slate-950 mb-8 h-1 w-full overflow-hidden rounded-b-full shadow-sm">
+      {/* Enhanced Sticky Progress Bar */}
+      <div className="sticky top-0 z-40 h-1.5 w-full overflow-hidden bg-white dark:bg-slate-950 shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-blue-500 via-cyan-500 to-sky-500 transition-all duration-200"
+          className="h-full rounded-full bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 shadow-lg shadow-cyan-500/50 transition-all duration-300 ease-out"
           style={{ width: `${progress}%` }}
         />
       </div>
 
-      <div className="max-w-6xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
-        <div className="mb-10 space-y-6">
-          <div className="flex flex-wrap items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
-            <Link
-              href="/news"
-              className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-slate-700 transition hover:border-slate-300 hover:bg-white dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
-            >
-              ← بازگشت به اخبار
-            </Link>
-            <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">
-              {article.category}
-            </span>
-            {formattedDate && <span className="text-sm text-slate-500 dark:text-slate-400">{formattedDate}</span>}
-          </div>
-
-          <div className="space-y-4">
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white leading-tight">
-              {article.title}
-            </h1>
-            {article.excerpt && (
-              <p className="max-w-3xl text-lg md:text-xl text-slate-600 dark:text-slate-300 leading-8">
-                {article.excerpt}
-              </p>
-            )}
-          </div>
-        </div>
-
-      {article.coverImage && (
-        <div className="mb-12 overflow-hidden rounded-[2rem] border border-slate-200 bg-slate-50 shadow-[0_30px_80px_rgba(15,23,42,0.08)] dark:border-slate-800 dark:bg-slate-950">
-          <div className="relative aspect-[16/9] w-full">
+      <div className="w-full bg-white dark:bg-slate-950">
+        {/* Hero Section with Image */}
+        {article.coverImage && (
+          <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] overflow-hidden">
             <Image
               src={article.coverImage}
               alt={article.title}
@@ -260,21 +235,111 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
               className="object-cover"
               priority
             />
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent" />
+            
+            {/* Header Content Overlay */}
+            <div className="absolute inset-0 flex flex-col justify-end">
+              <div className="max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12">
+                {/* Category and Date */}
+                <div className="flex flex-wrap items-center gap-3 mb-6">
+                  <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-400/40 backdrop-blur-sm">
+                    <span className="inline-block w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                    <span className="text-sm font-semibold text-cyan-300">{article.category}</span>
+                  </span>
+                  {formattedDate && (
+                    <span className="text-sm text-slate-300">{formattedDate}</span>
+                  )}
+                </div>
+
+                {/* Title */}
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-4">
+                  {article.title}
+                </h1>
+
+                {/* Excerpt */}
+                {article.excerpt && (
+                  <p className="max-w-2xl text-base sm:text-lg text-slate-100 leading-relaxed">
+                    {article.excerpt}
+                  </p>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      <ArticlePreviewCard article={article} />
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+          {/* Breadcrumb */}
+          <div className="mb-8 flex items-center gap-3 text-sm">
+            <Link
+              href="/news"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200/50 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-900/50 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200"
+            >
+              <span>←</span>
+              <span>بازگشت</span>
+            </Link>
+            <span className="text-slate-400">/</span>
+            <span className="text-slate-600 dark:text-slate-400">{readingTime} دقیقه مطالعه</span>
+          </div>
 
-      <article className="mx-auto max-w-4xl">
+          {/* Article Meta */}
+          <div className="flex flex-wrap items-center justify-between gap-4 py-6 border-b border-slate-200/50 dark:border-slate-800/50 mb-12">
+            <div className="flex flex-wrap items-center gap-6 text-sm text-slate-600 dark:text-slate-400">
+              {article.author && (
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center text-white font-bold text-xs">
+                    {article.author.charAt(0)}
+                  </div>
+                  <span>{article.author}</span>
+                </div>
+              )}
+              {article.views !== undefined && (
+                <div className="flex items-center gap-2">
+                  <span>👁</span>
+                  <span>{article.views.toLocaleString('fa-IR')} بازدید</span>
+                </div>
+              )}
+            </div>
+            {article.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {article.tags.slice(0, 3).map((tag) => (
+                  <span
+                    key={tag}
+                    className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-medium"
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+
+        <article className="mx-auto">
         {/* Content Wrapper with Magazine-style Styling */}
-        <div className="rounded-[2rem] border border-slate-200/60 bg-gradient-to-b from-white/95 to-slate-50/95 p-8 md:p-12 shadow-[0_40px_90px_rgba(15,23,42,0.08)] dark:border-slate-800/60 dark:from-slate-950/95 dark:to-slate-900/95">
-          
+        <div className="rounded-3xl border border-slate-200/50 dark:border-slate-800/50 bg-gradient-to-br from-white via-slate-50 to-white dark:from-slate-950/50 dark:via-slate-900/30 dark:to-slate-950/50 p-8 sm:p-10 md:p-12 shadow-xl dark:shadow-2xl dark:shadow-slate-900/50 mb-12">
           {/* Auto-detect and render content based on type */}
           {article.contentHtml ? (
             /* Pre-rendered HTML from markdown (RECOMMENDED) - Fastest load time */
             <div
-              className="space-y-6 text-right text-base md:text-lg leading-[1.85] text-slate-800 dark:text-slate-200 [&_p]:text-slate-800 [&_p]:dark:text-slate-200 [&_p]:mb-6 [&_h1]:text-4xl [&_h1]:md:text-5xl [&_h1]:font-black [&_h1]:text-slate-900 [&_h1]:dark:text-slate-100 [&_h1]:mb-8 [&_h1]:mt-10 [&_h2]:text-3xl [&_h2]:md:text-4xl [&_h2]:font-bold [&_h2]:text-slate-900 [&_h2]:dark:text-slate-100 [&_h2]:mb-7 [&_h2]:mt-9 [&_h3]:text-2xl [&_h3]:md:text-3xl [&_h3]:font-bold [&_h3]:text-slate-900 [&_h3]:dark:text-slate-100 [&_h3]:mb-6 [&_h3]:mt-8 [&_strong]:font-bold [&_em]:italic [&_code]:bg-slate-100 [&_code]:dark:bg-slate-800 [&_code]:px-2 [&_code]:py-1 [&_code]:rounded [&_code]:font-mono [&_code]:text-sm [&_pre]:bg-slate-950 [&_pre]:text-slate-100 [&_pre]:p-4 [&_pre]:rounded-3xl [&_pre]:overflow-x-auto [&_pre]:my-8 [&_blockquote]:border-r-4 [&_blockquote]:rtl:border-r-0 [&_blockquote]:rtl:border-l-4 [&_blockquote]:border-slate-400/90 [&_blockquote]:bg-slate-50 [&_blockquote]:dark:bg-slate-950/70 [&_blockquote]:p-6 [&_blockquote]:rounded-3xl [&_blockquote]:italic [&_blockquote]:text-slate-700 [&_blockquote]:dark:text-slate-200 [&_blockquote]:shadow-sm [&_blockquote]:my-10 [&_ul]:space-y-3 [&_ul]:list-disc [&_ul]:list-inside [&_ul]:mr-6 [&_ul]:my-8 [&_ol]:space-y-3 [&_ol]:list-decimal [&_ol]:list-inside [&_ol]:mr-6 [&_ol]:my-8 [&_li]:leading-relaxed [&_a]:text-blue-600 [&_a]:dark:text-blue-400 [&_a]:hover:underline"
+              className="prose prose-lg max-w-none space-y-6 text-right text-base md:text-lg leading-[1.9] text-slate-800 dark:text-slate-200 
+              [&_p]:text-slate-800 [&_p]:dark:text-slate-200 [&_p]:mb-7
+              [&_h1]:text-4xl [&_h1]:md:text-5xl [&_h1]:font-black [&_h1]:text-slate-900 [&_h1]:dark:text-slate-100 [&_h1]:mb-8 [&_h1]:mt-12 
+              [&_h2]:text-3xl [&_h2]:md:text-4xl [&_h2]:font-bold [&_h2]:text-slate-900 [&_h2]:dark:text-slate-100 [&_h2]:mb-7 [&_h2]:mt-10 [&_h2]:pt-6 [&_h2]:border-t [&_h2]:border-slate-200 [&_h2]:dark:border-slate-800
+              [&_h3]:text-2xl [&_h3]:md:text-3xl [&_h3]:font-bold [&_h3]:text-slate-900 [&_h3]:dark:text-slate-100 [&_h3]:mb-6 [&_h3]:mt-9
+              [&_h4]:text-xl [&_h4]:md:text-2xl [&_h4]:font-semibold [&_h4]:text-slate-900 [&_h4]:dark:text-slate-100 [&_h4]:mb-5 [&_h4]:mt-8
+              [&_strong]:font-bold [&_strong]:text-slate-900 [&_strong]:dark:text-slate-100
+              [&_em]:italic [&_em]:text-slate-700 [&_em]:dark:text-slate-300
+              [&_code]:bg-slate-900 [&_code]:dark:bg-slate-800 [&_code]:text-slate-100 [&_code]:px-2.5 [&_code]:py-1 [&_code]:rounded [&_code]:font-mono [&_code]:text-sm
+              [&_pre]:bg-slate-900 [&_pre]:text-slate-100 [&_pre]:p-6 [&_pre]:rounded-2xl [&_pre]:overflow-x-auto [&_pre]:my-8 [&_pre]:shadow-lg [&_pre]:border [&_pre]:border-slate-700
+              [&_blockquote]:border-r-4 [&_blockquote]:rtl:border-r-0 [&_blockquote]:rtl:border-l-4 [&_blockquote]:border-cyan-500 [&_blockquote]:bg-gradient-to-r [&_blockquote]:from-cyan-50/50 [&_blockquote]:to-blue-50/50 [&_blockquote]:dark:from-cyan-900/10 [&_blockquote]:dark:to-blue-900/10 [&_blockquote]:p-6 [&_blockquote]:rounded-2xl [&_blockquote]:italic [&_blockquote]:text-slate-700 [&_blockquote]:dark:text-slate-300 [&_blockquote]:shadow-sm [&_blockquote]:my-10
+              [&_ul]:space-y-3 [&_ul]:list-disc [&_ul]:list-inside [&_ul]:mr-2 [&_ul]:my-8 [&_ul]:text-slate-800 [&_ul]:dark:text-slate-200
+              [&_ol]:space-y-3 [&_ol]:list-decimal [&_ol]:list-inside [&_ol]:mr-2 [&_ol]:my-8 [&_ol]:text-slate-800 [&_ol]:dark:text-slate-200
+              [&_li]:leading-relaxed [&_li]:text-slate-700 [&_li]:dark:text-slate-300
+              [&_a]:text-cyan-600 [&_a]:dark:text-cyan-400 [&_a]:font-medium [&_a]:hover:underline [&_a]:transition
+              [&_hr]:my-12 [&_hr]:border-slate-200 [&_hr]:dark:border-slate-700
+              [&_table]:w-full [&_table]:my-8 [&_table]:border-collapse [&_table]:text-sm
+              [&_th]:bg-slate-100 [&_th]:dark:bg-slate-800 [&_th]:p-3 [&_th]:text-right [&_th]:font-semibold [&_th]:border [&_th]:border-slate-200 [&_th]:dark:border-slate-700
+              [&_td]:p-3 [&_td]:border [&_td]:border-slate-200 [&_td]:dark:border-slate-700"
               dangerouslySetInnerHTML={{ __html: contentToDisplay }}
             />
           ) : article.contentType === 'MARKDOWN' ? (
@@ -304,31 +369,34 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
         </div>
 
         {/* Article Meta Footer */}
-        <div className="mt-12 border-t border-slate-200/60 pt-8 dark:border-slate-800/60">
-          <div className="flex flex-wrap items-center justify-between gap-4 text-sm text-slate-600 dark:text-slate-400">
-            <div className="flex items-center gap-4">
+        <div className="border-t border-slate-200/50 dark:border-slate-800/50 pt-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 text-sm text-slate-600 dark:text-slate-400">
+            <div className="flex flex-col gap-2">
               {article.author && (
-                <span className="flex items-center gap-2">
-                  <span className="inline-block h-1 w-1 rounded-full bg-slate-400 dark:bg-slate-600" />
-                  <span>نوشتار: {article.author}</span>
-                </span>
+                <p className="text-slate-700 dark:text-slate-300 font-medium">
+                  <span className="text-slate-500 dark:text-slate-400">نوشتار توسط:</span> {article.author}
+                </p>
               )}
               {article.publishedAt && (
-                <span className="flex items-center gap-2">
-                  <span className="inline-block h-1 w-1 rounded-full bg-slate-400 dark:bg-slate-600" />
-                  <time dateTime={new Date(article.publishedAt).toISOString()}>
-                    {format(new Date(article.publishedAt), 'd MMMM yyyy', { locale: faIR })}
-                  </time>
-                </span>
+                <time dateTime={new Date(article.publishedAt).toISOString()} className="text-slate-600 dark:text-slate-400">
+                  {format(new Date(article.publishedAt), 'd MMMM yyyy', { locale: faIR })}
+                </time>
               )}
             </div>
-            <div className="text-xs font-medium text-slate-500 dark:text-slate-500">
-              ~{Math.ceil(article.content.split(/\s+/).length / 200)} دقیقه مطالعه
+            <div className="flex items-center gap-4 text-xs font-medium text-slate-500 dark:text-slate-500">
+              <span>~{readingTime} دقیقه مطالعه</span>
+              {article.views !== undefined && (
+                <span>{article.views.toLocaleString('fa-IR')} بازدید</span>
+              )}
             </div>
           </div>
         </div>
       </article>
       </div>
+      </div>
+
+      {/* Related Articles Section */}
+      <ArticlePreviewCard article={article} />
     </>
   );
 }

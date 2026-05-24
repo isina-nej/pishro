@@ -120,7 +120,7 @@ export const CreateNewsSchema = z.object({
     .optional(),
   // Accept both content and full text
   content: z.string()
-    .max(50000, 'محتوا نمی‌تواند بیش از 50000 کاراکتر باشد')
+    .max(500000, 'محتوا نمی‌تواند بیش از 500000 کاراکتر باشد')
     .optional(),
   // Accept both coverImage and thumbnail
   coverImage: z.string()
@@ -190,7 +190,7 @@ export const UpdateNewsSchema = z.object({
     .max(2000, 'توضیح نمی‌تواند بیش از 2000 کاراکتر باشد')
     .optional(),
   content: z.string()
-    .max(50000, 'محتوا نمی‌تواند بیش از 50000 کاراکتر باشد')
+    .max(500000, 'محتوا نمی‌تواند بیش از 500000 کاراکتر باشد')
     .optional(),
   categoryId: z.string()
     .regex(/^[a-f\d]{24}$/i, 'شناسه دسته‌بندی معتبر نیست')

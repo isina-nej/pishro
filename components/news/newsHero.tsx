@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Newspaper, Star, Eye, TrendingUp } from "lucide-react";
+import { Newspaper, Star, Eye, TrendingUp, ArrowLeft } from "lucide-react";
 import Image from "next/image";
 
 interface NewsHeroProps {
@@ -13,10 +13,67 @@ interface NewsHeroProps {
   };
 }
 
+const statsData = [
+  {
+    label: "خبر منتشر شده",
+    value: "totalNews",
+    icon: <Newspaper className="h-6 w-6" />,
+    color: "from-cyan-500/20 to-blue-500/20",
+    iconColor: "text-cyan-400",
+  },
+  {
+    label: "اخبار ویژه",
+    value: "featured",
+    icon: <Star className="h-6 w-6" />,
+    color: "from-purple-500/20 to-pink-500/20",
+    iconColor: "text-purple-400",
+  },
+  {
+    label: "انتشار این ماه",
+    value: "thisMonth",
+    icon: <TrendingUp className="h-6 w-6" />,
+    color: "from-emerald-500/20 to-green-500/20",
+    iconColor: "text-emerald-400",
+  },
+  {
+    label: "میانگین بازدید",
+    value: "avgViews",
+    icon: <Eye className="h-6 w-6" />,
+    color: "from-orange-500/20 to-red-500/20",
+    iconColor: "text-orange-400",
+  },
+];
+
 export const NewsHero = ({ stats }: NewsHeroProps) => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5 },
+    },
+  };
+
+  const getStatValue = (key: string) => {
+    const statKey = key as keyof typeof stats;
+    const value = stats[statKey];
+    return Number.isFinite(value) ? value : 0;
+  };
+
   return (
-    <section className="relative overflow-hidden pb-32 pt-36 text-white">
-      {/* Background Image */}
+    <section className="relative overflow-hidden pb-40 pt-32 text-white lg:pb-48">
+      {/* Background with enhanced gradient */}
       <div className="absolute inset-0">
         <Image
           src="/images/news/header.jpg"
@@ -25,68 +82,97 @@ export const NewsHero = ({ stats }: NewsHeroProps) => {
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/90 via-slate-900/70 to-slate-900/90" />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-900/70 to-slate-950/85" />
       </div>
 
-      {/* Floating Elements for depth */}
-      <div className="absolute -left-10 top-24 h-64 w-64 rounded-full bg-sky-500/20 blur-3xl" />
-      <div className="absolute -right-16 bottom-10 h-72 w-72 rounded-full bg-indigo-500/20 blur-3xl" />
+      {/* Animated floating elements */}
+      <motion.div
+        animate={{ y: [0, -20, 0] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute -left-20 top-10 h-80 w-80 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 blur-3xl opacity-10"
+      />
+      <motion.div
+        animate={{ y: [0, 20, 0] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        className="absolute -right-20 bottom-20 h-96 w-96 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 blur-3xl opacity-10"
+      />
 
-      <div className="container-xl relative z-10 flex flex-col gap-10">
-        <div className="max-w-3xl space-y-6">
-          <span className="inline-flex items-center rounded-full border border-white/20 bg-white dark:bg-cardBg px-4 py-1 text-sm font-medium text-slate-100">
-            اخبار و رویدادهای پیشرو
-          </span>
-          <h1 className="text-4xl font-extrabold !leading-tight md:text-5xl">
-            به‌روزترین اخبار دنیای سرمایه‌ گذاری و کسب‌وکار
-          </h1>
-          <p className="text-base text-slate-200 md:text-lg">
-            تازه‌ترین اخبار، تحلیل‌ها و بینش‌های بازار سرمایه که با دقت توسط تیم
-            تحریریه پیشرو انتخاب و تهیه شده‌اند تا شما همیشه در جریان باشید.
-          </p>
-        </div>
+      <div className="container-xl relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-12 space-y-6 lg:mb-16"
+        >
+          {/* Badge */}
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm hover:border-white/30 transition-colors">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75 animate-ping"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>
+              </span>
+              اخبار و رویدادهای پیشرو
+            </span>
+          </motion.div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            {
-              label: "خبر منتشر شده",
-              value: stats.totalNews,
-              icon: <Newspaper className="h-5 w-5" />,
-            },
-            {
-              label: "اخبار ویژه",
-              value: stats.featured,
-              icon: <Star className="h-5 w-5" />,
-            },
-            {
-              label: "انتشار این ماه",
-              value: stats.thisMonth,
-              icon: <TrendingUp className="h-5 w-5" />,
-            },
-            {
-              label: "میانگین بازدید",
-              value: stats.avgViews,
-              icon: <Eye className="h-5 w-5" />,
-            },
-          ].map((item) => (
+          {/* Main heading with gradient */}
+          <div className="space-y-4">
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="text-4xl font-black !leading-tight md:text-6xl lg:text-7xl"
+            >
+              <span className="bg-gradient-to-r from-white via-cyan-200 to-white bg-clip-text text-transparent">
+                به‌روزترین اخبار
+              </span>
+              <br />
+              <span className="text-white">دنیای سرمایه‌گذاری</span>
+            </motion.h1>
+          </div>
+
+          {/* Subtitle */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="max-w-2xl text-lg text-slate-200 md:text-xl leading-relaxed"
+          >
+            تازه‌ترین اخبار، تحلیل‌ها و بینش‌های بازار سرمایه که توسط تیم تحریریه پیشرو با دقت انتخاب شده‌اند تا شما همیشه یک قدم جلوتر باشید.
+          </motion.p>
+        </motion.div>
+
+        {/* Statistics Grid */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+        >
+          {statsData.map((item) => (
             <motion.div
               key={item.label}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              viewport={{ once: true }}
-              className="flex items-center gap-3 rounded-2xl border border-white/20 bg-white dark:bg-cardBg px-5 py-4 backdrop-blur"
+              variants={itemVariants}
+              whileHover={{ y: -5 }}
+              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 to-white/5 px-6 py-5 backdrop-blur-xl transition-all duration-300 hover:border-white/20 hover:from-white/15 hover:to-white/10"
             >
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white dark:bg-cardBg text-white">
-                {item.icon}
-              </span>
-              <div className="flex flex-col">
-              <span className="text-lg font-semibold">{Number.isFinite(item.value) ? item.value : 0}</span>
-                <span className="text-sm text-slate-200">{item.label}</span>
+              {/* Background gradient effect */}
+              <div className={`absolute -inset-1 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-100 blur transition-opacity duration-300 -z-10`} />
+
+              <div className="relative flex items-start justify-between">
+                <div className="flex flex-col gap-2">
+                  <span className={`text-2xl md:text-3xl font-bold ${item.iconColor}`}>
+                    {getStatValue(item.value).toLocaleString("fa-IR")}
+                  </span>
+                  <span className="text-xs md:text-sm text-slate-300 font-medium">{item.label}</span>
+                </div>
+                <div className={`${item.iconColor} p-2 rounded-xl bg-white/10 group-hover:bg-white/20 transition-colors`}>
+                  {item.icon}
+                </div>
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

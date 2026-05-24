@@ -22,6 +22,7 @@ const menuItems = [
   { href: '/admin/dashboard', label: 'داشبورد', icon: '📊', key: 'dashboard', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
   { href: '#', label: 'کاربران', icon: '👥', key: 'users', roles: ['ADMIN', 'MODERATOR'] },
   { href: '/admin/block-news', label: 'اخبار', icon: '📝', key: 'block-news', roles: ['ADMIN', 'MODERATOR'] },
+  { href: '/admin/library', label: 'کتابخانه', icon: '📚', key: 'library', roles: ['ADMIN', 'MODERATOR'] },
   { href: '/admin/courses', label: 'دوره‌ها', icon: '🎓', key: 'courses', roles: ['ADMIN', 'MODERATOR'] },
   { href: '#', label: 'گزارش‌ها', icon: '📈', key: 'reports', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
   { href: '#', label: 'تنظیمات', icon: '⚙️', key: 'settings', roles: ['ADMIN'] },

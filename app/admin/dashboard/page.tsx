@@ -145,6 +145,13 @@ export default function AdminDashboardPage() {
                   <span className="text-lg">📝</span>
                 </a>
                 <a
+                  href="/admin/library"
+                  className="flex items-center justify-end gap-3 px-4 py-3 rounded hover:bg-gray-700 transition"
+                >
+                  {sidebarOpen && <span>کتابخانه</span>}
+                  <span className="text-lg">📚</span>
+                </a>
+                <a
                   href="/admin/courses"
                   className="flex items-center justify-end gap-3 px-4 py-3 rounded hover:bg-gray-700 transition"
                 >
