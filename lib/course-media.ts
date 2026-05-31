@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import { basename } from "path";
 import {
   deleteFileFromStorage,
   getRelativePathFromUrl,
@@ -6,14 +7,21 @@ import {
   promoteTempFileToStorage,
 } from "@/lib/services/storage-adapter";
 
+function originalNameFromStoredPath(storedPath: string | null | undefined): string {
+  if (!storedPath) return "";
+  const relative = getRelativePathFromUrl(storedPath);
+
+  return basename(relative.split("?")[0] || "");
+}
+
 export function buildCourseThumbnailPath(courseId: string, fileName: string): string {
-  const ext = fileName.split(".").pop()?.toLowerCase() || "jpg";
-  return `courses/${courseId}/thumbnail_${Date.now()}.${ext}`;
+  const ext = originalNameFromStoredPath(fileName).split(".").pop()?.toLowerCase() || "jpg";
+  return `courses/${courseId}/cover/thumbnail_${Date.now()}.${ext}`;
 }
 
 export function buildCourseTrailerPath(courseId: string, fileName: string): string {
-  const ext = fileName.split(".").pop()?.toLowerCase() || "mp4";
-  return `courses/${courseId}/trailer_${Date.now()}.${ext}`;
+  const ext = originalNameFromStoredPath(fileName).split(".").pop()?.toLowerCase() || "mp4";
+  return `courses/${courseId}/trailer/trailer_${Date.now()}.${ext}`;
 }
 
 export function buildLessonThumbnailPath(
@@ -21,8 +29,8 @@ export function buildLessonThumbnailPath(
   lessonId: string,
   fileName: string
 ): string {
-  const ext = fileName.split(".").pop()?.toLowerCase() || "jpg";
-  return `courses/${courseId}/lessons/${lessonId}/thumb_${Date.now()}.${ext}`;
+  const ext = originalNameFromStoredPath(fileName).split(".").pop()?.toLowerCase() || "jpg";
+  return `courses/${courseId}/lessons/${lessonId}/cover/thumb_${Date.now()}.${ext}`;
 }
 
 export function buildLessonVideoPath(
@@ -30,8 +38,8 @@ export function buildLessonVideoPath(
   lessonId: string,
   fileName: string
 ): string {
-  const ext = fileName.split(".").pop()?.toLowerCase() || "mp4";
-  return `courses/${courseId}/lessons/${lessonId}/video_${crypto.randomBytes(4).toString("hex")}.${ext}`;
+  const ext = originalNameFromStoredPath(fileName).split(".").pop()?.toLowerCase() || "mp4";
+  return `courses/${courseId}/lessons/${lessonId}/video/video_${crypto.randomBytes(4).toString("hex")}.${ext}`;
 }
 
 export async function commitTempMediaPath(
@@ -41,9 +49,7 @@ export async function commitTempMediaPath(
   if (!tempPath) {
     throw new Error("مسیر فایل موقت نامعتبر است");
   }
-  const relative = tempPath.includes("://")
-    ? getRelativePathFromUrl(tempPath)
-    : tempPath;
+  const relative = getRelativePathFromUrl(tempPath);
   if (!isTempStoragePath(relative)) {
     return tempPath;
   }
@@ -55,9 +61,7 @@ export async function safeDeleteStoragePath(
 ): Promise<void> {
   if (!storedValue) return;
   try {
-    const relative = storedValue.includes("://")
-      ? getRelativePathFromUrl(storedValue)
-      : storedValue;
+    const relative = getRelativePathFromUrl(storedValue);
     await deleteFileFromStorage(relative);
   } catch (error) {
     console.error("[course-media] delete failed:", storedValue, error);

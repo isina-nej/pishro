@@ -129,6 +129,9 @@ export default function EditBlockNewsPage() {
           thumbnail: newsArticle.coverImage || '',
           categoryId: newsArticle.categoryId || '',
           author: newsArticle.author || '',
+          publishOption: newsArticle.published ? 'now' : 'draft',
+          scheduledDate: '',
+          scheduledTime: '',
         });
       } catch (error) {
         console.error('Error fetching article:', error);
@@ -606,12 +609,5 @@ export default function EditBlockNewsPage() {
     </div>
   );
 
-  return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-950" dir="rtl">
-      <AdminSidebar user={user} />
-      <main className="flex-1 overflow-auto">
-        <div className="p-4 md:p-8">{content}</div>
-      </main>
-    </div>
-  );
+  return <AdminSidebar user={user} currentPage="block-news">{content}</AdminSidebar>;
 }

@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readFile, stat } from 'fs/promises';
-import { join, normalize } from 'path';
-import { getStorageConfig } from '@/lib/services/storage-adapter';
+import { stat } from 'fs/promises';
+import { createReadStream } from 'fs';
+import { extname } from 'path';
+import { Readable } from 'stream';
+import { assertSafeStoragePath, getStorageConfig } from '@/lib/services/storage-adapter';
+
+export const runtime = 'nodejs';
 
 const MIME_TYPES: Record<string, string> = {
   '.jpg': 'image/jpeg',
@@ -22,22 +26,40 @@ const MIME_TYPES: Record<string, string> = {
 };
 
 function getMimeType(filePath: string): string {
-  const ext = filePath.substring(filePath.lastIndexOf('.')).toLowerCase();
+  const ext = extname(filePath).toLowerCase();
   return MIME_TYPES[ext] || 'application/octet-stream';
+}
+
+function isProtectedCourseVideoPath(pathParam: string): boolean {
+  const normalized = pathParam.replace(/\\/g, '/').replace(/^\/+/, '');
+  return /^courses\/[^/]+\/lessons\/[^/]+\/video\/.+\.(mp4|webm)$/i.test(normalized);
 }
 
 export async function GET(req: NextRequest) {
   const storageConfig = getStorageConfig();
-  const pathParam = req.nextUrl.pathname.replace(/^\/api\/uploads\/?/, '');
+  const pathParam = decodeURIComponent(req.nextUrl.pathname.replace(/^\/api\/uploads\/?/, ''));
 
   if (!pathParam) {
     return NextResponse.json({ error: 'Invalid upload path' }, { status: 400 });
   }
 
-  const normalizedRelativePath = normalize(pathParam).replace(/^\.\//, '');
-  const fullPath = normalize(join(storageConfig.storagePath, normalizedRelativePath));
+  if (isProtectedCourseVideoPath(pathParam)) {
+    return NextResponse.json(
+      { error: 'Protected video files must be streamed through the lesson player' },
+      {
+        status: 403,
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate',
+          'X-Robots-Tag': 'noindex, nofollow, noarchive',
+        },
+      }
+    );
+  }
 
-  if (!fullPath.startsWith(normalize(storageConfig.storagePath))) {
+  let fullPath: string;
+  try {
+    fullPath = assertSafeStoragePath(storageConfig.storagePath, pathParam);
+  } catch {
     return NextResponse.json({ error: 'Invalid upload path' }, { status: 400 });
   }
 
@@ -47,11 +69,12 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'File not found' }, { status: 404 });
     }
 
-    const fileBuffer = await readFile(fullPath);
-    return new NextResponse(fileBuffer, {
+    const fileStream = createReadStream(fullPath);
+    return new NextResponse(Readable.toWeb(fileStream) as ReadableStream, {
       status: 200,
       headers: {
         'Content-Type': getMimeType(fullPath),
+        'Content-Length': fileStat.size.toString(),
         'Cache-Control': 'public, max-age=31536000, immutable',
       },
     });

@@ -219,6 +219,12 @@ export async function updateLesson(lessonId: string, data: LessonUpdateInput) {
     updateData.durationSeconds = data.durationSeconds;
     updateData.duration = String(data.durationSeconds);
   }
+  if (data.thumbnailPath !== undefined && !data.thumbnailTempPath) {
+    updateData.thumbnail = data.thumbnailPath;
+  }
+  if (data.videoPath !== undefined && !data.videoTempPath) {
+    updateData.videoUrl = data.videoPath;
+  }
 
   try {
     if (data.thumbnailTempPath) {
@@ -250,7 +256,9 @@ export async function updateLesson(lessonId: string, data: LessonUpdateInput) {
 
 export async function deleteLesson(lessonId: string) {
   const lesson = await prisma.lesson.findUnique({ where: { id: lessonId } });
-  if (!lesson) return;
+  if (!lesson) {
+    throw new Error("LESSON_NOT_FOUND");
+  }
 
   await prisma.lesson.delete({ where: { id: lessonId } });
 
@@ -277,11 +285,8 @@ export function resolveLessonVideoRelativePath(lesson: {
   video?: { originalPath: string | null } | null;
 }): string | null {
   if (lesson.video?.originalPath) {
-    return lesson.video.originalPath;
+    return getRelativePathFromUrl(lesson.video.originalPath);
   }
   if (!lesson.videoUrl) return null;
-  if (lesson.videoUrl.includes("://")) {
-    return getRelativePathFromUrl(lesson.videoUrl);
-  }
-  return lesson.videoUrl.replace(/^\/+/, "");
+  return getRelativePathFromUrl(lesson.videoUrl);
 }

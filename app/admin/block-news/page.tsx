@@ -9,7 +9,6 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -24,6 +23,8 @@ import {
 import { Plus, Edit2, Trash2, Send, Search, Filter, Newspaper, Clock, Archive } from 'lucide-react';
 import { useBlockNewsList, useDeleteBlockNews, useChangeBlockNewsStatus } from '@/lib/hooks/use-block-news';
 import AdminSidebar from '@/components/admin/AdminSidebar';
+import { AdminLoadingState } from '@/components/admin/AdminPageShell';
+import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
 
 export const dynamic = 'force-dynamic';
 
@@ -33,17 +34,8 @@ const STATUS_LABELS: Record<string, string> = {
   'ARCHIVED': 'بایگانی شده',
 };
 
-interface AdminUser {
-  id: string;
-  email: string;
-  name: string;
-  role: 'ADMIN' | 'MODERATOR' | 'VIEWER';
-}
-
 export default function BlockNewsListPage() {
-  const router = useRouter();
-  const [user, setUser] = useState<AdminUser | null>(null);
-  const [isLoadingUser, setIsLoadingUser] = useState(true);
+  const { user, isLoading: isLoadingUser, logout } = useAdminAuth();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -58,38 +50,14 @@ export default function BlockNewsListPage() {
   const deleteNewsMutation = useDeleteBlockNews();
   const changeStatusMutation = useChangeBlockNewsStatus();
 
-  // Get current user
   useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const token = localStorage.getItem('admin_access_token');
-        if (!token) {
-          router.push('/admin/login');
-          return;
-        }
+    const timeoutId = window.setTimeout(() => {
+      setPage(1);
+      setSearchTerm(searchInput);
+    }, 400);
 
-        const response = await fetch('/api/admin/auth/me', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (!response.ok) {
-          localStorage.removeItem('admin_access_token');
-          router.push('/admin/login');
-          return;
-        }
-
-        const data = await response.json();
-        setUser(data.user);
-      } catch (error) {
-        console.error('Error fetching user:', error);
-        router.push('/admin/login');
-      } finally {
-        setIsLoadingUser(false);
-      }
-    };
-
-    fetchCurrentUser();
-  }, [router]);
+    return () => window.clearTimeout(timeoutId);
+  }, [searchInput]);
 
   const handleSearch = () => {
     setPage(1);
@@ -114,13 +82,7 @@ export default function BlockNewsListPage() {
   };
 
   if (isLoadingUser) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        </div>
-      </div>
-    );
+    return <AdminLoadingState />;
   }
 
   if (!user) return null;
@@ -349,5 +311,5 @@ export default function BlockNewsListPage() {
     </div>
   );
 
-  return <AdminSidebar user={user} currentPage="block-news">{content}</AdminSidebar>;
+  return <AdminSidebar user={user} currentPage="block-news" onLogout={logout}>{content}</AdminSidebar>;
 }

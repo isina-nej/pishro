@@ -1,11 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Plus } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -16,20 +18,13 @@ import {
 } from '@/components/ui/table';
 import { useAdminCoursesList } from '@/lib/hooks/useAdminCourses';
 import AdminSidebar from '@/components/admin/AdminSidebar';
+import { AdminEmptyState, AdminLoadingState, AdminPageShell } from '@/components/admin/AdminPageShell';
+import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
 
 export const dynamic = 'force-dynamic';
 
-interface AdminUser {
-  id: string;
-  email: string;
-  name: string;
-  role: 'ADMIN' | 'MODERATOR' | 'VIEWER';
-}
-
 export default function AdminCoursesPage() {
-  const router = useRouter();
-  const [user, setUser] = useState<AdminUser | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { user, isLoading, logout } = useAdminAuth();
   const [page, setPage] = useState(1);
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
@@ -40,51 +35,16 @@ export default function AdminCoursesPage() {
   const pagination = data?.pagination;
 
   useEffect(() => {
-    // Check authentication
-    const fetchCurrentUser = async () => {
-      try {
-        const token = localStorage.getItem('admin_access_token');
-        
-        if (!token) {
-          router.push('/admin/login');
-          return;
-        }
+    const timeoutId = window.setTimeout(() => {
+      setPage(1);
+      setSearch(searchInput);
+    }, 400);
 
-        // Fetch current user
-        const response = await fetch('/api/admin/auth/me', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          localStorage.removeItem('admin_access_token');
-          router.push('/admin/login');
-          return;
-        }
-
-        const data = await response.json();
-        setUser(data.user);
-      } catch (error) {
-        console.error('Error fetching user:', error);
-        router.push('/admin/login');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchCurrentUser();
-  }, [router]);
+    return () => window.clearTimeout(timeoutId);
+  }, [searchInput]);
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading...</p>
-        </div>
-      </div>
-    );
+    return <AdminLoadingState />;
   }
 
   if (!user) {
@@ -92,57 +52,74 @@ export default function AdminCoursesPage() {
   }
 
   const content = (
-    <div className="w-full">
-      <div className="flex justify-between items-center mb-6 flex-row-reverse">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-textPrimary">مدیریت دوره‌ها</h1>
-        <Link href="/admin/courses/create">
-          <Button>
+    <AdminPageShell
+      title="مدیریت دوره‌ها"
+      description="لیست دوره‌ها، وضعیت انتشار، فصل‌ها و عملیات ویرایش را از اینجا مدیریت کنید."
+      actions={
+        <Button asChild>
+          <Link href="/admin/courses/create">
+            <Plus className="h-4 w-4" />
             افزودن دوره جدید
-            <Plus className="h-4 w-4 ml-2" />
-          </Button>
-        </Link>
-      </div>
-
-      <div className="flex gap-2 mb-4 flex-row-reverse">
-        <Button
-          onClick={() => {
-            setPage(1);
-            setSearch(searchInput);
-          }}
-        >
-          جستجو
+          </Link>
         </Button>
-        <Input
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-          placeholder="جستجو..."
-          aria-label="جستجوی دوره"
-        />
-      </div>
+      }
+    >
+      <Card className="p-4">
+        <div className="relative">
+          <Search className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <Input
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            placeholder="جستجو در عنوان، توضیحات یا اسلاگ..."
+            aria-label="جستجوی دوره"
+            className="pr-9 text-right"
+          />
+        </div>
+      </Card>
 
       {isCoursesLoading ? (
-        <p className="text-center py-8">در حال بارگذاری...</p>
+        <AdminLoadingState label="در حال دریافت دوره‌ها..." />
+      ) : items.length === 0 ? (
+        <AdminEmptyState
+          title="دوره‌ای یافت نشد"
+          description={search ? 'عبارت جستجو را تغییر دهید یا یک دوره جدید بسازید.' : 'هنوز دوره‌ای ثبت نشده است.'}
+          action={
+            <Button asChild>
+              <Link href="/admin/courses/create">ایجاد اولین دوره</Link>
+            </Button>
+          }
+        />
       ) : (
-        <div className="bg-white dark:bg-cardBg rounded-lg shadow overflow-hidden">
+        <Card className="overflow-hidden">
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="border-b bg-slate-50 dark:bg-slate-900/60">
                 <TableHead>عنوان</TableHead>
                 <TableHead>قیمت</TableHead>
                 <TableHead>لایک</TableHead>
                 <TableHead>دیسلایک</TableHead>
                 <TableHead>فصل‌ها</TableHead>
+                <TableHead>انتشار</TableHead>
                 <TableHead>عملیات</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {items.map((course) => (
-                <TableRow key={course.id}>
-                  <TableCell>{course.subject}</TableCell>
-                  <TableCell>{course.price?.toLocaleString('fa-IR')}</TableCell>
+                <TableRow key={course.id} className="hover:bg-slate-50 dark:hover:bg-slate-900/60">
+                  <TableCell className="font-medium text-slate-950 dark:text-white">{course.subject}</TableCell>
+                  <TableCell>{course.price?.toLocaleString('fa-IR')} تومان</TableCell>
                   <TableCell>{course.likes ?? 0}</TableCell>
                   <TableCell>{course.dislikes ?? 0}</TableCell>
-                  <TableCell>{course.hasChapters ? 'بله' : 'خیر'}</TableCell>
+                  <TableCell>
+                    <Badge variant={course.hasChapters ? 'secondary' : 'outline'}>
+                      {course.hasChapters ? 'دارد' : 'ندارد'}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={course.published ? 'default' : 'outline'}>
+                      {course.published ? 'منتشر شده' : 'پیش‌نویس'}
+                    </Badge>
+                  </TableCell>
                   <TableCell>
                     <Link href={`/admin/courses/${course.id}/edit`}>
                       <Button
@@ -158,7 +135,7 @@ export default function AdminCoursesPage() {
               ))}
             </TableBody>
           </Table>
-        </div>
+        </Card>
       )}
 
       {pagination && pagination.totalPages > 1 && (
@@ -184,8 +161,8 @@ export default function AdminCoursesPage() {
           </Button>
         </div>
       )}
-    </div>
+    </AdminPageShell>
   );
 
-  return <AdminSidebar user={user} currentPage="courses">{content}</AdminSidebar>;
+  return <AdminSidebar user={user} currentPage="courses" onLogout={logout}>{content}</AdminSidebar>;
 }

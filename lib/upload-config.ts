@@ -13,9 +13,9 @@ import { constants } from "fs";
 /**
  * Base upload directory
  * این دایرکتوری خارج از پروژه است و برای persistence استفاده می‌شود
- * می‌توانید در .env تنظیم کنید: UPLOAD_BASE_DIR="D:\pishro_uploads"
+ * می‌توانید در .env تنظیم کنید: UPLOAD_BASE_DIR="/opt/uploade"
  */
-let BASE_UPLOAD_DIR = process.env.UPLOAD_BASE_DIR || join("D:", "pishro_uploads");
+let BASE_UPLOAD_DIR = process.env.UPLOAD_BASE_DIR || "/opt/uploade";
 
 // تبدیل مسیر نسبی به مطلق
 BASE_UPLOAD_DIR = resolve(BASE_UPLOAD_DIR);
@@ -47,6 +47,37 @@ export const BOOKS_UPLOAD_PATHS = {
   },
 };
 
+export const COURSES_UPLOAD_PATHS = {
+  root: {
+    dir: join(BASE_UPLOAD_DIR, "courses"),
+    url: "/api/uploads/courses",
+  },
+  covers: {
+    dir: join(BASE_UPLOAD_DIR, "courses", "<courseId>", "cover"),
+    url: "/api/uploads/courses/<courseId>/cover",
+  },
+  trailers: {
+    dir: join(BASE_UPLOAD_DIR, "courses", "<courseId>", "trailer"),
+    url: "/api/uploads/courses/<courseId>/trailer",
+  },
+  lessons: {
+    dir: join(BASE_UPLOAD_DIR, "courses", "<courseId>", "lessons", "<lessonId>"),
+    url: "/api/uploads/courses/<courseId>/lessons/<lessonId>",
+  },
+};
+
+export const IMAGES_UPLOAD_PATHS = {
+  root: {
+    dir: join(BASE_UPLOAD_DIR, "images"),
+    url: "/api/uploads/images",
+  },
+};
+
+export const TEMP_UPLOAD_PATHS = {
+  dir: join(BASE_UPLOAD_DIR, "tmp"),
+  url: "/api/uploads/tmp",
+};
+
 /**
  * Videos upload paths
  */
@@ -63,7 +94,10 @@ export const VIDEOS_UPLOAD_PATHS = {
 export function getAllUploadPaths() {
   return {
     base: BASE_UPLOAD_DIR,
+    temp: TEMP_UPLOAD_PATHS,
     books: BOOKS_UPLOAD_PATHS,
+    courses: COURSES_UPLOAD_PATHS,
+    images: IMAGES_UPLOAD_PATHS,
     videos: VIDEOS_UPLOAD_PATHS,
   };
 }

@@ -5,8 +5,8 @@ import { constants } from 'fs';
 import { BOOKS_UPLOAD_PATHS } from '@/lib/upload-config';
 
 export async function GET(
-  request: NextRequest,
-  { params }: { params: { type: string; filename: string } }
+  _request: NextRequest,
+  { params }: { params: Promise<{ type: string; filename: string }> }
 ) {
   try {
     const { type, filename } = await params;

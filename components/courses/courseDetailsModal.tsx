@@ -20,6 +20,12 @@ import {
 import type { Course } from "@prisma/client";
 import { useCartStore } from "@/stores/cart-store";
 import toast from "react-hot-toast";
+import { useSession } from "next-auth/react";
+import {
+  enrollFreeCourse,
+  isFreeCourse,
+  redirectToLoginForFreeCourse,
+} from "@/lib/free-course-enrollment";
 
 interface CourseDetailsModalProps {
   course: Course | null;
@@ -38,12 +44,29 @@ export const CourseDetailsModal = ({
   const [isLoading, setIsLoading] = useState(false);
   const addToCart = useCartStore((state) => state.addToCart);
   const items = useCartStore((state) => state.items);
+  const { data: session } = useSession();
 
   if (!course) return null;
 
   const isInCart = items.some((item) => item.id === course.id);
+  const freeCourse = isFreeCourse(course);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
+    if (freeCourse) {
+      if (!session?.user) {
+        redirectToLoginForFreeCourse(course.id);
+        return;
+      }
+
+      try {
+        await enrollFreeCourse(course.id);
+        toast.success(`«${course.subject}» به فهرست دوره‌های شما اضافه شد`);
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : "خطا در ثبت‌نام دوره رایگان");
+      }
+      return;
+    }
+
     if (isInCart) {
       toast.success("این دوره قبلاً به سبد خرید اضافه شده است");
       return;
@@ -248,7 +271,7 @@ export const CourseDetailsModal = ({
                   }`}
                 >
                   <ShoppingCart className="h-5 w-5" />
-                  {isInCart ? "در سبد خرید" : "خرید این دوره"}
+                  {freeCourse ? "ثبت‌نام رایگان" : isInCart ? "در سبد خرید" : "خرید این دوره"}
                 </motion.button>
               </div>
             </div>
@@ -345,7 +368,7 @@ export const CourseDetailsModal = ({
                     <div>
                       <div className="text-sm text-slate-400">قیمت</div>
                       <div className="mt-1 font-semibold">
-                        {course.price?.toLocaleString("fa-IR")} تومان
+                        {freeCourse ? "رایگان" : `${course.price?.toLocaleString("fa-IR")} تومان`}
                       </div>
                     </div>
                   </div>

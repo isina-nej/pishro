@@ -1,8 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Increase request body size limit for large file uploads (100MB)
-  // Note: In Next.js 15+, bodyParser is configured via middleware
+  experimental: {
+    // Middleware/proxy buffers request bodies before route handlers.
+    // Keep this above the 500MB video validation limit to avoid truncated multipart uploads.
+    middlewareClientMaxBodySize: "550mb",
+  },
   eslint: {
     ignoreDuringBuilds: true, // Skip ESLint during build - unused vars in some components
   },

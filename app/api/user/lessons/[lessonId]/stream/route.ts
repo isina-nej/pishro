@@ -16,7 +16,7 @@ interface LessonStreamRouteProps {
   params: Promise<{ lessonId: string }>;
 }
 
-export async function GET(_req: Request, { params }: LessonStreamRouteProps) {
+export async function GET(req: Request, { params }: LessonStreamRouteProps) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -55,7 +55,7 @@ export async function GET(_req: Request, { params }: LessonStreamRouteProps) {
       data: { views: { increment: 1 } },
     });
 
-    return await streamLessonVideoByRelativePath(relativePath);
+    return await streamLessonVideoByRelativePath(relativePath, req);
   } catch (error) {
     console.error("[GET /api/user/lessons/[lessonId]/stream] error:", error);
     return errorResponse(

@@ -11,6 +11,12 @@ import { useCartStore } from "@/stores/cart-store";
 import CourseDetailModal from "@/components/courses/CourseDetailModal";
 import toast from "react-hot-toast";
 import type { Course } from "@/lib/types/db";
+import { useSession } from "next-auth/react";
+import {
+  enrollFreeCourse,
+  isFreeCourse,
+  redirectToLoginForFreeCourse,
+} from "@/lib/free-course-enrollment";
 
 // Accept both Course and serialized versions (with string dates)
 type CourseData = Course | (Omit<Course, "createdAt" | "updatedAt"> & {
@@ -26,9 +32,26 @@ interface CourseCardProps {
 const CourseCard = ({ data, link: _link }: CourseCardProps) => {
   const [imageError, setImageError] = useState(false);
   const addToCart = useCartStore((state) => state.addToCart);
+  const { data: session } = useSession();
+  const freeCourse = isFreeCourse(data);
 
-  const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleAddToCart = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
+    if (freeCourse) {
+      if (!session?.user) {
+        redirectToLoginForFreeCourse(data.id);
+        return;
+      }
+
+      try {
+        await enrollFreeCourse(data.id);
+        toast.success(`«${data.subject}» به فهرست دوره‌های شما اضافه شد`);
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : "خطا در ثبت‌نام دوره رایگان");
+      }
+      return;
+    }
+
     addToCart(data);
     toast.success(`«${data.subject}» به سبد خرید اضافه شد 🛒`);
   };
@@ -62,7 +85,7 @@ const CourseCard = ({ data, link: _link }: CourseCardProps) => {
               className="absolute bottom-2 right-2 bg-mySecondary text-white px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1 hover:shadow-lg transition"
             >
               <ShoppingCart size={14} />
-              خرید
+              {freeCourse ? "رایگان" : "خرید"}
             </motion.button>
           </>
         )}
@@ -112,7 +135,7 @@ const CourseCard = ({ data, link: _link }: CourseCardProps) => {
           onClick={handleAddToCart}
           className="w-48 bg-mySecondary text-white font-bold text-sm sm:text-base py-2 rounded-full shadow-md hover:opacity-90 transition"
         >
-          افزودن به سبد خرید
+          {freeCourse ? "ثبت‌نام رایگان" : "افزودن به سبد خرید"}
         </button>
       </div>
     </div>

@@ -5,7 +5,7 @@
  */
 
 import { NextRequest } from "next/server";
-import { getAdminAuth } from "@/lib/auth-simple";
+import { getAdminAuthFromHeaders } from "@/lib/admin-auth";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import {
@@ -19,12 +19,9 @@ import { normalizeImageUrl } from "@/lib/utils";
 
 export async function GET(req: NextRequest) {
   try {
-    const adminAuth = await getAdminAuth(req);
-if (!adminAuth) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
-    }
+    const adminAuth = getAdminAuthFromHeaders(req.headers);
     if (!adminAuth) {
-      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
+      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -98,12 +95,9 @@ if (!adminAuth) {
 
 export async function POST(req: NextRequest) {
   try {
-    const adminAuth = await getAdminAuth(req);
-if (!adminAuth) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
-    }
+    const adminAuth = getAdminAuthFromHeaders(req.headers);
     if (!adminAuth) {
-      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
+      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
     }
 
     const body = await req.json();

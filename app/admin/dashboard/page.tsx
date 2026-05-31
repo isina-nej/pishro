@@ -1,247 +1,220 @@
-/**
- * Admin Dashboard
- * Route: /admin/dashboard
- * Main admin panel landing page (stub for Phase 2 features)
- */
-
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { LogOut, Menu, X } from 'lucide-react';
+import Link from 'next/link';
+import {
+  ArrowLeft,
+  BookOpen,
+  CheckCircle2,
+  Clock3,
+  Eye,
+  FileText,
+  GraduationCap,
+  ListChecks,
+  ShoppingCart,
+  Sparkles,
+  Users,
+} from 'lucide-react';
+import AdminSidebar from '@/components/admin/AdminSidebar';
+import { AdminLoadingState, AdminPageShell } from '@/components/admin/AdminPageShell';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { api } from '@/lib/api-client';
+import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
+import type { DashboardStats, StatWithGrowth } from '@/types/dashboard';
 
-interface AdminUser {
-  id: string;
-  email: string;
-  name: string;
-  role: 'ADMIN' | 'MODERATOR' | 'VIEWER';
+const numberFormatter = new Intl.NumberFormat('fa-IR');
+
+function formatMoney(value: number) {
+  return `${numberFormatter.format(value)} تومان`;
 }
 
+function formatGrowth(growthRate: number) {
+  const percent = Math.abs(Math.round(growthRate * 100));
+  if (percent === 0) return 'بدون تغییر';
+  return `${growthRate > 0 ? '+' : '-'}${numberFormatter.format(percent)}٪`;
+}
+
+function StatCard({
+  title,
+  value,
+  stat,
+  icon: Icon,
+}: {
+  title: string;
+  value: string;
+  stat: StatWithGrowth;
+  icon: typeof Eye;
+}) {
+  const positive = stat.growthRate >= 0;
+
+  return (
+    <Card className="min-w-0 p-4">
+      <div className="flex h-full items-start justify-between gap-3">
+        <div className="rounded-xl bg-blue-50 p-2.5 text-blue-600 dark:bg-blue-950/40 dark:text-blue-300">
+          <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
+        </div>
+        <div className="min-w-0 space-y-2 text-right">
+          <p className="text-xs text-slate-500 dark:text-slate-400 sm:text-sm">{title}</p>
+          <p className="truncate text-lg font-bold text-slate-950 dark:text-white sm:text-xl xl:text-2xl">{value}</p>
+          <Badge
+            variant="outline"
+            className={`text-[11px] ${positive ? 'border-green-200 text-green-700 dark:border-green-900 dark:text-green-300' : 'border-red-200 text-red-700 dark:border-red-900 dark:text-red-300'}`}
+          >
+            {formatGrowth(stat.growthRate)}
+          </Badge>
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+const managementLinks = [
+  { title: 'مدیریت اخبار', description: 'ایجاد، ویرایش و انتشار خبرها', href: '/admin/block-news', icon: FileText },
+  { title: 'مدیریت دوره‌ها', description: 'تعریف دوره و محتوای آموزشی', href: '/admin/courses', icon: GraduationCap },
+  { title: 'کتابخانه دیجیتال', description: 'کنترل کتاب‌ها و وضعیت انتشار', href: '/admin/library', icon: BookOpen },
+];
+
+const adminTasks = [
+  'بررسی خبرهای پیش‌نویس و زمان‌بندی انتشار',
+  'تکمیل اطلاعات دوره‌های ناقص',
+  'کنترل وضعیت کتاب‌های آرشیوشده',
+  'مرور سفارش‌ها و پرداخت‌های اخیر',
+];
+
 export default function AdminDashboardPage() {
-  const router = useRouter();
-  const [user, setUser] = useState<AdminUser | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [lastLogin, setLastLogin] = useState<string | null>(null);
+  const { user, isLoading, logout } = useAdminAuth();
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [statsLoading, setStatsLoading] = useState(true);
+  const [statsError, setStatsError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Check authentication
-    const fetchCurrentUser = async () => {
+    const loadStats = async () => {
       try {
-        const token = localStorage.getItem('admin_access_token');
-        
-        if (!token) {
-          router.push('/admin/login');
-          return;
-        }
-
-        // Fetch current user
-        const response = await fetch('/api/admin/auth/me', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          localStorage.removeItem('admin_access_token');
-          router.push('/admin/login');
-          return;
-        }
-
-        const data = await response.json();
-        setUser(data.user);
-        
-        // Get user info from localStorage
-        const userStr = localStorage.getItem('admin_user');
-        if (userStr) {
-          setLastLogin(new Date().toLocaleString());
-        }
+        setStatsLoading(true);
+        const { data } = await api.get('/api/admin/dashboard/stats');
+        setStats(data.data);
+        setStatsError(null);
       } catch (error) {
-        console.error('Error fetching user:', error);
-        router.push('/admin/login');
+        console.error('Error loading dashboard stats:', error);
+        setStatsError('خطا در دریافت آمار داشبورد');
       } finally {
-        setIsLoading(false);
+        setStatsLoading(false);
       }
     };
 
-    fetchCurrentUser();
-  }, [router]);
-
-  const handleLogout = async () => {
-    try {
-      await fetch('/api/admin/auth/logout', {
-        method: 'POST',
-      });
-    } catch (error) {
-      console.error('Logout error:', error);
-    } finally {
-      localStorage.removeItem('admin_access_token');
-      localStorage.removeItem('admin_user');
-      router.push('/admin/login');
+    if (user) {
+      loadStats();
     }
-  };
+  }, [user]);
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading dashboard...</p>
-        </div>
-      </div>
-    );
+    return <AdminLoadingState label="در حال آماده‌سازی داشبورد..." />;
   }
 
   if (!user) {
     return null;
   }
 
-  return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Sidebar */}
-      <aside
-        className={`${
-          sidebarOpen ? 'w-64' : 'w-20'
-        } bg-gray-800 dark:bg-gray-900 text-white transition-all duration-300 flex flex-col border-r border-gray-700`}
-      >
-        {/* Logo/Header */}
-        <div className="h-16 flex items-center justify-between px-4 border-b border-gray-700">
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-2 hover:bg-gray-700 rounded transition"
-          >
-            {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
-          {sidebarOpen && (
-            <h1 className="text-xl font-bold">پیشرو</h1>
-          )}
+  const content = (
+    <AdminPageShell
+      title="داشبورد مدیریت"
+      description={`خوش آمدید ${user.name}. نمای سریع از وضعیت فروش، کاربران و محتوای پلتفرم.`}
+      actions={<Badge variant="secondary">{user.role}</Badge>}
+    >
+      {statsError && (
+        <Card className="border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/30 dark:text-red-300">
+          {statsError}
+        </Card>
+      )}
+
+      {statsLoading ? (
+        <AdminLoadingState label="در حال دریافت آمار..." />
+      ) : stats ? (
+        <div className="grid gap-3 sm:grid-cols-2 2xl:grid-cols-4">
+          <StatCard title="بازدید ماه اخیر" value={numberFormatter.format(stats.totalViews.value)} stat={stats.totalViews} icon={Eye} />
+          <StatCard title="درآمد ماه اخیر" value={formatMoney(stats.totalRevenue.value)} stat={stats.totalRevenue} icon={ShoppingCart} />
+          <StatCard title="سفارش‌های پرداخت‌شده" value={numberFormatter.format(stats.totalOrders.value)} stat={stats.totalOrders} icon={FileText} />
+          <StatCard title="کاربران جدید" value={numberFormatter.format(stats.totalUsers.value)} stat={stats.totalUsers} icon={Users} />
         </div>
+      ) : null}
 
-        {/* Navigation */}
-        <nav className="flex-1 px-4 py-6">
-          <div className="space-y-2">
-            <a
-              href="#"
-              className="flex items-center justify-end gap-3 px-4 py-3 rounded bg-blue-600 hover:bg-blue-700 transition"
-            >
-              {sidebarOpen && <span>Dashboard</span>}
-              <span className="text-lg">📊</span>
-            </a>
-            
-            {(user.role === 'ADMIN' || user.role === 'MODERATOR') && (
-              <>
-                <a
-                  href="#"
-                  className="flex items-center justify-end gap-3 px-4 py-3 rounded hover:bg-gray-700 transition"
-                >
-                  {sidebarOpen && <span>Users</span>}
-                  <span className="text-lg">👥</span>
-                </a>
-                <a
-                  href="/admin/block-news"
-                  className="flex items-center justify-end gap-3 px-4 py-3 rounded hover:bg-gray-700 transition"
-                >
-                  {sidebarOpen && <span>اخبار</span>}
-                  <span className="text-lg">📝</span>
-                </a>
-                <a
-                  href="/admin/library"
-                  className="flex items-center justify-end gap-3 px-4 py-3 rounded hover:bg-gray-700 transition"
-                >
-                  {sidebarOpen && <span>کتابخانه</span>}
-                  <span className="text-lg">📚</span>
-                </a>
-                <a
-                  href="/admin/courses"
-                  className="flex items-center justify-end gap-3 px-4 py-3 rounded hover:bg-gray-700 transition"
-                >
-                  {sidebarOpen && <span>دوره‌ها</span>}
-                  <span className="text-lg">🎓</span>
-                </a>
-              </>
-            )}
+      <div className="grid gap-3 lg:grid-cols-3">
+        {managementLinks.map((item) => {
+          const Icon = item.icon;
+          return (
+            <Card key={item.href} className="flex min-h-36 flex-col justify-between p-4">
+              <div className="mb-4 flex items-start justify-between gap-3">
+                <div className="rounded-xl bg-slate-100 p-2.5 text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                  <Icon className="h-5 w-5" />
+                </div>
+                <div className="space-y-1 text-right">
+                  <h2 className="text-lg font-semibold text-slate-950 dark:text-white">{item.title}</h2>
+                  <p className="text-xs leading-6 text-slate-500 dark:text-slate-400 sm:text-sm">{item.description}</p>
+                </div>
+              </div>
+              <Button asChild variant="outline" size="sm" className="w-full justify-between">
+                <Link href={item.href}>
+                  ورود به بخش
+                  <ArrowLeft className="h-4 w-4" />
+                </Link>
+              </Button>
+            </Card>
+          );
+        })}
+      </div>
 
-            {user.role === 'ADMIN' && (
-              <a
-                href="#"
-                className="flex items-center justify-end gap-3 px-4 py-3 rounded hover:bg-gray-700 transition"
+      <div className="grid gap-3 xl:grid-cols-[minmax(0,1.4fr)_minmax(320px,0.8fr)]">
+        <Card className="p-4">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <Badge variant="outline" className="border-blue-200 text-blue-700 dark:border-blue-900 dark:text-blue-300">
+              امروز
+            </Badge>
+            <div className="flex items-center gap-2 text-right">
+              <div>
+                <h2 className="font-semibold text-slate-950 dark:text-white">کارهای پیشنهادی</h2>
+                <p className="text-xs text-slate-500 dark:text-slate-400">برای اینکه پنل همیشه به‌روز بماند</p>
+              </div>
+              <ListChecks className="h-5 w-5 text-blue-600" />
+            </div>
+          </div>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {adminTasks.map((task) => (
+              <div
+                key={task}
+                className="flex items-start justify-end gap-2 rounded-xl border border-slate-200 bg-slate-50 p-3 text-right text-sm text-slate-700 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-200"
               >
-                {sidebarOpen && <span>Settings</span>}
-                <span className="text-lg">⚙️</span>
-              </a>
-            )}
-
-            <a
-              href="#"
-              className="flex items-center justify-end gap-3 px-4 py-3 rounded hover:bg-gray-700 transition"
-            >
-              {sidebarOpen && <span>Reports</span>}
-              <span className="text-lg">📈</span>
-            </a>
+                <span className="leading-6">{task}</span>
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-green-600" />
+              </div>
+            ))}
           </div>
-        </nav>
+        </Card>
 
-        {/* User Section */}
-        <div className="border-t border-gray-700 p-4">
-          <button
-            onClick={handleLogout}
-            className="flex items-center justify-end gap-3 w-full px-4 py-2 rounded hover:bg-gray-700 transition text-red-400 hover:text-red-300"
-          >
-            {sidebarOpen && <span>Logout</span>}
-            <LogOut size={20} />
-          </button>
-        </div>
-      </aside>
-
-      {/* Main Content */}
-      <main className="flex-1 overflow-auto">
-        {/* Header */}
-        <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 h-16 flex items-center justify-between px-6 flex-row-reverse">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">داشبورد</h2>
-          
-          <div className="flex items-center gap-4 flex-row-reverse">
-            <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
-              {user.name.charAt(0)}
-            </div>
+        <Card className="p-4">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <Sparkles className="h-5 w-5 text-amber-500" />
             <div className="text-right">
-              <p className="text-sm font-medium text-gray-900 dark:text-white">{user.name}</p>
-              <p className="text-xs text-gray-600 dark:text-gray-400">{user.role}</p>
+              <h2 className="font-semibold text-slate-950 dark:text-white">وضعیت پنل</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">خلاصه‌ی سلامت بخش‌های مدیریتی</p>
             </div>
           </div>
-        </header>
-
-        {/* Content */}
-        <div className="p-6">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              Welcome back, {user.name}! 👋
-            </h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div className="bg-blue-50 dark:bg-blue-900 p-4 rounded-lg">
-                <p className="text-sm text-gray-600 dark:text-gray-300">Last Login</p>
-                <p className="text-lg font-bold text-gray-900 dark:text-white">{lastLogin || 'Just now'}</p>
+          <div className="space-y-2">
+            {managementLinks.map((item) => (
+              <div key={item.href} className="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-900/70">
+                <Badge variant="secondary" className="text-[11px]">فعال</Badge>
+                <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
+                  <span>{item.title}</span>
+                  <Clock3 className="h-4 w-4 text-slate-400" />
+                </div>
               </div>
-              
-              <div className="bg-green-50 dark:bg-green-900 p-4 rounded-lg">
-                <p className="text-sm text-gray-600 dark:text-gray-300">Your Role</p>
-                <p className="text-lg font-bold text-gray-900 dark:text-white">{user.role}</p>
-              </div>
-              
-              <div className="bg-purple-50 dark:bg-purple-900 p-4 rounded-lg">
-                <p className="text-sm text-gray-600 dark:text-gray-300">Email</p>
-                <p className="text-lg font-bold text-gray-900 dark:text-white text-sm">{user.email}</p>
-              </div>
-            </div>
-
-            <div className="bg-yellow-50 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-700 rounded-lg p-4">
-              <p className="text-yellow-800 dark:text-yellow-200">
-                🚀 <strong>Coming Soon:</strong> More admin features and management tools will be available soon.
-              </p>
-            </div>
+            ))}
           </div>
-        </div>
-      </main>
-    </div>
+        </Card>
+      </div>
+    </AdminPageShell>
   );
+
+  return <AdminSidebar user={user} currentPage="dashboard" onLogout={logout}>{content}</AdminSidebar>;
 }

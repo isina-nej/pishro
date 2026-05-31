@@ -41,6 +41,13 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  if (pathname === '/admin') {
+    const token = request.cookies.get('admin_access_token')?.value;
+    const target = token && verifyToken(token) ? '/admin/dashboard' : '/admin/login';
+
+    return NextResponse.redirect(new URL(target, request.url));
+  }
+
   // Allow public routes
   if (publicRoutes.some(route => pathname === route)) {
     console.log('[Middleware] Public route, checking login redirect');

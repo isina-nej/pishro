@@ -212,15 +212,15 @@ Body: FormData with file + alt text
 Response: { url, filename, size }
 ```
 
-See [API Documentation](./docs/API_DOCUMENTATION.md) for complete details.
+See [API Documentation](./API_DOCUMENTATION.md) for complete details.
 
 ## 📚 Documentation
 
-- [User Guide](./docs/USER_GUIDE.md) - For content editors
-- [API Documentation](./docs/API_DOCUMENTATION.md) - For developers
-- [Component API](./docs/COMPONENT_API.md) - Component reference
-- [Testing Guide](./docs/TESTING_GUIDE.md) - Testing strategies
-- [Deployment Guide](./docs/DEPLOYMENT_GUIDE.md) - Production deployment
+- [User Guide](./USER_GUIDE.md) - For content editors
+- [API Documentation](./API_DOCUMENTATION.md) - For developers
+- [Component API](./COMPONENT_API.md) - Component reference
+- [Testing Guide](./TESTING_GUIDE.md) - Testing strategies
+- [Deployment Guide](./DEPLOYMENT_GUIDE.md) - Production deployment
 
 ## 🧪 Testing
 
@@ -300,7 +300,7 @@ npm run test:coverage
 | Redo | Ctrl+Y |
 | Save Draft | Ctrl+S |
 
-See [User Guide](./docs/USER_GUIDE.md) for complete shortcuts.
+See [User Guide](./USER_GUIDE.md) for complete shortcuts.
 
 ## 📊 Database Schema
 
@@ -429,7 +429,7 @@ const RATE_LIMIT_MAX = {
 };
 ```
 
-See [Troubleshooting](./docs/USER_GUIDE.md#troubleshooting) for more.
+See [Troubleshooting](./USER_GUIDE.md#troubleshooting) for more.
 
 ## 📈 Performance
 

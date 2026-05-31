@@ -9,6 +9,7 @@ public/videos/*.mp4
 node_modules/
 .next/
 dist/
+prisma/engines/
 
 # Environment variables
 .env
@@ -18,6 +19,7 @@ dist/
 # IDE
 .vscode/
 .idea/
+*.code-workspace
 *.swp
 *.swo
 
@@ -27,3 +29,11 @@ Thumbs.db
 
 # Build outputs
 .turbo/
+*.tsbuildinfo
+
+# Temporary/generated files
+*.tmp
+folders_tree.txt
+tree-structure.txt
+scripts/log.txt
+uploads/tmp/

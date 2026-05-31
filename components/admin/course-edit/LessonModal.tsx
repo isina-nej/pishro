@@ -15,6 +15,7 @@ import {
   ALLOWED_VIDEO_TYPE,
   VIDEO_MAX_BYTES,
 } from '@/lib/schemas/course-management-schema';
+import { toast } from 'react-hot-toast';
 
 interface Chapter {
   id: string;
@@ -191,9 +192,17 @@ export default function LessonModal({
                   setErrors((err) => ({ ...err, thumbnail: 'حداکثر 2MB' }));
                   return;
                 }
-                setThumbnailTempPath(await uploadTempFile(f, 'thumbnail'));
+                try {
+                  setThumbnailTempPath(await uploadTempFile(f, 'thumbnail'));
+                  setErrors((err) => ({ ...err, thumbnail: '' }));
+                } catch (error) {
+                  const message = error instanceof Error ? error.message : 'خطا در آپلود تصویر';
+                  setErrors((err) => ({ ...err, thumbnail: message }));
+                  toast.error(message);
+                }
               }}
             />
+            {errors.thumbnail && <p className="text-red-500 text-sm">{errors.thumbnail}</p>}
           </div>
 
           <div>
@@ -213,7 +222,14 @@ export default function LessonModal({
                   setErrors((err) => ({ ...err, video: 'حداکثر 500MB' }));
                   return;
                 }
-                setVideoTempPath(await uploadTempFile(f, 'video'));
+                try {
+                  setVideoTempPath(await uploadTempFile(f, 'video'));
+                  setErrors((err) => ({ ...err, video: '' }));
+                } catch (error) {
+                  const message = error instanceof Error ? error.message : 'خطا در آپلود ویدیو';
+                  setErrors((err) => ({ ...err, video: message }));
+                  toast.error(message);
+                }
               }}
             />
             {errors.video && <p className="text-red-500 text-sm">{errors.video}</p>}

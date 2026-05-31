@@ -395,7 +395,7 @@ async function main(): Promise<void> {
         views: book.popularity,
         downloads: Math.floor(book.popularity / 10),
         formats: book.formats,
-        status: book.status,
+        bookStatus: "PUBLISHED",
         tags: book.tags,
         readingTime: book.readingTime,
         isFeatured: book.isFeatured || false,

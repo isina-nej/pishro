@@ -202,12 +202,7 @@ export async function seedBooks() {
               ["جلد نرم", "الکترونیکی"],
               ["جلد سخت", "الکترونیکی", "صوتی"],
             ]),
-            status:
-              generator.randomInt(0, 10) > 7
-                ? ["جدید"]
-                : generator.randomInt(0, 10) > 5
-                ? ["پرفروش"]
-                : [],
+            bookStatus: "PUBLISHED",
             tags: bookTags.map((t) => t.title),
             readingTime: `${generator.randomInt(5, 20)} ساعت`,
             isFeatured: generator.randomInt(0, 10) > 7,
@@ -259,12 +254,7 @@ export async function seedBooks() {
               ["جلد نرم", "الکترونیکی"],
               ["جلد سخت", "الکترونیکی", "صوتی"],
             ]),
-            status:
-              generator.randomInt(0, 10) > 7
-                ? ["جدید"]
-                : generator.randomInt(0, 10) > 5
-                ? ["پرفروش"]
-                : [],
+            bookStatus: "PUBLISHED",
             tags: bookTags.map((t) => t.title),
             readingTime: `${generator.randomInt(5, 20)} ساعت`,
             isFeatured: generator.randomInt(0, 10) > 7,

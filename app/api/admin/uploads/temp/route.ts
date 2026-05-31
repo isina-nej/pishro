@@ -11,6 +11,10 @@ import {
   validateVideoFile,
 } from "@/lib/schemas/course-management-schema";
 
+export const runtime = "nodejs";
+
+const MAX_MULTIPART_BODY_BYTES = 550 * 1024 * 1024;
+
 /**
  * POST /api/admin/uploads/temp
  * Store upload as tmp/... until form commit
@@ -35,6 +39,16 @@ export async function POST(req: NextRequest) {
 
     console.log("[POST /api/admin/uploads/temp] Auth successful for admin:", adminUser.id);
 
+    const contentLength = Number(req.headers.get("content-length") || 0);
+    if (contentLength > MAX_MULTIPART_BODY_BYTES) {
+      return errorResponse(
+        "حجم فایل برای آپلود بسیار زیاد است",
+        ErrorCodes.VALIDATION_ERROR,
+        { maxSizeMb: 500 },
+        413
+      );
+    }
+
     let formData;
     try {
       errorDetails = "FormData parsing";
@@ -43,8 +57,12 @@ export async function POST(req: NextRequest) {
       console.log("[POST /api/admin/uploads/temp] FormData parsed successfully");
     } catch (fde) {
       console.error("[POST /api/admin/uploads/temp] FormData parsing error:", fde);
-      errorDetails = `FormData parsing failed: ${fde instanceof Error ? fde.message : String(fde)}`;
-      throw fde;
+      return errorResponse(
+        "درخواست آپلود ناقص یا نامعتبر است. لطفا فایل را دوباره انتخاب و ارسال کنید",
+        ErrorCodes.VALIDATION_ERROR,
+        undefined,
+        400
+      );
     }
 
     const file = formData.get("file");
@@ -92,6 +110,15 @@ export async function POST(req: NextRequest) {
       console.error("[POST /api/admin/uploads/temp] Error message:", error.message);
       console.error("[POST /api/admin/uploads/temp] Error name:", error.name);
       console.error("[POST /api/admin/uploads/temp] Error stack:", error.stack);
+
+      if (error.message.includes("EACCES") || error.message.includes("permission denied")) {
+        return errorResponse(
+          "مسیر ذخیره‌سازی آپلود قابل نوشتن نیست. لطفا دسترسی UPLOAD_BASE_DIR را تنظیم کنید",
+          ErrorCodes.INTERNAL_ERROR,
+          { uploadBaseDir: process.env.UPLOAD_BASE_DIR || "/opt/uploade" },
+          500
+        );
+      }
     }
     return errorResponse(
       `خطا در آپلود فایل${errorDetails ? ` (${errorDetails})` : ""}`,

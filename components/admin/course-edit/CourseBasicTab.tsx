@@ -81,8 +81,15 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
       setErrors((e) => ({ ...e, thumbnail: 'حداکثر 2MB' }));
       return;
     }
-    const path = await uploadTempFile(file, 'thumbnail');
-    setThumbnailTempPath(path);
+    try {
+      const path = await uploadTempFile(file, 'thumbnail');
+      setThumbnailTempPath(path);
+      setErrors((e) => ({ ...e, thumbnail: '' }));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'خطا در آپلود تصویر';
+      setErrors((e) => ({ ...e, thumbnail: message }));
+      toast.error(message);
+    }
   };
 
   const handleTrailer = async (file: File) => {
@@ -94,8 +101,15 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
       setErrors((e) => ({ ...e, trailer: 'حداکثر 500MB' }));
       return;
     }
-    const path = await uploadTempFile(file, 'video');
-    setTrailerTempPath(path);
+    try {
+      const path = await uploadTempFile(file, 'video');
+      setTrailerTempPath(path);
+      setErrors((e) => ({ ...e, trailer: '' }));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'خطا در آپلود ویدیو';
+      setErrors((e) => ({ ...e, trailer: message }));
+      toast.error(message);
+    }
   };
 
   const handleSave = async () => {

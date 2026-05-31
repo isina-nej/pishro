@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { Trash2, Edit2, Plus, Search, Loader2 } from 'lucide-react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
+import { AdminLoadingState } from '@/components/admin/AdminPageShell';
+import { api } from '@/lib/api-client';
+import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
 
 interface DigitalBook {
   id: string;
@@ -21,17 +23,8 @@ interface DigitalBook {
   updatedAt: string;
 }
 
-interface AdminUser {
-  id: string;
-  email: string;
-  name: string;
-  role: 'ADMIN' | 'MODERATOR' | 'VIEWER';
-}
-
 export default function LibraryManagementPage() {
-  const router = useRouter();
-  const [user, setUser] = useState<AdminUser | null>(null);
-  const [isLoadingUser, setIsLoadingUser] = useState(true);
+  const { user, isLoading: isLoadingUser, logout } = useAdminAuth();
   const [books, setBooks] = useState<DigitalBook[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -52,48 +45,17 @@ export default function LibraryManagementPage() {
     'مدیریت مالی',
   ];
 
-  // Get current user
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const token = localStorage.getItem('admin_access_token');
-        if (!token) {
-          router.push('/admin/login');
-          return;
-        }
-
-        const response = await fetch('/api/admin/auth/me', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (!response.ok) {
-          localStorage.removeItem('admin_access_token');
-          router.push('/admin/login');
-          return;
-        }
-
-        const userData = await response.json();
-        setUser(userData.user);
-        setIsLoadingUser(false);
-      } catch (err) {
-        console.error('Error fetching user:', err);
-        router.push('/admin/login');
-      }
-    };
-
-    fetchCurrentUser();
-  }, [router]);
-
   // Load books
   useEffect(() => {
-    loadBooks();
-  }, []);
+    if (user) {
+      loadBooks();
+    }
+  }, [user]);
 
   const loadBooks = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('/api/library?limit=100');
-      const data = await response.json();
+      const { data } = await api.get('/api/admin/books?limit=100');
 
       if (data.status === 'success') {
         setBooks(data.data?.items || []);
@@ -115,16 +77,13 @@ export default function LibraryManagementPage() {
 
     try {
       setDeleting(id);
-      const response = await fetch(`/api/library/${id}`, {
-        method: 'DELETE',
-      });
+      const response = await api.delete(`/api/library/${id}`);
 
-      if (response.ok) {
+      if (response.status >= 200 && response.status < 300) {
         setBooks(books.filter((b) => b.id !== id));
         alert('کتاب با موفقیت حذف شد');
       } else {
-        const data = await response.json();
-        alert(data.message || 'خطا در حذف کتاب');
+        alert(response.data?.message || 'خطا در حذف کتاب');
       }
     } catch (err) {
       alert(err instanceof Error ? err.message : 'خطایی در حذف کتاب رخ داد');
@@ -137,15 +96,13 @@ export default function LibraryManagementPage() {
   const handlePublish = async (bookId: string) => {
     try {
       setActionLoading(bookId);
-      const response = await fetch(`/api/library/${bookId}/publish`, {
-        method: 'POST',
-      });
+      const response = await api.post(`/api/library/${bookId}/publish`);
 
-      if (!response.ok) {
+      if (response.status < 200 || response.status >= 300) {
         throw new Error('خطا در منتشر کردن کتاب');
       }
 
-      const data = await response.json();
+      const data = response.data;
       setBooks(books.map((book) => (book.id === bookId ? data.data : book)));
     } catch (err) {
       alert(err instanceof Error ? err.message : 'خطایی رخ داد');
@@ -157,15 +114,13 @@ export default function LibraryManagementPage() {
   const handleArchive = async (bookId: string) => {
     try {
       setActionLoading(bookId);
-      const response = await fetch(`/api/library/${bookId}/archive`, {
-        method: 'POST',
-      });
+      const response = await api.post(`/api/library/${bookId}/archive`);
 
-      if (!response.ok) {
+      if (response.status < 200 || response.status >= 300) {
         throw new Error('خطا در آرشیو کردن کتاب');
       }
 
-      const data = await response.json();
+      const data = response.data;
       setBooks(books.map((book) => (book.id === bookId ? data.data : book)));
     } catch (err) {
       alert(err instanceof Error ? err.message : 'خطایی رخ داد');
@@ -177,15 +132,13 @@ export default function LibraryManagementPage() {
   const handleRestore = async (bookId: string) => {
     try {
       setActionLoading(bookId);
-      const response = await fetch(`/api/library/${bookId}/restore`, {
-        method: 'POST',
-      });
+      const response = await api.post(`/api/library/${bookId}/restore`);
 
-      if (!response.ok) {
+      if (response.status < 200 || response.status >= 300) {
         throw new Error('خطا در بیرون آوردن کتاب از آرشیو');
       }
 
-      const data = await response.json();
+      const data = response.data;
       setBooks(books.map((book) => (book.id === bookId ? data.data : book)));
     } catch (err) {
       alert(err instanceof Error ? err.message : 'خطایی رخ داد');
@@ -207,14 +160,7 @@ export default function LibraryManagementPage() {
   });
 
   if (isLoadingUser) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">در حال بارگذاری...</p>
-        </div>
-      </div>
-    );
+    return <AdminLoadingState />;
   }
 
   if (!user) {
@@ -478,5 +424,5 @@ export default function LibraryManagementPage() {
     </div>
   );
 
-  return <AdminSidebar user={user} currentPage="library">{content}</AdminSidebar>;
+  return <AdminSidebar user={user} currentPage="library" onLogout={logout}>{content}</AdminSidebar>;
 }

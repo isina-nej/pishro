@@ -12,6 +12,12 @@ import RatingStars from "@/components/utils/RatingStars";
 import { useCartStore } from "@/stores/cart-store";
 import toast from "react-hot-toast";
 import type { Course } from "@/lib/types/db";
+import { useSession } from "next-auth/react";
+import {
+  enrollFreeCourse,
+  isFreeCourse,
+  redirectToLoginForFreeCourse,
+} from "@/lib/free-course-enrollment";
 
 type CourseData = Course | (Omit<Course, "createdAt" | "updatedAt"> & {
   createdAt: string | Date;
@@ -42,10 +48,12 @@ export default function CourseDetailModal({ course, trigger }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const addToCart = useCartStore((state) => state.addToCart);
   const items = useCartStore((state) => state.items);
+  const { data: session } = useSession();
 
   const finalPrice = course.discountPercent
     ? Math.round(course.price * (1 - course.discountPercent / 100))
     : course.price;
+  const freeCourse = isFreeCourse(course);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("fa-IR", {
@@ -132,7 +140,22 @@ export default function CourseDetailModal({ course, trigger }: Props) {
 
   const isInCart = items.some((item) => item.id === course.id);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
+    if (freeCourse) {
+      if (!session?.user) {
+        redirectToLoginForFreeCourse(course.id);
+        return;
+      }
+
+      try {
+        await enrollFreeCourse(course.id);
+        toast.success(`«${course.subject}» به فهرست دوره‌های شما اضافه شد`);
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : "خطا در ثبت‌نام دوره رایگان");
+      }
+      return;
+    }
+
     if (isInCart) {
       toast.success("این دوره قبلاً به سبد خرید اضافه شده است");
       return;
@@ -195,7 +218,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                 }`}
               >
                 <ShoppingCart size={40} className="sm:w-55 sm:h-55" />
-                <span>{isInCart ? "به سبد اضافه شد" : "اضافه کردن به سبد"}</span>
+                <span>{freeCourse ? "ثبت‌نام رایگان" : isInCart ? "به سبد اضافه شد" : "اضافه کردن به سبد"}</span>
               </button>
             </div>
           </div>
@@ -407,7 +430,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
             <div className="flex-1">
               <div className="flex items-baseline gap-2">
                 <span className="text-2xl sm:text-3xl font-bold text-mySecondary">
-                  {formatPrice(finalPrice)}
+                  {freeCourse ? "رایگان" : formatPrice(finalPrice)}
                 </span>
                 {course.discountPercent && (
                   <span className="text-base sm:text-lg text-gray-600 dark:text-textSecondary line-through">

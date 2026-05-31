@@ -8,6 +8,12 @@ import type { Course } from "@prisma/client";
 import { CourseDetailsModal } from "./courseDetailsModal";
 import { useCartStore } from "@/stores/cart-store";
 import toast from "react-hot-toast";
+import { useSession } from "next-auth/react";
+import {
+  enrollFreeCourse,
+  isFreeCourse,
+  redirectToLoginForFreeCourse,
+} from "@/lib/free-course-enrollment";
 
 interface CourseCardProps {
   course: Course;
@@ -17,15 +23,32 @@ export const CourseCard = ({ course }: CourseCardProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const addToCart = useCartStore((state) => state.addToCart);
   const items = useCartStore((state) => state.items);
+  const { data: session } = useSession();
 
   const discountedPrice = course.price
     ? Math.round(course.price * (1 - (course.discountPercent || 0) / 100))
     : 0;
 
   const isInCart = items.some((item) => item.id === course.id);
+  const freeCourse = isFreeCourse(course);
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = async (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (freeCourse) {
+      if (!session?.user) {
+        redirectToLoginForFreeCourse(course.id);
+        return;
+      }
+
+      try {
+        await enrollFreeCourse(course.id);
+        toast.success(`«${course.subject}» به فهرست دوره‌های شما اضافه شد`);
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : "خطا در ثبت‌نام دوره رایگان");
+      }
+      return;
+    }
+
     if (isInCart) {
       toast.success("این دوره قبلاً به سبد خرید اضافه شده است");
       return;
@@ -105,7 +128,7 @@ export const CourseCard = ({ course }: CourseCardProps) => {
             }`}
           >
             <ShoppingCart className="h-4 w-4" />
-            {isInCart ? "افزوده شد" : "خرید"}
+            {freeCourse ? "ثبت‌نام رایگان" : isInCart ? "افزوده شد" : "خرید"}
           </motion.button>
 
           <p className="text-xs text-slate-400">
@@ -131,7 +154,7 @@ export const CourseCard = ({ course }: CourseCardProps) => {
           {/* Price */}
           <div className="flex items-center gap-2 pt-2">
             <span className="text-lg font-bold text-white">
-              {discountedPrice.toLocaleString("fa-IR")}
+              {freeCourse ? "رایگان" : discountedPrice.toLocaleString("fa-IR")}
             </span>
             {course.discountPercent && course.discountPercent > 0 && (
               <span className="text-sm text-slate-400 line-through">

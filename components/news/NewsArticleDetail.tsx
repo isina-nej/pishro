@@ -213,6 +213,9 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
   // Determine which content to display
   const contentToDisplay = article.contentHtml || article.content || '';
   const readingTime = Math.ceil(article.content.split(/\s+/).length / 200);
+  const articleTags = Array.isArray(article.tags)
+    ? article.tags.filter((tag): tag is string => typeof tag === 'string')
+    : [];
 
   return (
     <>
@@ -300,9 +303,9 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
                 </div>
               )}
             </div>
-            {article.tags.length > 0 && (
+            {articleTags.length > 0 && (
               <div className="flex flex-wrap gap-2">
-                {article.tags.slice(0, 3).map((tag) => (
+                {articleTags.slice(0, 3).map((tag) => (
                   <span
                     key={tag}
                     className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-medium"

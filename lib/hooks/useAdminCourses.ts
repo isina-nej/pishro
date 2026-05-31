@@ -107,6 +107,13 @@ export async function uploadTempFile(
   const formData = new FormData();
   formData.append("file", file);
   formData.append("kind", kind);
-  const { data } = await api.post("/api/admin/uploads/temp", formData);
-  return data.data.tempPath as string;
+  try {
+    const { data } = await api.post("/api/admin/uploads/temp", formData);
+    return data.data.tempPath as string;
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message ||
+      "خطا در آپلود فایل. لطفا دوباره تلاش کنید";
+    throw new Error(message);
+  }
 }

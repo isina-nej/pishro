@@ -13,25 +13,9 @@ import { useRouter, useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import NewsArticleDetail from '@/components/news/NewsArticleDetail';
+import type { NewsArticle } from '@prisma/client';
 
 export const dynamic = 'force-dynamic';
-
-interface NewsArticle {
-  id: string;
-  title: string;
-  slug: string;
-  excerpt: string;
-  content: string;
-  coverImage?: string;
-  categoryId?: string;
-  author?: string;
-  published: boolean;
-  draft: boolean;
-  views?: number;
-  likes?: number;
-  createdAt: string;
-  updatedAt: string;
-}
 
 export default function NewsPreviewPage() {
   const router = useRouter();

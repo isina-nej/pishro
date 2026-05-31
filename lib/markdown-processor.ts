@@ -54,7 +54,7 @@ export function parseMarkdown(markdown: string): string {
 
   try {
     // Parse markdown to HTML
-    let html = marked(markdown);
+    const html = marked.parse(markdown, { async: false }) as string;
 
     // Sanitize the HTML to prevent XSS
     const sanitized = DOMPurify.sanitize(html, sanitizeConfig);

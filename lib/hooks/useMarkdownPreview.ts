@@ -29,7 +29,7 @@ export function useMarkdownPreview(
   const [html, setHtml] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isRendering, setIsRendering] = useState(false);
-  const debounceTimerRef = useRef<NodeJS.Timeout>();
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Render markdown to HTML
   const renderMarkdown = useCallback((content: string) => {

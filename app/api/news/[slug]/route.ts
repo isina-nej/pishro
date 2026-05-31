@@ -11,25 +11,13 @@ export async function GET(
     const { slug } = await params;
     
     // Try to find by slug first
-    let article = await getNewsBySlug(slug);
+    let article: Awaited<ReturnType<typeof getNewsBySlug>> | Awaited<ReturnType<typeof prisma.newsArticle.findUnique>> =
+      await getNewsBySlug(slug);
     
     // If not found, try to find by ID (for admin panel)
     if (!article) {
       article = await prisma.newsArticle.findUnique({
         where: { id: slug },
-        select: {
-          id: true,
-          title: true,
-          excerpt: true,
-          content: true,
-          coverImage: true,
-          categoryId: true,
-          author: true,
-          slug: true,
-          published: true,
-          createdAt: true,
-          updatedAt: true,
-        },
       });
     }
     
@@ -75,19 +63,6 @@ export async function PUT(
         categoryId,
         author,
         updatedAt: new Date(),
-      },
-      select: {
-        id: true,
-        title: true,
-        excerpt: true,
-        content: true,
-        coverImage: true,
-        categoryId: true,
-        author: true,
-        slug: true,
-        published: true,
-        createdAt: true,
-        updatedAt: true,
       },
     });
 

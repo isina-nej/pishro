@@ -5,10 +5,9 @@
  */
 
 import { writeFile, mkdir, unlink, rename } from "fs/promises";
-import { join } from "path";
+import { dirname, join, relative, resolve } from "path";
 import { existsSync } from "fs";
 import crypto from "crypto";
-import { tmpdir } from "os";
 
 export interface StorageConfig {
   // مسیر فیزیکی ذخیره‌سازی فایل‌ها (در سرور)
@@ -17,36 +16,46 @@ export interface StorageConfig {
   baseUrl: string;
 }
 
+const DEFAULT_UPLOAD_ROOT = "/opt/uploade";
+const DEFAULT_UPLOAD_BASE_URL = "/api/uploads";
+
+function normalizeRelativePath(relativePath: string): string {
+  return relativePath.replace(/\\/g, "/").replace(/^\/+/, "");
+}
+
+export function assertSafeStoragePath(
+  storageRoot: string,
+  relativePath: string
+): string {
+  const root = resolve(storageRoot);
+  const target = resolve(root, normalizeRelativePath(relativePath));
+  const rel = relative(root, target);
+
+  if (rel.startsWith("..") || rel === ".." || rel.startsWith(`..${"/"}`)) {
+    throw new Error("Invalid storage path");
+  }
+
+  return target;
+}
+
 /**
  * دریافت تنظیمات storage از environment variables
  */
 export function getStorageConfig(): StorageConfig {
-  // مسیر پیش‌فرض: UPLOAD_BASE_DIR برای local development
-  // یا UPLOAD_STORAGE_PATH برای production
-  // اگر environment variable تنظیم نشود، از ./uploads استفاده می‌کند
   let storagePath =
     process.env.UPLOAD_BASE_DIR ||
     process.env.UPLOAD_STORAGE_PATH ||
-    "./uploads";
+    DEFAULT_UPLOAD_ROOT;
 
-  console.log("[getStorageConfig] Raw UPLOAD_BASE_DIR:", process.env.UPLOAD_BASE_DIR);
-  console.log("[getStorageConfig] Raw storagePath:", storagePath);
-
-  // اگر relative path است، آن را نسبت به project root resolve کن
   if (!storagePath.startsWith("/")) {
     storagePath = join(process.cwd(), storagePath);
-    console.log("[getStorageConfig] Resolved to absolute path:", storagePath);
   }
 
-  // URL پایه پیش‌فرض: استفاده از /api/uploads endpoint
-  // این endpoint فایل‌ها را از UPLOAD_BASE_DIR سرو می‌کند
   const baseUrl =
-    process.env.UPLOAD_BASE_URL || "/api/uploads";
-
-  console.log("[getStorageConfig] Final config:", { storagePath, baseUrl });
+    process.env.UPLOAD_BASE_URL || DEFAULT_UPLOAD_BASE_URL;
 
   return {
-    storagePath,
+    storagePath: resolve(storagePath),
     baseUrl,
   };
 }
@@ -59,24 +68,14 @@ export async function saveFileToStorage(
   relativePath: string
 ): Promise<string> {
   const config = getStorageConfig();
-  // Normalize path to use forward slashes consistently
-  const normalizedPath = relativePath.replace(/\\/g, "/");
-  const fullPath = join(config.storagePath, normalizedPath).replace(/\\/g, "/");
-
-  console.log("[saveFileToStorage] Config:", { storagePath: config.storagePath, baseUrl: config.baseUrl });
-  console.log("[saveFileToStorage] Input relativePath:", relativePath);
-  console.log("[saveFileToStorage] Normalized path:", normalizedPath);
-  console.log("[saveFileToStorage] Full path:", fullPath);
+  const normalizedPath = normalizeRelativePath(relativePath);
+  const fullPath = assertSafeStoragePath(config.storagePath, normalizedPath);
 
   // ایجاد دایرکتوری اگر وجود ندارد
-  const directory = fullPath.substring(0, fullPath.lastIndexOf("/"));
-
-  console.log("[saveFileToStorage] Target directory:", directory);
+  const directory = dirname(fullPath);
 
   try {
-    console.log("[saveFileToStorage] Creating directory recursively...");
     await mkdir(directory, { recursive: true });
-    console.log("[saveFileToStorage] Directory created successfully");
   } catch (err) {
     console.error("Error creating directory:", err);
     throw new Error(
@@ -86,9 +85,7 @@ export async function saveFileToStorage(
 
   // ذخیره فایل
   try {
-    console.log("[saveFileToStorage] Writing file, size:", buffer.length);
     await writeFile(fullPath, buffer);
-    console.log("[saveFileToStorage] File written successfully");
   } catch (err) {
     console.error("Error writing file:", err);
     throw new Error(
@@ -97,9 +94,7 @@ export async function saveFileToStorage(
   }
 
   // برگرداندن URL کامل
-  const resultUrl = `${config.baseUrl}/${relativePath}`;
-  console.log("[saveFileToStorage] Returning URL:", resultUrl);
-  return resultUrl;
+  return `${config.baseUrl}/${normalizedPath}`;
 }
 
 /**
@@ -109,7 +104,7 @@ export async function deleteFileFromStorage(
   relativePath: string
 ): Promise<void> {
   const config = getStorageConfig();
-  const fullPath = join(config.storagePath, relativePath);
+  const fullPath = assertSafeStoragePath(config.storagePath, relativePath);
 
   // بررسی وجود فایل قبل از حذف
   if (existsSync(fullPath)) {
@@ -129,8 +124,22 @@ export async function deleteFileFromStorage(
  */
 export function getRelativePathFromUrl(url: string): string {
   const config = getStorageConfig();
-  // حذف base URL از ابتدای لینک
-  return url.replace(`${config.baseUrl}/`, "");
+  const baseUrl = config.baseUrl.replace(/\/+$/, "");
+  let pathValue = url;
+
+  try {
+    if (url.includes("://")) {
+      pathValue = new URL(url).pathname;
+    }
+  } catch {
+    pathValue = url;
+  }
+
+  if (pathValue.startsWith(`${baseUrl}/`)) {
+    return normalizeRelativePath(pathValue.slice(baseUrl.length + 1));
+  }
+
+  return normalizeRelativePath(pathValue);
 }
 
 const TMP_PREFIX = "tmp";
@@ -149,12 +158,8 @@ export async function saveTempFileToStorage(
   buffer: Buffer,
   fileName: string
 ): Promise<string> {
-  console.log("[saveTempFileToStorage] Called with fileName:", fileName);
   const relativePath = buildTempRelativePath(fileName);
-  console.log("[saveTempFileToStorage] Built relative path:", relativePath);
-  const fullUrl = await saveFileToStorage(buffer, relativePath);
-  console.log("[saveTempFileToStorage] File saved successfully");
-  return fullUrl;
+  return saveFileToStorage(buffer, relativePath);
 }
 
 /**
@@ -165,15 +170,14 @@ export async function promoteTempFileToStorage(
   permanentRelativePath: string
 ): Promise<string> {
   const config = getStorageConfig();
-  const tempFull = join(config.storagePath, tempRelativePath.replace(/\\/g, "/"));
-  const permanentFull = join(
-    config.storagePath,
-    permanentRelativePath.replace(/\\/g, "/")
-  );
-  const directory = permanentFull.substring(0, permanentFull.lastIndexOf("/"));
+  const tempRelative = normalizeRelativePath(tempRelativePath);
+  const permanentRelative = normalizeRelativePath(permanentRelativePath);
+  const tempFull = assertSafeStoragePath(config.storagePath, tempRelative);
+  const permanentFull = assertSafeStoragePath(config.storagePath, permanentRelative);
+  const directory = dirname(permanentFull);
   await mkdir(directory, { recursive: true });
   await rename(tempFull, permanentFull);
-  return `${config.baseUrl}/${permanentRelativePath}`;
+  return `${config.baseUrl}/${permanentRelative}`;
 }
 
 /**
@@ -181,7 +185,7 @@ export async function promoteTempFileToStorage(
  */
 export function getAbsoluteStoragePath(relativePath: string): string {
   const config = getStorageConfig();
-  return join(config.storagePath, relativePath.replace(/\\/g, "/"));
+  return assertSafeStoragePath(config.storagePath, relativePath);
 }
 
 /**

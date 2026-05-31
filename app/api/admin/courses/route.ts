@@ -19,6 +19,12 @@ import {
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
 import { CourseCreateSchema } from "@/lib/schemas/course-management-schema";
+import {
+  buildCourseThumbnailPath,
+  buildCourseTrailerPath,
+  commitTempMediaPath,
+  safeDeleteStoragePath,
+} from "@/lib/course-media";
 
 // Helper to get admin auth from request
 function getAdminUserFromRequest(req: NextRequest) {
@@ -29,6 +35,28 @@ function getAdminUserFromRequest(req: NextRequest) {
   
   const token = authHeader.slice(7);
   return verifyAdminAccessToken(token);
+}
+
+function slugifyCourseTitle(input: string) {
+  return input
+    .trim()
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 180);
+}
+
+async function createUniqueCourseSlug(title: string, requestedSlug?: string | null) {
+  const base = slugifyCourseTitle(requestedSlug || title) || `course-${Date.now()}`;
+  let slug = base;
+  let suffix = 2;
+
+  while (await prisma.course.findUnique({ where: { slug } })) {
+    slug = `${base}-${suffix}`;
+    suffix += 1;
+  }
+
+  return slug;
 }
 
 export async function GET(req: NextRequest) {
@@ -170,36 +198,48 @@ export async function POST(req: NextRequest) {
 
     const {
       title,
+      slug,
       cost,
       description,
       categoryId,
+      instructor,
+      level,
+      status,
+      published,
+      featured,
       likes,
       dislikes,
       hasChapters,
       thumbnailPath,
       trailerVideoPath,
+      thumbnailTempPath,
+      trailerTempPath,
     } = parsed.data;
 
     // Normalize image paths
-    const normalizedThumbnail = normalizeImageUrl(thumbnailPath);
-    const normalizedTrailer = normalizeImageUrl(trailerVideoPath);
+    const normalizedThumbnail = thumbnailTempPath ? undefined : normalizeImageUrl(thumbnailPath);
+    const normalizedTrailer = trailerTempPath ? undefined : normalizeImageUrl(trailerVideoPath);
+    const courseSlug = await createUniqueCourseSlug(title, slug);
 
     // Create course with validated data
     const course = await prisma.course.create({
       data: {
         subject: title,
+        slug: courseSlug,
         price: cost,
         description,
-        categoryId,
+        categoryId: categoryId || null,
+        instructor: instructor || null,
+        level: level || null,
         likes: likes ?? 0,
         dislikes: dislikes ?? 0,
         hasChapters: hasChapters ?? false,
         img: normalizedThumbnail,
         introVideoUrl: normalizedTrailer,
         language: "FA",
-        status: "ACTIVE",
-        published: true,
-        featured: false,
+        status: status ?? "ACTIVE",
+        published: published ?? true,
+        featured: featured ?? false,
         prerequisites: [],
         learningGoals: [],
       },
@@ -214,6 +254,52 @@ export async function POST(req: NextRequest) {
         tags: { include: { tag: true } }
       }
     });
+
+    const mediaUpdate: Prisma.CourseUpdateInput = {};
+
+    try {
+      if (thumbnailTempPath) {
+        mediaUpdate.img = await commitTempMediaPath(
+          thumbnailTempPath,
+          buildCourseThumbnailPath(course.id, thumbnailTempPath)
+        );
+      }
+
+      if (trailerTempPath) {
+        mediaUpdate.introVideoUrl = await commitTempMediaPath(
+          trailerTempPath,
+          buildCourseTrailerPath(course.id, trailerTempPath)
+        );
+      }
+
+      if (Object.keys(mediaUpdate).length > 0) {
+        const updatedCourse = await prisma.course.update({
+          where: { id: course.id },
+          data: mediaUpdate,
+          include: {
+            category: {
+              select: {
+                id: true,
+                slug: true,
+                title: true
+              }
+            },
+            tags: { include: { tag: true } }
+          }
+        });
+
+        return createdResponse(updatedCourse, "Course created successfully");
+      }
+    } catch (mediaError) {
+      if (thumbnailTempPath) await safeDeleteStoragePath(thumbnailTempPath);
+      if (trailerTempPath) await safeDeleteStoragePath(trailerTempPath);
+      if (typeof mediaUpdate.img === "string") await safeDeleteStoragePath(mediaUpdate.img);
+      if (typeof mediaUpdate.introVideoUrl === "string") {
+        await safeDeleteStoragePath(mediaUpdate.introVideoUrl);
+      }
+      await prisma.course.delete({ where: { id: course.id } }).catch(() => undefined);
+      throw mediaError;
+    }
 
     return createdResponse(course, "Course created successfully");
   } catch (error) {

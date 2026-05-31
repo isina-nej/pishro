@@ -6,7 +6,6 @@ import ChatWidget from "@/components/utils/ChatWidget";
 import ScrollToTopButton from "@/components/utils/ScrollToTopButton";
 import FloatingCartButton from "@/components/utils/FloatingCartButton";
 import { SessionProvider } from "next-auth/react";
-import { auth } from "@/auth";
 
 export const metadata: Metadata = {
   title: "پیشرو",
@@ -18,10 +17,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
-
   return (
-    <SessionProvider session={session}>
+    <SessionProvider session={null}>
       <Navbar />
       {children}
       <Footer />

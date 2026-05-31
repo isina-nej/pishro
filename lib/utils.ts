@@ -28,5 +28,7 @@ export function formatDate(date: Date | string | null | undefined): string {
 export function normalizeImageUrl(url: string | null | undefined): string | undefined {
   if (!url) return undefined
   if (url.startsWith('http')) return url
+  if (url.startsWith('/')) return url
+  if (url.startsWith('api/uploads/')) return `/${url}`
   return `${process.env.NEXT_PUBLIC_SUPABASE_URL || ''}/storage/v1/object/public/${url}`
 }

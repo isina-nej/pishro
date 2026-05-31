@@ -38,7 +38,8 @@ export async function createNews(data: {
   }
 
   // If publishedAt is provided, article is being scheduled for future publication
-  const isScheduled = validated.publishedAt && validated.publishedAt !== '';
+  const scheduledAt = validated.publishedAt || null;
+  const isScheduled = Boolean(scheduledAt);
   
   const news = await prisma.newsArticle.create({
     data: {
@@ -52,7 +53,7 @@ export async function createNews(data: {
       category: validated.categoryId || 'عمومی',
       draft: !isScheduled,
       published: false,
-      publishedAt: isScheduled ? new Date(validated.publishedAt) : null,
+      publishedAt: scheduledAt ? new Date(scheduledAt) : null,
     },
     include: {
       relatedCategory: { select: { id: true, title: true, slug: true } },

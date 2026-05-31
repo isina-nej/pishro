@@ -15,6 +15,7 @@ import {
   SignupFormValues,
   Variant,
 } from "@/lib/schemas/authSchema";
+import { completeFreeEnrollmentFromLoginUrl } from "@/lib/free-course-enrollment";
 
 export function useAuthForm() {
   const [variant, setVariant] = useState<Variant>("login");
@@ -31,6 +32,29 @@ export function useAuthForm() {
   const [twoFactorUsername, setTwoFactorUsername] = useState("");
 
   const router = useRouter();
+
+  const redirectAfterAuth = async (fallbackUrl: string = "/profile/acc") => {
+    try {
+      const freeEnrollment = await completeFreeEnrollmentFromLoginUrl();
+      if (freeEnrollment) {
+        toast.success("دوره رایگان به فهرست شما اضافه شد");
+        router.push(freeEnrollment.callbackUrl);
+        return;
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "ثبت‌نام خودکار دوره رایگان انجام نشد");
+    }
+
+    if (typeof window !== "undefined") {
+      const callbackUrl = new URLSearchParams(window.location.search).get("callbackUrl");
+      if (callbackUrl?.startsWith("/")) {
+        router.push(callbackUrl);
+        return;
+      }
+    }
+
+    router.push(fallbackUrl);
+  };
 
   const handleBackFromOtp = () => {
     setOtpStep(false);
@@ -91,8 +115,7 @@ export function useAuthForm() {
             return;
           }
           
-          // Redirect to profile
-          router.push("/profile/acc");
+          await redirectAfterAuth();
         }
       }
     } catch (error) {
@@ -112,7 +135,7 @@ export function useAuthForm() {
           redirect: false,
         });
         if (loginRes?.error) toast.error("خطا در ورود خودکار");
-        else router.push("/profile/acc");
+        else await redirectAfterAuth();
       } else toast.error("کد اشتباه است!");
     } catch (error) {
       console.error("OTP verification error:", error);
@@ -141,7 +164,7 @@ export function useAuthForm() {
       // Also store token expiry time (10 hours from now)
       const expiryTime = new Date(Date.now() + 10 * 60 * 60 * 1000).getTime();
       localStorage.setItem("auth_token_expiry", expiryTime.toString());
-      router.push("/profile/acc");
+      await redirectAfterAuth();
     } catch (error) {
       console.error("2FA verification error:", error);
       toast.error("خطا در تایید کد");

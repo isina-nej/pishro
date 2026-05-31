@@ -8,6 +8,7 @@ const titleSchema = z
 
 export const CourseCreateSchema = z.object({
   title: titleSchema,
+  slug: z.string().trim().max(220).optional().nullable(),
   description: z.string().optional(),
   cost: z.number()
     .int("قیمت باید عدد صحیح باشد")
@@ -16,6 +17,11 @@ export const CourseCreateSchema = z.object({
   likes: z.number().int().min(0).optional(),
   dislikes: z.number().int().min(0).optional(),
   categoryId: z.string().optional().nullable(),
+  instructor: z.string().trim().max(120).optional().nullable(),
+  level: z.enum(["BEGINNER", "INTERMEDIATE", "ADVANCED"]).optional().nullable(),
+  status: z.enum(["ACTIVE", "COMING_SOON", "ARCHIVED"]).optional(),
+  published: z.boolean().optional(),
+  featured: z.boolean().optional(),
   hasChapters: z.boolean().optional(),
   thumbnailPath: z.string().optional().nullable(),
   trailerVideoPath: z.string().optional().nullable(),

@@ -14,6 +14,7 @@ export interface NewsDetailResponse {
   content: string;
   coverImage: string | null;
   published: boolean;
+  draft?: boolean;
   categoryId: string | null;
   category: string;
   relatedCategory: {
@@ -40,6 +41,7 @@ export interface NewsListItem {
   content: string;
   coverImage: string | null;
   published: boolean;
+  draft?: boolean;
   category: string;
   relatedCategory: {
     id: string;
