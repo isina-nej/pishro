@@ -74,13 +74,13 @@ const Footer = () => {
                     پشتیبانی و تماس
                   </p>
                   <Link
-                    href={`tel:${contactInfo.phone}`}
+                    href={`tel:${contactInfo.phoneTel}`}
                     className="text-xs text-[#495157] hover:text-myPrimary transition-colors block mb-1"
                   >
                     تلفن: {contactInfo.phone}
                   </Link>
                   <Link
-                    href={`tel:${contactInfo.mobile}`}
+                    href={`tel:${contactInfo.mobileTel}`}
                     className="text-xs text-[#495157] hover:text-myPrimary transition-colors block"
                   >
                     موبایل: {contactInfo.mobile}
@@ -217,15 +217,22 @@ const Footer = () => {
 
               {/* Certificates */}
               <div className="flex flex-wrap w-full justify-evenly sm:justify-start gap-2">
-                <div className="flex justify-center items-center rounded-md border border-[#BAC9CF] px-3 py-2 hover:border-myPrimary transition-colors cursor-pointer">
-                  <Image
-                    src={"/images/e-namad.png"}
+                <a
+                  referrerPolicy="origin"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://trustseal.enamad.ir/?id=4965732&Code=Ey50OxJxpgFGnTsrvUy8QMpXTuLCb930"
+                  className="flex justify-center items-center rounded-md border border-[#BAC9CF] px-3 py-2 hover:border-myPrimary transition-colors cursor-pointer"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    referrerPolicy="origin"
+                    src="https://trustseal.enamad.ir/logo.aspx?id=4965732&Code=Ey50OxJxpgFGnTsrvUy8QMpXTuLCb930"
                     alt="نماد اعتماد الکترونیک"
-                    width={50}
-                    height={50}
-                    className="object-contain"
+                    style={{ cursor: "pointer" }}
+                    {...{ code: "Ey50OxJxpgFGnTsrvUy8QMpXTuLCb930" }}
                   />
-                </div>
+                </a>
                 <div className="flex justify-center items-center rounded-md border border-[#BAC9CF] px-3 py-2 hover:border-myPrimary transition-colors cursor-pointer">
                   <Image
                     src={"/images/united.png"}

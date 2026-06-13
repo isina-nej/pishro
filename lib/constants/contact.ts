@@ -1,6 +1,8 @@
 export const contactInfo = {
-  phone: "02112345678",
-  mobile: "09121234567",
+  phone: "۰۱۱۵۴۲۲۹۵۴۰",
+  phoneTel: "01154229540",
+  mobile: "۰۹۱۱۵۸۲۹۷۲۱",
+  mobileTel: "09115829721",
   email: "info@pishrosarmaye.com",
   address: "تهران، خیابان ولیعصر، پلاک ۱۲۳",
   socials: {

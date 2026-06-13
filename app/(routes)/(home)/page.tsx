@@ -6,14 +6,11 @@ export async function generateMetadata(): Promise<Metadata> {
   const homeLanding = await getHomeLandingData();
 
   return {
-    title: "52392950",
+    title: homeLanding?.metaTitle || "پیشرو | بزرگترین مؤسسه سرمایه‌ گذاری در ایران",
     description:
       homeLanding?.metaDescription ||
       "آموزش تخصصی بورس، بازارهای مالی و سرمایه‌ گذاری. از اصولی تا مشاوره حرفه‌ای",
     keywords: homeLanding?.metaKeywords || [],
-    other: {
-      enamad: "52392950",
-    },
   };
 }
 
