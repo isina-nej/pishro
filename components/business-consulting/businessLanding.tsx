@@ -14,6 +14,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { BusinessConsulting } from "@prisma/client";
+import { contactInfo } from "@/lib/constants/contact";
 
 interface BusinessLandingProps {
   businessConsultingData: BusinessConsulting;
@@ -71,13 +72,10 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
               </DrawerHeader>
               <div className="text-center mt-4 space-y-3">
                 <p className="text-xl font-semibold text-green-700 dark:text-green-300 tracking-tight">
-                  {businessConsultingData.phoneNumber || "0912-123-4567"}
+                  {contactInfo.mobile}
                 </p>
                 <a
-                  href={`tel:${businessConsultingData.phoneNumber?.replace(
-                    /-/g,
-                    ""
-                  )}`}
+                  href={`tel:${contactInfo.mobileTel}`}
                   className="inline-block px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium transition"
                 >
                   تماس بگیرید

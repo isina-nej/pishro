@@ -96,7 +96,7 @@ export async function seedLandingPages() {
         500000000, 1000000000, 2000000000, 3000000000, 5000000000,
       ],
       calculatorDurationSteps: [1, 3, 6, 9, 12],
-      calculatorInPersonPhone: "0912-123-4567",
+      calculatorInPersonPhone: "۰۹۱۱۵۸۲۹۷۲۱",
       calculatorOnlineTelegram: "@InvestmentSupport",
       calculatorOnlineTelegramLink: "https://t.me/amirhossein_v2",
 
@@ -224,7 +224,7 @@ export async function seedLandingPages() {
       image: "/images/business-consulting/landing.jpg",
 
       // Contact Info
-      phoneNumber: "0912-123-4567",
+      phoneNumber: "۰۹۱۱۵۸۲۹۷۲۱",
       telegramId: "@InvestmentSupport",
       telegramLink: "https://t.me/amirhossein_v2",
       coursesLink: "https://t.me/MyCoursesChannel",

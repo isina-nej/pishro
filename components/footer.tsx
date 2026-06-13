@@ -77,13 +77,13 @@ const Footer = () => {
                     href={`tel:${contactInfo.phoneTel}`}
                     className="text-xs text-[#495157] hover:text-myPrimary transition-colors block mb-1"
                   >
-                    تلفن: {contactInfo.phone}
+                    تلفن:{contactInfo.phone}
                   </Link>
                   <Link
                     href={`tel:${contactInfo.mobileTel}`}
                     className="text-xs text-[#495157] hover:text-myPrimary transition-colors block"
                   >
-                    موبایل: {contactInfo.mobile}
+                    موبایل:{contactInfo.mobile}
                   </Link>
                 </div>
                 <div className="flex-1 md:ml-auto">

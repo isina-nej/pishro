@@ -91,7 +91,7 @@ async function main() {
         500000000, 1000000000, 2000000000, 3000000000, 5000000000,
       ],
       calculatorDurationSteps: [1, 3, 6, 9, 12],
-      calculatorInPersonPhone: "0912-123-4567",
+      calculatorInPersonPhone: "۰۹۱۱۵۸۲۹۷۲۱",
       calculatorOnlineTelegram: "@InvestmentSupport",
       calculatorOnlineTelegramLink: "https://t.me/amirhossein_v2",
     },

@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/drawer";
 import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import { useInvestmentModels } from "@/lib/hooks/useInvestmentModels";
+import { contactInfo } from "@/lib/constants/contact";
 import type { InvestmentModelData } from "@/types/landing";
 
 // Icon mapping
@@ -105,14 +106,14 @@ const InvestmentModelsSection = () => {
         {
           icon: "Phone",
           title: "تلفن تماس",
-          value: "021-12345678",
-          link: "tel:02112345678",
+          value: contactInfo.phone,
+          link: `tel:${contactInfo.phoneTel}`,
         },
         {
           icon: "Phone",
           title: "موبایل",
-          value: "0912-345-6789",
-          link: "tel:09123456789",
+          value: contactInfo.mobile,
+          link: `tel:${contactInfo.mobileTel}`,
         },
         {
           icon: "MapPin",
@@ -189,14 +190,14 @@ const InvestmentModelsSection = () => {
         {
           icon: "MessageCircle",
           title: "واتساپ",
-          value: "0912-345-6789",
-          link: "https://wa.me/989123456789",
+          value: contactInfo.mobile,
+          link: `https://wa.me/98${contactInfo.mobileTel.slice(1)}`,
         },
         {
           icon: "Phone",
           title: "تلفن پشتیبانی",
-          value: "021-87654321",
-          link: "tel:02187654321",
+          value: contactInfo.phone,
+          link: `tel:${contactInfo.phoneTel}`,
         },
         {
           icon: "Mail",

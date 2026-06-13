@@ -81,7 +81,7 @@ const NewsClub = () => {
                 <Input
                   {...register("phone")}
                   className="rounded-full h-10 sm:h-12 ml-0 sm:ml-2 ltr !text-base sm:!text-lg max-w-[100%] sm:max-w-[290px] placeholder:text-base sm:placeholder:text-lg"
-                  placeholder="09121234567"
+                  placeholder="09115829721"
                 />
                 <Button
                   type="submit"
