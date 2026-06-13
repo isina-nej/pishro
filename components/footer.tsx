@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import React from "react";
-import Image from "next/image";
 import { PiInstagramLogoThin } from "react-icons/pi";
 
 import Logo from "./utils/Logo";
@@ -233,24 +232,6 @@ const Footer = () => {
                     {...{ code: "Ey50OxJxpgFGnTsrvUy8QMpXTuLCb930" }}
                   />
                 </a>
-                <div className="flex justify-center items-center rounded-md border border-[#BAC9CF] px-3 py-2 hover:border-myPrimary transition-colors cursor-pointer">
-                  <Image
-                    src={"/images/united.png"}
-                    alt="اتحادیه"
-                    width={50}
-                    height={50}
-                    className="object-contain"
-                  />
-                </div>
-                <div className="flex justify-center items-center rounded-md border border-[#BAC9CF] px-3 py-2 hover:border-myPrimary transition-colors cursor-pointer">
-                  <Image
-                    src={"/images/samandehi.png"}
-                    alt="ساماندهی"
-                    width={50}
-                    height={50}
-                    className="object-contain"
-                  />
-                </div>
               </div>
             </div>
           </div>

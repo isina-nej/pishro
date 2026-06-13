@@ -663,21 +663,13 @@ async function main(): Promise<void> {
     });
   }
 
-  // Certificates
-  const certificates = [
-    {
-      title: "تقدیرنامه برگزاری دوره‌های آموزشی",
-      description: "از سازمان نظام صنفی رایانه‌ای",
-      image: "/images/certificates/cert-1.jpg",
-      order: 1,
-    },
-    {
-      title: "گواهی عضویت در انجمن اقتصاد ایران",
-      description: "عضویت فعال در انجمن اقتصاد ایران",
-      image: "/images/certificates/cert-2.jpg",
-      order: 2,
-    },
-  ];
+  // Certificates should only be added after verification in the admin panel.
+  const certificates: Array<{
+    title: string;
+    description: string;
+    image: string;
+    order: number;
+  }> = [];
 
   for (const cert of certificates) {
     await prisma.certificate.create({
