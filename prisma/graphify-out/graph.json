@@ -1,0 +1,4098 @@
+{
+  "nodes": [
+    {
+      "id": "landings_seed",
+      "label": "landings-seed.js",
+      "file_type": "code",
+      "source_file": "landings-seed.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "landings_seed_prisma",
+      "label": "prisma",
+      "file_type": "code",
+      "source_file": "landings-seed.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "landings_seed_main",
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "landings-seed.js",
+      "source_location": "L7",
+      "_origin": "ast"
+    },
+    {
+      "id": "persian_data_generator",
+      "label": "persian-data-generator.ts",
+      "file_type": "code",
+      "source_file": "persian-data-generator.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "persian_data_generator_persiandatagenerator",
+      "label": "PersianDataGenerator",
+      "file_type": "code",
+      "source_file": "persian-data-generator.ts",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "persian_data_generator_persiandatagenerator_constructor",
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "persian-data-generator.ts",
+      "source_location": "L9",
+      "_origin": "ast"
+    },
+    {
+      "id": "persian_data_generator_persiandatagenerator_random",
+      "label": ".random()",
+      "file_type": "code",
+      "source_file": "persian-data-generator.ts",
+      "source_location": "L16",
+      "_origin": "ast"
+    },
+    {
+      "id": "persian_data_generator_persiandatagenerator_randomint",
+      "label": ".randomInt()",
+      "file_type": "code",
+      "source_file": "persian-data-generator.ts",
+      "source_location": "L24",
+      "_origin": "ast"
+    },
+    {
+      "id": "persian_data_generator_persiandatagenerator_choice",
+      "label": ".choice()",
+      "file_type": "code",
+      "source_file": "persian-data-generator.ts",
+      "source_location": "L31",
+      "_origin": "ast"
+    },
+    {
+      "id": "persian_data_generator_persiandatagenerator_generatefullname",
+      "label": ".generateFullName()",
+      "file_type": "code",
+      "source_file": "persian-data-generator.ts",
+      "source_location": "L38",
+      "_origin": "ast"
+    },
+    {
+      "id": "persian_data_generator_persiandatagenerator_generatecommenttext",
+      "label": ".generateCommentText()",
+      "file_type": "code",
+      "source_file": "persian-data-generator.ts",
+      "source_location": "L106",
+      "_origin": "ast"
+    },
+    {
+      "id": "persian_data_generator_persiandatagenerator_generateavatarurl",
+      "label": ".generateAvatarUrl()",
+      "file_type": "code",
+      "source_file": "persian-data-generator.ts",
+      "source_location": "L136",
+      "_origin": "ast"
+    },
+    {
+      "id": "persian_data_generator_persiandatagenerator_shuffle",
+      "label": ".shuffle()",
+      "file_type": "code",
+      "source_file": "persian-data-generator.ts",
+      "source_location": "L150",
+      "_origin": "ast"
+    },
+    {
+      "id": "seed_admin",
+      "label": "seed-admin.ts",
+      "file_type": "code",
+      "source_file": "seed-admin.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "seed_admin_prisma",
+      "label": "prisma",
+      "file_type": "code",
+      "source_file": "seed-admin.ts",
+      "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "seed_admin_hashadminpassword",
+      "label": "hashAdminPassword()",
+      "file_type": "code",
+      "source_file": "seed-admin.ts",
+      "source_location": "L13",
+      "_origin": "ast"
+    },
+    {
+      "id": "seed_admin_seedadminusers",
+      "label": "seedAdminUsers()",
+      "file_type": "code",
+      "source_file": "seed-admin.ts",
+      "source_location": "L18",
+      "_origin": "ast"
+    },
+    {
+      "id": "seed_simple",
+      "label": "seed-simple.js",
+      "file_type": "code",
+      "source_file": "seed-simple.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "seed_simple_prisma",
+      "label": "prisma",
+      "file_type": "code",
+      "source_file": "seed-simple.js",
+      "source_location": "L3",
+      "_origin": "ast"
+    },
+    {
+      "id": "seed_simple_main",
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "seed-simple.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "seed",
+      "label": "seed.ts",
+      "file_type": "code",
+      "source_file": "seed.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "seed_prisma",
+      "label": "prisma",
+      "file_type": "code",
+      "source_file": "seed.ts",
+      "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "seed_librarybookdata",
+      "label": "LibraryBookData",
+      "file_type": "code",
+      "source_file": "seed.ts",
+      "source_location": "L14",
+      "_origin": "ast"
+    },
+    {
+      "id": "seed_librarybooks",
+      "label": "libraryBooks",
+      "file_type": "code",
+      "source_file": "seed.ts",
+      "source_location": "L32",
+      "_origin": "ast"
+    },
+    {
+      "id": "seed_newsarticledata",
+      "label": "NewsArticleData",
+      "file_type": "code",
+      "source_file": "seed.ts",
+      "source_location": "L201",
+      "_origin": "ast"
+    },
+    {
+      "id": "seed_newsarticles",
+      "label": "newsArticles",
+      "file_type": "code",
+      "source_file": "seed.ts",
+      "source_location": "L215",
+      "_origin": "ast"
+    },
+    {
+      "id": "seed_main",
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "seed.ts",
+      "source_location": "L266",
+      "_origin": "ast"
+    },
+    {
+      "id": "seed_categories",
+      "label": "categories",
+      "file_type": "code",
+      "source_file": "seed.ts",
+      "source_location": "L971",
+      "_origin": "ast"
+    },
+    {
+      "id": "seed_tags",
+      "label": "tags",
+      "file_type": "code",
+      "source_file": "seed.ts",
+      "source_location": "L1069",
+      "_origin": "ast"
+    },
+    {
+      "id": "seed_coursedata",
+      "label": "CourseData",
+      "file_type": "code",
+      "source_file": "seed.ts",
+      "source_location": "L1155",
+      "_origin": "ast"
+    },
+    {
+      "id": "seed_courses",
+      "label": "courses",
+      "file_type": "code",
+      "source_file": "seed.ts",
+      "source_location": "L1177",
+      "_origin": "ast"
+    },
+    {
+      "id": "seed_commentdata",
+      "label": "CommentData",
+      "file_type": "code",
+      "source_file": "seed.ts",
+      "source_location": "L1339",
+      "_origin": "ast"
+    },
+    {
+      "id": "seed_comments",
+      "label": "comments",
+      "file_type": "code",
+      "source_file": "seed.ts",
+      "source_location": "L1351",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_landing_seed",
+      "label": "landing-seed.ts",
+      "file_type": "code",
+      "source_file": "seeds/landing-seed.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_landing_seed_prisma",
+      "label": "prisma",
+      "file_type": "code",
+      "source_file": "seeds/landing-seed.ts",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_landing_seed_seedlandingpages",
+      "label": "seedLandingPages()",
+      "file_type": "code",
+      "source_file": "seeds/landing-seed.ts",
+      "source_location": "L7",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_mini_slider_1_seed",
+      "label": "mini-slider-1-seed.js",
+      "file_type": "code",
+      "source_file": "seeds/mini-slider-1-seed.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_mini_slider_1_seed_prisma",
+      "label": "prisma",
+      "file_type": "code",
+      "source_file": "seeds/mini-slider-1-seed.js",
+      "source_location": "L3",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_mini_slider_1_seed_minislider1images",
+      "label": "miniSlider1Images",
+      "file_type": "code",
+      "source_file": "seeds/mini-slider-1-seed.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_mini_slider_1_seed_seedminislider1",
+      "label": "seedMiniSlider1()",
+      "file_type": "code",
+      "source_file": "seeds/mini-slider-1-seed.js",
+      "source_location": "L44",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_mini_slider_1_seed_main",
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "seeds/mini-slider-1-seed.js",
+      "source_location": "L72",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_mini_slider_2_seed",
+      "label": "mini-slider-2-seed.js",
+      "file_type": "code",
+      "source_file": "seeds/mini-slider-2-seed.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_mini_slider_2_seed_prisma",
+      "label": "prisma",
+      "file_type": "code",
+      "source_file": "seeds/mini-slider-2-seed.js",
+      "source_location": "L3",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_mini_slider_2_seed_minislider2images",
+      "label": "miniSlider2Images",
+      "file_type": "code",
+      "source_file": "seeds/mini-slider-2-seed.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_mini_slider_2_seed_seedminislider2",
+      "label": "seedMiniSlider2()",
+      "file_type": "code",
+      "source_file": "seeds/mini-slider-2-seed.js",
+      "source_location": "L44",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_mini_slider_2_seed_main",
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "seeds/mini-slider-2-seed.js",
+      "source_location": "L72",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator",
+      "label": "persian-data-generator.ts",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_seededrandom",
+      "label": "SeededRandom",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L8",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_seededrandom_constructor",
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_seededrandom_next",
+      "label": ".next()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L17",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_seededrandom_nextint",
+      "label": ".nextInt()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L23",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_seededrandom_choice",
+      "label": ".choice()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L28",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_seededrandom_shuffle",
+      "label": ".shuffle()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L33",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persian_first_names",
+      "label": "PERSIAN_FIRST_NAMES",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L44",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persian_last_names",
+      "label": "PERSIAN_LAST_NAMES",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L111",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_course_subjects",
+      "label": "COURSE_SUBJECTS",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L155",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_book_titles",
+      "label": "BOOK_TITLES",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L179",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_news_titles",
+      "label": "NEWS_TITLES",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L198",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persian_paragraphs",
+      "label": "PERSIAN_PARAGRAPHS",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L212",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_faq_questions",
+      "label": "FAQ_QUESTIONS",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L226",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_faq_answers",
+      "label": "FAQ_ANSWERS",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L239",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_categories",
+      "label": "CATEGORIES",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L253",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_tags",
+      "label": "TAGS",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L265",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_comment_texts",
+      "label": "COMMENT_TEXTS",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L289",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator",
+      "label": "PersianDataGenerator",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L305",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_constructor",
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L308",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_generatefullname",
+      "label": ".generateFullName()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L313",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_generatephone",
+      "label": ".generatePhone()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L325",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_generatenationalcode",
+      "label": ".generateNationalCode()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L336",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_generatecardnumber",
+      "label": ".generateCardNumber()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L341",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_generateshebanumber",
+      "label": ".generateShebaNumber()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L350",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_generatecoursesubject",
+      "label": ".generateCourseSubject()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L358",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_generatebooktitle",
+      "label": ".generateBookTitle()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L363",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_generatenewstitle",
+      "label": ".generateNewsTitle()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L368",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_generateparagraph",
+      "label": ".generateParagraph()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L373",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_generateparagraphs",
+      "label": ".generateParagraphs()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L378",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_generatefaqquestion",
+      "label": ".generateFAQQuestion()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L385",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_generatefaqanswer",
+      "label": ".generateFAQAnswer()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L390",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_generatecommenttext",
+      "label": ".generateCommentText()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L395",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_generatecategory",
+      "label": ".generateCategory()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L400",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_getallcategories",
+      "label": ".getAllCategories()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L405",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_generatetag",
+      "label": ".generateTag()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L410",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_getrandomtags",
+      "label": ".getRandomTags()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L415",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_generateslug",
+      "label": ".generateSlug()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L421",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_generateprice",
+      "label": ".generatePrice()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L479",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_generatediscount",
+      "label": ".generateDiscount()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L484",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_generaterating",
+      "label": ".generateRating()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L489",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_generatepastdate",
+      "label": ".generatePastDate()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L494",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_generatefuturedate",
+      "label": ".generateFutureDate()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L501",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_randomint",
+      "label": ".randomInt()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L508",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_choice",
+      "label": ".choice()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L513",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_generateimageurl",
+      "label": ".generateImageUrl()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L518",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandatagenerator_generateavatarurl",
+      "label": ".generateAvatarUrl()",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L528",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_persian_data_generator_persiandata",
+      "label": "persianData",
+      "file_type": "code",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L534",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_real_comments_seed",
+      "label": "real-comments-seed.js",
+      "file_type": "code",
+      "source_file": "seeds/real-comments-seed.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_real_comments_seed_prisma",
+      "label": "prisma",
+      "file_type": "code",
+      "source_file": "seeds/real-comments-seed.js",
+      "source_location": "L3",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_real_comments_seed_homecommentsdata",
+      "label": "homeCommentsData",
+      "file_type": "code",
+      "source_file": "seeds/real-comments-seed.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_real_comments_seed_seedrealcomments",
+      "label": "seedRealComments()",
+      "file_type": "code",
+      "source_file": "seeds/real-comments-seed.js",
+      "source_location": "L112",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_real_comments_seed_main",
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "seeds/real-comments-seed.js",
+      "source_location": "L159",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_admin",
+      "label": "seed-admin.ts",
+      "file_type": "code",
+      "source_file": "seeds/seed-admin.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_admin_prisma",
+      "label": "prisma",
+      "file_type": "code",
+      "source_file": "seeds/seed-admin.ts",
+      "source_location": "L9",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_admin_seedadminusers",
+      "label": "seedAdminUsers()",
+      "file_type": "code",
+      "source_file": "seeds/seed-admin.ts",
+      "source_location": "L14",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_all",
+      "label": "seed-all.ts",
+      "file_type": "code",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_all_prisma",
+      "label": "prisma",
+      "file_type": "code",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L25",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_all_seedresult",
+      "label": "SeedResult",
+      "file_type": "code",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L27",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_all_seedsummary",
+      "label": "SeedSummary",
+      "file_type": "code",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L33",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_all_seedall",
+      "label": "seedAll()",
+      "file_type": "code",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L40",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_books",
+      "label": "seed-books.ts",
+      "file_type": "code",
+      "source_file": "seeds/seed-books.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_books_prisma",
+      "label": "prisma",
+      "file_type": "code",
+      "source_file": "seeds/seed-books.ts",
+      "source_location": "L12",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_books_generator",
+      "label": "generator",
+      "file_type": "code",
+      "source_file": "seeds/seed-books.ts",
+      "source_location": "L13",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_books_createbookcover",
+      "label": "createBookCover()",
+      "file_type": "code",
+      "source_file": "seeds/seed-books.ts",
+      "source_location": "L20",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_books_createpdf",
+      "label": "createPDF()",
+      "file_type": "code",
+      "source_file": "seeds/seed-books.ts",
+      "source_location": "L55",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_books_createaudiofile",
+      "label": "createAudioFile()",
+      "file_type": "code",
+      "source_file": "seeds/seed-books.ts",
+      "source_location": "L107",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_books_seedbooks",
+      "label": "seedBooks()",
+      "file_type": "code",
+      "source_file": "seeds/seed-books.ts",
+      "source_location": "L126",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_categories",
+      "label": "seed-categories.ts",
+      "file_type": "code",
+      "source_file": "seeds/seed-categories.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_categories_prisma",
+      "label": "prisma",
+      "file_type": "code",
+      "source_file": "seeds/seed-categories.ts",
+      "source_location": "L9",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_categories_seedcategories",
+      "label": "seedCategories()",
+      "file_type": "code",
+      "source_file": "seeds/seed-categories.ts",
+      "source_location": "L14",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_comments",
+      "label": "seed-comments.ts",
+      "file_type": "code",
+      "source_file": "seeds/seed-comments.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_comments_prisma",
+      "label": "prisma",
+      "file_type": "code",
+      "source_file": "seeds/seed-comments.ts",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_comments_generator",
+      "label": "generator",
+      "file_type": "code",
+      "source_file": "seeds/seed-comments.ts",
+      "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_comments_seedcomments",
+      "label": "seedComments()",
+      "file_type": "code",
+      "source_file": "seeds/seed-comments.ts",
+      "source_location": "L16",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_courses",
+      "label": "seed-courses.ts",
+      "file_type": "code",
+      "source_file": "seeds/seed-courses.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_courses_prisma",
+      "label": "prisma",
+      "file_type": "code",
+      "source_file": "seeds/seed-courses.ts",
+      "source_location": "L17",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_courses_createcourseimage",
+      "label": "createCourseImage()",
+      "file_type": "code",
+      "source_file": "seeds/seed-courses.ts",
+      "source_location": "L22",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_courses_generator",
+      "label": "generator",
+      "file_type": "code",
+      "source_file": "seeds/seed-courses.ts",
+      "source_location": "L53",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_courses_seedcourses",
+      "label": "seedCourses()",
+      "file_type": "code",
+      "source_file": "seeds/seed-courses.ts",
+      "source_location": "L57",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_enrollments",
+      "label": "seed-enrollments.ts",
+      "file_type": "code",
+      "source_file": "seeds/seed-enrollments.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_enrollments_prisma",
+      "label": "prisma",
+      "file_type": "code",
+      "source_file": "seeds/seed-enrollments.ts",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_enrollments_generator",
+      "label": "generator",
+      "file_type": "code",
+      "source_file": "seeds/seed-enrollments.ts",
+      "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_enrollments_seedenrollments",
+      "label": "seedEnrollments()",
+      "file_type": "code",
+      "source_file": "seeds/seed-enrollments.ts",
+      "source_location": "L15",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_faqs",
+      "label": "seed-faqs.ts",
+      "file_type": "code",
+      "source_file": "seeds/seed-faqs.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_faqs_prisma",
+      "label": "prisma",
+      "file_type": "code",
+      "source_file": "seeds/seed-faqs.ts",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_faqs_generator",
+      "label": "generator",
+      "file_type": "code",
+      "source_file": "seeds/seed-faqs.ts",
+      "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_faqs_seedfaqs",
+      "label": "seedFAQs()",
+      "file_type": "code",
+      "source_file": "seeds/seed-faqs.ts",
+      "source_location": "L15",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_news",
+      "label": "seed-news.ts",
+      "file_type": "code",
+      "source_file": "seeds/seed-news.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_news_prisma",
+      "label": "prisma",
+      "file_type": "code",
+      "source_file": "seeds/seed-news.ts",
+      "source_location": "L12",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_news_generator",
+      "label": "generator",
+      "file_type": "code",
+      "source_file": "seeds/seed-news.ts",
+      "source_location": "L13",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_news_createnewsimage",
+      "label": "createNewsImage()",
+      "file_type": "code",
+      "source_file": "seeds/seed-news.ts",
+      "source_location": "L20",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_news_seednews",
+      "label": "seedNews()",
+      "file_type": "code",
+      "source_file": "seeds/seed-news.ts",
+      "source_location": "L59",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_newsletter",
+      "label": "seed-newsletter.ts",
+      "file_type": "code",
+      "source_file": "seeds/seed-newsletter.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_newsletter_prisma",
+      "label": "prisma",
+      "file_type": "code",
+      "source_file": "seeds/seed-newsletter.ts",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_newsletter_generator",
+      "label": "generator",
+      "file_type": "code",
+      "source_file": "seeds/seed-newsletter.ts",
+      "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_newsletter_seednewsletter",
+      "label": "seedNewsletter()",
+      "file_type": "code",
+      "source_file": "seeds/seed-newsletter.ts",
+      "source_location": "L15",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_orders",
+      "label": "seed-orders.ts",
+      "file_type": "code",
+      "source_file": "seeds/seed-orders.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_orders_prisma",
+      "label": "prisma",
+      "file_type": "code",
+      "source_file": "seeds/seed-orders.ts",
+      "source_location": "L15",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_orders_generator",
+      "label": "generator",
+      "file_type": "code",
+      "source_file": "seeds/seed-orders.ts",
+      "source_location": "L16",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_orders_seedorders",
+      "label": "seedOrders()",
+      "file_type": "code",
+      "source_file": "seeds/seed-orders.ts",
+      "source_location": "L18",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_pagecontent",
+      "label": "seed-pagecontent.ts",
+      "file_type": "code",
+      "source_file": "seeds/seed-pagecontent.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_pagecontent_prisma",
+      "label": "prisma",
+      "file_type": "code",
+      "source_file": "seeds/seed-pagecontent.ts",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_pagecontent_generator",
+      "label": "generator",
+      "file_type": "code",
+      "source_file": "seeds/seed-pagecontent.ts",
+      "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_pagecontent_seedpagecontent",
+      "label": "seedPageContent()",
+      "file_type": "code",
+      "source_file": "seeds/seed-pagecontent.ts",
+      "source_location": "L13",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_quizzes",
+      "label": "seed-quizzes.ts",
+      "file_type": "code",
+      "source_file": "seeds/seed-quizzes.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_quizzes_prisma",
+      "label": "prisma",
+      "file_type": "code",
+      "source_file": "seeds/seed-quizzes.ts",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_quizzes_generator",
+      "label": "generator",
+      "file_type": "code",
+      "source_file": "seeds/seed-quizzes.ts",
+      "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_quizzes_seedquizzes",
+      "label": "seedQuizzes()",
+      "file_type": "code",
+      "source_file": "seeds/seed-quizzes.ts",
+      "source_location": "L16",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_tags",
+      "label": "seed-tags.ts",
+      "file_type": "code",
+      "source_file": "seeds/seed-tags.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_tags_prisma",
+      "label": "prisma",
+      "file_type": "code",
+      "source_file": "seeds/seed-tags.ts",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_tags_generator",
+      "label": "_generator",
+      "file_type": "code",
+      "source_file": "seeds/seed-tags.ts",
+      "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_tags_tags_data",
+      "label": "TAGS_DATA",
+      "file_type": "code",
+      "source_file": "seeds/seed-tags.ts",
+      "source_location": "L14",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_tags_seedtags",
+      "label": "seedTags()",
+      "file_type": "code",
+      "source_file": "seeds/seed-tags.ts",
+      "source_location": "L276",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_users",
+      "label": "seed-users.ts",
+      "file_type": "code",
+      "source_file": "seeds/seed-users.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_users_prisma",
+      "label": "prisma",
+      "file_type": "code",
+      "source_file": "seeds/seed-users.ts",
+      "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_users_generator",
+      "label": "generator",
+      "file_type": "code",
+      "source_file": "seeds/seed-users.ts",
+      "source_location": "L12",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_seed_users_seedusers",
+      "label": "seedUsers()",
+      "file_type": "code",
+      "source_file": "seeds/seed-users.ts",
+      "source_location": "L19",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_slider_seed",
+      "label": "slider-seed.js",
+      "file_type": "code",
+      "source_file": "seeds/slider-seed.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_slider_seed_prisma",
+      "label": "prisma",
+      "file_type": "code",
+      "source_file": "seeds/slider-seed.js",
+      "source_location": "L3",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_slider_seed_homeslides",
+      "label": "homeSlides",
+      "file_type": "code",
+      "source_file": "seeds/slider-seed.js",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_slider_seed_seedhomeslides",
+      "label": "seedHomeSlides()",
+      "file_type": "code",
+      "source_file": "seeds/slider-seed.js",
+      "source_location": "L48",
+      "_origin": "ast"
+    },
+    {
+      "id": "seeds_slider_seed_main",
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "seeds/slider-seed.js",
+      "source_location": "L72",
+      "_origin": "ast"
+    }
+  ],
+  "edges": [
+    {
+      "source": "landings_seed",
+      "target": "ref_prisma_client",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "landings-seed.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "landings_seed",
+      "target": "seeds_mini_slider_1_seed",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "landings-seed.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "landings_seed",
+      "target": "seeds_mini_slider_1_seed_seedminislider1",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "landings-seed.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "landings_seed",
+      "target": "seeds_mini_slider_2_seed",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "landings-seed.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "landings_seed",
+      "target": "seeds_mini_slider_2_seed_seedminislider2",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "landings-seed.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "landings_seed",
+      "target": "landings_seed_prisma",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "landings-seed.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "landings_seed",
+      "target": "landings_seed_main",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "landings-seed.js",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "persian_data_generator",
+      "target": "persian_data_generator_persiandatagenerator",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "persian-data-generator.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "persian_data_generator_persiandatagenerator",
+      "target": "persian_data_generator_persiandatagenerator_constructor",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "persian-data-generator.ts",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "persian_data_generator_persiandatagenerator",
+      "target": "persian_data_generator_persiandatagenerator_random",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "persian-data-generator.ts",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "persian_data_generator_persiandatagenerator",
+      "target": "persian_data_generator_persiandatagenerator_randomint",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "persian-data-generator.ts",
+      "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "persian_data_generator_persiandatagenerator",
+      "target": "persian_data_generator_persiandatagenerator_choice",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "persian-data-generator.ts",
+      "source_location": "L31",
+      "weight": 1.0
+    },
+    {
+      "source": "persian_data_generator_persiandatagenerator",
+      "target": "persian_data_generator_persiandatagenerator_generatefullname",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "persian-data-generator.ts",
+      "source_location": "L38",
+      "weight": 1.0
+    },
+    {
+      "source": "persian_data_generator_persiandatagenerator",
+      "target": "persian_data_generator_persiandatagenerator_generatecommenttext",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "persian-data-generator.ts",
+      "source_location": "L106",
+      "weight": 1.0
+    },
+    {
+      "source": "persian_data_generator_persiandatagenerator",
+      "target": "persian_data_generator_persiandatagenerator_generateavatarurl",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "persian-data-generator.ts",
+      "source_location": "L136",
+      "weight": 1.0
+    },
+    {
+      "source": "persian_data_generator_persiandatagenerator",
+      "target": "persian_data_generator_persiandatagenerator_shuffle",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "persian-data-generator.ts",
+      "source_location": "L150",
+      "weight": 1.0
+    },
+    {
+      "source": "persian_data_generator_persiandatagenerator_randomint",
+      "target": "persian_data_generator_persiandatagenerator_random",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "persian-data-generator.ts",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "persian_data_generator_persiandatagenerator_choice",
+      "target": "persian_data_generator_persiandatagenerator_randomint",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "persian-data-generator.ts",
+      "source_location": "L32",
+      "weight": 1.0
+    },
+    {
+      "source": "persian_data_generator_persiandatagenerator_generatefullname",
+      "target": "persian_data_generator_persiandatagenerator_choice",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "persian-data-generator.ts",
+      "source_location": "L98",
+      "weight": 1.0
+    },
+    {
+      "source": "persian_data_generator_persiandatagenerator_generatecommenttext",
+      "target": "persian_data_generator_persiandatagenerator_choice",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "persian-data-generator.ts",
+      "source_location": "L130",
+      "weight": 1.0
+    },
+    {
+      "source": "persian_data_generator_persiandatagenerator_generateavatarurl",
+      "target": "persian_data_generator_persiandatagenerator_choice",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "persian-data-generator.ts",
+      "source_location": "L143",
+      "weight": 1.0
+    },
+    {
+      "source": "persian_data_generator_persiandatagenerator_shuffle",
+      "target": "persian_data_generator_persiandatagenerator_randomint",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "persian-data-generator.ts",
+      "source_location": "L153",
+      "weight": 1.0
+    },
+    {
+      "source": "seed_admin",
+      "target": "ref_prisma_client",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seed-admin.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "seed_admin",
+      "target": "ref_bcryptjs",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seed-admin.ts",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "seed_admin",
+      "target": "seed_admin_prisma",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seed-admin.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "seed_admin",
+      "target": "seed_admin_hashadminpassword",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seed-admin.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "seed_admin",
+      "target": "seed_admin_seedadminusers",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seed-admin.ts",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "seed_admin_seedadminusers",
+      "target": "seed_admin_hashadminpassword",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seed-admin.ts",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "seed_simple",
+      "target": "ref_prisma_client",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seed-simple.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "seed_simple",
+      "target": "seed_simple_prisma",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seed-simple.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "seed_simple",
+      "target": "seed_simple_main",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seed-simple.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "seed",
+      "target": "ref_prisma_client",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seed.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "seed",
+      "target": "seeds_seed_news",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seed.ts",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "seed",
+      "target": "seeds_seed_news_seednews",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seed.ts",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "seed",
+      "target": "seed_prisma",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seed.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "seed",
+      "target": "seed_librarybookdata",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seed.ts",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "seed",
+      "target": "seed_librarybooks",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seed.ts",
+      "source_location": "L32",
+      "weight": 1.0
+    },
+    {
+      "source": "seed",
+      "target": "seed_newsarticledata",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seed.ts",
+      "source_location": "L201",
+      "weight": 1.0
+    },
+    {
+      "source": "seed",
+      "target": "seed_newsarticles",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seed.ts",
+      "source_location": "L215",
+      "weight": 1.0
+    },
+    {
+      "source": "seed",
+      "target": "seed_main",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seed.ts",
+      "source_location": "L266",
+      "weight": 1.0
+    },
+    {
+      "source": "seed",
+      "target": "seed_categories",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seed.ts",
+      "source_location": "L971",
+      "weight": 1.0
+    },
+    {
+      "source": "seed",
+      "target": "seed_tags",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seed.ts",
+      "source_location": "L1069",
+      "weight": 1.0
+    },
+    {
+      "source": "seed",
+      "target": "seed_coursedata",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seed.ts",
+      "source_location": "L1155",
+      "weight": 1.0
+    },
+    {
+      "source": "seed",
+      "target": "seed_courses",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seed.ts",
+      "source_location": "L1177",
+      "weight": 1.0
+    },
+    {
+      "source": "seed",
+      "target": "seed_commentdata",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seed.ts",
+      "source_location": "L1339",
+      "weight": 1.0
+    },
+    {
+      "source": "seed",
+      "target": "seed_comments",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seed.ts",
+      "source_location": "L1351",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_landing_seed",
+      "target": "ref_prisma_client",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/landing-seed.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_landing_seed",
+      "target": "seeds_landing_seed_prisma",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/landing-seed.ts",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_landing_seed",
+      "target": "seeds_landing_seed_seedlandingpages",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/landing-seed.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_mini_slider_1_seed",
+      "target": "ref_prisma_client",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/mini-slider-1-seed.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_mini_slider_1_seed",
+      "target": "seeds_mini_slider_1_seed_prisma",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/mini-slider-1-seed.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_mini_slider_1_seed",
+      "target": "seeds_mini_slider_1_seed_minislider1images",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/mini-slider-1-seed.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_mini_slider_1_seed",
+      "target": "seeds_mini_slider_1_seed_seedminislider1",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/mini-slider-1-seed.js",
+      "source_location": "L44",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_mini_slider_1_seed",
+      "target": "seeds_mini_slider_1_seed_main",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/mini-slider-1-seed.js",
+      "source_location": "L72",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_mini_slider_1_seed_main",
+      "target": "seeds_mini_slider_1_seed_seedminislider1",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/mini-slider-1-seed.js",
+      "source_location": "L73",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_mini_slider_2_seed",
+      "target": "ref_prisma_client",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/mini-slider-2-seed.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_mini_slider_2_seed",
+      "target": "seeds_mini_slider_2_seed_prisma",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/mini-slider-2-seed.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_mini_slider_2_seed",
+      "target": "seeds_mini_slider_2_seed_minislider2images",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/mini-slider-2-seed.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_mini_slider_2_seed",
+      "target": "seeds_mini_slider_2_seed_seedminislider2",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/mini-slider-2-seed.js",
+      "source_location": "L44",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_mini_slider_2_seed",
+      "target": "seeds_mini_slider_2_seed_main",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/mini-slider-2-seed.js",
+      "source_location": "L72",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_mini_slider_2_seed_main",
+      "target": "seeds_mini_slider_2_seed_seedminislider2",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/mini-slider-2-seed.js",
+      "source_location": "L73",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator",
+      "target": "seeds_persian_data_generator_seededrandom",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_seededrandom",
+      "target": "seeds_persian_data_generator_seededrandom_constructor",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_seededrandom",
+      "target": "seeds_persian_data_generator_seededrandom_next",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_seededrandom",
+      "target": "seeds_persian_data_generator_seededrandom_nextint",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_seededrandom",
+      "target": "seeds_persian_data_generator_seededrandom_choice",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L28",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_seededrandom",
+      "target": "seeds_persian_data_generator_seededrandom_shuffle",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator",
+      "target": "seeds_persian_data_generator_persian_first_names",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L44",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator",
+      "target": "seeds_persian_data_generator_persian_last_names",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L111",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator",
+      "target": "seeds_persian_data_generator_course_subjects",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L155",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator",
+      "target": "seeds_persian_data_generator_book_titles",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L179",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator",
+      "target": "seeds_persian_data_generator_news_titles",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L198",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator",
+      "target": "seeds_persian_data_generator_persian_paragraphs",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L212",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator",
+      "target": "seeds_persian_data_generator_faq_questions",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L226",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator",
+      "target": "seeds_persian_data_generator_faq_answers",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L239",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator",
+      "target": "seeds_persian_data_generator_categories",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L253",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator",
+      "target": "seeds_persian_data_generator_tags",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L265",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator",
+      "target": "seeds_persian_data_generator_comment_texts",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L289",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator",
+      "target": "seeds_persian_data_generator_persiandatagenerator",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L305",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_constructor",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L308",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_generatefullname",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L313",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_generatephone",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L325",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_generatenationalcode",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L336",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_generatecardnumber",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L341",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_generateshebanumber",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L350",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_generatecoursesubject",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L358",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_generatebooktitle",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L363",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_generatenewstitle",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L368",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_generateparagraph",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L373",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_generateparagraphs",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L378",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_generatefaqquestion",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L385",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_generatefaqanswer",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L390",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_generatecommenttext",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L395",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_generatecategory",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L400",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_getallcategories",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L405",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_generatetag",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L410",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_getrandomtags",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L415",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_generateslug",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L421",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_generateprice",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L479",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_generatediscount",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L484",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_generaterating",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L489",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_generatepastdate",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L494",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_generatefuturedate",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L501",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_randomint",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L508",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_choice",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L513",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_generateimageurl",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L518",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator",
+      "target": "seeds_persian_data_generator_persiandatagenerator_generateavatarurl",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L528",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator",
+      "target": "seeds_persian_data_generator_persiandata",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L534",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_seededrandom_choice",
+      "target": "seeds_persian_data_generator_seededrandom_nextint",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L29",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_seededrandom_shuffle",
+      "target": "seeds_persian_data_generator_seededrandom_nextint",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L36",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_persian_data_generator_persiandatagenerator_generateparagraphs",
+      "target": "seeds_persian_data_generator_persiandatagenerator_generateparagraph",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/persian-data-generator.ts",
+      "source_location": "L379",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_real_comments_seed",
+      "target": "ref_prisma_client",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/real-comments-seed.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_real_comments_seed",
+      "target": "seeds_real_comments_seed_prisma",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/real-comments-seed.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_real_comments_seed",
+      "target": "seeds_real_comments_seed_homecommentsdata",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/real-comments-seed.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_real_comments_seed",
+      "target": "seeds_real_comments_seed_seedrealcomments",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/real-comments-seed.js",
+      "source_location": "L112",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_real_comments_seed",
+      "target": "seeds_real_comments_seed_main",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/real-comments-seed.js",
+      "source_location": "L159",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_real_comments_seed_main",
+      "target": "seeds_real_comments_seed_seedrealcomments",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/real-comments-seed.js",
+      "source_location": "L160",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_admin",
+      "target": "ref_prisma_client",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-admin.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_admin",
+      "target": "ref_bcryptjs",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-admin.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_admin",
+      "target": "seeds_seed_admin_prisma",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-admin.ts",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_admin",
+      "target": "seeds_seed_admin_seedadminusers",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-admin.ts",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "ref_dotenv_config",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "ref_prisma_client",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "ref_url",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_admin",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_admin_seedadminusers",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_categories",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_categories_seedcategories",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_tags",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_tags_seedtags",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_users",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_users_seedusers",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_courses",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_courses_seedcourses",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_comments",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_comments_seedcomments",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_quizzes",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_quizzes_seedquizzes",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_enrollments",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_enrollments_seedenrollments",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_orders",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_orders_seedorders",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_news",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_news_seednews",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_books",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_books_seedbooks",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_faqs",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_faqs_seedfaqs",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_pagecontent",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_pagecontent_seedpagecontent",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_newsletter",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_newsletter_seednewsletter",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_landing_seed",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_landing_seed_seedlandingpages",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_all_prisma",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_all_seedresult",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_all_seedsummary",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all",
+      "target": "seeds_seed_all_seedall",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L40",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_books",
+      "target": "ref_prisma_client",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-books.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_books",
+      "target": "seeds_persian_data_generator",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-books.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_books",
+      "target": "seeds_persian_data_generator_persiandatagenerator",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-books.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_books",
+      "target": "ref_url",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-books.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_books",
+      "target": "ref_fs",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-books.ts",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_books",
+      "target": "ref_path",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-books.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_books",
+      "target": "seeds_seed_books_prisma",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-books.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_books",
+      "target": "seeds_seed_books_generator",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-books.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_books",
+      "target": "seeds_seed_books_createbookcover",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-books.ts",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_books",
+      "target": "seeds_seed_books_createpdf",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-books.ts",
+      "source_location": "L55",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_books",
+      "target": "seeds_seed_books_createaudiofile",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-books.ts",
+      "source_location": "L107",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_books",
+      "target": "seeds_seed_books_seedbooks",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-books.ts",
+      "source_location": "L126",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_books_seedbooks",
+      "target": "seeds_seed_books_createbookcover",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-books.ts",
+      "source_location": "L156",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_books_seedbooks",
+      "target": "seeds_seed_books_createpdf",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-books.ts",
+      "source_location": "L157",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_books_seedbooks",
+      "target": "seeds_seed_books_createaudiofile",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-books.ts",
+      "source_location": "L159",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_categories",
+      "target": "ref_prisma_client",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-categories.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_categories",
+      "target": "ref_url",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-categories.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_categories",
+      "target": "seeds_seed_categories_prisma",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-categories.ts",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_categories",
+      "target": "seeds_seed_categories_seedcategories",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-categories.ts",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_comments",
+      "target": "ref_prisma_client",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-comments.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_comments",
+      "target": "seeds_persian_data_generator",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-comments.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_comments",
+      "target": "seeds_persian_data_generator_persiandatagenerator",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-comments.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_comments",
+      "target": "ref_url",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-comments.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_comments",
+      "target": "seeds_seed_comments_prisma",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-comments.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_comments",
+      "target": "seeds_seed_comments_generator",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-comments.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_comments",
+      "target": "seeds_seed_comments_seedcomments",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-comments.ts",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_courses",
+      "target": "ref_prisma_client",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-courses.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_courses",
+      "target": "seeds_persian_data_generator",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-courses.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_courses",
+      "target": "seeds_persian_data_generator_persiandatagenerator",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-courses.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_courses",
+      "target": "ref_url",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-courses.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_courses",
+      "target": "ref_fs",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-courses.ts",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_courses",
+      "target": "ref_path",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-courses.ts",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_courses",
+      "target": "seeds_seed_courses_prisma",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-courses.ts",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_courses",
+      "target": "seeds_seed_courses_createcourseimage",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-courses.ts",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_courses",
+      "target": "seeds_seed_courses_generator",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-courses.ts",
+      "source_location": "L53",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_courses",
+      "target": "seeds_seed_courses_seedcourses",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-courses.ts",
+      "source_location": "L57",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_courses_seedcourses",
+      "target": "seeds_seed_courses_createcourseimage",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-courses.ts",
+      "source_location": "L88",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_enrollments",
+      "target": "ref_prisma_client",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-enrollments.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_enrollments",
+      "target": "seeds_persian_data_generator",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-enrollments.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_enrollments",
+      "target": "seeds_persian_data_generator_persiandatagenerator",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-enrollments.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_enrollments",
+      "target": "ref_url",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-enrollments.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_enrollments",
+      "target": "seeds_seed_enrollments_prisma",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-enrollments.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_enrollments",
+      "target": "seeds_seed_enrollments_generator",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-enrollments.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_enrollments",
+      "target": "seeds_seed_enrollments_seedenrollments",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-enrollments.ts",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_faqs",
+      "target": "ref_prisma_client",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-faqs.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_faqs",
+      "target": "seeds_persian_data_generator",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-faqs.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_faqs",
+      "target": "seeds_persian_data_generator_persiandatagenerator",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-faqs.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_faqs",
+      "target": "ref_url",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-faqs.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_faqs",
+      "target": "seeds_seed_faqs_prisma",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-faqs.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_faqs",
+      "target": "seeds_seed_faqs_generator",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-faqs.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_faqs",
+      "target": "seeds_seed_faqs_seedfaqs",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-faqs.ts",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_news",
+      "target": "ref_prisma_client",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-news.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_news",
+      "target": "seeds_persian_data_generator",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-news.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_news",
+      "target": "seeds_persian_data_generator_persiandatagenerator",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-news.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_news",
+      "target": "ref_url",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-news.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_news",
+      "target": "ref_fs",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-news.ts",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_news",
+      "target": "ref_path",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-news.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_news",
+      "target": "seeds_seed_news_prisma",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-news.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_news",
+      "target": "seeds_seed_news_generator",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-news.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_news",
+      "target": "seeds_seed_news_createnewsimage",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-news.ts",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_news",
+      "target": "seeds_seed_news_seednews",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-news.ts",
+      "source_location": "L59",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_news_seednews",
+      "target": "seeds_seed_news_createnewsimage",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-news.ts",
+      "source_location": "L89",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_newsletter",
+      "target": "ref_prisma_client",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-newsletter.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_newsletter",
+      "target": "seeds_persian_data_generator",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-newsletter.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_newsletter",
+      "target": "seeds_persian_data_generator_persiandatagenerator",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-newsletter.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_newsletter",
+      "target": "ref_url",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-newsletter.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_newsletter",
+      "target": "seeds_seed_newsletter_prisma",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-newsletter.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_newsletter",
+      "target": "seeds_seed_newsletter_generator",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-newsletter.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_newsletter",
+      "target": "seeds_seed_newsletter_seednewsletter",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-newsletter.ts",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_orders",
+      "target": "ref_prisma_client",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-orders.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_orders",
+      "target": "seeds_persian_data_generator",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-orders.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_orders",
+      "target": "seeds_persian_data_generator_persiandatagenerator",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-orders.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_orders",
+      "target": "ref_url",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-orders.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_orders",
+      "target": "seeds_seed_orders_prisma",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-orders.ts",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_orders",
+      "target": "seeds_seed_orders_generator",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-orders.ts",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_orders",
+      "target": "seeds_seed_orders_seedorders",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-orders.ts",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_pagecontent",
+      "target": "ref_prisma_client",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-pagecontent.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_pagecontent",
+      "target": "seeds_persian_data_generator",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-pagecontent.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_pagecontent",
+      "target": "seeds_persian_data_generator_persiandatagenerator",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-pagecontent.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_pagecontent",
+      "target": "ref_url",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-pagecontent.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_pagecontent",
+      "target": "seeds_seed_pagecontent_prisma",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-pagecontent.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_pagecontent",
+      "target": "seeds_seed_pagecontent_generator",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-pagecontent.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_pagecontent",
+      "target": "seeds_seed_pagecontent_seedpagecontent",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-pagecontent.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_quizzes",
+      "target": "ref_prisma_client",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-quizzes.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_quizzes",
+      "target": "persian_data_generator",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-quizzes.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_quizzes",
+      "target": "persian_data_generator_persiandatagenerator",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-quizzes.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_quizzes",
+      "target": "ref_url",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-quizzes.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_quizzes",
+      "target": "seeds_seed_quizzes_prisma",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-quizzes.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_quizzes",
+      "target": "seeds_seed_quizzes_generator",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-quizzes.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_quizzes",
+      "target": "seeds_seed_quizzes_seedquizzes",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-quizzes.ts",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_tags",
+      "target": "ref_prisma_client",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-tags.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_tags",
+      "target": "seeds_persian_data_generator",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-tags.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_tags",
+      "target": "seeds_persian_data_generator_persiandatagenerator",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-tags.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_tags",
+      "target": "ref_url",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-tags.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_tags",
+      "target": "seeds_seed_tags_prisma",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-tags.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_tags",
+      "target": "seeds_seed_tags_generator",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-tags.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_tags",
+      "target": "seeds_seed_tags_tags_data",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-tags.ts",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_tags",
+      "target": "seeds_seed_tags_seedtags",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-tags.ts",
+      "source_location": "L276",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_users",
+      "target": "ref_prisma_client",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-users.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_users",
+      "target": "seeds_persian_data_generator",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-users.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_users",
+      "target": "seeds_persian_data_generator_persiandatagenerator",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-users.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_users",
+      "target": "ref_bcryptjs",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-users.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_users",
+      "target": "ref_url",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-users.ts",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_users",
+      "target": "seeds_seed_users_prisma",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-users.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_users",
+      "target": "seeds_seed_users_generator",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-users.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_users",
+      "target": "seeds_seed_users_seedusers",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-users.ts",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_slider_seed",
+      "target": "ref_prisma_client",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/slider-seed.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_slider_seed",
+      "target": "seeds_slider_seed_prisma",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/slider-seed.js",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_slider_seed",
+      "target": "seeds_slider_seed_homeslides",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/slider-seed.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_slider_seed",
+      "target": "seeds_slider_seed_seedhomeslides",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/slider-seed.js",
+      "source_location": "L48",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_slider_seed",
+      "target": "seeds_slider_seed_main",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/slider-seed.js",
+      "source_location": "L72",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_slider_seed_main",
+      "target": "seeds_slider_seed_seedhomeslides",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/slider-seed.js",
+      "source_location": "L73",
+      "weight": 1.0
+    },
+    {
+      "source": "landings_seed_main",
+      "target": "seeds_mini_slider_1_seed_seedminislider1",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "landings-seed.js",
+      "source_location": "L539",
+      "weight": 1.0
+    },
+    {
+      "source": "landings_seed_main",
+      "target": "seeds_mini_slider_2_seed_seedminislider2",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "landings-seed.js",
+      "source_location": "L540",
+      "weight": 1.0
+    },
+    {
+      "source": "seed_main",
+      "target": "seeds_seed_news_seednews",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seed.ts",
+      "source_location": "L416",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all_seedall",
+      "target": "seeds_seed_admin_seedadminusers",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L102",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all_seedall",
+      "target": "seeds_seed_categories_seedcategories",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L107",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all_seedall",
+      "target": "seeds_seed_tags_seedtags",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L112",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all_seedall",
+      "target": "seeds_seed_users_seedusers",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L117",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all_seedall",
+      "target": "seeds_seed_courses_seedcourses",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L122",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all_seedall",
+      "target": "seeds_seed_comments_seedcomments",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L127",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all_seedall",
+      "target": "seeds_seed_quizzes_seedquizzes",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L132",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all_seedall",
+      "target": "seeds_seed_enrollments_seedenrollments",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L137",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all_seedall",
+      "target": "seeds_seed_orders_seedorders",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L142",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all_seedall",
+      "target": "seeds_seed_news_seednews",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L147",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all_seedall",
+      "target": "seeds_seed_books_seedbooks",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L152",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all_seedall",
+      "target": "seeds_seed_faqs_seedfaqs",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L157",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all_seedall",
+      "target": "seeds_seed_pagecontent_seedpagecontent",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L162",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all_seedall",
+      "target": "seeds_landing_seed_seedlandingpages",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L167",
+      "weight": 1.0
+    },
+    {
+      "source": "seeds_seed_all_seedall",
+      "target": "seeds_seed_newsletter_seednewsletter",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "seeds/seed-all.ts",
+      "source_location": "L172",
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": [],
+  "input_tokens": 0,
+  "output_tokens": 0
+}
