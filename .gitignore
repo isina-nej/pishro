@@ -37,3 +37,14 @@ folders_tree.txt
 tree-structure.txt
 scripts/log.txt
 uploads/tmp/
+
+# Local backups and agent artifacts
+.backup/
+.hermes/
+.next.backup-*/
+.env.local.backup-*
+
+# Generated uploads used for local seeding/tests
+uploads/books/audio/
+uploads/books/covers/
+uploads/books/pdfs/

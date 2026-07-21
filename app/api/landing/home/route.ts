@@ -16,6 +16,7 @@ export async function GET(_req: NextRequest) {
       return errorResponse(
         "داده‌های صفحه اصلی یافت نشد",
         "HOME_LANDING_NOT_FOUND",
+        undefined,
         404
       );
     }

@@ -1,14 +1,16 @@
 // @/lib/services/landing-service.ts
 
 import * as db from "@/lib/db";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
 
 /**
  * Service for fetching landing page data
- * Using MySQL direct queries instead of Prisma
+ * Uses raw MySQL for landing tables and Prisma singleton for recent news.
  */
+
+function logLandingError(scope: string, error: unknown) {
+  console.error(`[landing-service] ${scope} failed`, error);
+}
 
 // ==================== HOME LANDING ====================
 
@@ -19,7 +21,7 @@ export async function getHomeLandingData() {
     );
     return homeLanding || null;
   } catch (error) {
-    console.error("Error fetching home landing data:", error);
+    logLandingError("getHomeLandingData", error);
     return null;
   }
 }
@@ -31,7 +33,7 @@ export async function getMobileScrollerSteps() {
     );
     return steps || [];
   } catch (error) {
-    console.error("Error fetching mobile scroller steps:", error);
+    logLandingError("getMobileScrollerSteps", error);
     return [];
   }
 }
@@ -43,7 +45,7 @@ export async function getHomeSlides() {
     );
     return slides || [];
   } catch (error) {
-    console.error("Error fetching home slides:", error);
+    logLandingError("getHomeSlides", error);
     return [];
   }
 }
@@ -52,18 +54,18 @@ export async function getHomeMiniSliders(row?: number) {
   try {
     let query = `SELECT * FROM HomeMiniSlider WHERE published = true`;
     const params: any[] = [];
-    
+
     if (row !== undefined) {
       query += ` AND \`row\` = ?`;
       params.push(row);
     }
-    
+
     query += ` ORDER BY \`order\` ASC`;
-    
+
     const sliders = await db.query<any>(query, params);
     return sliders || [];
   } catch (error) {
-    console.error("Error fetching home mini sliders:", error);
+    logLandingError("getHomeMiniSliders", error);
     return [];
   }
 }
@@ -78,7 +80,6 @@ export async function getAboutPageData() {
 
     if (!aboutPage) return null;
 
-    // Fetch related data
     const resumeItems = await db.query<any>(
       `SELECT * FROM ResumeItem WHERE published = true AND aboutPageId = ? ORDER BY \`order\` ASC`,
       [aboutPage.id]
@@ -115,7 +116,7 @@ export async function getAboutPageData() {
       news,
     };
   } catch (error) {
-    console.error("Error fetching about page data:", error);
+    logLandingError("getAboutPageData", error);
     return null;
   }
 }
@@ -129,7 +130,7 @@ export async function getBusinessConsultingData() {
     );
     return data || null;
   } catch (error) {
-    console.error("Error fetching business consulting data:", error);
+    logLandingError("getBusinessConsultingData", error);
     return null;
   }
 }
@@ -144,7 +145,6 @@ export async function getInvestmentPlansData() {
 
     if (!data) return null;
 
-    // Fetch related plans and tags
     const plans = await db.query<any>(
       `SELECT * FROM InvestmentPlan WHERE published = true AND investmentPlansId = ? ORDER BY \`order\` ASC`,
       [data.id]
@@ -161,7 +161,7 @@ export async function getInvestmentPlansData() {
       tags,
     };
   } catch (error) {
-    console.error("Error fetching investment plans data:", error);
+    logLandingError("getInvestmentPlansData", error);
     return null;
   }
 }

@@ -12,6 +12,7 @@ export async function GET(_req: NextRequest) {
       return errorResponse(
         "داده‌های صفحه سبدهای سرمایه‌ گذاری یافت نشد",
         "INVESTMENT_PLANS_NOT_FOUND",
+        undefined,
         404
       );
     }

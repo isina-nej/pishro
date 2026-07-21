@@ -26,7 +26,6 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateAdminUser, createAdminAccessToken, createAdminRefreshToken } from '@/lib/admin-auth';
-import { errorResponse, createdResponse } from '@/lib/api-response';
 
 // Rate limiting state (in-memory, would use Redis in production)
 const loginAttempts = new Map<string, { count: number; resetTime: number }>();
@@ -118,7 +117,7 @@ export async function POST(req: NextRequest) {
     const { user, error, code } = await authenticateAdminUser(email || phone, password);
 
     if (!user) {
-      recordLoginAttempt(email);
+      recordLoginAttempt(identifier);
       return NextResponse.json(
         {
           error: error || 'Authentication failed',

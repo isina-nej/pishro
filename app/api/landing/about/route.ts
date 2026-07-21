@@ -12,6 +12,7 @@ export async function GET(_req: NextRequest) {
       return errorResponse(
         "داده‌های صفحه درباره ما یافت نشد",
         "ABOUT_PAGE_NOT_FOUND",
+        undefined,
         404
       );
     }

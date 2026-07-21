@@ -6,12 +6,12 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getAdminAuthFromHeaders, getAdminUserById } from '@/lib/admin-auth';
+import { getAdminAuthFromRequest, getAdminUserById } from '@/lib/admin-auth';
 
 export async function GET(req: NextRequest) {
   try {
     // Get authenticated user from headers
-    const user = getAdminAuthFromHeaders(req.headers);
+    const user = getAdminAuthFromRequest(req);
 
     if (!user) {
       return NextResponse.json(
