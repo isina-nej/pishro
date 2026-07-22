@@ -160,11 +160,7 @@ const ImageZoomSliderSection = ({
     else setShowMiniSlider(false);
   });
 
-  // Use provided slides or empty array
-  const slides = useMemo(() => {
-    if (!slidesData || slidesData.length === 0) return [];
-    return [...slidesData, ...slidesData];
-  }, [slidesData]);
+  const slides = useMemo(() => (slidesData?.length ? [...slidesData, ...slidesData] : []), [slidesData]);
 
   // 🌀 Control autoplay based on visibility
   useMotionValueEvent(sectionScroll, "change", (latestSection) => {

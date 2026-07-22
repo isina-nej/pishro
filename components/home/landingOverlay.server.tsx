@@ -1,14 +1,10 @@
 // @/components/home/landingOverlay.server.tsx
 
-import LandingOverlay from "./landingOverlay";
-import {
-  getHomeLandingData,
-  getHomeSlides,
-  getHomeMiniSliders,
-} from "@/lib/services/landing-service";
+import LandingOverlay from './landingOverlay';
+import { getHomeLandingData, getHomeSlides, getHomeMiniSliders } from '@/lib/services/landing-service';
+import { homeAlbumSlides, homeMiniSliderRows } from '@/lib/data/home-album';
 
 export default async function LandingOverlayServer() {
-  // Fetch all data in parallel
   const [homeLanding, slides, miniSlider1, miniSlider2] = await Promise.all([
     getHomeLandingData(),
     getHomeSlides(),
@@ -16,35 +12,22 @@ export default async function LandingOverlayServer() {
     getHomeMiniSliders(2),
   ]);
 
-  // Transform data for components
-  const slidesData = slides.map((slide) => ({
+  const slideRows = slides.length > 0 ? slides : homeAlbumSlides;
+  const slidesData = slideRows.map((slide) => ({
     src: slide.imageUrl,
     title: slide.title,
-    text: slide.description || "",
+    text: slide.description || '',
   }));
-
-  const miniSlider1Data = miniSlider1.map((s) => s.imageUrl);
-  const miniSlider2Data = miniSlider2.map((s) => s.imageUrl);
+  const miniSlider1Data = miniSlider1.length > 0 ? miniSlider1.map((slide) => slide.imageUrl) : [...homeMiniSliderRows[1]];
+  const miniSlider2Data = miniSlider2.length > 0 ? miniSlider2.map((slide) => slide.imageUrl) : [...homeMiniSliderRows[2]];
 
   return (
     <LandingOverlay
-      mainHeroTitle={
-        homeLanding?.mainHeroTitle ||
-        "پیشرو بزرگترین مؤسسه سرمایه‌ گذاری در ایران"
-      }
-      mainHeroSubtitle={homeLanding?.mainHeroSubtitle || "شروع مسیر موفقیت"}
-      mainHeroCta1Link={homeLanding?.mainHeroCta1Link || "/business-consulting"}
-      heroVideoUrl={homeLanding?.heroVideoUrl || "/videos/aboutUs.webm"}
-      overlayTexts={
-        homeLanding?.overlayTexts && homeLanding.overlayTexts.length > 0
-          ? homeLanding.overlayTexts
-          : [
-              "پیشرو در مسیر سرمایه‌ گذاری هوشمند",
-              "ما در پیشرو با ارائه آموزش‌های تخصصی بورس، بازارهای مالی و سرمایه‌ گذاری، شما را مسیر رشد همراهی می‌کنیم.",
-              "از آموزش اصولی و گام‌به‌گام تا مشاوره‌های حرفه‌ای همراهی در مسیر رشد سرمایه شما، همه پیشرو فراهم است.",
-              "پیشرو انتخابی مطمئن برای کسانی است که به دنبال امنیت مالی، رشد پایدار و آینده‌ای روشن هستند.",
-            ]
-      }
+      mainHeroTitle={homeLanding?.mainHeroTitle || 'پیشرو بزرگترین مؤسسه سرمایه‌ گذاری در ایران'}
+      mainHeroSubtitle={homeLanding?.mainHeroSubtitle || 'شروع مسیر موفقیت'}
+      mainHeroCta1Link={homeLanding?.mainHeroCta1Link || '/business-consulting'}
+      heroVideoUrl={homeLanding?.heroVideoUrl || '/videos/aboutUs.webm'}
+      overlayTexts={homeLanding?.overlayTexts?.length ? homeLanding.overlayTexts : undefined}
       slides={slidesData}
       miniSlider1Data={miniSlider1Data}
       miniSlider2Data={miniSlider2Data}
