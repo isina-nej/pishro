@@ -82,11 +82,11 @@ const CalculatorSection = () => {
     arr[arr.indexOf(current) - 1] ?? current;
 
   return (
-    <section className="relative w-full min-h-[600px] md:min-h-screen bg-[#152c44] text-white overflow-hidden mt-8 md:mt-20">
-      {/* pattern background */}
-      <div className="absolute inset-0 bg-[url('/images/utiles/pattern1.svg')] opacity-10 z-0" />
+    <section className="relative mt-8 min-h-[600px] w-full overflow-hidden py-8 text-white md:mt-20 md:min-h-screen">
+      <div className="absolute inset-x-4 inset-y-8 rounded-[2.5rem] bg-gradient-to-br from-[#102d42]/95 via-[#16384e]/95 to-[#0a2233]/95 shadow-2xl shadow-[#0b2234]/20 md:inset-x-8" />
+      <div className="absolute inset-x-4 inset-y-8 rounded-[2.5rem] border border-white/10 bg-[url('/images/utiles/pattern1.svg')] opacity-[0.08] md:inset-x-8" />
 
-      <div className="container-xl relative z-10 py-6 md:py-10 flex flex-col justify-center">
+      <div className="container-xl relative z-10 flex flex-col justify-center py-10 md:py-16">
         {/* Header */}
         <div className="text-center mb-6 md:mb-10 px-2">
           <h4 className="font-bold text-3xl sm:text-4xl md:text-5xl mb-2 md:mb-4 mt-10 md:mt-0">
@@ -103,9 +103,9 @@ const CalculatorSection = () => {
           {/* Controls */}
           <div className="flex flex-col w-full lg:w-7/12 gap-4 px-1 md:px-0">
             {/* سبد سرمایه‌ گذاری */}
-            <div className="rounded-2xl border border-[#8B9BB4] bg-white px-4 py-4 text-[#1A0A3B] sm:px-6 dark:bg-cardBg dark:text-textPrimary">
+            <div className="rounded-3xl border border-white/15 bg-white/[0.08] px-4 py-4 text-white shadow-xl backdrop-blur-xl sm:px-6">
               <p className="text-center text-lg font-semibold mb-4 flex items-center justify-center gap-2">
-                <BarChart3 size={22} className="text-[#1A0A3B] dark:text-textPrimary" />
+                <BarChart3 size={22} className="text-white" />
                 نوع سبد سرمایه‌ گذاری
               </p>
 
@@ -133,9 +133,9 @@ const CalculatorSection = () => {
             </div>
 
             {/* مبلغ سرمایه‌ گذاری */}
-            <div className="rounded-2xl border border-[#8B9BB4] bg-white px-4 py-4 text-[#1A0A3B] sm:px-6 dark:bg-cardBg dark:text-textPrimary">
+            <div className="rounded-3xl border border-white/15 bg-white/[0.08] px-4 py-4 text-white shadow-xl backdrop-blur-xl sm:px-6">
               <p className="text-center text-lg font-bold mb-8 flex items-center justify-center gap-2">
-                <Wallet size={24} className="text-[#1A0A3B] dark:text-textPrimary" />
+                <Wallet size={24} className="text-white" />
                 مبلغ سرمایه‌ گذاری
               </p>
 
@@ -144,7 +144,7 @@ const CalculatorSection = () => {
                   onClick={() =>
                     setAmount((prev) => getNext(prev, amountSteps))
                   }
-                  className="size-6 md:size-10 rounded-full bg-gray-200 dark:bg-darkBgHidden text-2xl font-bold flex items-center justify-center active:scale-95"
+                  className="flex size-6 items-center justify-center rounded-full border border-white/15 bg-white/10 text-2xl font-bold text-white transition hover:bg-white/20 active:scale-95 md:size-10"
                 >
                   <span className="mt-1">+</span>
                 </button>
@@ -173,7 +173,7 @@ const CalculatorSection = () => {
                     }}
                   />
                   {/* ⬇️ Label range below slider */}
-                  <div className="md:mx-2 mt-3 flex flex-row-reverse justify-between text-sm text-gray-900 dark:text-textPrimary">
+                  <div className="md:mx-2 mt-3 flex flex-row-reverse justify-between text-sm text-slate-200">
                     <p>۱ میلیون تومان</p>
                     <p>5 میلیارد تومان</p>
                   </div>
@@ -183,22 +183,22 @@ const CalculatorSection = () => {
                   onClick={() =>
                     setAmount((prev) => getPrev(prev, amountSteps))
                   }
-                  className="size-6 md:size-10 rounded-full bg-gray-200 dark:bg-darkBgHidden text-2xl font-bold flex items-center justify-center active:scale-95"
+                  className="flex size-6 items-center justify-center rounded-full border border-white/15 bg-white/10 text-2xl font-bold text-white transition hover:bg-white/20 active:scale-95 md:size-10"
                 >
                   <span className="mt-1">−</span>
                 </button>
               </div>
 
-              <p className="mt-6 text-center font-bold text-[#1A0A3B] dark:text-textPrimary">
+              <p className="mt-6 text-center font-bold text-white">
                 {formatNumber(amount)}{""}
                 <span className="font-normal">تومان</span>
               </p>
             </div>
 
             {/* مدت سرمایه‌ گذاری */}
-            <div className="rounded-2xl border border-[#8B9BB4] bg-white px-4 py-4 text-[#1A0A3B] sm:px-6 dark:bg-cardBg dark:text-textPrimary">
+            <div className="rounded-3xl border border-white/15 bg-white/[0.08] px-4 py-4 text-white shadow-xl backdrop-blur-xl sm:px-6">
               <p className="text-center text-lg font-bold mb-8 flex items-center justify-center gap-2">
-                <Clock size={24} className="text-[#1A0A3B] dark:text-textPrimary" />
+                <Clock size={24} className="text-white" />
                 مدت سرمایه‌ گذاری
               </p>
 
@@ -207,7 +207,7 @@ const CalculatorSection = () => {
                   onClick={() =>
                     setDuration((prev) => getNext(prev, durationSteps))
                   }
-                  className="size-6 md:size-10 rounded-full bg-gray-200 dark:bg-darkBgHidden text-2xl font-bold flex items-center justify-center active:scale-95"
+                  className="flex size-6 items-center justify-center rounded-full border border-white/15 bg-white/10 text-2xl font-bold text-white transition hover:bg-white/20 active:scale-95 md:size-10"
                 >
                   <span className="mt-1">+</span>
                 </button>
@@ -236,7 +236,7 @@ const CalculatorSection = () => {
                     }}
                   />
                   {/* ⬇️ Label range below slider */}
-                  <div className="sm:mx-2 mt-3 flex flex-row-reverse justify-between text-sm text-gray-900 dark:text-textPrimary">
+                  <div className="sm:mx-2 mt-3 flex flex-row-reverse justify-between text-sm text-slate-200">
                     <p>۱ ماه</p>
                     <p>۱۲ ماه</p>
                   </div>
@@ -246,26 +246,26 @@ const CalculatorSection = () => {
                   onClick={() =>
                     setDuration((prev) => getPrev(prev, durationSteps))
                   }
-                  className="size-6 md:size-10 rounded-full bg-gray-200 dark:bg-darkBgHidden text-2xl font-bold flex items-center justify-center active:scale-95"
+                  className="flex size-6 items-center justify-center rounded-full border border-white/15 bg-white/10 text-2xl font-bold text-white transition hover:bg-white/20 active:scale-95 md:size-10"
                 >
                   <span className="mt-1">−</span>
                 </button>
               </div>
 
-              <p className="mt-6 text-center font-bold text-[#1A0A3B] dark:text-textPrimary">
+              <p className="mt-6 text-center font-bold text-white">
                 {duration} ماهه
               </p>
             </div>
           </div>
 
           {/* Result */}
-          <div className="w-full h-[-webkit-fill-available] lg:w-5/12 flex flex-col items-center justify-center bg-[#1a0a3b]/50 rounded-2xl p-4 md:p-10 mt-6 md:mt-0 mb-10 md:mb-0">
+          <div className="flex h-[-webkit-fill-available] w-full flex-col items-center justify-center rounded-3xl border border-white/15 bg-white/[0.08] p-4 shadow-2xl backdrop-blur-xl md:mb-0 md:mt-0 md:p-10 lg:w-5/12">
             <p className="text-center text-2xl font-bold mb-8">
               نتیجه سرمایه‌ گذاریت
             </p>
 
             {/* Result box */}
-            <div className="relative flex flex-col items-center justify-center rounded-2xl bg-white px-4 pb-4 pt-8 text-3xl font-medium text-[#1A0A3B] shadow-lg dark:bg-cardBg dark:text-textPrimary">
+            <div className="relative flex flex-col items-center justify-center rounded-3xl border border-white/60 bg-white/90 px-4 pb-4 pt-8 text-3xl font-medium text-[#112b3a] shadow-2xl backdrop-blur-xl">
               {/* قیمت و درصد سود */}
               <div className="flex items-center justify-between w-full gap-4 mb-4">
                 {/* مبلغ کل - سمت راست */}
@@ -298,14 +298,14 @@ const CalculatorSection = () => {
                   xmlns="http://www.w3.org/2000/svg"
                   className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5"
                   fill="none"
-                  viewBox="0 24"
+                  viewBox="0 0 24 24"
                   stroke="currentColor"
                   strokeWidth={2}
                 >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 01-8.618 3.04A12.02 12.02 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0 1 12 2.944a11.955 11.955 0 0 1-8.618 3.04A12.02 12.02 0 0 0 3 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
                   />
                 </svg>
                 <p className="leading-relaxed">
@@ -338,7 +338,7 @@ const CalculatorSection = () => {
                 <div className="flex justify-center">
                   <PhoneCall className="text-green-600 dark:text-green-400 h-10 w-10" />
                 </div>
-                <DrawerTitle className="text-2xl font-bold text-gray-900 dark:text-textPrimary mt-2">
+                <DrawerTitle className="text-2xl font-bold text-slate-200 mt-2">
                   مشاوره حضوری
                 </DrawerTitle>
                 <DrawerDescription className="text-center text-gray-600 dark:text-textSecondary mt-1">
@@ -377,7 +377,7 @@ const CalculatorSection = () => {
                 <div className="flex justify-center">
                   <Send className="text-blue-600 dark:text-blue-400 h-10 w-10" />
                 </div>
-                <DrawerTitle className="text-2xl font-bold text-gray-900 dark:text-textPrimary mt-2">
+                <DrawerTitle className="text-2xl font-bold text-slate-200 mt-2">
                   مشاوره آنلاین
                 </DrawerTitle>
                 <DrawerDescription className="text-center text-gray-600 dark:text-textSecondary mt-1">

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stat } from 'fs/promises';
 import { createReadStream } from 'fs';
-import { extname } from 'path';
+import { extname, join } from 'path';
 import { Readable } from 'stream';
 import { assertSafeStoragePath, getStorageConfig } from '@/lib/services/storage-adapter';
 
@@ -64,21 +64,36 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const fileStat = await stat(fullPath);
+    let resolvedPath = fullPath;
+    let fileStat;
+
+    try {
+      fileStat = await stat(resolvedPath);
+    } catch {
+      // Old course records sometimes point to a storage URL without a file.
+      // Return a real fallback image instead of a noisy broken-image request.
+      if (pathParam.startsWith('courses/')) {
+        resolvedPath = join(process.cwd(), 'public/images/courses/placeholder.png');
+        fileStat = await stat(resolvedPath);
+      } else {
+        throw new Error('File not found');
+      }
+    }
+
     if (!fileStat.isFile()) {
       return NextResponse.json({ error: 'File not found' }, { status: 404 });
     }
 
-    const fileStream = createReadStream(fullPath);
+    const fileStream = createReadStream(resolvedPath);
     return new NextResponse(Readable.toWeb(fileStream) as ReadableStream, {
       status: 200,
       headers: {
-        'Content-Type': getMimeType(fullPath),
+        'Content-Type': getMimeType(resolvedPath),
         'Content-Length': fileStat.size.toString(),
-        'Cache-Control': 'public, max-age=31536000, immutable',
+        'Cache-Control': resolvedPath === fullPath ? 'public, max-age=31536000, immutable' : 'public, max-age=300',
       },
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'File not found' }, { status: 404 });
   }
 }

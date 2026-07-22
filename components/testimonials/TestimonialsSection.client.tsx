@@ -23,7 +23,7 @@ const TestimonialsSectionClient: React.FC<TestimonialsSectionClientProps> = ({
   }
 
   return (
-    <section className="relative w-full py-20 lg:py-32 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden">
+    <section className="relative w-full overflow-hidden py-20 lg:py-32">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl" />
@@ -34,10 +34,11 @@ const TestimonialsSectionClient: React.FC<TestimonialsSectionClientProps> = ({
       <div className="relative z-10">
         {/* Header */}
         <div className="text-center mb-16 px-4">
-          <h2 className="text-4xl lg:text-5xl font-bold text-slate-100 mb-4">
+          <span className="mb-4 inline-flex rounded-full border border-[#214254]/10 bg-white/55 px-4 py-2 text-[11px] font-bold text-[#214254] backdrop-blur-xl dark:border-white/10 dark:bg-white/5 dark:text-cyan-100">اعتماد ساخته‌شده با تجربه</span>
+          <h2 className="mb-4 text-4xl font-black tracking-tight text-[#112b3a] dark:text-white lg:text-5xl">
             {title}
           </h2>
-          <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+          <p className="mx-auto max-w-2xl text-lg text-[#637987] dark:text-slate-400">
             {subtitle}
           </p>
         </div>
@@ -45,10 +46,10 @@ const TestimonialsSectionClient: React.FC<TestimonialsSectionClientProps> = ({
         {/* Testimonials Container with Fade Effect */}
         <div className="relative w-full h-96 flex items-center">
           {/* Left Fade Mask */}
-          <div className="absolute left-0 top-0 bottom-0 w-32 lg:w-48 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent z-20 pointer-events-none" />
+          <div className="pointer-events-none absolute bottom-0 left-0 top-0 z-20 w-32 bg-gradient-to-r from-[#edf5f7] via-[#edf5f7]/80 to-transparent dark:from-[#081722] dark:via-[#081722]/80 lg:w-48" />
 
           {/* Right Fade Mask */}
-          <div className="absolute right-0 top-0 bottom-0 w-32 lg:w-48 bg-gradient-to-l from-slate-950 via-slate-950/80 to-transparent z-20 pointer-events-none" />
+          <div className="pointer-events-none absolute bottom-0 right-0 top-0 z-20 w-32 bg-gradient-to-l from-[#edf5f7] via-[#edf5f7]/80 to-transparent dark:from-[#081722] dark:via-[#081722]/80 lg:w-48" />
 
           {/* Scrollable Track */}
           <div className="w-full overflow-hidden">

@@ -33,7 +33,7 @@ const useImageZoomScroll = (
 ) => {
   const { scrollYProgress: parentScroll } = useScroll({
     target: parentRef,
-    offset: ["end", "end start"],
+    offset: ["end end", "end start"],
   });
 
   const { scrollYProgress: sectionScroll } = useScroll({
@@ -189,7 +189,7 @@ const ImageZoomSliderSection = ({
         style={{ opacity: sectionOpacity }}
         className="relative h-screen sm:h-[215vh] md:h-[225vh] -mt-0 sm:-mt-[100vh]"
       >
-        <div className="sticky top-0 h-screen flex items-center justify-center bg-black overflow-hidden">
+        <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden bg-[#071520]">
           <motion.div className="relative w-full flex items-center justify-center">
             <motion.div
               style={{ opacity: revealSlides }}
@@ -235,7 +235,7 @@ const ImageZoomSliderSection = ({
                           scale: isActive ? bgScale : otherSlidesScale,
                         }}
                         transition={{ duration: 0.4 }}
-                        className="relative w-full aspect-[16/10] sm:aspect-[16/9] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl"
+                        className="relative w-full aspect-[16/10] overflow-hidden rounded-2xl border border-white/10 shadow-2xl shadow-black/40 sm:aspect-[16/9] sm:rounded-[2rem]"
                       >
                         <Image
                           src={slide.src}
@@ -282,7 +282,7 @@ const ImageZoomSliderSection = ({
         </div>
       </motion.section>
       {(miniSlider1Data || miniSlider2Data) && (
-        <motion.div className="relative w-full py-2 sm:py-3 md:py-4 bg-black mt-0 sm:-mt-16 md:-mt-20">
+        <motion.div className="relative mt-0 w-full bg-[#071520] py-2 sm:-mt-16 sm:py-3 md:-mt-20 md:py-4">
           {miniSlider1Data && miniSlider1Data.length > 0 && (
             <MiniMovingSlider
               isVisible={showMiniSlider}

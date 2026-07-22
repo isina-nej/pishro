@@ -12,41 +12,40 @@ import FloatingNotificationManager from "@/components/utils/floatingNotification
 
 export default async function HomePageContent() {
   return (
-    <div className="w-full bg-white dark:bg-cardBg transition-colors">
-      {/* Desktop Landing - hidden on mobile */}
-      <div className="shadow-backdrop">
+    <div className="home-shell w-full transition-colors">
+      <div className="home-hero-stage">
         <LandingOverlayServer />
       </div>
 
-      {/* Mobile Landing - hidden on desktop */}
-      <div className="lg:hidden shadow-backdrop">
+      <div className="lg:hidden">
         <MobileLandingServer />
       </div>
 
-      <div className="shadow-card">
-        <MobileScrollSectionServer />
+      <div className="home-ambient-stage">
+        <div className="home-section-stage">
+          <MobileScrollSectionServer />
+        </div>
+
+        <div className="home-section-stage">
+          <CalculatorSection />
+        </div>
+
+        <div className="home-section-stage">
+          <CoursesSec />
+        </div>
+
+        <TestimonialsSection
+          title="نظرات و تجربیات کاربران"
+          subtitle="بهترین‌های بازار چرا ما را انتخاب می‌کنند"
+          speed={50}
+          limit={15}
+        />
+
+        <div className="home-section-stage home-news-stage">
+          <NewsClub />
+        </div>
       </div>
-      
-      <div className="shadow-card">
-        <CalculatorSection />
-      </div>
-      
-      <div className="shadow-card">
-        <CoursesSec />
-      </div>
-      
-      {/* Premium Testimonials with Infinite Scroll - Using Database Comments */}
-      <TestimonialsSection 
-        title="نظرات و تجربیات کاربران"
-        subtitle="بهترین‌های بازار چرا ما را انتخاب می‌کنند"
-        speed={50}
-        limit={15}
-      />
-      
-      <div className="shadow-card">
-        <NewsClub />
-      </div>
-      
+
       <FloatingNotificationManager />
     </div>
   );

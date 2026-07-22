@@ -73,7 +73,7 @@ export default function CoursesGridClient({ courses }: Props) {
   return (
     <section
       id="courses-section"
-      className="relative flex flex-col justify-center container-xl mt-8 sm:mt-12 md:mt-16 lg:mt-28"
+      className="home-glass-panel relative mt-8 flex flex-col justify-center rounded-[2.5rem] px-4 py-10 sm:mt-12 sm:px-6 sm:py-12 md:mt-16 lg:mt-28 lg:px-10 container-xl"
       aria-label="دوره‌های آموزشی"
     >
       {/* Header */}
@@ -83,7 +83,8 @@ export default function CoursesGridClient({ courses }: Props) {
 
         {/* Title & Description */}
         <div className="flex-1 flex flex-col items-center">
-          <h2 className="font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl flex items-center justify-center gap-2 sm:gap-2.5 md:gap-3">
+          <span className="mb-3 rounded-full border border-[#214254]/10 bg-white/55 px-4 py-2 text-[11px] font-bold text-[#214254] backdrop-blur-xl dark:border-white/10 dark:bg-white/5 dark:text-cyan-100">مسیر یادگیری شما</span>
+          <h2 className="flex items-center justify-center gap-2 text-2xl font-black tracking-tight text-[#112b3a] dark:text-white sm:gap-2.5 sm:text-3xl md:gap-3 md:text-4xl lg:text-5xl">
             <span>دوره‌ها</span>
             <div className="relative w-12 h-6 sm:w-14 sm:h-7 md:w-16 md:h-8">
               <Image
@@ -103,7 +104,7 @@ export default function CoursesGridClient({ courses }: Props) {
         <div className="relative flex items-center justify-center lg:justify-end gap-2 sm:gap-3 mt-3 lg:mt-2 w-full lg:w-[340px] px-4 lg:px-0">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-1 bg-white dark:bg-cardBg border border-gray-300 dark:border-borderColor px-3 py-2 rounded-lg shadow-sm hover:shadow-md transition text-xs sm:text-sm font-bold">
+              <button className="flex items-center gap-1 rounded-full border border-white/60 bg-white/60 px-4 py-2 text-xs font-bold text-[#112b3a] shadow-sm backdrop-blur-xl transition hover:bg-white/80 hover:shadow-md dark:border-white/10 dark:bg-white/5 dark:text-white sm:text-sm">
                 <ChevronDown size={16} />
                 <span>{selectedCategory.label}</span>
               </button>
@@ -131,7 +132,7 @@ export default function CoursesGridClient({ courses }: Props) {
 
           <Link
             href={selectedCategory.href}
-            className="flex items-center gap-1 bg-mySecondary text-white px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-bold hover:opacity-90 transition whitespace-nowrap"
+            className="flex items-center gap-1 whitespace-nowrap rounded-full bg-[#112b3a] px-4 py-2 text-xs font-bold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-[#214254] sm:text-sm"
           >
             <Folder size={16} />
             <span>صفحه {selectedCategory.label}</span>

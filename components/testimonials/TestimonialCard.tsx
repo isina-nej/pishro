@@ -18,7 +18,7 @@ interface TestimonialCardProps {
 const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
   return (
     <div className="flex-shrink-0 w-96 px-4 h-48">
-      <div className="h-full bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-shadow duration-300 flex flex-col justify-between">
+      <div className="home-glass-card flex h-full flex-col justify-between rounded-3xl p-6 transition duration-300 hover:-translate-y-1 hover:shadow-2xl">
         {/* Star Rating */}
         <div className="flex gap-1 mb-4">
           {Array.from({ length: 5 }).map((_, i) => (
@@ -37,12 +37,12 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
         </div>
 
         {/* Review Text */}
-        <p className="text-slate-300 text-sm leading-relaxed mb-6 flex-grow line-clamp-4">
-          "{testimonial.content}"
+        <p className="mb-6 line-clamp-4 flex-grow text-sm leading-relaxed text-[#405c6b] dark:text-slate-300">
+          «{testimonial.content}»
         </p>
 
         {/* User Info */}
-        <div className="flex items-center gap-3 pt-4 border-t border-slate-700/50">
+        <div className="flex items-center gap-3 border-t border-[#214254]/10 pt-4 dark:border-white/10">
           <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-amber-400/20">
             <Image
               src={testimonial.avatar}
@@ -52,10 +52,10 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
             />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-slate-100 font-semibold text-sm truncate">
+            <p className="truncate text-sm font-semibold text-[#112b3a] dark:text-slate-100">
               {testimonial.name}
             </p>
-            <p className="text-slate-400 text-xs truncate">
+            <p className="truncate text-xs text-[#637987] dark:text-slate-400">
               {testimonial.role}
               {testimonial.company && ` • ${testimonial.company}`}
             </p>

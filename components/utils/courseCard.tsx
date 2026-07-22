@@ -32,6 +32,9 @@ interface CourseCardProps {
 const CourseCard = ({ data, link: _link }: CourseCardProps) => {
   const [imageError, setImageError] = useState(false);
   const addToCart = useCartStore((state) => state.addToCart);
+  const imageSrc = data.img || "/images/courses/placeholder.png";
+  const isUploadImage = imageSrc.startsWith("/api/uploads/");
+  const fallbackImage = "/images/courses/placeholder.png";
   const { data: session } = useSession();
   const freeCourse = isFreeCourse(data);
 
@@ -57,23 +60,20 @@ const CourseCard = ({ data, link: _link }: CourseCardProps) => {
   };
 
   const cardContent = (
-    <div className="w-full rounded-xl border border-slate-200 bg-white p-3 pb-8 shadow-md shadow-slate-200/60 transition-shadow hover:shadow-lg dark:border-borderColor dark:bg-cardBg dark:shadow-none flex flex-col relative group cursor-pointer"
+    <div className="home-glass-card group relative flex w-full cursor-pointer flex-col rounded-3xl p-3 pb-8 transition duration-300 hover:-translate-y-1 hover:shadow-2xl"
     >
       {/* Image section */}
       <motion.div
         transition={{ duration: 0.3, ease: "easeOut" }}
-        className="relative w-full aspect-[464/238] overflow-hidden rounded-lg"
+        className="relative w-full aspect-[464/238] overflow-hidden rounded-[1.15rem]"
       >
-        {imageError ? (
-          <div className="w-full h-full bg-[#e5e5e5] flex items-center justify-center">
-            <span className="text-gray-400 dark:text-textSecondary text-sm">تصویر در دسترس نیست</span>
-          </div>
-        ) : (
-          <>
+        <>
             <Image
-              src={data.img || "/images/default-course.jpg"}
+              key={imageError ? fallbackImage : imageSrc}
+              src={imageError ? fallbackImage : imageSrc}
               alt={data.subject}
               fill
+              unoptimized={isUploadImage}
               className="object-cover transition-transform duration-300 group-hover:scale-105"
               onError={() => setImageError(true)}
             />
@@ -87,8 +87,7 @@ const CourseCard = ({ data, link: _link }: CourseCardProps) => {
               <ShoppingCart size={14} />
               {freeCourse ? "رایگان" : "خرید"}
             </motion.button>
-          </>
-        )}
+        </>
       </motion.div>
 
       {/* Content */}
@@ -133,7 +132,7 @@ const CourseCard = ({ data, link: _link }: CourseCardProps) => {
       <div className="absolute -bottom-5 w-full flex justify-center pl-6">
         <button
           onClick={handleAddToCart}
-          className="w-48 bg-mySecondary text-white font-bold text-sm sm:text-base py-2 rounded-full shadow-md hover:opacity-90 transition"
+          className="w-48 rounded-full bg-[#112b3a] py-2 text-sm font-bold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-[#214254] sm:text-base"
         >
           {freeCourse ? "ثبت‌نام رایگان" : "افزودن به سبد خرید"}
         </button>

@@ -45,14 +45,14 @@ const MobileLanding = ({
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start", "end start"],
+    offset: ["start start", "end start"],
   });
 
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
 
   return (
-    <div ref={containerRef} className="relative w-full bg-black">
+    <div ref={containerRef} className="relative w-full bg-[#071520]">
       {/* Hero Section */}
       <HeroSection
         title={mainHeroTitle}
@@ -127,14 +127,14 @@ const HeroSection = ({
           initial={{ opacity: 0, y: 60 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="w-full"
+          className="w-full rounded-[2rem] border border-white/15 bg-[#091a28]/50 p-6 shadow-2xl backdrop-blur-2xl"
         >
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="inline-flex items-center gap-2 bg-white dark:bg-cardBg backdrop-blur-md border border-white/20 rounded-full px-4 py-2 mb-4"
+            className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-100/20 bg-white/10 px-4 py-2 backdrop-blur-md"
           >
             <Sparkles className="w-4 h-4 text-yellow-400" />
             <span className="text-white text-sm font-medium">
@@ -157,7 +157,7 @@ const HeroSection = ({
             href={ctaLink || "/business-consulting"}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-2 bg-gradient-to-l from-myPrimary to-mySecondary text-white font-bold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all"
+            className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 font-bold text-[#112b3a] shadow-xl transition-all hover:bg-cyan-50"
           >
             <span>{subtitle || "شروع مسیر موفقیت"}</span>
             <ArrowLeft className="w-5 h-5" />
@@ -206,7 +206,7 @@ const FeatureCardsSection = ({ overlayTexts }: { overlayTexts?: string[] }) => {
   ];
 
   return (
-    <section className="relative w-full bg-gradient-to-b from-black via-gray-950 to-black py-16 px-6 overflow-x-hidden">
+    <section className="relative w-full overflow-x-hidden bg-[#071520] px-6 py-16">
       <div className="max-w-4xl mx-auto space-y-6">
         {texts.map((text, index) => (
           <motion.div
@@ -215,9 +215,9 @@ const FeatureCardsSection = ({ overlayTexts }: { overlayTexts?: string[] }) => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.6, delay: index * 0.1 }}
-            className={`relative bg-gradient-to-br ${
+            className={`relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br ${
               gradients[index % gradients.length]
-            } backdrop-blur-sm border border-white/10 rounded-3xl p-6 shadow-2xl overflow-hidden`}
+            } p-6 shadow-2xl backdrop-blur-xl`}
           >
             {/* Decorative Background */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/5 to-transparent rounded-full blur-3xl" />
@@ -225,7 +225,7 @@ const FeatureCardsSection = ({ overlayTexts }: { overlayTexts?: string[] }) => {
             {/* Content */}
             <div className="relative z-10">
               <div className="flex items-start gap-3 mb-3">
-                <div className="flex-shrink-0 w-8 h-8 bg-white dark:bg-cardBg rounded-full flex items-center justify-center border border-white/20">
+                <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/10">
                   <span className="text-white text-sm font-bold">
                     {index + 1}
                   </span>

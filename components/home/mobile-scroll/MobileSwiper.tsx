@@ -21,10 +21,11 @@ export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
       : mobileScrollerSteps;
 
   return (
-    <section className="relative w-full min-h-screen overflow-hidden mt-10 pb-20">
-      <div className="container-md px-6 mx-auto h-full flex flex-col justify-start py-8">
-        <div className="relative z-30 flex flex-col gap-2 text-center md:text-right mb-8">
-          <h4 className="text-2xl font-extrabold sm:text-3xl md:text-4xl">سامانه پیشرو</h4>
+    <section className="relative mt-4 min-h-screen w-full overflow-hidden pb-20">
+      <div className="container-md mx-auto flex h-full flex-col justify-start px-6 py-8">
+        <div className="relative z-30 mb-8 flex flex-col gap-2 text-center md:text-right">
+          <span className="mx-auto mb-2 rounded-full border border-[#214254]/10 bg-white/55 px-4 py-2 text-[11px] font-bold text-[#214254] backdrop-blur-xl dark:border-white/10 dark:bg-white/5 dark:text-cyan-100">تجربه یکپارچه مالی</span>
+          <h4 className="text-2xl font-black tracking-tight text-[#112b3a] dark:text-white sm:text-3xl md:text-4xl">سامانه پیشرو</h4>
           <p className="text-xs sm:text-sm text-gray-500 dark:text-textSecondary leading-5 sm:leading-6">
             سامانه <span className="text-myPrimary">پیشرو</span>، مشاور و همراه
             مالی شما در مسیر پیشرفت
@@ -51,7 +52,7 @@ export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
               key={step.id}
               className="!h-auto !w-full overflow-visible"
             >
-              <div className="relative w-full min-h-[600px] rounded-[28px] bg-mySecondary p-4 sm:p-6 pt-6 pb-[280px] sm:pb-[320px] overflow-hidden">
+              <div className="home-glass-panel relative min-h-[600px] w-full overflow-hidden rounded-[28px] bg-gradient-to-br from-[#12344b]/95 via-[#183c53]/90 to-[#0d2435]/95 p-4 pb-[280px] pt-6 sm:p-6 sm:pb-[320px]">
                 <div className="w-full text-center px-2 sm:px-4 mt-4 mb-4">
                   <h6 className="text-lg sm:text-xl md:text-2xl font-extrabold leading-7 sm:leading-8 md:leading-9 text-gray-100">
                     {step.text}
@@ -62,12 +63,12 @@ export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
                   {step.link ? (
                     <a
                       href={step.link}
-                      className="inline-block px-6 sm:px-8 py-2 sm:py-2.5 bg-white dark:bg-cardBg text-mySecondary dark:text-textPrimary rounded-full shadow-md hover:bg-slate-50 dark:hover:bg-darkBgHidden transition text-xs sm:text-sm"
+                      className="inline-block rounded-full bg-white px-6 py-2 text-xs font-bold text-[#112b3a] shadow-xl transition hover:bg-cyan-50 sm:px-8 sm:py-2.5 sm:text-sm"
                     >
                       اطلاعات بیشتر
                     </a>
                   ) : (
-                    <button className="px-6 sm:px-8 py-2 sm:py-2.5 bg-white dark:bg-cardBg text-mySecondary dark:text-textPrimary rounded-full shadow-md hover:bg-slate-50 dark:hover:bg-darkBgHidden transition text-xs sm:text-sm cursor-default">
+                    <button className="cursor-default rounded-full bg-white px-6 py-2 text-xs font-bold text-[#112b3a] shadow-xl sm:px-8 sm:py-2.5 sm:text-sm">
                       اطلاعات بیشتر
                     </button>
                   )}
