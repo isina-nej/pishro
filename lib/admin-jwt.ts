@@ -47,14 +47,19 @@ async function verifySignature(token: string, secret: string): Promise<boolean> 
 }
 
 export async function verifyAdminAccessTokenForMiddleware(token: string): Promise<boolean> {
-  const secret = getAdminJwtSecret();
-  if (!secret || !token) return false;
+  try {
+    const secret = getAdminJwtSecret();
+    if (!secret || !token) return false;
 
-  const payload = decodePayload(token);
-  if (!payload || payload.type !== 'access') return false;
-  if (typeof payload.exp === 'number' && payload.exp * 1000 <= Date.now()) return false;
+    const payload = decodePayload(token);
+    if (!payload || payload.type !== 'access') return false;
+    if (typeof payload.exp === 'number' && payload.exp * 1000 <= Date.now()) return false;
 
-  return verifySignature(token, secret);
+    return await verifySignature(token, secret);
+  } catch {
+    // A stale or malformed cookie must behave like an anonymous request, not a 500.
+    return false;
+  }
 }
 
 export function getAdminTokenFromRequest(request: NextRequest): string | null {
