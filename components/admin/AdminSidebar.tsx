@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import {
   BarChart3,
+  Bitcoin,
   BookOpen,
   FileText,
   GraduationCap,
@@ -27,6 +28,7 @@ interface AdminSidebarProps {
 
 const menuItems = [
   { href: '/admin/dashboard', label: 'داشبورد', icon: Home, key: 'dashboard', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
+  { href: '/admin/crypto-prices', label: 'قیمت رمزارزها', icon: Bitcoin, key: 'crypto-prices', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
   { href: '/admin/block-news', label: 'اخبار', icon: FileText, key: 'block-news', roles: ['ADMIN', 'MODERATOR'] },
   { href: '/admin/library', label: 'کتابخانه', icon: BookOpen, key: 'library', roles: ['ADMIN', 'MODERATOR'] },
   { href: '/admin/courses', label: 'دوره‌ها', icon: GraduationCap, key: 'courses', roles: ['ADMIN', 'MODERATOR'] },

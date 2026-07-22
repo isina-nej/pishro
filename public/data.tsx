@@ -8,6 +8,10 @@ export const navbarData = [
     link: "/courses", // Courses listing page
   },
   {
+    label: "قیمت ارزها",
+    link: "/crypto-prices",
+  },
+  {
     label: "مشاوره کسب و کار",
     link: "/business-consulting", // Airdrop section
   },

@@ -10,6 +10,7 @@ const DARK_PATHS = new Set([
   "/faq",
   "/courses",
   "/news",
+  "/crypto-prices",
   "/skyroom-classes",
 ]);
 
