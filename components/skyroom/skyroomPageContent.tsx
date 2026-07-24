@@ -14,15 +14,16 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
   return (
     <div className="relative h-screen w-full overflow-hidden">
       {/* Background Video Layer */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
+      <div className="absolute inset-0 z-0 overflow-hidden bg-[url('/images/home/c/main.webp')] bg-cover bg-center">
         <video
           autoPlay
           muted
           loop
           playsInline
+          poster="/images/home/c/main.webp"
           className="absolute inset-0 w-full h-full object-cover"
         >
-          <source src="/videos/hamayesh-finalli.mp4" type="video/mp4" />
+          <source src="/videos/aboutUs.webm" type="video/webm" />
         </video>
       </div>
       <div className="absolute inset-0 bg-black/40 pointer-events-none z-0"></div>

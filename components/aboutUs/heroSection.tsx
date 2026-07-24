@@ -56,8 +56,8 @@ const HeroSection = ({
         <div className="absolute bottom-20 left-20 w-96 h-96 bg-white rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
 
-      <div className="container-md py-24 relative z-10">
-        <div className="text-center text-white">
+      <div className="container-md relative z-10 py-24">
+        <div className="mx-auto max-w-5xl rounded-[2.25rem] border border-white/15 bg-[#091a28]/50 p-7 text-center text-white shadow-2xl backdrop-blur-2xl sm:p-10">
           {/* Badge */}
           {badgeText && (
             <motion.div
@@ -112,7 +112,7 @@ const HeroSection = ({
                 return (
                   <div
                     key={index}
-                    className={`rounded-2xl border border-white/20 bg-white/10 p-6 text-white backdrop-blur-md transition-all duration-300 hover:bg-white/15 group ${
+                    className={`group rounded-3xl border border-white/15 bg-white/[0.08] p-6 text-white shadow-xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-white/15 ${
                       index === statsData.length - 1 &&
                       statsData.length % 3 !== 0
                         ? "sm:col-span-2 md:col-span-1"

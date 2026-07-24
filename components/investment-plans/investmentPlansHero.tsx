@@ -151,7 +151,7 @@ export const InvestmentPlansHero = ({
           className="flex flex-col gap-12"
         >
           {/* Header Section */}
-          <div className="max-w-4xl mx-auto text-center space-y-8">
+          <div className="mx-auto max-w-4xl space-y-8 rounded-[2.25rem] border border-white/15 bg-[#091a28]/50 p-7 text-center shadow-2xl backdrop-blur-2xl sm:p-10">
             <motion.div variants={itemVariants} className="flex justify-center">
               <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-6 py-2.5 text-sm font-medium text-emerald-300 shadow-lg shadow-emerald-500/10 backdrop-blur-sm">
                 <Sparkles className="h-4 w-4" />
@@ -235,8 +235,8 @@ export const InvestmentPlansHero = ({
                       }
                     : undefined
                 }
-                className={`group relative overflow-hidden rounded-3xl border border-white/20 bg-white/10 p-6 text-white ${
-                  isMobile ? "backdrop-blur-sm" : "backdrop-blur-xl"
+                className={`group relative overflow-hidden rounded-3xl border border-white/15 bg-[#091a28]/50 p-6 text-white ${
+                  isMobile ? "backdrop-blur-sm" : "backdrop-blur-2xl"
                 } shadow-xl transition-all duration-300 hover:bg-white/15`}
               >
                 <div className="relative flex flex-col items-center text-center gap-4">

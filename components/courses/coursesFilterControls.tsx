@@ -50,7 +50,7 @@ export const CoursesFilterControls = ({
   disabled = false,
 }: CoursesFilterControlsProps) => {
   return (
-    <div className="flex flex-col gap-6 border-b border-slate-200 pb-8 dark:border-borderColor">
+    <div className="flex flex-col gap-6 border-b border-[#214254]/10 pb-8 dark:border-white/10">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-col gap-3 md:flex-row md:items-center">
           <h2 className="text-xl font-bold text-slate-900 dark:text-textPrimary">دوره‌های آموزشی</h2>
@@ -66,7 +66,7 @@ export const CoursesFilterControls = ({
           >
             <SelectTrigger
               className={cn(
-                "w-full min-w-[180px] rounded-2xl border-slate-200 bg-white text-slate-700 dark:border-borderColor dark:bg-darkBgHidden dark:text-textPrimary",
+                "w-full min-w-[180px] rounded-2xl border-white/60 bg-white/60 text-[#112b3a] shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-white/5 dark:text-white",
                 disabled && "opacity-60"
               )}
               aria-disabled={disabled}
@@ -89,7 +89,7 @@ export const CoursesFilterControls = ({
           >
             <SelectTrigger
               className={cn(
-                "w-full min-w-[180px] rounded-2xl border-slate-200 bg-white text-slate-700 dark:border-borderColor dark:bg-darkBgHidden dark:text-textPrimary",
+                "w-full min-w-[180px] rounded-2xl border-white/60 bg-white/60 text-[#112b3a] shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-white/5 dark:text-white",
                 disabled && "opacity-60"
               )}
               aria-disabled={disabled}
@@ -110,7 +110,7 @@ export const CoursesFilterControls = ({
       <div className="flex flex-col gap-4">
         <div
           className={cn(
-            "flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-borderColor dark:bg-darkBgHidden",
+            "flex items-center gap-3 rounded-2xl border border-white/60 bg-white/60 p-3 shadow-inner backdrop-blur-xl dark:border-white/10 dark:bg-white/5",
             disabled && "opacity-60"
           )}
         >
@@ -142,8 +142,8 @@ export const CoursesFilterControls = ({
               className={cn(
                 "whitespace-nowrap rounded-full border px-4 py-2 text-sm font-medium transition-all",
                 selectedCategory === category
-                  ? "border-mySecondary bg-mySecondary text-white shadow"
-                  : "border-slate-200 bg-white text-slate-700 hover:border-mySecondary/40 hover:bg-slate-50 dark:border-borderColor dark:bg-darkBgHidden dark:text-textSecondary dark:hover:bg-cardBg",
+                  ? "border-[#112b3a] bg-[#112b3a] text-white shadow-lg"
+                  : "border-white/60 bg-white/55 text-[#405c6b] hover:border-cyan-300/50 hover:bg-white/80 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10",
                 disabled && "pointer-events-none opacity-60"
               )}
               aria-pressed={selectedCategory === category}

@@ -85,7 +85,7 @@ const PortfoliosDisplay = () => {
   };
 
   return (
-    <section className="w-full bg-slate-50 py-16 md:py-24 dark:bg-darkBgHidden">
+    <section className="w-full py-16 md:py-24">
       <div className="container-xl">
         {/* Header */}
         <div className="text-center mb-12">
@@ -104,9 +104,9 @@ const PortfoliosDisplay = () => {
             return (
               <div
                 key={portfolio.id}
-                className={`relative rounded-2xl border-2 bg-white shadow-sm shadow-slate-200/70 dark:bg-cardBg dark:shadow-none ${getBorderColor(
+                className={`public-page-card relative rounded-3xl border-2 ${getBorderColor(
                   portfolio.color
-                )} p-6 md:p-8 hover:shadow-xl transition-all duration-300 ${
+                )} p-6 md:p-8 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 ${
                   portfolio.recommended ? "ring-2 ring-orange-400" : ""
                 }`}
               >

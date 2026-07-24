@@ -23,18 +23,20 @@ export async function GET(
     const uploadPath = BOOKS_UPLOAD_PATHS[type as keyof typeof BOOKS_UPLOAD_PATHS];
     const filePath = join(uploadPath.dir, filename);
 
-    // Check if file exists
+    let resolvedPath = filePath;
+    let usedFallback = false;
+
     try {
-      await access(filePath, constants.F_OK);
+      await access(resolvedPath, constants.F_OK);
     } catch {
-      return NextResponse.json(
-        { error: 'فایل یافت نشد' },
-        { status: 404 }
-      );
+      if (type !== 'covers') {
+        return NextResponse.json({ error: 'فایل یافت نشد' }, { status: 404 });
+      }
+      resolvedPath = join(process.cwd(), 'public/images/library/landing.jpg');
+      usedFallback = true;
     }
 
-    // Read file
-    const fileContent = await readFile(filePath);
+    const fileContent = await readFile(resolvedPath);
 
     // Determine content type based on file type
     let contentType = 'application/octet-stream';
@@ -56,7 +58,7 @@ export async function GET(
     return new NextResponse(fileContent, {
       headers: {
         'Content-Type': contentType,
-        'Cache-Control': 'public, max-age=31536000, immutable',
+        'Cache-Control': usedFallback ? 'public, max-age=300' : 'public, max-age=31536000, immutable',
       },
     });
   } catch (error) {

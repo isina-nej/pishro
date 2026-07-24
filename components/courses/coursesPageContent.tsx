@@ -58,12 +58,12 @@ const CoursesPageContent = ({
   };
 
   return (
-    <div className="w-full bg-slate-50 pb-24 dark:bg-bodyBg">
+    <div className="w-full pb-24">
       <CoursesHero stats={stats} />
 
       <section className="relative -mt-16 z-10">
         <div className="container-xl space-y-12">
-          <div className="rounded-3xl border border-slate-200/80 bg-white px-5 py-8 shadow-lg shadow-slate-200/70 backdrop-blur dark:border-borderColor dark:bg-cardBg dark:shadow-none">
+          <div className="public-page-panel rounded-[2.25rem] px-5 py-8 sm:px-7 lg:px-9">
             <CoursesFilterControls
               categories={categories}
               selectedCategory={selectedCategory}

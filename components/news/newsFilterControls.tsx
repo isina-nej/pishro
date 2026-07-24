@@ -70,7 +70,7 @@ export const NewsFilterControls = ({
         </label>
         <div
           className={cn(
-            "flex items-center gap-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 p-3 shadow-sm transition-all focus-within:border-mySecondary focus-within:shadow-lg focus-within:shadow-mySecondary/10",
+            "flex items-center gap-3 rounded-2xl border border-white/60 bg-white/60 p-3 shadow-inner backdrop-blur-xl transition-all focus-within:border-cyan-300/60 dark:border-white/10 dark:bg-white/5",
             disabled && "opacity-60"
           )}
         >
@@ -108,7 +108,7 @@ export const NewsFilterControls = ({
           >
             <SelectTrigger
               className={cn(
-                "w-full rounded-2xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50",
+                "w-full rounded-2xl border-white/60 bg-white/60 backdrop-blur-xl dark:border-white/10 dark:bg-white/5",
                 disabled && "opacity-60"
               )}
               aria-disabled={disabled}
@@ -136,7 +136,7 @@ export const NewsFilterControls = ({
           >
             <SelectTrigger
               className={cn(
-                "w-full rounded-2xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50",
+                "w-full rounded-2xl border-white/60 bg-white/60 backdrop-blur-xl dark:border-white/10 dark:bg-white/5",
                 disabled && "opacity-60"
               )}
               aria-disabled={disabled}
@@ -167,8 +167,8 @@ export const NewsFilterControls = ({
               className={cn(
                 "px-4 py-3 rounded-xl text-sm font-medium text-start transition-all duration-200 border",
                 selectedCategory === category
-                  ? "border-mySecondary bg-gradient-to-r from-mySecondary/10 to-mySecondary/5 text-mySecondary shadow-lg shadow-mySecondary/20"
-                  : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/30 text-slate-600 dark:text-slate-300 hover:border-mySecondary/50 hover:bg-slate-50 dark:hover:bg-slate-800/50",
+                  ? "border-[#112b3a] bg-[#112b3a] text-white shadow-lg"
+                  : "border-white/60 bg-white/55 text-[#405c6b] hover:border-cyan-300/50 hover:bg-white/80 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10",
                 disabled && "pointer-events-none opacity-60"
               )}
               aria-pressed={selectedCategory === category}

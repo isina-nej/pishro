@@ -23,7 +23,7 @@ const CertificatesGallery = ({ certificates }: CertificatesGalleryProps) => {
 
   return (
     <>
-      <div ref={ref} className="bg-gradient-to-b from-white to-slate-50 py-20 dark:from-bodyBg dark:to-darkBgHidden">
+      <div ref={ref} className="py-20">
         <div className="container-md">
           {/* Header */}
           <motion.div

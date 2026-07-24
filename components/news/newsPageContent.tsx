@@ -85,7 +85,7 @@ const NewsPageContent = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
-              className="sticky top-28 rounded-3xl border border-slate-200/50 dark:border-borderColor/50 bg-white dark:bg-cardBg p-6 sm:p-8 shadow-lg dark:shadow-slate-900/30 backdrop-blur"
+              className="public-page-panel sticky top-28 rounded-[2rem] p-6 sm:p-8"
             >
               <NewsFilterControls
                 categories={categories}
@@ -112,7 +112,7 @@ const NewsPageContent = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="rounded-3xl border border-slate-200/50 dark:border-borderColor/50 bg-white dark:bg-cardBg p-6 sm:p-8 shadow-lg dark:shadow-slate-900/30 backdrop-blur"
+              className="public-page-panel rounded-[2rem] p-6 sm:p-8"
             >
               <div className="flex flex-col gap-4 sm:gap-6">
                 <div className="flex items-start justify-between gap-4">
@@ -178,7 +178,7 @@ const NewsPageContent = () => {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.4 }}
-                className="rounded-3xl border border-slate-200/50 dark:border-borderColor/50 bg-white dark:bg-cardBg p-12 sm:p-16 shadow-lg dark:shadow-slate-900/30"
+                className="public-page-panel rounded-[2rem] p-12 sm:p-16"
               >
                 <div className="flex min-h-[320px] flex-col items-center justify-center gap-6 text-center">
                   <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">

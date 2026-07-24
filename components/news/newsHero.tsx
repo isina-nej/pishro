@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Newspaper, Star, Eye, TrendingUp, ArrowLeft } from "lucide-react";
+import { Newspaper, Star, Eye, TrendingUp } from "lucide-react";
 import Image from "next/image";
 
 interface NewsHeroProps {
@@ -102,7 +102,7 @@ export const NewsHero = ({ stats }: NewsHeroProps) => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-12 space-y-6 lg:mb-16"
+          className="mb-12 max-w-4xl space-y-6 rounded-[2rem] border border-white/15 bg-[#091a28]/45 p-7 shadow-2xl backdrop-blur-2xl sm:p-9 lg:mb-16"
         >
           {/* Badge */}
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
@@ -154,7 +154,7 @@ export const NewsHero = ({ stats }: NewsHeroProps) => {
               key={item.label}
               variants={itemVariants}
               whileHover={{ y: -5 }}
-              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 to-white/5 px-6 py-5 backdrop-blur-xl transition-all duration-300 hover:border-white/20 hover:from-white/15 hover:to-white/10"
+              className="group relative overflow-hidden rounded-3xl border border-white/15 bg-[#091a28]/45 px-6 py-5 shadow-xl backdrop-blur-2xl transition-all duration-300 hover:-translate-y-1 hover:border-white/25 hover:bg-white/15"
             >
               {/* Background gradient effect */}
               <div className={`absolute -inset-1 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-100 blur transition-opacity duration-300 -z-10`} />

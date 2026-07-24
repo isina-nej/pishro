@@ -22,21 +22,6 @@ const ResumeSection = ({ resumeItems }: ResumeSectionProps) => {
     return IconComponent || LuIcons.LuTarget;
   };
 
-  // Background color mapping - prevents Tailwind purging
-  const bgColorMap: Record<string, string> = {
-    "bg-blue-50": "bg-blue-50",
-    "bg-green-50": "bg-green-50",
-    "bg-orange-50 dark:bg-orange-900": "bg-orange-50 dark:bg-orange-900",
-    "bg-pink-50": "bg-pink-50",
-    "bg-purple-50": "bg-purple-50",
-    "bg-red-50": "bg-red-50",
-    "bg-yellow-50": "bg-yellow-50",
-    "bg-indigo-50": "bg-indigo-50",
-    "bg-teal-50": "bg-teal-50",
-    "bg-cyan-50": "bg-cyan-50",
-    "bg-gray-50 dark:bg-darkBgHidden": "bg-gray-50 dark:bg-darkBgHidden",
-  };
-
   // Gradient color mapping - prevents Tailwind purging
   const gradientColorMap: Record<string, string> = {
     "from-blue-500 to-purple-500": "from-blue-500 to-purple-500",
@@ -77,7 +62,6 @@ const ResumeSection = ({ resumeItems }: ResumeSectionProps) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {resumeItems.map((item, index) => {
           const IconComponent = getIconComponent(item.icon);
-          const bgColor = bgColorMap[item.bgColor || ""] || "bg-gray-50 dark:bg-darkBgHidden";
           const gradientColor = gradientColorMap[item.color || ""] || "from-blue-500 to-purple-500";
 
           return (
@@ -86,7 +70,7 @@ const ResumeSection = ({ resumeItems }: ResumeSectionProps) => {
               initial={{ opacity: 0, y: 50 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className={`${bgColor} rounded-3xl border border-slate-200 p-8 shadow-sm shadow-slate-200/60 transition-all duration-300 hover:shadow-2xl dark:border-borderColor dark:shadow-none group relative overflow-hidden`}
+              className={`public-page-card group relative overflow-hidden rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl`}
             >
               {/* Gradient Background */}
               <div

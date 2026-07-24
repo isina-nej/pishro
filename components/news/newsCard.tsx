@@ -65,7 +65,7 @@ const NewsCard = ({ data }: NewsCardProps) => {
       className="group relative overflow-hidden rounded-3xl"
     >
       <Link
-        className="flex flex-col h-full bg-white dark:bg-cardBg border border-slate-200/50 dark:border-borderColor/50 rounded-3xl overflow-hidden shadow-lg dark:shadow-slate-900/30 hover:shadow-2xl hover:shadow-mySecondary/20 transition-all duration-500"
+        className="public-page-card flex h-full flex-col overflow-hidden rounded-3xl transition-all duration-500 hover:shadow-2xl"
         href={`/news/${data.slug}`}
       >
         {/* Image Container */}

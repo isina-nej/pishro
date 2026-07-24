@@ -37,7 +37,7 @@ const CtaSection = ({
         initial={{ opacity: 0, y: 50 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.6 }}
-        className="relative bg-gradient-to-br from-myPrimary via-mySecondary to-myPrimary rounded-3xl overflow-hidden shadow-2xl"
+        className="relative overflow-hidden rounded-[2.5rem] border border-white/15 bg-gradient-to-br from-[#102d42] via-[#16384e] to-[#0a2233] shadow-2xl"
       >
         {/* Animated Background */}
         <div className="absolute inset-0 opacity-10">

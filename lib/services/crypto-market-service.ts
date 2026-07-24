@@ -118,7 +118,9 @@ function selectAssets<T extends { id: string; symbol: string }>(assets: T[], ids
   if (!ids.length && !symbols.length) return assets.slice(0, limit);
   const idSet = normalizeIdSet(ids);
   const symbolSet = normalizeSymbolSet(symbols);
-  return assets.filter((asset) => idSet.has(asset.id.toLowerCase()) || symbolSet.has(asset.symbol.toUpperCase())).slice(0, limit);
+  const matched = assets.filter((asset) => idSet.has(asset.id.toLowerCase()) || symbolSet.has(asset.symbol.toUpperCase()));
+  // If the requester explicitly asked for an empty list, don't fallback to the limit cut.
+  return matched.length ? matched.slice(0, limit) : matched;
 }
 
 function imageForAsset(item: { image?: string | null }): string | null {
@@ -126,9 +128,11 @@ function imageForAsset(item: { image?: string | null }): string | null {
 }
 
 function assetRequestOptions(options?: { ids?: string[]; symbols?: string[]; limit?: number }) {
+  const ids = options?.ids || [];
+  const symbols = options?.symbols || [];
   return {
-    ids: options?.ids || DEFAULT_ASSET_IDS,
-    symbols: options?.symbols || DEFAULT_SYMBOLS,
+    ids,
+    symbols,
     limit: options?.limit || DEFAULT_MARKET_LIMIT,
   };
 }

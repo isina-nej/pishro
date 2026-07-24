@@ -347,7 +347,8 @@ html.dark
 }
 
 /* Home landing visual system */
-.home-shell {
+.home-shell,
+.public-page-shell {
   --home-ink: #112b3a;
   --home-muted: #637987;
   --home-navy: #0b2234;
@@ -361,12 +362,62 @@ html.dark
   background: #eef5f8;
 }
 
-.dark .home-shell {
+.dark .home-shell,
+.dark .public-page-shell {
   --home-ink: #eef8fb;
   --home-muted: #91a7b4;
   --home-glass: rgba(13, 36, 52, 0.64);
   --home-glass-border: rgba(255, 255, 255, 0.1);
   background: #071520;
+}
+
+.public-page-shell {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  color: var(--home-ink);
+  background:
+    radial-gradient(circle at 92% 8%, rgba(91, 207, 224, 0.15), transparent 28rem),
+    radial-gradient(circle at 4% 58%, rgba(246, 185, 74, 0.1), transparent 25rem),
+    linear-gradient(180deg, #eaf3f7 0%, #f8fafb 52%, #edf5f7 100%);
+}
+
+.dark .public-page-shell {
+  background:
+    radial-gradient(circle at 92% 8%, rgba(52, 182, 202, 0.11), transparent 28rem),
+    radial-gradient(circle at 4% 58%, rgba(246, 185, 74, 0.07), transparent 25rem),
+    linear-gradient(180deg, #071520 0%, #0b1d2a 52%, #081722 100%);
+}
+
+.public-page-panel {
+  border: 1px solid var(--home-glass-border);
+  background: var(--home-glass);
+  box-shadow: 0 28px 80px rgba(24, 60, 78, 0.12);
+  backdrop-filter: blur(22px) saturate(130%);
+  -webkit-backdrop-filter: blur(22px) saturate(130%);
+}
+
+.dark .public-page-panel {
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.28);
+}
+
+.public-page-card {
+  border: 1px solid rgba(255, 255, 255, 0.58);
+  background: rgba(255, 255, 255, 0.56);
+  box-shadow: 0 16px 50px rgba(24, 60, 78, 0.1);
+  backdrop-filter: blur(16px) saturate(125%);
+  -webkit-backdrop-filter: blur(16px) saturate(125%);
+}
+
+.dark .public-page-card {
+  border-color: rgba(255, 255, 255, 0.09);
+  background: rgba(16, 42, 59, 0.58);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.22);
+}
+
+.public-page-shell :where(a, button, input, [role="button"]):focus-visible {
+  outline: 2px solid var(--home-cyan);
+  outline-offset: 3px;
 }
 
 .home-hero-stage {

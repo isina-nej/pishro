@@ -160,7 +160,7 @@ export default async function AllCoursesPage() {
   const categoriesWithCourses = await getCoursesGroupedByCategory();
 
   return (
-    <main className="w-full min-h-screen">
+    <main className="public-page-shell w-full">
       <Suspense
         fallback={
           <div className="h-screen flex items-center justify-center">

@@ -288,7 +288,7 @@ const InvestmentModelsSection = () => {
   // Loading state
   if (isLoading) {
     return (
-      <section className="w-full bg-gradient-to-br from-slate-50 via-white to-slate-100 py-16 md:py-24 mt-24 dark:from-bodyBg dark:via-cardBg dark:to-bodyBg">
+      <section className="mt-24 w-full py-16 md:py-24">
         <div className="container-xl">
           <div className="text-center">در حال بارگذاری...</div>
         </div>
@@ -297,7 +297,7 @@ const InvestmentModelsSection = () => {
   }
 
   return (
-    <section className="w-full bg-gradient-to-br from-slate-50 via-white to-slate-100 py-16 md:py-24 mt-24 dark:from-bodyBg dark:via-cardBg dark:to-bodyBg">
+    <section className="mt-24 w-full py-16 md:py-24">
       <div className="container-xl">
         {/* Models Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
@@ -306,7 +306,7 @@ const InvestmentModelsSection = () => {
             return (
               <div
                 key={model.id}
-                className="flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-200/70 transition-shadow duration-300 hover:shadow-2xl dark:border-borderColor dark:bg-cardBg dark:shadow-none"
+                className="public-page-card flex flex-col overflow-hidden rounded-3xl transition duration-300 hover:-translate-y-1 hover:shadow-2xl"
               >
                 {/* Header با gradient - با ارتفاع یکسان */}
                 <div

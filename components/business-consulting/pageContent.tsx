@@ -9,7 +9,7 @@ const BusinessConsultingContent = ({
   businessConsultingData,
 }: BusinessConsultingContentProps) => {
   return (
-    <div>
+    <div className="public-page-shell">
       <BusinessLanding businessConsultingData={businessConsultingData} />
     </div>
   );

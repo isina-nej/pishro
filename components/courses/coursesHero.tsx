@@ -33,7 +33,7 @@ export const CoursesHero = ({ stats }: CoursesHeroProps) => {
       <div className="absolute -right-16 bottom-10 h-72 w-72 rounded-full bg-indigo-500/20 blur-3xl" />
 
       <div className="container-xl relative z-10 flex flex-col gap-10">
-        <div className="max-w-3xl space-y-6">
+        <div className="max-w-3xl space-y-6 rounded-[2rem] border border-white/15 bg-[#091a28]/45 p-7 shadow-2xl backdrop-blur-2xl sm:p-9">
           <span className="inline-flex items-center rounded-full border border-white/25 bg-white/10 px-4 py-1 text-sm font-medium text-white shadow-sm backdrop-blur">
             دوره‌های آموزشی پیشرو
           </span>
@@ -75,7 +75,7 @@ export const CoursesHero = ({ stats }: CoursesHeroProps) => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
               viewport={{ once: true }}
-              className="flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 px-5 py-4 text-white shadow-lg backdrop-blur"
+              className="flex items-center gap-3 rounded-3xl border border-white/15 bg-[#091a28]/45 px-5 py-4 text-white shadow-xl backdrop-blur-2xl transition hover:-translate-y-1 hover:bg-white/15"
             >
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white">
                 {item.icon}

@@ -45,7 +45,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
             initial={{ opacity: 0, y: 50 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: index * 0.2 }}
-            className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-200/70 transition-all duration-300 hover:shadow-2xl dark:border-borderColor dark:bg-cardBg dark:shadow-none group"
+            className="public-page-card group overflow-hidden rounded-3xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
           >
             {/* Image Section */}
             {member.image && (

@@ -70,14 +70,16 @@ export async function GET(req: NextRequest) {
     try {
       fileStat = await stat(resolvedPath);
     } catch {
-      // Old course records sometimes point to a storage URL without a file.
-      // Return a real fallback image instead of a noisy broken-image request.
+      // Seed records reference generated image paths; return a real local
+      // placeholder until those generated assets are uploaded.
       if (pathParam.startsWith('courses/')) {
         resolvedPath = join(process.cwd(), 'public/images/courses/placeholder.png');
-        fileStat = await stat(resolvedPath);
+      } else if (pathParam.startsWith('news/')) {
+        resolvedPath = join(process.cwd(), 'public/images/news/post-1.jpg');
       } else {
         throw new Error('File not found');
       }
+      fileStat = await stat(resolvedPath);
     }
 
     if (!fileStat.isFile()) {

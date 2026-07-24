@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true, // Skip ESLint during build - unused vars in some components
   },
   images: {
+    qualities: [75, 85, 90, 100],
     remotePatterns: [
       {
         protocol: "https",

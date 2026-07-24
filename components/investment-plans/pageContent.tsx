@@ -17,7 +17,7 @@ const InvestmentPlansPageContent = ({
   investmentPlansData,
 }: InvestmentPlansPageContentProps) => {
   return (
-    <div className="bg-slate-50 text-slate-900 dark:bg-bodyBg dark:text-textPrimary">
+    <div className="public-page-shell text-slate-900 dark:text-textPrimary">
       {/* Hero Section - New Design */}
       <InvestmentPlansHero investmentPlansData={investmentPlansData} />
 

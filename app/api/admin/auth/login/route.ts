@@ -1,29 +1,3 @@
-/**
- * Admin Login API Route
- * POST /api/admin/auth/login
- * 
- * Request body (one of email or phone):
- * {
- *   "email": "admin@example.com",
- *   "password": "password123",
- *   "rememberMe": false
- * }
- * OR
- * {
- *   "phone": "09123456789",
- *   "password": "password123",
- *   "rememberMe": false
- * }
- * 
- * Response:
- * {
- *   "user": { "id", "email", "phone", "name", "role" },
- *   "accessToken": "jwt-token",
- *   "refreshToken": "jwt-refresh-token",
- *   "expiresIn": 86400
- * }
- */
-
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateAdminUser, createAdminAccessToken, createAdminRefreshToken } from '@/lib/admin-auth';
 

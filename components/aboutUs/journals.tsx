@@ -48,7 +48,7 @@ const Journals = ({ news }: JournalsProps) => {
             initial={{ opacity: 0, y: 50 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5, delay: idx * 0.1 }}
-            className="bg-white dark:bg-cardBg rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 group border border-gray-100 dark:border-borderColor"
+            className="public-page-card group rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
           >
             {/* Icon Badge */}
             <div className="inline-flex bg-gradient-to-br from-myPrimary to-mySecondary text-white p-4 rounded-xl mb-6 group-hover:scale-110 transition-transform">
