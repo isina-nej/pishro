@@ -1,6 +1,7 @@
 import BusinessConsultingContent from "@/components/business-consulting/pageContent";
 import { Metadata } from "next";
 import { getBusinessConsultingData } from "@/lib/services/landing-service";
+import { businessConsultingFallback } from "@/lib/data/public-page-fallbacks";
 
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getBusinessConsultingData();
@@ -15,23 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const BusinessConsultingPage = async () => {
-  // Fetch business consulting page data
-  const businessConsultingData = await getBusinessConsultingData();
-
-  // If no data is available, show a fallback message
-  if (!businessConsultingData) {
-    return (
-      <div className="container-md py-20 text-center">
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-textPrimary mb-4">
-          صفحه مشاوره کسب و کار
-        </h1>
-        <p className="text-gray-600 dark:text-textSecondary">
-          اطلاعات صفحه مشاوره کسب و کار در حال حاضر در دسترس نیست. لطفاً بعداً
-          مراجعه کنید.
-        </p>
-      </div>
-    );
-  }
+  const businessConsultingData = (await getBusinessConsultingData()) || businessConsultingFallback;
 
   return (
     <>

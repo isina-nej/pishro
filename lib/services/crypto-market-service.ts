@@ -8,8 +8,9 @@ import type {
 const DEFAULT_ASSET_IDS: string[] = [];
 const DEFAULT_SYMBOLS: string[] = [];
 const DEFAULT_MARKET_LIMIT = 150;
-const REQUEST_TIMEOUT_MS = 5_000;
+const REQUEST_TIMEOUT_MS = 12_000;
 const CACHE_TTL_MS = 30_000;
+const STALE_CACHE_TTL_MS = 10 * 60_000;
 
 type JsonRecord = Record<string, unknown>;
 
@@ -71,7 +72,8 @@ interface MarketSnapshot {
   providers: ProviderState;
 }
 
-let cachedSnapshot: { expiresAt: number; value: CryptoMarketResponse } | null = null;
+let cachedSnapshot: { expiresAt: number; staleUntil: number; value: CryptoMarketResponse } | null = null;
+let marketRequest: Promise<CryptoMarketResponse> | null = null;
 
 function numberOrNull(value: unknown): number | null {
   const parsed = typeof value === 'number' ? value : Number(value);
@@ -353,10 +355,8 @@ function applyBinancePrices(asset: CryptoMarketAsset, prices: Map<string, number
 }
 
 async function loadSnapshot(ids: string[], symbols: string[], limit: number): Promise<MarketSnapshot> {
-  const [coinGecko, coinPaprika] = await Promise.all([
-    loadCoinGecko(ids, symbols, limit),
-    loadCoinPaprika(ids, symbols, limit),
-  ]);
+  const coinGecko = await loadCoinGecko(ids, symbols, limit);
+  const coinPaprika = coinGecko ? null : await loadCoinPaprika(ids, symbols, limit);
   const market = coinGecko || coinPaprika;
   if (!market) throw new Error('No crypto market provider is available');
 
@@ -379,19 +379,41 @@ async function loadSnapshot(ids: string[], symbols: string[], limit: number): Pr
     providers: {
       coingecko: coinGecko ? 'live' : 'unavailable',
       binance: binancePrices.size ? 'live' : 'standby',
-      coinpaprika: coinGecko ? (coinPaprika ? 'standby' : 'unavailable') : 'live',
+      coinpaprika: coinGecko ? 'standby' : 'live',
       nobitex: nobitex ? 'live' : 'unavailable',
     },
   };
 }
 
-export async function getCryptoMarketData(options?: { ids?: string[]; symbols?: string[]; limit?: number; forceRefresh?: boolean }): Promise<CryptoMarketResponse> {
-  if (!options?.forceRefresh && cachedSnapshot && cachedSnapshot.expiresAt > Date.now()) return cachedSnapshot.value;
+async function refreshCryptoMarketData(options?: { ids?: string[]; symbols?: string[]; limit?: number }): Promise<CryptoMarketResponse> {
   const { ids, symbols, limit } = assetRequestOptions(options);
   const snapshot = await loadSnapshot(ids, symbols, limit);
   const value: CryptoMarketResponse = { generatedAt: new Date().toISOString(), currency: 'USD', ...snapshot };
-  cachedSnapshot = { expiresAt: Date.now() + CACHE_TTL_MS, value };
+  const now = Date.now();
+  cachedSnapshot = { expiresAt: now + CACHE_TTL_MS, staleUntil: now + STALE_CACHE_TTL_MS, value };
   return value;
+}
+
+export async function getCryptoMarketData(options?: { ids?: string[]; symbols?: string[]; limit?: number; forceRefresh?: boolean }): Promise<CryptoMarketResponse> {
+  const now = Date.now();
+  if (!options?.forceRefresh && cachedSnapshot && cachedSnapshot.expiresAt > now) return cachedSnapshot.value;
+
+  // Coalesce the two initial client fetches and periodic refreshes into one upstream request.
+  if (!marketRequest) {
+    marketRequest = refreshCryptoMarketData(options).finally(() => {
+      marketRequest = null;
+    });
+  }
+
+  try {
+    return await marketRequest;
+  } catch (error) {
+    if (cachedSnapshot && cachedSnapshot.staleUntil > now) {
+      console.warn('[crypto] Serving stale market cache after provider failure');
+      return cachedSnapshot.value;
+    }
+    throw error;
+  }
 }
 
 export function parseCryptoMarketQuery(searchParams: URLSearchParams) {
