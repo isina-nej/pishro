@@ -428,7 +428,8 @@ html.dark
 .home-ambient-stage {
   position: relative;
   z-index: 1;
-  overflow: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
   background:
     radial-gradient(circle at 90% 8%, rgba(91, 207, 224, 0.18), transparent 28rem),
     radial-gradient(circle at 4% 47%, rgba(246, 185, 74, 0.13), transparent 25rem),

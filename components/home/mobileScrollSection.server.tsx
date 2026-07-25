@@ -10,7 +10,7 @@ export default async function MobileScrollSectionServer() {
   // Transform steps data for components
   const transformedSteps = steps.map((step) => ({
     id: step.stepNumber,
-    text: step.title,
+    text: step.description || step.title,
     imgCover: step.coverImageUrl || "/images/home/mobile-scroll/mobile.webp",
     img: step.imageUrl || "/images/home/mobile-scroll/in-mobile-1.svg",
     gradient:

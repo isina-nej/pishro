@@ -36,7 +36,10 @@ export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
           modules={[Pagination]}
           spaceBetween={24}
           slidesPerView={1}
+          slidesPerGroup={1}
           pagination={{ clickable: true }}
+          allowTouchMove
+          simulateTouch
           className="relative z-10 !pb-16 !w-full"
           style={
             {

@@ -26,22 +26,45 @@ export function DesktopScroller({
     const node = sectionRef.current;
     if (!node) return;
 
-    let lastScrollTop = window.scrollY;
+    const desktopQuery = window.matchMedia("(min-width: 1024px)");
+
     const handleScroll = () => {
-      const scrollTop = window.scrollY - node.offsetTop;
-      const stepHeight = 500;
+      if (!desktopQuery.matches) return;
+
+      const rect = node.getBoundingClientRect();
+
+      // 0 when the top of this section reaches the top of the viewport
+      const scrolledPastTop = Math.max(0, -rect.top);
+
+      // Make the entire extra height of the section drive the steps.
+      // We gave the section extra height (steps.length * 100vh), so use that as range.
+      const totalExtraHeight = Math.max(1, rect.height - window.innerHeight);
+
+      const progress = Math.min(0.999, scrolledPastTop / totalExtraHeight);
+
       const newIndex = Math.min(
         steps.length - 1,
-        Math.max(0, Math.floor(scrollTop / stepHeight))
+        Math.floor(progress * steps.length)
       );
 
-      setDirection(window.scrollY > lastScrollTop ? "down" : "up");
-      lastScrollTop = window.scrollY;
-      setIndex(newIndex);
+      if (newIndex !== index) {
+        const goingDown = newIndex > index;
+        setDirection(goingDown ? "down" : "up");
+        setIndex(newIndex);
+      }
     };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [steps]);
+
+    // Run once after mount
+    requestAnimationFrame(handleScroll);
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
+  }, [steps, index]);
 
   const variants = {
     enter: (dir: "up" | "down") => ({
@@ -55,21 +78,21 @@ export function DesktopScroller({
   return (
     <section
       ref={sectionRef}
-      style={{ height: `calc(${steps.length * 501}px + 100vh)` }}
-      className="relative w-full mt-20"
+      style={{ height: `${steps.length * 100}vh` }}
+      className="relative mt-20 w-full"
     >
-      <div className="sticky top-0 h-screen flex items-center justify-center container-xl py-8">
-        <div className="absolute top-[6%] z-10 flex w-full flex-col items-start justify-start px-40">
-          <span className="mb-3 rounded-full border border-[#214254]/10 bg-white/50 px-4 py-2 text-xs font-bold text-[#214254] backdrop-blur-xl dark:border-white/10 dark:bg-white/5 dark:text-cyan-100">تجربه یکپارچه مالی</span>
-          <h4 className="mb-2 text-6xl font-black tracking-tight text-[#112b3a] dark:text-white">سامانه پیشرو</h4>
-          <p className="text-base text-gray-500 dark:text-textSecondary">
+      <div className="sticky top-0 grid h-screen grid-rows-[auto_minmax(0,1fr)] gap-5 py-6 container-xl">
+        <div className="relative z-10 flex w-full flex-col items-start justify-start px-8 xl:px-20">
+          <span className="mb-2 rounded-full border border-[#214254]/10 bg-white/50 px-4 py-2 text-xs font-bold text-[#214254] backdrop-blur-xl dark:border-white/10 dark:bg-white/5 dark:text-cyan-100">تجربه یکپارچه مالی</span>
+          <h4 className="mb-1 text-4xl font-black tracking-tight text-[#112b3a] dark:text-white xl:text-5xl">سامانه پیشرو</h4>
+          <p className="text-sm text-gray-500 dark:text-textSecondary xl:text-base">
             سامانه <span className="text-myPrimary">پیشرو</span>، مشاور و همراه
             مالی شما در مسیر پیشرفت
           </p>
         </div>
 
-        <div className="w-full h-[700px] overflow-hidden flex flex-col justify-end mb-10">
-          <div className="home-glass-panel relative h-[74vh] w-full overflow-hidden rounded-[40px]">
+        <div className="min-h-0 w-full overflow-hidden pb-4">
+          <div className="home-glass-panel relative h-full min-h-[520px] w-full overflow-hidden rounded-[40px]">
             <div className="absolute inset-0 overflow-hidden rounded-[38px] bg-gradient-to-br from-[#12344b]/95 via-[#183c53]/90 to-[#0d2435]/95">
               <div className="absolute -right-32 -top-36 h-96 w-96 rounded-full bg-cyan-300/15 blur-3xl" />
               <div className="absolute -bottom-28 left-1/4 h-80 w-80 rounded-full bg-amber-300/10 blur-3xl" />
@@ -78,10 +101,10 @@ export function DesktopScroller({
 
             <div className="w-full h-full flex items-center justify-center">
               {/* right section */}
-              <div className="flex-1 flex flex-col justify-between h-full pt-28 pb-20 pr-12 pl-8 z-10">
+              <div className="z-10 flex h-full flex-1 flex-col justify-between py-10 pr-12 pl-8 xl:py-14">
                 <div>
-                  <h4 className="text-6xl font-semibold text-white mb-12">
-                    از مزایای <span className="">پیشرو</span> بودن
+                  <h4 className="mb-8 text-4xl font-semibold text-white xl:text-5xl">
+                    از مزایای پیشرو بودن
                   </h4>
 
                   <ul className="space-y-4">
@@ -130,7 +153,7 @@ export function DesktopScroller({
               </div>
 
               {/* left section */}
-              <div className="relative w-[500px] flex justify-center pl-12">
+              <div className="relative flex h-full w-[42%] min-w-[390px] justify-center pl-8">
                 <AnimatePresence mode="popLayout" custom={direction}>
                   <motion.div
                     key={steps[index].id}
@@ -139,7 +162,7 @@ export function DesktopScroller({
                     initial="enter"
                     animate="center"
                     exit="exit"
-                    className="relative w-[435px] aspect-[500/980] -mb-[80px]"
+                    className="relative h-[115%] max-h-[720px] w-full max-w-[435px] -mb-[80px]"
                   >
                     {/* mobile frame (background layer) */}
                     <Image
