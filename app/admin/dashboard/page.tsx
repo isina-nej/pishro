@@ -11,8 +11,10 @@ import {
   FileText,
   GraduationCap,
   ListChecks,
+  Percent,
   ShoppingCart,
   Sparkles,
+  TrendingUp,
   Users,
 } from 'lucide-react';
 import { AdminLoadingState, AdminPageShell } from '@/components/admin/AdminPageShell';
@@ -21,6 +23,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { api } from '@/lib/api-client';
 import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
+import { useCrmPipelineFunnel, useLeadConversionStats } from '@/lib/hooks/useCrmAnalytics';
 import type { DashboardStats, StatWithGrowth } from '@/types/dashboard';
 
 const numberFormatter = new Intl.NumberFormat('fa-IR');
@@ -87,6 +90,8 @@ export default function AdminDashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [statsLoading, setStatsLoading] = useState(true);
   const [statsError, setStatsError] = useState<string | null>(null);
+  const { data: pipelineFunnel, isLoading: isPipelineLoading } = useCrmPipelineFunnel();
+  const { data: leadConversion, isLoading: isLeadConversionLoading } = useLeadConversionStats('monthly');
 
   useEffect(() => {
     const loadStats = async () => {
@@ -209,6 +214,59 @@ export default function AdminDashboardPage() {
                 </div>
               </div>
             ))}
+          </div>
+        </Card>
+      </div>
+
+      <div className="grid gap-3 sm:grid-cols-2">
+        <Card className="min-w-0 p-4">
+          <div className="flex h-full items-start justify-between gap-3">
+            <div className="rounded-xl bg-muted p-2.5 text-primary">
+              <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />
+            </div>
+            <div className="min-w-0 flex-1 space-y-2 text-right">
+              <p className="text-xs text-muted-foreground sm:text-sm">قیف فروش CRM</p>
+              {isPipelineLoading ? (
+                <p className="text-sm text-muted-foreground">در حال دریافت...</p>
+              ) : (
+                <p className="truncate text-lg font-bold text-foreground sm:text-xl">
+                  {numberFormatter.format(
+                    (pipelineFunnel ?? []).reduce((sum, stage) => sum + stage.dealCount, 0)
+                  )}{' '}
+                  معامله فعال
+                </p>
+              )}
+              <Button asChild variant="outline" size="sm" className="w-full justify-between">
+                <Link href="/admin/reports">
+                  مشاهده گزارش کامل
+                  <ArrowLeft className="h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="min-w-0 p-4">
+          <div className="flex h-full items-start justify-between gap-3">
+            <div className="rounded-xl bg-muted p-2.5 text-primary">
+              <Percent className="h-4 w-4 sm:h-5 sm:w-5" />
+            </div>
+            <div className="min-w-0 flex-1 space-y-2 text-right">
+              <p className="text-xs text-muted-foreground sm:text-sm">نرخ تبدیل سرنخ‌ها (ماه اخیر)</p>
+              {isLeadConversionLoading ? (
+                <p className="text-sm text-muted-foreground">در حال دریافت...</p>
+              ) : (
+                <p className="truncate text-lg font-bold text-foreground sm:text-xl">
+                  {numberFormatter.format(leadConversion?.conversionRate ?? 0)}٪
+                </p>
+              )}
+              <Button asChild variant="outline" size="sm" className="w-full justify-between">
+                <Link href="/admin/reports">
+                  مشاهده گزارش کامل
+                  <ArrowLeft className="h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
           </div>
         </Card>
       </div>
