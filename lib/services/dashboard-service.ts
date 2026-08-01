@@ -371,3 +371,198 @@ export function getCachedData<T>(key: string): T | null {
 export function setCachedData(key: string, data: unknown): void {
   cache.set(key, { data, timestamp: Date.now() });
 }
+
+/* ------------------------------------------------------------------ */
+/* CRM Analytics                                                       */
+/* آمار تحلیلی مربوط به بخش CRM (قیف فروش، سرنخ‌ها، تیکت‌های پشتیبانی) */
+/* ------------------------------------------------------------------ */
+
+/**
+ * یک مرحله از قیف فروش به همراه تعداد و مبلغ معاملات آن مرحله
+ */
+export interface CrmPipelineFunnelStage {
+  stageId: string;
+  name: string;
+  order: number;
+  isWon: boolean;
+  isLost: boolean;
+  dealCount: number;
+  totalAmount: number;
+}
+
+export type CrmPipelineFunnel = CrmPipelineFunnelStage[];
+
+/**
+ * دوره زمانی برای آمار تبدیل سرنخ‌ها
+ */
+export type CrmLeadConversionPeriod = "monthly" | "weekly";
+
+export interface CrmLeadStatusCount {
+  status: string;
+  count: number;
+}
+
+export interface CrmLeadConversionStats {
+  period: CrmLeadConversionPeriod;
+  statusCounts: CrmLeadStatusCount[];
+  total: number;
+  convertedCount: number;
+  /** درصد تبدیل سرنخ به مشتری (0 تا 100) */
+  conversionRate: number;
+}
+
+export interface CrmTicketStatusCount {
+  status: string;
+  count: number;
+}
+
+export interface CrmTicketStats {
+  statusCounts: CrmTicketStatusCount[];
+  total: number;
+  resolvedCount: number;
+  /** میانگین زمان حل تیکت بر حسب ساعت (فقط تیکت‌های دارای resolvedAt) */
+  avgResolutionHours: number;
+}
+
+/**
+ * دریافت قیف فروش: تعداد و مجموع مبلغ معاملات به تفکیک مرحله pipeline
+ * مرحله‌ها بر اساس فیلد order مرتب می‌شوند
+ */
+export async function getCrmPipelineFunnel(): Promise<CrmPipelineFunnel> {
+  const cacheKey = "crm-pipeline-funnel";
+  const cached = getCachedData<CrmPipelineFunnel>(cacheKey);
+  if (cached) return cached;
+
+  const [stages, dealAggregates] = await Promise.all([
+    prisma.pipelineStage.findMany({
+      orderBy: { order: "asc" },
+    }),
+    prisma.deal.groupBy({
+      by: ["stageId"],
+      _count: { _all: true },
+      _sum: { amount: true },
+    }),
+  ]);
+
+  const aggByStage = new Map(dealAggregates.map((agg) => [agg.stageId, agg]));
+
+  const result: CrmPipelineFunnel = stages.map((stage) => {
+    const agg = aggByStage.get(stage.id);
+    return {
+      stageId: stage.id,
+      name: stage.name,
+      order: stage.order,
+      isWon: stage.isWon,
+      isLost: stage.isLost,
+      dealCount: agg?._count._all ?? 0,
+      totalAmount: agg?._sum.amount ?? 0,
+    };
+  });
+
+  setCachedData(cacheKey, result);
+  return result;
+}
+
+/**
+ * دریافت آمار وضعیت سرنخ‌ها (Lead) به همراه نرخ تبدیل
+ * @param period بازه زمانی: monthly (30 روز اخیر) یا weekly (7 روز اخیر)
+ */
+export async function getLeadConversionStats(
+  period: CrmLeadConversionPeriod
+): Promise<CrmLeadConversionStats> {
+  const cacheKey = `crm-lead-conversion-${period}`;
+  const cached = getCachedData<CrmLeadConversionStats>(cacheKey);
+  if (cached) return cached;
+
+  const now = new Date();
+  const startDate = new Date(now);
+  if (period === "weekly") {
+    startDate.setDate(now.getDate() - 7);
+  } else {
+    startDate.setMonth(now.getMonth() - 1);
+  }
+
+  const statusGroups = await prisma.lead.groupBy({
+    by: ["status"],
+    _count: { _all: true },
+    where: { createdAt: { gte: startDate } },
+  });
+
+  const statusCounts: CrmLeadStatusCount[] = statusGroups.map((group) => ({
+    status: group.status,
+    count: group._count._all,
+  }));
+
+  const total = statusCounts.reduce((sum, item) => sum + item.count, 0);
+  const convertedCount =
+    statusCounts.find((item) => item.status === "CONVERTED")?.count ?? 0;
+  const conversionRate =
+    total > 0 ? Number(((convertedCount / total) * 100).toFixed(1)) : 0;
+
+  const result: CrmLeadConversionStats = {
+    period,
+    statusCounts,
+    total,
+    convertedCount,
+    conversionRate,
+  };
+
+  setCachedData(cacheKey, result);
+  return result;
+}
+
+/**
+ * دریافت آمار تیکت‌های پشتیبانی: توزیع وضعیت‌ها و میانگین زمان حل تیکت
+ */
+export async function getTicketStats(): Promise<CrmTicketStats> {
+  const cacheKey = "crm-ticket-stats";
+  const cached = getCachedData<CrmTicketStats>(cacheKey);
+  if (cached) return cached;
+
+  const [statusGroups, resolvedTickets] = await Promise.all([
+    prisma.supportTicket.groupBy({
+      by: ["status"],
+      _count: { _all: true },
+    }),
+    prisma.supportTicket.findMany({
+      where: { resolvedAt: { not: null } },
+      select: { createdAt: true, resolvedAt: true },
+    }),
+  ]);
+
+  const statusCounts: CrmTicketStatusCount[] = statusGroups.map((group) => ({
+    status: group.status,
+    count: group._count._all,
+  }));
+
+  const total = statusCounts.reduce((sum, item) => sum + item.count, 0);
+
+  // محاسبه میانگین زمان حل تیکت در جاوااسکریپت (نه با AVG در دیتابیس)
+  const resolutionHours = resolvedTickets
+    .filter((ticket): ticket is typeof ticket & { resolvedAt: Date } => ticket.resolvedAt !== null)
+    .map(
+      (ticket) =>
+        (ticket.resolvedAt.getTime() - ticket.createdAt.getTime()) /
+        (1000 * 60 * 60)
+    );
+
+  const avgResolutionHours =
+    resolutionHours.length > 0
+      ? Number(
+          (
+            resolutionHours.reduce((sum, hours) => sum + hours, 0) /
+            resolutionHours.length
+          ).toFixed(1)
+        )
+      : 0;
+
+  const result: CrmTicketStats = {
+    statusCounts,
+    total,
+    resolvedCount: resolutionHours.length,
+    avgResolutionHours,
+  };
+
+  setCachedData(cacheKey, result);
+  return result;
+}
