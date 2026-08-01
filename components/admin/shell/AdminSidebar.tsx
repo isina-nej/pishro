@@ -111,7 +111,10 @@ export default function AdminSidebar({ user, children, onLogout }: AdminSidebarP
                 return (
                   <div
                     key={item.key}
-                    className="flex cursor-not-allowed items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-muted-foreground/50"
+                    className={cn(
+                      'flex cursor-not-allowed items-center gap-3 rounded-xl px-3 py-2.5 text-muted-foreground/50',
+                      collapsed ? 'justify-center' : 'justify-between'
+                    )}
                     title="به‌زودی"
                   >
                     {!collapsed && <span className="text-sm font-medium">{item.label}</span>}
@@ -126,7 +129,8 @@ export default function AdminSidebar({ user, children, onLogout }: AdminSidebarP
                   href={item.href}
                   onClick={onNavigate}
                   className={cn(
-                    'flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 transition-colors',
+                    'flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors',
+                    collapsed ? 'justify-center' : 'justify-between',
                     active
                       ? 'bg-navActiveBg text-primary font-medium shadow-sm'
                       : 'text-foreground/80 hover:bg-accent hover:text-accent-foreground'
@@ -184,7 +188,10 @@ export default function AdminSidebar({ user, children, onLogout }: AdminSidebarP
           )}
           <button
             onClick={onLogout}
-            className="flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2 text-destructive transition hover:bg-destructive/10"
+            className={cn(
+              'flex w-full items-center gap-3 rounded-xl px-3 py-2 text-destructive transition hover:bg-destructive/10',
+              desktopOpen ? 'justify-between' : 'justify-center'
+            )}
           >
             {desktopOpen && <span className="text-sm font-medium">خروج</span>}
             <LogOut size={20} />

@@ -147,7 +147,7 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
   };
 
   return (
-    <div className="bg-white dark:bg-cardBg rounded-lg shadow p-6 mt-6 text-right">
+    <div className="bg-card rounded-lg shadow p-6 mt-6 text-right">
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium mb-2">نام دوره</label>
@@ -160,7 +160,7 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
             aria-label="نام دوره"
             className="w-full px-4 py-2 border rounded-lg"
           />
-          {errors.subject && <p className="text-red-500 text-sm">{errors.subject}</p>}
+          {errors.subject && <p className="text-destructive text-sm">{errors.subject}</p>}
         </div>
 
         <div className="grid grid-cols-2 gap-4">
@@ -226,7 +226,7 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
               if (f) handleThumbnail(f);
             }}
           />
-          {thumbnailTempPath && <p className="text-sm text-green-600">فایل آماده ذخیره</p>}
+          {thumbnailTempPath && <p className="text-sm text-success">فایل آماده ذخیره</p>}
         </div>
 
         <div>

@@ -68,7 +68,7 @@ export default function CourseLessonsTab({
   }
 
   return (
-    <div className="bg-white dark:bg-cardBg rounded-lg shadow p-6 mt-6">
+    <div className="bg-card rounded-lg shadow p-6 mt-6">
       <div className="flex justify-between items-center mb-6 flex-row-reverse">
         <h2 className="text-xl font-bold">درس‌ها</h2>
         <Button onClick={() => setIsModalOpen(true)} aria-label="ایجاد درس جدید">
@@ -77,7 +77,7 @@ export default function CourseLessonsTab({
       </div>
 
       {lessons.length === 0 ? (
-        <p className="text-gray-500 text-center py-8">درسی ایجاد نشده</p>
+        <p className="text-muted-foreground text-center py-8">درسی ایجاد نشده</p>
       ) : (
         <ReorderableTable
           items={lessons}

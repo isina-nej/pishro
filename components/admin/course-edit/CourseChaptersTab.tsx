@@ -12,7 +12,6 @@ import {
 import { Button } from '@/components/ui/button';
 import ReorderableTable from './ReorderableTable';
 import ChapterModal from './ChapterModal';
-import { toast } from 'react-hot-toast';
 
 interface Chapter {
   id: string;
@@ -69,14 +68,14 @@ export default function CourseChaptersTab({ courseId }: CourseChaptersTabProps) 
   }
 
   return (
-    <div className="bg-white dark:bg-cardBg rounded-lg shadow p-6 mt-6">
+    <div className="bg-card rounded-lg shadow p-6 mt-6">
       <div className="flex justify-between items-center mb-6 flex-row-reverse">
         <h2 className="text-xl font-bold">فصل‌ها</h2>
         <Button onClick={() => setIsModalOpen(true)}>فصل جدید</Button>
       </div>
 
       {chapters.length === 0 ? (
-        <p className="text-gray-500 text-center py-8">فصلی ایجاد نشده</p>
+        <p className="text-muted-foreground text-center py-8">فصلی ایجاد نشده</p>
       ) : (
         <ReorderableTable
           items={chapters}

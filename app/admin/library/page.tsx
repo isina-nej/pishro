@@ -1,9 +1,22 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
-import { Trash2, Edit2, Plus, Search, Loader2 } from 'lucide-react';
-import { AdminLoadingState } from '@/components/admin/AdminPageShell';
+import type { ColumnDef } from '@tanstack/react-table';
+import { Loader2, Plus } from 'lucide-react';
+import { AdminLoadingState, AdminEmptyState, AdminPageShell } from '@/components/admin/AdminPageShell';
+import { DataTable } from '@/components/admin/data-table/DataTable';
+import DataTableToolbar from '@/components/admin/data-table/DataTableToolbar';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { api } from '@/lib/api-client';
 import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
 
@@ -22,6 +35,23 @@ interface DigitalBook {
   updatedAt: string;
 }
 
+const CATEGORIES = [
+  'همه',
+  'بورس و سهام',
+  'ارز دیجیتال',
+  'سرمایه‌ گذاری',
+  'کسب و کار',
+  'اقتصاد',
+  'تحلیل تکنیکال',
+  'مدیریت مالی',
+];
+
+const STATUS_BADGE: Record<DigitalBook['bookStatus'], { label: string; variant: 'secondary' | 'success' | 'outline' }> = {
+  DRAFT: { label: 'پیشنویس', variant: 'secondary' },
+  PUBLISHED: { label: 'منتشر شده', variant: 'success' },
+  ARCHIVED: { label: 'آرشیو شده', variant: 'outline' },
+};
+
 export default function LibraryManagementPage() {
   const { user, isLoading: isLoadingUser } = useAdminAuth();
   const [books, setBooks] = useState<DigitalBook[]>([]);
@@ -32,17 +62,6 @@ export default function LibraryManagementPage() {
   const [filterCategory, setFilterCategory] = useState<string>('همه');
   const [filterStatus, setFilterStatus] = useState<string>('همه');
   const [actionLoading, setActionLoading] = useState<string | null>(null);
-
-  const categories = [
-    'همه',
-    'بورس و سهام',
-    'ارز دیجیتال',
-    'سرمایه‌ گذاری',
-    'کسب و کار',
-    'اقتصاد',
-    'تحلیل تکنیکال',
-    'مدیریت مالی',
-  ];
 
   // Load books
   useEffect(() => {
@@ -146,17 +165,139 @@ export default function LibraryManagementPage() {
     }
   };
 
-  const filteredBooks = books.filter((book) => {
-    const matchesSearch =
-      book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      book.author.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredBooks = useMemo(() => {
+    return books.filter((book) => {
+      const matchesSearch =
+        book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        book.author.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesCategory = filterCategory === 'همه' || book.category === filterCategory;
-    
-    const matchesStatus = filterStatus === 'همه' || book.bookStatus === filterStatus;
+      const matchesCategory = filterCategory === 'همه' || book.category === filterCategory;
 
-    return matchesSearch && matchesCategory && matchesStatus;
-  });
+      const matchesStatus = filterStatus === 'همه' || book.bookStatus === filterStatus;
+
+      return matchesSearch && matchesCategory && matchesStatus;
+    });
+  }, [books, searchTerm, filterCategory, filterStatus]);
+
+  const columns: ColumnDef<DigitalBook>[] = useMemo(
+    () => [
+      {
+        accessorKey: 'title',
+        header: 'عنوان',
+        cell: ({ row }) => (
+          <div className="flex items-center gap-2">
+            {row.original.isFeatured && (
+              <Badge variant="premium" className="text-[10px]">
+                منتخب
+              </Badge>
+            )}
+            <span className="line-clamp-2 font-medium text-foreground">{row.original.title}</span>
+          </div>
+        ),
+      },
+      {
+        accessorKey: 'author',
+        header: 'نویسنده',
+        cell: ({ row }) => <span className="text-muted-foreground">{row.original.author}</span>,
+      },
+      {
+        accessorKey: 'category',
+        header: 'دسته‌بندی',
+        cell: ({ row }) => <Badge variant="secondary">{row.original.category}</Badge>,
+      },
+      {
+        accessorKey: 'rating',
+        header: 'امتیاز',
+        cell: ({ row }) => (
+          <span>
+            <span className="font-medium">{row.original.rating.toFixed(1)}</span>
+            <span className="text-xs text-muted-foreground">/10</span>
+          </span>
+        ),
+      },
+      {
+        accessorKey: 'views',
+        header: 'بازدید',
+        cell: ({ row }) => row.original.views.toLocaleString('fa-IR'),
+      },
+      {
+        accessorKey: 'downloads',
+        header: 'دانلود',
+        cell: ({ row }) => row.original.downloads.toLocaleString('fa-IR'),
+      },
+      {
+        accessorKey: 'bookStatus',
+        header: 'وضعیت',
+        cell: ({ row }) => {
+          const status = STATUS_BADGE[row.original.bookStatus];
+          return <Badge variant={status.variant}>{status.label}</Badge>;
+        },
+      },
+      {
+        id: 'actions',
+        header: 'عملیات',
+        cell: ({ row }) => {
+          const book = row.original;
+          const isBusy = actionLoading === book.id;
+          return (
+            <div className="flex flex-wrap items-center gap-1.5">
+              {book.bookStatus === 'DRAFT' && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePublish(book.id)}
+                  disabled={isBusy}
+                  className="h-7 px-2 text-xs text-success"
+                >
+                  {isBusy ? <Loader2 className="h-3 w-3 animate-spin" /> : 'منتشر'}
+                </Button>
+              )}
+              {book.bookStatus === 'PUBLISHED' && (
+                <>
+                  <Link href={`/admin/library/${book.id}`}>
+                    <Button variant="outline" size="sm" className="h-7 px-2 text-xs">
+                      ویرایش
+                    </Button>
+                  </Link>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleArchive(book.id)}
+                    disabled={isBusy}
+                    className="h-7 px-2 text-xs"
+                  >
+                    {isBusy ? <Loader2 className="h-3 w-3 animate-spin" /> : 'آرشیو'}
+                  </Button>
+                </>
+              )}
+              {book.bookStatus === 'ARCHIVED' && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleRestore(book.id)}
+                  disabled={isBusy}
+                  className="h-7 px-2 text-xs"
+                >
+                  {isBusy ? <Loader2 className="h-3 w-3 animate-spin" /> : 'بیرون آوردن'}
+                </Button>
+              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => handleDelete(book.id, book.title)}
+                disabled={deleting === book.id}
+                className="h-7 px-2 text-xs text-destructive hover:bg-destructive/10 hover:text-destructive"
+              >
+                {deleting === book.id ? <Loader2 className="h-3 w-3 animate-spin" /> : 'حذف'}
+              </Button>
+            </div>
+          );
+        },
+      },
+    ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [actionLoading, deleting, books]
+  );
 
   if (isLoadingUser) {
     return <AdminLoadingState />;
@@ -167,260 +308,75 @@ export default function LibraryManagementPage() {
   }
 
   const content = (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 p-4 md:p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">
-              مدیریت کتابخانه دیجیتالی
-            </h1>
-            <Link
-              href="/admin/library/create"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition"
-            >
-              <Plus className="w-5 h-5" />
-              کتاب جدید
-            </Link>
-          </div>
-          <p className="text-slate-600 dark:text-slate-400">
-            تعداد کتاب‌ها: <span className="font-bold text-slate-900 dark:text-white">{books.length}</span>
-          </p>
-        </div>
-
-        {/* Controls */}
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-4 md:p-6 mb-6 space-y-4">
-          {/* Search */}
-          <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-700 rounded-lg px-4 py-2">
-            <Search className="w-5 h-5 text-slate-400" />
-            <input
-              type="text"
-              placeholder="جستجو در عنوان یا نویسنده..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-transparent outline-none text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400"
-            />
-          </div>
-
-          {/* Category Filter */}
-          <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-              دسته‌بندی:
-            </label>
-            <select
-              value={filterCategory}
-              onChange={(e) => setFilterCategory(e.target.value)}
-              className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white outline-none focus:border-blue-500"
-            >
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Status Filter */}
-          <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-              وضعیت:
-            </label>
-            <select
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-              className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white outline-none focus:border-blue-500"
-            >
-              <option value="همه">همه</option>
-              <option value="DRAFT">پیشنویس</option>
-              <option value="PUBLISHED">منتشر شده</option>
-              <option value="ARCHIVED">آرشیو شده</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Error Message */}
-        {error && (
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6 text-red-700 dark:text-red-300">
-            {error}
-          </div>
-        )}
-
-        {/* Loading */}
-        {isLoading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="text-center">
-              <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2 text-blue-600" />
-              <p className="text-slate-600 dark:text-slate-400">در حال بارگذاری...</p>
-            </div>
-          </div>
-        ) : filteredBooks.length === 0 ? (
-          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-8 text-center">
-            <p className="text-slate-600 dark:text-slate-400 mb-4">کتابی یافت نشد</p>
-            <Link
-              href="/admin/library/create"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition"
-            >
-              <Plus className="w-5 h-5" />
-              ایجاد کتاب اول
-            </Link>
-          </div>
-        ) : (
-          /* Books Table */
-          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="bg-slate-50 dark:bg-slate-700 border-b border-slate-200 dark:border-slate-600">
-                    <th className="px-4 py-3 text-right text-sm font-semibold text-slate-900 dark:text-white">
-                      عنوان
-                    </th>
-                    <th className="px-4 py-3 text-right text-sm font-semibold text-slate-900 dark:text-white">
-                      نویسنده
-                    </th>
-                    <th className="px-4 py-3 text-right text-sm font-semibold text-slate-900 dark:text-white">
-                      دسته‌بندی
-                    </th>
-                    <th className="px-4 py-3 text-center text-sm font-semibold text-slate-900 dark:text-white">
-                      امتیاز
-                    </th>
-                    <th className="px-4 py-3 text-center text-sm font-semibold text-slate-900 dark:text-white">
-                      بازدید
-                    </th>
-                    <th className="px-4 py-3 text-center text-sm font-semibold text-slate-900 dark:text-white">
-                      دانلود
-                    </th>
-                    <th className="px-4 py-3 text-center text-sm font-semibold text-slate-900 dark:text-white">
-                      وضعیت
-                    </th>
-                    <th className="px-4 py-3 text-center text-sm font-semibold text-slate-900 dark:text-white">
-                      عملیات
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
-                  {filteredBooks.map((book) => (
-                    <tr
-                      key={book.id}
-                      className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition"
-                    >
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          {book.isFeatured && (
-                            <span className="px-2 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 text-xs rounded font-medium">
-                              منتخب
-                            </span>
-                          )}
-                          <div className="text-sm font-medium text-slate-900 dark:text-white line-clamp-2">
-                            {book.title}
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300">
-                        {book.author}
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs rounded-full font-medium">
-                          {book.category}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-center text-sm text-slate-600 dark:text-slate-300">
-                        <span className="font-medium">{book.rating.toFixed(1)}</span>
-                        <span className="text-xs text-slate-500">/10</span>
-                      </td>
-                      <td className="px-4 py-3 text-center text-sm text-slate-600 dark:text-slate-300">
-                        {book.views.toLocaleString('fa-IR')}
-                      </td>
-                      <td className="px-4 py-3 text-center text-sm text-slate-600 dark:text-slate-300">
-                        {book.downloads.toLocaleString('fa-IR')}
-                      </td>
-                      <td className="px-4 py-3 text-center">
-                        {book.bookStatus === 'DRAFT' && (
-                          <span className="px-3 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 text-xs rounded-full font-medium">
-                            پیشنویس
-                          </span>
-                        )}
-                        {book.bookStatus === 'PUBLISHED' && (
-                          <span className="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs rounded-full font-medium">
-                            منتشر شده
-                          </span>
-                        )}
-                        {book.bookStatus === 'ARCHIVED' && (
-                          <span className="px-3 py-1 bg-gray-100 dark:bg-gray-900/30 text-gray-800 dark:text-gray-300 text-xs rounded-full font-medium">
-                            آرشیو شده
-                          </span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center justify-center gap-1 flex-wrap">
-                          {book.bookStatus === 'DRAFT' && (
-                            <button
-                              onClick={() => handlePublish(book.id)}
-                              disabled={actionLoading === book.id}
-                              className="px-2 py-1 bg-green-50 dark:bg-green-900/30 hover:bg-green-100 dark:hover:bg-green-900/50 text-green-700 dark:text-green-300 rounded text-xs transition disabled:opacity-50"
-                            >
-                              {actionLoading === book.id ? (
-                                <Loader2 className="w-3 h-3 animate-spin inline" />
-                              ) : (
-                                'منتشر'
-                              )}
-                            </button>
-                          )}
-                          {book.bookStatus === 'PUBLISHED' && (
-                            <>
-                              <Link
-                                href={`/admin/library/${book.id}`}
-                                className="px-2 py-1 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded text-xs transition"
-                              >
-                                ویرایش
-                              </Link>
-                              <button
-                                onClick={() => handleArchive(book.id)}
-                                disabled={actionLoading === book.id}
-                                className="px-2 py-1 bg-orange-50 dark:bg-orange-900/30 hover:bg-orange-100 dark:hover:bg-orange-900/50 text-orange-700 dark:text-orange-300 rounded text-xs transition disabled:opacity-50"
-                              >
-                                {actionLoading === book.id ? (
-                                  <Loader2 className="w-3 h-3 animate-spin inline" />
-                                ) : (
-                                  'آرشیو'
-                                )}
-                              </button>
-                            </>
-                          )}
-                          {book.bookStatus === 'ARCHIVED' && (
-                            <button
-                              onClick={() => handleRestore(book.id)}
-                              disabled={actionLoading === book.id}
-                              className="px-2 py-1 bg-purple-50 dark:bg-purple-900/30 hover:bg-purple-100 dark:hover:bg-purple-900/50 text-purple-700 dark:text-purple-300 rounded text-xs transition disabled:opacity-50"
-                            >
-                              {actionLoading === book.id ? (
-                                <Loader2 className="w-3 h-3 animate-spin inline" />
-                              ) : (
-                                'بیرون آوردن'
-                              )}
-                            </button>
-                          )}
-                          <button
-                            onClick={() => handleDelete(book.id, book.title)}
-                            disabled={deleting === book.id}
-                            className="px-2 py-1 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50 text-red-700 dark:text-red-300 rounded text-xs transition disabled:opacity-50"
-                          >
-                            {deleting === book.id ? (
-                              <Loader2 className="w-3 h-3 animate-spin inline" />
-                            ) : (
-                              'حذف'
-                            )}
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
+    <AdminPageShell
+      title="مدیریت کتابخانه دیجیتالی"
+      description={`تعداد کتاب‌ها: ${books.length.toLocaleString('fa-IR')}`}
+      actions={
+        <Button asChild>
+          <Link href="/admin/library/create">
+            <Plus className="h-4 w-4" />
+            کتاب جدید
+          </Link>
+        </Button>
+      }
+    >
+      <Card className="space-y-4 p-4">
+        <DataTableToolbar
+          searchValue={searchTerm}
+          onSearchChange={setSearchTerm}
+          searchPlaceholder="جستجو در عنوان یا نویسنده..."
+          filters={
+            <>
+              <Select value={filterCategory} onValueChange={setFilterCategory}>
+                <SelectTrigger className="h-9 w-full sm:w-48">
+                  <SelectValue placeholder="دسته‌بندی" />
+                </SelectTrigger>
+                <SelectContent>
+                  {CATEGORIES.map((cat) => (
+                    <SelectItem key={cat} value={cat}>
+                      {cat}
+                    </SelectItem>
                   ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
+                </SelectContent>
+              </Select>
+              <Select value={filterStatus} onValueChange={setFilterStatus}>
+                <SelectTrigger className="h-9 w-full sm:w-40">
+                  <SelectValue placeholder="وضعیت" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="همه">همه وضعیت‌ها</SelectItem>
+                  <SelectItem value="DRAFT">پیشنویس</SelectItem>
+                  <SelectItem value="PUBLISHED">منتشر شده</SelectItem>
+                  <SelectItem value="ARCHIVED">آرشیو شده</SelectItem>
+                </SelectContent>
+              </Select>
+            </>
+          }
+        />
+      </Card>
+
+      {error && (
+        <Card className="border-destructive/30 bg-destructive/10 p-4 text-destructive">{error}</Card>
+      )}
+
+      {isLoading ? (
+        <AdminLoadingState label="در حال بارگذاری..." />
+      ) : filteredBooks.length === 0 ? (
+        <AdminEmptyState
+          title="کتابی یافت نشد"
+          action={
+            <Button asChild>
+              <Link href="/admin/library/create">
+                <Plus className="h-4 w-4" />
+                ایجاد کتاب اول
+              </Link>
+            </Button>
+          }
+        />
+      ) : (
+        <DataTable columns={columns} data={filteredBooks} />
+      )}
+    </AdminPageShell>
   );
 
   return content;

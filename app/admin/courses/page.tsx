@@ -2,25 +2,80 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Search } from 'lucide-react';
+import type { ColumnDef } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Plus } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { DataTable } from '@/components/admin/data-table/DataTable';
+import DataTableToolbar from '@/components/admin/data-table/DataTableToolbar';
 import { useAdminCoursesList } from '@/lib/hooks/useAdminCourses';
 import { AdminEmptyState, AdminLoadingState, AdminPageShell } from '@/components/admin/AdminPageShell';
 import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
 
 export const dynamic = 'force-dynamic';
+
+interface CourseRow {
+  id: string;
+  subject: string;
+  price: number;
+  likes: number;
+  dislikes: number;
+  hasChapters: boolean;
+  published: boolean;
+}
+
+const columns: ColumnDef<CourseRow>[] = [
+  {
+    accessorKey: 'subject',
+    header: 'عنوان',
+    cell: ({ row }) => <span className="font-medium text-foreground">{row.original.subject}</span>,
+  },
+  {
+    accessorKey: 'price',
+    header: 'قیمت',
+    cell: ({ row }) => `${row.original.price?.toLocaleString('fa-IR')} تومان`,
+  },
+  {
+    accessorKey: 'likes',
+    header: 'لایک',
+    cell: ({ row }) => row.original.likes ?? 0,
+  },
+  {
+    accessorKey: 'dislikes',
+    header: 'دیسلایک',
+    cell: ({ row }) => row.original.dislikes ?? 0,
+  },
+  {
+    accessorKey: 'hasChapters',
+    header: 'فصل‌ها',
+    cell: ({ row }) => (
+      <Badge variant={row.original.hasChapters ? 'secondary' : 'outline'}>
+        {row.original.hasChapters ? 'دارد' : 'ندارد'}
+      </Badge>
+    ),
+  },
+  {
+    accessorKey: 'published',
+    header: 'انتشار',
+    cell: ({ row }) => (
+      <Badge variant={row.original.published ? 'default' : 'outline'}>
+        {row.original.published ? 'منتشر شده' : 'پیش‌نویس'}
+      </Badge>
+    ),
+  },
+  {
+    id: 'actions',
+    header: 'عملیات',
+    cell: ({ row }) => (
+      <Link href={`/admin/courses/${row.original.id}/edit`}>
+        <Button variant="outline" size="sm" aria-label={`ویرایش ${row.original.subject}`}>
+          ویرایش
+        </Button>
+      </Link>
+    ),
+  },
+];
 
 export default function AdminCoursesPage() {
   const { user, isLoading } = useAdminAuth();
@@ -64,16 +119,11 @@ export default function AdminCoursesPage() {
       }
     >
       <Card className="p-4">
-        <div className="relative">
-          <Search className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-          <Input
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            placeholder="جستجو در عنوان، توضیحات یا اسلاگ..."
-            aria-label="جستجوی دوره"
-            className="pr-9 text-right"
-          />
-        </div>
+        <DataTableToolbar
+          searchValue={searchInput}
+          onSearchChange={setSearchInput}
+          searchPlaceholder="جستجو در عنوان، توضیحات یا اسلاگ..."
+        />
       </Card>
 
       {isCoursesLoading ? (
@@ -89,76 +139,7 @@ export default function AdminCoursesPage() {
           }
         />
       ) : (
-        <Card className="overflow-hidden">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-b bg-slate-50 dark:bg-slate-900/60">
-                <TableHead>عنوان</TableHead>
-                <TableHead>قیمت</TableHead>
-                <TableHead>لایک</TableHead>
-                <TableHead>دیسلایک</TableHead>
-                <TableHead>فصل‌ها</TableHead>
-                <TableHead>انتشار</TableHead>
-                <TableHead>عملیات</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {items.map((course) => (
-                <TableRow key={course.id} className="hover:bg-slate-50 dark:hover:bg-slate-900/60">
-                  <TableCell className="font-medium text-slate-950 dark:text-white">{course.subject}</TableCell>
-                  <TableCell>{course.price?.toLocaleString('fa-IR')} تومان</TableCell>
-                  <TableCell>{course.likes ?? 0}</TableCell>
-                  <TableCell>{course.dislikes ?? 0}</TableCell>
-                  <TableCell>
-                    <Badge variant={course.hasChapters ? 'secondary' : 'outline'}>
-                      {course.hasChapters ? 'دارد' : 'ندارد'}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={course.published ? 'default' : 'outline'}>
-                      {course.published ? 'منتشر شده' : 'پیش‌نویس'}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Link href={`/admin/courses/${course.id}/edit`}>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        aria-label={`ویرایش ${course.subject}`}
-                      >
-                        ویرایش
-                      </Button>
-                    </Link>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Card>
-      )}
-
-      {pagination && pagination.totalPages > 1 && (
-        <div className="flex gap-2 mt-4 justify-center flex-row-reverse">
-          <Button
-            variant="outline"
-            disabled={!pagination.hasNextPage}
-            onClick={() => setPage((p) => p + 1)}
-            aria-label="صفحه بعد"
-          >
-            بعدی
-          </Button>
-          <span className="py-2 px-4 text-gray-700 dark:text-textSecondary">
-            {pagination.page} / {pagination.totalPages}
-          </span>
-          <Button
-            variant="outline"
-            disabled={!pagination.hasPrevPage}
-            onClick={() => setPage((p) => p - 1)}
-            aria-label="صفحه قبل"
-          >
-            قبلی
-          </Button>
-        </div>
+        <DataTable columns={columns} data={items} pagination={pagination} onPageChange={setPage} />
       )}
     </AdminPageShell>
   );

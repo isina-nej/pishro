@@ -54,7 +54,7 @@ export default function EditCoursePage() {
           </Button>
         }
       >
-        <Card className="p-6 text-center text-sm text-slate-500 dark:text-slate-400">
+        <Card className="p-6 text-center text-sm text-muted-foreground">
           اطلاعات دوره قابل دریافت نیست.
         </Card>
       </AdminPageShell>
@@ -80,16 +80,16 @@ export default function EditCoursePage() {
       }
     >
       <Tabs defaultValue="basic" className="space-y-4">
-        <TabsList className="grid gap-2 rounded-2xl border border-slate-200 bg-white p-2 dark:border-slate-800 dark:bg-slate-900 sm:grid-cols-3">
-          <TabsTrigger value="basic" className="justify-center gap-2 data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+        <TabsList className="grid gap-2 rounded-2xl border border-border bg-card p-2 sm:grid-cols-3">
+          <TabsTrigger value="basic" className="justify-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
             <BookOpen className="h-4 w-4" />
             اطلاعات پایه
           </TabsTrigger>
-          <TabsTrigger value="chapters" className="justify-center gap-2 data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+          <TabsTrigger value="chapters" className="justify-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
             <Layers className="h-4 w-4" />
             فصل‌ها
           </TabsTrigger>
-          <TabsTrigger value="lessons" className="justify-center gap-2 data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+          <TabsTrigger value="lessons" className="justify-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
             <PlayCircle className="h-4 w-4" />
             درس‌ها
           </TabsTrigger>
