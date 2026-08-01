@@ -37,6 +37,13 @@ model User {
   quizAttempts         QuizAttempt[]             @relation("UserQuizAttempts")
   investmentPortfolios UserInvestmentPortfolio[] @relation("UserInvestmentPortfolios")
   images               Image[]                   @relation("UserImages")
+
+  // CRM relations
+  convertedFromLeads Lead[]              @relation("LeadConvertedUser")
+  deals              Deal[]              @relation("UserDeals")
+  tickets            SupportTicket[]     @relation("UserTickets")
+  tagAssignments     UserTagAssignment[] @relation("UserTagAssignments")
+  crmActivities      Activity[]          @relation("UserActivities")
 }
 
 // Admin Users Model - Separate from regular users for admin panel access
@@ -51,7 +58,14 @@ model AdminUser {
   lastLoginAt   DateTime?
   createdAt     DateTime?   @default(now())
   updatedAt     DateTime?   @updatedAt
-  
+
+  // CRM relations
+  assignedLeads    Lead[]            @relation("LeadAssignee")
+  ownedDeals       Deal[]            @relation("DealOwner")
+  assignedTickets  SupportTicket[]   @relation("TicketAssignee")
+  createdSegments  CustomerSegment[] @relation("SegmentCreator")
+  crmActivities    Activity[]        @relation("ActivityAuthor")
+
   @@index([email])
   @@index([phone])
   @@index([status])
@@ -185,6 +199,7 @@ model Order {
   createdAt    DateTime? @default(now())
   orderItems   OrderItem[]   @relation("OrderOrderItems")
   transactions Transaction[] @relation("OrderTransactions")
+  deal         Deal?         @relation("OrderDeal")
 }
 
 model NewsletterSubscriber {
@@ -1312,4 +1327,213 @@ model InvestmentModel {
   updatedAt DateTime? @updatedAt
 
   @@index([investmentModelsPageId, order])
+}
+
+// ============================================================
+// CRM: leads, sales pipeline, support ticketing, segmentation
+// ============================================================
+
+model Lead {
+  id     String     @id @default(cuid())
+  firstName String?
+  lastName  String?
+  phone     String
+  email     String?
+  source    LeadSource @default(OTHER)
+  status    LeadStatus @default(NEW)
+  score     Int?
+  notes     String?    @db.Text
+
+  convertedUser   User?   @relation("LeadConvertedUser", fields: [convertedUserId], references: [id], onDelete: SetNull)
+  convertedUserId String?
+
+  assignedTo   AdminUser? @relation("LeadAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  assignedToId String?
+
+  deals      Deal[]     @relation("LeadDeals")
+  activities Activity[] @relation("LeadActivities")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([phone])
+  @@index([assignedToId])
+  @@index([createdAt])
+}
+
+enum LeadSource {
+  WEBSITE
+  REFERRAL
+  ADS
+  SOCIAL
+  PHONE
+  OTHER
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  CONVERTED
+  LOST
+}
+
+model PipelineStage {
+  id     String  @id @default(cuid())
+  name   String
+  order  Int     @unique
+  color  String?
+  isWon  Boolean @default(false)
+  isLost Boolean @default(false)
+
+  deals Deal[] @relation("StageDeals")
+}
+
+model Deal {
+  id     String @id @default(cuid())
+  title  String
+  amount Int?
+
+  stage   PipelineStage @relation("StageDeals", fields: [stageId], references: [id], onDelete: Restrict)
+  stageId String
+
+  lead   Lead?   @relation("LeadDeals", fields: [leadId], references: [id], onDelete: SetNull)
+  leadId String?
+
+  customer   User?   @relation("UserDeals", fields: [customerId], references: [id], onDelete: SetNull)
+  customerId String?
+
+  order   Order?  @relation("OrderDeal", fields: [orderId], references: [id], onDelete: SetNull)
+  orderId String? @unique
+
+  ownerAdmin   AdminUser? @relation("DealOwner", fields: [ownerAdminId], references: [id], onDelete: SetNull)
+  ownerAdminId String?
+
+  expectedCloseDate DateTime?
+  closedAt          DateTime?
+
+  activities Activity[] @relation("DealActivities")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([stageId])
+  @@index([ownerAdminId])
+  @@index([customerId])
+}
+
+model SupportTicket {
+  id          String         @id @default(cuid())
+  subject     String
+  description String         @db.Text
+  status      TicketStatus   @default(OPEN)
+  priority    TicketPriority @default(NORMAL)
+
+  customer   User?   @relation("UserTickets", fields: [customerId], references: [id], onDelete: SetNull)
+  customerId String?
+
+  assignedTo   AdminUser? @relation("TicketAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  assignedToId String?
+
+  activities Activity[] @relation("TicketActivities")
+
+  resolvedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@index([status])
+  @@index([priority])
+  @@index([assignedToId])
+  @@index([customerId])
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING_ON_CUSTOMER
+  RESOLVED
+  CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+model CustomerTag {
+  id        String              @id @default(cuid())
+  name      String              @unique
+  color     String?
+  users     UserTagAssignment[] @relation("TagAssignments")
+  createdAt DateTime            @default(now())
+}
+
+model UserTagAssignment {
+  id String @id @default(cuid())
+
+  user   User   @relation("UserTagAssignments", fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  tag   CustomerTag @relation("TagAssignments", fields: [tagId], references: [id], onDelete: Cascade)
+  tagId String
+
+  @@unique([userId, tagId])
+}
+
+model CustomerSegment {
+  id          String @id @default(cuid())
+  name        String
+  description String?
+  // Rule-based segmentation stored as JSON (e.g. { minSpend, tagIds,
+  // lifecycleStage }), evaluated at read-time against User/Order/Transaction
+  // — NOT a materialized member list, to avoid a second source of truth
+  // that can drift (the same bug class already found elsewhere in this
+  // schema for Order.items/OrderItem and NewsArticle JSON-tags/join-table).
+  rules Json
+
+  createdBy   AdminUser? @relation("SegmentCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  createdById String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Activity {
+  id      String       @id @default(cuid())
+  type    ActivityType
+  content String       @db.Text
+
+  admin   AdminUser? @relation("ActivityAuthor", fields: [adminId], references: [id], onDelete: SetNull)
+  adminId String?
+
+  lead   Lead?   @relation("LeadActivities", fields: [leadId], references: [id], onDelete: Cascade)
+  leadId String?
+
+  deal   Deal?   @relation("DealActivities", fields: [dealId], references: [id], onDelete: Cascade)
+  dealId String?
+
+  ticket   SupportTicket? @relation("TicketActivities", fields: [ticketId], references: [id], onDelete: Cascade)
+  ticketId String?
+
+  customer   User?   @relation("UserActivities", fields: [customerId], references: [id], onDelete: SetNull)
+  customerId String?
+
+  createdAt DateTime @default(now())
+
+  @@index([leadId])
+  @@index([dealId])
+  @@index([ticketId])
+  @@index([customerId])
+}
+
+enum ActivityType {
+  NOTE
+  CALL
+  EMAIL
+  MEETING
+  STATUS_CHANGE
+  SYSTEM
 }
