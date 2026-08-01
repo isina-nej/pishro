@@ -23,8 +23,9 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import type { AdminUser } from '@/lib/hooks/useAdminAuth';
 import AdminTopbar from './AdminTopbar';
+import CommandPalette from './CommandPalette';
 
-interface NavItem {
+export interface NavItem {
   href: string;
   label: string;
   icon: typeof Home;
@@ -33,12 +34,12 @@ interface NavItem {
   disabled?: boolean;
 }
 
-interface NavSection {
+export interface NavSection {
   label?: string;
   items: NavItem[];
 }
 
-const navSections: NavSection[] = [
+export const navSections: NavSection[] = [
   {
     items: [
       { href: '/admin/dashboard', label: 'داشبورد', icon: Home, key: 'dashboard', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
@@ -81,6 +82,7 @@ export default function AdminSidebar({ user, children, onLogout }: AdminSidebarP
   const pathname = usePathname();
   const [desktopOpen, setDesktopOpen] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
 
   const isActive = (href: string) => pathname === href || pathname?.startsWith(`${href}/`);
   const visibleSections = navSections
@@ -230,12 +232,17 @@ export default function AdminSidebar({ user, children, onLogout }: AdminSidebarP
 
       {/* Main content */}
       <main className="flex-1 flex flex-col overflow-hidden">
-        <AdminTopbar onOpenMobileNav={() => setMobileOpen(true)} />
+        <AdminTopbar
+          onOpenMobileNav={() => setMobileOpen(true)}
+          onOpenCommandPalette={() => setCommandPaletteOpen(true)}
+        />
 
         <div className="w-full flex-1 overflow-auto">
           <div className="min-h-full w-full p-3 sm:p-4 lg:p-5 xl:p-6">{children}</div>
         </div>
       </main>
+
+      <CommandPalette user={user} open={commandPaletteOpen} onOpenChange={setCommandPaletteOpen} />
     </div>
   );
 }
