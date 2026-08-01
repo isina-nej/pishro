@@ -13,6 +13,7 @@ import {
   Home,
   LogOut,
   Menu,
+  PieChart,
   Settings,
   Ticket,
   Users,
@@ -48,10 +49,11 @@ export const navSections: NavSection[] = [
   {
     label: 'CRM',
     items: [
-      { href: '/admin/crm/customers', label: 'مشتریان', icon: UsersRound, key: 'crm-customers', roles: ['ADMIN', 'MODERATOR', 'VIEWER'], disabled: true },
-      { href: '/admin/crm/leads', label: 'سرنخ‌ها', icon: Contact, key: 'crm-leads', roles: ['ADMIN', 'MODERATOR', 'VIEWER'], disabled: true },
-      { href: '/admin/crm/deals', label: 'فرصت‌های فروش', icon: Handshake, key: 'crm-deals', roles: ['ADMIN', 'MODERATOR', 'VIEWER'], disabled: true },
-      { href: '/admin/crm/tickets', label: 'تیکت‌های پشتیبانی', icon: Ticket, key: 'crm-tickets', roles: ['ADMIN', 'MODERATOR', 'VIEWER'], disabled: true },
+      { href: '/admin/crm/customers', label: 'مشتریان', icon: UsersRound, key: 'crm-customers', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
+      { href: '/admin/crm/leads', label: 'سرنخ‌ها', icon: Contact, key: 'crm-leads', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
+      { href: '/admin/crm/deals', label: 'فرصت‌های فروش', icon: Handshake, key: 'crm-deals', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
+      { href: '/admin/crm/tickets', label: 'تیکت‌های پشتیبانی', icon: Ticket, key: 'crm-tickets', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
+      { href: '/admin/crm/segments', label: 'بخش‌بندی مشتریان', icon: PieChart, key: 'crm-segments', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
     ],
   },
   {
@@ -66,7 +68,7 @@ export const navSections: NavSection[] = [
   {
     items: [
       { href: '/admin/users', label: 'کاربران', icon: Users, key: 'users', roles: ['ADMIN', 'MODERATOR'] },
-      { href: '/admin/reports', label: 'گزارش‌ها', icon: BarChart3, key: 'reports', roles: ['ADMIN', 'MODERATOR', 'VIEWER'], disabled: true },
+      { href: '/admin/reports', label: 'گزارش‌ها', icon: BarChart3, key: 'reports', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
       { href: '/admin/settings', label: 'تنظیمات', icon: Settings, key: 'settings', roles: ['ADMIN'], disabled: true },
     ],
   },
