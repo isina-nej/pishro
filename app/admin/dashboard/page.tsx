@@ -15,7 +15,6 @@ import {
   Sparkles,
   Users,
 } from 'lucide-react';
-import AdminSidebar from '@/components/admin/AdminSidebar';
 import { AdminLoadingState, AdminPageShell } from '@/components/admin/AdminPageShell';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -84,7 +83,7 @@ const adminTasks = [
 ];
 
 export default function AdminDashboardPage() {
-  const { user, isLoading, logout } = useAdminAuth();
+  const { user, isLoading } = useAdminAuth();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [statsLoading, setStatsLoading] = useState(true);
   const [statsError, setStatsError] = useState<string | null>(null);
@@ -216,5 +215,5 @@ export default function AdminDashboardPage() {
     </AdminPageShell>
   );
 
-  return <AdminSidebar user={user} currentPage="dashboard" onLogout={logout}>{content}</AdminSidebar>;
+  return content;
 }

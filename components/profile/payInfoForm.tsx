@@ -70,14 +70,14 @@ const PayInfoForm = forwardRef((props, ref) => {
   }));
 
   return (
-    <div className="bg-[#fafafa] w-full rounded mt-8">
+    <div className="bg-muted/40 w-full rounded mt-8">
       {/* هدر */}
-      <div className="w-full p-5 border-b border-[#e1e1e1]">
-        <h6 className="font-irsans text-xs text-[#4d4d4d] mb-5 flex items-center">
-          <ProfileIcon className="size-4 stroke-[#2F2F2F]" />
+      <div className="w-full p-5 border-b border-border">
+        <h6 className="font-irsans text-xs text-muted-foreground mb-5 flex items-center">
+          <ProfileIcon className="size-4 stroke-foreground" />
           <span className="mr-3">اطلاعات بانکی</span>
         </h6>
-        <p className="font-medium text-xs text-[#4D4D4D]">
+        <p className="font-medium text-xs text-muted-foreground">
           لطفاً اطلاعات بانکی خود را برای بازگشت وجه وارد کنید
         </p>
       </div>
@@ -88,7 +88,7 @@ const PayInfoForm = forwardRef((props, ref) => {
           {/* شماره کارت */}
           <div>
             <div className="flex items-center">
-              <label className="w-[150px] block text-xs font-medium text-[#1a1a1a]">
+              <label className="w-[150px] block text-xs font-medium text-foreground">
                 شماره کارت
               </label>
               <input
@@ -97,7 +97,7 @@ const PayInfoForm = forwardRef((props, ref) => {
                 disabled={loading}
                 placeholder="1234567812345678"
                 maxLength={16}
-                className="mt-1 block w-full border border-gray-300 dark:border-borderColor rounded-md p-2 text-left"
+                className="mt-1 block w-full border border-input bg-card text-foreground rounded-md p-2 text-left"
                 dir="ltr"
               />
             </div>
@@ -111,11 +111,11 @@ const PayInfoForm = forwardRef((props, ref) => {
           {/* شماره شبا */}
           <div>
             <div className="flex items-center">
-              <label className="w-[150px] block text-xs font-medium text-[#1a1a1a]">
+              <label className="w-[150px] block text-xs font-medium text-foreground">
                 شماره شبا
               </label>
               <div className="flex-1 flex items-center">
-                <span className="text-sm font-medium text-gray-600 dark:text-textSecondary ml-2">
+                <span className="text-sm font-medium text-muted-foreground ml-2">
                   IR
                 </span>
                 <input
@@ -124,7 +124,7 @@ const PayInfoForm = forwardRef((props, ref) => {
                   disabled={loading}
                   placeholder="012345678901234567890123"
                   maxLength={24}
-                  className="mt-1 block w-full border border-gray-300 dark:border-borderColor rounded-md p-2 text-left"
+                  className="mt-1 block w-full border border-input bg-card text-foreground rounded-md p-2 text-left"
                   dir="ltr"
                 />
               </div>
@@ -139,7 +139,7 @@ const PayInfoForm = forwardRef((props, ref) => {
           {/* نام صاحب حساب */}
           <div>
             <div className="flex items-center">
-              <label className="w-[150px] block text-xs font-medium text-[#1a1a1a]">
+              <label className="w-[150px] block text-xs font-medium text-foreground">
                 نام صاحب حساب
               </label>
               <input
@@ -147,7 +147,7 @@ const PayInfoForm = forwardRef((props, ref) => {
                 {...register("accountOwner")}
                 disabled={loading}
                 placeholder="نام و خانوادگی"
-                className="mt-1 block w-full border border-gray-300 dark:border-borderColor rounded-md p-2"
+                className="mt-1 block w-full border border-input bg-card text-foreground rounded-md p-2"
               />
             </div>
             {errors.accountOwner && (

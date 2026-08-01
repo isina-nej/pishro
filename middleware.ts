@@ -46,10 +46,14 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  const isProtectedRoute = 
-    pathname.startsWith('/admin/dashboard') ||
-    pathname.startsWith('/admin/block-news') ||
-    pathname.startsWith('/admin/library') ||
+  // Default-protect every /admin/* page. By this point pathname is guaranteed to be
+  // neither '/admin' nor an exact publicRoutes match (both handled and returned above),
+  // so this covers every current AND future admin page without needing a per-page
+  // allowlist entry (the previous allowlist silently left /admin/courses, /admin/news,
+  // etc. unprotected on direct page load — see IMPLEMENTATION_ROADMAP.md Batch 1.1 area
+  // / admin-panel-redesign plan for context).
+  const isProtectedRoute =
+    pathname.startsWith('/admin/') ||
     pathname.startsWith('/api/admin/auth/me') ||
     pathname.startsWith('/api/admin/auth/refresh') ||
     (pathname.startsWith('/api/admin') && !pathname.includes('/login') && !pathname.includes('/logout'));

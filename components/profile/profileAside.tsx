@@ -20,6 +20,8 @@ import {
   HiClipboardList,
   HiOutlineUser,
   HiUser,
+  HiOutlineReceiptTax,
+  HiReceiptTax,
 } from "react-icons/hi";
 import { LogOut } from "lucide-react";
 
@@ -58,6 +60,12 @@ const ProfileAside = () => {
       link: "/profile/orders",
     },
     {
+      label: "تراکنش‌ها",
+      outlinedIcon: <HiOutlineReceiptTax />,
+      filledIcon: <HiReceiptTax />,
+      link: "/profile/transactions",
+    },
+    {
       label: "لیست ها",
       outlinedIcon: <HiOutlineClipboardList />,
       filledIcon: <HiClipboardList />,
@@ -80,11 +88,11 @@ const ProfileAside = () => {
   };
 
   return (
-    <aside className="w-full overflow-hidden rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-sm dark:border-borderColor dark:bg-cardBg dark:text-textPrimary md:w-[264px] md:min-w-[264px]">
+    <aside className="w-full overflow-hidden rounded-2xl border border-border bg-card text-card-foreground shadow-sm md:w-[264px] md:min-w-[264px]">
       {/* بخش پروفایل کاربر */}
-      <div className="w-full border-b border-slate-100 p-5 dark:border-borderColor">
+      <div className="w-full border-b border-border p-5">
         <div className="flex items-center gap-3">
-          <div className="relative h-14 w-14 overflow-hidden rounded-2xl bg-slate-100 ring-4 ring-slate-50 dark:bg-darkBgHidden dark:ring-darkBgHidden">
+          <div className="relative h-14 w-14 overflow-hidden rounded-2xl bg-muted ring-4 ring-muted/50">
             <Image
               alt="user-profile"
               src={user?.avatarUrl || "/images/profile/profile-1.png"}
@@ -94,15 +102,15 @@ const ProfileAside = () => {
           </div>
           <div className="min-w-0">
             {loading ? (
-              <p className="h-4 w-28 animate-pulse rounded bg-slate-200 dark:bg-darkBgHidden">
+              <p className="h-4 w-28 animate-pulse rounded bg-muted">
                 <span className="sr-only">در حال بارگذاری...</span>
               </p>
             ) : (
               <>
-                <p className="truncate text-sm font-bold text-slate-950 dark:text-textPrimary">
+                <p className="truncate text-sm font-bold text-foreground">
                   {getUserName()}
                 </p>
-                <p className="mt-1 text-xs text-slate-500 dark:text-textSecondary">
+                <p className="mt-1 text-xs text-muted-foreground">
                   {user?.phone}
                 </p>
               </>
@@ -112,7 +120,7 @@ const ProfileAside = () => {
       </div>
 
       {/* لینک‌های ناوبری */}
-      <div className="flex gap-2 overflow-x-auto border-b border-slate-100 p-3 dark:border-borderColor md:flex-col md:overflow-visible">
+      <div className="flex gap-2 overflow-x-auto border-b border-border p-3 md:flex-col md:overflow-visible">
         {sidebarLinks.map((item, idx) => {
           const isActive = pathname?.includes(item.link) || false;
           return (
@@ -122,11 +130,11 @@ const ProfileAside = () => {
                 className={cn(
                   "flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold transition",
                   isActive
-                    ? "bg-mySecondary text-white shadow-sm dark:bg-myGolden dark:text-slate-950"
-                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-950 dark:text-textSecondary dark:hover:bg-darkBgHidden dark:hover:text-textPrimary"
+                    ? "bg-navActiveBg text-primary shadow-sm"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 )}
               >
-                <span className="text-lg">
+                <span className={cn("text-lg", isActive && "text-iconBrand")}>
                   {isActive ? item.filledIcon : item.outlinedIcon}
                 </span>
                 <span>{item.label}</span>
@@ -140,7 +148,7 @@ const ProfileAside = () => {
       <div className="p-3">
         <Button
           variant="outline"
-          className="flex w-full items-center justify-center gap-2 rounded-xl border-red-200 bg-red-50 text-sm font-bold text-red-700 hover:bg-red-100 dark:border-red-900 dark:bg-red-950/30 dark:text-red-300 dark:hover:bg-red-950/50"
+          className="flex w-full items-center justify-center gap-2 rounded-xl border-destructive/30 bg-destructive/10 text-sm font-bold text-destructive hover:bg-destructive/20"
           onClick={handleLogout} // ← تابع خروج
         >
           <LogOut className="size-4" />

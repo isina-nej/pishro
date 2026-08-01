@@ -4,7 +4,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, ArrowRight, CheckCircle2, Loader2, Plus, Settings2, Sparkles } from 'lucide-react';
-import AdminSidebar from '@/components/admin/AdminSidebar';
 import { AdminLoadingState, AdminPageShell } from '@/components/admin/AdminPageShell';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -72,7 +71,7 @@ function createSlug(value: string) {
 
 export default function CreateCoursePage() {
   const router = useRouter();
-  const { user, isLoading: isAuthLoading, logout } = useAdminAuth();
+  const { user, isLoading: isAuthLoading } = useAdminAuth();
   const [formData, setFormData] = useState<CourseFormData>({
     subject: '',
     slug: '',
@@ -500,9 +499,5 @@ export default function CreateCoursePage() {
     </AdminPageShell>
   );
 
-  return (
-    <AdminSidebar user={user} currentPage="courses" onLogout={logout}>
-      {content}
-    </AdminSidebar>
-  );
+  return content;
 }

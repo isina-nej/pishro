@@ -17,14 +17,13 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { useAdminCoursesList } from '@/lib/hooks/useAdminCourses';
-import AdminSidebar from '@/components/admin/AdminSidebar';
 import { AdminEmptyState, AdminLoadingState, AdminPageShell } from '@/components/admin/AdminPageShell';
 import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
 
 export const dynamic = 'force-dynamic';
 
 export default function AdminCoursesPage() {
-  const { user, isLoading, logout } = useAdminAuth();
+  const { user, isLoading } = useAdminAuth();
   const [page, setPage] = useState(1);
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
@@ -164,5 +163,5 @@ export default function AdminCoursesPage() {
     </AdminPageShell>
   );
 
-  return <AdminSidebar user={user} currentPage="courses" onLogout={logout}>{content}</AdminSidebar>;
+  return content;
 }

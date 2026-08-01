@@ -14,17 +14,10 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { ArrowRight, AlertCircle, FileText, Image as ImageIcon, Tag, Zap, Upload, X, Clock } from 'lucide-react';
-import AdminSidebar from '@/components/admin/AdminSidebar';
 import CKEditor5Wrapper from '@/components/admin/news/CKEditor5Wrapper';
+import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
 
 export const dynamic = 'force-dynamic';
-
-interface AdminUser {
-  id: string;
-  email: string;
-  name: string;
-  role: 'ADMIN' | 'MODERATOR' | 'VIEWER';
-}
 
 interface NewsArticle {
   id: string;
@@ -42,8 +35,7 @@ export default function EditBlockNewsPage() {
   const articleId = params.id as string;
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [user, setUser] = useState<AdminUser | null>(null);
-  const [isLoadingUser, setIsLoadingUser] = useState(true);
+  const { user, isLoading: isLoadingUser } = useAdminAuth();
   const [isLoadingArticle, setIsLoadingArticle] = useState(true);
   const [article, setArticle] = useState<NewsArticle | null>(null);
 
@@ -63,39 +55,6 @@ export default function EditBlockNewsPage() {
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [uploadError, setUploadError] = useState<string>('');
   const [error, setError] = useState<string>('');
-
-  // Get current user
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const token = localStorage.getItem('admin_access_token');
-        if (!token) {
-          router.push('/admin/login');
-          return;
-        }
-
-        const response = await fetch('/api/admin/auth/me', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (!response.ok) {
-          localStorage.removeItem('admin_access_token');
-          router.push('/admin/login');
-          return;
-        }
-
-        const data = await response.json();
-        setUser(data.user);
-      } catch (error) {
-        console.error('Error fetching user:', error);
-        router.push('/admin/login');
-      } finally {
-        setIsLoadingUser(false);
-      }
-    };
-
-    fetchCurrentUser();
-  }, [router]);
 
   // Get article data
   useEffect(() => {
@@ -609,5 +568,5 @@ export default function EditBlockNewsPage() {
     </div>
   );
 
-  return <AdminSidebar user={user} currentPage="block-news">{content}</AdminSidebar>;
+  return content;
 }

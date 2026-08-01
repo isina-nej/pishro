@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { ArrowRight, BookOpen, Layers, PlayCircle } from 'lucide-react';
-import AdminSidebar from '@/components/admin/AdminSidebar';
 import { AdminLoadingState, AdminPageShell } from '@/components/admin/AdminPageShell';
 import CourseBasicTab, {
   type CourseBasicTabData,
@@ -23,7 +22,7 @@ export const dynamic = 'force-dynamic';
 export default function EditCoursePage() {
   const params = useParams();
   const courseId = params.id as string;
-  const { user, isLoading: isAuthLoading, logout } = useAdminAuth();
+  const { user, isLoading: isAuthLoading } = useAdminAuth();
   const { data, isLoading, error } = useAdminCourse(courseId, Boolean(user && courseId));
   const [course, setCourse] = useState<CourseBasicTabData | null>(null);
 
@@ -43,24 +42,22 @@ export default function EditCoursePage() {
 
   if (error || !course) {
     return (
-      <AdminSidebar user={user} currentPage="courses" onLogout={logout}>
-        <AdminPageShell
-          title="دوره یافت نشد"
-          description="دوره مورد نظر وجود ندارد یا دسترسی به آن ممکن نیست."
-          actions={
-            <Button asChild variant="outline">
-              <Link href="/admin/courses">
-                بازگشت به دوره‌ها
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Button>
-          }
-        >
-          <Card className="p-6 text-center text-sm text-slate-500 dark:text-slate-400">
-            اطلاعات دوره قابل دریافت نیست.
-          </Card>
-        </AdminPageShell>
-      </AdminSidebar>
+      <AdminPageShell
+        title="دوره یافت نشد"
+        description="دوره مورد نظر وجود ندارد یا دسترسی به آن ممکن نیست."
+        actions={
+          <Button asChild variant="outline">
+            <Link href="/admin/courses">
+              بازگشت به دوره‌ها
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
+        }
+      >
+        <Card className="p-6 text-center text-sm text-slate-500 dark:text-slate-400">
+          اطلاعات دوره قابل دریافت نیست.
+        </Card>
+      </AdminPageShell>
     );
   }
 
@@ -111,9 +108,5 @@ export default function EditCoursePage() {
     </AdminPageShell>
   );
 
-  return (
-    <AdminSidebar user={user} currentPage="courses" onLogout={logout}>
-      {content}
-    </AdminSidebar>
-  );
+  return content;
 }

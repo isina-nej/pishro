@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Trash2, Edit2, Plus, Search, Loader2 } from 'lucide-react';
-import AdminSidebar from '@/components/admin/AdminSidebar';
 import { AdminLoadingState } from '@/components/admin/AdminPageShell';
 import { api } from '@/lib/api-client';
 import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
@@ -24,7 +23,7 @@ interface DigitalBook {
 }
 
 export default function LibraryManagementPage() {
-  const { user, isLoading: isLoadingUser, logout } = useAdminAuth();
+  const { user, isLoading: isLoadingUser } = useAdminAuth();
   const [books, setBooks] = useState<DigitalBook[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -424,5 +423,5 @@ export default function LibraryManagementPage() {
     </div>
   );
 
-  return <AdminSidebar user={user} currentPage="library" onLogout={logout}>{content}</AdminSidebar>;
+  return content;
 }

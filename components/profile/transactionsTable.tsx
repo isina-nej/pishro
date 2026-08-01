@@ -3,6 +3,8 @@
 import { useState } from "react";
 import ProfileHeader from "./header";
 import { useUserTransactions } from "@/lib/hooks/useUser";
+import { Badge } from "@/components/ui/badge";
+import EmptyState from "./emptyState";
 
 const TransactionsTable = () => {
   const [page, setPage] = useState(1);
@@ -16,29 +18,17 @@ const TransactionsTable = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "success":
-        return (
-          <span className="inline-flex px-2 py-1 text-xs rounded-full bg-green-100 dark:bg-green-950 text-green-800">
-            موفق
-          </span>
-        );
+        return <Badge variant="success">موفق</Badge>;
       case "pending":
         return (
-          <span className="inline-flex px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">
+          <span className="inline-flex px-2 py-1 text-xs rounded-full bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300">
             در انتظار
           </span>
         );
       case "failed":
-        return (
-          <span className="inline-flex px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">
-            ناموفق
-          </span>
-        );
+        return <Badge variant="destructive">ناموفق</Badge>;
       default:
-        return (
-          <span className="inline-flex px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-cardBg text-gray-800 dark:text-textPrimary">
-            {status}
-          </span>
-        );
+        return <Badge variant="secondary">{status}</Badge>;
     }
   };
 
@@ -70,9 +60,9 @@ const TransactionsTable = () => {
 
   if (loading && transactions.length === 0) {
     return (
-      <div className="bg-white dark:bg-cardBg rounded-md mb-8 shadow p-8">
+      <div className="bg-card rounded-md mb-8 shadow p-8">
         <div className="flex justify-center items-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </div>
       </div>
     );
@@ -80,61 +70,64 @@ const TransactionsTable = () => {
 
   if (transactions.length === 0) {
     return (
-      <div className="bg-white dark:bg-cardBg rounded-md mb-8 shadow">
+      <div className="bg-card rounded-md mb-8 shadow">
         <ProfileHeader>
-          <h4 className="font-medium text-sm text-[#131834]">
+          <h4 className="font-medium text-sm text-foreground">
             تراکنش‌های اخیر
           </h4>
         </ProfileHeader>
-        <div className="p-8 text-center text-gray-500 dark:text-textSecondary">
-          هیچ تراکنشی ثبت نشده است
+        <div className="p-8">
+          <EmptyState
+            title="هنوز تراکنشی ثبت نشده"
+            description="پس از هر پرداخت یا بازگشت وجه، جزئیات تراکنش‌ها اینجا نمایش داده می‌شود."
+            href="/courses"
+            action="مشاهده دوره‌ها"
+          />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-white dark:bg-cardBg rounded-md mb-8 shadow">
+    <div className="bg-card rounded-md mb-8 shadow">
       <ProfileHeader>
-        <h4 className="font-medium text-sm text-[#131834]">
+        <h4 className="font-medium text-sm text-foreground">
           تراکنش‌های اخیر ({total})
         </h4>
       </ProfileHeader>
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-[#f5f5f5]">
-          <thead className="bg-gray-50 dark:bg-darkBgHidden">
+        <table className="min-w-full divide-y divide-border">
+          <thead className="bg-muted/50">
             <tr>
-              <th className="px-5 py-3 text-xs font-medium text-gray-500 dark:text-textSecondary text-right">
+              <th className="px-5 py-3 text-xs font-medium text-muted-foreground text-right">
                 نوع تراکنش
               </th>
-              <th className="px-5 py-3 text-xs font-medium text-gray-500 dark:text-textSecondary text-right">
+              <th className="px-5 py-3 text-xs font-medium text-muted-foreground text-right">
                 مبلغ
               </th>
-              <th className="px-5 py-3 text-xs font-medium text-gray-500 dark:text-textSecondary text-right">
+              <th className="px-5 py-3 text-xs font-medium text-muted-foreground text-right">
                 وضعیت
               </th>
-              <th className="px-5 py-3 text-xs font-medium text-gray-500 dark:text-textSecondary text-right">
+              <th className="px-5 py-3 text-xs font-medium text-muted-foreground text-right">
                 شماره پیگیری
               </th>
-              <th className="px-5 py-3 text-xs font-medium text-gray-500 dark:text-textSecondary text-right">
+              <th className="px-5 py-3 text-xs font-medium text-muted-foreground text-right">
                 تاریخ
               </th>
-              <th className="px-5 py-3 text-xs font-medium text-gray-500 dark:text-textSecondary text-right">
+              <th className="px-5 py-3 text-xs font-medium text-muted-foreground text-right">
                 توضیحات
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white dark:bg-cardBg divide-y divide-[#f5f5f5]">
+          <tbody className="bg-card divide-y divide-border">
             {transactions.map((transaction) => (
-              <tr key={transaction.id} className="hover:bg-gray-50 dark:hover:bg-darkBgHidden dark:bg-darkBgHidden">
-                <td className="px-5 py-4 whitespace-nowrap text-xs text-gray-900 dark:text-textPrimary">
+              <tr key={transaction.id} className="hover:bg-muted/40">
+                <td className="px-5 py-4 whitespace-nowrap text-xs text-foreground">
                   {getTypeLabel(transaction.type)}
                 </td>
-                <td className="px-5 py-4 whitespace-nowrap text-xs text-gray-900 dark:text-textPrimary">
+                <td className="px-5 py-4 whitespace-nowrap text-xs text-foreground">
                   <span
-                    className={
-                      transaction.type === "refund" ? "text-green-600 dark:text-green-400" : ""
-                    }
+                    className={transaction.type === "refund" ? "text-success" : ""}
                   >
                     {transaction.amount.toLocaleString("fa-IR")} تومان
                   </span>
@@ -142,13 +135,13 @@ const TransactionsTable = () => {
                 <td className="px-5 py-4 whitespace-nowrap text-xs">
                   {getStatusBadge(transaction.status)}
                 </td>
-                <td className="px-5 py-4 whitespace-nowrap text-xs font-irsans text-gray-500 dark:text-textSecondary">
+                <td className="px-5 py-4 whitespace-nowrap text-xs font-irsans text-muted-foreground">
                   {transaction.refNumber || "-"}
                 </td>
-                <td className="px-5 py-4 whitespace-nowrap text-xs font-irsans text-gray-500 dark:text-textSecondary">
+                <td className="px-5 py-4 whitespace-nowrap text-xs font-irsans text-muted-foreground">
                   {formatDate(transaction.createdAt)}
                 </td>
-                <td className="px-5 py-4 text-xs text-gray-500 dark:text-textSecondary">
+                <td className="px-5 py-4 text-xs text-muted-foreground">
                   {transaction.description || "-"}
                 </td>
               </tr>
@@ -159,28 +152,28 @@ const TransactionsTable = () => {
 
       {/* pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-3 p-4 border-t border-[#f5f5f5]">
+        <div className="flex justify-center items-center gap-3 p-4 border-t border-border">
           <button
-            className="px-3 py-1 text-xs border rounded disabled:opacity-50"
+            className="px-3 py-1 text-xs border border-input rounded disabled:opacity-50"
             onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
             disabled={loading || page === 1}
           >
             {loading ? (
-              <div className="w-3 h-3 border-b-2 border-gray-500 rounded-full animate-spin inline-block"></div>
+              <div className="w-3 h-3 border-b-2 border-muted-foreground rounded-full animate-spin inline-block"></div>
             ) : (
               "قبلی"
             )}
           </button>
-          <span className="text-xs text-gray-600 dark:text-textSecondary">
+          <span className="text-xs text-muted-foreground">
             صفحه {page} از {totalPages}
           </span>
           <button
-            className="px-3 py-1 text-xs border rounded disabled:opacity-50"
+            className="px-3 py-1 text-xs border border-input rounded disabled:opacity-50"
             onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
             disabled={loading || page === totalPages}
           >
             {loading ? (
-              <div className="w-3 h-3 border-b-2 border-gray-500 rounded-full animate-spin inline-block"></div>
+              <div className="w-3 h-3 border-b-2 border-muted-foreground rounded-full animate-spin inline-block"></div>
             ) : (
               "بعدی"
             )}

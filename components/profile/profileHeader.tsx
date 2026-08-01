@@ -42,12 +42,12 @@ const ProfileHeader = () => {
   return (
     <div className="container-xl mb-5 flex flex-col gap-3 px-4 md:flex-row md:items-center md:justify-between md:px-0">
       <div>
-        <p className="text-xs font-medium text-slate-500 dark:text-textSecondary">
+        <p className="text-xs font-medium text-muted-foreground">
           داشبورد کاربری پیشرو
         </p>
-        <h1 className="mt-1 text-xl font-extrabold text-slate-950 dark:text-textPrimary md:text-2xl">
+        <h1 className="mt-1 text-xl font-extrabold text-foreground md:text-2xl">
           {loading ? (
-            <span className="inline-block h-7 w-44 animate-pulse rounded bg-slate-200 dark:bg-darkBgHidden" />
+            <span className="inline-block h-7 w-44 animate-pulse rounded bg-muted" />
           ) : (
             <>
               {getGreeting()} بخیر، <span>{getUserName()}</span>
@@ -56,14 +56,14 @@ const ProfileHeader = () => {
         </h1>
       </div>
       <div className="flex w-full items-center justify-end gap-2 md:w-auto">
-        <div className="inline-flex h-10 items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 shadow-sm dark:border-borderColor dark:bg-cardBg dark:text-textPrimary">
-          <CalendarDays className="size-4 text-mySecondary dark:text-myGolden" />
+        <div className="inline-flex h-10 items-center gap-2 rounded-lg border border-border bg-card px-3 text-sm text-foreground shadow-sm">
+          <CalendarDays className="size-4 text-primary" />
           <span>{today || "..."}</span>
         </div>
-        <button className="relative inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:bg-slate-50 dark:border-borderColor dark:bg-cardBg dark:text-textPrimary dark:hover:bg-darkBgHidden">
+        {/* Decorative only — no notification backend exists yet */}
+        <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground">
           <Bell className="size-5" />
-          <span className="absolute right-2 top-2 size-2 rounded-full bg-myPrimary" />
-        </button>
+        </span>
       </div>
     </div>
   );

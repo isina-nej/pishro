@@ -7,7 +7,7 @@
 
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -15,23 +15,13 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { ArrowRight, AlertCircle, FileText, Image as ImageIcon, Tag, Zap, Upload, X, Clock } from 'lucide-react';
 import { useCreateBlockNews } from '@/lib/hooks/use-block-news';
-import AdminSidebar from '@/components/admin/AdminSidebar';
 import CKEditor5Wrapper from '@/components/admin/news/CKEditor5Wrapper';
 
 export const dynamic = 'force-dynamic';
 
-interface AdminUser {
-  id: string;
-  email: string;
-  name: string;
-  role: 'ADMIN' | 'MODERATOR' | 'VIEWER';
-}
-
 export default function CreateBlockNewsPage() {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [user, setUser] = useState<AdminUser | null>(null);
-  const [isLoadingUser, setIsLoadingUser] = useState(true);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -48,39 +38,6 @@ export default function CreateBlockNewsPage() {
   const [uploadError, setUploadError] = useState<string>('');
 
   const createNewsMutation = useCreateBlockNews();
-
-  // Get current user
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const token = localStorage.getItem('admin_access_token');
-        if (!token) {
-          router.push('/admin/login');
-          return;
-        }
-
-        const response = await fetch('/api/admin/auth/me', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (!response.ok) {
-          localStorage.removeItem('admin_access_token');
-          router.push('/admin/login');
-          return;
-        }
-
-        const data = await response.json();
-        setUser(data.user);
-      } catch (error) {
-        console.error('Error fetching user:', error);
-        router.push('/admin/login');
-      } finally {
-        setIsLoadingUser(false);
-      }
-    };
-
-    fetchCurrentUser();
-  }, [router]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -198,18 +155,6 @@ export default function CreateBlockNewsPage() {
       setIsSubmitting(false);
     }
   };
-
-  if (isLoadingUser) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        </div>
-      </div>
-    );
-  }
-
-  if (!user) return null;
 
   const content = (
     <div className="w-full space-y-6">
@@ -538,5 +483,5 @@ export default function CreateBlockNewsPage() {
     </div>
   );
 
-  return <AdminSidebar user={user} currentPage="block-news">{content}</AdminSidebar>;
+  return content;
 }

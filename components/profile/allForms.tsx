@@ -50,7 +50,6 @@ const AllForms = ({ formType }: AllFormsProps) => {
       )}
       <div className="mt-6 md:mt-8 flex justify-end">
         <Button
-          variant={"destructive"}
           className="px-4 md:px-6 text-xs w-full sm:w-auto"
           onClick={handleSaveChanges}
         >

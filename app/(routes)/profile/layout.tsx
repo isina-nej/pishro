@@ -24,7 +24,7 @@ export default async function ProfileLayout({
   }
 
   return (
-    <div className="min-h-screen w-full bg-slate-50 py-6 text-slate-900 dark:bg-bodyBg dark:text-textPrimary md:py-8 mt-16 md:mt-20">
+    <div className="royal-theme min-h-screen w-full bg-background py-6 text-foreground md:py-8 mt-16 md:mt-20">
       <ProfileHeader />
       <div className="container-xl w-full flex flex-col gap-5 px-4 md:flex-row md:px-0">
         <ProfileAside />

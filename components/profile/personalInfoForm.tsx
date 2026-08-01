@@ -81,14 +81,14 @@ const PersonalInfoForm = forwardRef((props, ref) => {
   }));
 
   return (
-    <div className="bg-[#fafafa] w-full rounded mt-6 md:mt-8">
+    <div className="bg-muted/40 w-full rounded mt-6 md:mt-8">
       {/* header */}
-      <div className="w-full p-4 md:p-5 border-b border-[#e1e1e1]">
-        <h6 className="font-irsans text-xs text-[#4d4d4d] mb-3 md:mb-5 flex items-start md:items-center flex-col md:flex-row gap-2 md:gap-0">
-          <ProfileIcon className="size-4 stroke-[#2F2F2F]" />
+      <div className="w-full p-4 md:p-5 border-b border-border">
+        <h6 className="font-irsans text-xs text-muted-foreground mb-3 md:mb-5 flex items-start md:items-center flex-col md:flex-row gap-2 md:gap-0">
+          <ProfileIcon className="size-4 stroke-foreground" />
           <span className="md:mr-3">
             مشخصات فردی (شخصیت حقوقی هستید؟{""}
-            <button className="text-[#2B93F3]">کلید کنید</button>)
+            <button className="text-primary">کلید کنید</button>)
           </span>
         </h6>
       </div>
@@ -99,14 +99,14 @@ const PersonalInfoForm = forwardRef((props, ref) => {
           {/* نام */}
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-              <label className="w-full sm:w-[110px] block text-xs font-medium text-[#1a1a1a]">
+              <label className="w-full sm:w-[110px] block text-xs font-medium text-foreground">
                 نام <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 {...register("firstName")}
                 disabled={loading}
-                className="block w-full border border-gray-300 dark:border-borderColor rounded-md p-2 text-sm"
+                className="block w-full border border-input bg-card text-foreground rounded-md p-2 text-sm"
               />
             </div>
             {errors.firstName && (
@@ -119,14 +119,14 @@ const PersonalInfoForm = forwardRef((props, ref) => {
           {/* نام خانوادگی */}
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-              <label className="w-full sm:w-[110px] block text-xs font-medium text-[#1a1a1a]">
+              <label className="w-full sm:w-[110px] block text-xs font-medium text-foreground">
                 نام خانوادگی <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 {...register("lastName")}
                 disabled={loading}
-                className="block w-full border border-gray-300 dark:border-borderColor rounded-md p-2 text-sm"
+                className="block w-full border border-input bg-card text-foreground rounded-md p-2 text-sm"
               />
             </div>
             {errors.lastName && (
@@ -139,14 +139,14 @@ const PersonalInfoForm = forwardRef((props, ref) => {
           {/* شماره تماس */}
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-              <label className="w-full sm:w-[110px] block text-xs font-medium text-[#1a1a1a]">
+              <label className="w-full sm:w-[110px] block text-xs font-medium text-foreground">
                 شماره تماس <span className="text-red-500">*</span>
               </label>
               <input
                 type="tel"
                 {...register("phone")}
                 disabled={loading}
-                className="block w-full border border-gray-300 dark:border-borderColor rounded-md p-2 text-sm"
+                className="block w-full border border-input bg-card text-foreground rounded-md p-2 text-sm"
               />
             </div>
             {errors.phone && (
@@ -159,14 +159,14 @@ const PersonalInfoForm = forwardRef((props, ref) => {
           {/* نشانی ایمیل */}
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-              <label className="w-full sm:w-[110px] block text-xs font-medium text-[#1a1a1a]">
+              <label className="w-full sm:w-[110px] block text-xs font-medium text-foreground">
                 نشانی ایمیل <span className="text-red-500">*</span>
               </label>
               <input
                 type="email"
                 {...register("email")}
                 disabled={loading}
-                className="block w-full border border-gray-300 dark:border-borderColor rounded-md p-2 text-sm"
+                className="block w-full border border-input bg-card text-foreground rounded-md p-2 text-sm"
               />
             </div>
             {errors.email && (
@@ -179,14 +179,14 @@ const PersonalInfoForm = forwardRef((props, ref) => {
           {/* کد ملی */}
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-              <label className="w-full sm:w-[110px] block text-xs font-medium text-[#1a1a1a]">
+              <label className="w-full sm:w-[110px] block text-xs font-medium text-foreground">
                 کد ملی
               </label>
               <input
                 type="text"
                 {...register("nationalCode")}
                 disabled={loading}
-                className="block w-full border border-gray-300 dark:border-borderColor rounded-md p-2 text-sm"
+                className="block w-full border border-input bg-card text-foreground rounded-md p-2 text-sm"
               />
             </div>
             {errors.nationalCode && (
@@ -199,7 +199,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
           {/* تاریخ تولد */}
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-              <label className="w-full sm:w-[110px] block text-xs font-medium text-[#1a1a1a]">
+              <label className="w-full sm:w-[110px] block text-xs font-medium text-foreground">
                 تاریخ تولد
               </label>
               <Controller
@@ -213,7 +213,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
                     locale={persian_fa}
                     calendarPosition="bottom-right"
                     placeholder="انتخاب تاریخ"
-                    inputClass="block w-full border border-gray-300 dark:border-borderColor rounded-md p-2 text-sm"
+                    inputClass="block w-full border border-input bg-card text-foreground rounded-md p-2 text-sm"
                     containerClassName="w-full"
                     disabled={loading}
                   />

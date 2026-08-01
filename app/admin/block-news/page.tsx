@@ -22,7 +22,6 @@ import {
 } from '@/components/ui/select';
 import { Plus, Edit2, Trash2, Send, Search, Filter, Newspaper, Clock, Archive } from 'lucide-react';
 import { useBlockNewsList, useDeleteBlockNews, useChangeBlockNewsStatus } from '@/lib/hooks/use-block-news';
-import AdminSidebar from '@/components/admin/AdminSidebar';
 import { AdminLoadingState } from '@/components/admin/AdminPageShell';
 import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
 
@@ -35,7 +34,7 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 export default function BlockNewsListPage() {
-  const { user, isLoading: isLoadingUser, logout } = useAdminAuth();
+  const { user, isLoading: isLoadingUser } = useAdminAuth();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -311,5 +310,5 @@ export default function BlockNewsListPage() {
     </div>
   );
 
-  return <AdminSidebar user={user} currentPage="block-news" onLogout={logout}>{content}</AdminSidebar>;
+  return content;
 }

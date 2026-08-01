@@ -121,11 +121,11 @@ export function ChangePasswordModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white dark:bg-cardBg rounded-lg w-full max-w-md mx-4 p-6 relative animate-in fade-in zoom-in-95 duration-300">
+      <div className="bg-card rounded-lg w-full max-w-md mx-4 p-6 relative animate-in fade-in zoom-in-95 duration-300">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute left-4 top-4 text-gray-400 dark:text-textSecondary hover:text-gray-600 dark:hover:text-textSecondary transition-colors"
+          className="absolute left-4 top-4 text-muted-foreground hover:text-foreground transition-colors"
           disabled={isLoading}
         >
           <X className="w-5 h-5" />
@@ -135,10 +135,10 @@ export function ChangePasswordModal({
         {step === "request" && (
           <div className="flex flex-col gap-4">
             <div className="text-center space-y-2 mb-4">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-textPrimary">
+              <h2 className="text-xl font-bold text-foreground">
                 تغییر رمز عبور
               </h2>
-              <p className="text-sm text-gray-600 dark:text-textSecondary">
+              <p className="text-sm text-muted-foreground">
                 برای تغییر رمز عبور، ابتدا کد تایید به شماره {phone} ارسال
                 می‌شود
               </p>
@@ -148,7 +148,7 @@ export function ChangePasswordModal({
               onClick={handleRequestOtp}
               disabled={isLoading}
               className={cn(
-                "w-full h-12 bg-[#d52a16] text-white font-bold text-lg",
+                "w-full h-12 bg-primary text-primary-foreground font-bold text-lg hover:bg-primary/90",
                 isLoading && "opacity-80 cursor-not-allowed"
               )}
             >
@@ -167,7 +167,7 @@ export function ChangePasswordModal({
         {step === "otp" && (
           <div className="flex flex-col gap-4">
             <div className="text-center space-y-2 mb-4">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-textPrimary">
+              <h2 className="text-xl font-bold text-foreground">
                 تایید شماره موبایل
               </h2>
             </div>
@@ -184,10 +184,10 @@ export function ChangePasswordModal({
         {step === "reset" && (
           <div className="flex flex-col gap-4">
             <div className="text-center space-y-2 mb-4">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-textPrimary">
+              <h2 className="text-xl font-bold text-foreground">
                 تنظیم رمز عبور جدید
               </h2>
-              <p className="text-sm text-gray-600 dark:text-textSecondary">
+              <p className="text-sm text-muted-foreground">
                 لطفاً رمز عبور جدید خود را وارد کنید
               </p>
             </div>
@@ -228,7 +228,7 @@ export function ChangePasswordModal({
                 type="submit"
                 disabled={isLoading}
                 className={cn(
-                  "mt-2 w-full h-12 bg-[#d52a16] text-white font-bold text-lg",
+                  "mt-2 w-full h-12 bg-primary text-primary-foreground font-bold text-lg hover:bg-primary/90",
                   isLoading && "opacity-80 cursor-not-allowed"
                 )}
               >

@@ -1,7 +1,4 @@
-import { GoKebabHorizontal } from "react-icons/go";
-import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
-import ProfileHeader from "./header";
-import Link from "next/link";
+import { FaCheckCircle, FaTimesCircle, FaRegClock } from "react-icons/fa";
 
 interface OrderItem {
   courseId: string;
@@ -17,35 +14,11 @@ interface OrderDetailProps {
     status: string;
     paymentRef?: string | null;
     createdAt: string;
-    user?: {
-      id: string;
-      phone: string;
-    } | null; // 👈 اینجا تغییر کن
     items: OrderItem[];
-  } | null;
+  };
 }
 
 const OrderDetail = ({ order }: OrderDetailProps) => {
-  // handle not found
-  if (!order) {
-    return (
-      <div className="bg-white dark:bg-cardBg rounded-md">
-        <ProfileHeader>
-          <h4 className="font-medium text-sm text-[#d52a16]">
-            جزئیات سفارش پیدا نشد!
-          </h4>
-          <Link
-            href="/profile/orders"
-            className="text-xs text-[#879] hover:text-[#657] hover:underline underline-offset-4"
-          >
-            برگشت
-          </Link>
-        </ProfileHeader>
-      </div>
-    );
-  }
-
-  // Format date
   const formattedDate = new Date(order.createdAt).toLocaleDateString("fa-IR", {
     year: "numeric",
     month: "long",
@@ -54,27 +27,25 @@ const OrderDetail = ({ order }: OrderDetailProps) => {
     minute: "2-digit",
   });
 
-  // Get status info
   const getStatusInfo = (status: string) => {
     switch (status) {
-      case "PAID":
+      case "paid":
         return {
-          icon: <FaCheckCircle className="text-white w-4" />,
+          icon: <FaCheckCircle className="text-success-foreground w-3.5" />,
           text: "پرداخت شده",
-          bgColor: "bg-green-500",
+          bgColor: "bg-success",
         };
-      case "FAILED":
+      case "failed":
         return {
-          icon: <FaTimesCircle className="text-white w-4" />,
+          icon: <FaTimesCircle className="text-destructive-foreground w-3.5" />,
           text: "ناموفق",
-          bgColor: "bg-red-500",
+          bgColor: "bg-destructive",
         };
-      case "PENDING":
       default:
         return {
-          icon: <GoKebabHorizontal className="text-white w-4" />,
-          text: "درحال پردازش",
-          bgColor: "bg-[#ffa200]",
+          icon: <FaRegClock className="w-3.5 text-amber-900" />,
+          text: "در انتظار پرداخت",
+          bgColor: "bg-amber-400",
         };
     }
   };
@@ -82,54 +53,34 @@ const OrderDetail = ({ order }: OrderDetailProps) => {
   const statusInfo = getStatusInfo(order.status);
 
   return (
-    <div className="bg-white dark:bg-cardBg rounded-md">
-      <ProfileHeader>
-        <h4 className="font-medium text-sm text-[#131b22]">جزئیات سفارش</h4>
-        <Link
-          href="/profile/orders"
-          className="text-xs text-[#879] hover:text-[#657] hover:underline underline-offset-4"
-        >
-          برگشت
-        </Link>
-      </ProfileHeader>
-
+    <div>
       {/* Status */}
-      <div className="flex p-5 pb-0 items-center gap-2">
+      <div className="flex items-center gap-2">
         <div
           className={`size-6 rounded-full ${statusInfo.bgColor} flex justify-center items-center`}
         >
           {statusInfo.icon}
         </div>
-        <p className="text-xs">{statusInfo.text}</p>
+        <p className="text-xs font-medium text-foreground">{statusInfo.text}</p>
       </div>
 
       {/* Order Details */}
-      <div className="flex flex-wrap gap-4 text-[#1a1a1a] text-xs max-w-[580px] p-5 leading-9">
+      <div className="flex flex-wrap gap-4 text-foreground text-xs leading-9 mt-3">
         <p>
-          <strong className="font-medium text-[#879ca6]">شناسه سفارش:</strong>{""}
+          <strong className="font-medium text-muted-foreground">شناسه سفارش: </strong>
           {order.id}
         </p>
         <p>
-          <strong className="font-medium text-[#879ca6]">
-            تاریخ ثبت سفارش:
-          </strong>{""}
+          <strong className="font-medium text-muted-foreground">تاریخ ثبت سفارش: </strong>
           {formattedDate}
         </p>
         <p>
-          <strong className="font-medium text-[#879ca6]">مبلغ سفارش:</strong>{""}
+          <strong className="font-medium text-muted-foreground">مبلغ سفارش: </strong>
           {order.total.toLocaleString("fa-IR")} تومان
         </p>
-        {order.user?.phone && (
-          <p>
-            <strong className="font-medium text-[#879ca6]">شماره تماس:</strong>{""}
-            {order.user.phone}
-          </p>
-        )}
         {order.paymentRef && (
           <p>
-            <strong className="font-medium text-[#879ca6]">
-              شناسه پرداخت:
-            </strong>{""}
+            <strong className="font-medium text-muted-foreground">شناسه پرداخت: </strong>
             {order.paymentRef}
           </p>
         )}
@@ -137,32 +88,30 @@ const OrderDetail = ({ order }: OrderDetailProps) => {
 
       {/* Order Items */}
       {order.items.length > 0 && (
-        <div className="p-5 pt-0">
-          <h5 className="font-medium text-sm text-[#131b22] mb-3">
-            اقلام سفارش
-          </h5>
+        <div className="mt-3">
+          <h5 className="font-medium text-sm text-foreground mb-3">اقلام سفارش</h5>
           <div className="space-y-2">
             {order.items.map((item, index) => (
               <div
                 key={item.courseId}
-                className="flex justify-between items-center p-3 bg-gray-50 dark:bg-darkBgHidden rounded-md text-xs"
+                className="flex justify-between items-center p-3 bg-muted rounded-md text-xs"
               >
                 <div>
-                  <p className="font-medium text-[#131b22]">
+                  <p className="font-medium text-foreground">
                     {item.title || `دوره ${index + 1}`}
                   </p>
                 </div>
                 <div className="text-left">
                   {item.discountPercent && item.discountPercent > 0 ? (
                     <div>
-                      <p className="text-gray-400 dark:text-textSecondary line-through">
+                      <p className="text-muted-foreground line-through">
                         {item.price?.toLocaleString("fa-IR")} تومان
                       </p>
-                      <p className="text-green-600 dark:text-green-400 font-medium">
+                      <p className="text-success font-medium">
                         {(
                           (item.price || 0) *
                           (1 - item.discountPercent / 100)
-                        ).toLocaleString("fa-IR")}{""}
+                        ).toLocaleString("fa-IR")}{" "}
                         تومان
                       </p>
                     </div>

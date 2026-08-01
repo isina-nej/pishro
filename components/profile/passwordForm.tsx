@@ -20,11 +20,11 @@ const PasswordForm = forwardRef((props, ref) => {
 
   return (
     <>
-      <div className="bg-[#fafafa] w-full rounded mt-8">
+      <div className="bg-muted/40 w-full rounded mt-8">
         {/* هدر */}
-        <div className="w-full p-5 border-b border-[#e1e1e1]">
-          <h6 className="font-irsans text-xs text-[#4d4d4d] mb-5 flex items-center">
-            <ProfileIcon className="size-4 stroke-[#2F2F2F]" />
+        <div className="w-full p-5 border-b border-border">
+          <h6 className="font-irsans text-xs text-muted-foreground mb-5 flex items-center">
+            <ProfileIcon className="size-4 stroke-foreground" />
             <span className="mr-3">اطلاعات امنیتی</span>
           </h6>
         </div>
