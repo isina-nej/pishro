@@ -1,6 +1,7 @@
 import axios from "axios";
 import type { DigitalBook } from "@prisma/client";
 import { ApiResponse, PaginatedData } from "@/lib/api-response";
+import { getBaseUrl } from "@/lib/get-base-url";
 
 export interface BookListParams {
   page?: number;
@@ -16,10 +17,7 @@ export async function getBooks(
   params?: BookListParams
 ): Promise<PaginatedData<DigitalBook>> {
   try {
-    const baseUrl =
-      process.env.NODE_ENV === "production"
-        ? process.env.NEXT_PUBLIC_BASE_URL || window.location.origin
-        : "http://localhost:3000";
+    const baseUrl = getBaseUrl();
 
     const queryParams = new URLSearchParams();
     if (params?.page) queryParams.set("page", params.page.toString());
@@ -52,10 +50,7 @@ export async function getBooks(
 
 export async function getBookById(id: string): Promise<DigitalBook> {
   try {
-    const baseUrl =
-      process.env.NODE_ENV === "production"
-        ? process.env.NEXT_PUBLIC_BASE_URL || window.location.origin
-        : "http://localhost:3000";
+    const baseUrl = getBaseUrl();
 
     const { data } = await axios.get<ApiResponse<DigitalBook>>(
       `${baseUrl}/api/library/${id}`
@@ -76,10 +71,7 @@ export async function createBook(
   bookData: Partial<DigitalBook>
 ): Promise<DigitalBook> {
   try {
-    const baseUrl =
-      process.env.NODE_ENV === "production"
-        ? process.env.NEXT_PUBLIC_BASE_URL || window.location.origin
-        : "http://localhost:3000";
+    const baseUrl = getBaseUrl();
 
     const { data } = await axios.post<ApiResponse<DigitalBook>>(
       `${baseUrl}/api/library`,
