@@ -21,6 +21,7 @@ import {
   X,
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import type { AdminUser } from '@/lib/hooks/useAdminAuth';
 import AdminTopbar from './AdminTopbar';
@@ -166,11 +167,28 @@ export default function AdminSidebar({ user, children, onLogout }: AdminSidebarP
           >
             {desktopOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
-          {desktopOpen && (
-            <div className="text-right">
-              <h1 className="text-lg font-bold">پیشرو</h1>
-              <p className="text-xs text-muted-foreground">پنل مدیریت</p>
+          {desktopOpen ? (
+            <div className="flex items-center gap-2">
+              <div className="text-right">
+                <h1 className="text-lg font-bold">پیشرو</h1>
+                <p className="text-xs text-muted-foreground">پنل مدیریت</p>
+              </div>
+              <Image
+                src="/logo/logo-square.png"
+                alt="پیشرو"
+                width={36}
+                height={36}
+                className="shrink-0 rounded-lg object-cover"
+              />
             </div>
+          ) : (
+            <Image
+              src="/logo/logo-square.png"
+              alt="پیشرو"
+              width={32}
+              height={32}
+              className="shrink-0 rounded-lg object-cover"
+            />
           )}
         </div>
 
@@ -219,7 +237,16 @@ export default function AdminSidebar({ user, children, onLogout }: AdminSidebarP
           >
             <X size={20} />
           </button>
-          <h1 className="text-lg font-bold">پیشرو</h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-lg font-bold">پیشرو</h1>
+            <Image
+              src="/logo/logo-square.png"
+              alt="پیشرو"
+              width={32}
+              height={32}
+              className="shrink-0 rounded-lg object-cover"
+            />
+          </div>
         </div>
         <nav className="flex-1 overflow-y-auto px-3 py-5">
           {renderNavList(false, () => setMobileOpen(false))}

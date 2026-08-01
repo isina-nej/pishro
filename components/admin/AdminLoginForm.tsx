@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import { Lock, Mail, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -164,9 +165,14 @@ export default function AdminLoginForm({ onError, onSuccess }: AdminLoginFormPro
       {/* Header */}
       <div className="mb-8 text-right">
         <div className="flex items-center justify-end gap-3 mb-3">
-          <div className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl p-3 shadow-lg">
-            <span className="text-2xl">🔐</span>
-          </div>
+          <Image
+            src="/logo/logo-login.png"
+            alt="پیشرو"
+            width={64}
+            height={64}
+            className="shrink-0 rounded-2xl object-cover shadow-lg"
+            priority
+          />
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             پنل ادمین
           </h1>

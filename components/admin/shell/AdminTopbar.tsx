@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { Menu, Search } from 'lucide-react';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 
@@ -18,7 +19,16 @@ export default function AdminTopbar({ onOpenMobileNav, onOpenCommandPalette }: A
       >
         <Menu size={22} />
       </button>
-      <h1 className="text-lg font-bold md:hidden">پیشرو</h1>
+      <div className="flex items-center gap-2 md:hidden">
+        <h1 className="text-lg font-bold">پیشرو</h1>
+        <Image
+          src="/logo/logo-square.png"
+          alt="پیشرو"
+          width={28}
+          height={28}
+          className="shrink-0 rounded-md object-cover"
+        />
+      </div>
 
       <button
         onClick={onOpenCommandPalette}
