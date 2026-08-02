@@ -1,40 +1,69 @@
 /**
  * Sanitize Content Utility
  * Server-side HTML content sanitization for XSS prevention
+ *
+ * پاک‌سازی روی DOMPurify انجام می‌شود (allow-list واقعی، نه regex).
  */
 
+import DOMPurify from 'isomorphic-dompurify';
+
 export interface SanitizationOptions {
+  /** Overrides the default tag allow-list entirely. */
   allowedTags?: string[];
-  allowedAttributes?: Record<string, string[]>;
+  /**
+   * Overrides the default attribute allow-list entirely.
+   * DOMPurify applies attributes globally, so this is a flat list —
+   * it cannot express per-tag rules.
+   */
+  allowedAttributes?: string[];
 }
 
-const DEFAULT_ALLOWED_TAGS = [
-  'p',
-  'h1',
-  'h2',
-  'h3',
-  'blockquote',
-  'ul',
-  'ol',
-  'li',
-  'pre',
-  'hr',
-  'strong',
-  'b',
-  'em',
-  'i',
-  'u',
-  's',
-  'del',
-  'a',
-  'code',
-  'br',
-  'img',
-];
+/**
+ * Shared DOMPurify allow-list for every user-supplied HTML path in the app:
+ * editor/article HTML here, and rendered markdown in `lib/markdown-processor.ts`.
+ *
+ * تنها منبع حقیقت برای تگ‌ها و ویژگی‌های مجاز — کپی نکنید، از همین‌جا import کنید.
+ */
+export const HTML_SANITIZE_CONFIG = {
+  ALLOWED_TAGS: [
+    'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+    'strong', 'b', 'em', 'i', 'u', 's', 'del',
+    'blockquote', 'ul', 'ol', 'li',
+    'pre', 'code', 'hr', 'br',
+    'a', 'img',
+    'table', 'thead', 'tbody', 'tr', 'th', 'td',
+  ],
+  ALLOWED_ATTR: [
+    'href', 'title', 'target', 'rel',
+    'src', 'alt', 'width', 'height',
+    'class', 'id', 'style',
+    'colspan', 'rowspan',
+    'align', 'valign',
+  ],
+  KEEP_CONTENT: true,
+};
 
 /**
- * Basic HTML content sanitization to prevent XSS attacks
- * Removes dangerous scripts and event handlers
+ * Build the DOMPurify config for a call, applying any caller overrides.
+ */
+function resolveConfig(options?: SanitizationOptions) {
+  if (!options?.allowedTags && !options?.allowedAttributes) {
+    return HTML_SANITIZE_CONFIG;
+  }
+
+  return {
+    ...HTML_SANITIZE_CONFIG,
+    ...(options.allowedTags ? { ALLOWED_TAGS: options.allowedTags } : {}),
+    ...(options.allowedAttributes ? { ALLOWED_ATTR: options.allowedAttributes } : {}),
+  };
+}
+
+/**
+ * HTML content sanitization to prevent XSS attacks
+ *
+ * Delegates to DOMPurify with the shared allow-list: anything outside
+ * `HTML_SANITIZE_CONFIG` is dropped (text content of unknown tags is kept,
+ * per `KEEP_CONTENT`), including scripts, event handlers and unsafe URL schemes.
  */
 export function sanitizeContent(
   html: string,
@@ -45,28 +74,7 @@ export function sanitizeContent(
   }
 
   try {
-    let sanitized = html;
-
-    // Remove script tags and content
-    sanitized = sanitized.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
-
-    // Remove style tags and content
-    sanitized = sanitized.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
-
-    // Remove event handlers (onclick, onload, etc.)
-    sanitized = sanitized.replace(/\s*on\w+\s*=\s*["'][^"']*["']/gi, '');
-    sanitized = sanitized.replace(/\s*on\w+\s*=\s*[^\s>]*/gi, '');
-
-    // Remove dangerous protocols in href and src
-    sanitized = sanitized.replace(/href\s*=\s*["']?javascript:/gi, 'href="#"');
-    sanitized = sanitized.replace(/href\s*=\s*["']?data:/gi, 'href="#"');
-    sanitized = sanitized.replace(/src\s*=\s*["']?javascript:/gi, 'src=""');
-    sanitized = sanitized.replace(/src\s*=\s*["']?data:/gi, 'src=""');
-
-    // Remove iframes
-    sanitized = sanitized.replace(/<iframe[^>]*>[\s\S]*?<\/iframe>/gi, '');
-
-    return sanitized;
+    return DOMPurify.sanitize(html, resolveConfig(options));
   } catch (error) {
     console.error('Sanitization error:', error);
     return '';
@@ -74,32 +82,17 @@ export function sanitizeContent(
 }
 
 /**
- * Check if HTML content is safe (no scripts, event handlers, etc.)
+ * Check if HTML content is safe, i.e. sanitizing it would not change it.
+ *
+ * Conservative by design: markup that is merely *normalized* by the sanitizer
+ * (unquoted attributes, unclosed tags, tags outside the allow-list) also
+ * reports `false`. A `true` result means the content can be stored/rendered
+ * exactly as-is; it never returns `true` for content DOMPurify would strip.
  */
 export function isContentSafe(html: string): boolean {
   if (!html) return true;
 
-  // Check for script tags
-  if (/<script[^>]*>[\s\S]*?<\/script>/gi.test(html)) {
-    return false;
-  }
-
-  // Check for event handlers
-  if (/on\w+\s*=/gi.test(html)) {
-    return false;
-  }
-
-  // Check for iframes
-  if (/<iframe/gi.test(html)) {
-    return false;
-  }
-
-  // Check for dangerous protocols
-  if (/javascript:|data:|vbscript:/gi.test(html)) {
-    return false;
-  }
-
-  return true;
+  return sanitizeContent(html) === html;
 }
 
 /**
@@ -108,8 +101,9 @@ export function isContentSafe(html: string): boolean {
 export function getWordCount(html: string): number {
   if (!html) return 0;
 
-  // Remove HTML tags
-  const text = html.replace(/<[^>]*>/g, '');
+  // Replace tags with a space so adjacent tags don't fuse two words together
+  // (`<p>Hello</p><b>world</b>` is two words, not "Helloworld")
+  const text = html.replace(/<[^>]*>/g, ' ');
 
   // Remove extra whitespace
   const cleaned = text.trim().replace(/\s+/g, ' ');
@@ -137,8 +131,9 @@ export function getCharacterCount(html: string): number {
 export function extractPlainText(html: string): string {
   if (!html) return '';
 
-  // Remove HTML tags
-  let text = html.replace(/<[^>]*>/g, '');
+  // Replace tags with a space so adjacent tags don't fuse two words together
+  // (collapsed again below by the whitespace pass)
+  let text = html.replace(/<[^>]*>/g, ' ');
 
   // Decode HTML entities
   text = text
