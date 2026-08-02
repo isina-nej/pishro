@@ -168,7 +168,8 @@ const NewsPageContent = () => {
                       data={{
                         ...newsItem,
                         tags: (Array.isArray(newsItem.tags) ? newsItem.tags : []) as string[],
-                      } as any}
+                        createdAt: newsItem.createdAt ?? new Date(),
+                      }}
                     />
                   </motion.div>
                 ))}

@@ -1,14 +1,19 @@
 // @/stores/cart-store.ts
 
 import type { Course } from "@/lib/types/db";
+import type { Course as PrismaCourse } from "@prisma/client";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-// Accept both Course and serialized versions (with string dates)
-type CourseData = Course | (Omit<Course, "createdAt" | "updatedAt"> & {
-  createdAt: string | Date;
-  updatedAt: string | Date;
-});
+// Accept the app-level Course, the Prisma model the course components pass,
+// and serialized versions (with string dates)
+type CourseData =
+  | Course
+  | PrismaCourse
+  | (Omit<Course, "createdAt" | "updatedAt"> & {
+      createdAt: string | Date;
+      updatedAt: string | Date;
+    });
 
 // Investment Portfolio item type
 export interface InvestmentPortfolioItem {

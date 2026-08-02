@@ -38,6 +38,8 @@ import {
   diffSourcePlugin,
 } from '@mdxeditor/editor';
 
+import type { MDXEditorMethods } from '@mdxeditor/editor';
+
 import '@mdxeditor/editor/style.css';
 
 export interface MDXNewsEditorProps {
@@ -102,7 +104,7 @@ export const MDXNewsEditor = React.forwardRef<
       'idle' | 'saving' | 'saved' | 'error'
     >('idle');
     const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
-    const editorRef = useRef<any>(null);
+    const editorRef = useRef<MDXEditorMethods | null>(null);
     const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
     const contentRef = useRef(initialContent);
     const titleRef = useRef(initialTitle);

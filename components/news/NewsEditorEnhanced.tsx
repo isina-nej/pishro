@@ -29,7 +29,7 @@ export interface NewsEditorProps {
   maxLength?: number;
   articleId?: string;
   onContentChange?: (content: string) => void;
-  onSave?: (data: any) => void;
+  onSave?: (data: unknown) => void;
   onError?: (error: Error) => void;
   showStatusBar?: boolean;
   showToolbar?: boolean;

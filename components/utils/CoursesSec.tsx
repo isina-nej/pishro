@@ -32,7 +32,7 @@ const CoursesSec = () => {
   const filteredCourses =
     selectedCategory.label === "همه"
       ? courses
-      : (courses as any[]).filter((c: any) => c.subject.includes(selectedCategory.label));
+      : courses.filter((c) => c.subject.includes(selectedCategory.label));
 
   if (loading)
     return (

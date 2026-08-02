@@ -18,7 +18,7 @@ interface NewsCardProps {
     publishedAt: Date | null;
     views: number;
     createdAt: Date;
-    updatedAt?: Date;
+    updatedAt?: Date | null;
   };
 }
 

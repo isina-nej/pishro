@@ -83,10 +83,18 @@ export function extractHeadings(content: string): Array<{ level: number; text: s
   return headings;
 }
 
-/** Minimal ProseMirror document node - only the parts walked below */
-interface ProseMirrorNode {
+/** A formatting mark attached to a ProseMirror text node */
+export interface ProseMirrorMark {
+  type: string;
+  attrs?: Record<string, unknown>;
+}
+
+/** Minimal ProseMirror document node - only the parts this app walks/renders */
+export interface ProseMirrorNode {
   type?: string;
   text?: string;
+  marks?: ProseMirrorMark[];
+  attrs?: Record<string, unknown>;
   content?: ProseMirrorNode[];
 }
 

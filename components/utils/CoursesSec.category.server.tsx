@@ -1,14 +1,15 @@
 // Server Component برای دریافت دوره‌های یک دسته‌بندی خاص
 import CoursesGridCategoryClient from "./CoursesGrid.category.client";
 import { getCategoryCourses } from "@/lib/services/category-service";
-import { Prisma } from "@prisma/client";
+import { Prisma, type Tag } from "@prisma/client";
 
 interface CoursesSectionProps {
   categorySlug: string;
   categoryTitle: string;
 }
 
-// Type for serialized course with string dates (server -> client)
+// Mirrors the include used by getCategoryCourses. Note the relation is `tags`
+// (a CourseTags join model) - the mapping below flattens it into `relatedTags`.
 type CourseWithRelations = Prisma.CourseGetPayload<{
   include: {
     category: {
@@ -19,7 +20,11 @@ type CourseWithRelations = Prisma.CourseGetPayload<{
         color: true;
       };
     };
-    relatedTags: true;
+    tags: {
+      include: {
+        tag: true;
+      };
+    };
     _count: {
       select: {
         enrollments: true;
@@ -29,13 +34,16 @@ type CourseWithRelations = Prisma.CourseGetPayload<{
   };
 }>;
 
-type SerializedCourse = Omit<CourseWithRelations, "createdAt" | "updatedAt" | "relatedTags"> & {
+type SerializedTag = Omit<Tag, "createdAt" | "updatedAt"> & {
   createdAt: string;
   updatedAt: string;
-  relatedTags: Array<Omit<CourseWithRelations["relatedTags"][number], "createdAt" | "updatedAt"> & {
-    createdAt: string;
-    updatedAt: string;
-  }>;
+};
+
+// Type for serialized course with string dates (server -> client)
+type SerializedCourse = Omit<CourseWithRelations, "createdAt" | "updatedAt" | "tags"> & {
+  createdAt: string;
+  updatedAt: string;
+  relatedTags: SerializedTag[];
 };
 
 export default async function CoursesSectionCategory({
@@ -49,11 +57,11 @@ export default async function CoursesSectionCategory({
   });
 
   // Serialize dates to strings for client component
-  const serializedCourses: SerializedCourse[] = (coursesData.courses as any[]).map((course) => ({
+  const serializedCourses: SerializedCourse[] = coursesData.courses.map((course) => ({
     ...course,
     createdAt: (course.createdAt || new Date()).toISOString(),
     updatedAt: (course.updatedAt || new Date()).toISOString(),
-    relatedTags: (course.tags || []).map((tagRelation: any) => ({
+    relatedTags: (course.tags || []).map((tagRelation) => ({
       ...tagRelation.tag,
       createdAt: (tagRelation.tag?.createdAt || new Date()).toISOString(),
       updatedAt: (tagRelation.tag?.updatedAt || new Date()).toISOString(),

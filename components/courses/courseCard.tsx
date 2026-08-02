@@ -53,7 +53,7 @@ export const CourseCard = ({ course }: CourseCardProps) => {
       toast.success("این دوره قبلاً به سبد خرید اضافه شده است");
       return;
     }
-    addToCart(course as any);
+    addToCart(course);
     toast.success(`«${course.subject}» به سبد خرید اضافه شد 🛒`);
   };
 
