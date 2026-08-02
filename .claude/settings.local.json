@@ -16,7 +16,10 @@
       "Bash(git commit *)",
       "Bash(node *)",
       "Bash(npx eslint *)",
-      "Bash(grep -E \"\\\\.\\(tsx|ts|jsx|js|css\\)$\")"
+      "Bash(grep -E \"\\\\.\\(tsx|ts|jsx|js|css\\)$\")",
+      "Bash(git add *)",
+      "Bash(git push *)",
+      "Bash(git checkout *)"
     ]
   }
 }
