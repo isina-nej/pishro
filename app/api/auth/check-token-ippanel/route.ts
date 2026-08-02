@@ -6,6 +6,7 @@ import {
   successResponse,
   errorResponse,
   ErrorCodes,
+  HttpStatus,
 } from "@/lib/api-response";
 
 const PAYAMAK_API_URL = process.env.PAYAMAK_API_URL || "https://edge.ippanel.com/v1";
@@ -41,7 +42,8 @@ export async function POST(req: Request) {
       return errorResponse(
         "توکن الزامی است",
         ErrorCodes.UNAUTHORIZED,
-        401
+        undefined,
+        HttpStatus.UNAUTHORIZED
       );
     }
 

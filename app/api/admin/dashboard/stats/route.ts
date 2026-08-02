@@ -8,7 +8,8 @@ import { getAdminAuth } from "@/lib/auth-simple";
 import {
   errorResponse,
   successResponse,
-  ErrorCodes
+  ErrorCodes,
+  HttpStatus,
 } from "@/lib/api-response";
 import { corsPreflightResponse, addCorsHeaders } from "@/lib/cors";
 import {
@@ -28,7 +29,12 @@ export async function GET(_req: NextRequest) {
     const adminAuth = await getAdminAuth(_req);
 
     if (!adminAuth) {
-      const response = errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);
+      const response = errorResponse(
+        "دسترسی محدود به ادمین",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
       return addCorsHeaders(response, origin);
     }
 

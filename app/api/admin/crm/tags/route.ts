@@ -13,6 +13,7 @@ import {
   ErrorCodes,
   successResponse,
   validationError,
+  HttpStatus,
 } from "@/lib/api-response";
 import { CreateCustomerTagSchema } from "@/lib/schemas/crm-customer-schema";
 
@@ -24,7 +25,12 @@ export async function GET(req: NextRequest) {
   try {
     const adminUser = requireAdmin(req);
     if (!adminUser) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "Please login to continue",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const tags = await prisma.customerTag.findMany({
@@ -45,7 +51,12 @@ export async function POST(req: NextRequest) {
   try {
     const adminUser = requireAdmin(req);
     if (!adminUser) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "Please login to continue",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const body = await req.json();

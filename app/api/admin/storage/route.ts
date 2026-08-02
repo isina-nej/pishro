@@ -11,7 +11,8 @@ import { join } from "path";
 import {
   successResponse,
   errorResponse,
-  ErrorCodes
+  ErrorCodes,
+  HttpStatus,
 } from "@/lib/api-response";
 import { getAllUploadPaths } from "@/lib/upload-config";
 
@@ -20,10 +21,20 @@ export async function GET(_req: NextRequest) {
     const adminAuth = await getAdminAuth(_req);
 // فقط ادمین می‌تواند این endpoint را دیده‌ها را ببیند
     if (!adminAuth) {
-      return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "لطفاً وارد حساب کاربری خود شوید",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
     if (!adminAuth) {
-      return errorResponse("فقط ادمین می‌تواند این اطلاعات را ببیند", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "فقط ادمین می‌تواند این اطلاعات را ببیند",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const paths = getAllUploadPaths();
@@ -52,10 +63,20 @@ export async function POST(req: NextRequest) {
     const adminAuth = await getAdminAuth(req);
 // فقط ادمین می‌تواند مهاجرت انجام دهد
     if (!adminAuth) {
-      return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "لطفاً وارد حساب کاربری خود شوید",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
     if (!adminAuth) {
-      return errorResponse("فقط ادمین می‌تواند مهاجرت انجام دهد", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "فقط ادمین می‌تواند مهاجرت انجام دهد",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const body = await req.json();
@@ -64,7 +85,9 @@ export async function POST(req: NextRequest) {
     if (!fromPath || !toPath) {
       return errorResponse(
         "fromPath و toPath الزامی هستند",
-        ErrorCodes.VALIDATION_ERROR
+        ErrorCodes.VALIDATION_ERROR,
+        undefined,
+        HttpStatus.BAD_REQUEST
       );
     }
 

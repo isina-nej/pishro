@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { Prisma } from "@prisma/client";
 import { getAdminAuthFromHeaders } from "@/lib/admin-auth";
-import { errorResponse, successResponse, ErrorCodes, notFoundResponse, validationError } from "@/lib/api-response";
+import { errorResponse, successResponse, ErrorCodes, notFoundResponse, validationError, HttpStatus } from "@/lib/api-response";
 import { LessonUpdateSchema } from "@/lib/schemas/course-management-schema";
 import { deleteLesson, updateLesson } from "@/lib/services/lesson-service";
 
@@ -11,7 +11,12 @@ export async function PATCH(
 ) {
   try {
     if (!getAdminAuthFromHeaders(req.headers)) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "Please login to continue",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
     const { id } = await params;
     const body = await req.json();
@@ -45,7 +50,12 @@ export async function DELETE(
 ) {
   try {
     if (!getAdminAuthFromHeaders(req.headers)) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "Please login to continue",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
     const { id } = await params;
     await deleteLesson(id);

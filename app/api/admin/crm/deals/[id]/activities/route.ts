@@ -15,6 +15,7 @@ import {
   ErrorCodes,
   notFoundResponse,
   validationError,
+  HttpStatus,
 } from "@/lib/api-response";
 import { DealActivityCreateSchema } from "@/lib/schemas/crm-deal-schema";
 
@@ -29,7 +30,12 @@ export async function POST(
   try {
     const adminUser = requireAdmin(req);
     if (!adminUser) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "Please login to continue",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const { id } = await params;
@@ -66,6 +72,9 @@ export async function POST(
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
       return notFoundResponse("Deal", "فرصت فروش یافت نشد");
     }
-    return errorResponse("Error creating deal activity", ErrorCodes.DATABASE_ERROR);
+    return errorResponse(
+      "Error creating deal activity",
+      ErrorCodes.DATABASE_ERROR
+    );
   }
 }

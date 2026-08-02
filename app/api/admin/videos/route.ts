@@ -6,7 +6,8 @@ import {
   errorResponse,
   validationError,
   paginatedResponse,
-  ErrorCodes
+  ErrorCodes,
+  HttpStatus,
 } from "@/lib/api-response";
 import {
   createVideo,
@@ -29,7 +30,12 @@ export async function GET(req: NextRequest) {
     // Unified authentication - supports NextAuth and Bearer token
     const adminAuth = await getAdminAuth(req);
     if (!adminAuth) {
-      return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "دسترسی غیرمجاز - فقط ادمین",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -72,7 +78,12 @@ export async function POST(req: NextRequest) {
     // Unified authentication - supports NextAuth and Bearer token
     const adminAuth = await getAdminAuth(req);
     if (!adminAuth) {
-      return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "دسترسی غیرمجاز - فقط ادمین",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const body = await req.json();

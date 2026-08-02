@@ -4,6 +4,7 @@ import {
   successResponse,
   errorResponse,
   ErrorCodes,
+  HttpStatus,
 } from "@/lib/api-response";
 
 export async function GET(
@@ -24,14 +25,18 @@ export async function GET(
     if (!book) {
       return errorResponse(
         "کتاب یافت نشد",
-        ErrorCodes.NOT_FOUND
+        ErrorCodes.NOT_FOUND,
+        undefined,
+        HttpStatus.NOT_FOUND
       );
     }
 
     if (!foundById && book.bookStatus && book.bookStatus !== "PUBLISHED") {
       return errorResponse(
         "این کتاب در دسترس عموم نیست",
-        ErrorCodes.NOT_FOUND
+        ErrorCodes.NOT_FOUND,
+        undefined,
+        HttpStatus.NOT_FOUND
       );
     }
 
@@ -78,7 +83,9 @@ export async function PUT(
     if (!title || !author || !category) {
       return errorResponse(
         "فیلدهای الزامی را پر کنید",
-        ErrorCodes.VALIDATION_ERROR
+        ErrorCodes.VALIDATION_ERROR,
+        undefined,
+        HttpStatus.BAD_REQUEST
       );
     }
 

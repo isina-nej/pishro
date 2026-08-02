@@ -6,6 +6,7 @@ import {
   errorResponse,
   ErrorCodes,
   createdResponse,
+  HttpStatus,
 } from "@/lib/api-response";
 import { LessonCreateSchema } from "@/lib/schemas/course-management-schema";
 import { prisma } from "@/lib/prisma";
@@ -14,7 +15,12 @@ export async function GET(_req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(_req);
     if (!adminAuth) {
-      return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "دسترسی غیرمجاز",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const lessons = await getAllLessons();
@@ -32,7 +38,12 @@ export async function POST(req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(req);
     if (!adminAuth) {
-      return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "دسترسی غیرمجاز",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const body = await req.json();
@@ -44,7 +55,8 @@ export async function POST(req: NextRequest) {
         ErrorCodes.VALIDATION_ERROR,
         Object.fromEntries(
           parsed.error.errors.map((e) => [String(e.path[0]), e.message])
-        )
+        ),
+        HttpStatus.BAD_REQUEST
       );
     }
 
@@ -52,12 +64,19 @@ export async function POST(req: NextRequest) {
       where: { id: parsed.data.courseId },
     });
     if (!course) {
-      return errorResponse("دوره یافت نشد", ErrorCodes.NOT_FOUND);
+      return errorResponse(
+        "دوره یافت نشد",
+        ErrorCodes.NOT_FOUND,
+        undefined,
+        HttpStatus.NOT_FOUND
+      );
     }
     if (parsed.data.chapterId && !course.hasChapters) {
       return errorResponse(
         "این دوره از فصل پشتیبانی نمی‌کند",
-        ErrorCodes.VALIDATION_ERROR
+        ErrorCodes.VALIDATION_ERROR,
+        undefined,
+        HttpStatus.BAD_REQUEST
       );
     }
 
@@ -66,7 +85,12 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("[POST /api/admin/lessons] error:", error);
     if (error instanceof Error && error.message === "POSITION_CONFLICT") {
-      return errorResponse("تضاد در ترتیب", ErrorCodes.CONFLICT, undefined, 409);
+      return errorResponse(
+        "تضاد در ترتیب",
+        ErrorCodes.CONFLICT,
+        undefined,
+        409
+      );
     }
     return errorResponse(
       "خطایی در ایجاد کلاس رخ داد",

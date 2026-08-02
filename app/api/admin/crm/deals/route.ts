@@ -16,6 +16,7 @@ import {
   ErrorCodes,
   paginatedResponse,
   validationError,
+  HttpStatus,
 } from "@/lib/api-response";
 import { DealCreateSchema } from "@/lib/schemas/crm-deal-schema";
 
@@ -34,7 +35,12 @@ export async function GET(req: NextRequest) {
   try {
     const adminUser = requireAdmin(req);
     if (!adminUser) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "Please login to continue",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -76,7 +82,12 @@ export async function POST(req: NextRequest) {
   try {
     const adminUser = requireAdmin(req);
     if (!adminUser) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "Please login to continue",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const body = await req.json();

@@ -11,7 +11,8 @@ import {
   paginatedResponse,
   createdResponse,
   ErrorCodes,
-  validationError
+  validationError,
+  HttpStatus,
 } from "@/lib/api-response";
 import { getUserImages, uploadImage } from "@/lib/services/image-service";
 import { ImageCategory } from "@prisma/client";
@@ -20,10 +21,20 @@ export async function GET(req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(req);
 if (!adminAuth) {
-      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "لطفا وارد شوید",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
     if (!adminAuth) {
-      return errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "دسترسی محدود به ادمین",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -64,10 +75,20 @@ export async function POST(req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(req);
 if (!adminAuth) {
-      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "لطفا وارد شوید",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
     if (!adminAuth) {
-      return errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "دسترسی محدود به ادمین",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     // Parse multipart form data

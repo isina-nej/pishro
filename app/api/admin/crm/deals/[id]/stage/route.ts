@@ -18,6 +18,7 @@ import {
   notFoundResponse,
   successResponse,
   validationError,
+  HttpStatus,
 } from "@/lib/api-response";
 import { DealStageMoveSchema } from "@/lib/schemas/crm-deal-schema";
 
@@ -32,7 +33,12 @@ export async function PATCH(
   try {
     const adminUser = requireAdmin(req);
     if (!adminUser) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "Please login to continue",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const { id } = await params;

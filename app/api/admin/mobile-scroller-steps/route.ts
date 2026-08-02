@@ -13,7 +13,8 @@ import {
   paginatedResponse,
   createdResponse,
   ErrorCodes,
-  validationError
+  validationError,
+  HttpStatus,
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
 
@@ -21,10 +22,20 @@ export async function GET(req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(req);
 if (!adminAuth) {
-      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "لطفا وارد شوید",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
     if (!adminAuth) {
-      return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "دسترسی محدود. فقط ادمین.",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -71,10 +82,20 @@ export async function POST(req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(req);
 if (!adminAuth) {
-      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "لطفا وارد شوید",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
     if (!adminAuth) {
-      return errorResponse("دسترسی محدود. فقط ادمین.", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "دسترسی محدود. فقط ادمین.",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const body = await req.json();

@@ -5,6 +5,7 @@ import {
   errorResponse,
   paginatedResponse,
   ErrorCodes,
+  HttpStatus,
 } from "@/lib/api-response";
 
 export async function GET(req: NextRequest) {
@@ -82,7 +83,9 @@ export async function POST(req: NextRequest) {
     if (!title || !slug || !author || !description || !category || !year) {
       return errorResponse(
         "فیلدهای الزامی را پر کنید",
-        ErrorCodes.VALIDATION_ERROR
+        ErrorCodes.VALIDATION_ERROR,
+        undefined,
+        HttpStatus.BAD_REQUEST
       );
     }
 

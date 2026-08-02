@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { successResponse, errorResponse, ErrorCodes } from "@/lib/api-response";
+import { successResponse, errorResponse, ErrorCodes, HttpStatus } from "@/lib/api-response";
 import { query } from "@/lib/db";
 import { randomUUID } from "crypto";
 
@@ -11,7 +11,9 @@ export async function POST(req: NextRequest) {
     if (!courseId) {
       return errorResponse(
         "شناسه دوره الزامی است",
-        ErrorCodes.VALIDATION_ERROR
+        ErrorCodes.VALIDATION_ERROR,
+        undefined,
+        HttpStatus.BAD_REQUEST
       );
     }
 

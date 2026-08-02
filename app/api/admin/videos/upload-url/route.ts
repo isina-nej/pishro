@@ -5,7 +5,8 @@ import {
   successResponse,
   errorResponse,
   validationError,
-  ErrorCodes
+  ErrorCodes,
+  HttpStatus,
 } from "@/lib/api-response";
 import {
   generateVideoId,
@@ -23,7 +24,12 @@ export async function POST(req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(req);
     if (!adminAuth) {
-      return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "دسترسی غیرمجاز - فقط ادمین",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const body: RequestUploadUrlInput = await req.json();

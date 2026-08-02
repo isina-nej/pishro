@@ -6,7 +6,7 @@
 
 import { NextRequest } from "next/server";
 import { getAdminAuthFromHeaders } from "@/lib/admin-auth";
-import { errorResponse, successResponse, ErrorCodes } from "@/lib/api-response";
+import { errorResponse, successResponse, ErrorCodes, HttpStatus } from "@/lib/api-response";
 import {
   getLeadConversionStats,
   type CrmLeadConversionPeriod,
@@ -20,7 +20,12 @@ export async function GET(req: NextRequest) {
   try {
     const adminAuth = getAdminAuthFromHeaders(req.headers);
     if (!adminAuth) {
-      return errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "دسترسی محدود به ادمین",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const period = parsePeriod(req.nextUrl.searchParams.get("period"));
