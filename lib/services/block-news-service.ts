@@ -111,10 +111,13 @@ export async function getNewsList(
 
   if (filters.categoryId) where.categoryId = filters.categoryId;
   if (filters.search) {
+    // No `mode: 'insensitive'` here - Prisma only supports it on PostgreSQL
+    // and MongoDB. This schema is MySQL, whose default collation already
+    // compares strings case-insensitively.
     where.OR = [
-      { title: { contains: filters.search, mode: 'insensitive' } },
-      { excerpt: { contains: filters.search, mode: 'insensitive' } },
-      { content: { contains: filters.search, mode: 'insensitive' } },
+      { title: { contains: filters.search } },
+      { excerpt: { contains: filters.search } },
+      { content: { contains: filters.search } },
     ];
   }
 

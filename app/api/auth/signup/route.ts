@@ -1,4 +1,5 @@
 // app/api/auth/signup/route.ts
+import type { User, Otp, TempUser } from "@prisma/client";
 import { query, execute } from "@/lib/db";
 import bcrypt from "bcryptjs";
 import { randomUUID } from "crypto";
@@ -34,7 +35,7 @@ export async function POST(req: Request) {
     }
 
     // Check if user already verified
-    const users = await query<any>(
+    const users = await query<Pick<User, "phoneVerified">>(
       `SELECT phoneVerified FROM User WHERE phone = ? LIMIT 1`,
       [phone]
     );
@@ -52,7 +53,7 @@ export async function POST(req: Request) {
     console.log("code:", code);
 
     // Check if OTP exists for this phone
-    const otps = await query<any>(
+    const otps = await query<Pick<Otp, "id">>(
       `SELECT id FROM Otp WHERE phone = ? LIMIT 1`,
       [phone]
     );
@@ -73,7 +74,7 @@ export async function POST(req: Request) {
     }
 
     // Check if TempUser exists for this phone
-    const tempUsers = await query<any>(
+    const tempUsers = await query<Pick<TempUser, "id">>(
       `SELECT id FROM TempUser WHERE phone = ? LIMIT 1`,
       [phone]
     );

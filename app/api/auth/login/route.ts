@@ -6,6 +6,13 @@
  * and receive session credentials for subsequent API calls.
  */
 
+import type { User } from "@prisma/client";
+
+/** Columns selected for the credentials check below */
+type AuthUserRow = Pick<
+  User,
+  "id" | "phone" | "passwordHash" | "role" | "firstName" | "lastName" | "email" | "phoneVerified"
+>;
 import { NextRequest } from "next/server";
 import { queryOne } from "@/lib/db";
 import bcrypt from "bcryptjs";
@@ -61,7 +68,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Find user
-    const user = await queryOne<any>(
+    const user = await queryOne<AuthUserRow>(
       "SELECT id, phone, passwordHash, role, firstName, lastName, email, phoneVerified FROM `User` WHERE phone = ?",
       [phone]
     );

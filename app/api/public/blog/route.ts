@@ -4,6 +4,7 @@
 
 import { successResponse, errorResponse } from '@/lib/api-response';
 import { prisma } from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
 
 export async function GET(req: Request) {
   try {
@@ -14,7 +15,7 @@ export async function GET(req: Request) {
 
     const skip = (page - 1) * limit;
 
-    const whereClause: any = {
+    const whereClause: Prisma.NewsArticleWhereInput = {
       published: true,
       publishedAt: {
         not: null,
@@ -23,11 +24,14 @@ export async function GET(req: Request) {
     };
 
     if (search) {
+      // No `mode: 'insensitive'` here - Prisma only supports it on PostgreSQL
+      // and MongoDB. This schema is MySQL, whose default collation already
+      // compares strings case-insensitively.
       whereClause.OR = [
-        { title: { contains: search, mode: 'insensitive' } },
-        { excerpt: { contains: search, mode: 'insensitive' } },
-        { author: { contains: search, mode: 'insensitive' } },
-        { content: { contains: search, mode: 'insensitive' } }
+        { title: { contains: search } },
+        { excerpt: { contains: search } },
+        { author: { contains: search } },
+        { content: { contains: search } }
       ];
     }
 

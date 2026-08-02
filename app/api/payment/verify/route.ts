@@ -1,6 +1,7 @@
 // @/app/api/payment/verify/route.ts
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { TransactionType, TransactionStatus } from "@prisma/client";
 import {
   createTransaction,
   createEnrollmentsFromOrder,
@@ -89,8 +90,8 @@ export async function GET(req: Request) {
           userId: order.userId,
           orderId: order.id,
           amount: order.total,
-          type: "PAYMENT" as any,
-          status: "SUCCESS" as any,
+          type: TransactionType.PAYMENT,
+          status: TransactionStatus.SUCCESS,
           gateway: "zarinpal",
           refNumber,
           description: "پرداخت موفق سفارش",
@@ -121,8 +122,8 @@ export async function GET(req: Request) {
           userId: order.userId,
           orderId: order.id,
           amount: order.total,
-          type: "PAYMENT" as any,
-          status: "FAILED" as any,
+          type: TransactionType.PAYMENT,
+          status: TransactionStatus.FAILED,
           gateway: "zarinpal",
           description: "پرداخت ناموفق",
         });

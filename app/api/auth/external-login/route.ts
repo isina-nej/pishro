@@ -1,6 +1,13 @@
 // app/api/auth/external-login/route.ts
 // Local database login (no external API)
 
+import type { User } from "@prisma/client";
+
+/** Columns selected for the credentials check below */
+type AuthUserRow = Pick<
+  User,
+  "id" | "phone" | "passwordHash" | "role" | "firstName" | "lastName" | "email" | "phoneVerified"
+>;
 import { queryOne } from "@/lib/db";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
@@ -78,7 +85,7 @@ export async function POST(req: Request) {
     console.log(`[Local Login] Authenticating user: ${phone}`);
 
     // Find user in database
-    const user = await queryOne<any>(
+    const user = await queryOne<AuthUserRow>(
       "SELECT id, phone, passwordHash, role, firstName, lastName, email, phoneVerified FROM `User` WHERE phone = ?",
       [phone]
     );
@@ -114,12 +121,12 @@ export async function POST(req: Request) {
       id: user.id,
       phone: user.phone,
       role: user.role,
-      firstName: user.firstName,
-      lastName: user.lastName,
+      firstName: user.firstName ?? undefined,
+      lastName: user.lastName ?? undefined,
       name: user.firstName && user.lastName
         ? `${user.firstName} ${user.lastName}`
         : undefined,
-      email: user.email,
+      email: user.email ?? undefined,
     };
 
     return successLoginResponse(userData);

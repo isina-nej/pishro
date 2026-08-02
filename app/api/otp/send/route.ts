@@ -1,4 +1,5 @@
 // app/api/otp/send/route.ts
+import type { Otp } from "@prisma/client";
 import { query, execute } from "@/lib/db";
 import { randomUUID } from "crypto";
 import { sendOtpViaPattern } from "@/lib/sms";
@@ -30,7 +31,7 @@ export async function POST(req: Request) {
     const expiresAt = new Date(Date.now() + 2 * 60 * 1000); // valid for 2 minutes
 
     // Check if OTP exists for this phone
-    const otps = await query<any>(
+    const otps = await query<Pick<Otp, "id">>(
       `SELECT id FROM Otp WHERE phone = ? LIMIT 1`,
       [phone]
     );

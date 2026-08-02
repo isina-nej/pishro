@@ -24,7 +24,7 @@ interface BookDetail {
   isbn?: string;
   language: string;
   publisher?: string;
-  formats: any[];
+  formats: string[];
   price?: number;
   fileUrl?: string;
   audioUrl?: string;
@@ -292,7 +292,7 @@ export default function BookDetailPage() {
               <div className="mt-8">
                 <h3 className="font-semibold text-slate-900 dark:text-white mb-4">برچسب‌ها</h3>
                 <div className="flex flex-wrap gap-2">
-                  {book.tags.map((tag: any, index: number) => (
+                  {book.tags.map((tag: string | { name: string }, index: number) => (
                     <span
                       key={index}
                       className="px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm"

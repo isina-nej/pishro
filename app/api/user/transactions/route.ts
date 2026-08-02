@@ -48,7 +48,7 @@ export async function GET(req: Request) {
       prisma.transaction.count({ where }),
     ]);
 
-    const formattedTransactions = transactions.map((transaction: any) => ({
+    const formattedTransactions = transactions.map((transaction) => ({
       id: transaction.id,
       amount: transaction.amount,
       type: transaction.type,

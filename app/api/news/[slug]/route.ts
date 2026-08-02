@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { getNewsBySlug } from '@/lib/services/news-mysql';
 import { successResponse, errorResponse, ErrorCodes } from '@/lib/api-response';
 import { prisma } from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
 
 export async function GET(
   _req: NextRequest,
@@ -67,9 +68,12 @@ export async function PUT(
     });
 
     return successResponse(article, 'خبر با موفقیت به‌روزرسانی شد');
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error updating article:', error);
-    if (error.code === 'P2025') {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === 'P2025'
+    ) {
       return errorResponse('خبر پیدا نشد', ErrorCodes.NOT_FOUND, undefined, 404);
     }
     return errorResponse(

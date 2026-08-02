@@ -1,3 +1,10 @@
+import type { User } from "@prisma/client";
+
+/** Columns selected for the credentials check below */
+type AuthUserRow = Pick<
+  User,
+  "id" | "phone" | "passwordHash" | "role" | "firstName" | "lastName" | "email" | "phoneVerified" | "avatarUrl"
+>;
 import { NextRequest, NextResponse } from "next/server";
 import { queryOne } from "@/lib/db";
 import bcrypt from "bcryptjs";
@@ -40,8 +47,8 @@ export async function POST(request: NextRequest) {
 
     // Find user
     console.log("DEBUG: Querying user from database");
-    const user = await queryOne<any>(
-      "SELECT id, phone, passwordHash, role, firstName, lastName, email, phoneVerified FROM `User` WHERE phone = ?",
+    const user = await queryOne<AuthUserRow>(
+      "SELECT id, phone, passwordHash, role, firstName, lastName, email, phoneVerified, avatarUrl FROM `User` WHERE phone = ?",
       [phone]
     );
 
@@ -95,14 +102,15 @@ export async function POST(request: NextRequest) {
       message: "Login successful",
       data: userData,
     });
-  } catch (error: any) {
-    console.error("DEBUG: Error:", error);
-    console.error("DEBUG: Error message:", error.message);
-    console.error("DEBUG: Error stack:", error.stack);
+  } catch (error: unknown) {
+    const err = error instanceof Error ? error : new Error(String(error));
+    console.error("DEBUG: Error:", err);
+    console.error("DEBUG: Error message:", err.message);
+    console.error("DEBUG: Error stack:", err.stack);
     return NextResponse.json({
       status: "error",
-      message: error.message || "Login failed",
-      error: process.env.NODE_ENV === "development" ? error.stack : undefined,
+      message: err.message || "Login failed",
+      error: process.env.NODE_ENV === "development" ? err.stack : undefined,
     }, { status: 500 });
   }
 }
