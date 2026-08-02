@@ -3,7 +3,7 @@
 import { useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { api } from '@/lib/api-client';
+import { api, clearAdminSession } from '@/lib/api-client';
 
 export interface AdminUser {
   id: string;
@@ -33,26 +33,25 @@ export function useAdminAuth(): UseAdminAuthResult {
   const pathname = usePathname();
   const queryClient = useQueryClient();
 
-  const clearSession = useCallback(() => {
-    localStorage.removeItem('admin_access_token');
-    localStorage.removeItem('admin_user');
-  }, []);
-
   const { data: user, isLoading } = useQuery({
     queryKey: adminAuthKeys.me(),
     queryFn: async () => {
-      const token = localStorage.getItem('admin_access_token');
-      if (!token) {
-        router.push('/admin/login');
-        return null;
-      }
-
+      // Deliberately does NOT gate on localStorage having a token. The session
+      // also lives in the `admin_access_token` cookie, which the browser sends
+      // automatically and which `middleware.ts` treats as authenticated. If the
+      // two ever diverge (cleared site data, another tab, an older build), a
+      // localStorage-only check declares "logged out" while middleware keeps
+      // redirecting /admin/login back here — leaving the shell rendering
+      // nothing at all. Let /api/admin/auth/me be the single source of truth:
+      // the request interceptor attaches a Bearer token when localStorage has
+      // one, and the cookie covers the case where it doesn't.
       try {
         const { data } = await api.get('/api/admin/auth/me');
         return data.user as AdminUser;
       } catch (error) {
         console.error('Error fetching admin user:', error);
-        clearSession();
+        // Clears the cookie too, so /admin/login is actually reachable.
+        clearAdminSession();
         router.push('/admin/login');
         return null;
       }
@@ -72,7 +71,7 @@ export function useAdminAuth(): UseAdminAuthResult {
       await api.post('/api/admin/auth/logout');
     },
     onSettled: () => {
-      clearSession();
+      clearAdminSession();
       queryClient.setQueryData(adminAuthKeys.me(), null);
       router.push('/admin/login');
     },

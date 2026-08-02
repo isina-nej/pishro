@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# A newer push to the same branch makes the in-flight run obsolete. Deploys are
+# exempt below via cancel-in-progress:false semantics — a cancelled deploy could
+# leave the server half-updated.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  verify:
+    name: Lint, type-check, build, test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Matches the Node version running on the VPS (v20.20.2), so a build that
+      # passes here is a build that runs there.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      # postinstall runs `prisma generate`; without it @prisma/client resolves
+      # to an unbuilt stub and the Next.js build fails.
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: nextjs-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**/*.ts', '**/*.tsx') }}
+          restore-keys: |
+            nextjs-${{ hashFiles('package-lock.json') }}-
+            nextjs-
+
+      # Non-blocking on purpose: the repo carries ~259 pre-existing ESLint
+      # errors across ~105 files, and next.config.ts already sets
+      # eslint.ignoreDuringBuilds. Flip this to blocking once that backlog is
+      # cleared, otherwise every run is red and nobody reads it.
+      - name: Lint
+        run: npm run lint
+        continue-on-error: true
+
+      - name: Type-check
+        run: npx tsc --noEmit
+
+      - name: Build
+        run: npm run build
+
+      # The three integration suites skip themselves when no app answers at
+      # TEST_BASE_URL (see tests/helpers/server.ts). They stay skipped here
+      # until CI grows a MySQL service and a seeded database.
+      - name: Test
+        run: npm test
+
+  # Requires these repository secrets (Settings > Secrets and variables > Actions):
+  #   DEPLOY_HOST     VPS address
+  #   DEPLOY_USER     SSH user (currently root)
+  #   DEPLOY_SSH_KEY  private key whose public half is in that user's authorized_keys
+  #   DEPLOY_PORT     optional, defaults to 22
+  deploy:
+    name: Deploy to VPS
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Pull, build and restart over SSH
+        uses: appleboy/ssh-action@v1.2.5
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ secrets.DEPLOY_PORT || 22 }}
+          script_stop: true
+          script: |
+            set -euo pipefail
+            cd /opt/pishro
+
+            # --ff-only rather than reset --hard: if the server has drifted,
+            # fail loudly instead of silently discarding whatever is there.
+            git fetch --prune origin
+            git pull --ff-only origin main
+
+            npm ci
+            npm run build
+
+            # Only reached when the build above succeeded, so a broken build
+            # leaves the currently running process untouched. Restarts only
+            # this app — the `pishbini` process on the same box is not ours.
+            pm2 restart pishro-app --update-env
+            pm2 save

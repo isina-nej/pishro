@@ -3,24 +3,24 @@
  * Location: tests/api/security.integration.test.ts
  */
 
-import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
-import fetch from 'node-fetch';
+import { describe, it, before, after } from 'node:test';
+import { expect } from 'expect';
+import { TEST_BASE_URL, skipUnlessServerUp } from '../helpers/server';
 
-const API_BASE = process.env.API_URL || 'http://localhost:3000';
+const API_BASE = TEST_BASE_URL;
 const TEST_TIMEOUT = 30000;
 
-describe('API Security & Rate Limiting', () => {
+describe('API Security & Rate Limiting', { skip: await skipUnlessServerUp() }, () => {
   let authToken: string;
-  let testArticleId: string;
 
-  beforeAll(async () => {
+  before(async () => {
     // Get auth token (mock session in real tests)
     authToken = 'test-token';
-  }, TEST_TIMEOUT);
+  });
 
-  afterAll(async () => {
+  after(async () => {
     // Cleanup
-  }, TEST_TIMEOUT);
+  });
 
   // ============================================
   // XSS PREVENTION TESTS

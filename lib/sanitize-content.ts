@@ -80,8 +80,11 @@ export function isContentSafe(html: string): boolean {
 export function getWordCount(html: string): number {
   if (!html) return 0;
 
-  // Remove HTML tags
-  const text = html.replace(/<[^>]*>/g, '');
+  // Replace tags with a space rather than nothing: adjacent tags carry an
+  // implicit word boundary, so "<p>Hello</p><strong>world</strong>" must count
+  // as two words, not collapse into the single token "Helloworld".
+  // The whitespace pass below re-collapses the spaces this introduces.
+  const text = html.replace(/<[^>]*>/g, ' ');
 
   // Remove extra whitespace
   const cleaned = text.trim().replace(/\s+/g, ' ');

@@ -12,8 +12,8 @@
     "seed": "tsx prisma/seeds/seed-all.ts",
     "seed:reset": "npx prisma migrate reset --force && npm run seed",
     "db:studio": "npx prisma studio",
-    "postinstall": "echo 'Setup complete'",
-    "test": "node --import tsx --test tests/**/*.test.ts",
+    "postinstall": "prisma generate",
+    "test": "node --import tsx --test $(find tests -name '*.test.ts' | sort)",
     "test:unit": "node --import tsx --test tests/course-management-schema.test.ts"
   },
   "dependencies": {
@@ -110,6 +110,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@svgr/cli": "^8.1.0",
+    "expect": "^30.2.0",
     "@types/hls.js": "^1.0.0",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20.19.24",

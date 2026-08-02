@@ -3,6 +3,8 @@
  * Testing XSS protection and HTML sanitization
  */
 
+import { describe, it } from 'node:test';
+import { expect } from 'expect';
 import {
   sanitizeContent,
   isContentSafe,
@@ -66,8 +68,8 @@ describe('Sanitization Service', () => {
     });
 
     it('should handle null/undefined gracefully', () => {
-      expect(sanitizeContent(null as any)).toBe('');
-      expect(sanitizeContent(undefined as any)).toBe('');
+      expect(sanitizeContent(null as unknown as string)).toBe('');
+      expect(sanitizeContent(undefined as unknown as string)).toBe('');
     });
 
     it('should preserve heading hierarchy', () => {
