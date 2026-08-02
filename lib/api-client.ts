@@ -4,7 +4,9 @@
 import axios from 'axios';
 
 export const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000'),
+  // Always use the current origin in the browser so requests are same-origin
+  // and never trigger CORS preflight (www vs non-www mismatch).
+  baseURL: typeof window !== 'undefined' ? window.location.origin : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'),
   timeout: 10000,
 });
 
