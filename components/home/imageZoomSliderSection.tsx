@@ -238,7 +238,7 @@ const ImageZoomSliderSection = ({
                           alt={`slide-${index}`}
                           fill
                           className="object-cover"
-                          priority
+                          priority={index === 0}
                         />
 
                       </motion.div>
@@ -256,7 +256,7 @@ const ImageZoomSliderSection = ({
                                 alt="Zoom Background"
                                 fill
                                 className="object-cover"
-                                priority
+                                priority={index === 0}
                               />
                             </div>
                           </motion.div>

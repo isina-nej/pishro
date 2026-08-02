@@ -99,13 +99,12 @@ const MiniMovingSlider = ({
                 alt={`mini-slide-${i}`}
                 fill
                 className="object-cover"
-                priority
               />
               {/* لایه تیره شدن هنگام هاور */}
               <div
                 className="absolute inset-0 transition-opacity duration-300"
                 style={{
-                  backgroundColor: "rgba(0, 0, 0.3)", // رنگ تیره با شفافیت
+                  backgroundColor: "rgba(0, 0, 0, 0.3)", // رنگ تیره با شفافیت
                   opacity: isHovered === i ? 1 : 0, // فقط برای اسلاید هاور شده
                 }}
               />
