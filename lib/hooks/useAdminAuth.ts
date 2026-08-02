@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api-client';
 
@@ -30,6 +30,7 @@ export const adminAuthKeys = {
  */
 export function useAdminAuth(): UseAdminAuthResult {
   const router = useRouter();
+  const pathname = usePathname();
   const queryClient = useQueryClient();
 
   const clearSession = useCallback(() => {
@@ -56,6 +57,11 @@ export function useAdminAuth(): UseAdminAuthResult {
         return null;
       }
     },
+    // Never run (or cache a "logged out" result for) this query while sitting
+    // on the login page — otherwise a successful login's client-side redirect
+    // to /admin/dashboard lands on a query cache that was poisoned with `null`
+    // before the login happened, and stays that way until staleTime expires.
+    enabled: pathname !== '/admin/login',
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
     retry: false,

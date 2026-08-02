@@ -10,14 +10,14 @@ import AdminLoginForm from '@/components/admin/AdminLoginForm';
 
 export default function AdminLoginPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 px-4 sm:px-6 lg:px-8 py-12 relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-blue-500/10 to-purple-500/10 dark:from-blue-500/5 dark:to-purple-500/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-purple-500/10 to-pink-500/10 dark:from-purple-500/5 dark:to-pink-500/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-12 sm:px-6 lg:px-8">
+      {/* Ambient background glow */}
+      <div className="pointer-events-none absolute -left-24 -top-24 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-premium/10 blur-3xl" />
 
-      <div className="w-full max-w-md relative z-10">
+      <div className="relative z-10 w-full max-w-md">
         {/* Login Card */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl dark:shadow-2xl p-8 md:p-10 border border-gray-100 dark:border-gray-800 backdrop-blur-xl">
+        <div className="rounded-2xl border border-border bg-card p-8 shadow-2xl md:p-10">
           <AdminLoginForm
             onSuccess={() => {
               // Form handles redirect after successful login
@@ -29,11 +29,8 @@ export default function AdminLoginPage() {
         </div>
 
         {/* Footer Info */}
-        <div className="mt-8 text-center text-xs text-gray-500 dark:text-gray-500">
-          <p className="flex items-center justify-center gap-2">
-            <span>🔒</span>
-            <span>For security reasons, this is a restricted admin area.</span>
-          </p>
+        <div className="mt-8 text-center text-xs text-muted-foreground">
+          <p>این بخش محدود و مخصوص مدیران سامانه است.</p>
         </div>
       </div>
     </div>
