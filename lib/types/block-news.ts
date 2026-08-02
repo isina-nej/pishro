@@ -23,7 +23,7 @@ export interface NewsDetailResponse {
     slug: string;
   } | null;
   author: string | null;
-  tags: any[];
+  tags: { id: string; title: string; slug: string }[];
   featured: boolean;
   readingTime: number | null;
   likes: number;

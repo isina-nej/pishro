@@ -74,7 +74,7 @@ export function addSecurityHeaders(response: Response): Response {
 /**
  * Validate request size
  */
-export function validateRequestSize(body: any, maxSize: number = 1048576): boolean {
+export function validateRequestSize(body: unknown, maxSize: number = 1048576): boolean {
   const size = JSON.stringify(body).length;
   return size <= maxSize;
 }

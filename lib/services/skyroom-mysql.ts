@@ -1,4 +1,4 @@
-import { query } from "@/lib/db";
+import { query, type QueryValues } from "@/lib/db";
 
 interface SkyRoomClass {
   id: string;
@@ -82,7 +82,7 @@ export async function updateSkyRoomClass(
   try {
     const now = new Date().toISOString();
     const updates: string[] = [];
-    const params: any[] = [];
+    const params: QueryValues = [];
 
     if (data.meetingLink !== undefined) {
       updates.push("meetingLink = ?");

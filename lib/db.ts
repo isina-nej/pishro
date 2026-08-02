@@ -1,7 +1,10 @@
 // lib/db.ts
 // MySQL database connection utility (without Prisma)
 
-import mysql from 'mysql2/promise';
+import mysql, { type ResultSetHeader, type ExecuteValues } from 'mysql2/promise';
+
+/** Values bound to the `?` placeholders of a parameterized query */
+export type QueryValues = ExecuteValues[];
 
 const dbConfig = {
   host: process.env.DB_HOST || 'localhost',
@@ -57,7 +60,7 @@ async function withConnection<T>(
 /**
  * Execute a SELECT query
  */
-export async function query<T>(sql: string, values?: any[]): Promise<T[]> {
+export async function query<T>(sql: string, values?: QueryValues): Promise<T[]> {
   return withConnection('query', async (connection) => {
     const [rows] = await connection.execute(sql, values);
     return rows as T[];
@@ -67,7 +70,7 @@ export async function query<T>(sql: string, values?: any[]): Promise<T[]> {
 /**
  * Execute a single row SELECT query
  */
-export async function queryOne<T>(sql: string, values?: any[]): Promise<T | null> {
+export async function queryOne<T>(sql: string, values?: QueryValues): Promise<T | null> {
   const rows = await query<T>(sql, values);
   return rows[0] || null;
 }
@@ -77,13 +80,14 @@ export async function queryOne<T>(sql: string, values?: any[]): Promise<T | null
  */
 export async function execute(
   sql: string,
-  values?: any[]
+  values?: QueryValues
 ): Promise<{ insertId?: number; affectedRows: number }> {
   return withConnection('execute', async (connection) => {
     const [result] = await connection.execute(sql, values);
+    const header = result as ResultSetHeader;
     return {
-      insertId: (result as any).insertId,
-      affectedRows: (result as any).affectedRows,
+      insertId: header.insertId,
+      affectedRows: header.affectedRows,
     };
   });
 }

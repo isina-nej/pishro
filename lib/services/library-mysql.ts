@@ -1,4 +1,4 @@
-import { query } from "@/lib/db";
+import { query, type QueryValues } from "@/lib/db";
 
 interface DigitalBook {
   id: string;
@@ -48,7 +48,7 @@ export async function getBooks(params?: GetBooksParams) {
     const skip = (page - 1) * limit;
 
     let sql = `SELECT * FROM DigitalBook WHERE 1=1`;
-    const sqlParams: any[] = [];
+    const sqlParams: QueryValues = [];
 
     if (params?.category) {
       sql += ` AND category = ?`;
@@ -202,7 +202,7 @@ export async function updateBook(id: string, data: Partial<DigitalBook>) {
     const mysqlDateTime = now.toISOString().slice(0, 19).replace('T', ' ');
 
     const updateFields: string[] = [];
-    const updateValues: any[] = [];
+    const updateValues: QueryValues = [];
 
     // Build dynamic UPDATE query
     const fieldsToUpdate = [
@@ -238,6 +238,9 @@ export async function updateBook(id: string, data: Partial<DigitalBook>) {
           updateValues.push(JSON.stringify(Array.isArray(value) ? value : []));
         } else if (field === 'isFeatured') {
           updateValues.push(value ? 1 : 0);
+        } else if (value !== null && typeof value === 'object' && !(value instanceof Date)) {
+          // Any remaining JSON-backed column has to be serialized before binding
+          updateValues.push(JSON.stringify(value));
         } else {
           updateValues.push(value || null);
         }

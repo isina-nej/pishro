@@ -1,3 +1,4 @@
+import { getApiErrorMessage } from "@/lib/utils/api-error";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api-client";
 import { toast } from "react-hot-toast";
@@ -110,10 +111,7 @@ export async function uploadTempFile(
   try {
     const { data } = await api.post("/api/admin/uploads/temp", formData);
     return data.data.tempPath as string;
-  } catch (error: any) {
-    const message =
-      error?.response?.data?.message ||
-      "خطا در آپلود فایل. لطفا دوباره تلاش کنید";
-    throw new Error(message);
+  } catch (error) {
+    throw new Error(getApiErrorMessage(error, "خطا در آپلود فایل. لطفا دوباره تلاش کنید"));
   }
 }

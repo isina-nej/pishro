@@ -13,6 +13,13 @@ import type {
   UpdateNewsRequest,
 } from '@/lib/types/block-news';
 
+/** JSend-style envelope the block-news endpoints wrap their payload in */
+interface BlockNewsEnvelope<T> {
+  status?: string;
+  message?: string;
+  data?: T;
+}
+
 /**
  * Query key factory for consistent key naming
  */
@@ -45,17 +52,20 @@ export function useBlockNewsList(
       if (filters?.categoryId) params.set('categoryId', filters.categoryId);
       if (filters?.search) params.set('search', filters.search);
 
-      const response = await api.get<any>(`/api/admin/block-news?${params.toString()}`);
+      const response =
+        await api.get<BlockNewsEnvelope<NewsListResponse> | NewsListResponse>(
+          `/api/admin/block-news?${params.toString()}`
+        );
       const data = response.data;
-      
+
       // Extract the actual data from the API response wrapper
-      if (data && data.data && 'items' in data.data && 'pagination' in data.data) {
-        return data.data as NewsListResponse;
+      if (data && 'data' in data && data.data && 'items' in data.data && 'pagination' in data.data) {
+        return data.data;
       }
-      
+
       // Fallback: if it already has items/pagination structure
       if (data && 'items' in data && 'pagination' in data) {
-        return data as NewsListResponse;
+        return data;
       }
       
       throw new Error('Invalid API response structure - missing pagination data');
@@ -74,7 +84,7 @@ export function useBlockNews(id: string) {
       const data = response.data;
       
       if (data && typeof data === 'object' && 'data' in data) {
-        return (data as any).data as NewsDetailResponse;
+        return data.data;
       }
       
       return data as unknown as NewsDetailResponse;
@@ -93,24 +103,26 @@ export function useCreateBlockNews() {
     mutationFn: async (data: CreateNewsRequest) => {
       try {
         console.log('[useCreateBlockNews] Sending request with data:', data);
-        const response = await api.post<any>('/api/admin/block-news', data);
+        const response = await api.post<
+          BlockNewsEnvelope<NewsDetailResponse> | NewsDetailResponse | string
+        >('/api/admin/block-news', data);
         const responseData = response.data;
         console.log('[useCreateBlockNews] Response data:', responseData);
-        
+
         if (typeof responseData === 'string') {
           console.error('[useCreateBlockNews] ERROR: Response is HTML string, not JSON');
           throw new Error(`API Error: Received HTML instead of JSON. Status: ${response.status}`);
         }
-        
-        if (responseData && responseData.data && typeof responseData.data === 'object' && 'id' in responseData.data) {
+
+        if (responseData && 'data' in responseData && responseData.data && 'id' in responseData.data) {
           console.log('[useCreateBlockNews] Extracted from nested data.data:', responseData.data);
-          return responseData.data as NewsDetailResponse;
+          return responseData.data;
         }
-        
+
         // Fallback: return the response as-is if it already has an id
         if (responseData && 'id' in responseData) {
           console.log('[useCreateBlockNews] Extracted from flat response:', responseData);
-          return responseData as NewsDetailResponse;
+          return responseData;
         }
         
         console.log('[useCreateBlockNews] ERROR: Could not extract news from response');
@@ -138,7 +150,7 @@ export function useUpdateBlockNews(id: string) {
       const respData = response.data;
       
       if (respData && typeof respData === 'object' && 'data' in respData) {
-        return (respData as any).data as NewsDetailResponse;
+        return respData.data;
       }
       
       return respData as unknown as NewsDetailResponse;
@@ -181,7 +193,7 @@ export function useChangeBlockNewsStatus() {
       const respData = response.data;
       
       if (respData && typeof respData === 'object' && 'data' in respData) {
-        return (respData as any).data as NewsDetailResponse;
+        return respData.data;
       }
       
       return respData as unknown as NewsDetailResponse;

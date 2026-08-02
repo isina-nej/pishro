@@ -6,6 +6,7 @@
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import Placeholder from '@tiptap/extension-placeholder';
+import type { Editor } from '@tiptap/core';
 
 /**
  * Configure TipTap extensions for the news editor
@@ -120,7 +121,7 @@ export interface EditorState {
 /**
  * Extract current formatting state from editor
  */
-export function getEditorState(editor: any): EditorState {
+export function getEditorState(editor: Editor | null): EditorState {
   if (!editor || !editor.isActive || !editor.can) {
     return {
       isBold: false,

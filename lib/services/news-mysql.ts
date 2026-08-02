@@ -1,4 +1,4 @@
-import { query } from "@/lib/db";
+import { query, type QueryValues } from "@/lib/db";
 
 interface NewsArticle {
   id: string;
@@ -36,7 +36,7 @@ export async function getNews(params?: GetNewsParams) {
     const skip = (page - 1) * limit;
 
     let sql = `SELECT * FROM NewsArticle WHERE 1=1`;
-    const sqlParams: any[] = [];
+    const sqlParams: QueryValues = [];
 
     // Default to published only if not specified
     if (params?.published === false) {

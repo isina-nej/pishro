@@ -13,7 +13,7 @@ export interface UseAutoSaveOptions {
   content: string;
   excerpt?: string;
   interval?: number; // Milliseconds, default 30000 (30s)
-  onSave?: (response: any) => void;
+  onSave?: (response: unknown) => void;
   onError?: (error: Error) => void;
   enabled?: boolean;
 }

@@ -83,6 +83,13 @@ export function extractHeadings(content: string): Array<{ level: number; text: s
   return headings;
 }
 
+/** Minimal ProseMirror document node - only the parts walked below */
+interface ProseMirrorNode {
+  type?: string;
+  text?: string;
+  content?: ProseMirrorNode[];
+}
+
 /**
  * Extract summary from ProseMirror JSON content
  */
@@ -92,7 +99,7 @@ export function extractProseMirrorSummary(jsonString: string, maxChars: number =
     if (!parsed || parsed.type !== 'doc') return '';
     
     let text = '';
-    const collectText = (content: any[]): void => {
+    const collectText = (content: ProseMirrorNode[]): void => {
       for (const node of content) {
         if (node.type === 'text') {
           text += node.text || '';

@@ -1,6 +1,5 @@
 // @/lib/services/comment-service.ts
-import { query } from "@/lib/db";
-
+import { query, type QueryValues } from "@/lib/db";
 interface GetCommentsOptions {
   courseId?: string;
   userId?: string;
@@ -11,12 +10,23 @@ interface GetCommentsOptions {
   limit?: number;
 }
 
+/** Raw Comment row as selected below; `likes`/`dislikes` are Json columns */
 interface CommentRow {
   id: string;
   text: string;
   rating?: number;
   userId: string;
   courseId?: string;
+  userName?: string;
+  userAvatar?: string;
+  userRole?: string;
+  userCompany?: string;
+  published?: boolean;
+  verified?: boolean;
+  featured?: boolean;
+  likes?: unknown;
+  dislikes?: unknown;
+  views?: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -34,7 +44,7 @@ export async function getComments(options: GetCommentsOptions = {}) {
       FROM Comment
       WHERE 1=1
     `;
-    const params: any[] = [];
+    const params: QueryValues = [];
 
     if (courseId) {
       sql += ` AND courseId = ?`;
@@ -63,7 +73,7 @@ export async function getComments(options: GetCommentsOptions = {}) {
 
     sql += ` ORDER BY createdAt DESC LIMIT ${Math.max(1, Math.min(limit || 10, 1000))}`;
 
-    const comments = await query<any>(sql, params);
+    const comments = await query<CommentRow>(sql, params);
 
     return comments.map((comment) => ({
       ...comment,
@@ -79,21 +89,21 @@ export async function getComments(options: GetCommentsOptions = {}) {
 /**
  * Helper function to safely parse JSON
  */
-function tryParseJson(value: any, defaultValue: any = null) {
+function tryParseJson<T>(value: unknown, defaultValue: T): T {
   if (!value) return defaultValue;
-  
+
   // If it's already an object/array, return it
-  if (typeof value === 'object') return value;
-  
+  if (typeof value === 'object') return value as T;
+
   // Try to parse if it's a string
   if (typeof value === 'string') {
     try {
-      return JSON.parse(value);
+      return JSON.parse(value) as T;
     } catch {
       return defaultValue;
     }
   }
-  
+
   return defaultValue;
 }
 
