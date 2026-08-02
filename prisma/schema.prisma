@@ -1537,3 +1537,28 @@ enum ActivityType {
   STATUS_CHANGE
   SYSTEM
 }
+
+// ============================================================
+// Public investment calculator — admin-editable fund products
+// (replaces the old hardcoded low/medium/high risk-tier rates)
+// ============================================================
+
+model InvestmentFund {
+  id            String   @id @default(cuid())
+  key           String   @unique // stable identifier, e.g. "fixed-income-monthly", "hold"
+  name          String   // نمایش عمومی، مثل «صندوق درآمد ثابت ماهیانه»
+  description   String?  @db.Text // پیام تضمین/توضیح زیر نتیجه محاسبه
+  monthlyRate   Float    // نرخ سود ماهیانه، مثلاً 0.08 برای ۸٪
+  minDuration   Int      @default(1)  // حداقل مدت به ماه
+  maxDuration   Int      @default(12)
+  durationStep  Int      @default(1) // گام مجاز مدت، مثلاً 3 برای صندوق هولد
+  minAmount     BigInt   @default(1000000)
+  maxAmount     BigInt   @default(5000000000)
+  amountStep    BigInt   @default(1000000)
+  order         Int      @default(0)
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([active, order])
+}

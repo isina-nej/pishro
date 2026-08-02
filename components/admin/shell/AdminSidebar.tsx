@@ -16,6 +16,7 @@ import {
   PieChart,
   Settings,
   Ticket,
+  TrendingUp,
   Users,
   UsersRound,
   X,
@@ -64,6 +65,7 @@ export const navSections: NavSection[] = [
       { href: '/admin/block-news', label: 'اخبار', icon: FileText, key: 'block-news', roles: ['ADMIN', 'MODERATOR'] },
       { href: '/admin/library', label: 'کتابخانه', icon: BookOpen, key: 'library', roles: ['ADMIN', 'MODERATOR'] },
       { href: '/admin/courses', label: 'دوره‌ها', icon: GraduationCap, key: 'courses', roles: ['ADMIN', 'MODERATOR'] },
+      { href: '/admin/investment-funds', label: 'صندوق‌های سرمایه‌گذاری', icon: TrendingUp, key: 'investment-funds', roles: ['ADMIN', 'MODERATOR'] },
     ],
   },
   {

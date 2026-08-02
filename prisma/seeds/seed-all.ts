@@ -21,6 +21,7 @@ import { seedFAQs } from './seed-faqs';
 import { seedPageContent } from './seed-pagecontent';
 import { seedNewsletter } from './seed-newsletter';
 import { seedLandingPages } from './landing-seed';
+import { seedInvestmentFunds } from './seed-investment-funds';
 
 const prisma = new PrismaClient();
 
@@ -98,78 +99,83 @@ async function seedAll() {
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
     // 1. Seed Admin Users
-    console.log('👑 [1/15] Admin Users');
+    console.log('👑 [1/16] Admin Users');
     summary.adminUsers = await seedAdminUsers();
     console.log('');
 
     // 2. Seed Categories
-    console.log('📁 [2/15] Categories');
+    console.log('📁 [2/16] Categories');
     summary.categories = await seedCategories();
     console.log('');
 
     // 3. Seed Tags
-    console.log('🏷️  [3/15] Tags');
+    console.log('🏷️  [3/16] Tags');
     summary.tags = await seedTags();
     console.log('');
 
     // 4. Seed Users
-    console.log('👥 [4/15] Users');
+    console.log('👥 [4/16] Users');
     summary.users = await seedUsers();
     console.log('');
 
     // 5. Seed Courses
-    console.log('📚 [5/15] Courses');
+    console.log('📚 [5/16] Courses');
     summary.courses = await seedCourses();
     console.log('');
 
     // 6. Seed Comments
-    console.log('💬 [6/15] Comments');
+    console.log('💬 [6/16] Comments');
     summary.comments = await seedComments();
     console.log('');
 
     // 7. Seed Quizzes and Questions
-    console.log('❓ [7/15] Quizzes & Questions');
+    console.log('❓ [7/16] Quizzes & Questions');
     summary.quizzes = await seedQuizzes();
     console.log('');
 
     // 8. Seed Enrollments
-    console.log('✍️  [8/15] Enrollments');
+    console.log('✍️  [8/16] Enrollments');
     summary.enrollments = await seedEnrollments();
     console.log('');
 
     // 9. Seed Orders and Transactions
-    console.log('🛒 [9/15] Orders & Transactions');
+    console.log('🛒 [9/16] Orders & Transactions');
     summary.orders = await seedOrders();
     console.log('');
 
     // 9. Seed News Articles
-    console.log('📰 [10/15] News Articles');
+    console.log('📰 [10/16] News Articles');
     summary.news = await seedNews();
     console.log('');
 
     // 10. Seed Digital Books
-    console.log('📖 [11/15] Digital Books');
+    console.log('📖 [11/16] Digital Books');
     summary.books = await seedBooks();
     console.log('');
 
     // 11. Seed FAQs
-    console.log('❔ [12/15] FAQs');
+    console.log('❔ [12/16] FAQs');
     summary.faqs = await seedFAQs();
     console.log('');
 
     // 12. Seed Page Content
-    console.log('📄 [13/15] Page Content');
+    console.log('📄 [13/16] Page Content');
     summary.pageContent = await seedPageContent();
     console.log('');
 
     // 13. Seed Landing Pages
-    console.log('🏠 [14/15] Landing Pages');
+    console.log('🏠 [14/16] Landing Pages');
     summary.landing = await seedLandingPages();
     console.log('');
 
     // 14. Seed Newsletter Subscribers
-    console.log('📧 [15/15] Newsletter Subscribers');
+    console.log('📧 [15/16] Newsletter Subscribers');
     summary.newsletter = await seedNewsletter();
+    console.log('');
+
+    // 15. Seed Investment Funds
+    console.log('💰 [16/16] Investment Funds');
+    summary.investmentFunds = await seedInvestmentFunds();
     console.log('');
 
     // Calculate totals
