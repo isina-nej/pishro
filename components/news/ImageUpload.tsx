@@ -134,6 +134,7 @@ export function ImageUpload({
         {/* Preview */}
         {preview && (
           <div style={{ marginBottom: '1rem' }}>
+            {/* eslint-disable-next-line @next/next/no-img-element -- preview is a data: URL from FileReader, next/image cannot optimize it */}
             <img
               src={preview}
               alt="Preview"

@@ -28,14 +28,12 @@ export const LinkManager: React.FC<LinkManagerProps> = ({ editor, darkMode = fal
   });
   const [isEditing, setIsEditing] = useState(false);
 
-  if (!editor) return null;
-
   // Check if editor has link at cursor
-  const hasLink = editor.isActive('link');
+  const hasLink = editor?.isActive('link') ?? false;
 
   // Get current link data
   const getCurrentLink = useCallback(() => {
-    if (!hasLink) return null;
+    if (!editor || !hasLink) return null;
 
     const { from, to } = editor.view.state.selection;
     const node = editor.view.state.doc.cut(from, to);
@@ -67,6 +65,8 @@ export const LinkManager: React.FC<LinkManagerProps> = ({ editor, darkMode = fal
 
   // Save link
   const handleSave = useCallback(() => {
+    if (!editor) return;
+
     if (!linkData.url || !linkData.text) {
       alert('Please fill in both URL and link text');
       return;
@@ -86,6 +86,8 @@ export const LinkManager: React.FC<LinkManagerProps> = ({ editor, darkMode = fal
 
   // Remove link
   const handleRemove = useCallback(() => {
+    if (!editor) return;
+
     if (confirm('Remove this link?')) {
       editor.chain().focus().unsetLink().run();
       setIsOpen(false);
@@ -96,6 +98,9 @@ export const LinkManager: React.FC<LinkManagerProps> = ({ editor, darkMode = fal
   const updateLinkData = (updates: Partial<LinkData>) => {
     setLinkData((prev) => ({ ...prev, ...updates }));
   };
+
+  // Hooks above must run unconditionally - bail out only after they are declared
+  if (!editor) return null;
 
   const buttonClasses = [
     'px-3 py-2 text-sm rounded transition-colors',

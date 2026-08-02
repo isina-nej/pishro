@@ -95,7 +95,10 @@ export function useMarkdownPreview(
     if (initialMarkdown && !html) {
       renderMarkdown(initialMarkdown);
     }
-  }, []); // Run only on mount
+    // Mount-only on purpose: renderMarkdown sets `html`, so depending on it
+    // would re-trigger this effect in a loop.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return {
     markdown,

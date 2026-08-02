@@ -374,6 +374,7 @@ export default function EditBlockNewsPage() {
               ) : (
                 <div className="space-y-3">
                   <div className="relative w-full h-40 md:h-48 rounded-lg overflow-hidden shadow-md ring-2 ring-purple-200 dark:ring-purple-900">
+                    {/* eslint-disable-next-line @next/next/no-img-element -- admin-supplied thumbnail URL, host is not in next.config remotePatterns */}
                     <img
                       src={formData.thumbnail}
                       alt="Preview"

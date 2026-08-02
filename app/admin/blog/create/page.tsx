@@ -240,6 +240,7 @@ export default function CreateBlogPage() {
           {formData.thumbnail ? (
             <div className="space-y-4">
               <div className="relative rounded-lg overflow-hidden h-48 md:h-64 group">
+                {/* eslint-disable-next-line @next/next/no-img-element -- admin-supplied cover URL, host is not in next.config remotePatterns */}
                 <img
                   src={formData.thumbnail}
                   alt="Cover"

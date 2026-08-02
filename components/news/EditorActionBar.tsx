@@ -196,7 +196,7 @@ export function EditorActionBar({
                 color: darkMode ? '#d1d5db' : '#6b7280',
               }}
             >
-              You have unsaved changes. Are you sure you want to go back? Your changes will be lost if you haven't published them.
+              You have unsaved changes. Are you sure you want to go back? Your changes will be lost if you haven&apos;t published them.
             </p>
             <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
               <button

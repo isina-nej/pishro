@@ -158,7 +158,7 @@ export default function ArticlePreviewCard({ article }: ArticlePreviewCardProps)
             خلاصه کوتاه
           </h3>
           <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed text-right italic">
-            "{article.excerpt}"
+            &quot;{article.excerpt}&quot;
           </p>
         </div>
       )}

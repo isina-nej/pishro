@@ -283,9 +283,9 @@ export default function CreateNewsPage() {
           <ul style={{ listStyle: 'disc', paddingLeft: '1.5rem', fontSize: '0.875rem' }}>
             <li>Enter a title and write your article content</li>
             <li>Use the formatting toolbar for styling (bold, italic, headings, etc.)</li>
-            <li>Click <strong>"Save Draft"</strong> to save without publishing</li>
-            <li>Click <strong>"Publish"</strong> to publish the article immediately</li>
-            <li>Click <strong>"Back"</strong> to return to the article list</li>
+            <li>Click <strong>&quot;Save Draft&quot;</strong> to save without publishing</li>
+            <li>Click <strong>&quot;Publish&quot;</strong> to publish the article immediately</li>
+            <li>Click <strong>&quot;Back&quot;</strong> to return to the article list</li>
           </ul>
         </div>
       </div>

@@ -16,7 +16,7 @@ import { EditorContent } from '@tiptap/react';
 import { useEditor } from '@/lib/hooks/useEditor';
 import { useAutoSave } from '@/lib/hooks/useAutoSave';
 import { EDITOR_CONFIG } from '@/lib/editor-config';
-import { EditorContextMenu } from '@/components/news/EditorContextMenu';
+import { EditorContextMenu, type ContextMenuOption } from '@/components/news/EditorContextMenu';
 import { ImageUpload } from '@/components/news/ImageUpload';
 import { LinkDialog } from '@/components/news/LinkDialog';
 import styles from '@/styles/editor.module.css';
@@ -41,6 +41,7 @@ export interface NewsEditorProps {
 interface ContextMenuPosition {
   x: number;
   y: number;
+  hasSelection: boolean;
 }
 
 /**
@@ -98,48 +99,17 @@ export function NewsEditor({
   const handleContextMenu = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       if (readonly) return;
-      
+
       e.preventDefault();
-      
-      // Get selection state
-      const hasSelection = editor?.view.state.selection.from !== editor?.view.state.selection.to;
-      
-      // Build context menu options
-      const options: any[] = [];
 
-      if (hasSelection) {
-        // Options for selected text
-        options.push(
-          { label: 'Bold', icon: 'B', action: () => toggleFormat('bold') },
-          { label: 'Italic', icon: 'I', action: () => toggleFormat('italic') },
-          { label: 'Link', icon: '🔗', action: () => setShowLinkDialog(true) },
-          { label: 'Code', icon: '&lt;/&gt;', action: () => toggleFormat('code') },
-          { divider: true },
-          { label: 'Delete', icon: '🗑️', action: () => deleteSelection(), danger: true }
-        );
-      } else {
-        // Options for empty area
-        options.push(
-          { label: 'Insert Image', icon: '🖼️', action: () => setShowImageUpload(true) },
-          { label: 'Insert Heading', icon: 'H1', action: () => insertHeading(1) },
-          { label: 'Insert Quote', icon: '❝', action: () => toggleFormat('blockquote') },
-          { label: 'Insert Code Block', icon: '&lt;&gt;', action: () => insertCodeBlock() },
-          { divider: true }
-        );
-      }
+      // The option list itself is built at render time, where the action
+      // callbacks below are already in scope.
+      const hasSelection =
+        editor?.view.state.selection.from !== editor?.view.state.selection.to;
 
-      // Global options
-      options.push(
-        { label: 'Undo', icon: '↶', action: () => toggleFormat('undo'), disabled: !editorState?.canUndo },
-        { label: 'Redo', icon: '↷', action: () => toggleFormat('redo'), disabled: !editorState?.canRedo },
-        { divider: true },
-        { label: 'Select All', icon: '▢', action: () => selectAll() }
-      );
-
-      // Show context menu
-      setContextMenu({ x: e.clientX, y: e.clientY });
+      setContextMenu({ x: e.clientX, y: e.clientY, hasSelection });
     },
-    [editor, editorState, readonly]
+    [editor, readonly]
   );
 
   // Close context menu when clicking elsewhere
@@ -282,6 +252,42 @@ export function NewsEditor({
 
   const isDark = darkMode;
 
+  // Context menu entries, built from the selection state captured on right-click
+  const contextMenuOptions: ContextMenuOption[] = contextMenu
+    ? [
+        ...(contextMenu.hasSelection
+          ? [
+              { label: 'Bold', icon: 'B', onClick: () => toggleFormat('bold') },
+              { label: 'Italic', icon: 'I', onClick: () => toggleFormat('italic') },
+              { label: 'Link', icon: '🔗', onClick: () => setShowLinkDialog(true) },
+              { label: 'Code', icon: '</>', onClick: () => toggleFormat('code') },
+              { label: '', divider: true, onClick: () => {} },
+              { label: 'Delete', icon: '🗑️', onClick: () => deleteSelection() },
+            ]
+          : [
+              { label: 'Insert Image', icon: '🖼️', onClick: () => setShowImageUpload(true) },
+              { label: 'Insert Heading', icon: 'H1', onClick: () => insertHeading(1) },
+              { label: 'Insert Quote', icon: '❝', onClick: () => toggleFormat('blockquote') },
+              { label: 'Insert Code Block', icon: '<>', onClick: () => insertCodeBlock() },
+              { label: '', divider: true, onClick: () => {} },
+            ]),
+        {
+          label: 'Undo',
+          icon: '↶',
+          onClick: () => toggleFormat('undo'),
+          disabled: !editorState?.canUndo,
+        },
+        {
+          label: 'Redo',
+          icon: '↷',
+          onClick: () => toggleFormat('redo'),
+          disabled: !editorState?.canRedo,
+        },
+        { label: '', divider: true, onClick: () => {} },
+        { label: 'Select All', icon: '▢', onClick: () => selectAll() },
+      ]
+    : [];
+
   return (
     <div
       ref={editorRef}
@@ -356,7 +362,7 @@ export function NewsEditor({
       {contextMenu && !readonly && (
         <EditorContextMenu
           position={contextMenu}
-          options={[]}
+          options={contextMenuOptions}
           onClose={() => setContextMenu(null)}
           darkMode={isDark}
         />
