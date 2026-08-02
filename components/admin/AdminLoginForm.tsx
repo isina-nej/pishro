@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, FormEvent } from 'react';
-import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import { Input } from '@/components/ui/input';
@@ -34,7 +33,6 @@ const normalizePhone = (value: string): string => {
 };
 
 export default function AdminLoginForm({ onError, onSuccess }: AdminLoginFormProps) {
-  const router = useRouter();
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -119,7 +117,16 @@ export default function AdminLoginForm({ onError, onSuccess }: AdminLoginFormPro
 
       setSuccess(true);
       onSuccess?.();
-      router.push('/admin/dashboard');
+
+      // Hard navigation on purpose: a client-side router.push() here would
+      // rely on the browser having already durably stored the just-issued
+      // admin_access_token/admin_refresh_token cookies from the fetch above.
+      // A full page load guarantees middleware.ts re-evaluates with the
+      // actual cookies the browser sends on a real navigation (which is not
+      // the same code path as the fetch's credentials, and is the one thing
+      // that determines whether /admin/dashboard's page-level auth check
+      // passes) instead of trusting client-side navigation/router state.
+      window.location.href = '/admin/dashboard';
     } catch {
       const errorMessage = 'خطایی رخ داد. دوباره تلاش کنید.';
       setError(errorMessage);
