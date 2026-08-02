@@ -13,7 +13,10 @@
       "Bash(npm run *)",
       "Bash(echo \"exit: $?\")",
       "Bash(npx tsc *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(node *)",
+      "Bash(npx eslint *)",
+      "Bash(grep -E \"\\\\.\\(tsx|ts|jsx|js|css\\)$\")"
     ]
   }
 }

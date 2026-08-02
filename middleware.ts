@@ -70,12 +70,19 @@ export async function middleware(request: NextRequest) {
     if (!isValidToken) {
       console.warn(`[Middleware] Denying access - no valid token for ${pathname}`);
 
+      // For admin pages (not API routes): instead of immediately redirecting to
+      // login, let the page render client-side. The client-side useAdminAuth hook
+      // has access to localStorage (which the middleware cannot read) and can
+      // send the token via Authorization header for API calls. This fixes the
+      // case where the login Set-Cookie was not persisted by the browser (e.g.
+      // behind certain reverse proxies or CDN configurations) but localStorage
+      // has the valid token.
+      // ponytail: if localStorage auth is also absent, useAdminAuth redirects
+      // to login client-side. Upgrade path: ensure cookies are always set
+      // correctly at the infrastructure level and revert to server-side redirect.
       if (pathname.startsWith('/admin/') && !pathname.startsWith('/api')) {
-        const loginUrl = new URL('/admin/login', request.url);
-        const response = NextResponse.redirect(loginUrl);
-        response.cookies.set('admin_access_token', '', { maxAge: 0 });
-        response.cookies.set('admin_refresh_token', '', { maxAge: 0 });
-        return response;
+        console.log('[Middleware] Allowing admin page to render for client-side auth check');
+        return NextResponse.next();
       }
 
       return NextResponse.json(
