@@ -6,14 +6,11 @@ import type { Course, Category } from "@/lib/types/db";
 export type CourseSortOption = "جدیدترین" | "محبوب‌ترین" | "پرفروش‌ترین";
 
 export interface CoursesFiltersHook {
-  categories: string[];
   sortOptions: CourseSortOption[];
   query: string;
-  selectedCategory: string;
   selectedSort: CourseSortOption;
   levelFilter: string;
   setQuery: (value: string) => void;
-  setCategory: (value: string) => void;
   setSort: (value: CourseSortOption) => void;
   setLevelFilter: (value: string) => void;
   filteredCourses: Course[];
@@ -44,21 +41,12 @@ export const useCoursesFilters = (
   categoriesWithCourses: CategoryWithCourses[]
 ): CoursesFiltersHook => {
   const [query, setQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("همه");
   const [selectedSort, setSelectedSort] = useState<CourseSortOption>("جدیدترین");
   const [levelFilter, setLevelFilter] = useState("همه");
 
   // تبدیل دوره‌ها از ساختار دسته‌بندی به یک آرایه مسطح
   const allCourses = useMemo(() => {
     return categoriesWithCourses.flatMap((cat) => cat.courses);
-  }, [categoriesWithCourses]);
-
-  const categories = useMemo<string[]>(() => {
-    const unique = new Set<string>();
-    categoriesWithCourses.forEach((cat) => {
-      if (cat.title) unique.add(cat.title);
-    });
-    return ["همه", ...Array.from(unique)];
   }, [categoriesWithCourses]);
 
   const sortOptions: CourseSortOption[] = ["جدیدترین", "محبوب‌ترین", "پرفروش‌ترین"];
@@ -79,13 +67,6 @@ export const useCoursesFilters = (
     return allCourses
       .filter((course) => course.published) // فقط دوره‌های منتشر شده
       .filter((course) => {
-        if (selectedCategory === "همه") return true;
-        const category = categoriesWithCourses.find((cat) =>
-          cat.courses.some((c) => c.id === course.id)
-        );
-        return category?.title === selectedCategory;
-      })
-      .filter((course) => {
         if (levelFilter === "همه") return true;
         const enumLevel = getLevelEnum(levelFilter);
         return course.level === enumLevel;
@@ -101,7 +82,7 @@ export const useCoursesFilters = (
       )
       .slice()
       .sort(sorters[selectedSort]);
-  }, [allCourses, selectedCategory, query, selectedSort, levelFilter, categoriesWithCourses]);
+  }, [allCourses, query, selectedSort, levelFilter]);
 
   const featuredCourses = useMemo(
     () =>
@@ -133,14 +114,11 @@ export const useCoursesFilters = (
   }, [allCourses, categoriesWithCourses]);
 
   return {
-    categories,
     sortOptions,
     query,
-    selectedCategory,
     selectedSort,
     levelFilter,
     setQuery,
-    setCategory: setSelectedCategory,
     setSort: setSelectedSort,
     setLevelFilter,
     filteredCourses,

@@ -20,14 +20,11 @@ const CoursesPageContent = ({
   categoriesWithCourses,
 }: CoursesPageContentProps) => {
   const {
-    categories,
     sortOptions,
     query,
-    selectedCategory,
     selectedSort,
     levelFilter,
     setQuery,
-    setCategory,
     setSort,
     setLevelFilter,
     filteredCourses,
@@ -35,13 +32,10 @@ const CoursesPageContent = ({
   } = useCoursesFilters(categoriesWithCourses);
 
   const hasActiveFilters =
-    query.trim().length > 0 ||
-    selectedCategory !== "همه" ||
-    levelFilter !== "همه";
+    query.trim().length > 0 || levelFilter !== "همه";
 
   const handleResetFilters = () => {
     setQuery("");
-    setCategory("همه");
     setSort("جدیدترین");
     setLevelFilter("همه");
   };
@@ -65,9 +59,6 @@ const CoursesPageContent = ({
         <div className="container-xl space-y-12">
           <div className="public-page-panel rounded-[2.25rem] px-5 py-8 sm:px-7 lg:px-9">
             <CoursesFilterControls
-              categories={categories}
-              selectedCategory={selectedCategory}
-              onCategoryChange={setCategory}
               query={query}
               onQueryChange={setQuery}
               sortOptions={sortOptions}

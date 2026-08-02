@@ -12,9 +12,6 @@ import { cn } from "@/lib/utils";
 import type { CourseSortOption } from "./hooks/useCoursesFilters";
 
 interface CoursesFilterControlsProps {
-  categories: string[];
-  selectedCategory: string;
-  onCategoryChange: (value: string) => void;
   query: string;
   onQueryChange: (value: string) => void;
   sortOptions: CourseSortOption[];
@@ -35,9 +32,6 @@ const levelOptions = [
 ];
 
 export const CoursesFilterControls = ({
-  categories,
-  selectedCategory,
-  onCategoryChange,
   query,
   onQueryChange,
   sortOptions,
@@ -132,26 +126,6 @@ export const CoursesFilterControls = ({
               حذف فیلترها
             </button>
           )}
-        </div>
-
-        <div className="flex gap-3 overflow-x-auto pb-1">
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => onCategoryChange(category)}
-              className={cn(
-                "whitespace-nowrap rounded-full border px-4 py-2 text-sm font-medium transition-all",
-                selectedCategory === category
-                  ? "border-[#112b3a] bg-[#112b3a] text-white shadow-lg"
-                  : "border-white/60 bg-white/55 text-[#405c6b] hover:border-cyan-300/50 hover:bg-white/80 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10",
-                disabled && "pointer-events-none opacity-60"
-              )}
-              aria-pressed={selectedCategory === category}
-              aria-disabled={disabled}
-            >
-              {category}
-            </button>
-          ))}
         </div>
       </div>
     </div>
