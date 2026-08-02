@@ -5,18 +5,13 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
-import { writeFile } from "fs/promises";
 import {
   successResponse,
   validationError,
   errorResponse,
   ErrorCodes
 } from "@/lib/api-response";
-import {
-  BOOKS_UPLOAD_PATHS,
-  ensureUploadDirExists,
-  generateFileUrl
-} from "@/lib/upload-config";
+import { saveFileToStorage } from "@/lib/services/storage-adapter";
 
 // تنظیمات مجاز برای آپلود PDF کتاب
 const MAX_FILE_SIZE = 1024 * 1024 * 1024; // 1GB
@@ -107,32 +102,19 @@ export async function POST(req: NextRequest) {
     const randomString = Math.random().toString(36).substring(2, 15);
     const filename = `book_${timestamp}_${randomString}.pdf`;
 
-    // مسیر ذخیره فایل
-    const uploadDir = BOOKS_UPLOAD_PATHS.pdfs.dir;
-    const filepath = `${uploadDir}/${filename}`.replace(/\\/g, "/");
-
-    console.log("Creating upload directory:", uploadDir);
-    // ایجاد دایرکتوری اگر وجود ندارد
+    // ذخیره در storage (ابری یا محلی، بسته به STORAGE_DRIVER)
+    let pdfUrl: string;
     try {
-      await ensureUploadDirExists(uploadDir);
-      console.log("Upload directory created successfully");
-    } catch (err) {
-      console.error("Error creating directory:", err);
-      throw err;
-    }
-
-    console.log("Writing file to disk:", filepath);
-    // ذخیره فایل
-    try {
-      await writeFile(filepath, buffer);
+      pdfUrl = await saveFileToStorage(
+        buffer,
+        `books/pdfs/${filename}`,
+        "application/pdf"
+      );
       console.log("File written successfully");
     } catch (err) {
       console.error("Error writing file:", err);
       throw err;
     }
-
-    // URL نسبی فایل
-    const pdfUrl = generateFileUrl("pdf", filename);
 
     console.log("Upload successful:", { pdfUrl, fileName: file.name });
     const response = successResponse(

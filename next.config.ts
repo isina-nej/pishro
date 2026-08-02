@@ -13,6 +13,11 @@ const nextConfig: NextConfig = {
     qualities: [75, 85, 90, 100],
     remotePatterns: [
       {
+        // فضای ابری پارس‌پک (هر ساب‌دامین باکت، مثل c773651.parspack.net)
+        protocol: "https",
+        hostname: "**.parspack.net",
+      },
+      {
         protocol: "https",
         hostname: "images.unsplash.com",
       },

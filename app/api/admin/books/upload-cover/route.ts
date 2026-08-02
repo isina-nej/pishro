@@ -1,17 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
-import { writeFile } from "fs/promises";
 import {
   successResponse,
   validationError,
   errorResponse,
   ErrorCodes
 } from "@/lib/api-response";
-import {
-  BOOKS_UPLOAD_PATHS,
-  ensureUploadDirExists,
-  generateFileUrl
-} from "@/lib/upload-config";
+import { saveFileToStorage } from "@/lib/services/storage-adapter";
 
 // تنظیمات برای آپلود کاور کتاب
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
@@ -87,23 +82,12 @@ export async function POST(req: NextRequest) {
     const extension = file.name.split(".").pop() || "jpg";
     const filename = `cover_${timestamp}_${randomString}.${extension}`;
 
-    // مسیر ذخیره فایل
-    const uploadDir = BOOKS_UPLOAD_PATHS.covers.dir;
-    const filepath = `${uploadDir}/${filename}`.replace(/\\/g, "/");
-
-    // ایجاد دایرکتوری اگر وجود ندارد
-    try {
-      await ensureUploadDirExists(uploadDir);
-    } catch (err) {
-      console.error("Error creating directory:", err);
-      throw err;
-    }
-
-    // ذخیره فایل
-    await writeFile(filepath, buffer);
-
-    // URL نسبی فایل
-    const coverUrl = generateFileUrl("cover", filename);
+    // ذخیره در storage (ابری یا محلی، بسته به STORAGE_DRIVER)
+    const coverUrl = await saveFileToStorage(
+      buffer,
+      `books/covers/${filename}`,
+      file.type
+    );
 
     const response = successResponse(
       {

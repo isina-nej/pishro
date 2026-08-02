@@ -7,9 +7,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
 import { randomBytes } from 'crypto';
+import { saveFileToStorage } from '@/lib/services/storage-adapter';
 import { checkRateLimit, getClientIp, addSecurityHeaders } from '@/lib/api-security';
 
 // Max file size: 5MB
@@ -93,16 +92,12 @@ export async function POST(request: NextRequest) {
     const random = randomBytes(4).toString('hex');
     const filename = `${timestamp}-${random}.${ext}`;
 
-    // Create upload directory if it doesn't exist
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'articles');
-    await mkdir(uploadDir, { recursive: true });
-
-    // Save file
-    const filepath = path.join(uploadDir, filename);
-    await writeFile(filepath, buffer);
-
-    // Return public URL
-    const publicUrl = `/uploads/articles/${filename}`;
+    // ذخیره در storage (ابری یا محلی، بسته به STORAGE_DRIVER)
+    const publicUrl = await saveFileToStorage(
+      buffer,
+      `news/${filename}`,
+      file.type
+    );
 
     const response = NextResponse.json(
       {

@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
-import { existsSync } from 'fs';
-import { BOOKS_UPLOAD_PATHS } from '@/lib/upload-config';
+import { saveFileToStorage } from '@/lib/services/storage-adapter';
 
 export async function POST(request: NextRequest) {
   try {
@@ -55,48 +52,28 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Determine upload path based on file type
-    let uploadDir: string;
-    let urlPath: string;
+    // Determine storage prefix based on file type
+    const STORAGE_PREFIXES = {
+      cover: 'books/covers',
+      pdf: 'books/pdfs',
+      audio: 'books/audio',
+    } as const;
 
-    switch (fileType) {
-      case 'cover':
-        uploadDir = BOOKS_UPLOAD_PATHS.covers.dir;
-        urlPath = BOOKS_UPLOAD_PATHS.covers.url;
-        break;
-      case 'pdf':
-        uploadDir = BOOKS_UPLOAD_PATHS.pdfs.dir;
-        urlPath = BOOKS_UPLOAD_PATHS.pdfs.url;
-        break;
-      case 'audio':
-        uploadDir = BOOKS_UPLOAD_PATHS.audio.dir;
-        urlPath = BOOKS_UPLOAD_PATHS.audio.url;
-        break;
-      default:
-        return NextResponse.json(
-          { success: false, message: 'نوع فایل نامعتبر' },
-          { status: 400 }
-        );
-    }
-
-    // Ensure directory exists
-    if (!existsSync(uploadDir)) {
-      await mkdir(uploadDir, { recursive: true });
-    }
+    const prefix = STORAGE_PREFIXES[fileType as keyof typeof STORAGE_PREFIXES];
 
     // Generate unique filename
     const timestamp = Date.now();
     const fileExtension = file.name.split('.').pop();
     const filename = `${fileType}_${timestamp}_${Math.random().toString(36).substring(7)}.${fileExtension}`;
-    const filepath = join(uploadDir, filename);
 
-    // Convert file to buffer and save
+    // Convert file to buffer and save (ابری یا محلی، بسته به STORAGE_DRIVER)
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    await writeFile(filepath, buffer);
-
-    // Return file URL
-    const fileUrl = `${urlPath}/${filename}`;
+    const fileUrl = await saveFileToStorage(
+      buffer,
+      `${prefix}/${filename}`,
+      file.type
+    );
 
     return NextResponse.json({
       success: true,

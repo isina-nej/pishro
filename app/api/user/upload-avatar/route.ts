@@ -1,7 +1,6 @@
 import { NextRequest } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
 import { auth } from "@/auth";
+import { saveFileToStorage } from "@/lib/services/storage-adapter";
 import {
   successResponse,
   unauthorizedResponse,
@@ -58,22 +57,12 @@ export async function POST(req: NextRequest) {
     const extension = file.name.split(".").pop() || "jpg";
     const filename = `${session.user.id}_${timestamp}_${randomString}.${extension}`;
 
-    // مسیر ذخیره فایل
-    const uploadDir = join(process.cwd(), "public", "uploads", "avatars");
-    const filepath = join(uploadDir, filename);
-
-    // ایجاد دایرکتوری اگر وجود ندارد
-    try {
-      await mkdir(uploadDir, { recursive: true });
-    } catch (err) {
-      console.error("Error creating directory:", err);
-    }
-
-    // ذخیره فایل
-    await writeFile(filepath, buffer);
-
-    // URL نسبی فایل
-    const avatarUrl = `/uploads/avatars/${filename}`;
+    // ذخیره در storage (ابری یا محلی، بسته به STORAGE_DRIVER)
+    const avatarUrl = await saveFileToStorage(
+      buffer,
+      `avatars/${filename}`,
+      file.type
+    );
 
     // بروزرسانی آواتار کاربر در دیتابیس
     const user = await prisma.user.update({

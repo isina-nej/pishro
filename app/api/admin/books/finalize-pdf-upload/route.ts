@@ -13,6 +13,8 @@ import {
   validationError,
   errorResponse
 } from "@/lib/api-response";
+import { getStorageDriver } from "@/lib/services/storage-adapter";
+import { uploadFileStreamToS3 } from "@/lib/services/storage-s3";
 
 const UPLOAD_DIR = process.env.UPLOAD_BASE_DIR || path.join(process.cwd(), "uploads");
 const CHUNKS_DIR = path.join(UPLOAD_DIR, "chunks");
@@ -102,9 +104,22 @@ export async function POST(req: NextRequest) {
     // Clean up chunks directory
     await rm(fileChunksDir, { recursive: true, force: true });
 
-    console.log(`✅ PDF file finalized: ${finalFileName}`);
+    // انتقال فایل سرهم‌شده به storage نهایی
+    let fileUrl: string;
+    if (getStorageDriver() === "s3") {
+      // آپلود استریمی تا فایل چندصدمگابایتی وارد حافظه نشود
+      fileUrl = await uploadFileStreamToS3(
+        finalPath,
+        `books/pdfs/${finalFileName}`,
+        "application/pdf"
+      );
+      // فایل موقت محلی دیگر لازم نیست
+      await rm(finalPath, { force: true });
+    } else {
+      fileUrl = `/api/uploads/books/pdfs/${finalFileName}`;
+    }
 
-    const fileUrl = `/api/uploads/books/pdfs/${finalFileName}`;
+    console.log(`✅ PDF file finalized: ${finalFileName}`);
 
     const response = successResponse({
       fileName: finalFileName,

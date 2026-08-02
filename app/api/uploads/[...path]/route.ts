@@ -3,7 +3,13 @@ import { stat } from 'fs/promises';
 import { createReadStream } from 'fs';
 import { extname, join } from 'path';
 import { Readable } from 'stream';
-import { assertSafeStoragePath, getStorageConfig } from '@/lib/services/storage-adapter';
+import {
+  assertSafeStoragePath,
+  getStorageConfig,
+  getStorageDriver,
+} from '@/lib/services/storage-adapter';
+import { getS3ObjectStream, isPrivateStoragePath } from '@/lib/services/storage-s3';
+import { buildPublicUrl } from '@/lib/services/s3-client';
 
 export const runtime = 'nodejs';
 
@@ -56,11 +62,49 @@ export async function GET(req: NextRequest) {
     );
   }
 
+  // مسیر پیمایش دایرکتوری را حتی در حالت ابری هم مسدود می‌کنیم
   let fullPath: string;
   try {
     fullPath = assertSafeStoragePath(storageConfig.storagePath, pathParam);
   } catch {
     return NextResponse.json({ error: 'Invalid upload path' }, { status: 400 });
+  }
+
+  if (getStorageDriver() === 's3') {
+    // فایل‌های عمومی: ریدایرکت به CDN تا پهنای باند از روی سرور برداشته شود.
+    // (لینک‌های قدیمی /api/uploads/... که هنوز در دیتابیس مانده‌اند از این راه زنده می‌مانند.)
+    if (!isPrivateStoragePath(pathParam)) {
+      return NextResponse.redirect(buildPublicUrl(pathParam), {
+        status: 302,
+        headers: { 'Cache-Control': 'public, max-age=3600' },
+      });
+    }
+
+    // فایل‌های خصوصی: از داخل اپ استریم می‌شوند تا کنترل دسترسی حفظ شود
+    const range = req.headers.get('range') || undefined;
+    const object = await getS3ObjectStream(pathParam, range);
+
+    if (!object) {
+      return NextResponse.json({ error: 'File not found' }, { status: 404 });
+    }
+
+    const headers: Record<string, string> = {
+      'Content-Type': object.contentType,
+      'Cache-Control': 'private, no-store',
+      'X-Robots-Tag': 'noindex, nofollow, noarchive',
+    };
+    if (object.contentLength !== undefined) {
+      headers['Content-Length'] = object.contentLength.toString();
+    }
+    if (object.contentRange) {
+      headers['Content-Range'] = object.contentRange;
+      headers['Accept-Ranges'] = 'bytes';
+    }
+
+    return new NextResponse(object.body, {
+      status: object.contentRange ? 206 : 200,
+      headers,
+    });
   }
 
   try {
