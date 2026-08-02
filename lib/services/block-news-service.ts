@@ -12,7 +12,9 @@ import { CreateNewsSchema, UpdateNewsSchema } from '@/lib/schemas/block-news-sch
 import { deleteFileFromStorage, getRelativePathFromUrl } from '@/lib/services/storage-adapter';
 
 /**
- * Create a new news article with published=false (draft status)
+ * Create a new news article.
+ * خبر همیشه منتشر ساخته می‌شود؛ اگر publishedAt در آینده باشد، خبر «تایم‌دار» است و
+ * تا رسیدن آن زمان توسط APIهای عمومی فیلتر می‌شود (بدون نیاز به cron).
  */
 export async function createNews(data: {
   title: string;
@@ -37,10 +39,18 @@ export async function createNews(data: {
     throw new Error(`مقاله با این آدرس قبلا ایجاد شده است: ${slug}`);
   }
 
-  // If publishedAt is provided, article is being scheduled for future publication
+  // اگر publishedAt داده شده باشد یعنی انتشار تایم‌دار، وگرنه انتشار فوری
   const scheduledAt = validated.publishedAt || null;
-  const isScheduled = Boolean(scheduledAt);
-  
+
+  // فیلد رشته‌ای category نام دسته را نگه می‌دارد، نه شناسه‌اش —
+  // صفحه عمومی لیست فیلترهای دسته‌بندی را از همین فیلد می‌سازد.
+  const categoryTitle = validated.categoryId
+    ? (await prisma.category.findUnique({
+        where: { id: validated.categoryId },
+        select: { title: true },
+      }))?.title || 'عمومی'
+    : 'عمومی';
+
   const news = await prisma.newsArticle.create({
     data: {
       title: validated.title,
@@ -50,10 +60,10 @@ export async function createNews(data: {
       coverImage: validated.coverImage || null,
       categoryId: validated.categoryId,
       author: validated.author,
-      category: validated.categoryId || 'عمومی',
-      draft: !isScheduled,
-      published: false,
-      publishedAt: scheduledAt ? new Date(scheduledAt) : null,
+      category: categoryTitle,
+      draft: false,
+      published: true,
+      publishedAt: scheduledAt ? new Date(scheduledAt) : new Date(),
     },
     include: {
       relatedCategory: { select: { id: true, title: true, slug: true } },
@@ -169,6 +179,17 @@ export async function updateNewsMetadata(
     }
   }
 
+  // فیلد رشته‌ای category را با دسته جدید همگام نگه می‌داریم (صفحه عمومی از آن فیلتر می‌سازد)
+  let categoryTitle: string | undefined;
+  if (validated.categoryId !== undefined) {
+    categoryTitle = validated.categoryId
+      ? (await prisma.category.findUnique({
+          where: { id: validated.categoryId },
+          select: { title: true },
+        }))?.title || 'عمومی'
+      : 'عمومی';
+  }
+
   const news = await prisma.newsArticle.update({
     where: { id },
     data: {
@@ -177,6 +198,7 @@ export async function updateNewsMetadata(
       ...(validated.excerpt !== undefined && { excerpt: validated.excerpt }),
       ...(validated.content !== undefined && { content: validated.content }),
       ...(validated.categoryId !== undefined && { categoryId: validated.categoryId }),
+      ...(categoryTitle !== undefined && { category: categoryTitle }),
       ...(validated.coverImage !== undefined && { coverImage: validated.coverImage }),
       ...(validated.author !== undefined && { author: validated.author }),
       ...(validated.publishedAt !== undefined && { publishedAt: validated.publishedAt ? new Date(validated.publishedAt) : null }),

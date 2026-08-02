@@ -27,6 +27,20 @@ interface NewsArticle {
   coverImage?: string;
   categoryId?: string;
   status?: string;
+  published?: boolean;
+  publishedAt?: string | null;
+}
+
+/** تاریخ محلی به فرمت مورد نیاز input[type=date] */
+function toDateInputValue(date: Date): string {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+/** ساعت محلی به فرمت مورد نیاز input[type=time] */
+function toTimeInputValue(date: Date): string {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
 export default function EditBlockNewsPage() {
@@ -80,6 +94,10 @@ export default function EditBlockNewsPage() {
         const data = await response.json();
         const newsArticle = data.data || data;
 
+        // اگر تاریخ انتشار در آینده باشد یعنی خبر تایم‌دار است و باید فرم را همان‌طور نشان دهیم
+        const publishedAt = newsArticle.publishedAt ? new Date(newsArticle.publishedAt) : null;
+        const isScheduled = !!publishedAt && publishedAt.getTime() > Date.now();
+
         setArticle(newsArticle);
         setFormData({
           title: newsArticle.title || '',
@@ -88,9 +106,9 @@ export default function EditBlockNewsPage() {
           thumbnail: newsArticle.coverImage || '',
           categoryId: newsArticle.categoryId || '',
           author: newsArticle.author || '',
-          publishOption: newsArticle.published ? 'now' : 'draft',
-          scheduledDate: '',
-          scheduledTime: '',
+          publishOption: isScheduled ? 'scheduled' : 'manual',
+          scheduledDate: isScheduled ? toDateInputValue(publishedAt) : '',
+          scheduledTime: isScheduled ? toTimeInputValue(publishedAt) : '',
         });
       } catch (error) {
         console.error('Error fetching article:', error);
@@ -206,12 +224,20 @@ export default function EditBlockNewsPage() {
         return;
       }
 
-      const publishedAtTime = formData.publishOption === 'scheduled'
-        ? new Date(`${formData.scheduledDate}T${formData.scheduledTime}`).toISOString()
-        : undefined;
+      const wasScheduled =
+        !!article?.publishedAt && new Date(article.publishedAt).getTime() > Date.now();
 
-      const response = await fetch(`/api/news/${articleId}`, {
-        method: 'PUT',
+      // تایم‌دار: تاریخ انتخاب‌شده. فوری: اگر قبلاً زمان‌بندی بود همین حالا منتشر شود،
+      // وگرنه تاریخ انتشار قبلی دست‌نخورده بماند تا ترتیب اخبار به‌هم نریزد.
+      const publishedAtTime =
+        formData.publishOption === 'scheduled'
+          ? new Date(`${formData.scheduledDate}T${formData.scheduledTime}`).toISOString()
+          : wasScheduled
+            ? new Date().toISOString()
+            : undefined;
+
+      const response = await fetch(`/api/admin/block-news/${articleId}`, {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,

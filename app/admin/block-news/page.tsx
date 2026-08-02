@@ -178,9 +178,27 @@ export default function BlockNewsListPage() {
                   {/* Card Header with Status */}
                   <div className="p-4 md:p-6 bg-muted/50 border-b border-border">
                     <div className="flex items-start justify-between flex-row-reverse gap-3 mb-3">
-                      <Badge variant={news.draft ? 'secondary' : news.published ? 'success' : 'outline'} className="flex-shrink-0">
-                        {news.draft ? '📝 پیش‌نویس' : news.published ? '✓ منتشرشده' : '📦 بایگانی شده'}
-                      </Badge>
+                      {(() => {
+                        // خبر منتشرشده با تاریخ انتشار در آینده = تایم‌دار (هنوز در سایت دیده نمی‌شود)
+                        const isScheduled =
+                          news.published &&
+                          !!news.publishedAt &&
+                          new Date(news.publishedAt).getTime() > Date.now();
+                        return (
+                          <Badge
+                            variant={news.draft ? 'secondary' : isScheduled ? 'secondary' : news.published ? 'success' : 'outline'}
+                            className="flex-shrink-0"
+                          >
+                            {news.draft
+                              ? '📝 پیش‌نویس'
+                              : isScheduled
+                                ? '🕒 زمان‌بندی‌شده'
+                                : news.published
+                                  ? '✓ منتشرشده'
+                                  : '📦 بایگانی شده'}
+                          </Badge>
+                        );
+                      })()}
                       <div className="text-right flex-1 min-w-0">
                         <Link href={`/admin/block-news/${news.id}/preview`}>
                           <h3 className="font-bold text-base md:text-lg line-clamp-2 group-hover:text-primary transition-colors cursor-pointer hover:underline">

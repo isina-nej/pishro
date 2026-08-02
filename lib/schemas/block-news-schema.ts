@@ -192,12 +192,12 @@ export const UpdateNewsSchema = z.object({
   content: z.string()
     .max(500000, 'محتوا نمی‌تواند بیش از 500000 کاراکتر باشد')
     .optional(),
+  // شناسه‌های این پروژه cuid هستند نه ObjectId، پس الگوی ثابتی روی طول/کاراکتر نمی‌گذاریم
   categoryId: z.string()
-    .regex(/^[a-f\d]{24}$/i, 'شناسه دسته‌بندی معتبر نیست')
+    .trim()
     .nullable()
     .optional()
-    .or(z.literal(''))  // Allow empty string
-    .transform((val) => val === '' ? undefined : val),
+    .transform((val) => (val === '' ? undefined : val)),
   // Accept both coverImage and thumbnail
   coverImage: z.string()
     .refine(
