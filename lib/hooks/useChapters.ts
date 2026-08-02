@@ -25,10 +25,6 @@ interface UpdateChapterInput {
   title?: string;
 }
 
-interface ReorderInput {
-  order: string[];
-}
-
 export const chapterKeys = {
   all: ["chapters"] as const,
   lists: () => [...chapterKeys.all, "list"] as const,
@@ -137,7 +133,7 @@ export function useDeleteChapter() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, courseId }: { id: string; courseId: string }) => {
+    mutationFn: async ({ id }: { id: string; courseId: string }) => {
       await api.delete(`/api/admin/chapters/${id}`);
     },
     onSuccess: (_, { courseId }) => {

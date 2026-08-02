@@ -61,7 +61,7 @@ export default function ChapterModal({
       setTitle('');
       setErrors({});
       onClose();
-    } catch (error) {
+    } catch {
       // Error handling is done in the parent component via toast
     }
   };

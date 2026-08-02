@@ -16,7 +16,6 @@ import { EditorContent } from '@tiptap/react';
 import { useEditor } from '@/lib/hooks/useEditor';
 import { useAutoSave } from '@/lib/hooks/useAutoSave';
 import { EDITOR_CONFIG } from '@/lib/editor-config';
-import { BlockTypeSelector } from '@/components/news/BlockTypeSelector';
 import { EditorContextMenu } from '@/components/news/EditorContextMenu';
 import { ImageUpload } from '@/components/news/ImageUpload';
 import { LinkDialog } from '@/components/news/LinkDialog';
@@ -57,8 +56,6 @@ export function NewsEditor({
   onContentChange,
   onSave,
   onError,
-  showStatusBar = true,
-  showToolbar = true,
   autoSaveEnabled = true,
   darkMode = false,
 }: NewsEditorProps) {
@@ -71,7 +68,7 @@ export function NewsEditor({
   const editorRef = useRef<HTMLDivElement>(null);
 
   // Initialize editor
-  const { editor, editorState, getContent, getText, isReady } = useEditor({
+  const { editor, editorState, isReady } = useEditor({
     initialContent,
     placeholder,
     readonly,
@@ -83,7 +80,7 @@ export function NewsEditor({
   });
 
   // Auto-save functionality
-  const { saveStatus, lastSavedAt } = useAutoSave({
+  useAutoSave({
     articleId,
     title,
     content: contentRef.current,

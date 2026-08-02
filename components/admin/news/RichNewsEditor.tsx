@@ -224,14 +224,6 @@ export default function RichNewsEditor({
     }
   };
 
-  const confirmImageInsert = () => {
-    if (modalUrl.trim()) {
-      editor?.chain().focus().setImage({ src: modalUrl }).run();
-    }
-    setShowImageModal(false);
-    setModalUrl('');
-  };
-
   const insertLink = () => {
     setModalUrl('');
     setShowLinkModal(true);
@@ -465,7 +457,7 @@ export default function RichNewsEditor({
 
       {/* Editor Area */}
       <div className="flex-1 overflow-auto p-6 prose prose-sm dark:prose-invert max-w-none">
-        <EditorContent editor={editor} />
+        <EditorContent editor={editor} onContextMenu={handleContextMenu} />
       </div>
 
       {/* Footer */}

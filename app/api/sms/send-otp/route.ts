@@ -1,4 +1,3 @@
-import { NextResponse } from "next/server";
 import { sendOtpViaPattern } from "@/lib/sms";
 import {
   successResponse,

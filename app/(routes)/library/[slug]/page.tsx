@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Star, BookOpen, Download, DollarSign, Calendar, MapPin, User, ThumbsUp, Eye } from 'lucide-react';
+import { Star, BookOpen, Download, DollarSign, Calendar, User, Eye } from 'lucide-react';
 import Navbar from '@/components/navbar/navbar';
 import Footer from '@/components/footer';
 

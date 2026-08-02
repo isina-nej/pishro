@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import NavbarLinks from "./NavbarLinks";
 import NavbarActions from "./NavbarActions";
 import NavbarPopover from "./navbarPopover";

@@ -4,7 +4,6 @@
  */
 
 import {
-  successResponse,
   paginatedResponse,
   createdResponse,
   validationError,
@@ -16,7 +15,7 @@ import {
 } from '@/lib/services/block-news-service';
 import { CreateNewsSchema } from '@/lib/schemas/block-news-schema';
 import { getAdminAuth } from "@/lib/auth-simple";
-import type { NewsListResponse, CreateNewsRequest, NewsDetailResponse } from '@/lib/types/block-news';
+import type { CreateNewsRequest } from '@/lib/types/block-news';
 
 export async function GET(req: Request) {
   try {

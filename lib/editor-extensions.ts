@@ -3,15 +3,16 @@
  * Defines all editor extensions and their settings
  */
 
-import { Extension } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
+import Placeholder from '@tiptap/extension-placeholder';
 
 /**
  * Configure TipTap extensions for the news editor
+ * @param placeholder - Placeholder text shown while the document is empty
  * Returns an array of extension instances
  */
-export function createEditorExtensions() {
+export function createEditorExtensions(placeholder?: string) {
   return [
     // Starter kit with most common formatting (includes bold, italic, link, etc.)
     StarterKit.configure({
@@ -62,6 +63,11 @@ export function createEditorExtensions() {
       HTMLAttributes: {
         class: 'editor-image',
       },
+    }),
+
+    // Placeholder shown while the document is empty
+    Placeholder.configure({
+      placeholder: placeholder ?? '',
     }),
   ];
 }
@@ -152,7 +158,7 @@ export function getEditorState(editor: any): EditorState {
       canUndo: editor.can && editor.can().undo ? editor.can().undo() : false,
       canRedo: editor.can && editor.can().redo ? editor.can().redo() : false,
     };
-  } catch (error) {
+  } catch {
     // Fallback if any editor methods fail
     return {
       isBold: false,

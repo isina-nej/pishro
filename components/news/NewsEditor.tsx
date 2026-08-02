@@ -66,7 +66,7 @@ export function NewsEditor({
   }, [onContentChange]);
 
   // Initialize editor
-  const { editor, editorState, getContent, getText, isReady } = useEditor({
+  const { editor, editorState, isReady } = useEditor({
     initialContent,
     placeholder,
     readonly,

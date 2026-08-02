@@ -7,7 +7,6 @@ import { LuArrowRight, LuLoader, LuPhone } from "react-icons/lu";
 
 interface TwoFactorFormProps {
   method: "sms" | "ga";
-  token: string;
   onVerify: (code: string) => Promise<void>;
   onBack: () => void;
   onRequestSMS?: () => Promise<void>;
@@ -15,7 +14,6 @@ interface TwoFactorFormProps {
 
 export function TwoFactorForm({
   method,
-  token,
   onVerify,
   onBack,
   onRequestSMS,

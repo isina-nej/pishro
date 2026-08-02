@@ -31,17 +31,13 @@ export function useEditor(options: UseEditorOptions = {}) {
 
   const editor = useTipTapEditor(
     {
-      extensions: createEditorExtensions(),
+      extensions: createEditorExtensions(placeholder),
       content: initialContent,
       immediatelyRender: false, // Avoid hydration mismatch
       editorProps: {
         attributes: {
           class:
             'prose prose-sm dark:prose-invert max-w-none focus:outline-none editor-content',
-        },
-        handlePaste: (view, event) => {
-          // Handle paste events
-          return false;
         },
       },
       onUpdate: ({ editor }) => {

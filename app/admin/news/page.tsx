@@ -13,7 +13,6 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 interface Article {
   id: string;
@@ -27,7 +26,6 @@ interface Article {
 }
 
 export default function NewsManagementPage() {
-  const router = useRouter();
   const [articles, setArticles] = useState<Article[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

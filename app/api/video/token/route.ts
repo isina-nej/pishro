@@ -1,7 +1,6 @@
 // @/app/api/video/token/route.ts
 import { auth } from "@/auth";
 import { NextRequest } from "next/server";
-import { prisma } from "@/lib/prisma";
 import {
   successResponse,
   errorResponse,

@@ -6,7 +6,6 @@
  */
 
 import React, { useState } from 'react';
-import styles from '@/styles/editor.module.css';
 
 export interface EditorActionBarProps {
   onBack?: () => void;

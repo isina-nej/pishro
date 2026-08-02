@@ -167,7 +167,7 @@ export async function createComment(data: {
 /**
  * Increment comment views count
  */
-export async function incrementCommentViews(commentId: string) {
+export async function incrementCommentViews(_commentId: string) {
   try {
     // Table doesn't have views column, so we skip this
     return { success: true };

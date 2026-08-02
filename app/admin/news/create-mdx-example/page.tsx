@@ -17,7 +17,6 @@ import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { MDXNewsEditor } from '@/components/news/MDXNewsEditor';
 import { useMDXEditor } from '@/lib/hooks/useMDXEditor';
-import toast from 'react-hot-toast';
 import Link from 'next/link';
 
 /**

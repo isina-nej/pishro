@@ -12,13 +12,10 @@ import React, {
   useCallback,
   useRef,
   Suspense,
-  useMemo,
 } from 'react';
 import dynamic from 'next/dynamic';
 import { useTheme } from 'next-themes';
 import toast from 'react-hot-toast';
-import { EDITOR_CONFIG } from '@/lib/editor-config';
-import styles from '@/styles/editor.module.css';
 
 // Dynamically import MDXEditor with no SSR
 const MDXEditor = dynamic(
@@ -50,6 +47,7 @@ export interface MDXNewsEditorProps {
   readonly?: boolean;
   articleId?: string;
   onContentChange?: (content: string) => void;
+  onTitleChange?: (title: string) => void;
   onSave?: (data: { title: string; content: string }) => Promise<void>;
   onError?: (error: Error) => void;
   autoSaveEnabled?: boolean;
@@ -89,6 +87,7 @@ export const MDXNewsEditor = React.forwardRef<
       readonly = false,
       articleId,
       onContentChange,
+      onTitleChange,
       onSave,
       onError,
       autoSaveEnabled = true,
@@ -398,6 +397,7 @@ export const MDXNewsEditor = React.forwardRef<
             onChange={(e) => {
               setTitle(e.target.value);
               titleRef.current = e.target.value;
+              onTitleChange?.(e.target.value);
             }}
             placeholder="عنوان مقاله..."
             className={`w-full px-4 py-3 text-2xl font-bold rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition ${

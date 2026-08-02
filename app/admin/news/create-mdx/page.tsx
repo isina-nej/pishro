@@ -10,7 +10,6 @@ import React, { useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { MDXNewsEditor } from '@/components/news/MDXNewsEditor';
 import toast from 'react-hot-toast';
-import Link from 'next/link';
 
 interface CreateArticleData {
   title: string;
@@ -173,7 +172,7 @@ export default function CreateNewsWithMDXPage() {
         throw new Error(error.message || 'خطا در انتشار');
       }
 
-      const result = await response.json();
+      await response.json();
       toast.success('مقاله منتشر شد');
 
       // Redirect to news management or detail page
@@ -247,6 +246,7 @@ export default function CreateNewsWithMDXPage() {
                 initialTitle={title}
                 initialContent={editorContentRef.current}
                 onContentChange={handleContentChange}
+                onTitleChange={setTitle}
                 articleId={articleId || undefined}
                 placeholder="محتوا را اینجا بنویسید..."
                 autoSaveEnabled={false}

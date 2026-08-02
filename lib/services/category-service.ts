@@ -109,7 +109,7 @@ export async function getCategoryBySlug(
     if (category.statsBoxes && typeof category.statsBoxes === 'string') {
       try {
         category.statsBoxes = JSON.parse(category.statsBoxes);
-      } catch (e) {
+      } catch {
         category.statsBoxes = [];
       }
     } else if (!category.statsBoxes) {
@@ -119,7 +119,7 @@ export async function getCategoryBySlug(
     if (category.metaKeywords && typeof category.metaKeywords === 'string') {
       try {
         category.metaKeywords = JSON.parse(category.metaKeywords);
-      } catch (e) {
+      } catch {
         category.metaKeywords = [];
       }
     } else if (!category.metaKeywords) {
@@ -129,7 +129,7 @@ export async function getCategoryBySlug(
     if (category.tagIds && typeof category.tagIds === 'string') {
       try {
         category.tagIds = JSON.parse(category.tagIds);
-      } catch (e) {
+      } catch {
         category.tagIds = [];
       }
     } else if (!category.tagIds) {

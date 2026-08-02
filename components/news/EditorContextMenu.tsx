@@ -5,7 +5,7 @@
  * Right-click context menu for the editor with formatting options
  */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styles from '@/styles/editor.module.css';
 
 export interface ContextMenuOption {
@@ -30,7 +30,6 @@ export function EditorContextMenu({
   darkMode = false,
 }: EditorContextMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null);
-  const [visibleOptions, setVisibleOptions] = useState(options);
 
   // Close on escape key
   useEffect(() => {

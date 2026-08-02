@@ -72,7 +72,7 @@ export default function CreateNewsPage() {
         throw new Error('Failed to save draft');
       }
 
-      const data = await response.json();
+      await response.json();
       lastSavedRef.current = { title, content: editorContentRef.current };
       setHasUnsavedChanges(false);
       setSaveStatus('saved');
@@ -123,7 +123,7 @@ export default function CreateNewsPage() {
         throw new Error('Failed to publish article');
       }
 
-      const data = await response.json();
+      await response.json();
       alert('Article published successfully!');
       router.push('/admin/news');
     } catch (error) {

@@ -5,7 +5,7 @@
  * Edit and remove links from editor
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import type { Editor } from '@tiptap/react';
 
 export interface LinkManagerProps {

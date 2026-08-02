@@ -7,7 +7,7 @@ import {
   replaceStorageFile,
   safeDeleteStoragePath,
 } from "@/lib/course-media";
-import { deleteFileFromStorage, getRelativePathFromUrl } from "@/lib/services/storage-adapter";
+import { getRelativePathFromUrl } from "@/lib/services/storage-adapter";
 import type { z } from "zod";
 import type {
   LessonCreateSchema,

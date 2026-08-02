@@ -6,7 +6,7 @@ import {
 import { getAbsoluteStoragePath } from "@/lib/services/storage-adapter";
 import { existsSync } from "fs";
 import { createReadStream } from "fs";
-import { readFile, stat } from "fs/promises";
+import { stat } from "fs/promises";
 import { Readable } from "stream";
 
 const STREAM_EXPIRES = 60;
