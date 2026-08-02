@@ -1,26 +1,32 @@
 import { NextRequest } from 'next/server';
 import { getNewsBySlug } from '@/lib/services/news-mysql';
-import { successResponse, errorResponse, ErrorCodes } from '@/lib/api-response';
+import {
+  successResponse,
+  errorResponse,
+  ErrorCodes,
+  HttpStatus,
+} from '@/lib/api-response';
+import { getAdminAuth } from '@/lib/auth-simple';
 import { prisma } from '@/lib/prisma';
 
+/**
+ * GET /api/news/[slug]
+ * دریافت خبر منتشرشده بر اساس slug (عمومی)
+ *
+ * جستجوی جایگزین بر اساس شناسه (ID) عمداً حذف شده است: آن مسیر فیلتر
+ * `published` را دور می‌زد و پیش‌نویس‌ها و خبرهای زمان‌بندی‌شده را برای
+ * هر کاربر ناشناسی که شناسه خبر را داشت قابل خواندن می‌کرد.
+ * پنل ادمین باید از `GET /api/admin/block-news/[id]` استفاده کند.
+ */
 export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
     const { slug } = await params;
-    
-    // Try to find by slug first
-    let article: Awaited<ReturnType<typeof getNewsBySlug>> | Awaited<ReturnType<typeof prisma.newsArticle.findUnique>> =
-      await getNewsBySlug(slug);
-    
-    // If not found, try to find by ID (for admin panel)
-    if (!article) {
-      article = await prisma.newsArticle.findUnique({
-        where: { id: slug },
-      });
-    }
-    
+
+    const article = await getNewsBySlug(slug);
+
     if (!article) {
       return errorResponse('خبر پیدا نشد', ErrorCodes.NOT_FOUND, undefined, 404);
     }
@@ -37,13 +43,35 @@ export async function GET(
 
 /**
  * PUT /api/news/[slug]
- * Update a news article (for admin panel using ID)
+ * به‌روزرسانی خبر (پنل ادمین، با شناسه خبر)
+ *
+ * این مسیر زیرمجموعه `/api/admin/*` نیست، بنابراین `middleware.ts` آن را
+ * محافظت نمی‌کند و احراز هویت باید صریحاً در خود هندلر انجام شود.
  */
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
+    const adminAuth = await getAdminAuth(request);
+    if (!adminAuth) {
+      return errorResponse(
+        'ورود به سیستم الزامی است',
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
+    }
+
+    if (adminAuth.role !== 'ADMIN') {
+      return errorResponse(
+        'دسترسی منحصر به مدیران است',
+        ErrorCodes.FORBIDDEN,
+        undefined,
+        HttpStatus.FORBIDDEN
+      );
+    }
+
     const { slug } = await params;
     const body = await request.json();
     const { title, description, content, thumbnail, categoryId, author } = body;

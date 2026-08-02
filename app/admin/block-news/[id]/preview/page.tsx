@@ -36,7 +36,7 @@ export default function NewsPreviewPage() {
           return;
         }
 
-        const response = await fetch(`/api/news/${articleId}`, {
+        const response = await fetch(`/api/admin/block-news/${articleId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
