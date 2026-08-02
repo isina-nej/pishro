@@ -193,7 +193,7 @@ export function getReadingTime(markdown: string): number {
  */
 export function getExcerpt(markdown: string, maxLength: number = 150): string {
   // Remove markdown syntax
-  let text = markdown
+  const text = markdown
     .replace(/#+\s/g, '')
     .replace(/\*\*(.+?)\*\*/g, '$1')
     .replace(/\*(.+?)\*/g, '$1')

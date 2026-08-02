@@ -1,7 +1,7 @@
-import type { Prisma } from '@prisma/client';
-// Client Component برای نمایش دوره‌های یک دسته‌بندی با فیلتر سطح
 "use client";
 
+// Client Component برای نمایش دوره‌های یک دسته‌بندی با فیلتر سطح
+import type { Prisma } from "@prisma/client";
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
