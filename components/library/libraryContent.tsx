@@ -8,7 +8,6 @@ import { LibraryHero } from "./libraryHero";
 import { FilterControls } from "./filterControls";
 import { ResultsSummary } from "./resultsSummary";
 import { FeaturedRow } from "./featuredRow";
-import { CollectionsRow } from "./collectionsRow";
 import { BookGrid } from "./bookGrid";
 import { LoadingPlaceholder } from "./loadingPlaceholder";
 
@@ -92,10 +91,7 @@ const LibraryPageContent = () => {
                 {hasActiveFilters ? (
                   <ResultsSummary query={query} count={filteredBooks.length} />
                 ) : (
-                  <>
-                    <FeaturedRow books={featuredBooks} />
-                    <CollectionsRow />
-                  </>
+                  <FeaturedRow books={featuredBooks} />
                 )}
 
                 <BookGrid books={filteredBooks} />
