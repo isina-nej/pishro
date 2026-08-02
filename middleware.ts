@@ -59,6 +59,12 @@ export async function middleware(request: NextRequest) {
     (pathname.startsWith('/api/admin') && !pathname.includes('/login') && !pathname.includes('/logout'));
 
   if (isProtectedRoute) {
+    
+    // Let CORS preflight requests pass through to the route handler's OPTIONS method
+    if (method === 'OPTIONS') {
+      return NextResponse.next();
+    }
+
     console.log(`[Middleware] Protected route detected: ${pathname}`);
 
     const token = getAdminTokenFromRequest(request);

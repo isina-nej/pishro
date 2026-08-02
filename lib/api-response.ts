@@ -22,6 +22,8 @@ export const ALLOWED_ORIGINS = [
   "https://admin.pishrosarmaye.com",
   "http://admin.pishrosarmaye.com",
   "https://pishrosarmaye.com",
+  "https://www.pishrosarmaye.com",
+  "http://www.pishrosarmaye.com",
   "http://pishrosarmaye.com",
   "https://www.pishrosarmaye.com",
   "http://www.pishrosarmaye.com",
