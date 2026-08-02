@@ -1,26 +1,28 @@
 /**
  * API Security & Rate Limiting Tests
  * Location: tests/api/security.integration.test.ts
+ *
+ * These are true integration tests: they issue real HTTP requests against a
+ * running instance at API_URL (default http://localhost:3000). They fail with
+ * ECONNREFUSED when no server is up — start one with `npm run dev` first.
  */
 
-import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
-import fetch from 'node-fetch';
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
 
 const API_BASE = process.env.API_URL || 'http://localhost:3000';
 const TEST_TIMEOUT = 30000;
 
+/** assert that `haystack` contains `needle`, with a readable failure message */
+function assertContains(haystack: string, needle: string) {
+  assert.ok(
+    haystack.includes(needle),
+    `expected ${JSON.stringify(haystack)} to contain ${JSON.stringify(needle)}`
+  );
+}
+
 describe('API Security & Rate Limiting', () => {
-  let authToken: string;
-  let testArticleId: string;
-
-  beforeAll(async () => {
-    // Get auth token (mock session in real tests)
-    authToken = 'test-token';
-  }, TEST_TIMEOUT);
-
-  afterAll(async () => {
-    // Cleanup
-  }, TEST_TIMEOUT);
+  const authToken = 'test-token';
 
   // ============================================
   // XSS PREVENTION TESTS
@@ -57,7 +59,7 @@ describe('API Security & Rate Limiting', () => {
     ];
 
     xssPayloads.forEach(({ name, payload, shouldContain, shouldNotContain }) => {
-      it(`should prevent XSS: ${name}`, async () => {
+      it(`should prevent XSS: ${name}`, { timeout: TEST_TIMEOUT }, async () => {
         const response = await fetch(`${API_BASE}/api/news/create`, {
           method: 'POST',
           headers: {
@@ -71,7 +73,7 @@ describe('API Security & Rate Limiting', () => {
           }),
         });
 
-        expect(response.status).toBeLessThan(500); // Should not crash
+        assert.ok(response.status < 500, `expected status < 500, got ${response.status}`); // Should not crash
 
         if (response.ok) {
           const data = await response.json();
@@ -82,14 +84,17 @@ describe('API Security & Rate Limiting', () => {
 
           const content = articleData.content || '';
           shouldNotContain?.forEach((pattern) => {
-            expect(content.toLowerCase()).not.toContain(pattern.toLowerCase());
+            assert.ok(
+              !content.toLowerCase().includes(pattern.toLowerCase()),
+              `expected sanitized content not to contain ${JSON.stringify(pattern)}`
+            );
           });
 
           if (shouldContain) {
-            expect(content).toContain(shouldContain);
+            assertContains(content, shouldContain);
           }
         }
-      }, TEST_TIMEOUT);
+      });
     });
   });
 
@@ -98,7 +103,7 @@ describe('API Security & Rate Limiting', () => {
   // ============================================
 
   describe('Rate Limiting', () => {
-    it('should allow requests within rate limit', async () => {
+    it('should allow requests within rate limit', { timeout: TEST_TIMEOUT }, async () => {
       const requests = [];
 
       // Make 5 requests (limit for create is 5/min)
@@ -120,11 +125,11 @@ describe('API Security & Rate Limiting', () => {
 
       const responses = await Promise.all(requests);
       responses.forEach((response) => {
-        expect(response.status).not.toBe(429);
+        assert.notEqual(response.status, 429);
       });
-    }, TEST_TIMEOUT);
+    });
 
-    it('should reject requests exceeding rate limit', async () => {
+    it('should reject requests exceeding rate limit', { timeout: TEST_TIMEOUT }, async () => {
       const requests = [];
 
       // Make 10 requests (limit is 5/min, so 6th+ should be rejected)
@@ -147,10 +152,10 @@ describe('API Security & Rate Limiting', () => {
       const responses = await Promise.all(requests);
       const rateLimitedCount = responses.filter((r) => r.status === 429).length;
 
-      expect(rateLimitedCount).toBeGreaterThan(0);
-    }, TEST_TIMEOUT);
+      assert.ok(rateLimitedCount > 0, `expected some 429s, got ${rateLimitedCount}`);
+    });
 
-    it('should include Retry-After header on rate limit', async () => {
+    it('should include Retry-After header on rate limit', { timeout: TEST_TIMEOUT }, async () => {
       // Make requests until rate limit
       const requests = [];
       for (let i = 0; i < 10; i++) {
@@ -174,12 +179,12 @@ describe('API Security & Rate Limiting', () => {
 
       if (rateLimitedResponse) {
         const retryAfter = rateLimitedResponse.headers.get('Retry-After');
-        expect(retryAfter).toBeDefined();
-        expect(parseInt(retryAfter || '0')).toBeGreaterThan(0);
+        assert.notEqual(retryAfter, null);
+        assert.ok(parseInt(retryAfter || '0') > 0, 'expected positive Retry-After');
       }
-    }, TEST_TIMEOUT);
+    });
 
-    it('should have different limits for different endpoints', async () => {
+    it('should have different limits for different endpoints', { timeout: TEST_TIMEOUT }, async () => {
       // Test draft save endpoint (30/min limit)
       const draftRequests = [];
       for (let i = 0; i < 5; i++) {
@@ -199,8 +204,8 @@ describe('API Security & Rate Limiting', () => {
 
       const responses = await Promise.all(draftRequests);
       const allSuccessful = responses.every((r) => r.status !== 429);
-      expect(allSuccessful).toBe(true); // Should not hit 30/min limit with just 5 requests
-    }, TEST_TIMEOUT);
+      assert.equal(allSuccessful, true); // Should not hit 30/min limit with just 5 requests
+    });
   });
 
   // ============================================
@@ -208,7 +213,7 @@ describe('API Security & Rate Limiting', () => {
   // ============================================
 
   describe('Security Headers', () => {
-    it('should include X-Content-Type-Options header', async () => {
+    it('should include X-Content-Type-Options header', { timeout: TEST_TIMEOUT }, async () => {
       const response = await fetch(`${API_BASE}/api/news/create`, {
         method: 'POST',
         headers: {
@@ -222,10 +227,10 @@ describe('API Security & Rate Limiting', () => {
         }),
       });
 
-      expect(response.headers.get('X-Content-Type-Options')).toBe('nosniff');
-    }, TEST_TIMEOUT);
+      assert.equal(response.headers.get('X-Content-Type-Options'), 'nosniff');
+    });
 
-    it('should include X-Frame-Options header', async () => {
+    it('should include X-Frame-Options header', { timeout: TEST_TIMEOUT }, async () => {
       const response = await fetch(`${API_BASE}/api/news/create`, {
         method: 'POST',
         headers: {
@@ -239,10 +244,10 @@ describe('API Security & Rate Limiting', () => {
         }),
       });
 
-      expect(response.headers.get('X-Frame-Options')).toBe('SAMEORIGIN');
-    }, TEST_TIMEOUT);
+      assert.equal(response.headers.get('X-Frame-Options'), 'SAMEORIGIN');
+    });
 
-    it('should include Content-Security-Policy header', async () => {
+    it('should include Content-Security-Policy header', { timeout: TEST_TIMEOUT }, async () => {
       const response = await fetch(`${API_BASE}/api/news/create`, {
         method: 'POST',
         headers: {
@@ -257,11 +262,11 @@ describe('API Security & Rate Limiting', () => {
       });
 
       const csp = response.headers.get('Content-Security-Policy');
-      expect(csp).toBeDefined();
-      expect(csp).toContain('default-src');
-    }, TEST_TIMEOUT);
+      assert.notEqual(csp, null);
+      assertContains(csp || '', 'default-src');
+    });
 
-    it('should include Referrer-Policy header', async () => {
+    it('should include Referrer-Policy header', { timeout: TEST_TIMEOUT }, async () => {
       const response = await fetch(`${API_BASE}/api/news/create`, {
         method: 'POST',
         headers: {
@@ -275,12 +280,13 @@ describe('API Security & Rate Limiting', () => {
         }),
       });
 
-      expect(response.headers.get('Referrer-Policy')).toBe(
+      assert.equal(
+        response.headers.get('Referrer-Policy'),
         'strict-origin-when-cross-origin'
       );
-    }, TEST_TIMEOUT);
+    });
 
-    it('should include Permissions-Policy header', async () => {
+    it('should include Permissions-Policy header', { timeout: TEST_TIMEOUT }, async () => {
       const response = await fetch(`${API_BASE}/api/news/create`, {
         method: 'POST',
         headers: {
@@ -295,9 +301,9 @@ describe('API Security & Rate Limiting', () => {
       });
 
       const permPolicy = response.headers.get('Permissions-Policy');
-      expect(permPolicy).toBeDefined();
-      expect(permPolicy).toContain('camera=()');
-    }, TEST_TIMEOUT);
+      assert.notEqual(permPolicy, null);
+      assertContains(permPolicy || '', 'camera=()');
+    });
   });
 
   // ============================================
@@ -305,7 +311,7 @@ describe('API Security & Rate Limiting', () => {
   // ============================================
 
   describe('Content Validation', () => {
-    it('should reject oversized content', async () => {
+    it('should reject oversized content', { timeout: TEST_TIMEOUT }, async () => {
       const largeContent = '<p>' + 'x'.repeat(1048576 + 100) + '</p>';
 
       const response = await fetch(`${API_BASE}/api/news/create`, {
@@ -321,10 +327,10 @@ describe('API Security & Rate Limiting', () => {
         }),
       });
 
-      expect(response.status).toBe(400);
-    }, TEST_TIMEOUT);
+      assert.equal(response.status, 400);
+    });
 
-    it('should validate required fields', async () => {
+    it('should validate required fields', { timeout: TEST_TIMEOUT }, async () => {
       const response = await fetch(`${API_BASE}/api/news/create`, {
         method: 'POST',
         headers: {
@@ -338,12 +344,12 @@ describe('API Security & Rate Limiting', () => {
         }),
       });
 
-      expect(response.status).toBe(400);
+      assert.equal(response.status, 400);
       const data = await response.json();
-      expect(data.error).toContain('required');
-    }, TEST_TIMEOUT);
+      assertContains(data.error ?? '', 'required');
+    });
 
-    it('should reject invalid HTML entities', async () => {
+    it('should reject invalid HTML entities', { timeout: TEST_TIMEOUT }, async () => {
       const response = await fetch(`${API_BASE}/api/news/create`, {
         method: 'POST',
         headers: {
@@ -358,8 +364,11 @@ describe('API Security & Rate Limiting', () => {
       });
 
       // Should either clean or reject
-      expect([200, 201, 400]).toContain(response.status);
-    }, TEST_TIMEOUT);
+      assert.ok(
+        [200, 201, 400].includes(response.status),
+        `unexpected status ${response.status}`
+      );
+    });
   });
 
   // ============================================
@@ -372,28 +381,35 @@ describe('API Security & Rate Limiting', () => {
       "1' OR '1'='1",
       "admin' --",
       "1; DELETE FROM NewsArticle; --",
-      "UNION SELECT * FROM NewsArticle",
+      'UNION SELECT * FROM NewsArticle',
     ];
 
     sqlPayloads.forEach((payload) => {
-      it(`should prevent SQL injection: ${payload.substring(0, 20)}...`, async () => {
-        const response = await fetch(`${API_BASE}/api/news/create`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${authToken}`,
-          },
-          body: JSON.stringify({
-            title: payload,
-            content: `<p>${payload}</p>`,
-            category: payload,
-          }),
-        });
+      it(
+        `should prevent SQL injection: ${payload.substring(0, 20)}...`,
+        { timeout: TEST_TIMEOUT },
+        async () => {
+          const response = await fetch(`${API_BASE}/api/news/create`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${authToken}`,
+            },
+            body: JSON.stringify({
+              title: payload,
+              content: `<p>${payload}</p>`,
+              category: payload,
+            }),
+          });
 
-        // Should not execute SQL, just treat as data
-        expect([200, 201, 400]).toContain(response.status);
-        expect(response.status).not.toBe(500);
-      }, TEST_TIMEOUT);
+          // Should not execute SQL, just treat as data
+          assert.ok(
+            [200, 201, 400].includes(response.status),
+            `unexpected status ${response.status}`
+          );
+          assert.notEqual(response.status, 500);
+        }
+      );
     });
   });
 
@@ -402,7 +418,7 @@ describe('API Security & Rate Limiting', () => {
   // ============================================
 
   describe('Authentication & Authorization', () => {
-    it('should reject requests without authentication', async () => {
+    it('should reject requests without authentication', { timeout: TEST_TIMEOUT }, async () => {
       const response = await fetch(`${API_BASE}/api/news/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -413,10 +429,10 @@ describe('API Security & Rate Limiting', () => {
         }),
       });
 
-      expect(response.status).toBe(401);
-    }, TEST_TIMEOUT);
+      assert.equal(response.status, 401);
+    });
 
-    it('should reject requests with invalid token', async () => {
+    it('should reject requests with invalid token', { timeout: TEST_TIMEOUT }, async () => {
       const response = await fetch(`${API_BASE}/api/news/create`, {
         method: 'POST',
         headers: {
@@ -430,8 +446,8 @@ describe('API Security & Rate Limiting', () => {
         }),
       });
 
-      expect(response.status).toBe(401);
-    }, TEST_TIMEOUT);
+      assert.equal(response.status, 401);
+    });
   });
 
   // ============================================
@@ -439,7 +455,7 @@ describe('API Security & Rate Limiting', () => {
   // ============================================
 
   describe('Image Upload Security', () => {
-    it('should validate image file type', async () => {
+    it('should validate image file type', { timeout: TEST_TIMEOUT }, async () => {
       const formData = new FormData();
       formData.append(
         'file',
@@ -453,10 +469,10 @@ describe('API Security & Rate Limiting', () => {
         body: formData,
       });
 
-      expect(response.status).toBe(400);
-    }, TEST_TIMEOUT);
+      assert.equal(response.status, 400);
+    });
 
-    it('should reject oversized images', async () => {
+    it('should reject oversized images', { timeout: TEST_TIMEOUT }, async () => {
       const largeBlob = new Blob([new ArrayBuffer(6 * 1024 * 1024)], {
         type: 'image/jpeg',
       });
@@ -469,7 +485,7 @@ describe('API Security & Rate Limiting', () => {
         body: formData,
       });
 
-      expect(response.status).toBe(400);
-    }, TEST_TIMEOUT);
+      assert.equal(response.status, 400);
+    });
   });
 });
