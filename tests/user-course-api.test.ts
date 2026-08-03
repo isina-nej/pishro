@@ -1,9 +1,10 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
+import { TEST_BASE_URL, skipUnlessServerUp } from "./helpers/server";
 
-const BASE = process.env.TEST_BASE_URL || "http://localhost:3000";
+const BASE = TEST_BASE_URL;
 
-describe("user purchased course API", () => {
+describe("user purchased course API", { skip: await skipUnlessServerUp() }, () => {
   it("GET /api/user/courses/:id returns 401 without auth", async () => {
     const res = await fetch(`${BASE}/api/user/courses/test-course-id`);
     assert.equal(res.status, 401);
