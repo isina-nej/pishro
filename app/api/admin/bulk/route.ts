@@ -128,7 +128,8 @@ export async function POST(req: Request) {
         where: { id: { in: foundIds } },
       }));
     } else {
-      const data = action === "archive" ? config.archiveData : config.activateData;
+      const data =
+        action === "archive" ? config.archiveData() : config.activateData();
       ({ count: affected } = await delegate.updateMany({
         where: { id: { in: foundIds } },
         data,

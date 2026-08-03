@@ -11,7 +11,6 @@
 // DigitalBook.bookStatus، NewsArticle.published) و بعضی نداشتند، که برایشان
 // `archivedAt` اضافه شد. این تفاوت اینجا پنهان می‌شود تا بقیه‌ی کد نفهمد.
 
-import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
 /** عملیاتی که روی یک انتخاب گروهی قابل اجراست */
@@ -39,10 +38,16 @@ export interface EntityConfig {
   labelFields: string[];
   /** ساخت عنوان خوانا از یک ردیف */
   toLabel: (row: Record<string, unknown>) => string;
-  /** مقادیری که ردیف را آرشیو می‌کند */
-  archiveData: Prisma.InputJsonObject | Record<string, unknown>;
+  /**
+   * مقادیری که ردیف را آرشیو می‌کند.
+   *
+   * تابع است نه شیء ثابت: بعضی مدل‌ها `archivedAt: new Date()` می‌خواهند و اگر
+   * به‌صورت مقدار نوشته شود، فقط یک‌بار هنگام بارگذاری ماژول ارزیابی می‌شود —
+   * یعنی همه‌ی آرشیوها زمان راه‌اندازی سرور را ثبت می‌کنند، نه زمان عمل را.
+   */
+  archiveData: () => Record<string, unknown>;
   /** مقادیری که ردیف را به حالت فعال برمی‌گرداند */
-  activateData: Record<string, unknown>;
+  activateData: () => Record<string, unknown>;
   /**
    * آیا حذف واقعی مجاز است.
    * برای User عمداً false است: کاربر به سفارش، تراکنش و ثبت‌نام دوره وصل است و
@@ -69,8 +74,8 @@ export const ENTITY_REGISTRY = {
     labelFields: ["title"],
     toLabel: (r) => text(r, "title"),
     // draft=false تا خبرِ آرشیوشده دوباره در فهرست پیش‌نویس‌ها ظاهر نشود
-    archiveData: { published: false, draft: false },
-    activateData: { published: true, draft: false },
+    archiveData: () => ({ published: false, draft: false }),
+    activateData: () => ({ published: true, draft: false }),
     allowDelete: true,
   },
   course: {
@@ -79,8 +84,8 @@ export const ENTITY_REGISTRY = {
     entityType: "Course",
     labelFields: ["subject"],
     toLabel: (r) => text(r, "subject"),
-    archiveData: { status: "ARCHIVED", published: false },
-    activateData: { status: "ACTIVE", published: true },
+    archiveData: () => ({ status: "ARCHIVED", published: false }),
+    activateData: () => ({ status: "ACTIVE", published: true }),
     allowDelete: true,
   },
   book: {
@@ -89,8 +94,8 @@ export const ENTITY_REGISTRY = {
     entityType: "DigitalBook",
     labelFields: ["title"],
     toLabel: (r) => text(r, "title"),
-    archiveData: { bookStatus: "ARCHIVED" },
-    activateData: { bookStatus: "PUBLISHED" },
+    archiveData: () => ({ bookStatus: "ARCHIVED" }),
+    activateData: () => ({ bookStatus: "PUBLISHED" }),
     allowDelete: true,
   },
   fund: {
@@ -99,8 +104,8 @@ export const ENTITY_REGISTRY = {
     entityType: "InvestmentFund",
     labelFields: ["name"],
     toLabel: (r) => text(r, "name"),
-    archiveData: { active: false },
-    activateData: { active: true },
+    archiveData: () => ({ active: false }),
+    activateData: () => ({ active: true }),
     allowDelete: true,
   },
   customer: {
@@ -109,8 +114,8 @@ export const ENTITY_REGISTRY = {
     entityType: "User",
     labelFields: ["firstName", "lastName", "phone"],
     toLabel: (r) => joinName(r),
-    archiveData: { archivedAt: new Date() },
-    activateData: { archivedAt: null },
+    archiveData: () => ({ archivedAt: new Date() }),
+    activateData: () => ({ archivedAt: null }),
     allowDelete: false,
   },
   lead: {
@@ -119,8 +124,8 @@ export const ENTITY_REGISTRY = {
     entityType: "Lead",
     labelFields: ["firstName", "lastName", "phone"],
     toLabel: (r) => joinName(r),
-    archiveData: { archivedAt: new Date() },
-    activateData: { archivedAt: null },
+    archiveData: () => ({ archivedAt: new Date() }),
+    activateData: () => ({ archivedAt: null }),
     allowDelete: true,
   },
   deal: {
@@ -129,8 +134,8 @@ export const ENTITY_REGISTRY = {
     entityType: "Deal",
     labelFields: ["title"],
     toLabel: (r) => text(r, "title"),
-    archiveData: { archivedAt: new Date() },
-    activateData: { archivedAt: null },
+    archiveData: () => ({ archivedAt: new Date() }),
+    activateData: () => ({ archivedAt: null }),
     allowDelete: true,
   },
   ticket: {
@@ -139,8 +144,8 @@ export const ENTITY_REGISTRY = {
     entityType: "SupportTicket",
     labelFields: ["subject"],
     toLabel: (r) => text(r, "subject"),
-    archiveData: { archivedAt: new Date() },
-    activateData: { archivedAt: null },
+    archiveData: () => ({ archivedAt: new Date() }),
+    activateData: () => ({ archivedAt: null }),
     allowDelete: true,
   },
   segment: {
@@ -149,8 +154,8 @@ export const ENTITY_REGISTRY = {
     entityType: "CustomerSegment",
     labelFields: ["name"],
     toLabel: (r) => text(r, "name"),
-    archiveData: { archivedAt: new Date() },
-    activateData: { archivedAt: null },
+    archiveData: () => ({ archivedAt: new Date() }),
+    activateData: () => ({ archivedAt: null }),
     allowDelete: true,
   },
 } as const satisfies Record<string, EntityConfig>;
