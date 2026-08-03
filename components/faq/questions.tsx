@@ -43,9 +43,10 @@ const Questions = ({ items }: QuestionsProps) => {
             </h3>
             <div className="rounded-sm border border-[#131b22] size-6 flex justify-center items-center shrink-0">
               <motion.div
-                animate={{ rotate: openIndex === idx ? 180 : 0 }}
+                animate={{ rotate: openIndex === idx ? 0 : 180 }}
                 transition={{ duration: 0.3 }}
               >
+                {/* Closed: points down; open: points up */}
                 <FaChevronUp className="text-[#131b22] size-4" />
               </motion.div>
             </div>
