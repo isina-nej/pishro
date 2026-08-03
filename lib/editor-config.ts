@@ -1,6 +1,9 @@
 /**
  * Rich Text Editor Configuration
- * Defines sanitization rules, allowed HTML tags, and editor settings
+ * Defines editor settings, keyboard shortcuts, and upload constraints
+ *
+ * HTML sanitization is NOT handled here — use `sanitizeContent` from
+ * `@/lib/sanitize-content` for any content rendered as HTML.
  */
 
 export interface EditorConfig {
@@ -20,75 +23,6 @@ export const EDITOR_CONFIG: EditorConfig = {
     height: 1080,
   },
 };
-
-/**
- * Sanitization configuration for HTML content
- * Uses whitelist approach for security
- */
-export const SANITIZATION_CONFIG = {
-  ALLOWED_TAGS: [
-    // Block elements
-    'p',
-    'h1',
-    'h2',
-    'h3',
-    'blockquote',
-    'ul',
-    'ol',
-    'li',
-    'pre',
-    'hr',
-    // Inline elements
-    'strong',
-    'b',
-    'em',
-    'i',
-    'u',
-    's',
-    'del',
-    'a',
-    'code',
-    'br',
-    // Media
-    'img',
-  ],
-  ALLOWED_ATTRIBUTES: {
-    // Link attributes
-    a: ['href', 'title', 'target', 'rel'],
-    // Image attributes
-    img: ['src', 'alt', 'width', 'height', 'title'],
-    // Heading attributes
-    h1: ['id'],
-    h2: ['id'],
-    h3: ['id'],
-    // Other
-    pre: ['class'],
-    code: ['class'],
-  },
-};
-
-/**
- * Server-side HTML sanitization
- * Removes dangerous content while preserving formatting
- */
-export function sanitizeHtmlContent(dirtyHtml: string): string {
-  if (!dirtyHtml) return '';
-
-  let html = dirtyHtml;
-  
-  // Remove script tags
-  html = html.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
-  
-  // Remove event handlers
-  html = html.replace(/\s*on\w+\s*=\s*["'][^"']*["']/gi, '');
-  html = html.replace(/\s*on\w+\s*=\s*[^\s>]*/gi, '');
-  
-  // Remove dangerous protocols
-  html = html.replace(/href\s*=\s*["']?javascript:/gi, 'href="#"');
-  html = html.replace(/src\s*=\s*["']?javascript:/gi, 'src=""');
-  
-  return html;
-}
 
 /**
  * Keyboard shortcuts configuration

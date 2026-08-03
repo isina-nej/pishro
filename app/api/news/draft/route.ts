@@ -7,7 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { sanitizeHtmlContent } from '@/lib/editor-config';
+import { sanitizeContent } from '@/lib/sanitize-content';
 import { auth } from '@/auth';
 import { checkRateLimit, getClientIp, addSecurityHeaders } from '@/lib/api-security';
 import { parseMarkdown, sanitizeMarkdown, validateMarkdown } from '@/lib/markdown-processor';
@@ -86,11 +86,11 @@ export async function POST(request: NextRequest) {
       finalHtml = parseMarkdown(finalMarkdown);
     } else if (contentHtml) {
       // If HTML is provided, sanitize it
-      finalHtml = sanitizeHtmlContent(contentHtml);
+      finalHtml = sanitizeContent(contentHtml);
       finalMarkdown = '';
     } else if (content) {
       // Fallback to legacy content field (assume it's HTML)
-      finalHtml = sanitizeHtmlContent(content);
+      finalHtml = sanitizeContent(content);
       finalMarkdown = '';
     }
 
