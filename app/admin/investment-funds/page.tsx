@@ -20,9 +20,16 @@ import {
 } from '@/components/ui/sheet';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
+import { BulkActionBar } from '@/components/admin/data-table/BulkActionBar';
+import {
+  SelectionCheckbox,
+  SelectAllCheckbox,
+} from '@/components/admin/data-table/SelectionCheckbox';
+import { useBulkSelection } from '@/lib/hooks/useBulkSelection';
 import {
   type AdminInvestmentFund,
   type InvestmentFundFormData,
+  adminInvestmentFundKeys,
   useAdminInvestmentFunds,
   useCreateAdminInvestmentFund,
   useDeleteAdminInvestmentFund,
@@ -269,6 +276,9 @@ export default function InvestmentFundsPage() {
   const deleteMutation = useDeleteAdminInvestmentFund();
   const [sheetOpen, setSheetOpen] = useState(false);
   const [editingFund, setEditingFund] = useState<AdminInvestmentFund | null>(null);
+  const { selectedIds, setSelectedIds, clear, onDone } = useBulkSelection(
+    adminInvestmentFundKeys.all
+  );
 
   if (isAuthLoading) {
     return <AdminLoadingState />;
@@ -319,10 +329,23 @@ export default function InvestmentFundsPage() {
         />
       ) : (
         <div className="grid gap-4 md:grid-cols-2">
+          <div className="md:col-span-2 flex justify-end">
+            <SelectAllCheckbox
+              ids={funds.map((f) => f.id)}
+              selectedIds={selectedIds}
+              onChange={setSelectedIds}
+            />
+          </div>
           {funds.map((fund) => (
             <Card key={fund.id} className="p-4">
               <div className="mb-3 flex items-start justify-between gap-2">
                 <div className="flex items-center gap-2">
+                  <SelectionCheckbox
+                    id={fund.id}
+                    selectedIds={selectedIds}
+                    onChange={setSelectedIds}
+                    label={`انتخاب ${fund.name}`}
+                  />
                   <div className="rounded-xl bg-primary/10 p-2 text-primary">
                     <TrendingUp className="h-5 w-5" />
                   </div>
@@ -377,6 +400,14 @@ export default function InvestmentFundsPage() {
           ))}
         </div>
       )}
+
+      <BulkActionBar
+        entity="fund"
+        entityLabel="صندوق"
+        selectedIds={selectedIds}
+        onClear={clear}
+        onDone={onDone}
+      />
 
       <FundFormSheet fund={editingFund} open={sheetOpen} onOpenChange={setSheetOpen} />
     </AdminPageShell>

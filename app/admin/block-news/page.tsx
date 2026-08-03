@@ -21,9 +21,15 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Plus, Edit2, Trash2, Send, Search, Filter, Newspaper, Clock, Archive } from 'lucide-react';
-import { useBlockNewsList, useDeleteBlockNews, useChangeBlockNewsStatus } from '@/lib/hooks/use-block-news';
+import { useBlockNewsList, useDeleteBlockNews, useChangeBlockNewsStatus, blockNewsKeys } from '@/lib/hooks/use-block-news';
 import { AdminLoadingState } from '@/components/admin/AdminPageShell';
 import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
+import { BulkActionBar } from '@/components/admin/data-table/BulkActionBar';
+import {
+  SelectionCheckbox,
+  SelectAllCheckbox,
+} from '@/components/admin/data-table/SelectionCheckbox';
+import { useBulkSelection } from '@/lib/hooks/useBulkSelection';
 
 export const dynamic = 'force-dynamic';
 
@@ -42,6 +48,7 @@ export default function BlockNewsListPage() {
 
   const deleteNewsMutation = useDeleteBlockNews();
   const changeStatusMutation = useChangeBlockNewsStatus();
+  const { selectedIds, setSelectedIds, clear, onDone } = useBulkSelection(blockNewsKeys.all);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -172,12 +179,25 @@ export default function BlockNewsListPage() {
           </Card>
         ) : (
           <>
+            <div className="mb-3 flex items-center justify-end">
+              <SelectAllCheckbox
+                ids={data.items.map((n) => n.id)}
+                selectedIds={selectedIds}
+                onChange={setSelectedIds}
+              />
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 w-full">
               {data.items.map((news) => (
                 <Card key={news.id} className="group hover:shadow-xl transition-all duration-300 overflow-hidden border-0 shadow-md hover:ring-1 hover:ring-primary/30 flex flex-col">
                   {/* Card Header with Status */}
                   <div className="p-4 md:p-6 bg-muted/50 border-b border-border">
                     <div className="flex items-start justify-between flex-row-reverse gap-3 mb-3">
+                      <SelectionCheckbox
+                        id={news.id}
+                        selectedIds={selectedIds}
+                        onChange={setSelectedIds}
+                        label={`انتخاب ${news.title}`}
+                      />
                       {(() => {
                         // خبر منتشرشده با تاریخ انتشار در آینده = تایم‌دار (هنوز در سایت دیده نمی‌شود)
                         const isScheduled =
@@ -310,6 +330,14 @@ export default function BlockNewsListPage() {
                 </div>
               </Card>
             )}
+
+            <BulkActionBar
+              entity="news"
+              entityLabel="خبر"
+              selectedIds={selectedIds}
+              onClear={clear}
+              onDone={onDone}
+            />
           </>
         )}
       </div>
