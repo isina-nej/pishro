@@ -5,6 +5,7 @@
 
 import { marked } from 'marked';
 import DOMPurify from 'isomorphic-dompurify';
+import { HTML_SANITIZE_CONFIG } from '@/lib/sanitize-content';
 
 /**
  * Configuration for Markdown parsing
@@ -13,28 +14,6 @@ const markedConfig = {
   breaks: true,
   gfm: true, // GitHub Flavored Markdown
   pedantic: false,
-};
-
-/**
- * HTML Sanitization configuration for DOMPurify
- */
-const sanitizeConfig = {
-  ALLOWED_TAGS: [
-    'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-    'strong', 'b', 'em', 'i', 'u', 's', 'del',
-    'blockquote', 'ul', 'ol', 'li',
-    'pre', 'code', 'hr', 'br',
-    'a', 'img',
-    'table', 'thead', 'tbody', 'tr', 'th', 'td',
-  ],
-  ALLOWED_ATTR: [
-    'href', 'title', 'target', 'rel',
-    'src', 'alt', 'width', 'height',
-    'class', 'id', 'style',
-    'colspan', 'rowspan',
-    'align', 'valign',
-  ],
-  KEEP_CONTENT: true,
 };
 
 /**
@@ -57,7 +36,7 @@ export function parseMarkdown(markdown: string): string {
     const html = marked.parse(markdown, { async: false }) as string;
 
     // Sanitize the HTML to prevent XSS
-    const sanitized = DOMPurify.sanitize(html, sanitizeConfig);
+    const sanitized = DOMPurify.sanitize(html, HTML_SANITIZE_CONFIG);
 
     return sanitized;
   } catch (error) {
