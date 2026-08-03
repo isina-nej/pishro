@@ -1,8 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getAdminAuth } from '@/lib/auth-simple';
+import { errorResponse, ErrorCodes } from '@/lib/api-response';
 import { saveFileToStorage } from '@/lib/services/storage-adapter';
 
 export async function POST(request: NextRequest) {
   try {
+    // این مسیر زیر ماژور /api/admin نیست، پس middleware آن را محافظت نمی‌کند
+    // و باید احراز هویت ادمین صراحتاً اینجا بررسی شود (مثل app/api/admin/books/upload-*)
+    const adminAuth = await getAdminAuth(request);
+    if (!adminAuth) {
+      return errorResponse('دسترسی غیرمجاز', ErrorCodes.UNAUTHORIZED);
+    }
+
     const formData = await request.formData();
     const file = formData.get('file') as File;
     const fileType = formData.get('fileType') as string; // 'cover', 'pdf', 'audio'
