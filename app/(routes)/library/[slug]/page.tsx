@@ -213,7 +213,7 @@ export default function BookDetailPage() {
                   
                   {book.year && (
                     <div className="flex items-center gap-3 p-3 rounded-lg bg-muted">
-                      <Calendar className="h-5 w-5 text-accent" />
+                      <Calendar className="h-5 w-5 text-accent-foreground" />
                       <div>
                         <p className="text-xs text-muted-foreground">سال</p>
                         <p className="font-semibold">{book.year}</p>

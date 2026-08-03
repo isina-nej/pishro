@@ -301,7 +301,7 @@ const ProfileMainContent = () => {
             label: "پرداخت موفق اخیر",
             value: paidOrders,
             icon: CreditCard,
-            tone: "text-accent bg-accent/40",
+            tone: "text-accent-foreground bg-accent/40",
           },
         ].map((item) => {
           const Icon = item.icon;

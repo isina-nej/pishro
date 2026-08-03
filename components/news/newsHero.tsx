@@ -26,7 +26,7 @@ const statsData = [
     value: "featured",
     icon: <Star className="h-6 w-6" />,
     color: "from-accent/20 to-destructive/20",
-    iconColor: "text-accent",
+    iconColor: "text-accent-foreground",
   },
   {
     label: "انتشار این ماه",

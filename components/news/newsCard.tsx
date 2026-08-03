@@ -45,7 +45,7 @@ const NewsCard = ({ data }: NewsCardProps) => {
   const getCategoryColor = (category: string) => {
     const colors: Record<string, { bg: string; text: string; icon: string }> = {
       اخبار: { bg: "from-primary/20 to-primary/20", text: "from-primary to-primary", icon: "bg-primary/20 text-primary" },
-      آموزش: { bg: "from-accent/20 to-destructive/20", text: "from-accent to-destructive", icon: "bg-accent/20 text-accent" },
+      آموزش: { bg: "from-accent/20 to-destructive/20", text: "from-accent to-destructive", icon: "bg-accent/20 text-accent-foreground" },
       فناوری: { bg: "from-primary/20 to-primary/20", text: "from-primary to-primary", icon: "bg-primary/20 text-primary" },
       رویداد: { bg: "from-premium/20 to-destructive/20", text: "from-premium to-destructive", icon: "bg-premium/20 text-premium" },
       پروژه: { bg: "from-primary/20 to-accent/20", text: "from-primary to-accent", icon: "bg-primary/20 text-primary" },

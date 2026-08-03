@@ -81,12 +81,16 @@ export default {
   			 * آن‌ها، خودِ تعریف به توکن‌های پالت وصل شد: هم رنگ خارج از پالت حذف
   			 * می‌شود، هم این‌ها خودکار دو‌حالته می‌شوند.
   			 * (myPrimary پیش‌تر #D52A16 بود — قرمز، نه سبزِ برند.)
+  			 *
+  			 * mySecondary و myBlue به توکن «متن» وصل شده‌اند نه سطح: هر دو بیشتر
+  			 * به‌عنوان رنگ متن به کار می‌روند (mySecondary شصت بار)، و وصل‌کردنشان
+  			 * به secondary/accent — که سطوح تیره‌اند — متن را نامرئی می‌کرد.
   			 */
   			myPrimary: 'hsl(var(--primary))',
-  			mySecondary: 'hsl(var(--secondary))',
+  			mySecondary: 'hsl(var(--muted-foreground))',
   			myGolden: 'hsl(var(--premium))',
-  			myBlue: 'hsl(var(--accent))',
-  			myGray: 'hsl(var(--muted))',
+  			myBlue: 'hsl(var(--chart-2))',
+  			myGray: 'hsl(var(--muted-foreground))',
   			myLightGray: 'hsl(var(--muted))',
   			brand: 'var(--brand-color)',
   			bodyBg: 'var(--body-background)',

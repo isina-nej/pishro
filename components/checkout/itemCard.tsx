@@ -285,7 +285,7 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
 
             {/* Duration */}
             <div className="flex items-start gap-2 p-3 bg-accent rounded-lg">
-              <Clock className="w-5 h-5 text-accent mt-0.5" />
+              <Clock className="w-5 h-5 text-accent-foreground mt-0.5" />
               <div>
                 <p className="text-xs text-muted-foreground dark:text-textSecondary mb-1">مدت زمان</p>
                 <p className="text-sm font-bold text-foreground dark:text-textPrimary">
