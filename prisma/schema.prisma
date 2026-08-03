@@ -27,8 +27,8 @@ model User {
   shebaNumber  String?
   accountOwner String?
 
-  createdAt            DateTime?                  @default(now())
-  updatedAt            DateTime?                  @updatedAt
+  createdAt            DateTime?                 @default(now())
+  updatedAt            DateTime?                 @updatedAt
   comments             Comment[]                 @relation("UserComments")
   orders               Order[]                   @relation("UserOrders")
   enrollments          Enrollment[]              @relation("UserEnrollments")
@@ -44,27 +44,34 @@ model User {
   tickets            SupportTicket[]     @relation("UserTickets")
   tagAssignments     UserTagAssignment[] @relation("UserTagAssignments")
   crmActivities      Activity[]          @relation("UserActivities")
+
+  /// این مدل وضعیتی برای آرشیو ندارد، پس آرشیو ادمین اینجا ثبت می‌شود.
+  /// تهی یعنی فعال — کوئری‌های موجود دست‌نخورده کار می‌کنند.
+  archivedAt DateTime?
+
+  @@index([archivedAt])
 }
 
 // Admin Users Model - Separate from regular users for admin panel access
 model AdminUser {
-  id            String      @id @default(cuid())
-  email         String      @unique
-  phone         String?     @unique
-  passwordHash  String
-  name          String
-  role          AdminRole   @default(ADMIN)
-  status        AdminStatus @default(ACTIVE)
-  lastLoginAt   DateTime?
-  createdAt     DateTime?   @default(now())
-  updatedAt     DateTime?   @updatedAt
+  id           String      @id @default(cuid())
+  email        String      @unique
+  phone        String?     @unique
+  passwordHash String
+  name         String
+  role         AdminRole   @default(ADMIN)
+  status       AdminStatus @default(ACTIVE)
+  lastLoginAt  DateTime?
+  createdAt    DateTime?   @default(now())
+  updatedAt    DateTime?   @updatedAt
 
   // CRM relations
-  assignedLeads    Lead[]            @relation("LeadAssignee")
-  ownedDeals       Deal[]            @relation("DealOwner")
-  assignedTickets  SupportTicket[]   @relation("TicketAssignee")
-  createdSegments  CustomerSegment[] @relation("SegmentCreator")
-  crmActivities    Activity[]        @relation("ActivityAuthor")
+  assignedLeads   Lead[]            @relation("LeadAssignee")
+  ownedDeals      Deal[]            @relation("DealOwner")
+  assignedTickets SupportTicket[]   @relation("TicketAssignee")
+  createdSegments CustomerSegment[] @relation("SegmentCreator")
+  crmActivities   Activity[]        @relation("ActivityAuthor")
+  auditLogs       AuditLog[]        @relation("AdminAuditLogs")
 
   @@index([email])
   @@index([phone])
@@ -72,43 +79,43 @@ model AdminUser {
 }
 
 model TempUser {
-  id           String   @id @default(cuid())
-  phone        String   @unique
+  id           String    @id @default(cuid())
+  phone        String    @unique
   passwordHash String
   createdAt    DateTime? @default(now())
 }
 
 model Otp {
-  id        String   @id @default(cuid())
-  phone     String   @unique
+  id        String    @id @default(cuid())
+  phone     String    @unique
   code      String
   expiresAt DateTime
   createdAt DateTime? @default(now())
 }
 
 model Course {
-  id              String   @id @default(cuid())
+  id              String    @id @default(cuid())
   subject         String
   price           Int
   img             String?
   rating          Float?
-  description     String?  @db.LongText
+  description     String?   @db.LongText
   discountPercent Int?
   time            String?
   students        Int?
   videosCount     Int?
   introVideoUrl   String? // ویدیو معرفی دوره (trailer)
-  likes           Int      @default(0)
-  dislikes        Int      @default(0)
-  hasChapters     Boolean  @default(false) // نشان‌دهنده وجود فصل‌های تنظیم شده
+  likes           Int       @default(0)
+  dislikes        Int       @default(0)
+  hasChapters     Boolean   @default(false) // نشان‌دهنده وجود فصل‌های تنظیم شده
   createdAt       DateTime? @default(now())
   updatedAt       DateTime? @default(now())
 
   category   Category? @relation("CategoryCourses", fields: [categoryId], references: [id], onDelete: SetNull)
-  categoryId String?  
+  categoryId String?
 
-  tags      CourseTags[] @relation("CourseTags")
-  chapters  Chapter[]    @relation("CourseChapters")
+  tags     CourseTags[] @relation("CourseTags")
+  chapters Chapter[]    @relation("CourseChapters")
 
   slug          String?      @unique
   level         CourseLevel?
@@ -164,9 +171,9 @@ model Comment {
 
   // Relations
   course     Course?   @relation(fields: [courseId], references: [id], name: "CourseComments", onDelete: Cascade)
-  courseId   String?  
+  courseId   String?
   category   Category? @relation("CategoryComments", fields: [categoryId], references: [id], onDelete: SetNull)
-  categoryId String?  
+  categoryId String?
 
   // Engagement
   likes    Json @default("[]")
@@ -191,29 +198,29 @@ model Comment {
 model Order {
   id           String        @id @default(cuid())
   user         User?         @relation(fields: [userId], references: [id], name: "UserOrders", onDelete: SetNull)
-  userId       String?      
+  userId       String?
   items        Json
   total        Int
   status       OrderStatus   @default(PENDING)
   paymentRef   String?
-  createdAt    DateTime? @default(now())
+  createdAt    DateTime?     @default(now())
   orderItems   OrderItem[]   @relation("OrderOrderItems")
   transactions Transaction[] @relation("OrderTransactions")
   deal         Deal?         @relation("OrderDeal")
 }
 
 model NewsletterSubscriber {
-  id        String   @id @default(cuid())
-  phone     String   @unique
+  id        String    @id @default(cuid())
+  phone     String    @unique
   createdAt DateTime? @default(now())
 }
 
 model Enrollment {
   id           String    @id @default(cuid())
   user         User      @relation(fields: [userId], references: [id], name: "UserEnrollments", onDelete: Cascade)
-  userId       String   
+  userId       String
   course       Course    @relation(fields: [courseId], references: [id], name: "CourseEnrollments", onDelete: Cascade)
-  courseId     String   
+  courseId     String
   enrolledAt   DateTime? @default(now())
   progress     Int       @default(0)
   completedAt  DateTime?
@@ -225,16 +232,16 @@ model Enrollment {
 model Transaction {
   id          String            @id @default(cuid())
   user        User?             @relation(fields: [userId], references: [id], name: "UserTransactions", onDelete: SetNull)
-  userId      String?          
+  userId      String?
   order       Order?            @relation(fields: [orderId], references: [id], name: "OrderTransactions", onDelete: SetNull)
-  orderId     String?          
+  orderId     String?
   amount      Int
   type        TransactionType
   status      TransactionStatus
   gateway     String?
   refNumber   String?
   description String?
-  createdAt   DateTime? @default(now())
+  createdAt   DateTime?         @default(now())
 }
 
 model OrderItem {
@@ -256,9 +263,9 @@ model OrderItem {
 }
 
 model Lesson {
-  id          String  @id @default(cuid())
-  course      Course  @relation("CourseLessons", fields: [courseId], references: [id], onDelete: Cascade)
-  courseId    String 
+  id          String   @id @default(cuid())
+  course      Course   @relation("CourseLessons", fields: [courseId], references: [id], onDelete: Cascade)
+  courseId    String
   chapter     Chapter? @relation("ChapterLessons", fields: [chapterId], references: [id], onDelete: SetNull)
   chapterId   String?
   title       String
@@ -269,7 +276,7 @@ model Lesson {
   videoId String?
 
   // Legacy fields (for backward compatibility)
-  videoUrl  String? // برای سازگاری با ویدیوهای قبلی
+  videoUrl        String? // برای سازگاری با ویدیوهای قبلی
   thumbnail       String?
   duration        String? // legacy display duration
   durationSeconds Int?
@@ -294,22 +301,22 @@ enum ContentType {
 }
 
 model NewsArticle {
-  id          String    @id @default(cuid())
+  id          String      @id @default(cuid())
   title       String
-  slug        String    @unique
-  excerpt     String    @db.LongText
-  content     String    @db.LongText
+  slug        String      @unique
+  excerpt     String      @db.LongText
+  content     String      @db.LongText
   contentType ContentType @default(HTML) // Support for rich HTML content
-  
+
   // Markdown and HTML content storage
-  contentMarkdown  String?  @db.LongText // Raw markdown source for editing
-  contentHtml      String?  @db.LongText // Rendered and sanitized HTML for display
-  
+  contentMarkdown String? @db.LongText // Raw markdown source for editing
+  contentHtml     String? @db.LongText // Rendered and sanitized HTML for display
+
   // Draft management
-  draft         Boolean   @default(false)
-  draftContent  String?   @db.LongText // Auto-saved version
-  draftMarkdown String?   @db.LongText // Auto-saved markdown version
-  
+  draft         Boolean @default(false)
+  draftContent  String? @db.LongText // Auto-saved version
+  draftMarkdown String? @db.LongText // Auto-saved markdown version
+
   coverImage  String?
   author      String?
   category    String
@@ -319,7 +326,7 @@ model NewsArticle {
   views       Int       @default(0)
 
   relatedCategory Category? @relation("CategoryNews", fields: [categoryId], references: [id], onDelete: SetNull)
-  categoryId      String?  
+  categoryId      String?
 
   relatedTags NewsArticleTags[] @relation("NewsTags")
 
@@ -328,13 +335,13 @@ model NewsArticle {
   likes       Int     @default(0)
 
   // Audit fields
-  createdAt   DateTime? @default(now())
-  updatedAt   DateTime? @updatedAt
-  lastEditedAt DateTime? @updatedAt // Track last edit time
-  comments    NewsComment[] @relation("NewsArticleComments")
+  createdAt    DateTime?     @default(now())
+  updatedAt    DateTime?     @updatedAt
+  lastEditedAt DateTime?     @updatedAt // Track last edit time
+  comments     NewsComment[] @relation("NewsArticleComments")
 
   // Relation with AboutPage
-  aboutPageId String?   
+  aboutPageId String?
   aboutPage   AboutPage? @relation("AboutNews", fields: [aboutPageId], references: [id], onDelete: SetNull)
 
   @@index([categoryId])
@@ -346,39 +353,39 @@ model NewsArticle {
 model NewsComment {
   id        String      @id @default(cuid())
   article   NewsArticle @relation(fields: [articleId], references: [id], name: "NewsArticleComments", onDelete: Cascade)
-  articleId String     
+  articleId String
   user      User?       @relation(fields: [userId], references: [id], name: "UserNewsComments", onDelete: SetNull)
-  userId    String?    
+  userId    String?
   content   String
   likes     Json        @default("[]")
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
+  createdAt DateTime?   @default(now())
+  updatedAt DateTime?   @updatedAt
 }
 
 // ===================== END COMMENTS =====================
 
 model DigitalBook {
-  id          String   @id @default(cuid())
+  id          String            @id @default(cuid())
   title       String
-  slug        String   @unique
+  slug        String            @unique
   author      String
-  description String   @db.LongText
+  description String            @db.LongText
   cover       String?
   publisher   String?
   year        Int
   pages       Int?
   isbn        String?
-  language    String   @default("فارسی")
-  rating      Float    @default(0)
-  votes       Int      @default(0)
-  views       Int      @default(0)
-  downloads   Int      @default(0)
+  language    String            @default("فارسی")
+  rating      Float             @default(0)
+  votes       Int               @default(0)
+  views       Int               @default(0)
+  downloads   Int               @default(0)
   category    String
-  formats     Json     @default("[]")
+  formats     Json              @default("[]")
   bookStatus  DigitalBookStatus @default(DRAFT)
-  tags        Json     @default("[]")
+  tags        Json              @default("[]")
   readingTime String?
-  isFeatured  Boolean  @default(false)
+  isFeatured  Boolean           @default(false)
   price       Int?
   fileUrl     String?
   audioUrl    String?
@@ -457,8 +464,8 @@ model Tag {
   icon        String?
   published   Boolean? @default(false)
 
-  categories CategoryTags[] @relation("CategoryTags")
-  courses    CourseTags[]   @relation("CourseTags")
+  categories CategoryTags[]    @relation("CategoryTags")
+  courses    CourseTags[]      @relation("CourseTags")
   news       NewsArticleTags[] @relation("NewsTags")
   books      DigitalBookTags[] @relation("BookTags")
 
@@ -525,7 +532,7 @@ model CategoryTags {
 model PageContent {
   id         String   @id @default(cuid())
   category   Category @relation("CategoryContent", fields: [categoryId], references: [id], onDelete: Cascade)
-  categoryId String  
+  categoryId String
 
   type      PageContentType
   section   String?
@@ -550,7 +557,7 @@ model FAQ {
   question    String
   answer      String
   category    Category?    @relation("CategoryFAQs", fields: [categoryId], references: [id], onDelete: Cascade)
-  categoryId  String?     
+  categoryId  String?
   faqCategory FAQCategory?
   order       Int          @default(0)
   published   Boolean      @default(true)
@@ -558,8 +565,8 @@ model FAQ {
   views       Int          @default(0)
   helpful     Int          @default(0)
   notHelpful  Int          @default(0)
-  createdAt   DateTime? @default(now())
-  updatedAt   DateTime? @updatedAt
+  createdAt   DateTime?    @default(now())
+  updatedAt   DateTime?    @updatedAt
 
   @@index([categoryId, published])
   @@index([faqCategory])
@@ -576,7 +583,7 @@ model Quiz {
 
   // Category relation (optional for category-level assessment quizzes)
   category   Category? @relation("CategoryQuizzes", fields: [categoryId], references: [id], onDelete: SetNull)
-  categoryId String?  
+  categoryId String?
 
   // Quiz settings
   timeLimit          Int? // Time limit in minutes (null = no limit)
@@ -744,9 +751,9 @@ enum AdminStatus {
 
 // Digital Book Status Enum
 enum DigitalBookStatus {
-  DRAFT       // پیشنویس - هنوز منتشر نشده
-  PUBLISHED   // منتشر شده
-  ARCHIVED    // آرشیو شده
+  DRAFT // پیشنویس - هنوز منتشر نشده
+  PUBLISHED // منتشر شده
+  ARCHIVED // آرشیو شده
 }
 
 //
@@ -841,10 +848,10 @@ model AboutPage {
   id String @id @default(cuid())
 
   // Hero Section
-  heroTitle          String @default("")
-  heroSubtitle       String?
-  heroDescription    String?
-  heroBadgeText      String?
+  heroTitle           String  @default("")
+  heroSubtitle        String?
+  heroDescription     String?
+  heroBadgeText       String?
   doctorIntroVideoUrl String? // ویدیو معرفی دکتر
 
   // Hero Stats
@@ -892,7 +899,7 @@ model AboutPage {
 model ResumeItem {
   id          String    @id @default(cuid())
   aboutPage   AboutPage @relation("AboutResumeItems", fields: [aboutPageId], references: [id], onDelete: Cascade)
-  aboutPageId String   
+  aboutPageId String
 
   icon        String? // نام آیکون (مثل "LuClock", "LuTarget", ...)
   title       String
@@ -913,21 +920,21 @@ model ResumeItem {
 model TeamMember {
   id          String    @id @default(cuid())
   aboutPage   AboutPage @relation("AboutTeamMembers", fields: [aboutPageId], references: [id], onDelete: Cascade)
-  aboutPageId String   
+  aboutPageId String
 
-  name        String @default("")
-  role        String @default("")
+  name        String  @default("")
+  role        String  @default("")
   image       String?
   education   String?
   description String?
   specialties Json    @default("[]")
 
   // Social Links
-  linkedinUrl  String?
-  emailUrl     String?
-  twitterUrl   String?
-  whatsappUrl  String?
-  telegramUrl  String?
+  linkedinUrl String?
+  emailUrl    String?
+  twitterUrl  String?
+  whatsappUrl String?
+  telegramUrl String?
 
   order     Int     @default(0)
   published Boolean @default(true)
@@ -942,7 +949,7 @@ model TeamMember {
 model Certificate {
   id          String    @id @default(cuid())
   aboutPage   AboutPage @relation("AboutCertificates", fields: [aboutPageId], references: [id], onDelete: Cascade)
-  aboutPageId String   
+  aboutPageId String
 
   title       String
   description String?
@@ -1030,7 +1037,7 @@ model InvestmentPlans {
 model InvestmentPlan {
   id                String          @id @default(cuid())
   investmentPlans   InvestmentPlans @relation("InvestmentPlansPlans", fields: [investmentPlansId], references: [id], onDelete: Cascade)
-  investmentPlansId String         
+  investmentPlansId String
 
   label       String // مثل "ارز دیجیتال"، "بورس"، "ترکیبی"
   icon        String? // نام آیکون (مثل "Bitcoin", "LineChart", "PieChart")
@@ -1049,7 +1056,7 @@ model InvestmentPlan {
 model InvestmentTag {
   id                String          @id @default(cuid())
   investmentPlans   InvestmentPlans @relation("InvestmentPlansTags", fields: [investmentPlansId], references: [id], onDelete: Cascade)
-  investmentPlansId String         
+  investmentPlansId String
 
   title String
   color String? // رنگ تگ
@@ -1127,7 +1134,7 @@ model UserInvestmentPortfolio {
 
   // Purchase details
   purchasePrice Int // قیمت پرداختی
-  orderId       String?         // ارجاع به سفارش
+  orderId       String? // ارجاع به سفارش
   status        PortfolioStatus @default(ACTIVE)
 
   // Dates
@@ -1293,7 +1300,7 @@ model InvestmentModelsPage {
 model InvestmentModel {
   id                     String               @id @default(cuid())
   investmentModelsPage   InvestmentModelsPage @relation("InvestmentModelsPageModels", fields: [investmentModelsPageId], references: [id], onDelete: Cascade)
-  investmentModelsPageId String              
+  investmentModelsPageId String
 
   type        String // "in-person" | "online"
   title       String
@@ -1334,7 +1341,7 @@ model InvestmentModel {
 // ============================================================
 
 model Lead {
-  id     String     @id @default(cuid())
+  id        String     @id @default(cuid())
   firstName String?
   lastName  String?
   phone     String
@@ -1356,10 +1363,14 @@ model Lead {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  /// LeadStatus مراحل قیف فروش را نشان می‌دهد، نه آرشیو بودن — پس جدا نگه داشته شد.
+  archivedAt DateTime?
+
   @@index([status])
   @@index([phone])
   @@index([assignedToId])
   @@index([createdAt])
+  @@index([archivedAt])
 }
 
 enum LeadSource {
@@ -1418,9 +1429,12 @@ model Deal {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  archivedAt DateTime?
+
   @@index([stageId])
   @@index([ownerAdminId])
   @@index([customerId])
+  @@index([archivedAt])
 }
 
 model SupportTicket {
@@ -1442,10 +1456,14 @@ model SupportTicket {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
 
+  /// TicketStatus چرخه‌ی رسیدگی است (باز/بسته)، نه آرشیو — پس جدا نگه داشته شد.
+  archivedAt DateTime?
+
   @@index([status])
   @@index([priority])
   @@index([assignedToId])
   @@index([customerId])
+  @@index([archivedAt])
 }
 
 enum TicketStatus {
@@ -1484,7 +1502,7 @@ model UserTagAssignment {
 }
 
 model CustomerSegment {
-  id          String @id @default(cuid())
+  id          String  @id @default(cuid())
   name        String
   description String?
   // Rule-based segmentation stored as JSON (e.g. { minSpend, tagIds,
@@ -1492,13 +1510,17 @@ model CustomerSegment {
   // — NOT a materialized member list, to avoid a second source of truth
   // that can drift (the same bug class already found elsewhere in this
   // schema for Order.items/OrderItem and NewsArticle JSON-tags/join-table).
-  rules Json
+  rules       Json
 
   createdBy   AdminUser? @relation("SegmentCreator", fields: [createdById], references: [id], onDelete: SetNull)
   createdById String?
 
+  archivedAt DateTime?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([archivedAt])
 }
 
 model Activity {
@@ -1544,21 +1566,73 @@ enum ActivityType {
 // ============================================================
 
 model InvestmentFund {
-  id            String   @id @default(cuid())
-  key           String   @unique // stable identifier, e.g. "fixed-income-monthly", "hold"
-  name          String   // نمایش عمومی، مثل «صندوق درآمد ثابت ماهیانه»
-  description   String?  @db.Text // پیام تضمین/توضیح زیر نتیجه محاسبه
-  monthlyRate   Float    // نرخ سود ماهیانه، مثلاً 0.08 برای ۸٪
-  minDuration   Int      @default(1)  // حداقل مدت به ماه
-  maxDuration   Int      @default(12)
-  durationStep  Int      @default(1) // گام مجاز مدت، مثلاً 3 برای صندوق هولد
-  minAmount     BigInt   @default(1000000)
-  maxAmount     BigInt   @default(5000000000)
-  amountStep    BigInt   @default(1000000)
-  order         Int      @default(0)
-  active        Boolean  @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id           String   @id @default(cuid())
+  key          String   @unique // stable identifier, e.g. "fixed-income-monthly", "hold"
+  name         String // نمایش عمومی، مثل «صندوق درآمد ثابت ماهیانه»
+  description  String?  @db.Text // پیام تضمین/توضیح زیر نتیجه محاسبه
+  monthlyRate  Float // نرخ سود ماهیانه، مثلاً 0.08 برای ۸٪
+  minDuration  Int      @default(1) // حداقل مدت به ماه
+  maxDuration  Int      @default(12)
+  durationStep Int      @default(1) // گام مجاز مدت، مثلاً 3 برای صندوق هولد
+  minAmount    BigInt   @default(1000000)
+  maxAmount    BigInt   @default(5000000000)
+  amountStep   BigInt   @default(1000000)
+  order        Int      @default(0)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   @@index([active, order])
+}
+
+// ─────────────────────────────────────────────────────────────
+// گزارش فعالیت‌های پنل ادمین
+// ─────────────────────────────────────────────────────────────
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  ARCHIVE
+  RESTORE
+  PUBLISH
+  UNPUBLISH
+  LOGIN
+  LOGIN_FAILED
+  LOGOUT
+}
+
+/// یک ردیف به ازای هر عمل ادمین.
+///
+/// نام ادمین و عنوان رکورد به‌صورت snapshot ذخیره می‌شوند، نه فقط با کلید خارجی:
+/// لاگِ حذف باید بعد از رفتنِ خودِ رکورد هم قابل خواندن بماند، وگرنه دقیقاً
+/// همان عملی که بیشترین اهمیت را دارد بی‌ردپا می‌شود.
+model AuditLog {
+  id     String      @id @default(cuid())
+  action AuditAction
+
+  /// نام مدل، مثل "NewsArticle" — رابطه‌ی واقعی نیست چون رکورد ممکن است حذف شده باشد
+  entityType  String
+  entityId    String?
+  /// عنوان رکورد در لحظه‌ی عمل (title/subject/name)
+  entityLabel String? @db.Text
+
+  admin     AdminUser? @relation("AdminAuditLogs", fields: [adminId], references: [id], onDelete: SetNull)
+  adminId   String?
+  /// نام ادمین در لحظه‌ی عمل، تا حذف حساب ادمین تاریخچه را خالی نکند
+  adminName String?
+
+  /// برای عملیات گروهی: چند رکورد در یک درخواست
+  batchSize Int?
+  /// تغییرات یا فراداده‌ی عمل
+  meta      Json?
+
+  ip        String?
+  userAgent String?  @db.Text
+  createdAt DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([adminId])
+  @@index([action])
+  @@index([createdAt])
 }

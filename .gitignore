@@ -54,9 +54,9 @@ uploads/books/pdfs/
 # source tree, so committing it only produces huge diffs on every code change.
 graphify-out/
 
-# Files setup_parspack.sh generates in the deploy directory on the server.
-# rclone.conf holds the ParsPack access/secret key in plain text — it must
-# never reach the repo, so keep this rule even if the script itself goes away.
+# Left in the deploy directory on the server by the old setup_parspack.sh.
+# rclone.conf holds the ParsPack access/secret key in plain text, so this rule
+# outlives the script that wrote it — the file is still sitting on the VPS.
 rclone.conf
 rclone_test_file.txt
 npm-install.log

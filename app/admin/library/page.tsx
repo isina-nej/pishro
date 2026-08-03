@@ -7,6 +7,7 @@ import { Loader2, Plus } from 'lucide-react';
 import { AdminLoadingState, AdminEmptyState, AdminPageShell } from '@/components/admin/AdminPageShell';
 import { DataTable } from '@/components/admin/data-table/DataTable';
 import DataTableToolbar from '@/components/admin/data-table/DataTableToolbar';
+import { BulkActionBar } from '@/components/admin/data-table/BulkActionBar';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -62,6 +63,9 @@ export default function LibraryManagementPage() {
   const [filterCategory, setFilterCategory] = useState<string>('همه');
   const [filterStatus, setFilterStatus] = useState<string>('همه');
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  // این صفحه با state محلی کار می‌کند نه React Query، پس به‌جای invalidate
+  // مستقیم loadBooks را دوباره صدا می‌زنیم.
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   // Load books
   useEffect(() => {
@@ -374,7 +378,22 @@ export default function LibraryManagementPage() {
           }
         />
       ) : (
-        <DataTable columns={columns} data={filteredBooks} />
+        <>
+          <DataTable
+            columns={columns}
+            data={filteredBooks}
+            enableSelection
+            selectedIds={selectedIds}
+            onSelectedIdsChange={setSelectedIds}
+          />
+          <BulkActionBar
+            entity="book"
+            entityLabel="کتاب"
+            selectedIds={selectedIds}
+            onClear={() => setSelectedIds([])}
+            onDone={loadBooks}
+          />
+        </>
       )}
     </AdminPageShell>
   );

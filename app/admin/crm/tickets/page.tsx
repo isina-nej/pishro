@@ -10,7 +10,9 @@ import DataTableToolbar from '@/components/admin/data-table/DataTableToolbar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
-import { useCrmTicketsList, type CrmTicket } from '@/lib/hooks/useCrmTickets';
+import { useCrmTicketsList, crmTicketKeys, type CrmTicket } from '@/lib/hooks/useCrmTickets';
+import { BulkActionBar } from '@/components/admin/data-table/BulkActionBar';
+import { useBulkSelection } from '@/lib/hooks/useBulkSelection';
 
 export const dynamic = 'force-dynamic';
 
@@ -67,6 +69,8 @@ export default function CrmTicketsPage() {
     priority: priority || undefined,
     assignedToMe,
   });
+
+  const { selectedIds, setSelectedIds, clear, onDone } = useBulkSelection(crmTicketKeys.all);
 
   const items = data?.items ?? [];
   const pagination = data?.pagination;
@@ -212,6 +216,17 @@ export default function CrmTicketsPage() {
           onPageChange={setPage}
           emptyTitle="تیکتی یافت نشد"
           emptyDescription="با تغییر فیلترها یا جستجو دوباره تلاش کنید، یا یک تیکت جدید ثبت کنید."
+          enableSelection
+          selectedIds={selectedIds}
+          onSelectedIdsChange={setSelectedIds}
+        />
+
+        <BulkActionBar
+          entity="ticket"
+          entityLabel="تیکت"
+          selectedIds={selectedIds}
+          onClear={clear}
+          onDone={onDone}
         />
 
         {!isTicketsLoading && items.length > 0 && (

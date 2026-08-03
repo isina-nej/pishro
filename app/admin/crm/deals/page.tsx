@@ -15,9 +15,12 @@ import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
 import {
   useCrmDealsList,
   useMoveDealStage,
+  crmDealKeys,
   type CrmDealListItem,
   type CrmPersonRef,
 } from '@/lib/hooks/useCrmDeals';
+import { BulkActionBar } from '@/components/admin/data-table/BulkActionBar';
+import { useBulkSelection } from '@/lib/hooks/useBulkSelection';
 import { useCrmPipelineStages } from '@/lib/hooks/useCrmPipelineStages';
 
 export const dynamic = 'force-dynamic';
@@ -71,6 +74,7 @@ export default function DealsPage() {
     limit
   );
   const moveDealStage = useMoveDealStage();
+  const { selectedIds, setSelectedIds, clear, onDone } = useBulkSelection(crmDealKeys.all);
 
   const stages = useMemo(
     () => [...(stagesData ?? [])].sort((a, b) => a.order - b.order),
@@ -190,14 +194,27 @@ export default function DealsPage() {
           onItemMove={handleItemMove}
         />
       ) : (
-        <DataTable
-          columns={columnsDef}
-          data={dealsData?.items ?? []}
-          pagination={dealsData?.pagination}
-          onPageChange={setPage}
-          emptyTitle="فرصت فروشی یافت نشد"
-          emptyDescription="با دکمه «فرصت جدید» اولین فرصت فروش را ایجاد کنید."
-        />
+        <>
+          <DataTable
+            columns={columnsDef}
+            data={dealsData?.items ?? []}
+            pagination={dealsData?.pagination}
+            onPageChange={setPage}
+            emptyTitle="فرصت فروشی یافت نشد"
+            emptyDescription="با دکمه «فرصت جدید» اولین فرصت فروش را ایجاد کنید."
+            enableSelection
+            selectedIds={selectedIds}
+            onSelectedIdsChange={setSelectedIds}
+          />
+
+          <BulkActionBar
+            entity="deal"
+            entityLabel="فرصت فروش"
+            selectedIds={selectedIds}
+            onClear={clear}
+            onDone={onDone}
+          />
+        </>
       )}
     </AdminPageShell>
   );

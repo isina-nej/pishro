@@ -9,7 +9,9 @@ import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { DataTable } from '@/components/admin/data-table/DataTable';
 import DataTableToolbar from '@/components/admin/data-table/DataTableToolbar';
-import { useAdminCoursesList } from '@/lib/hooks/useAdminCourses';
+import { BulkActionBar } from '@/components/admin/data-table/BulkActionBar';
+import { useBulkSelection } from '@/lib/hooks/useBulkSelection';
+import { useAdminCoursesList, adminCourseKeys } from '@/lib/hooks/useAdminCourses';
 import { AdminEmptyState, AdminLoadingState, AdminPageShell } from '@/components/admin/AdminPageShell';
 import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
 
@@ -84,6 +86,7 @@ export default function AdminCoursesPage() {
   const [search, setSearch] = useState('');
 
   const { data, isLoading: isCoursesLoading } = useAdminCoursesList(page, 20, { search });
+  const { selectedIds, setSelectedIds, clear, onDone } = useBulkSelection(adminCourseKeys.all);
 
   const items = data?.items ?? [];
   const pagination = data?.pagination;
@@ -139,7 +142,24 @@ export default function AdminCoursesPage() {
           }
         />
       ) : (
-        <DataTable columns={columns} data={items} pagination={pagination} onPageChange={setPage} />
+        <>
+          <DataTable
+            columns={columns}
+            data={items}
+            pagination={pagination}
+            onPageChange={setPage}
+            enableSelection
+            selectedIds={selectedIds}
+            onSelectedIdsChange={setSelectedIds}
+          />
+          <BulkActionBar
+            entity="course"
+            entityLabel="دوره"
+            selectedIds={selectedIds}
+            onClear={clear}
+            onDone={onDone}
+          />
+        </>
       )}
     </AdminPageShell>
   );

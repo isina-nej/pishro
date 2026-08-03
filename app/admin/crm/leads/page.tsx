@@ -15,10 +15,13 @@ import {
   LEAD_STATUS_BADGE_VARIANT,
   LEAD_STATUS_LABELS,
   useCrmLeadsList,
+  crmLeadKeys,
   type CrmLeadListItem,
   type CrmLeadSource,
   type CrmLeadStatus,
 } from '@/lib/hooks/useCrmLeads';
+import { BulkActionBar } from '@/components/admin/data-table/BulkActionBar';
+import { useBulkSelection } from '@/lib/hooks/useBulkSelection';
 
 export const dynamic = 'force-dynamic';
 
@@ -118,6 +121,8 @@ export default function AdminCrmLeadsPage() {
     source: source === 'ALL' ? undefined : source,
   });
 
+  const { selectedIds, setSelectedIds, clear, onDone } = useBulkSelection(crmLeadKeys.all);
+
   const items = data?.items ?? [];
   const pagination = data?.pagination;
 
@@ -205,6 +210,17 @@ export default function AdminCrmLeadsPage() {
           onPageChange={setPage}
           emptyTitle="سرنخی یافت نشد"
           emptyDescription={search ? 'عبارت جستجو را تغییر دهید یا یک سرنخ جدید ثبت کنید.' : 'هنوز سرنخی ثبت نشده است.'}
+          enableSelection
+          selectedIds={selectedIds}
+          onSelectedIdsChange={setSelectedIds}
+        />
+
+        <BulkActionBar
+          entity="lead"
+          entityLabel="سرنخ"
+          selectedIds={selectedIds}
+          onClear={clear}
+          onDone={onDone}
         />
       </div>
     </AdminPageShell>
