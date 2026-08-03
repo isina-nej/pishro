@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
-import { writeFile } from "fs/promises";
 import {
   successResponse,
   validationError,
@@ -8,11 +7,7 @@ import {
   ErrorCodes,
   HttpStatus,
 } from "@/lib/api-response";
-import {
-  BOOKS_UPLOAD_PATHS,
-  ensureUploadDirExists,
-  generateFileUrl
-} from "@/lib/upload-config";
+import { saveFileToStorage } from "@/lib/services/storage-adapter";
 
 // تنظیمات برای آپلود صوت کتاب
 const MAX_FILE_SIZE = 1024 * 1024 * 1024; // 1GB
@@ -101,23 +96,12 @@ export async function POST(req: NextRequest) {
     const extension = file.name.split(".").pop() || "mp3";
     const filename = `audio_${timestamp}_${randomString}.${extension}`;
 
-    // مسیر ذخیره فایل
-    const uploadDir = BOOKS_UPLOAD_PATHS.audio.dir;
-    const filepath = `${uploadDir}/${filename}`.replace(/\\/g, "/");
-
-    // ایجاد دایرکتوری اگر وجود ندارد
-    try {
-      await ensureUploadDirExists(uploadDir);
-    } catch (err) {
-      console.error("Error creating directory:", err);
-      throw err;
-    }
-
-    // ذخیره فایل
-    await writeFile(filepath, buffer);
-
-    // URL نسبی فایل
-    const audioUrl = generateFileUrl("audio", filename);
+    // ذخیره در storage (ابری یا محلی، بسته به STORAGE_DRIVER)
+    const audioUrl = await saveFileToStorage(
+      buffer,
+      `books/audio/${filename}`,
+      file.type
+    );
 
     const response = successResponse(
       {

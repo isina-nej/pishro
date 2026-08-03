@@ -1,13 +1,26 @@
 // @/lib/services/storage-adapter.ts
 /**
  * Storage Adapter برای ذخیره‌سازی فایل‌ها
- * این adapter از environment variables برای تنظیم مسیر ذخیره‌سازی استفاده می‌کند
+ *
+ * این فایل façade واحد ذخیره‌سازی است و بین دو درایور سوییچ می‌کند:
+ *   STORAGE_DRIVER=local  → دیسک محلی (پیش‌فرض، برای توسعه)
+ *   STORAGE_DRIVER=s3     → فضای ابری پارس‌پک / هر S3 سازگار
+ *
+ * همه روت‌های آپلود باید از این فایل استفاده کنند، نه از fs مستقیم.
  */
 
 import { writeFile, mkdir, unlink, rename } from "fs/promises";
 import { dirname, join, relative, resolve } from "path";
 import { existsSync } from "fs";
 import crypto from "crypto";
+import {
+  saveFileToS3,
+  deleteFileFromS3,
+  promoteTempFileInS3,
+  isPrivateStoragePath,
+  guessContentType,
+} from "@/lib/services/storage-s3";
+import { getPublicBaseUrl } from "@/lib/services/s3-client";
 
 export interface StorageConfig {
   // مسیر فیزیکی ذخیره‌سازی فایل‌ها (در سرور)
@@ -16,8 +29,17 @@ export interface StorageConfig {
   baseUrl: string;
 }
 
+export type StorageDriver = "local" | "s3";
+
 const DEFAULT_UPLOAD_ROOT = "/opt/uploade";
 const DEFAULT_UPLOAD_BASE_URL = "/api/uploads";
+
+/** درایور فعال ذخیره‌سازی */
+export function getStorageDriver(): StorageDriver {
+  return (process.env.STORAGE_DRIVER || "local").toLowerCase() === "s3"
+    ? "s3"
+    : "local";
+}
 
 function normalizeRelativePath(relativePath: string): string {
   return relativePath.replace(/\\/g, "/").replace(/^\/+/, "");
@@ -62,13 +84,24 @@ export function getStorageConfig(): StorageConfig {
 
 /**
  * ذخیره فایل در storage
+ * @returns آدرس قابل استفاده فایل (URL مستقیم ابری برای فایل‌های عمومی)
  */
 export async function saveFileToStorage(
   buffer: Buffer,
-  relativePath: string
+  relativePath: string,
+  contentType?: string
 ): Promise<string> {
-  const config = getStorageConfig();
   const normalizedPath = normalizeRelativePath(relativePath);
+
+  if (getStorageDriver() === "s3") {
+    return saveFileToS3(
+      buffer,
+      normalizedPath,
+      contentType || guessContentType(normalizedPath)
+    );
+  }
+
+  const config = getStorageConfig();
   const fullPath = assertSafeStoragePath(config.storagePath, normalizedPath);
 
   // ایجاد دایرکتوری اگر وجود ندارد
@@ -103,8 +136,22 @@ export async function saveFileToStorage(
 export async function deleteFileFromStorage(
   relativePath: string
 ): Promise<void> {
+  const normalizedPath = normalizeRelativePath(relativePath);
+
+  if (getStorageDriver() === "s3") {
+    try {
+      await deleteFileFromS3(normalizedPath);
+    } catch (error) {
+      console.error("Error deleting file from object storage:", error);
+      throw new Error(
+        `خطا در حذف فایل: ${error instanceof Error ? error.message : "خطای نامشخص"}`
+      );
+    }
+    return;
+  }
+
   const config = getStorageConfig();
-  const fullPath = assertSafeStoragePath(config.storagePath, relativePath);
+  const fullPath = assertSafeStoragePath(config.storagePath, normalizedPath);
 
   // بررسی وجود فایل قبل از حذف
   if (existsSync(fullPath)) {
@@ -121,11 +168,22 @@ export async function deleteFileFromStorage(
 
 /**
  * تبدیل URL به relative path
+ *
+ * سه شکل ورودی را پشتیبانی می‌کند:
+ *   https://c773651.parspack.net/images/x.jpg  → images/x.jpg   (URL مستقیم ابری)
+ *   /api/uploads/images/x.jpg                  → images/x.jpg   (مسیر اپ)
+ *   images/x.jpg                               → images/x.jpg   (از قبل نسبی)
  */
 export function getRelativePathFromUrl(url: string): string {
   const config = getStorageConfig();
   const baseUrl = config.baseUrl.replace(/\/+$/, "");
+  const publicBase = getPublicBaseUrl();
   let pathValue = url;
+
+  // آدرس مستقیم فضای ابری
+  if (publicBase && url.startsWith(`${publicBase}/`)) {
+    return normalizeRelativePath(url.slice(publicBase.length + 1));
+  }
 
   try {
     if (url.includes("://")) {
@@ -169,9 +227,14 @@ export async function promoteTempFileToStorage(
   tempRelativePath: string,
   permanentRelativePath: string
 ): Promise<string> {
-  const config = getStorageConfig();
   const tempRelative = normalizeRelativePath(tempRelativePath);
   const permanentRelative = normalizeRelativePath(permanentRelativePath);
+
+  if (getStorageDriver() === "s3") {
+    return promoteTempFileInS3(tempRelative, permanentRelative);
+  }
+
+  const config = getStorageConfig();
   const tempFull = assertSafeStoragePath(config.storagePath, tempRelative);
   const permanentFull = assertSafeStoragePath(config.storagePath, permanentRelative);
   const directory = dirname(permanentFull);
@@ -182,6 +245,7 @@ export async function promoteTempFileToStorage(
 
 /**
  * مسیر مطلق فایل در storage محلی
+ * ⚠️ فقط در حالت درایور local معنا دارد.
  */
 export function getAbsoluteStoragePath(relativePath: string): string {
   const config = getStorageConfig();
@@ -194,3 +258,5 @@ export function getAbsoluteStoragePath(relativePath: string): string {
 export function isTempStoragePath(relativePath: string): boolean {
   return relativePath.startsWith(`${TMP_PREFIX}/`);
 }
+
+export { isPrivateStoragePath };

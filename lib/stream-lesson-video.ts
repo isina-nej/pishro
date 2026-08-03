@@ -1,15 +1,11 @@
 import { NextResponse } from "next/server";
-import {
-  generateSignedDownloadUrl,
-  downloadFileFromStorage,
-} from "@/lib/services/object-storage-service";
+import { downloadFileFromStorage } from "@/lib/services/object-storage-service";
 import { getAbsoluteStoragePath } from "@/lib/services/storage-adapter";
+import { getS3ObjectStream } from "@/lib/services/storage-s3";
 import { existsSync } from "fs";
 import { createReadStream } from "fs";
 import { stat } from "fs/promises";
 import { Readable } from "stream";
-
-const STREAM_EXPIRES = 60;
 
 const secureVideoHeaders = {
   "Content-Type": "video/mp4",
@@ -75,17 +71,32 @@ export async function streamLessonVideoByRelativePath(
     });
   }
 
-  let fileContent: Buffer;
+  // فایل روی دیسک محلی نیست → از فضای ابری استریم می‌کنیم.
+  // مهم: بدنه به‌صورت استریم پاس داده می‌شود و Range هم منتقل می‌شود،
+  // تا هم seek کردن کار کند و هم کل ویدیو وارد حافظه سرور نشود.
   if (process.env.S3_BUCKET_NAME) {
-    const signedUrl = await generateSignedDownloadUrl(relativePath, STREAM_EXPIRES);
-    const fetchRes = await fetch(signedUrl);
-    if (!fetchRes.ok) {
-      throw new Error(`Signed fetch failed: ${fetchRes.status}`);
+    const range = req?.headers.get("range") || undefined;
+    const object = await getS3ObjectStream(relativePath, range);
+
+    if (!object) {
+      return new NextResponse(null, { status: 404, headers: secureVideoHeaders });
     }
-    fileContent = Buffer.from(await fetchRes.arrayBuffer());
-  } else {
-    fileContent = await downloadFileFromStorage(relativePath);
+
+    const headers: Record<string, string> = { ...secureVideoHeaders };
+    if (object.contentLength !== undefined) {
+      headers["Content-Length"] = object.contentLength.toString();
+    }
+    if (object.contentRange) {
+      headers["Content-Range"] = object.contentRange;
+    }
+
+    return new NextResponse(object.body, {
+      status: object.contentRange ? 206 : 200,
+      headers,
+    });
   }
+
+  const fileContent = await downloadFileFromStorage(relativePath);
 
   const response = new NextResponse(new Uint8Array(fileContent));
   Object.entries(secureVideoHeaders).forEach(([key, value]) => {
