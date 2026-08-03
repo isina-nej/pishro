@@ -39,7 +39,27 @@ log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"; }
 
 cd "$REPO_DIR"
 
-git fetch --prune --quiet origin "$BRANCH"
+# resolv.conf روی این سرور مستقیم به شکن اشاره می‌کند و کش محلی وجود ندارد، پس
+# هر lookup روی شبکه می‌رود. یک قطعی لحظه‌ای، fetch را با
+# "Could not resolve host: github.com" می‌اندازد. چند بار تلاش می‌کنیم تا یک
+# تپق شبکه دیپلوی را تا چرخه بعدی cron عقب نیندازد.
+fetched=0
+fetch_err=""
+for attempt in 1 2 3; do
+  if fetch_err=$(git fetch --prune --quiet origin "$BRANCH" 2>&1); then
+    fetched=1
+    break
+  fi
+  if [ "$attempt" -lt 3 ]; then
+    sleep $((attempt * 5))
+  fi
+done
+
+if [ "$fetched" -eq 0 ]; then
+  # cron پنج دقیقه دیگر دوباره تلاش می‌کند، پس این کشنده نیست — فقط ثبتش می‌کنیم.
+  log "fetch نشد بعد از ۳ تلاش: ${fetch_err//$'\n'/ }"
+  exit 1
+fi
 
 local_sha=$(git rev-parse HEAD)
 remote_sha=$(git rev-parse "origin/$BRANCH")
