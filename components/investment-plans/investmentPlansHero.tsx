@@ -177,7 +177,7 @@ export const InvestmentPlansHero = ({
               <Button
                 onClick={scrollToModels}
                 size="lg"
-                className="bg-gradient-to-r from-primary to-primary hover:from-primary hover:to-primary text-foreground shadow-xl shadow-emerald-500/25 hover:shadow-2xl hover:shadow-emerald-500/40 transition-all duration-300 px-8 py-6 text-lg font-semibold rounded-2xl"
+                className="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white shadow-xl shadow-emerald-500/25 hover:shadow-2xl hover:shadow-emerald-500/40 transition-all duration-300 px-8 py-6 text-lg font-semibold rounded-2xl"
               >
                 شروع سرمایه‌گذاری
               </Button>
