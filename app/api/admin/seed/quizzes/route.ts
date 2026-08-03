@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
 import { prisma } from "@/lib/prisma";
-import { successResponse, errorResponse, ErrorCodes } from "@/lib/api-response";
+import { successResponse, errorResponse, ErrorCodes, HttpStatus } from "@/lib/api-response";
 import { QuestionType } from "@prisma/client";
 
 export const dynamic = "force-dynamic";
@@ -440,7 +440,12 @@ export async function POST(_req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(_req);
     if (!adminAuth) {
-      return errorResponse("احراز هویت نشده است", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "احراز هویت نشده است",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     console.log("🌱 شروع Seed کردن آزمون‌های تعیین سطح...");

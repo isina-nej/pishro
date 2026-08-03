@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAdminAuth } from '@/lib/auth-simple';
-import { errorResponse, ErrorCodes } from '@/lib/api-response';
+import { errorResponse, ErrorCodes, HttpStatus } from '@/lib/api-response';
 import { saveFileToStorage } from '@/lib/services/storage-adapter';
 
 export async function POST(request: NextRequest) {
@@ -9,7 +9,12 @@ export async function POST(request: NextRequest) {
     // و باید احراز هویت ادمین صراحتاً اینجا بررسی شود (مثل app/api/admin/books/upload-*)
     const adminAuth = await getAdminAuth(request);
     if (!adminAuth) {
-      return errorResponse('دسترسی غیرمجاز', ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        'دسترسی غیرمجاز',
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const formData = await request.formData();
