@@ -24,6 +24,7 @@ Evidence from HTTP smoke tests, Playwright (desktop 1440 / tablet 768 / mobile 3
 | B07 | Medium | **Fixed** | Admin login icons/padding fight RTL | `AdminLoginForm.tsx` | Icon on physical right of identifier field |
 | B08 | Low | Open | Dead duplicate FAQ component | `components/utils/QuestionsSection.tsx` | Unused; left for separate cleanup |
 | B09 | Low | **Fixed** | FAQ chevron pointed up while closed | `faq/questions.tsx` | Default rotation now points down when closed |
+| B10 | Medium | **Fixed** | Investment plans CTA low contrast | `investmentPlansHero.tsx` | Button text now white on emerald gradient |
 
 ## Retracted / not code bugs
 
