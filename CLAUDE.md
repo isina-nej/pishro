@@ -60,3 +60,11 @@ This repo uses [OpenSpec](openspec/config.yaml) (`schema: spec-driven`) for plan
 
 ### Graphify knowledge graph
 Per `AGENTS.md`, this repo has a code knowledge graph in `graphify-out/`. For codebase questions, prefer `graphify query "<question>"`, `graphify path "<A>" "<B>"`, or `graphify explain "<concept>"` over raw grep when `graphify-out/graph.json` exists, and run `graphify update .` after making code changes.
+
+`graphify-out/` is **gitignored and not committed** — the graph is derived from the source tree, and committing it produced huge generated diffs on every code change. So a fresh clone has no graph at all:
+
+```bash
+graphify update .          # generate graphify-out/ before the first query
+```
+
+Run this once after cloning (and after pulling a batch of changes) — until then `graphify-out/graph.json` won't exist and the query commands above have nothing to read, so fall back to grep/ripgrep rather than assuming the graph is stale or broken.
