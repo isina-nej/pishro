@@ -9,6 +9,13 @@ const DEFAULT_ASSET_IDS: string[] = [];
 const DEFAULT_SYMBOLS: string[] = [];
 const DEFAULT_MARKET_LIMIT = 150;
 const REQUEST_TIMEOUT_MS = 12_000;
+// Binance and Nobitex only refine prices CoinGecko has already supplied, so a
+// slow or unreachable one must not hold the whole response hostage. Binance is
+// unreachable from the Iranian VPS ("[crypto] Binance unavailable: fetch
+// failed") and was burning the full 12s on every refresh, which is most of the
+// ~17s the endpoint took in production regardless of how many assets were asked
+// for. Nobitex answers in well under a second, so it is unaffected.
+const ENRICHMENT_TIMEOUT_MS = 4_000;
 const CACHE_TTL_MS = 30_000;
 const STALE_CACHE_TTL_MS = 10 * 60_000;
 
@@ -72,8 +79,30 @@ interface MarketSnapshot {
   providers: ProviderState;
 }
 
-let cachedSnapshot: { expiresAt: number; staleUntil: number; value: CryptoMarketResponse } | null = null;
-let marketRequest: Promise<CryptoMarketResponse> | null = null;
+interface CacheEntry {
+  expiresAt: number;
+  staleUntil: number;
+  value: CryptoMarketResponse;
+}
+
+// Keyed by request shape, not global. crypto-asset-detail-service asks for
+// { ids: [id], limit: 1 }, so with a single shared slot one visit to an asset
+// page poisoned the cache with a one-item snapshot and the market list served
+// that same single asset for the rest of the TTL.
+const cacheStore = new Map<string, CacheEntry>();
+const inflightRequests = new Map<string, Promise<CryptoMarketResponse>>();
+const MAX_CACHE_ENTRIES = 200;
+
+function cacheKeyFor(ids: string[], symbols: string[], limit: number): string {
+  return JSON.stringify([limit, [...ids].sort(), [...symbols].sort()]);
+}
+
+function pruneExpired(now: number) {
+  if (cacheStore.size <= MAX_CACHE_ENTRIES) return;
+  for (const [key, entry] of cacheStore) {
+    if (entry.staleUntil <= now) cacheStore.delete(key);
+  }
+}
 
 function numberOrNull(value: unknown): number | null {
   const parsed = typeof value === 'number' ? value : Number(value);
@@ -91,8 +120,14 @@ function toQueryList(value: string | null, fallback: string[], max = 150): strin
 }
 
 function toLimit(value: string | null): number {
+  // An absent ?limit must fall through to the default. Testing Number.isInteger
+  // first cannot do that: a missing param is null, Number(null) is 0, and
+  // Number.isInteger(0) is true — so the default branch was unreachable and
+  // Math.max(0, 1) clamped every default request down to a single asset.
+  if (!value) return DEFAULT_MARKET_LIMIT;
   const parsed = Number(value);
-  return Number.isInteger(parsed) ? Math.min(Math.max(parsed, 1), DEFAULT_MARKET_LIMIT) : DEFAULT_MARKET_LIMIT;
+  if (!Number.isInteger(parsed) || parsed < 1) return DEFAULT_MARKET_LIMIT;
+  return Math.min(parsed, DEFAULT_MARKET_LIMIT);
 }
 
 function coingeckoMarketUrl(limit: number, ids: string[] = []): string {
@@ -143,9 +178,9 @@ function parseJson(text: string): unknown {
   return JSON.parse(text) as unknown;
 }
 
-async function fetchJson<T>(url: string, init?: RequestInit): Promise<T> {
+async function fetchJson<T>(url: string, init?: RequestInit, timeoutMs = REQUEST_TIMEOUT_MS): Promise<T> {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
     const response = await fetch(url, {
@@ -236,7 +271,11 @@ async function loadCoinPaprika(ids: string[], symbols: string[], limit: number):
 
 async function loadBinancePrices(symbols: string[]): Promise<Map<string, number>> {
   try {
-    const data = await fetchJson<Array<{ symbol: string; price: string }>>(`${binanceBaseUrl()}/ticker/price`);
+    const data = await fetchJson<Array<{ symbol: string; price: string }>>(
+      `${binanceBaseUrl()}/ticker/price`,
+      undefined,
+      ENRICHMENT_TIMEOUT_MS
+    );
     const wanted = new Set(symbols.map((symbol) => `${symbol.toUpperCase()}USDT`));
     return new Map(
       data.filter((item) => wanted.has(item.symbol)).map((item) => [item.symbol.replace(/USDT$/, ''), numberOrZero(item.price)])
@@ -254,7 +293,11 @@ function normalizeNobitexSymbol(symbol: string): string {
 async function loadNobitexStats(symbols: string[]): Promise<{ stats: NobitexStats; usdtIrr: number | null } | null> {
   try {
     const requested = symbols.map(normalizeNobitexSymbol);
-    const stats = await fetchJson<{ stats?: NobitexStats }>(`${nobitexBaseUrl()}/market/stats`);
+    const stats = await fetchJson<{ stats?: NobitexStats }>(
+      `${nobitexBaseUrl()}/market/stats`,
+      undefined,
+      ENRICHMENT_TIMEOUT_MS
+    );
     const allStats = stats.stats || {};
     const selectedStats = Object.fromEntries(
       Object.entries(allStats).filter(([pair]) => {
@@ -390,27 +433,41 @@ async function refreshCryptoMarketData(options?: { ids?: string[]; symbols?: str
   const snapshot = await loadSnapshot(ids, symbols, limit);
   const value: CryptoMarketResponse = { generatedAt: new Date().toISOString(), currency: 'USD', ...snapshot };
   const now = Date.now();
-  cachedSnapshot = { expiresAt: now + CACHE_TTL_MS, staleUntil: now + STALE_CACHE_TTL_MS, value };
+  pruneExpired(now);
+  cacheStore.set(cacheKeyFor(ids, symbols, limit), {
+    expiresAt: now + CACHE_TTL_MS,
+    staleUntil: now + STALE_CACHE_TTL_MS,
+    value,
+  });
   return value;
 }
 
 export async function getCryptoMarketData(options?: { ids?: string[]; symbols?: string[]; limit?: number; forceRefresh?: boolean }): Promise<CryptoMarketResponse> {
+  const { ids, symbols, limit } = assetRequestOptions(options);
+  const key = cacheKeyFor(ids, symbols, limit);
   const now = Date.now();
-  if (!options?.forceRefresh && cachedSnapshot && cachedSnapshot.expiresAt > now) return cachedSnapshot.value;
 
-  // Coalesce the two initial client fetches and periodic refreshes into one upstream request.
-  if (!marketRequest) {
-    marketRequest = refreshCryptoMarketData(options).finally(() => {
-      marketRequest = null;
+  const cached = cacheStore.get(key);
+  if (!options?.forceRefresh && cached && cached.expiresAt > now) return cached.value;
+
+  // Coalesce concurrent callers, but only those asking for the same thing —
+  // sharing one promise across different shapes handed the market list whatever
+  // an asset-detail request happened to be fetching.
+  let request = inflightRequests.get(key);
+  if (!request) {
+    request = refreshCryptoMarketData(options).finally(() => {
+      inflightRequests.delete(key);
     });
+    inflightRequests.set(key, request);
   }
 
   try {
-    return await marketRequest;
+    return await request;
   } catch (error) {
-    if (cachedSnapshot && cachedSnapshot.staleUntil > now) {
+    const stale = cacheStore.get(key);
+    if (stale && stale.staleUntil > now) {
       console.warn('[crypto] Serving stale market cache after provider failure');
-      return cachedSnapshot.value;
+      return stale.value;
     }
     throw error;
   }

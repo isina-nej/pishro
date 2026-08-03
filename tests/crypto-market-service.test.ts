@@ -1,6 +1,10 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { getCryptoMarketData } from '@/lib/services/crypto-market-service';
+import {
+  DEFAULT_MARKET_LIMIT,
+  getCryptoMarketData,
+  parseCryptoMarketQuery,
+} from '@/lib/services/crypto-market-service';
 
 const originalFetch = global.fetch;
 const originalEnv = {
@@ -17,6 +21,24 @@ function json(data: unknown) {
 test.afterEach(() => {
   global.fetch = originalFetch;
   Object.assign(process.env, originalEnv);
+});
+
+test('an absent ?limit falls back to the full market limit, not one asset', () => {
+  // The crypto page fetches /api/public/crypto-market with no query string at
+  // all, so this is the path that actually runs in production.
+  assert.equal(parseCryptoMarketQuery(new URLSearchParams()).limit, DEFAULT_MARKET_LIMIT);
+  assert.equal(parseCryptoMarketQuery(new URLSearchParams('limit=')).limit, DEFAULT_MARKET_LIMIT);
+});
+
+test('an explicit ?limit is honoured, clamped, and validated', () => {
+  const limitOf = (qs: string) => parseCryptoMarketQuery(new URLSearchParams(qs)).limit;
+  assert.equal(limitOf('limit=25'), 25);
+  assert.equal(limitOf('limit=1'), 1);
+  assert.equal(limitOf(`limit=${DEFAULT_MARKET_LIMIT + 500}`), DEFAULT_MARKET_LIMIT);
+  assert.equal(limitOf('limit=0'), DEFAULT_MARKET_LIMIT);
+  assert.equal(limitOf('limit=-5'), DEFAULT_MARKET_LIMIT);
+  assert.equal(limitOf('limit=abc'), DEFAULT_MARKET_LIMIT);
+  assert.equal(limitOf('limit=1.5'), DEFAULT_MARKET_LIMIT);
 });
 
 test('uses CoinGecko market data, Binance price, and Nobitex toman price', async () => {
@@ -42,6 +64,42 @@ test('uses CoinGecko market data, Binance price, and Nobitex toman price', async
   assert.equal(result.assets[0].sources.price, 'binance');
   assert.equal(result.assets[0].sources.local, 'nobitex-direct');
   assert.equal(result.global.source, 'coingecko');
+});
+
+test('an asset-detail request does not poison the market-list cache', async () => {
+  process.env.COINGECKO_API_URL = 'https://cg2.test';
+  process.env.COINPAPRIKA_API_URL = 'https://cp2.test';
+  process.env.BINANCE_API_URL = 'https://binance2.test';
+  process.env.NOBITEX_API_URL = 'https://nobitex2.test';
+
+  const catalogue = [
+    { id: 'bitcoin', symbol: 'btc', name: 'Bitcoin', market_cap_rank: 1, current_price: 100 },
+    { id: 'ethereum', symbol: 'eth', name: 'Ethereum', market_cap_rank: 2, current_price: 50 },
+    { id: 'solana', symbol: 'sol', name: 'Solana', market_cap_rank: 3, current_price: 20 },
+  ];
+
+  global.fetch = async (input) => {
+    const url = String(input);
+    if (url.includes('cg2.test/coins/markets')) {
+      // Mirror CoinGecko: ?ids= narrows the result set, per_page caps it.
+      const requested = new URL(url).searchParams.get('ids');
+      const rows = requested ? catalogue.filter((row) => requested.split(',').includes(row.id)) : catalogue;
+      return json(rows);
+    }
+    if (url.includes('cg2.test/global')) return json({ data: { total_market_cap: { usd: 1 }, total_volume: { usd: 1 }, market_cap_percentage: { btc: 50 } } });
+    if (url.includes('binance2.test')) return json([]);
+    if (url.includes('nobitex2.test')) return json({ stats: {} });
+    throw new Error(`Unexpected URL ${url}`);
+  };
+
+  // What /crypto-prices/[id] does, via crypto-asset-detail-service.
+  const detail = await getCryptoMarketData({ ids: ['bitcoin'], limit: 1 });
+  assert.equal(detail.assets.length, 1);
+
+  // What /crypto-prices does immediately afterwards, inside the 30s TTL.
+  const market = await getCryptoMarketData({ limit: DEFAULT_MARKET_LIMIT });
+  assert.equal(market.assets.length, catalogue.length);
+  assert.deepEqual(market.assets.map((asset) => asset.symbol), ['BTC', 'ETH', 'SOL']);
 });
 
 test('falls back to CoinPaprika when CoinGecko is unavailable', async () => {
