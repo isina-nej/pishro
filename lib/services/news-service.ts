@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { NewsArticle } from "@prisma/client";
 import { ApiResponse, PaginatedData } from "@/lib/api-response";
-import { getBaseUrl } from "@/lib/get-base-url";
+import { getInternalBaseUrl } from "@/lib/get-base-url";
 
 export interface NewsListParams {
   page?: number;
@@ -15,7 +15,7 @@ export async function getNews(
   params?: NewsListParams
 ): Promise<PaginatedData<NewsArticle>> {
   try {
-    const baseUrl = getBaseUrl();
+    const baseUrl = getInternalBaseUrl();
 
     const queryParams = new URLSearchParams();
     if (params?.page) queryParams.set("page", params.page.toString());
@@ -46,7 +46,7 @@ export async function getNews(
 
 export async function getNewsById(id: string): Promise<NewsArticle> {
   try {
-    const baseUrl = getBaseUrl();
+    const baseUrl = getInternalBaseUrl();
 
     const { data } = await axios.get<ApiResponse<NewsArticle>>(
       `${baseUrl}/api/news/${id}`
@@ -65,7 +65,7 @@ export async function getNewsById(id: string): Promise<NewsArticle> {
 
 export async function getNewsBySlug(slug: string): Promise<NewsArticle | null> {
   try {
-    const baseUrl = getBaseUrl();
+    const baseUrl = getInternalBaseUrl();
 
     const { data } = await axios.get<ApiResponse<NewsArticle>>(
       `${baseUrl}/api/news/${slug}`
@@ -86,7 +86,7 @@ export async function createNewsArticle(
   articleData: Partial<NewsArticle>
 ): Promise<NewsArticle> {
   try {
-    const baseUrl = getBaseUrl();
+    const baseUrl = getInternalBaseUrl();
 
     const { data } = await axios.post<ApiResponse<NewsArticle>>(
       `${baseUrl}/api/news`,

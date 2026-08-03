@@ -8,7 +8,7 @@ import axios from 'axios';
 import type { NewsArticle } from '@prisma/client';
 import { ApiResponse } from '@/lib/api-response';
 import { validateMarkdown } from '@/lib/utils/mdx-editor-utils';
-import { getBaseUrl } from '@/lib/get-base-url';
+import { getInternalBaseUrl } from '@/lib/get-base-url';
 
 export interface CreateMDXNewsDTO {
   title: string;
@@ -37,7 +37,7 @@ export class MDXNewsService {
   private baseUrl: string;
 
   constructor(baseUrl?: string) {
-    this.baseUrl = baseUrl || getBaseUrl();
+    this.baseUrl = baseUrl || getInternalBaseUrl();
   }
 
   /**

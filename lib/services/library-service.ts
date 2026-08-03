@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { DigitalBook } from "@/lib/types/db";
 import { ApiResponse, PaginatedData } from "@/lib/api-response";
-import { getBaseUrl } from "@/lib/get-base-url";
+import { getInternalBaseUrl } from "@/lib/get-base-url";
 
 export interface BookListParams {
   page?: number;
@@ -17,7 +17,7 @@ export async function getBooks(
   params?: BookListParams
 ): Promise<PaginatedData<DigitalBook>> {
   try {
-    const baseUrl = getBaseUrl();
+    const baseUrl = getInternalBaseUrl();
 
     const queryParams = new URLSearchParams();
     if (params?.page) queryParams.set("page", params.page.toString());
@@ -50,7 +50,7 @@ export async function getBooks(
 
 export async function getBookById(id: string): Promise<DigitalBook> {
   try {
-    const baseUrl = getBaseUrl();
+    const baseUrl = getInternalBaseUrl();
 
     const { data } = await axios.get<ApiResponse<DigitalBook>>(
       `${baseUrl}/api/library/${id}`
@@ -71,7 +71,7 @@ export async function createBook(
   bookData: Partial<DigitalBook>
 ): Promise<DigitalBook> {
   try {
-    const baseUrl = getBaseUrl();
+    const baseUrl = getInternalBaseUrl();
 
     const { data } = await axios.post<ApiResponse<DigitalBook>>(
       `${baseUrl}/api/library`,
