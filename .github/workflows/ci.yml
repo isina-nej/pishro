@@ -40,13 +40,12 @@ jobs:
             nextjs-${{ hashFiles('package-lock.json') }}-
             nextjs-
 
-      # Non-blocking on purpose: the repo carries ~259 pre-existing ESLint
-      # errors across ~105 files, and next.config.ts already sets
-      # eslint.ignoreDuringBuilds. Flip this to blocking once that backlog is
-      # cleared, otherwise every run is red and nobody reads it.
+      # Blocking: the pre-existing backlog (267 errors across 105 files) is
+      # cleared, so `npm run lint` is clean and any new error is a regression.
+      # next.config.ts still sets eslint.ignoreDuringBuilds, which means this
+      # step is the only thing that catches lint errors - keep it blocking.
       - name: Lint
         run: npm run lint
-        continue-on-error: true
 
       - name: Type-check
         run: npx tsc --noEmit
