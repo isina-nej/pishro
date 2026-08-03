@@ -50,9 +50,6 @@ uploads/books/covers/
 uploads/books/pdfs/
 
 # Generated graphify artifacts
-graphify-out/.graphify_root
-graphify-out/ARCHITECTURE_PREVIEW.md
-graphify-out/architecture-filter-rules.json
-graphify-out/architecture-preview.json
-graphify-out/cache/
-graphify-out/manifest.json
+# Rebuild locally with `graphify update .` — the graph is derived from the
+# source tree, so committing it only produces huge diffs on every code change.
+graphify-out/
