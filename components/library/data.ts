@@ -204,27 +204,3 @@ export const libraryBooks: LibraryBook[] = [
     readingTime: "9 ساعت",
   },
 ];
-
-export const curatedCollections = [
-  {
-    id: "crypto-basics",
-    title: "ورود هوشمند به کریپتو",
-    description:
-      "آشنایی کامل با مفاهیم رمزارز، بلاکچین و سرمایه‌ گذاری ایمن در کریپتو.",
-    accent: "from-cyan-500/80 via-blue-500/80 to-indigo-600/80",
-  },
-  {
-    id: "stock-secrets",
-    title: "رازهای بازار سهام",
-    description:
-      "مجموعه‌ای از کتاب‌ها برای درک عمیق رفتار بورس، ارزش‌گذاری سهام و استراتژی‌های موفق.",
-    accent: "from-amber-500/80 via-orange-500/80 to-red-500/80",
-  },
-  {
-    id: "financial-mindset",
-    title: "ذهن ثروت‌ساز",
-    description:
-      "کتاب‌هایی برای تغییر نگرش مالی، کنترل احساسات در سرمایه‌ گذاری و ساخت درآمد پایدار.",
-    accent: "from-emerald-500/80 via-teal-500/80 to-cyan-500/80",
-  },
-];

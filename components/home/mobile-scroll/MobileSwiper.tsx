@@ -1,14 +1,17 @@
 "use client";
 
-import { type CSSProperties } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Pagination } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
+import clsx from "clsx";
+import {
+  AnimatePresence,
+  motion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 
 import { mobileScrollerSteps, type MobileScrollerStep } from "./data";
-
-import "swiper/css";
-import "swiper/css/pagination";
 
 type MobileSwiperProps = {
   steps?: MobileScrollerStep[];
@@ -20,94 +23,236 @@ export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
       ? providedSteps
       : mobileScrollerSteps;
 
+  const sectionRef = useRef<HTMLElement>(null);
+  const [index, setIndex] = useState(0);
+  const [direction, setDirection] = useState<"up" | "down">("down");
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end end"],
+  });
+
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 110,
+    damping: 22,
+    mass: 0.4,
+  });
+
+  useEffect(() => {
+    return scrollYProgress.on("change", (value) => {
+      const clamped = Math.min(0.999, Math.max(0, value));
+      const newIndex = Math.min(
+        steps.length - 1,
+        Math.floor(clamped * steps.length)
+      );
+      setIndex((prev) => {
+        if (prev === newIndex) return prev;
+        setDirection(newIndex > prev ? "down" : "up");
+        return newIndex;
+      });
+    });
+  }, [scrollYProgress, steps.length]);
+
+  // Continuous 3D tilt tied to scroll position — the phone gently turns in
+  // and out of the screen as each step enters, giving a real sense of depth.
+  const cycle = useTransform(
+    smoothProgress,
+    (v) => v * steps.length * Math.PI
+  );
+  const rotateY = useTransform(cycle, (v) => Math.sin(v) * 14);
+  const rotateX = useTransform(cycle, (v) => Math.cos(v) * 5);
+  const translateZ = useTransform(cycle, (v) => Math.abs(Math.sin(v)) * -60);
+  const hintOpacity = useTransform(scrollYProgress, [0, 0.06], [1, 0]);
+
+  const currentStep = steps[index];
+
+  const textVariants = {
+    enter: (dir: "up" | "down") => ({
+      opacity: 0,
+      y: dir === "down" ? 18 : -18,
+      filter: "blur(4px)",
+    }),
+    center: {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+      transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const },
+    },
+    exit: {
+      opacity: 0,
+      filter: "blur(4px)",
+      transition: { duration: 0.25 },
+    },
+  };
+
+  const phoneVariants = {
+    enter: (dir: "up" | "down") => ({
+      opacity: 0,
+      scale: 0.85,
+      rotateX: dir === "down" ? 35 : -35,
+    }),
+    center: {
+      opacity: 1,
+      scale: 1,
+      rotateX: 0,
+      transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as const },
+    },
+    exit: (dir: "up" | "down") => ({
+      opacity: 0,
+      scale: 0.9,
+      rotateX: dir === "down" ? -25 : 25,
+      transition: { duration: 0.3 },
+    }),
+  };
+
   return (
-    <section className="relative mt-4 min-h-screen w-full overflow-hidden pb-20">
-      <div className="container-md mx-auto flex h-full flex-col justify-start px-6 py-8">
-        <div className="relative z-30 mb-8 flex flex-col gap-2 text-center md:text-right">
-          <span className="mx-auto mb-2 rounded-full border border-[#214254]/10 bg-white/55 px-4 py-2 text-[11px] font-bold text-[#214254] backdrop-blur-xl dark:border-white/10 dark:bg-white/5 dark:text-cyan-100">تجربه یکپارچه مالی</span>
-          <h4 className="text-2xl font-black tracking-tight text-[#112b3a] dark:text-white sm:text-3xl md:text-4xl">سامانه پیشرو</h4>
-          <p className="text-xs sm:text-sm text-gray-500 dark:text-textSecondary leading-5 sm:leading-6">
-            سامانه <span className="text-myPrimary">پیشرو</span>، مشاور و همراه
-            مالی شما در مسیر پیشرفت
+    <section
+      ref={sectionRef}
+      style={{ height: `${steps.length * 100}vh` }}
+      className="relative lg:hidden"
+    >
+      <div className="sticky top-0 flex h-[100dvh] w-full flex-col overflow-hidden">
+        <div className="relative z-20 flex flex-col items-center gap-1 px-6 pt-8 text-center">
+          <span className="mb-1 rounded-full border border-[#214254]/10 bg-white/55 px-4 py-1.5 text-[11px] font-bold text-[#214254] backdrop-blur-xl dark:border-white/10 dark:bg-white/5 dark:text-cyan-100">
+            تجربه یکپارچه مالی
+          </span>
+          <h4 className="text-2xl font-black tracking-tight text-[#112b3a] dark:text-white sm:text-3xl">
+            سامانه پیشرو
+          </h4>
+          <p className="text-xs leading-5 text-gray-500 dark:text-textSecondary sm:text-sm">
+            سامانه <span className="text-myPrimary">پیشرو</span>، مشاور و
+            همراه مالی شما در مسیر پیشرفت
           </p>
         </div>
 
-        <Swiper
-          modules={[Pagination]}
-          spaceBetween={24}
-          slidesPerView={1}
-          slidesPerGroup={1}
-          pagination={{ clickable: true }}
-          allowTouchMove
-          simulateTouch
-          className="relative z-10 !pb-16 !w-full"
-          style={
-            {
-              "--swiper-pagination-bottom": "16px",
-              width: "100%",
-              height: "auto",
-              minHeight: "600px",
-            } as CSSProperties
-          }
-        >
-          {steps.map((step) => (
-            <SwiperSlide
+        <div className="relative z-20 mt-4 flex items-center justify-center gap-2">
+          {steps.map((step, i) => (
+            <span
               key={step.id}
-              className="!h-auto !w-full overflow-visible"
+              className={clsx(
+                "h-1.5 rounded-full transition-all duration-500",
+                i === index
+                  ? "w-8 bg-gradient-to-r from-[#5bcfe0] to-cyan-300"
+                  : "w-1.5 bg-[#214254]/20 dark:bg-white/20"
+              )}
+            />
+          ))}
+        </div>
+
+        <div
+          className="relative z-10 mt-5 flex flex-1 items-center justify-center px-5 pb-8"
+          style={{ perspective: "1300px" }}
+        >
+          <div className="home-glass-panel relative flex h-full max-h-[600px] w-full max-w-sm flex-col items-center overflow-hidden rounded-[32px] bg-gradient-to-br from-[#12344b]/95 via-[#183c53]/90 to-[#0d2435]/95 px-5 pt-7">
+            <motion.div
+              className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-cyan-300/15 blur-3xl"
+              style={{ x: useTransform(cycle, (v) => Math.sin(v) * 16) }}
+            />
+            <motion.div
+              className="pointer-events-none absolute -bottom-16 -left-10 h-52 w-52 rounded-full bg-amber-300/10 blur-3xl"
+              style={{ x: useTransform(cycle, (v) => Math.cos(v) * -16) }}
+            />
+
+            <div className="relative z-20 h-[86px] w-full px-1 text-center">
+              <AnimatePresence mode="wait" custom={direction}>
+                <motion.h6
+                  key={`text-${currentStep.id}`}
+                  custom={direction}
+                  variants={textVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  className="text-base font-extrabold leading-7 text-white sm:text-lg"
+                >
+                  {currentStep.text}
+                </motion.h6>
+              </AnimatePresence>
+            </div>
+
+            <motion.div
+              className="relative z-10 mt-2 h-[300px] w-[170px] drop-shadow-[0_30px_45px_rgba(0,0,0,0.45)] sm:h-[330px] sm:w-[186px]"
+              style={{
+                rotateY,
+                rotateX,
+                translateZ,
+                transformStyle: "preserve-3d",
+              }}
             >
-              <div className="home-glass-panel relative min-h-[600px] w-full overflow-hidden rounded-[28px] bg-gradient-to-br from-[#12344b]/95 via-[#183c53]/90 to-[#0d2435]/95 p-4 pb-[280px] pt-6 sm:p-6 sm:pb-[320px]">
-                <div className="w-full text-center px-2 sm:px-4 mt-4 mb-4">
-                  <h6 className="text-lg sm:text-xl md:text-2xl font-extrabold leading-7 sm:leading-8 md:leading-9 text-gray-100">
-                    {step.text}
-                  </h6>
-                </div>
-
-                <div className="w-full flex justify-center mt-3 mb-4 sm:mb-6">
-                  {step.link ? (
-                    <a
-                      href={step.link}
-                      className="inline-block rounded-full bg-white px-6 py-2 text-xs font-bold text-[#112b3a] shadow-xl transition hover:bg-cyan-50 sm:px-8 sm:py-2.5 sm:text-sm"
-                    >
-                      اطلاعات بیشتر
-                    </a>
-                  ) : (
-                    <button className="cursor-default rounded-full bg-white px-6 py-2 text-xs font-bold text-[#112b3a] shadow-xl sm:px-8 sm:py-2.5 sm:text-sm">
-                      اطلاعات بیشتر
-                    </button>
-                  )}
-                </div>
-
-                <div className="absolute -bottom-[80px] sm:-bottom-[100px] right-0 flex w-full flex-col items-center justify-center">
-                  <div className="relative w-full max-w-[240px] sm:max-w-[270px] aspect-[500/960]">
-                    {/* mobile frame (background layer) */}
-                    <Image
-                      src={
-                        step.imgCover ||
-                        "/images/home/mobile-scroll/mobile.webp"
-                      }
-                      alt="mobile frame"
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 1024px) 300px"
-                    />
-                    {/* mobile screen content (foreground layer) */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="relative w-[100%] h-[100%]">
-                        <Image
-                          src={step.img}
-                          alt="mobile screen content"
-                          fill
-                          className="object-contain"
-                          sizes="(max-width: 1024px) 300px"
-                        />
-                      </div>
+              <AnimatePresence mode="popLayout" custom={direction}>
+                <motion.div
+                  key={currentStep.id}
+                  custom={direction}
+                  variants={phoneVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  className="absolute inset-0"
+                  style={{ transformStyle: "preserve-3d" }}
+                >
+                  <Image
+                    src={
+                      currentStep.imgCover ||
+                      "/images/home/mobile-scroll/mobile.webp"
+                    }
+                    alt="mobile frame"
+                    fill
+                    className="object-cover rounded-2xl"
+                    sizes="(max-width: 1024px) 220px"
+                    priority={index === 0}
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="relative h-full w-full">
+                      <Image
+                        src={currentStep.img}
+                        alt="mobile screen content"
+                        fill
+                        className="object-contain"
+                        sizes="(max-width: 1024px) 220px"
+                      />
                     </div>
                   </div>
-                </div>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+                </motion.div>
+              </AnimatePresence>
+            </motion.div>
+
+            <div className="relative z-20 mb-6 mt-auto w-full pt-4 text-center">
+              {currentStep.link ? (
+                <a
+                  href={currentStep.link}
+                  className="inline-block rounded-full bg-white px-8 py-2.5 text-xs font-bold text-[#112b3a] shadow-xl transition hover:bg-cyan-50 sm:text-sm"
+                >
+                  اطلاعات بیشتر
+                </a>
+              ) : (
+                <button className="cursor-default rounded-full bg-white px-8 py-2.5 text-xs font-bold text-[#112b3a] shadow-xl sm:text-sm">
+                  اطلاعات بیشتر
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {index === 0 && (
+          <motion.div
+            style={{ opacity: hintOpacity }}
+            className="pointer-events-none absolute bottom-4 left-0 right-0 z-20 flex flex-col items-center gap-1"
+          >
+            <span className="text-[11px] font-semibold text-[#214254]/60 dark:text-white/50">
+              برای ادامه اسکرول کنید
+            </span>
+            <motion.span
+              animate={{ y: [0, 6, 0] }}
+              transition={{ duration: 1.4, repeat: Infinity }}
+              className="h-6 w-4 rounded-full border border-[#214254]/30 dark:border-white/30"
+            >
+              <motion.span
+                animate={{ y: [0, 8, 0], opacity: [1, 0, 1] }}
+                transition={{ duration: 1.4, repeat: Infinity }}
+                className="mx-auto mt-1 block h-1.5 w-1.5 rounded-full bg-[#214254]/60 dark:bg-white/60"
+              />
+            </motion.span>
+          </motion.div>
+        )}
       </div>
     </section>
   );
