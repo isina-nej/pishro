@@ -25,6 +25,10 @@ print_error() {
 
 # --- Main Script ---
 
+# Set config path to be local to the script
+export RCLONE_CONFIG=./rclone.conf
+
+
 # 1. Install rclone if not exists
 if ! command -v rclone &> /dev/null; then
     print_info "rclone not found. Installing..."
