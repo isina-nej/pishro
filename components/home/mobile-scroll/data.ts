@@ -1,5 +1,6 @@
 export type MobileScrollerStep = {
   id: number;
+  title: string;
   text: string;
   img: string; // تصویر داخل موبایل (مثل in-mobile-1.svg)
   imgCover?: string; // تصویر پس‌زمینه موبایل
@@ -10,6 +11,7 @@ export type MobileScrollerStep = {
 export const mobileScrollerSteps: MobileScrollerStep[] = [
   {
     id: 1,
+    title: "قدم اول",
     text: "با مشاوره‌های تخصصی و آموزش‌های کاربردی، اولین قدم مطمئن در بازار سرمایه را بردارید.",
     img: "/images/home/mobile-scroll/in-mobile-1.svg",
     imgCover: "/images/home/mobile-scroll/mobile.webp",
@@ -17,6 +19,7 @@ export const mobileScrollerSteps: MobileScrollerStep[] = [
   },
   {
     id: 2,
+    title: "قدم دوم",
     text: "دسترسی به تحلیل‌های روزانه و فرصت‌های طلایی در بورس بازارهای نوین.",
     img: "/images/home/mobile-scroll/mobile2.svg",
     imgCover: "/images/home/mobile-scroll/mobile.webp",
@@ -24,6 +27,7 @@ export const mobileScrollerSteps: MobileScrollerStep[] = [
   },
   {
     id: 3,
+    title: "قدم سوم",
     text: "با استراتژی‌های پیشرفته و ابزارهای مدرن، سبد سرمایه خود را حرفه‌ای مدیریت کنید.",
     img: "/images/home/mobile-scroll/in-mobile-1.svg",
     imgCover: "/images/home/mobile-scroll/mobile.webp",
