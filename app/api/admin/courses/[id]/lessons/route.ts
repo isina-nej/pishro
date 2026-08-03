@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { getAdminAuthFromHeaders } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
-import { createdResponse, errorResponse, paginatedResponse, ErrorCodes, validationError } from "@/lib/api-response";
+import { createdResponse, errorResponse, paginatedResponse, ErrorCodes, validationError, HttpStatus } from "@/lib/api-response";
 import { LessonCreateSchema } from "@/lib/schemas/course-management-schema";
 import { createLessonForCourse } from "@/lib/services/lesson-service";
 
@@ -11,7 +11,12 @@ export async function GET(
 ) {
   try {
     if (!getAdminAuthFromHeaders(req.headers)) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "Please login to continue",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
     const { id } = await params;
     const lessons = await prisma.lesson.findMany({
@@ -31,7 +36,12 @@ export async function POST(
 ) {
   try {
     if (!getAdminAuthFromHeaders(req.headers)) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "Please login to continue",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
     const { id } = await params;
     const body = await req.json();

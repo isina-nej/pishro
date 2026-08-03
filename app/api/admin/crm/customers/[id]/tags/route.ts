@@ -16,6 +16,7 @@ import {
   noContentResponse,
   notFoundResponse,
   validationError,
+  HttpStatus,
 } from "@/lib/api-response";
 import { AssignCustomerTagSchema } from "@/lib/schemas/crm-customer-schema";
 
@@ -30,7 +31,12 @@ export async function POST(
   try {
     const adminUser = requireAdmin(req);
     if (!adminUser) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "Please login to continue",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const { id } = await params;
@@ -90,7 +96,12 @@ export async function DELETE(
   try {
     const adminUser = requireAdmin(req);
     if (!adminUser) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "Please login to continue",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const { id } = await params;

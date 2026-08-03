@@ -5,14 +5,20 @@ import { prisma } from "@/lib/prisma";
 import {
   successResponse,
   errorResponse,
-  ErrorCodes
+  ErrorCodes,
+  HttpStatus,
 } from "@/lib/api-response";
 
 export async function POST(_req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(_req);
     if (!adminAuth) {
-      return errorResponse("احراز هویت نشده است", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "احراز هویت نشده است",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     console.log("🔧 Starting database fix for null updatedAt values...");

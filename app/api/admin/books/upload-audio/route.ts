@@ -5,7 +5,8 @@ import {
   successResponse,
   validationError,
   errorResponse,
-  ErrorCodes
+  ErrorCodes,
+  HttpStatus,
 } from "@/lib/api-response";
 import {
   BOOKS_UPLOAD_PATHS,
@@ -57,7 +58,12 @@ export async function POST(req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(req);
     if (!adminAuth) {
-      return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "دسترسی غیرمجاز",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
     const formData = await req.formData();
     const file = formData.get("audio") as File | null;

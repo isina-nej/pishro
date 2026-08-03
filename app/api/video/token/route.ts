@@ -8,6 +8,7 @@ import {
   notFoundResponse,
   validationError,
   ErrorCodes,
+  HttpStatus,
 } from "@/lib/api-response";
 import { generateStreamToken } from "@/lib/services/video-token-service";
 import { getVideoByVideoId } from "@/lib/services/video-service";
@@ -47,7 +48,9 @@ export async function POST(req: NextRequest) {
     if (video.processingStatus !== "READY") {
       return errorResponse(
         "ویدیو هنوز آماده پخش نیست",
-        ErrorCodes.VALIDATION_ERROR
+        ErrorCodes.VALIDATION_ERROR,
+        undefined,
+        HttpStatus.BAD_REQUEST
       );
     }
 

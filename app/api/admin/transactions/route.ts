@@ -10,17 +10,28 @@ import { prisma } from "@/lib/prisma";
 import {
   errorResponse,
   paginatedResponse,
-  ErrorCodes
+  ErrorCodes,
+  HttpStatus,
 } from "@/lib/api-response";
 
 export async function GET(req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(req);
 if (!adminAuth) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "Please login to continue",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
     if (!adminAuth) {
-      return errorResponse("Access denied. Admin only.", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "Access denied. Admin only.",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const searchParams = req.nextUrl.searchParams;

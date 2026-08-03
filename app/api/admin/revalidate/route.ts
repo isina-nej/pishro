@@ -11,7 +11,8 @@ import {
   successResponse,
   errorResponse,
   failResponse,
-  ErrorCodes
+  ErrorCodes,
+  HttpStatus,
 } from "@/lib/api-response";
 
 /**
@@ -39,12 +40,22 @@ export async function POST(req: NextRequest) {
 
     const adminAuth = await getAdminAuth(req);
 if (!adminAuth) {
-      return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "لطفاً وارد حساب کاربری خود شوید",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     // Check if user is admin (assuming role field exists in user model)
     if (adminAuth.role !== "ADMIN") {
-      return errorResponse("شما دسترسی به این عملیات ندارید", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "شما دسترسی به این عملیات ندارید",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     // Parse request body
@@ -127,11 +138,21 @@ export async function GET(req: NextRequest) {
 
     const adminAuth = await getAdminAuth(req);
     if (!adminAuth) {
-      return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "لطفاً وارد حساب کاربری خود شوید",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     if (adminAuth.role !== "ADMIN") {
-      return errorResponse("شما دسترسی به این عملیات ندارید", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "شما دسترسی به این عملیات ندارید",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     // Return available paths and tags that can be revalidated

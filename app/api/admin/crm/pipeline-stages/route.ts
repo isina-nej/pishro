@@ -16,6 +16,7 @@ import {
   ErrorCodes,
   successResponse,
   validationError,
+  HttpStatus,
 } from "@/lib/api-response";
 import { PipelineStageCreateSchema } from "@/lib/schemas/crm-deal-schema";
 
@@ -46,7 +47,12 @@ export async function GET(req: NextRequest) {
   try {
     const adminUser = requireAdmin(req);
     if (!adminUser) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "Please login to continue",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     await ensureDefaultStages();
@@ -58,7 +64,10 @@ export async function GET(req: NextRequest) {
     return successResponse(stages, "مراحل پایپ‌لاین با موفقیت دریافت شد");
   } catch (error) {
     console.error("Error fetching pipeline stages:", error);
-    return errorResponse("Error fetching pipeline stages", ErrorCodes.DATABASE_ERROR);
+    return errorResponse(
+      "Error fetching pipeline stages",
+      ErrorCodes.DATABASE_ERROR
+    );
   }
 }
 
@@ -66,7 +75,12 @@ export async function POST(req: NextRequest) {
   try {
     const adminUser = requireAdmin(req);
     if (!adminUser) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "Please login to continue",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const body = await req.json();
@@ -99,6 +113,9 @@ export async function POST(req: NextRequest) {
     return createdResponse(stage, "مرحله پایپ‌لاین با موفقیت ایجاد شد");
   } catch (error) {
     console.error("Error creating pipeline stage:", error);
-    return errorResponse("Error creating pipeline stage", ErrorCodes.DATABASE_ERROR);
+    return errorResponse(
+      "Error creating pipeline stage",
+      ErrorCodes.DATABASE_ERROR
+    );
   }
 }

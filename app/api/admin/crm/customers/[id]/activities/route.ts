@@ -13,6 +13,7 @@ import {
   ErrorCodes,
   notFoundResponse,
   validationError,
+  HttpStatus,
 } from "@/lib/api-response";
 import { AddCustomerActivitySchema } from "@/lib/schemas/crm-customer-schema";
 
@@ -27,7 +28,12 @@ export async function POST(
   try {
     const adminUser = requireAdmin(req);
     if (!adminUser) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "Please login to continue",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const { id } = await params;

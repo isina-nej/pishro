@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { getAdminAuthFromHeaders } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
-import { errorResponse, successResponse, ErrorCodes, validationError } from "@/lib/api-response";
+import { errorResponse, successResponse, ErrorCodes, validationError, HttpStatus } from "@/lib/api-response";
 import { ReorderSchema } from "@/lib/schemas/course-management-schema";
 
 export async function POST(
@@ -10,7 +10,12 @@ export async function POST(
 ) {
   try {
     if (!getAdminAuthFromHeaders(req.headers)) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "Please login to continue",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
     const { id } = await params;
     const body = await req.json();

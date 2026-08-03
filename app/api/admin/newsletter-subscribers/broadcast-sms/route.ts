@@ -11,17 +11,28 @@ import {
   errorResponse,
   successResponse,
   validationError,
-  ErrorCodes
+  ErrorCodes,
+  HttpStatus,
 } from "@/lib/api-response";
 
 export async function POST(req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(req);
 if (!adminAuth) {
-      return errorResponse("لطفا ابتدا وارد شوید", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "لطفا ابتدا وارد شوید",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
     if (!adminAuth) {
-      return errorResponse("دسترسی غیرمجاز. فقط ادمین‌ها اجازه دارند.", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "دسترسی غیرمجاز. فقط ادمین‌ها اجازه دارند.",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     // Get message text from request body
@@ -54,7 +65,9 @@ if (!adminAuth) {
     if (subscribers.length === 0) {
       return errorResponse(
         "هیچ عضوی در باشگاه خبری یافت نشد",
-        ErrorCodes.NOT_FOUND
+        ErrorCodes.NOT_FOUND,
+        undefined,
+        HttpStatus.NOT_FOUND
       );
     }
 

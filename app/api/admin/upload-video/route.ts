@@ -5,7 +5,8 @@ import {
   successResponse,
   validationError,
   errorResponse,
-  ErrorCodes
+  ErrorCodes,
+  HttpStatus,
 } from "@/lib/api-response";
 import {
   VIDEOS_UPLOAD_PATHS,
@@ -30,11 +31,21 @@ export async function POST(req: NextRequest) {
     const adminAuth = await getAdminAuth(req);
 // بررسی احراز هویت و نقش ادمین
     if (!adminAuth) {
-      return errorResponse("لطفاً وارد حساب کاربری خود شوید", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "لطفاً وارد حساب کاربری خود شوید",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     if (!adminAuth) {
-      return errorResponse("دسترسی غیرمجاز - فقط ادمین", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "دسترسی غیرمجاز - فقط ادمین",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const formData = await req.formData();

@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { verifyAdminAccessToken } from '@/lib/admin-auth';
-import { errorResponse, successResponse, ErrorCodes } from '@/lib/api-response';
+import { errorResponse, successResponse, ErrorCodes, HttpStatus } from '@/lib/api-response';
 import { saveTempFileToStorage } from '@/lib/services/storage-adapter';
 
 /**
@@ -16,7 +16,12 @@ export async function POST(req: NextRequest) {
     const authHeader = req.headers.get('Authorization');
     if (!authHeader?.startsWith('Bearer ')) {
       console.log('[POST /api/news/upload-temp-image] Missing auth header');
-      return errorResponse('لطفا وارد شوید', ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        'لطفا وارد شوید',
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const token = authHeader.slice(7);
@@ -24,7 +29,12 @@ export async function POST(req: NextRequest) {
 
     if (!adminUser) {
       console.log('[POST /api/news/upload-temp-image] Invalid token');
-      return errorResponse('توکن معتبر نیست', ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        'توکن معتبر نیست',
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     console.log('[POST /api/news/upload-temp-image] Auth verified');
@@ -37,20 +47,35 @@ export async function POST(req: NextRequest) {
 
     if (!(file instanceof File)) {
       console.log('[POST /api/news/upload-temp-image] Invalid file');
-      return errorResponse('فایل الزامی است', ErrorCodes.VALIDATION_ERROR);
+      return errorResponse(
+        'فایل الزامی است',
+        ErrorCodes.VALIDATION_ERROR,
+        undefined,
+        HttpStatus.BAD_REQUEST
+      );
     }
 
     // Validate image type
     if (!file.type.startsWith('image/')) {
       console.log('[POST /api/news/upload-temp-image] Invalid file type:', file.type);
-      return errorResponse('فایل باید عکس باشد', ErrorCodes.VALIDATION_ERROR);
+      return errorResponse(
+        'فایل باید عکس باشد',
+        ErrorCodes.VALIDATION_ERROR,
+        undefined,
+        HttpStatus.BAD_REQUEST
+      );
     }
 
     // Validate file size (5MB max)
     const MAX_FILE_SIZE = 5 * 1024 * 1024;
     if (file.size > MAX_FILE_SIZE) {
       console.log('[POST /api/news/upload-temp-image] File too large:', file.size);
-      return errorResponse('حجم فایل بیش از 5MB است', ErrorCodes.VALIDATION_ERROR);
+      return errorResponse(
+        'حجم فایل بیش از 5MB است',
+        ErrorCodes.VALIDATION_ERROR,
+        undefined,
+        HttpStatus.BAD_REQUEST
+      );
     }
 
     console.log('[POST /api/news/upload-temp-image] File validation passed, converting to buffer');

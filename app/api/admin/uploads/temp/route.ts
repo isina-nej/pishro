@@ -4,6 +4,7 @@ import {
   errorResponse,
   successResponse,
   ErrorCodes,
+  HttpStatus,
 } from "@/lib/api-response";
 import { saveTempFileToStorage } from "@/lib/services/storage-adapter";
 import {
@@ -26,7 +27,12 @@ export async function POST(req: NextRequest) {
     const authHeader = req.headers.get('Authorization');
     if (!authHeader?.startsWith('Bearer ')) {
       console.error("[POST /api/admin/uploads/temp] Missing Authorization header");
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "Please login to continue",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const token = authHeader.slice(7);
@@ -34,7 +40,12 @@ export async function POST(req: NextRequest) {
     
     if (!adminUser) {
       console.error("[POST /api/admin/uploads/temp] Invalid or expired token");
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "Please login to continue",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     console.log("[POST /api/admin/uploads/temp] Auth successful for admin:", adminUser.id);
@@ -72,7 +83,12 @@ export async function POST(req: NextRequest) {
 
     if (!(file instanceof File)) {
       console.error("[POST /api/admin/uploads/temp] File validation failed - not a File");
-      return errorResponse("فایل الزامی است", ErrorCodes.VALIDATION_ERROR);
+      return errorResponse(
+        "فایل الزامی است",
+        ErrorCodes.VALIDATION_ERROR,
+        undefined,
+        HttpStatus.BAD_REQUEST
+      );
     }
 
     const validationError =
@@ -82,7 +98,12 @@ export async function POST(req: NextRequest) {
 
     if (validationError) {
       console.error("[POST /api/admin/uploads/temp] Validation error:", validationError);
-      return errorResponse(validationError, ErrorCodes.VALIDATION_ERROR);
+      return errorResponse(
+        validationError,
+        ErrorCodes.VALIDATION_ERROR,
+        undefined,
+        HttpStatus.BAD_REQUEST
+      );
     }
 
     try {

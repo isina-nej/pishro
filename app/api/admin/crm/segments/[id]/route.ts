@@ -17,6 +17,7 @@ import {
   notFoundResponse,
   successResponse,
   validationError,
+  HttpStatus,
 } from "@/lib/api-response";
 import { UpdateCustomerSegmentSchema } from "@/lib/schemas/crm-segment-schema";
 import { evaluateSegmentMembers } from "@/lib/services/customer-segment-service";
@@ -33,7 +34,12 @@ export async function GET(
   try {
     const adminUser = requireAdmin(req);
     if (!adminUser) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "Please login to continue",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const { id } = await params;
@@ -87,7 +93,12 @@ export async function PATCH(
   try {
     const adminUser = requireAdmin(req);
     if (!adminUser) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "Please login to continue",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const { id } = await params;
@@ -141,7 +152,12 @@ export async function DELETE(
   try {
     const adminUser = requireAdmin(req);
     if (!adminUser) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "Please login to continue",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const { id } = await params;

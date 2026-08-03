@@ -9,7 +9,8 @@ import {
   successResponse,
   errorResponse,
   validationError,
-  ErrorCodes
+  ErrorCodes,
+  HttpStatus,
 } from "@/lib/api-response";
 
 /**
@@ -20,7 +21,12 @@ export async function GET(_req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(_req);
 if (!adminAuth || adminAuth.role !== "ADMIN") {
-      return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "دسترسی غیرمجاز",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const classes = await getAllSkyRoomClassesForAdmin();
@@ -43,7 +49,12 @@ export async function POST(req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(req);
 if (!adminAuth || adminAuth.role !== "ADMIN") {
-      return errorResponse("دسترسی غیرمجاز", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "دسترسی غیرمجاز",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const body = await req.json();

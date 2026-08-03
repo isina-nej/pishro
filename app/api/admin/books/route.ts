@@ -13,7 +13,8 @@ import {
   paginatedResponse,
   createdResponse,
   ErrorCodes,
-  validationError
+  validationError,
+  HttpStatus,
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
 
@@ -22,7 +23,12 @@ export async function GET(req: NextRequest) {
     // Unified authentication - supports NextAuth and Bearer token
     const adminAuth = await getAdminAuth(req);
     if (!adminAuth) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "Please login to continue",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -99,7 +105,12 @@ export async function POST(req: NextRequest) {
     // Unified authentication - supports NextAuth and Bearer token
     const adminAuth = await getAdminAuth(req);
     if (!adminAuth) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "Please login to continue",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const body = await req.json();

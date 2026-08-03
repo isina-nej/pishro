@@ -8,7 +8,8 @@ import { getAdminAuth } from "@/lib/auth-simple";
 import {
   errorResponse,
   successResponse,
-  ErrorCodes
+  ErrorCodes,
+  HttpStatus,
 } from "@/lib/api-response";
 import { getVideoStats } from "@/lib/services/video-service";
 
@@ -16,7 +17,12 @@ export async function GET(req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(req);
     if (!adminAuth) {
-      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "لطفا وارد شوید",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const stats = await getVideoStats();

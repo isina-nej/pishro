@@ -10,7 +10,8 @@ import {
   errorResponse,
   successResponse,
   ErrorCodes,
-  validationError
+  validationError,
+  HttpStatus,
 } from "@/lib/api-response";
 import {
   getSettings,
@@ -26,10 +27,20 @@ export async function GET(_req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(_req);
 if (!adminAuth) {
-      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "لطفا وارد شوید",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
     if (!adminAuth) {
-      return errorResponse("دسترسی محدود به ادمین", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "دسترسی محدود به ادمین",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const settings = await getSettings();
@@ -61,7 +72,12 @@ export async function PATCH(req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(req);
     if (!adminAuth) {
-      return errorResponse("لطفا وارد شوید", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "لطفا وارد شوید",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     // Parse request body

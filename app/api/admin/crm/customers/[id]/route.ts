@@ -13,6 +13,7 @@ import {
   successResponse,
   ErrorCodes,
   notFoundResponse,
+  HttpStatus,
 } from "@/lib/api-response";
 
 function requireAdmin(req: NextRequest) {
@@ -26,7 +27,12 @@ export async function GET(
   try {
     const adminUser = requireAdmin(req);
     if (!adminUser) {
-      return errorResponse("Please login to continue", ErrorCodes.UNAUTHORIZED);
+      return errorResponse(
+        "Please login to continue",
+        ErrorCodes.UNAUTHORIZED,
+        undefined,
+        HttpStatus.UNAUTHORIZED
+      );
     }
 
     const { id } = await params;
