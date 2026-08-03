@@ -4,11 +4,9 @@
  */
 
 import { PrismaClient } from "@prisma/client";
-import { PersianDataGenerator } from "./persian-data-generator";
 import { fileURLToPath } from "url";
 
 const prisma = new PrismaClient();
-const _generator = new PersianDataGenerator(12345);
 
 // Define tags
 const TAGS_DATA = [

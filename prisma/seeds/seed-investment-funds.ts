@@ -51,7 +51,19 @@ export async function seedInvestmentFunds() {
       const existing = await prisma.investmentFund.findUnique({ where: { key: fund.key } });
       await prisma.investmentFund.upsert({
         where: { key: fund.key },
-        update: {},
+        update: {
+          name: fund.name,
+          description: fund.description,
+          monthlyRate: fund.monthlyRate,
+          minDuration: fund.minDuration,
+          maxDuration: fund.maxDuration,
+          durationStep: fund.durationStep,
+          minAmount: fund.minAmount,
+          maxAmount: fund.maxAmount,
+          amountStep: fund.amountStep,
+          order: fund.order,
+          active: fund.active,
+        },
         create: fund,
       });
       if (existing) updated++;
