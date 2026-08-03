@@ -37,6 +37,7 @@ model User {
   quizAttempts         QuizAttempt[]             @relation("UserQuizAttempts")
   investmentPortfolios UserInvestmentPortfolio[] @relation("UserInvestmentPortfolios")
   images               Image[]                   @relation("UserImages")
+  bookmarks            Bookmark[]                @relation("UserBookmarks")
 
   // CRM relations
   convertedFromLeads Lead[]              @relation("LeadConvertedUser")
@@ -126,6 +127,7 @@ model Course {
   orderItems  OrderItem[]  @relation("CourseOrderItems")
   quizzes     Quiz[]       @relation("CourseQuizzes")
   lessons     Lesson[]     @relation("CourseLessons")
+  bookmarks   Bookmark[]   @relation("CourseBookmarks")
 
   @@index([categoryId])
   @@index([published, featured])
@@ -337,6 +339,8 @@ model NewsArticle {
   aboutPageId String?   
   aboutPage   AboutPage? @relation("AboutNews", fields: [aboutPageId], references: [id], onDelete: SetNull)
 
+  bookmarks   Bookmark[] @relation("NewsBookmarks")
+
   @@index([categoryId])
   @@index([published, featured])
   @@index([publishedAt])
@@ -384,10 +388,51 @@ model DigitalBook {
   audioUrl    String?
 
   relatedTags DigitalBookTags[] @relation("BookTags")
+  bookmarks   Bookmark[]        @relation("BookBookmarks")
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
 }
+
+// ===================== BOOKMARKS =====================
+
+/// نشان‌شده‌های کاربر — دوره، خبر یا کتاب دیجیتال.
+///
+/// عمداً به‌جای یک ستون چندریختی (itemType + itemId) سه رابطهٔ اختیاری دارد:
+/// با کلید خارجی و onDelete: Cascade، حذف یک دوره/خبر/کتاب نشان‌های آن را هم
+/// پاک می‌کند، پس پنل کاربر هیچ‌وقت آیتم حذف‌شده نشان نمی‌دهد. نوع آیتم هم از
+/// روی همین ستون‌ها خوانده می‌شود و جدا ذخیره نمی‌شود تا منبع دوم حقیقت نسازد.
+///
+/// یونیک‌های ترکیبی، هر آیتم را برای هر کاربر یک‌بار نگه می‌دارند. در MySQL چند
+/// ردیف با ستون NULL مجاز است، پس هر کاربر می‌تواند هم‌زمان چند نشان از انواع
+/// مختلف داشته باشد.
+model Bookmark {
+  id String @id @default(cuid())
+
+  user   User   @relation("UserBookmarks", fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  course   Course? @relation("CourseBookmarks", fields: [courseId], references: [id], onDelete: Cascade)
+  courseId String?
+
+  newsArticle   NewsArticle? @relation("NewsBookmarks", fields: [newsArticleId], references: [id], onDelete: Cascade)
+  newsArticleId String?
+
+  digitalBook   DigitalBook? @relation("BookBookmarks", fields: [digitalBookId], references: [id], onDelete: Cascade)
+  digitalBookId String?
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, courseId])
+  @@unique([userId, newsArticleId])
+  @@unique([userId, digitalBookId])
+  @@index([userId, createdAt])
+  @@index([courseId])
+  @@index([newsArticleId])
+  @@index([digitalBookId])
+}
+
+// ===================== END BOOKMARKS =====================
 
 model Category {
   id          String  @id @default(cuid())

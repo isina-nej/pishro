@@ -9,6 +9,7 @@ import { FormatTime } from "./FormatTime";
 import RatingStars from "./RatingStars";
 import { useCartStore } from "@/stores/cart-store";
 import CourseDetailModal from "@/components/courses/CourseDetailModal";
+import BookmarkButton from "@/components/bookmarks/bookmarkButton";
 import toast from "react-hot-toast";
 import type { Course } from "@/lib/types/db";
 import { useSession } from "next-auth/react";
@@ -77,6 +78,15 @@ const CourseCard = ({ data, link: _link }: CourseCardProps) => {
               className="object-cover transition-transform duration-300 group-hover:scale-105"
               onError={() => setImageError(true)}
             />
+            {/* Bookmark - Top Left */}
+            <div className="absolute top-2 left-2 z-10">
+              <BookmarkButton
+                type="course"
+                itemId={data.id}
+                className="size-8 bg-background/80 backdrop-blur-sm"
+              />
+            </div>
+
             {/* Purchase Button - Bottom Right */}
             <motion.button
               onClick={handleAddToCart}

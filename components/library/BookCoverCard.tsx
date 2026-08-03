@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { Star, BookOpen, TrendingUp } from "lucide-react";
+import BookmarkButton from "@/components/bookmarks/bookmarkButton";
 import type { LibraryBook } from "./data";
 
 interface BookCoverCardProps {
@@ -84,10 +85,18 @@ export const BookCoverCard = ({
               {book.status}
             </div>
 
-            {/* Rating Badge */}
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-500/95 to-orange-500/95 px-3 py-1.5 text-xs font-semibold text-white shadow-lg backdrop-blur-sm border border-amber-400/30">
-              <Star className="h-3.5 w-3.5 fill-white" />
-              {book.rating.toFixed(1)}
+            <div className="flex items-center gap-2">
+              <BookmarkButton
+                type="book"
+                itemId={book.id}
+                className="size-8 border-white/30 bg-white/90 backdrop-blur-sm dark:bg-slate-900/80"
+              />
+
+              {/* Rating Badge */}
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-500/95 to-orange-500/95 px-3 py-1.5 text-xs font-semibold text-white shadow-lg backdrop-blur-sm border border-amber-400/30">
+                <Star className="h-3.5 w-3.5 fill-white" />
+                {book.rating.toFixed(1)}
+              </div>
             </div>
           </motion.div>
 

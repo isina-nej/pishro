@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Calendar, Eye, Clock, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
+import BookmarkButton from "@/components/bookmarks/bookmarkButton";
 
 interface NewsCardProps {
   data: {
@@ -86,6 +87,15 @@ const NewsCard = ({ data }: NewsCardProps) => {
                 {data.category}
               </span>
             </div>
+          </div>
+
+          {/* Bookmark */}
+          <div className="absolute top-4 left-4 z-10">
+            <BookmarkButton
+              type="news"
+              itemId={data.id}
+              className="backdrop-blur-xl border-white/20"
+            />
           </div>
 
           {/* Overlay gradient on hover */}
