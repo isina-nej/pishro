@@ -133,7 +133,7 @@ const CalculatorSection = () => {
   };
 
   return (
-    <section className="relative w-full min-h-[600px] md:min-h-screen bg-gradient-to-br from-[#152c44] via-[#1a3a54] to-[#152c44] text-white overflow-hidden mt-44">
+    <section className="relative w-full min-h-[600px] md:min-h-screen bg-gradient-to-br from-[#152c44] via-[#1a3a54] to-[#152c44] text-primary-foreground overflow-hidden mt-44">
       {/* pattern background */}
       <div className="absolute inset-0 bg-[url('/images/utiles/pattern1.svg')] opacity-10 z-0" />
 
@@ -143,7 +143,7 @@ const CalculatorSection = () => {
           <h1 className="font-bold text-4xl sm:text-5xl md:text-6xl mb-4 md:mb-6 mt-10 md:mt-0">
             سبدهای سرمایه‌ گذاری پیشرو
           </h1>
-          <p className="text-lg md:text-xl lg:text-2xl leading-relaxed text-gray-200 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl lg:text-2xl leading-relaxed text-muted-foreground max-w-3xl mx-auto">
             با انتخاب نوع سبد سرمایه‌ گذاری، مبلغ و مدت، میزان بازده خود را
             مشاهده کنید.
           </p>
@@ -154,7 +154,7 @@ const CalculatorSection = () => {
           {/* Controls */}
           <div className="flex flex-col w-full lg:w-7/12 gap-4 px-1 md:px-0">
             {/* سبد سرمایه‌ گذاری */}
-            <div className="rounded-2xl border border-[#8B9BB4] bg-white dark:bg-cardBg text-[#1A0A3B] dark:text-textPrimary px-4 sm:px-6 py-4">
+            <div className="rounded-2xl border border-[#8B9BB4] bg-card dark:bg-cardBg text-[#1A0A3B] dark:text-textPrimary px-4 sm:px-6 py-4">
               <p className="text-center text-lg font-semibold mb-4 flex items-center justify-center gap-2">
                 <BarChart3 size={22} className="text-[#1A0A3B] dark:text-textPrimary" />
                 نوع سبد سرمایه‌ گذاری
@@ -173,8 +173,8 @@ const CalculatorSection = () => {
                     }
                     className={`px-5 py-2 rounded-full border transition-all  ${
                       portfolio === item.key
-                        ? "bg-mySecondary text-white border-mySecondary"
-                        : "bg-gray-100 text-mySecondary border-gray-300 hover:bg-gray-200 dark:border-borderColor dark:bg-darkBgHidden dark:text-textPrimary dark:hover:bg-cardBg"
+                        ? "bg-mySecondary text-primary-foreground border-mySecondary"
+                        : "bg-muted text-mySecondary border-border hover:bg-muted dark:border-borderColor dark:bg-darkBgHidden dark:text-textPrimary dark:hover:bg-cardBg"
                     }`}
                   >
                     {item.label}
@@ -184,7 +184,7 @@ const CalculatorSection = () => {
             </div>
 
             {/* مبلغ سرمایه‌ گذاری */}
-            <div className="rounded-2xl border border-[#8B9BB4] bg-white dark:bg-cardBg text-[#1A0A3B] dark:text-textPrimary px-4 sm:px-6 py-4">
+            <div className="rounded-2xl border border-[#8B9BB4] bg-card dark:bg-cardBg text-[#1A0A3B] dark:text-textPrimary px-4 sm:px-6 py-4">
               <p className="text-center text-lg font-bold mb-8 flex items-center justify-center gap-2">
                 <Wallet size={24} className="text-[#1A0A3B] dark:text-textPrimary" />
                 مبلغ سرمایه‌ گذاری
@@ -195,7 +195,7 @@ const CalculatorSection = () => {
                   onClick={() =>
                     setAmount((prev) => getNext(prev, amountSteps))
                   }
-                  className="size-6 md:size-10 rounded-full bg-gray-200 dark:bg-darkBgHidden text-2xl font-bold flex items-center justify-center active:scale-95"
+                  className="size-6 md:size-10 rounded-full bg-muted dark:bg-darkBgHidden text-2xl font-bold flex items-center justify-center active:scale-95"
                 >
                   <span className="mt-1">+</span>
                 </button>
@@ -224,7 +224,7 @@ const CalculatorSection = () => {
                     }}
                   />
                   {/* ⬇️ Label range below slider */}
-                  <div className="md:mx-2 mt-3 flex flex-row-reverse justify-between text-sm text-gray-900 dark:text-textPrimary">
+                  <div className="md:mx-2 mt-3 flex flex-row-reverse justify-between text-sm text-foreground dark:text-textPrimary">
                     <p>۱ میلیون تومان</p>
                     <p>5 میلیارد تومان</p>
                   </div>
@@ -234,7 +234,7 @@ const CalculatorSection = () => {
                   onClick={() =>
                     setAmount((prev) => getPrev(prev, amountSteps))
                   }
-                  className="size-6 md:size-10 rounded-full bg-gray-200 dark:bg-darkBgHidden text-2xl font-bold flex items-center justify-center active:scale-95"
+                  className="size-6 md:size-10 rounded-full bg-muted dark:bg-darkBgHidden text-2xl font-bold flex items-center justify-center active:scale-95"
                 >
                   <span className="mt-1">−</span>
                 </button>
@@ -247,7 +247,7 @@ const CalculatorSection = () => {
             </div>
 
             {/* مدت سرمایه‌ گذاری */}
-            <div className="rounded-2xl border border-[#8B9BB4] bg-white dark:bg-cardBg text-[#1A0A3B] dark:text-textPrimary px-4 sm:px-6 py-4">
+            <div className="rounded-2xl border border-[#8B9BB4] bg-card dark:bg-cardBg text-[#1A0A3B] dark:text-textPrimary px-4 sm:px-6 py-4">
               <p className="text-center text-lg font-bold mb-8 flex items-center justify-center gap-2">
                 <Clock size={24} className="text-[#1A0A3B] dark:text-textPrimary" />
                 مدت سرمایه‌ گذاری
@@ -258,7 +258,7 @@ const CalculatorSection = () => {
                   onClick={() =>
                     setDuration((prev) => getNext(prev, durationSteps))
                   }
-                  className="size-6 md:size-10 rounded-full bg-gray-200 dark:bg-darkBgHidden text-2xl font-bold flex items-center justify-center active:scale-95"
+                  className="size-6 md:size-10 rounded-full bg-muted dark:bg-darkBgHidden text-2xl font-bold flex items-center justify-center active:scale-95"
                 >
                   <span className="mt-1">+</span>
                 </button>
@@ -287,7 +287,7 @@ const CalculatorSection = () => {
                     }}
                   />
                   {/* ⬇️ Label range below slider */}
-                  <div className="sm:mx-2 mt-3 flex flex-row-reverse justify-between text-sm text-gray-900 dark:text-textPrimary">
+                  <div className="sm:mx-2 mt-3 flex flex-row-reverse justify-between text-sm text-foreground dark:text-textPrimary">
                     <p>۱ ماه</p>
                     <p>۱۲ ماه</p>
                   </div>
@@ -297,7 +297,7 @@ const CalculatorSection = () => {
                   onClick={() =>
                     setDuration((prev) => getPrev(prev, durationSteps))
                   }
-                  className="size-6 md:size-10 rounded-full bg-gray-200 dark:bg-darkBgHidden text-2xl font-bold flex items-center justify-center active:scale-95"
+                  className="size-6 md:size-10 rounded-full bg-muted dark:bg-darkBgHidden text-2xl font-bold flex items-center justify-center active:scale-95"
                 >
                   <span className="mt-1">−</span>
                 </button>
@@ -316,7 +316,7 @@ const CalculatorSection = () => {
             </p>
 
             {/* Result box */}
-            <div className="bg-white dark:bg-cardBg text-[#1A0A3B] dark:text-textPrimary rounded-2xl pt-8 pb-4 px-4 flex flex-col items-center justify-center text-3xl font-medium shadow-lg relative">
+            <div className="bg-card dark:bg-cardBg text-[#1A0A3B] dark:text-textPrimary rounded-2xl pt-8 pb-4 px-4 flex flex-col items-center justify-center text-3xl font-medium shadow-lg relative">
               {/* قیمت و درصد سود */}
               <div className="flex items-center justify-between w-full gap-4 mb-4">
                 {/* مبلغ کل - سمت راست */}
@@ -328,26 +328,26 @@ const CalculatorSection = () => {
                     separator=","
                     formattingFn={(n) => formatNumber(n)}
                   />
-                  <span className="mr-2 mt-1 text-lg font-bold text-gray-400 dark:text-textSecondary">
+                  <span className="mr-2 mt-1 text-lg font-bold text-muted-foreground dark:text-textSecondary">
                     تومان
                   </span>
                 </div>
                 {/* درصد سود ماهیانه - سمت چپ */}
-                <div className="flex flex-col items-center bg-gradient-to-br from-orange-100 to-orange-50 rounded-xl px-4 py-3 shadow-sm border border-orange-200 dark:border-orange-800">
-                  <p className="text-xs text-orange-600 dark:text-orange-400 font-medium mb-1">
+                <div className="flex flex-col items-center bg-gradient-to-br from-premium to-premium rounded-xl px-4 py-3 shadow-sm border border-premium">
+                  <p className="text-xs text-premium font-medium mb-1">
                     سود ماهیانه
                   </p>
-                  <p className="text-2xl font-bold text-orange-700 dark:text-orange-300">
+                  <p className="text-2xl font-bold text-premium">
                     {(rates[portfolio] * 100).toFixed(0)}٪
                   </p>
                 </div>
               </div>
 
               {/* 🛡 پیام تضمین سرمایه */}
-              <div className="mt-4 flex items-start gap-2 bg-green-100 dark:bg-green-950 border border-green-300 dark:border-green-800 rounded-xl px-4 py-3 text-green-700 dark:text-green-300 text-sm font-medium shadow-sm">
+              <div className="mt-4 flex items-start gap-2 bg-primary border border-primary rounded-xl px-4 py-3 text-primary text-sm font-medium shadow-sm">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5"
+                  className="w-5 h-5 text-primary flex-shrink-0 mt-0.5"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -365,12 +365,12 @@ const CalculatorSection = () => {
               </div>
 
               {/* قیمت سبد */}
-              <div className="mt-4 w-full bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-xl px-4 py-3 dark:border-blue-800 dark:from-blue-950 dark:to-cyan-950">
+              <div className="mt-4 w-full bg-gradient-to-r from-primary to-primary border border-primary rounded-xl px-4 py-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-blue-900 dark:text-blue-200">
+                  <span className="text-sm font-medium text-primary">
                     هزینه سبد:
                   </span>
-                  <span className="text-lg font-bold text-blue-700 dark:text-blue-300">
+                  <span className="text-lg font-bold text-primary">
                     {formatNumber(calculatePortfolioPrice())} تومان
                   </span>
                 </div>
@@ -380,7 +380,7 @@ const CalculatorSection = () => {
               <button
                 onClick={handleAddToCart}
                 disabled={isAddingToCart}
-                className="mt-4 w-full bg-gradient-to-r from-mySecondary to-orange-500 hover:from-mySecondary/90 hover:to-orange-600 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+                className="mt-4 w-full bg-gradient-to-r from-mySecondary to-premium hover:from-mySecondary/90 hover:to-premium text-primary-foreground font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
               >
                 <ShoppingCart size={20} />
                 {isAddingToCart ? "در حال افزودن..." : "افزودن به سبد خرید"}

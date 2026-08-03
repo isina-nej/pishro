@@ -78,18 +78,18 @@ const PlansList = ({ investmentPlansData }: PlansListProps) => {
         {PlansListData.map((item, idx) => (
           <Drawer key={idx}>
             <DrawerTrigger asChild>
-              <button className="group relative flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-200 bg-white px-6 py-3 font-medium text-mySecondary shadow-lg shadow-emerald-950/5 transition-all hover:border-emerald-400 hover:bg-emerald-50 sm:w-auto dark:border-borderColor dark:bg-cardBg dark:text-textPrimary dark:hover:bg-darkBgHidden">
-                <item.Icon className="h-5 w-5 text-emerald-700 transition-transform group-hover:scale-110 dark:text-emerald-300" />
+              <button className="group relative flex w-full items-center justify-center gap-2 rounded-xl border border-primary bg-card px-6 py-3 font-medium text-mySecondary shadow-lg shadow-emerald-950/5 transition-all hover:border-primary hover:bg-primary sm:w-auto dark:border-borderColor dark:bg-cardBg dark:text-textPrimary dark:hover:bg-darkBgHidden">
+                <item.Icon className="h-5 w-5 text-primary transition-transform group-hover:scale-110" />
                 {item.label}
               </button>
             </DrawerTrigger>
 
-            <DrawerContent className="rounded-t-2xl px-6 pb-8 pt-4 bg-gray-50 dark:bg-darkBgHidden shadow-2xl border-t border-gray-200 dark:border-borderColor">
-              <DrawerHeader className="text-center border-b pb-4 border-gray-200 dark:border-borderColor">
-                <DrawerTitle className="text-2xl font-bold text-gray-800 dark:text-textPrimary">
+            <DrawerContent className="rounded-t-2xl px-6 pb-8 pt-4 bg-muted dark:bg-darkBgHidden shadow-2xl border-t border-border dark:border-borderColor">
+              <DrawerHeader className="text-center border-b pb-4 border-border dark:border-borderColor">
+                <DrawerTitle className="text-2xl font-bold text-foreground dark:text-textPrimary">
                   ساخت سبد سرمایه‌ گذاری ({item.label})
                 </DrawerTitle>
-                <DrawerDescription className="text-gray-600 dark:text-textSecondary mt-1">
+                <DrawerDescription className="text-muted-foreground dark:text-textSecondary mt-1">
                   لطفاً اطلاعات زیر را وارد کنید:
                 </DrawerDescription>
               </DrawerHeader>
@@ -99,7 +99,7 @@ const PlansList = ({ investmentPlansData }: PlansListProps) => {
                 <div className="space-y-8 mt-6 w-full max-w-2xl">
                   {/* Amount */}
                   <div className="w-full">
-                    <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-textPrimary">
+                    <label className="block mb-2 text-sm font-medium text-muted-foreground dark:text-textPrimary">
                       میزان سرمایه (میلیون تومان)
                     </label>
                     <Slider
@@ -109,22 +109,22 @@ const PlansList = ({ investmentPlansData }: PlansListProps) => {
                       value={[amount]}
                       onValueChange={([val]) => setAmount(val)}
                       className="h-3"
-                      trackClassName="bg-gray-200 dark:bg-darkBgHidden"
-                      rangeClassName="bg-green-600"
-                      thumbClassName="border-green-600"
+                      trackClassName="bg-muted dark:bg-darkBgHidden"
+                      rangeClassName="bg-primary"
+                      thumbClassName="border-primary"
                     />
-                    <div className="ltr flex justify-between text-xs text-gray-500 dark:text-textSecondary mt-1 font-medium">
+                    <div className="ltr flex justify-between text-xs text-muted-foreground dark:text-textSecondary mt-1 font-medium">
                       <span>۱۰ میلیون</span>
                       <span>۱۰ میلیارد</span>
                     </div>
-                    <div className="text-center mt-2 text-lg font-semibold text-green-700 dark:text-green-300">
+                    <div className="text-center mt-2 text-lg font-semibold text-primary">
                       {formatAmount(amount)}
                     </div>
                   </div>
 
                   {/* Risk */}
                   <div>
-                    <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-textPrimary">
+                    <label className="block mb-2 text-sm font-medium text-muted-foreground dark:text-textPrimary">
                       میزان ریسک
                     </label>
                     <Slider
@@ -134,20 +134,20 @@ const PlansList = ({ investmentPlansData }: PlansListProps) => {
                       value={[risk]}
                       onValueChange={([val]) => setRisk(val)}
                       className="h-3"
-                      trackClassName="bg-gray-200 dark:bg-darkBgHidden"
+                      trackClassName="bg-muted dark:bg-darkBgHidden"
                       rangeClassName={clsx(
                         risk === 0
-                          ? "bg-green-500"
+                          ? "bg-primary"
                           : risk === 1
-                          ? "bg-yellow-500"
-                          : "bg-red-500"
+                          ? "bg-premium"
+                          : "bg-destructive"
                       )}
                       thumbClassName={clsx(
                         risk === 0
-                          ? "border-green-600"
+                          ? "border-primary"
                           : risk === 1
-                          ? "border-yellow-500"
-                          : "border-red-600"
+                          ? "border-premium"
+                          : "border-destructive"
                       )}
                     />
                     <div className="flex ltr justify-between text-xs px-1 mt-2 font-medium">
@@ -157,11 +157,11 @@ const PlansList = ({ investmentPlansData }: PlansListProps) => {
                           className={clsx(
                             index === risk
                               ? risk === 0
-                                ? "text-green-600 dark:text-green-400 font-bold"
+                                ? "text-primary font-bold"
                                 : risk === 1
-                                ? "text-yellow-600 font-bold"
-                                : "text-red-600 font-bold"
-                              : "text-gray-500 dark:text-textSecondary"
+                                ? "text-premium font-bold"
+                                : "text-destructive font-bold"
+                              : "text-muted-foreground dark:text-textSecondary"
                           )}
                         >
                           {level}
@@ -172,7 +172,7 @@ const PlansList = ({ investmentPlansData }: PlansListProps) => {
 
                   {/* Duration */}
                   <div>
-                    <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-textPrimary">
+                    <label className="block mb-2 text-sm font-medium text-muted-foreground dark:text-textPrimary">
                       مدت سرمایه‌ گذاری
                     </label>
                     <Slider
@@ -182,17 +182,17 @@ const PlansList = ({ investmentPlansData }: PlansListProps) => {
                       value={[duration]}
                       onValueChange={([val]) => setDuration(val)}
                       className="h-3"
-                      rangeClassName="bg-indigo-500"
-                      thumbClassName="border-indigo-600"
+                      rangeClassName="bg-primary"
+                      thumbClassName="border-primary"
                     />
-                    <div className="flex ltr justify-between text-xs text-gray-600 dark:text-textSecondary px-1 mt-2 font-medium">
+                    <div className="flex ltr justify-between text-xs text-muted-foreground dark:text-textSecondary px-1 mt-2 font-medium">
                       {durations.map((d, i) => (
                         <span
                           key={i}
                           className={clsx(
                             i === duration
-                              ? "text-indigo-600 font-bold"
-                              : "text-gray-500 dark:text-textSecondary"
+                              ? "text-primary font-bold"
+                              : "text-muted-foreground dark:text-textSecondary"
                           )}
                         >
                           {d}
@@ -206,12 +206,12 @@ const PlansList = ({ investmentPlansData }: PlansListProps) => {
               <div className="mt-10 flex flex-col items-center gap-4">
                 <button
                   onClick={() => handleCreatePortfolio(item.label)}
-                  className="px-6 py-3 bg-gradient-to-r from-[#214254] to-emerald-800 text-white font-semibold rounded-xl shadow-lg hover:brightness-110 transition-all"
+                  className="px-6 py-3 bg-gradient-to-r from-[#214254] to-primary text-primary-foreground font-semibold rounded-xl shadow-lg hover:brightness-110 transition-all"
                 >
                   سبد شخصی من را بساز
                 </button>
 
-                <DrawerClose className="text-sm text-gray-400 dark:text-textSecondary underline mt-2 hover:text-gray-600 dark:hover:text-textSecondary transition-colors">
+                <DrawerClose className="text-sm text-muted-foreground dark:text-textSecondary underline mt-2 hover:text-muted-foreground dark:hover:text-textSecondary transition-colors">
                   <XIcon />
                 </DrawerClose>
               </div>

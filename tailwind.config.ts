@@ -76,12 +76,18 @@ export default {
   			surfaceSelected: 'hsl(var(--surface-selected))',
   			navActiveBg: 'hsl(var(--nav-active-bg))',
   			iconBrand: 'hsl(var(--icon-brand))',
-  			myPrimary: '#D52A16',
-  			mySecondary: '#214254',
-  			myGolden: '#F5A623',
-  			myBlue: '#3FC1C9',
-  			myGray: '#E0E0E0',
-  			myLightGray: '#F5F5F5',
+  			/*
+  			 * نام‌های قدیمی برند، ۲۵۵ جا در کد صدا زده می‌شوند. به‌جای ویرایش تک‌تک
+  			 * آن‌ها، خودِ تعریف به توکن‌های پالت وصل شد: هم رنگ خارج از پالت حذف
+  			 * می‌شود، هم این‌ها خودکار دو‌حالته می‌شوند.
+  			 * (myPrimary پیش‌تر #D52A16 بود — قرمز، نه سبزِ برند.)
+  			 */
+  			myPrimary: 'hsl(var(--primary))',
+  			mySecondary: 'hsl(var(--secondary))',
+  			myGolden: 'hsl(var(--premium))',
+  			myBlue: 'hsl(var(--accent))',
+  			myGray: 'hsl(var(--muted))',
+  			myLightGray: 'hsl(var(--muted))',
   			brand: 'var(--brand-color)',
   			bodyBg: 'var(--body-background)',
   			headerBg: 'var(--header-background)',

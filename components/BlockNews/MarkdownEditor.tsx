@@ -162,7 +162,7 @@ export default function MarkdownEditor({
   return (
     <div className={cn('space-y-3', className)}>
       {/* Toolbar */}
-      <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-2 md:p-3 flex flex-wrap gap-1 md:gap-2">
+      <div className="bg-muted border border-border rounded-xl p-2 md:p-3 flex flex-wrap gap-1 md:gap-2">
         {/* Main formatting buttons */}
         <div className="flex gap-1 md:gap-2 flex-wrap">
           {toolbarButtons.map((btn) => (
@@ -173,7 +173,7 @@ export default function MarkdownEditor({
               onClick={btn.onClick}
               disabled={isLoading || isUploadingImage}
               title={btn.title}
-              className="h-8 md:h-9 px-2 md:px-3 hover:bg-gray-200 dark:hover:bg-gray-800"
+              className="h-8 md:h-9 px-2 md:px-3 hover:bg-muted dark:hover:bg-card"
             >
               <btn.icon className="w-4 h-4" />
             </Button>
@@ -181,7 +181,7 @@ export default function MarkdownEditor({
         </div>
 
         {/* Divider */}
-        <div className="w-px bg-gray-200 dark:bg-gray-700 mx-1" />
+        <div className="w-px bg-muted mx-1" />
 
         {/* Image upload */}
         <div>
@@ -198,14 +198,14 @@ export default function MarkdownEditor({
             onClick={() => fileInputRef.current?.click()}
             disabled={isLoading || isUploadingImage || !onImageUpload}
             title="Upload Image"
-            className="h-8 md:h-9 px-2 md:px-3 hover:bg-gray-200 dark:hover:bg-gray-800"
+            className="h-8 md:h-9 px-2 md:px-3 hover:bg-muted dark:hover:bg-card"
           >
             <ImageIcon className="w-4 h-4" />
           </Button>
         </div>
 
         {/* Divider */}
-        <div className="w-px bg-gray-200 dark:bg-gray-700 mx-1" />
+        <div className="w-px bg-muted mx-1" />
 
         {/* Code block selector */}
         <div className="flex gap-1">
@@ -219,7 +219,7 @@ export default function MarkdownEditor({
               }
               disabled={isLoading}
               title={`${btn.label} Code`}
-              className="h-8 md:h-9 px-2 text-xs hover:bg-gray-200 dark:hover:bg-gray-800"
+              className="h-8 md:h-9 px-2 text-xs hover:bg-muted dark:hover:bg-card"
             >
               {btn.label}
             </Button>
@@ -236,7 +236,7 @@ export default function MarkdownEditor({
           variant="ghost"
           size="sm"
           onClick={() => setShowPreview(!showPreview)}
-          className="h-8 md:h-9 px-2 md:px-3 hover:bg-gray-200 dark:hover:bg-gray-800"
+          className="h-8 md:h-9 px-2 md:px-3 hover:bg-muted dark:hover:bg-card"
           title={showPreview ? 'Hide Preview' : 'Show Preview'}
         >
           {showPreview ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -253,14 +253,14 @@ export default function MarkdownEditor({
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
             disabled={isLoading}
-            className="flex-1 min-h-[400px] md:min-h-[600px] p-4 font-mono text-sm bg-white dark:bg-gray-950 border-2 border-gray-200 dark:border-gray-800 rounded-xl resize-none"
+            className="flex-1 min-h-[400px] md:min-h-[600px] p-4 font-mono text-sm bg-card border-2 border-border rounded-xl resize-none"
           />
         </div>
 
         {/* Preview */}
         {showPreview && (
           <div className="hidden md:flex flex-col">
-            <div className="flex-1 overflow-auto bg-white dark:bg-gray-950 border-2 border-gray-200 dark:border-gray-800 rounded-xl p-4 md:p-6">
+            <div className="flex-1 overflow-auto bg-card border-2 border-border rounded-xl p-4 md:p-6">
               <MarkdownPreview content={value} />
             </div>
           </div>
@@ -269,14 +269,14 @@ export default function MarkdownEditor({
 
       {/* Mobile preview toggle */}
       {showPreview && (
-        <div className="md:hidden bg-white dark:bg-gray-950 border-2 border-gray-200 dark:border-gray-800 rounded-xl p-4">
+        <div className="md:hidden bg-card border-2 border-border rounded-xl p-4">
           <h3 className="font-bold mb-4 text-right">پیش‌نمایش:</h3>
           <MarkdownPreview content={value} />
         </div>
       )}
 
       {/* Info */}
-      <div className="text-xs text-muted-foreground text-right bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg border border-blue-200 dark:border-blue-800">
+      <div className="text-xs text-muted-foreground text-right bg-primary/20 p-3 rounded-lg border border-primary">
         💡 <strong>نکات:</strong> از Markdown استفاده کنید. توپر: ** متن **، کج: * متن *، کد: ` متن `، لیست: - مورد، لینک: [متن](url)
       </div>
     </div>

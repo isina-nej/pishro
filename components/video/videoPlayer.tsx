@@ -153,20 +153,20 @@ export function VideoPlayer({
 
       {/* Loading Overlay */}
       {isLoading && !error && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-lg">
+        <div className="absolute inset-0 flex items-center justify-center bg-background bg-opacity-50 rounded-lg">
           <div className="flex flex-col items-center">
-            <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin" />
-            <p className="mt-4 text-white text-sm">در حال بارگذاری...</p>
+            <div className="w-12 h-12 border-4 border-border border-t-transparent rounded-full animate-spin" />
+            <p className="mt-4 text-primary-foreground text-sm">در حال بارگذاری...</p>
           </div>
         </div>
       )}
 
       {/* Error Overlay */}
       {error && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 rounded-lg">
+        <div className="absolute inset-0 flex items-center justify-center bg-background bg-opacity-75 rounded-lg">
           <div className="text-center px-4">
             <svg
-              className="w-16 h-16 mx-auto text-red-500 mb-4"
+              className="w-16 h-16 mx-auto text-destructive mb-4"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -178,13 +178,13 @@ export function VideoPlayer({
                 d="M12 8v4m0 4h.01M21 12a9 9 0 1-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <p className="text-white text-lg font-semibold mb-2">
+            <p className="text-primary-foreground text-lg font-semibold mb-2">
               خطا در پخش ویدیو
             </p>
-            <p className="text-gray-300 text-sm">{error}</p>
+            <p className="text-muted-foreground text-sm">{error}</p>
             <button
               onClick={() => window.location.reload()}
-              className="mt-4 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors"
+              className="mt-4 px-6 py-2 bg-primary hover:bg-primary text-primary-foreground rounded-md transition-colors"
             >
               تلاش مجدد
             </button>

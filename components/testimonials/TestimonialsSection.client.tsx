@@ -26,19 +26,19 @@ const TestimonialsSectionClient: React.FC<TestimonialsSectionClientProps> = ({
     <section className="relative w-full overflow-hidden py-20 lg:py-32">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-premium/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
       </div>
 
       {/* Content */}
       <div className="relative z-10">
         {/* Header */}
         <div className="text-center mb-16 px-4">
-          <span className="mb-4 inline-flex rounded-full border border-[#214254]/10 bg-white/55 px-4 py-2 text-[11px] font-bold text-[#214254] backdrop-blur-xl dark:border-white/10 dark:bg-white/5 dark:text-cyan-100">اعتماد ساخته‌شده با تجربه</span>
-          <h2 className="mb-4 text-4xl font-black tracking-tight text-[#112b3a] dark:text-white lg:text-5xl">
+          <span className="mb-4 inline-flex rounded-full border border-[#214254]/10 bg-card/55 px-4 py-2 text-[11px] font-bold text-[#214254] backdrop-blur-xl/10/5">اعتماد ساخته‌شده با تجربه</span>
+          <h2 className="mb-4 text-4xl font-black tracking-tight text-[#112b3a] lg:text-5xl">
             {title}
           </h2>
-          <p className="mx-auto max-w-2xl text-lg text-[#637987] dark:text-slate-400">
+          <p className="mx-auto max-w-2xl text-lg text-[#637987]">
             {subtitle}
           </p>
         </div>
@@ -58,7 +58,7 @@ const TestimonialsSectionClient: React.FC<TestimonialsSectionClientProps> = ({
         </div>
 
         {/* Bottom Gradient */}
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-500/20 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-premium/20 to-transparent" />
       </div>
     </section>
   );

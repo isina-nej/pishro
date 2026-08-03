@@ -29,10 +29,10 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
         transition={{ duration: 0.6 }}
         className="text-center mb-16"
       >
-        <h2 className="text-4xl font-bold mb-4 text-gray-800 dark:text-textPrimary">
+        <h2 className="text-4xl font-bold mb-4 text-foreground dark:text-textPrimary">
           تیم <span className="text-myPrimary">پیشرو</span>
         </h2>
-        <p className="text-lg text-gray-600 dark:text-textSecondary max-w-2xl mx-auto">
+        <p className="text-lg text-muted-foreground dark:text-textSecondary max-w-2xl mx-auto">
           بنیانگذاران و رهبران آکادمی مالی پیشرو سرمایه
         </p>
       </motion.div>
@@ -59,9 +59,9 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
 
                 {/* Name on Image */}
-                <div className="absolute bottom-6 right-6 text-white">
+                <div className="absolute bottom-6 right-6 text-primary-foreground">
                   <h3 className="text-2xl font-bold mb-1">{member.name}</h3>
-                  <p className="text-white/90 font-medium">{member.role}</p>
+                  <p className="text-primary-foreground/90 font-medium">{member.role}</p>
                 </div>
               </div>
             )}
@@ -71,7 +71,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
               {/* Name (if no image) */}
               {!member.image && (
                 <div className="mb-6">
-                  <h3 className="text-2xl font-bold mb-1 text-gray-800 dark:text-textPrimary">
+                  <h3 className="text-2xl font-bold mb-1 text-foreground dark:text-textPrimary">
                     {member.name}
                   </h3>
                   <p className="text-myPrimary font-medium">{member.role}</p>
@@ -83,7 +83,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
                 <div className="flex items-start gap-3 mb-6 rounded-xl border border-myPrimary/10 bg-myPrimary/5 p-4 dark:border-myPrimary/20">
                   <LuGraduationCap className="text-2xl text-myPrimary mt-1 flex-shrink-0" />
                   <div>
-                    <p className="font-medium text-gray-800 dark:text-textPrimary">
+                    <p className="font-medium text-foreground dark:text-textPrimary">
                       {member.education}
                     </p>
                   </div>
@@ -92,7 +92,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
 
               {/* Description */}
               {member.description && (
-                <p className="text-gray-600 dark:text-textSecondary leading-relaxed mb-6">
+                <p className="text-muted-foreground dark:text-textSecondary leading-relaxed mb-6">
                   {member.description}
                 </p>
               )}
@@ -100,7 +100,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
               {/* Specialties */}
               {member.specialties.length > 0 && (
                 <div className="mb-6">
-                  <h4 className="font-bold text-gray-800 dark:text-textPrimary mb-3 text-sm">
+                  <h4 className="font-bold text-foreground dark:text-textPrimary mb-3 text-sm">
                     تخصص‌های کلیدی:
                   </h4>
                   <div className="flex flex-wrap gap-2">
@@ -118,13 +118,13 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
 
               {/* Social Links */}
               {(member.linkedinUrl || member.emailUrl || member.twitterUrl || member.whatsappUrl || member.telegramUrl) && (
-                <div className="flex flex-wrap gap-3 pt-6 border-t border-slate-200 dark:border-borderColor">
+                <div className="flex flex-wrap gap-3 pt-6 border-t border-border dark:border-borderColor">
                   {member.linkedinUrl && (
                     <a
                       href={member.linkedinUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 min-w-[120px] bg-myPrimary/10 hover:bg-myPrimary text-myPrimary hover:text-white py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
+                      className="flex-1 min-w-[120px] bg-myPrimary/10 hover:bg-myPrimary text-myPrimary hover:text-primary-foreground py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
                     >
                       <LuLinkedin />
                       <span>لینکدین</span>
@@ -133,7 +133,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
                   {member.emailUrl && (
                     <a
                       href={member.emailUrl}
-                      className="flex-1 min-w-[120px] bg-mySecondary/10 hover:bg-mySecondary text-mySecondary hover:text-white py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
+                      className="flex-1 min-w-[120px] bg-mySecondary/10 hover:bg-mySecondary text-mySecondary hover:text-primary-foreground py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
                     >
                       <LuMail />
                       <span>ایمیل</span>
@@ -144,7 +144,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
                       href={member.twitterUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 min-w-[120px] bg-blue-100 hover:bg-blue-500 text-blue-500 hover:text-white py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
+                      className="flex-1 min-w-[120px] bg-primary hover:bg-primary text-primary hover:text-primary-foreground py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
                     >
                       <LuTwitter />
                       <span>توییتر</span>
@@ -155,7 +155,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
                       href={member.whatsappUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 min-w-[120px] bg-green-100 dark:bg-green-950 hover:bg-green-500 text-green-600 dark:text-green-400 hover:text-white py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
+                      className="flex-1 min-w-[120px] bg-primary hover:bg-primary text-primary hover:text-primary-foreground py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
                     >
                       <FaWhatsapp />
                       <span>واتساپ</span>
@@ -166,7 +166,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
                       href={member.telegramUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 min-w-[120px] bg-sky-100 hover:bg-sky-500 text-sky-600 hover:text-white py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
+                      className="flex-1 min-w-[120px] bg-primary hover:bg-primary text-primary hover:text-primary-foreground py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
                     >
                       <FaTelegramPlane />
                       <span>تلگرام</span>

@@ -32,14 +32,14 @@ const CertificatesGallery = ({ certificates }: CertificatesGalleryProps) => {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <div className="inline-flex items-center gap-2 bg-yellow-100 text-yellow-700 px-6 py-2 rounded-full mb-4">
+            <div className="inline-flex items-center gap-2 bg-premium text-premium px-6 py-2 rounded-full mb-4">
               <LuAward className="text-xl" />
               <span className="font-medium">افتخارات و دستاوردها</span>
             </div>
-            <h2 className="text-4xl font-bold mb-4 text-gray-800 dark:text-textPrimary">
+            <h2 className="text-4xl font-bold mb-4 text-foreground dark:text-textPrimary">
               گالری <span className="text-myPrimary">تقدیرنامه‌ها</span>
             </h2>
-            <p className="text-lg text-gray-600 dark:text-textSecondary max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground dark:text-textSecondary max-w-2xl mx-auto">
               مجموعه‌ای از افتخارات و دستاوردهای ما در مسیر خدمت‌رسانی به جامعه
             </p>
           </motion.div>
@@ -55,7 +55,7 @@ const CertificatesGallery = ({ certificates }: CertificatesGalleryProps) => {
                 onClick={() => setSelectedImage(index)}
                 className="group cursor-pointer"
               >
-                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gray-200 dark:bg-darkBgHidden shadow-lg hover:shadow-2xl transition-all duration-300">
+                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-muted dark:bg-darkBgHidden shadow-lg hover:shadow-2xl transition-all duration-300">
                   {/* Image */}
                   <Image
                     src={cert.image}
@@ -66,13 +66,13 @@ const CertificatesGallery = ({ certificates }: CertificatesGalleryProps) => {
 
                   {/* Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                    <div className="absolute bottom-0 left-0 right-0 p-6 text-primary-foreground">
                       <div className="flex items-center gap-2 mb-2">
-                        <LuAward className="text-yellow-400" />
+                        <LuAward className="text-premium" />
                         <h3 className="font-bold text-lg">{cert.title}</h3>
                       </div>
                       {cert.description && (
-                        <p className="text-sm text-gray-200">
+                        <p className="text-sm text-muted-foreground">
                           {cert.description}
                         </p>
                       )}
@@ -80,7 +80,7 @@ const CertificatesGallery = ({ certificates }: CertificatesGalleryProps) => {
                   </div>
 
                   {/* Badge */}
-                  <div className="absolute top-4 right-4 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                  <div className="absolute top-4 right-4 bg-premium text-premium px-3 py-1 rounded-full text-xs font-bold shadow-lg">
                     {index + 1}
                   </div>
                 </div>
@@ -96,7 +96,7 @@ const CertificatesGallery = ({ certificates }: CertificatesGalleryProps) => {
               transition={{ duration: 0.6, delay: 0.8 }}
               className="text-center mt-12"
             >
-              <p className="text-gray-600 dark:text-textSecondary mb-4">
+              <p className="text-muted-foreground dark:text-textSecondary mb-4">
                 و افتخارات بیشتری در مسیر خدمت‌رسانی به جامعه...
               </p>
             </motion.div>
@@ -111,12 +111,12 @@ const CertificatesGallery = ({ certificates }: CertificatesGalleryProps) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={() => setSelectedImage(null)}
-          className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-background/95 z-50 flex items-center justify-center p-4"
         >
           {/* Close Button */}
           <button
             onClick={() => setSelectedImage(null)}
-            className="absolute top-4 left-4 rounded-full bg-white/90 p-3 text-slate-900 backdrop-blur-sm transition-all hover:bg-white z-10"
+            className="absolute top-4 left-4 rounded-full bg-card/90 p-3 text-foreground backdrop-blur-sm transition-all hover:bg-card z-10"
           >
             <HiXMark className="text-2xl" />
           </button>
@@ -136,12 +136,12 @@ const CertificatesGallery = ({ certificates }: CertificatesGalleryProps) => {
           </motion.div>
 
           {/* Info */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 rounded-2xl bg-white/90 px-8 py-4 text-center text-slate-900 backdrop-blur-md max-w-2xl">
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 rounded-2xl bg-card/90 px-8 py-4 text-center text-foreground backdrop-blur-md max-w-2xl">
             <h3 className="font-bold text-xl mb-2">
               {certificates[selectedImage].title}
             </h3>
             {certificates[selectedImage].description && (
-              <p className="text-slate-600">
+              <p className="text-muted-foreground">
                 {certificates[selectedImage].description}
               </p>
             )}

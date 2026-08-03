@@ -23,17 +23,23 @@ const ResumeSection = ({ resumeItems }: ResumeSectionProps) => {
   };
 
   // Gradient color mapping - prevents Tailwind purging
+  /*
+   * کلیدها مقادیری هستند که در دیتابیس ذخیره شده‌اند (item.color) و نباید عوض
+   * شوند، وگرنه جستجو رد می‌شود و همه‌ی آیتم‌ها به رنگ پیش‌فرض می‌افتند.
+   * مقادیر، کلاس تیلویند خروجی‌اند و به پالت نگاشت شده‌اند. نوشتنشان به‌صورت
+   * رشته‌ی کامل عمدی است تا JIT تیلویند آن‌ها را در اسکن پیدا کند.
+   */
   const gradientColorMap: Record<string, string> = {
-    "from-blue-500 to-purple-500": "from-blue-500 to-purple-500",
-    "from-green-500 to-emerald-500": "from-green-500 to-emerald-500",
-    "from-orange-500 to-red-500": "from-orange-500 to-red-500",
-    "from-pink-500 to-rose-500": "from-pink-500 to-rose-500",
-    "from-purple-500 to-indigo-500": "from-purple-500 to-indigo-500",
-    "from-red-500 to-orange-500": "from-red-500 to-orange-500",
-    "from-yellow-500 to-orange-500": "from-yellow-500 to-orange-500",
-    "from-indigo-500 to-purple-500": "from-indigo-500 to-purple-500",
-    "from-teal-500 to-cyan-500": "from-teal-500 to-cyan-500",
-    "from-cyan-500 to-blue-500": "from-cyan-500 to-blue-500",
+    "from-blue-500 to-purple-500": "from-chart-4 to-accent",
+    "from-green-500 to-emerald-500": "from-primary to-success",
+    "from-orange-500 to-red-500": "from-premium to-destructive",
+    "from-pink-500 to-rose-500": "from-destructive to-chart-5",
+    "from-purple-500 to-indigo-500": "from-accent to-chart-4",
+    "from-red-500 to-orange-500": "from-destructive to-premium",
+    "from-yellow-500 to-orange-500": "from-premium to-chart-5",
+    "from-indigo-500 to-purple-500": "from-chart-4 to-accent",
+    "from-teal-500 to-cyan-500": "from-success to-chart-2",
+    "from-cyan-500 to-blue-500": "from-chart-2 to-chart-4",
   };
 
   if (resumeItems.length === 0) {
@@ -49,10 +55,10 @@ const ResumeSection = ({ resumeItems }: ResumeSectionProps) => {
         transition={{ duration: 0.6 }}
         className="text-center mb-16"
       >
-        <h2 className="text-4xl font-bold mb-4 text-gray-800 dark:text-textPrimary">
+        <h2 className="text-4xl font-bold mb-4 text-foreground dark:text-textPrimary">
           داستان <span className="text-myPrimary">پیشرو</span>
         </h2>
-        <p className="text-lg text-gray-600 dark:text-textSecondary max-w-2xl mx-auto">
+        <p className="text-lg text-muted-foreground dark:text-textSecondary max-w-2xl mx-auto">
           از آغاز تا امروز، با هدف واحد: ساختن آینده‌ای روشن‌تر برای
           سرمایه‌گذاران
         </p>
@@ -62,7 +68,7 @@ const ResumeSection = ({ resumeItems }: ResumeSectionProps) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {resumeItems.map((item, index) => {
           const IconComponent = getIconComponent(item.icon);
-          const gradientColor = gradientColorMap[item.color || ""] || "from-blue-500 to-purple-500";
+          const gradientColor = gradientColorMap[item.color || ""] || "from-primary to-accent";
 
           return (
             <motion.div
@@ -79,16 +85,16 @@ const ResumeSection = ({ resumeItems }: ResumeSectionProps) => {
 
               {/* Icon */}
               <div
-                className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${gradientColor} text-white mb-6 group-hover:scale-110 transition-transform relative z-10`}
+                className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${gradientColor} text-primary-foreground mb-6 group-hover:scale-110 transition-transform relative z-10`}
               >
                 <IconComponent className="text-4xl" />
               </div>
 
               {/* Content */}
-              <h3 className="text-2xl font-bold mb-4 text-gray-800 dark:text-textPrimary relative z-10">
+              <h3 className="text-2xl font-bold mb-4 text-foreground dark:text-textPrimary relative z-10">
                 {item.title}
               </h3>
-              <p className="text-gray-600 dark:text-textSecondary leading-relaxed relative z-10">
+              <p className="text-muted-foreground dark:text-textSecondary leading-relaxed relative z-10">
                 {item.description}
               </p>
             </motion.div>

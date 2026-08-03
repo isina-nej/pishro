@@ -14,13 +14,13 @@ const AboutUsContent = ({ aboutPageData }: AboutUsContentProps) => {
   if (!aboutPageData) {
     return (
       <div className="container-md py-20 text-center">
-        <p className="text-gray-600 dark:text-textSecondary">اطلاعات صفحه درباره ما در دسترس نیست</p>
+        <p className="text-muted-foreground dark:text-textSecondary">اطلاعات صفحه درباره ما در دسترس نیست</p>
       </div>
     );
   }
 
   return (
-    <div className="public-page-shell text-slate-900 dark:text-textPrimary">
+    <div className="public-page-shell text-foreground dark:text-textPrimary">
       {/* Hero با دیزاین مدرن */}
       <HeroSection
         title={aboutPageData.heroTitle}

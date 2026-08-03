@@ -68,7 +68,7 @@ export const InvestmentPlansHero = ({
   };
 
   return (
-    <section className="relative overflow-hidden pb-20 pt-28 text-white min-h-[90vh] flex items-center">
+    <section className="relative overflow-hidden pb-20 pt-28 text-primary-foreground min-h-[90vh] flex items-center">
       {/* Background Video with Parallax Effect */}
       <div className="absolute inset-0">
         <motion.div
@@ -91,7 +91,7 @@ export const InvestmentPlansHero = ({
           </video>
         </motion.div>
         {/* Enhanced Gradient Overlays */}
-        <div className="absolute inset-0 bg-black/60"></div>
+        <div className="absolute inset-0 bg-background/60"></div>
       </div>
 
       {/* Animated Floating Elements - Disabled on mobile for performance */}
@@ -107,7 +107,7 @@ export const InvestmentPlansHero = ({
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            className="absolute -top-20 -right-20 h-96 w-96 rounded-full bg-gradient-to-br from-emerald-500/30 to-teal-500/30 blur-3xl"
+            className="absolute -top-20 -right-20 h-96 w-96 rounded-full bg-gradient-to-br from-primary/30 to-primary/30 blur-3xl"
           />
           <motion.div
             animate={{
@@ -120,7 +120,7 @@ export const InvestmentPlansHero = ({
               ease: "easeInOut",
               delay: 1,
             }}
-            className="absolute -bottom-32 -left-32 h-[500px] w-[500px] rounded-full bg-gradient-to-tr from-blue-500/25 to-cyan-500/25 blur-3xl"
+            className="absolute -bottom-32 -left-32 h-[500px] w-[500px] rounded-full bg-gradient-to-tr from-primary/25 to-primary/25 blur-3xl"
           />
           <motion.div
             animate={{
@@ -133,14 +133,14 @@ export const InvestmentPlansHero = ({
               ease: "easeInOut",
               delay: 2,
             }}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-full bg-gradient-to-r from-violet-500/20 to-purple-500/20 blur-3xl"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-full bg-gradient-to-r from-accent/20 to-accent/20 blur-3xl"
           />
         </>
       )}
 
       {/* Static background for mobile */}
       {isMobile && (
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-blue-500/10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-primary/10" />
       )}
 
       <div className="container-xl relative z-10">
@@ -151,9 +151,9 @@ export const InvestmentPlansHero = ({
           className="flex flex-col gap-12"
         >
           {/* Header Section */}
-          <div className="mx-auto max-w-4xl space-y-8 rounded-[2.25rem] border border-white/15 bg-[#091a28]/50 p-7 text-center shadow-2xl backdrop-blur-2xl sm:p-10">
+          <div className="mx-auto max-w-4xl space-y-8 rounded-[2.25rem] border border-border/15 bg-[#091a28]/50 p-7 text-center shadow-2xl backdrop-blur-2xl sm:p-10">
             <motion.div variants={itemVariants} className="flex justify-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-6 py-2.5 text-sm font-medium text-emerald-300 shadow-lg shadow-emerald-500/10 backdrop-blur-sm">
+              <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-6 py-2.5 text-sm font-medium text-primary shadow-lg shadow-emerald-500/10 backdrop-blur-sm">
                 <Sparkles className="h-4 w-4" />
                 سبدهای سرمایه‌ گذاری پیشرو
               </span>
@@ -168,7 +168,7 @@ export const InvestmentPlansHero = ({
 
             <motion.p
               variants={itemVariants}
-              className="text-lg text-slate-300 md:text-xl max-w-2xl mx-auto leading-relaxed"
+              className="text-lg text-muted-foreground md:text-xl max-w-2xl mx-auto leading-relaxed"
             >
               {investmentPlansData.description}
             </motion.p>
@@ -177,7 +177,7 @@ export const InvestmentPlansHero = ({
               <Button
                 onClick={scrollToModels}
                 size="lg"
-                className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-xl shadow-emerald-500/25 hover:shadow-2xl hover:shadow-emerald-500/40 transition-all duration-300 px-8 py-6 text-lg font-semibold rounded-2xl"
+                className="bg-gradient-to-r from-primary to-primary hover:from-primary hover:to-primary text-primary-foreground shadow-xl shadow-emerald-500/25 hover:shadow-2xl hover:shadow-emerald-500/40 transition-all duration-300 px-8 py-6 text-lg font-semibold rounded-2xl"
               >
                 شروع سرمایه‌گذاری
               </Button>
@@ -194,33 +194,33 @@ export const InvestmentPlansHero = ({
                 label: "نوع سبد",
                 value: stats.totalPlans,
                 icon: <BarChart3 className="h-6 w-6" />,
-                gradient: "from-violet-500/20 to-purple-500/20",
-                iconBg: "bg-violet-500/20",
-                border: "border-violet-400/30",
+                gradient: "from-accent/20 to-accent/20",
+                iconBg: "bg-accent/20",
+                border: "border-accent/30",
               },
               {
                 label: "حداقل سرمایه (میلیون)",
                 value: stats.minInvestment,
                 icon: <Wallet className="h-6 w-6" />,
-                gradient: "from-blue-500/20 to-cyan-500/20",
-                iconBg: "bg-blue-500/20",
-                border: "border-blue-400/30",
+                gradient: "from-primary/20 to-primary/20",
+                iconBg: "bg-primary/20",
+                border: "border-primary/30",
               },
               {
                 label: "حداکثر بازدهی",
                 value: `${stats.maxReturn}٪`,
                 icon: <TrendingUp className="h-6 w-6" />,
-                gradient: "from-emerald-500/20 to-teal-500/20",
-                iconBg: "bg-emerald-500/20",
-                border: "border-emerald-400/30",
+                gradient: "from-primary/20 to-primary/20",
+                iconBg: "bg-primary/20",
+                border: "border-primary/30",
               },
               {
                 label: "تضمین سرمایه",
                 value: "100٪",
                 icon: <Shield className="h-6 w-6" />,
-                gradient: "from-amber-500/20 to-orange-500/20",
-                iconBg: "bg-amber-500/20",
-                border: "border-amber-400/30",
+                gradient: "from-premium/20 to-premium/20",
+                iconBg: "bg-premium/20",
+                border: "border-premium/30",
               },
             ].map((item) => (
               <motion.div
@@ -235,20 +235,20 @@ export const InvestmentPlansHero = ({
                       }
                     : undefined
                 }
-                className={`group relative overflow-hidden rounded-3xl border border-white/15 bg-[#091a28]/50 p-6 text-white ${
+                className={`group relative overflow-hidden rounded-3xl border border-border/15 bg-[#091a28]/50 p-6 text-primary-foreground ${
                   isMobile ? "backdrop-blur-sm" : "backdrop-blur-2xl"
-                } shadow-xl transition-all duration-300 hover:bg-white/15`}
+                } shadow-xl transition-all duration-300 hover:bg-card/15`}
               >
                 <div className="relative flex flex-col items-center text-center gap-4">
-                  <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15 text-white shadow-lg backdrop-blur-sm">
+                  <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-card/15 text-primary-foreground shadow-lg backdrop-blur-sm">
                     {item.icon}
                   </span>
 
                   <div className="flex flex-col gap-1">
-                    <span className="text-3xl font-bold text-white">
+                    <span className="text-3xl font-bold text-primary-foreground">
                       {item.value}
                     </span>
-                    <span className="text-sm text-slate-300 font-medium">
+                    <span className="text-sm text-muted-foreground font-medium">
                       {item.label}
                     </span>
                   </div>
@@ -271,7 +271,7 @@ export const InvestmentPlansHero = ({
             className="flex flex-col items-center gap-2 cursor-pointer"
             onClick={scrollToPlans}
           >
-            <span className="text-xs text-slate-400 font-medium">
+            <span className="text-xs text-muted-foreground font-medium">
               مشاهده سبدها
             </span>
             <motion.div
@@ -283,7 +283,7 @@ export const InvestmentPlansHero = ({
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="h-10 w-6 rounded-full border-2 border-white/30 flex items-start justify-center p-1"
+              className="h-10 w-6 rounded-full border-2 border-border/30 flex items-start justify-center p-1"
             >
               <motion.div
                 animate={{
@@ -294,7 +294,7 @@ export const InvestmentPlansHero = ({
                   repeat: Infinity,
                   ease: "easeInOut",
                 }}
-                className="h-2 w-2 rounded-full bg-white"
+                className="h-2 w-2 rounded-full bg-card"
               />
             </motion.div>
           </motion.div>
@@ -305,10 +305,10 @@ export const InvestmentPlansHero = ({
           onClick={scrollToPlans}
         >
           <div className="flex flex-col items-center gap-2">
-            <span className="text-xs text-slate-400 font-medium">
+            <span className="text-xs text-muted-foreground font-medium">
               مشاهده سبدها
             </span>
-            <ArrowDown className="h-5 w-5 text-white/60" />
+            <ArrowDown className="h-5 w-5 text-primary-foreground/60" />
           </div>
         </div>
       )}

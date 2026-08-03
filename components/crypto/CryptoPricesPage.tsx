@@ -76,10 +76,16 @@ const assetNames: Record<string, string> = {
   BTC: 'بیت‌کوین', ETH: 'اتریوم', SOL: 'سولانا', USDT: 'تتر', BNB: 'بایننس کوین', XRP: 'ریپل',
 };
 
+/*
+ * هر ارز رنگ متمایز خودش را دارد تا در فهرست از هم تفکیک شوند. sweep رنگ‌ها
+ * این تمایز را از بین برده بود و همه به یک سبز رسیده بودند.
+ * از chart-1..5 استفاده شده چون دقیقاً برای تفکیک سری‌ها در پالت تعریف شده‌اند —
+ * تنوع برمی‌گردد بدون آنکه رنگ تازه‌ای وارد شود.
+ */
 const assetTones: Record<string, string> = {
-  BTC: 'from-premium to-premium', ETH: 'from-primary to-accent',
-  SOL: 'from-primary to-accent', USDT: 'from-primary to-primary',
-  BNB: 'from-premium to-premium', XRP: 'from-muted to-primary',
+  BTC: 'from-premium to-chart-5', ETH: 'from-chart-4 to-primary',
+  SOL: 'from-chart-2 to-chart-4', USDT: 'from-success to-chart-2',
+  BNB: 'from-premium to-chart-3', XRP: 'from-chart-3 to-chart-4',
 };
 
 const faNumber = new Intl.NumberFormat('fa-IR', { maximumFractionDigits: 2 });

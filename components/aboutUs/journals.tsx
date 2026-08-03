@@ -32,10 +32,10 @@ const Journals = ({ news }: JournalsProps) => {
           <LuNewspaper className="text-xl" />
           <span className="font-medium">اطلاعیه‌ها و مقالات</span>
         </div>
-        <h2 className="text-4xl font-bold mb-4 text-gray-800 dark:text-textPrimary">
+        <h2 className="text-4xl font-bold mb-4 text-foreground dark:text-textPrimary">
           تازه‌ها و <span className="text-myPrimary">رویدادهای پیشرو</span>
         </h2>
-        <p className="text-lg text-gray-600 dark:text-textSecondary max-w-2xl mx-auto">
+        <p className="text-lg text-muted-foreground dark:text-textSecondary max-w-2xl mx-auto">
           آخرین اخبار، رویدادها و مقالات آموزشی ما را دنبال کنید
         </p>
       </motion.div>
@@ -51,7 +51,7 @@ const Journals = ({ news }: JournalsProps) => {
             className="public-page-card group rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
           >
             {/* Icon Badge */}
-            <div className="inline-flex bg-gradient-to-br from-myPrimary to-mySecondary text-white p-4 rounded-xl mb-6 group-hover:scale-110 transition-transform">
+            <div className="inline-flex bg-gradient-to-br from-myPrimary to-mySecondary text-primary-foreground p-4 rounded-xl mb-6 group-hover:scale-110 transition-transform">
               <LuNewspaper className="text-2xl" />
             </div>
 
@@ -63,12 +63,12 @@ const Journals = ({ news }: JournalsProps) => {
             </div>
 
             {/* Title */}
-            <h5 className="font-bold text-xl mb-4 text-gray-800 dark:text-textPrimary group-hover:text-myPrimary transition-colors line-clamp-2">
+            <h5 className="font-bold text-xl mb-4 text-foreground dark:text-textPrimary group-hover:text-myPrimary transition-colors line-clamp-2">
               {item.title}
             </h5>
 
             {/* Text */}
-            <p className="font-medium text-base leading-relaxed text-gray-600 dark:text-textSecondary mb-6 line-clamp-4">
+            <p className="font-medium text-base leading-relaxed text-muted-foreground dark:text-textSecondary mb-6 line-clamp-4">
               {item.excerpt}
             </p>
 

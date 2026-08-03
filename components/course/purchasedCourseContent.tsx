@@ -120,39 +120,39 @@ export default function PurchasedCourseContent({
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-20 dark:bg-bodyBg">
+    <div className="min-h-screen bg-muted pt-20 dark:bg-bodyBg">
       <div className="container-xl px-4 pb-12">
-      <header className="mb-6 overflow-hidden rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-borderColor dark:bg-cardBg md:p-7">
+      <header className="mb-6 overflow-hidden rounded-3xl border border-border bg-card p-5 shadow-sm dark:border-borderColor dark:bg-cardBg md:p-7">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full bg-mySecondary/10 px-3 py-1 text-xs font-bold text-mySecondary dark:bg-darkBgHidden dark:text-myGolden">
               <PlayCircle className="size-4" />
               پنل یادگیری
             </span>
-            <h1 className="mt-4 text-2xl font-black leading-9 text-slate-950 dark:text-textPrimary md:text-3xl">
+            <h1 className="mt-4 text-2xl font-black leading-9 text-foreground dark:text-textPrimary md:text-3xl">
               {course.subject}
             </h1>
             {course.instructor && (
-              <p className="mt-2 text-sm text-slate-500 dark:text-textSecondary">
+              <p className="mt-2 text-sm text-muted-foreground dark:text-textSecondary">
                 مدرس: {course.instructor}
               </p>
             )}
             {course.description && (
-              <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-600 dark:text-textSecondary">
+              <p className="mt-4 max-w-3xl text-sm leading-7 text-muted-foreground dark:text-textSecondary">
                 {course.description}
               </p>
             )}
           </div>
           <div className="grid grid-cols-2 gap-3 text-sm sm:min-w-80">
-            <div className="rounded-2xl bg-slate-50 p-4 dark:bg-darkBgHidden">
-              <p className="text-slate-500 dark:text-textSecondary">تعداد قسمت‌ها</p>
-              <p className="mt-2 text-2xl font-black text-slate-950 dark:text-textPrimary">
+            <div className="rounded-2xl bg-muted p-4 dark:bg-darkBgHidden">
+              <p className="text-muted-foreground dark:text-textSecondary">تعداد قسمت‌ها</p>
+              <p className="mt-2 text-2xl font-black text-foreground dark:text-textPrimary">
                 {allLessons.length.toLocaleString("fa-IR")}
               </p>
             </div>
-            <div className="rounded-2xl bg-slate-50 p-4 dark:bg-darkBgHidden">
-              <p className="text-slate-500 dark:text-textSecondary">قسمت فعلی</p>
-              <p className="mt-2 line-clamp-1 text-sm font-black text-slate-950 dark:text-textPrimary">
+            <div className="rounded-2xl bg-muted p-4 dark:bg-darkBgHidden">
+              <p className="text-muted-foreground dark:text-textSecondary">قسمت فعلی</p>
+              <p className="mt-2 line-clamp-1 text-sm font-black text-foreground dark:text-textPrimary">
                 {selectedLesson?.title || "ندارد"}
               </p>
             </div>
@@ -166,7 +166,7 @@ export default function PurchasedCourseContent({
             <>
               <div
                 ref={playerShellRef}
-                className="overflow-hidden rounded-3xl border border-slate-900 bg-black shadow-2xl shadow-slate-900/20"
+                className="overflow-hidden rounded-3xl border border-border bg-background shadow-2xl shadow-slate-900/20"
               >
                 <video
                   ref={videoRef}
@@ -195,9 +195,9 @@ export default function PurchasedCourseContent({
                     type="video/mp4"
                   />
                 </video>
-                <div className="border-t border-white/10 bg-slate-950 px-4 py-3 text-white">
+                <div className="border-t border-border/10 bg-card px-4 py-3 text-primary-foreground">
                   <div className="mb-3 flex items-center gap-3">
-                    <span className="w-11 text-xs font-bold text-white/70">
+                    <span className="w-11 text-xs font-bold text-primary-foreground/70">
                       {formatPlaybackTime(currentTime)}
                     </span>
                     <input
@@ -213,7 +213,7 @@ export default function PurchasedCourseContent({
                       aria-label="نوار پیشرفت ویدیو"
                       className="h-2 flex-1 accent-myGolden"
                     />
-                    <span className="w-11 text-left text-xs font-bold text-white/70">
+                    <span className="w-11 text-left text-xs font-bold text-primary-foreground/70">
                       {formatPlaybackTime(duration)}
                     </span>
                   </div>
@@ -223,7 +223,7 @@ export default function PurchasedCourseContent({
                       <button
                         type="button"
                         onClick={togglePlay}
-                        className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-bold text-slate-950 transition hover:bg-myGolden"
+                        className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2 text-sm font-bold text-foreground transition hover:bg-myGolden"
                       >
                         {isPlaying ? <Pause className="size-4" /> : <Play className="size-4" />}
                         {isPlaying ? "توقف" : "پخش"}
@@ -231,7 +231,7 @@ export default function PurchasedCourseContent({
                       <button
                         type="button"
                         onClick={() => skip(-10)}
-                        className="inline-flex items-center gap-1 rounded-full bg-white/10 px-3 py-2 text-xs font-bold transition hover:bg-white/20"
+                        className="inline-flex items-center gap-1 rounded-full bg-card/10 px-3 py-2 text-xs font-bold transition hover:bg-card/20"
                       >
                         <RotateCcw className="size-4" />
                         ۱۰ ثانیه
@@ -239,7 +239,7 @@ export default function PurchasedCourseContent({
                       <button
                         type="button"
                         onClick={() => skip(10)}
-                        className="inline-flex items-center gap-1 rounded-full bg-white/10 px-3 py-2 text-xs font-bold transition hover:bg-white/20"
+                        className="inline-flex items-center gap-1 rounded-full bg-card/10 px-3 py-2 text-xs font-bold transition hover:bg-card/20"
                       >
                         <RotateCw className="size-4" />
                         ۱۰ ثانیه
@@ -247,22 +247,22 @@ export default function PurchasedCourseContent({
                       <button
                         type="button"
                         onClick={toggleMute}
-                        className="inline-flex items-center gap-1 rounded-full bg-white/10 px-3 py-2 text-xs font-bold transition hover:bg-white/20"
+                        className="inline-flex items-center gap-1 rounded-full bg-card/10 px-3 py-2 text-xs font-bold transition hover:bg-card/20"
                       >
                         {isMuted ? <VolumeX className="size-4" /> : <Volume2 className="size-4" />}
                         {isMuted ? "صدا بسته" : "صدا"}
                       </button>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-2 text-xs font-bold text-white/80">
+                    <div className="flex flex-wrap items-center gap-2 text-xs font-bold text-primary-foreground/80">
                       <select
                         value={playbackRate}
                         onChange={(e) => changePlaybackRate(Number(e.target.value))}
                         aria-label="سرعت پخش"
-                        className="rounded-full border border-white/10 bg-white/10 px-3 py-2 text-white outline-none"
+                        className="rounded-full border border-border/10 bg-card/10 px-3 py-2 text-primary-foreground outline-none"
                       >
                         {[0.75, 1, 1.25, 1.5, 2].map((rate) => (
-                          <option key={rate} value={rate} className="bg-slate-950">
+                          <option key={rate} value={rate} className="bg-card">
                             {rate}x
                           </option>
                         ))}
@@ -270,7 +270,7 @@ export default function PurchasedCourseContent({
                       <button
                         type="button"
                         onClick={toggleFullscreen}
-                        className="inline-flex items-center gap-1 rounded-full bg-white/10 px-3 py-2 transition hover:bg-white/20"
+                        className="inline-flex items-center gap-1 rounded-full bg-card/10 px-3 py-2 transition hover:bg-card/20"
                       >
                         <Expand className="size-4" />
                         تمام صفحه
@@ -279,19 +279,19 @@ export default function PurchasedCourseContent({
                   </div>
                 </div>
               </div>
-              <section className="mt-5 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-borderColor dark:bg-cardBg">
+              <section className="mt-5 rounded-3xl border border-border bg-card p-5 shadow-sm dark:border-borderColor dark:bg-cardBg">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div>
-                    <h2 className="text-xl font-black text-slate-950 dark:text-textPrimary">
+                    <h2 className="text-xl font-black text-foreground dark:text-textPrimary">
                       {selectedLesson.title}
                     </h2>
                     {selectedLesson.description && (
-                      <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-600 dark:text-textSecondary">
+                      <p className="mt-2 max-w-3xl text-sm leading-7 text-muted-foreground dark:text-textSecondary">
                         {selectedLesson.description}
                       </p>
                     )}
                   </div>
-                  <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-600 dark:bg-darkBgHidden dark:text-textSecondary">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1.5 text-xs font-bold text-muted-foreground dark:bg-darkBgHidden dark:text-textSecondary">
                     <Clock3 className="size-4" />
                     {formatDuration(selectedLesson)}
                   </span>
@@ -299,21 +299,21 @@ export default function PurchasedCourseContent({
               </section>
             </>
           ) : (
-            <div className="rounded-2xl border border-dashed border-slate-300 bg-white py-12 text-center dark:border-borderColor dark:bg-cardBg">
-              <p className="text-slate-500 dark:text-textSecondary">
+            <div className="rounded-2xl border border-dashed border-border bg-card py-12 text-center dark:border-borderColor dark:bg-cardBg">
+              <p className="text-muted-foreground dark:text-textSecondary">
                 درسی برای نمایش وجود ندارد
               </p>
             </div>
           )}
         </main>
 
-        <aside className="h-fit rounded-3xl border border-slate-200 bg-white p-4 shadow-sm dark:border-borderColor dark:bg-cardBg xl:sticky xl:top-24">
-          <div className="mb-4 flex items-center justify-between border-b border-slate-100 pb-4 dark:border-borderColor">
-            <h3 className="flex items-center gap-2 text-base font-black text-slate-950 dark:text-textPrimary">
+        <aside className="h-fit rounded-3xl border border-border bg-card p-4 shadow-sm dark:border-borderColor dark:bg-cardBg xl:sticky xl:top-24">
+          <div className="mb-4 flex items-center justify-between border-b border-border pb-4 dark:border-borderColor">
+            <h3 className="flex items-center gap-2 text-base font-black text-foreground dark:text-textPrimary">
               <ListVideo className="size-5 text-mySecondary dark:text-myGolden" />
               قسمت‌های دوره
             </h3>
-            <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-500 dark:bg-darkBgHidden dark:text-textSecondary">
+            <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-bold text-muted-foreground dark:bg-darkBgHidden dark:text-textSecondary">
               {allLessons.length.toLocaleString("fa-IR")} درس
             </span>
           </div>
@@ -321,7 +321,7 @@ export default function PurchasedCourseContent({
             {course.hasChapters
               ? course.chapters.map((chapter) => (
                   <div key={chapter.id}>
-                    <p className="mb-2 px-1 text-xs font-extrabold text-slate-500 dark:text-textSecondary">
+                    <p className="mb-2 px-1 text-xs font-extrabold text-muted-foreground dark:text-textSecondary">
                       {chapter.title}
                     </p>
                     <ul className="space-y-2">
@@ -371,12 +371,12 @@ function LessonListItem({
         className={cn(
           "flex w-full items-center gap-3 rounded-xl p-3 text-right transition-colors",
           active
-            ? "bg-mySecondary text-white shadow-sm dark:bg-myGolden dark:text-slate-950"
-            : "text-slate-700 hover:bg-slate-50 dark:text-textPrimary dark:hover:bg-darkBgHidden"
+            ? "bg-mySecondary text-primary-foreground shadow-sm dark:bg-myGolden"
+            : "text-muted-foreground hover:bg-muted dark:text-textPrimary dark:hover:bg-darkBgHidden"
         )}
       >
         {lesson.thumbnail && (
-          <div className="relative h-12 w-16 shrink-0 overflow-hidden rounded-lg bg-slate-100 dark:bg-darkBgHidden">
+          <div className="relative h-12 w-16 shrink-0 overflow-hidden rounded-lg bg-muted dark:bg-darkBgHidden">
             <Image
               src={lesson.thumbnail}
               alt=""
@@ -394,8 +394,8 @@ function LessonListItem({
             className={cn(
               "mt-1 flex items-center gap-1 text-xs",
               active
-                ? "text-white/80 dark:text-slate-900/70"
-                : "text-slate-500 dark:text-textSecondary"
+                ? "text-primary-foreground/80/70"
+                : "text-muted-foreground dark:text-textSecondary"
             )}
           >
             <CheckCircle2 className="size-3.5" />

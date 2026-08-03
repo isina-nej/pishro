@@ -26,8 +26,8 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
               key={i}
               className={`w-4 h-4 ${
                 i < testimonial.rating
-                  ? "text-amber-400 fill-amber-400"
-                  : "text-slate-600 fill-slate-600"
+                  ? "text-premium fill-amber-400"
+                  : "text-muted-foreground fill-slate-600"
               }`}
               viewBox="0 0 20 20"
             >
@@ -37,13 +37,13 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
         </div>
 
         {/* Review Text */}
-        <p className="mb-6 line-clamp-4 flex-grow text-sm leading-relaxed text-[#405c6b] dark:text-slate-300">
+        <p className="mb-6 line-clamp-4 flex-grow text-sm leading-relaxed text-[#405c6b]">
           «{testimonial.content}»
         </p>
 
         {/* User Info */}
-        <div className="flex items-center gap-3 border-t border-[#214254]/10 pt-4 dark:border-white/10">
-          <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-amber-400/20">
+        <div className="flex items-center gap-3 border-t border-[#214254]/10 pt-4/10">
+          <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-premium/20">
             <Image
               src={testimonial.avatar}
               alt={testimonial.name}
@@ -52,10 +52,10 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
             />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="truncate text-sm font-semibold text-[#112b3a] dark:text-slate-100">
+            <p className="truncate text-sm font-semibold text-[#112b3a]">
               {testimonial.name}
             </p>
-            <p className="truncate text-xs text-[#637987] dark:text-slate-400">
+            <p className="truncate text-xs text-[#637987]">
               {testimonial.role}
               {testimonial.company && ` • ${testimonial.company}`}
             </p>

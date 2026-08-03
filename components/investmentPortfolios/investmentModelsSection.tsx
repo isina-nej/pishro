@@ -68,7 +68,7 @@ const InvestmentModelsSection = () => {
         "برای سرمایه‌گذاران حرفه‌ای که تمایل به همکاری حضوری و مدیریت مستقیم سرمایه دارند",
       icon: "Building2",
       color: "green",
-      gradient: "from-green-500 to-emerald-600",
+      gradient: "from-primary to-primary",
       features: [
         {
           icon: "Users",
@@ -146,7 +146,7 @@ const InvestmentModelsSection = () => {
         "برای سرمایه‌گذارانی که ترجیح می‌دهند از طریق سایت اقدام کنند و اطلاعات سیگنال‌ها را به صورت دیجیتال دریافت",
       icon: "Globe",
       color: "blue",
-      gradient: "from-blue-500 to-cyan-600",
+      gradient: "from-primary to-primary",
       features: [
         {
           icon: "CreditCard",
@@ -248,13 +248,13 @@ const InvestmentModelsSection = () => {
           return (
             <div
               key={idx}
-              className="flex items-start gap-4 p-4 rounded-lg bg-gray-50 dark:bg-darkBgHidden hover:bg-gray-100 dark:hover:bg-cardBg transition"
+              className="flex items-start gap-4 p-4 rounded-lg bg-muted dark:bg-darkBgHidden hover:bg-muted dark:hover:bg-cardBg transition"
             >
-              <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-white dark:bg-cardBg shadow-sm flex items-center justify-center">
+              <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-card dark:bg-cardBg shadow-sm flex items-center justify-center">
                 <Icon className="text-mySecondary" size={24} />
               </div>
               <div className="flex-1">
-                <p className="font-semibold text-gray-900 dark:text-textPrimary mb-1">
+                <p className="font-semibold text-foreground dark:text-textPrimary mb-1">
                   {contact.title}
                 </p>
                 {contact.link ? (
@@ -267,7 +267,7 @@ const InvestmentModelsSection = () => {
                     {contact.value}
                   </a>
                 ) : (
-                  <p className="text-gray-700 dark:text-textPrimary">{contact.value}</p>
+                  <p className="text-muted-foreground dark:text-textPrimary">{contact.value}</p>
                 )}
               </div>
             </div>
@@ -310,10 +310,10 @@ const InvestmentModelsSection = () => {
               >
                 {/* Header با gradient - با ارتفاع یکسان */}
                 <div
-                  className={`bg-gradient-to-br ${model.gradient} p-8 text-white min-h-[200px] md:min-h-[220px] flex flex-col justify-center`}
+                  className={`bg-gradient-to-br ${model.gradient} p-8 text-primary-foreground min-h-[200px] md:min-h-[220px] flex flex-col justify-center`}
                 >
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="w-16 h-16 rounded-2xl bg-white/15 text-white backdrop-blur-sm flex items-center justify-center">
+                    <div className="w-16 h-16 rounded-2xl bg-card/15 text-primary-foreground backdrop-blur-sm flex items-center justify-center">
                       <Icon size={32} />
                     </div>
                     <div>
@@ -322,7 +322,7 @@ const InvestmentModelsSection = () => {
                       </h3>
                     </div>
                   </div>
-                  <p className="text-white/90 leading-relaxed line-clamp-4">
+                  <p className="text-primary-foreground/90 leading-relaxed line-clamp-4">
                     {model.description}
                   </p>
                 </div>
@@ -332,7 +332,7 @@ const InvestmentModelsSection = () => {
                   <div>
                     {/* Features */}
                     <div className="mb-8">
-                      <h4 className="text-lg font-bold text-gray-900 dark:text-textPrimary mb-4">
+                      <h4 className="text-lg font-bold text-foreground dark:text-textPrimary mb-4">
                         ویژگی‌ها
                       </h4>
                       <div className="grid grid-cols-1 gap-4">
@@ -341,19 +341,19 @@ const InvestmentModelsSection = () => {
                           return (
                             <div
                               key={idx}
-                              className="flex items-start gap-3 p-3 rounded-xl bg-gray-50 dark:bg-darkBgHidden hover:bg-gray-100 dark:hover:bg-cardBg transition"
+                              className="flex items-start gap-3 p-3 rounded-xl bg-muted dark:bg-darkBgHidden hover:bg-muted dark:hover:bg-cardBg transition"
                             >
-                              <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-white dark:bg-cardBg shadow-sm flex items-center justify-center">
+                              <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-card dark:bg-cardBg shadow-sm flex items-center justify-center">
                                 <FeatureIcon
                                   className="text-mySecondary"
                                   size={20}
                                 />
                               </div>
                               <div>
-                                <p className="font-semibold text-gray-900 dark:text-textPrimary mb-1">
+                                <p className="font-semibold text-foreground dark:text-textPrimary mb-1">
                                   {feature.title}
                                 </p>
-                                <p className="text-sm text-gray-600 dark:text-textSecondary">
+                                <p className="text-sm text-muted-foreground dark:text-textSecondary">
                                   {feature.description}
                                 </p>
                               </div>
@@ -365,17 +365,17 @@ const InvestmentModelsSection = () => {
 
                     {/* Benefits */}
                     <div className="mb-8">
-                      <h4 className="text-lg font-bold text-gray-900 dark:text-textPrimary mb-4">
+                      <h4 className="text-lg font-bold text-foreground dark:text-textPrimary mb-4">
                         مزایا
                       </h4>
                       <ul className="space-y-3">
                         {model.benefits.map((benefit, idx) => (
                           <li key={idx} className="flex items-start gap-2">
                             <CheckCircle2
-                              className="flex-shrink-0 mt-0.5 text-green-600 dark:text-green-400"
+                              className="flex-shrink-0 mt-0.5 text-primary"
                               size={20}
                             />
-                            <span className="text-gray-700 dark:text-textPrimary">{benefit}</span>
+                            <span className="text-muted-foreground dark:text-textPrimary">{benefit}</span>
                           </li>
                         ))}
                       </ul>
@@ -389,7 +389,7 @@ const InvestmentModelsSection = () => {
                         ? scrollToCalculator()
                         : setOpenModal(model.type as "in-person" | "online")
                     }
-                    className={`group w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-gradient-to-r ${model.gradient} text-white font-bold text-lg hover:shadow-lg transition-all`}
+                    className={`group w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-gradient-to-r ${model.gradient} text-primary-foreground font-bold text-lg hover:shadow-lg transition-all`}
                   >
                     {model.ctaText}
                     <ArrowRight
@@ -423,10 +423,10 @@ const InvestmentModelsSection = () => {
               </svg>
             </div>
             <div className="flex-1">
-              <h4 className="text-lg font-bold text-gray-900 dark:text-textPrimary mb-2">
+              <h4 className="text-lg font-bold text-foreground dark:text-textPrimary mb-2">
                 {additionalInfo.title}
               </h4>
-              <p className="text-gray-700 dark:text-textPrimary leading-relaxed">
+              <p className="text-muted-foreground dark:text-textPrimary leading-relaxed">
                 {additionalInfo.content}
               </p>
             </div>
@@ -443,11 +443,11 @@ const InvestmentModelsSection = () => {
               >
                 <DialogContent className="sm:max-w-[600px]">
                   <DialogHeader>
-                    <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-textPrimary rtl">
+                    <DialogTitle className="text-2xl font-bold text-foreground dark:text-textPrimary rtl">
                       {models.find((m) => m.type === openModal)?.contactTitle ||
                         "اطلاعات تماس"}
                     </DialogTitle>
-                    <DialogDescription className="text-base text-gray-600 dark:text-textSecondary rtl">
+                    <DialogDescription className="text-base text-muted-foreground dark:text-textSecondary rtl">
                       {models.find((m) => m.type === openModal)
                         ?.contactDescription || ""}
                     </DialogDescription>
@@ -462,11 +462,11 @@ const InvestmentModelsSection = () => {
               >
                 <DrawerContent>
                   <DrawerHeader>
-                    <DrawerTitle className="text-2xl font-bold text-gray-900 dark:text-textPrimary rtl">
+                    <DrawerTitle className="text-2xl font-bold text-foreground dark:text-textPrimary rtl">
                       {models.find((m) => m.type === openModal)?.contactTitle ||
                         "اطلاعات تماس"}
                     </DrawerTitle>
-                    <DrawerDescription className="text-base text-gray-600 dark:text-textSecondary rtl">
+                    <DrawerDescription className="text-base text-muted-foreground dark:text-textSecondary rtl">
                       {models.find((m) => m.type === openModal)
                         ?.contactDescription || ""}
                     </DrawerDescription>
