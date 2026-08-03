@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { Star, BookOpen, Download, DollarSign, Calendar, User, Eye } from 'lucide-react';
 import Navbar from '@/components/navbar/navbar';
 import Footer from '@/components/footer';
+import BookmarkButton from '@/components/bookmarks/bookmarkButton';
 
 interface BookDetail {
   id: string;
@@ -223,6 +224,12 @@ export default function BookDetailPage() {
 
                 {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                  <BookmarkButton
+                    type="book"
+                    itemId={book.id}
+                    showLabel
+                    className="justify-center px-6 py-3 font-semibold"
+                  />
                   {book.fileUrl && (
                     <button className="flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors font-semibold">
                       <Download className="h-5 w-5" />

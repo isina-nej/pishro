@@ -18,7 +18,12 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <SessionProvider session={null}>
+    // بدون prop سشن: خود SessionProvider سشن را از /api/auth/session می‌گیرد.
+    // با `session={null}` سشن کلاینت روی null قفل می‌شد و useSession() برای
+    // کاربرِ وارد‌شده هم "unauthenticated" برمی‌گرداند. پاس‌دادن نتیجهٔ auth()
+    // هم درست بود ولی این layout را dynamic می‌کرد و رندر ایستای صفحات عمومی
+    // را از بین می‌برد.
+    <SessionProvider>
       <Navbar />
       {children}
       <Footer />

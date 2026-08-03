@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { ShoppingCart, Heart, ThumbsUp, ThumbsDown, Bookmark, Share2 } from "lucide-react";
+import { ShoppingCart, Heart, ThumbsUp, ThumbsDown, Share2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import RatingStars from "@/components/utils/RatingStars";
+import BookmarkButton from "@/components/bookmarks/bookmarkButton";
 import { useCartStore } from "@/stores/cart-store";
 import toast from "react-hot-toast";
 import type { Course } from "@/lib/types/db";
@@ -44,7 +45,6 @@ export default function CourseDetailModal({ course, trigger }: Props) {
   const [activeTab, setActiveTab] = useState("about");
   const [isFavorite, setIsFavorite] = useState(false);
   const [liked, setLiked] = useState<"LIKE" | "DISLIKE" | null>(null);
-  const [saved, setSaved] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const addToCart = useCartStore((state) => state.addToCart);
   const items = useCartStore((state) => state.items);
@@ -93,23 +93,6 @@ export default function CourseDetailModal({ course, trigger }: Props) {
       }
     } catch (error) {
       console.error("Error disliking course:", error);
-    }
-    setIsLoading(false);
-  };
-
-  const handleSave = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch("/api/courses/save", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ courseId: course.id }),
-      });
-      if (response.ok) {
-        setSaved(!saved);
-      }
-    } catch (error) {
-      console.error("Error saving course:", error);
     }
     setIsLoading(false);
   };
@@ -254,18 +237,11 @@ export default function CourseDetailModal({ course, trigger }: Props) {
             </button>
 
             {/* Save Button */}
-            <button
-              onClick={handleSave}
-              disabled={isLoading}
-              title="ذخیره"
-              className={`p-2 sm:p-2.5 rounded-lg font-medium transition flex items-center justify-center ${
-                saved
-                  ? "bg-purple-600 text-white"
-                  : "bg-black/20 text-white hover:bg-white/20 dark:bg-cardBg/20"
-              }`}
-            >
-              <Bookmark size={18} fill={saved ? "currentColor" : "none"} />
-            </button>
+            <BookmarkButton
+              type="course"
+              itemId={course.id}
+              className="size-9 rounded-lg border-0 bg-black/20 text-white hover:bg-white/20 dark:bg-cardBg/20"
+            />
 
             {/* Share Button */}
             <button

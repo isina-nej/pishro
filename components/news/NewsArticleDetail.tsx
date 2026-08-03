@@ -4,6 +4,7 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import MarkdownPreview from '@/components/BlockNews/MarkdownPreview';
 import ArticlePreviewCard from '@/components/news/ArticlePreviewCard';
+import BookmarkButton from '@/components/bookmarks/bookmarkButton';
 import type { NewsArticle } from "@prisma/client";
 import type { ProseMirrorNode, ProseMirrorMark } from "@/lib/utils/article-utils";
 import { format } from 'date-fns';
@@ -284,6 +285,7 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
             </Link>
             <span className="text-slate-400">/</span>
             <span className="text-slate-600 dark:text-slate-400">{readingTime} دقیقه مطالعه</span>
+            <BookmarkButton type="news" itemId={article.id} showLabel className="ms-auto" />
           </div>
 
           {/* Article Meta */}
