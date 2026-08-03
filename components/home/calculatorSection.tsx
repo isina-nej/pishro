@@ -97,9 +97,9 @@ const CalculatorSection = () => {
   }, [amount, duration, selectedFund]);
 
   return (
-    <section className="relative mt-8 min-h-[600px] w-full overflow-hidden py-8 text-foreground md:mt-20 md:min-h-screen">
+    <section className="relative mt-8 min-h-[600px] w-full overflow-hidden py-8 home-on-dark md:mt-20 md:min-h-screen">
       <div className="absolute inset-x-4 inset-y-8 rounded-[2.5rem] bg-gradient-to-br from-[#0F2A1F]/95 via-[#0B3D2E]/95 to-[#0A100E]/95 shadow-2xl shadow-[#0B3D2E]/25 md:inset-x-8" />
-      <div className="absolute inset-x-4 inset-y-8 rounded-[2.5rem] border border-border/10 bg-[url('/images/utiles/pattern1.svg')] opacity-[0.08] md:inset-x-8" />
+      <div className="absolute inset-x-4 inset-y-8 rounded-[2.5rem] border border-white/10 bg-[url('/images/utiles/pattern1.svg')] opacity-[0.08] md:inset-x-8" />
 
       <div className="container-xl relative z-10 flex flex-col justify-center py-10 md:py-16">
         {/* Header */}
@@ -107,14 +107,14 @@ const CalculatorSection = () => {
           <h4 className="font-bold text-3xl sm:text-4xl md:text-5xl mb-2 md:mb-4 mt-10 md:mt-0">
             ماشین حساب
           </h4>
-          <p className="text-base md:text-lg lg:text-xl leading-relaxed text-muted-foreground max-w-2xl mx-auto bg-[#0F2A1F]/70">
+          <p className="text-base md:text-lg lg:text-xl leading-relaxed home-on-dark-muted max-w-2xl mx-auto">
             با انتخاب نوع صندوق سرمایه‌ گذاری، مبلغ و مدت، میزان بازده خود را
             مشاهده کنید.
           </p>
         </div>
 
         {fundsLoading || !selectedFund ? (
-          <div className="flex items-center justify-center py-20 text-lg text-muted-foreground">
+          <div className="flex items-center justify-center py-20 text-lg home-on-dark-muted">
             در حال بارگذاری صندوق‌های سرمایه‌گذاری...
           </div>
         ) : (
@@ -124,9 +124,9 @@ const CalculatorSection = () => {
               {/* Controls */}
               <div className="flex flex-col w-full lg:w-7/12 gap-4 px-1 md:px-0">
                 {/* نوع صندوق سرمایه‌ گذاری */}
-                <div className="rounded-3xl border border-border/15 bg-card/[0.08] px-4 py-4 text-primary-foreground shadow-xl backdrop-blur-xl sm:px-6">
+                <div className="rounded-3xl border border-white/10 bg-black/20 px-4 py-4 shadow-xl backdrop-blur-xl sm:px-6">
                   <p className="text-center text-lg font-semibold mb-4 flex items-center justify-center gap-2">
-                    <BarChart3 size={22} className="text-foreground" />
+                    <BarChart3 size={22} className="home-on-dark" />
                     نوع صندوق سرمایه‌ گذاری
                   </p>
 
@@ -137,8 +137,8 @@ const CalculatorSection = () => {
                         onClick={() => handleSelectFund(fund)}
                         className={`px-5 py-2 rounded-full border transition-all  ${
                           selectedFund.key === fund.key
-                            ? "bg-mySecondary text-foreground border-mySecondary"
-                            : "bg-muted text-mySecondary border-border hover:bg-muted dark:border-borderColor dark:bg-darkBgHidden dark:text-textPrimary dark:hover:bg-cardBg"
+                            ? "bg-[#FBF9F5] text-[#0B3D2E] border-[#FBF9F5]"
+                            : "bg-white/10 home-on-dark border-white/20 hover:bg-white/15"
                         }`}
                       >
                         {fund.name}
@@ -148,16 +148,16 @@ const CalculatorSection = () => {
                 </div>
 
                 {/* مبلغ سرمایه‌ گذاری */}
-                <div className="rounded-3xl border border-border/15 bg-card/[0.08] px-4 py-4 text-primary-foreground shadow-xl backdrop-blur-xl sm:px-6">
+                <div className="rounded-3xl border border-white/10 bg-black/20 px-4 py-4 shadow-xl backdrop-blur-xl sm:px-6">
                   <p className="text-center text-lg font-bold mb-8 flex items-center justify-center gap-2">
-                    <Wallet size={24} className="text-foreground" />
+                    <Wallet size={24} className="home-on-dark" />
                     مبلغ سرمایه‌ گذاری
                   </p>
 
                   <div className="flex items-start justify-between gap-4">
                     <button
                       onClick={() => setAmount((prev) => getNext(prev, amountSteps))}
-                      className="flex size-6 items-center justify-center rounded-full border border-border/15 bg-card/10 text-2xl font-bold text-primary-foreground transition hover:bg-card/20 active:scale-95 md:size-10"
+                      className="flex size-6 items-center justify-center rounded-full border border-white/15 bg-white/10 text-2xl font-bold home-on-dark transition hover:bg-white/20 active:scale-95 md:size-10"
                     >
                       <span className="mt-1">+</span>
                     </button>
@@ -173,20 +173,20 @@ const CalculatorSection = () => {
                         }
                         trackStyle={{
                           background:
-                            "linear-gradient(90deg, rgb(244,184,150) 0%, rgb(218,222,241) 100%)",
+                            "linear-gradient(90deg, #B8913A 0%, #1A6B45 100%)",
                           height: 6,
                         }}
-                        railStyle={{ backgroundColor: "#DADEF1", height: 6 }}
+                        railStyle={{ backgroundColor: "rgba(232,240,235,0.25)", height: 6 }}
                         handleStyle={{
-                          borderColor: "#aaa",
-                          backgroundColor: "#fff",
+                          borderColor: "#B8913A",
+                          backgroundColor: "#FBF9F5",
                           width: 24,
                           height: 24,
                           marginTop: -9,
                         }}
                       />
                       {/* ⬇️ Label range below slider */}
-                      <div className="md:mx-2 mt-3 flex flex-row-reverse justify-between text-sm text-muted-foreground">
+                      <div className="md:mx-2 mt-3 flex flex-row-reverse justify-between text-sm home-on-dark-muted">
                         <p>{formatNumber(selectedFund.minAmount)} تومان</p>
                         <p>{formatNumber(selectedFund.maxAmount)} تومان</p>
                       </div>
@@ -194,29 +194,29 @@ const CalculatorSection = () => {
 
                     <button
                       onClick={() => setAmount((prev) => getPrev(prev, amountSteps))}
-                      className="flex size-6 items-center justify-center rounded-full border border-border/15 bg-card/10 text-2xl font-bold text-primary-foreground transition hover:bg-card/20 active:scale-95 md:size-10"
+                      className="flex size-6 items-center justify-center rounded-full border border-white/15 bg-white/10 text-2xl font-bold home-on-dark transition hover:bg-white/20 active:scale-95 md:size-10"
                     >
                       <span className="mt-1">−</span>
                     </button>
                   </div>
 
-                  <p className="mt-6 text-center font-bold text-foreground">
+                  <p className="mt-6 text-center font-bold home-on-dark">
                     {formatNumber(amount)}
                     <span className="font-normal">تومان</span>
                   </p>
                 </div>
 
                 {/* مدت سرمایه‌ گذاری */}
-                <div className="rounded-3xl border border-border/15 bg-card/[0.08] px-4 py-4 text-primary-foreground shadow-xl backdrop-blur-xl sm:px-6">
+                <div className="rounded-3xl border border-white/10 bg-black/20 px-4 py-4 shadow-xl backdrop-blur-xl sm:px-6">
                   <p className="text-center text-lg font-bold mb-8 flex items-center justify-center gap-2">
-                    <Clock size={24} className="text-foreground" />
+                    <Clock size={24} className="home-on-dark" />
                     مدت سرمایه‌ گذاری
                   </p>
 
                   <div className="flex items-center justify-between gap-4">
                     <button
                       onClick={() => setDuration((prev) => getNext(prev, durationSteps))}
-                      className="flex size-6 items-center justify-center rounded-full border border-border/15 bg-card/10 text-2xl font-bold text-primary-foreground transition hover:bg-card/20 active:scale-95 md:size-10"
+                      className="flex size-6 items-center justify-center rounded-full border border-white/15 bg-white/10 text-2xl font-bold home-on-dark transition hover:bg-white/20 active:scale-95 md:size-10"
                     >
                       <span className="mt-1">+</span>
                     </button>
@@ -232,20 +232,20 @@ const CalculatorSection = () => {
                         }
                         trackStyle={{
                           background:
-                            "linear-gradient(90deg, rgb(244,184,150) 0%, rgb(218,222,241) 100%)",
+                            "linear-gradient(90deg, #B8913A 0%, #1A6B45 100%)",
                           height: 6,
                         }}
-                        railStyle={{ backgroundColor: "#DADEF1", height: 6 }}
+                        railStyle={{ backgroundColor: "rgba(232,240,235,0.25)", height: 6 }}
                         handleStyle={{
-                          borderColor: "#aaa",
-                          backgroundColor: "#fff",
+                          borderColor: "#B8913A",
+                          backgroundColor: "#FBF9F5",
                           width: 24,
                           height: 24,
                           marginTop: -9,
                         }}
                       />
                       {/* ⬇️ Label range below slider */}
-                      <div className="sm:mx-2 mt-3 flex flex-row-reverse justify-between text-sm text-muted-foreground">
+                      <div className="sm:mx-2 mt-3 flex flex-row-reverse justify-between text-sm home-on-dark-muted">
                         <p>{selectedFund.minDuration} ماه</p>
                         <p>{selectedFund.maxDuration} ماه</p>
                       </div>
@@ -253,24 +253,24 @@ const CalculatorSection = () => {
 
                     <button
                       onClick={() => setDuration((prev) => getPrev(prev, durationSteps))}
-                      className="flex size-6 items-center justify-center rounded-full border border-border/15 bg-card/10 text-2xl font-bold text-primary-foreground transition hover:bg-card/20 active:scale-95 md:size-10"
+                      className="flex size-6 items-center justify-center rounded-full border border-white/15 bg-white/10 text-2xl font-bold home-on-dark transition hover:bg-white/20 active:scale-95 md:size-10"
                     >
                       <span className="mt-1">−</span>
                     </button>
                   </div>
 
-                  <p className="mt-6 text-center font-bold text-foreground">{duration} ماهه</p>
+                  <p className="mt-6 text-center font-bold home-on-dark">{duration} ماهه</p>
                 </div>
               </div>
 
               {/* Result */}
-              <div className="flex h-[-webkit-fill-available] w-full flex-col items-center justify-center rounded-3xl border border-border/15 bg-card/[0.08] p-4 shadow-2xl backdrop-blur-xl md:mb-0 md:mt-0 md:p-10 lg:w-5/12">
+              <div className="flex h-[-webkit-fill-available] w-full flex-col items-center justify-center rounded-3xl border border-white/10 bg-black/20 p-4 shadow-2xl backdrop-blur-xl md:mb-0 md:mt-0 md:p-10 lg:w-5/12">
                 <p className="text-center text-2xl font-bold mb-8">
                   نتیجه سرمایه‌ گذاریت
                 </p>
 
                 {/* Result box */}
-                <div className="relative flex flex-col items-center justify-center rounded-3xl border border-border/60 bg-card/90 px-4 pb-4 pt-8 text-3xl font-medium text-[#0B3D2E] shadow-2xl backdrop-blur-xl">
+                <div className="relative flex flex-col items-center justify-center rounded-3xl border border-border/60 bg-[#FBF9F5]/95 px-4 pb-4 pt-8 text-3xl font-medium text-primary shadow-2xl backdrop-blur-xl dark:bg-card/95 dark:text-foreground">
                   {/* قیمت و درصد سود */}
                   <div className="flex items-center justify-between w-full gap-4 mb-4">
                     {/* مبلغ کل - سمت راست */}
@@ -282,12 +282,12 @@ const CalculatorSection = () => {
                         separator=","
                         formattingFn={(n) => formatNumber(n)}
                       />
-                      <span className="mr-2 mt-1 text-lg font-bold text-muted-foreground dark:text-textSecondary">
+                      <span className="mr-2 mt-1 text-lg font-bold text-muted-foreground">
                         تومان
                       </span>
                     </div>
                     {/* درصد سود ماهیانه - سمت چپ */}
-                    <div className="flex flex-col items-center bg-gradient-to-br from-premium to-premium rounded-xl px-4 py-3 shadow-sm border border-premium">
+                    <div className="flex flex-col items-center rounded-xl border border-premium/40 bg-premium/15 px-4 py-3 shadow-sm">
                       <p className="text-xs text-premium font-medium mb-1">
                         سود ماهیانه
                       </p>
@@ -299,10 +299,10 @@ const CalculatorSection = () => {
 
                   {/* 🛡 پیام تضمین سرمایه */}
                   {selectedFund.description && (
-                    <div className="mt-4 flex items-start gap-2 bg-primary border border-primary rounded-xl px-4 py-3 text-primary text-sm font-medium shadow-sm">
+                    <div className="mt-4 flex items-start gap-2 rounded-xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm font-medium text-primary shadow-sm dark:border-primary/40 dark:bg-primary/15 dark:text-[#A8E0C2]">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="w-5 h-5 text-primary flex-shrink-0 mt-0.5"
+                        className="w-5 h-5 flex-shrink-0 mt-0.5"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -321,7 +321,7 @@ const CalculatorSection = () => {
 
                 <Link
                   href="/investment-plans"
-                  className="mt-10 px-16 w-full sm:w-fit bg-mySecondary border border-mySecondary text-foreground rounded-full py-4 font-bold text-center hover:bg-mySecondary/30 hover:border-border transition-colors"
+                  className="mt-10 px-16 w-full sm:w-fit bg-[#FBF9F5] border border-[#FBF9F5] text-[#0B3D2E] rounded-full py-4 font-bold text-center hover:bg-[#EDE9E1] transition-colors"
                 >
                   سرمایه‌ گذاری
                 </Link>
@@ -335,8 +335,8 @@ const CalculatorSection = () => {
           {/* 📍 مشاوره حضوری */}
           <Drawer>
             <DrawerTrigger asChild>
-              <button className="group relative flex w-full items-center justify-center gap-2 rounded-xl border border-primary bg-card px-10 py-4 font-medium text-mySecondary shadow-lg shadow-green-950/5 transition-all hover:border-primary hover:bg-primary sm:w-auto dark:border-borderColor dark:bg-cardBg dark:text-textPrimary dark:hover:bg-darkBgHidden">
-                <PhoneCall className="h-5 w-5 text-primary transition-transform group-hover:scale-110" />
+              <button className="group relative flex w-full items-center justify-center gap-2 rounded-xl border border-primary bg-card px-10 py-4 font-medium text-foreground shadow-lg shadow-green-950/5 transition-all hover:border-primary hover:bg-primary hover:text-primary-foreground sm:w-auto">
+                <PhoneCall className="h-5 w-5 text-primary transition-transform group-hover:scale-110 group-hover:text-primary-foreground" />
                 رزرو مشاوره حضوری
               </button>
             </DrawerTrigger>
@@ -345,10 +345,10 @@ const CalculatorSection = () => {
                 <div className="flex justify-center">
                   <PhoneCall className="text-primary h-10 w-10" />
                 </div>
-                <DrawerTitle className="text-2xl font-bold text-muted-foreground mt-2">
+                <DrawerTitle className="text-2xl font-bold text-foreground mt-2">
                   مشاوره حضوری
                 </DrawerTitle>
-                <DrawerDescription className="text-center text-muted-foreground dark:text-textSecondary mt-1">
+                <DrawerDescription className="text-center text-muted-foreground mt-1">
                   برای رزرو مشاوره حضوری با ما تماس بگیرید:
                 </DrawerDescription>
               </DrawerHeader>
@@ -358,13 +358,13 @@ const CalculatorSection = () => {
                 </p>
                 <a
                   href={`tel:${contactInfo.mobileTel}`}
-                  className="inline-block px-6 py-2 bg-primary hover:bg-primary text-primary-foreground rounded-md font-medium transition"
+                  className="inline-block px-6 py-2 bg-primary hover:bg-[#1A6B45] text-primary-foreground rounded-md font-medium transition"
                 >
                   تماس بگیرید
                 </a>
               </div>
               <DrawerFooter>
-                <DrawerClose className="block mt-6 text-sm text-muted-foreground dark:text-textSecondary hover:text-muted-foreground dark:hover:text-textSecondary underline text-center">
+                <DrawerClose className="block mt-6 text-sm text-muted-foreground hover:text-foreground underline text-center">
                   <XIcon className="inline-block" />
                 </DrawerClose>
               </DrawerFooter>
@@ -374,8 +374,8 @@ const CalculatorSection = () => {
           {/* 💻 مشاوره آنلاین */}
           <Drawer>
             <DrawerTrigger asChild>
-              <button className="group relative flex w-full items-center justify-center gap-2 rounded-xl border border-primary bg-card px-10 py-4 font-medium text-mySecondary shadow-lg shadow-primary/10 transition-all hover:border-primary hover:bg-primary sm:w-auto dark:border-borderColor dark:bg-cardBg dark:text-textPrimary dark:hover:bg-darkBgHidden">
-                <Send className="h-5 w-5 text-primary transition-transform group-hover:scale-110" />
+              <button className="group relative flex w-full items-center justify-center gap-2 rounded-xl border border-primary bg-card px-10 py-4 font-medium text-foreground shadow-lg shadow-primary/10 transition-all hover:border-primary hover:bg-primary hover:text-primary-foreground sm:w-auto">
+                <Send className="h-5 w-5 text-primary transition-transform group-hover:scale-110 group-hover:text-primary-foreground" />
                 رزرو مشاوره آنلاین
               </button>
             </DrawerTrigger>
@@ -384,10 +384,10 @@ const CalculatorSection = () => {
                 <div className="flex justify-center">
                   <Send className="text-primary h-10 w-10" />
                 </div>
-                <DrawerTitle className="text-2xl font-bold text-muted-foreground mt-2">
+                <DrawerTitle className="text-2xl font-bold text-foreground mt-2">
                   مشاوره آنلاین
                 </DrawerTitle>
-                <DrawerDescription className="text-center text-muted-foreground dark:text-textSecondary mt-1">
+                <DrawerDescription className="text-center text-muted-foreground mt-1">
                   برای دریافت مشاوره آنلاین از طریق تلگرام پیام دهید:
                 </DrawerDescription>
               </DrawerHeader>
@@ -398,13 +398,13 @@ const CalculatorSection = () => {
                 <Link
                   href="https://t.me/amirhossein_v2"
                   target="_blank"
-                  className="inline-block px-6 py-2 bg-primary hover:bg-primary text-primary-foreground rounded-md font-medium transition"
+                  className="inline-block px-6 py-2 bg-primary hover:bg-[#1A6B45] text-primary-foreground rounded-md font-medium transition"
                 >
                   پیام در تلگرام
                 </Link>
               </div>
               <DrawerFooter>
-                <DrawerClose className="block mt-6 text-sm text-muted-foreground dark:text-textSecondary hover:text-muted-foreground dark:hover:text-textSecondary underline text-center">
+                <DrawerClose className="block mt-6 text-sm text-muted-foreground hover:text-foreground underline text-center">
                   <XIcon className="inline-block" />
                 </DrawerClose>
               </DrawerFooter>

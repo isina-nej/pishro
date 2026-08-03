@@ -61,7 +61,7 @@ const CoursesSec = () => {
               />
             </div>
           </h2>
-          <p className="text-[#8A8A8A] mt-1 sm:mt-1.5 md:mt-2 font-bold text-xs sm:text-sm md:text-base max-w-xl">
+          <p className="text-muted-foreground mt-1 sm:mt-1.5 md:mt-2 font-bold text-xs sm:text-sm md:text-base max-w-xl">
             این دوره‌ها منتخب بهترین دوره‌های مجموعه ماست
           </p>
         </div>

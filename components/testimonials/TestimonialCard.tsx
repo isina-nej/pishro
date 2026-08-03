@@ -26,8 +26,8 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
               key={i}
               className={`w-4 h-4 ${
                 i < testimonial.rating
-                  ? "text-premium fill-amber-400"
-                  : "text-muted-foreground fill-slate-600"
+                  ? "text-premium fill-premium"
+                  : "text-muted-foreground/40 fill-muted-foreground/40"
               }`}
               viewBox="0 0 20 20"
             >
@@ -37,12 +37,12 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
         </div>
 
         {/* Review Text */}
-        <p className="mb-6 line-clamp-4 flex-grow text-sm leading-relaxed text-[#405c6b]">
+        <p className="mb-6 line-clamp-4 flex-grow text-sm leading-relaxed text-muted-foreground">
           «{testimonial.content}»
         </p>
 
         {/* User Info */}
-        <div className="flex items-center gap-3 border-t border-primary/10 pt-4/10">
+        <div className="flex items-center gap-3 border-t border-border pt-4">
           <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-premium/20">
             <Image
               src={testimonial.avatar}
@@ -52,10 +52,10 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
             />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="truncate text-sm font-semibold text-[#0B3D2E]">
+            <p className="truncate text-sm font-semibold text-foreground">
               {testimonial.name}
             </p>
-            <p className="truncate text-xs text-[#637987]">
+            <p className="truncate text-xs text-muted-foreground">
               {testimonial.role}
               {testimonial.company && ` • ${testimonial.company}`}
             </p>

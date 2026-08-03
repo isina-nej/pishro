@@ -34,11 +34,11 @@ const TestimonialsSectionClient: React.FC<TestimonialsSectionClientProps> = ({
       <div className="relative z-10">
         {/* Header */}
         <div className="text-center mb-16 px-4">
-          <span className="mb-4 inline-flex rounded-full border border-primary/15 bg-card/55 px-4 py-2 text-[11px] font-bold text-primary backdrop-blur-xl/10/5">اعتماد ساخته‌شده با تجربه</span>
-          <h2 className="mb-4 text-4xl font-black tracking-tight text-[#0B3D2E] lg:text-5xl">
+          <span className="mb-4 inline-flex rounded-full border border-primary/20 bg-card/70 px-4 py-2 text-[11px] font-bold text-primary backdrop-blur-xl">اعتماد ساخته‌شده با تجربه</span>
+          <h2 className="mb-4 text-4xl font-black tracking-tight text-foreground lg:text-5xl">
             {title}
           </h2>
-          <p className="mx-auto max-w-2xl text-lg text-[#637987]">
+          <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
             {subtitle}
           </p>
         </div>
@@ -46,10 +46,10 @@ const TestimonialsSectionClient: React.FC<TestimonialsSectionClientProps> = ({
         {/* Testimonials Container with Fade Effect */}
         <div className="relative w-full h-96 flex items-center">
           {/* Left Fade Mask */}
-          <div className="pointer-events-none absolute bottom-0 left-0 top-0 z-20 w-32 bg-gradient-to-r from-[#edf5f7] via-[#edf5f7]/80 to-transparent dark:from-[#081722] dark:via-[#081722]/80 lg:w-48" />
+          <div className="pointer-events-none absolute bottom-0 left-0 top-0 z-20 w-32 bg-gradient-to-r from-background via-background/80 to-transparent lg:w-48" />
 
           {/* Right Fade Mask */}
-          <div className="pointer-events-none absolute bottom-0 right-0 top-0 z-20 w-32 bg-gradient-to-l from-[#edf5f7] via-[#edf5f7]/80 to-transparent dark:from-[#081722] dark:via-[#081722]/80 lg:w-48" />
+          <div className="pointer-events-none absolute bottom-0 right-0 top-0 z-20 w-32 bg-gradient-to-l from-background via-background/80 to-transparent lg:w-48" />
 
           {/* Scrollable Track */}
           <div className="w-full overflow-hidden">

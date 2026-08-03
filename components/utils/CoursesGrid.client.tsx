@@ -83,8 +83,8 @@ export default function CoursesGridClient({ courses }: Props) {
 
         {/* Title & Description */}
         <div className="flex-1 flex flex-col items-center">
-          <span className="mb-3 rounded-full border border-primary/15 bg-card/55 px-4 py-2 text-[11px] font-bold text-primary backdrop-blur-xl/10/5">مسیر یادگیری شما</span>
-          <h2 className="flex items-center justify-center gap-2 text-2xl font-black tracking-tight text-[#0B3D2E] sm:gap-2.5 sm:text-3xl md:gap-3 md:text-4xl lg:text-5xl">
+          <span className="mb-3 rounded-full border border-primary/20 bg-card/70 px-4 py-2 text-[11px] font-bold text-primary backdrop-blur-xl">مسیر یادگیری شما</span>
+          <h2 className="flex items-center justify-center gap-2 text-2xl font-black tracking-tight text-foreground sm:gap-2.5 sm:text-3xl md:gap-3 md:text-4xl lg:text-5xl">
             <span>دوره‌ها</span>
             <div className="relative w-12 h-6 sm:w-14 sm:h-7 md:w-16 md:h-8">
               <Image
@@ -95,7 +95,7 @@ export default function CoursesGridClient({ courses }: Props) {
               />
             </div>
           </h2>
-          <p className="text-[#8A8A8A] mt-1 sm:mt-1.5 md:mt-2 font-bold text-xs sm:text-sm md:text-base max-w-xl">
+          <p className="text-muted-foreground mt-1 sm:mt-1.5 md:mt-2 font-bold text-xs sm:text-sm md:text-base max-w-xl">
             این دوره‌ها منتخب بهترین دوره‌های مجموعه ماست
           </p>
         </div>
@@ -104,7 +104,7 @@ export default function CoursesGridClient({ courses }: Props) {
         <div className="relative flex items-center justify-center lg:justify-end gap-2 sm:gap-3 mt-3 lg:mt-2 w-full lg:w-[340px] px-4 lg:px-0">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-1 rounded-full border border-border/60 bg-card/60 px-4 py-2 text-xs font-bold text-[#0B3D2E] shadow-sm backdrop-blur-xl transition hover:bg-card/80 hover:shadow-md/10/5 sm:text-sm">
+              <button className="flex items-center gap-1 rounded-full border border-border bg-card/80 px-4 py-2 text-xs font-bold text-primary shadow-sm backdrop-blur-xl transition hover:bg-card sm:text-sm">
                 <ChevronDown size={16} />
                 <span>{selectedCategory.label}</span>
               </button>

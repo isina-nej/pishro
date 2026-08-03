@@ -180,7 +180,7 @@ const OverlayText = ({
             viewport={{ once: false, amount: 0.1 }}
             onViewportEnter={i === 0 ? () => onEnter(true) : undefined}
             onViewportLeave={i === 0 ? () => onEnter(false) : undefined}
-            className="w-full max-w-5xl rounded-[2rem] border border-border/10 bg-card/[0.055] p-6 text-xl font-bold text-primary-foreground shadow-2xl shadow-black/15 backdrop-blur-xl !leading-[1.65] sm:p-8 sm:text-2xl md:text-3xl lg:text-4xl"
+            className="home-on-dark w-full max-w-5xl rounded-[2rem] border border-white/10 bg-[#0F2A1F]/55 p-6 text-xl font-bold shadow-2xl shadow-black/15 backdrop-blur-xl !leading-[1.65] sm:p-8 sm:text-2xl md:text-3xl lg:text-4xl"
           >
             {text.includes("پیشرو") ? (
               <>
@@ -211,22 +211,22 @@ const OverlayMainText = ({
   ctaLink?: string;
 }) => (
   <div className="h-screen container-xl pt-28 sm:pt-32 md:pt-40 px-4 sm:px-6 flex flex-col items-start justify-start">
-    <div className="max-w-4xl rounded-[2.25rem] border border-border/20 bg-[#0F2A1F]/55 p-7 shadow-2xl shadow-black/20 backdrop-blur-2xl sm:p-10 lg:p-12">
-      <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-card/10 px-4 py-2 text-xs text-primary">
-        <span className="h-2 w-2 rounded-full bg-[#D4B06A] shadow-[0_0_16px_#D4B06A]" />
+    <div className="max-w-4xl rounded-[2.25rem] border border-white/15 bg-[#0F2A1F]/72 p-7 shadow-2xl shadow-black/20 backdrop-blur-2xl sm:p-10 lg:p-12">
+      <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#D4B06A]/35 bg-black/20 px-4 py-2 text-xs text-[#D4B06A]">
+        <span className="h-2 w-2 rounded-full bg-[#D4B06A]" />
         آموزش، تحلیل و سرمایه‌گذاری در یک مسیر
       </div>
-      <h1 className="max-w-3xl text-4xl font-black leading-[1.35] tracking-tight text-foreground sm:text-5xl lg:text-6xl xl:text-7xl">
+      <h1 className="home-on-dark max-w-3xl text-4xl font-black leading-[1.35] tracking-tight sm:text-5xl lg:text-6xl xl:text-7xl">
         {title || "خوش آمدید به خانواده بزرگ پیشرو"}
       </h1>
-      <p className="mt-5 max-w-2xl text-base leading-8 text-muted-foreground/85">
+      <p className="home-on-dark-muted mt-5 max-w-2xl text-base leading-8">
         تصمیم مالی بهتر از وضوح شروع می‌شود؛ دانش، ابزار و همراهی تخصصی برای ساختن آینده‌ای مطمئن‌تر.
       </p>
       <motion.a
         whileHover={{ y: -3 }}
         whileTap={{ scale: 0.98 }}
         href={ctaLink || "/business-consulting"}
-        className="mt-8 inline-flex items-center rounded-full bg-card px-7 py-3.5 text-sm font-black text-[#0B3D2E] shadow-xl shadow-black/15 transition hover:bg-primary sm:text-base"
+        className="mt-8 inline-flex items-center rounded-full bg-[#FBF9F5] px-7 py-3.5 text-sm font-black text-[#0B3D2E] shadow-xl shadow-black/15 transition hover:bg-[#1A6B45] hover:text-white sm:text-base"
       >
         {subtitle || "شروع مسیر موفقیت"}
       </motion.a>

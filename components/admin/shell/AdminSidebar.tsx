@@ -18,6 +18,7 @@ import {
   Settings,
   Ticket,
   TrendingUp,
+  LayoutTemplate,
   Users,
   UsersRound,
   X,
@@ -67,6 +68,7 @@ export const navSections: NavSection[] = [
       { href: '/admin/library', label: 'کتابخانه', icon: BookOpen, key: 'library', roles: ['ADMIN', 'MODERATOR'] },
       { href: '/admin/courses', label: 'دوره‌ها', icon: GraduationCap, key: 'courses', roles: ['ADMIN', 'MODERATOR'] },
       { href: '/admin/investment-funds', label: 'صندوق‌های سرمایه‌گذاری', icon: TrendingUp, key: 'investment-funds', roles: ['ADMIN', 'MODERATOR'] },
+      { href: '/admin/landing', label: 'لندینگ / CMS', icon: LayoutTemplate, key: 'landing', roles: ['ADMIN', 'MODERATOR'] },
     ],
   },
   {

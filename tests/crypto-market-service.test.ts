@@ -121,3 +121,53 @@ test('falls back to CoinPaprika when CoinGecko is unavailable', async () => {
   assert.equal(result.providers.coingecko, 'unavailable');
   assert.equal(result.providers.coinpaprika, 'live');
 });
+
+test('falls back to Nobitex when CoinGecko and CoinPaprika are unavailable', async () => {
+  process.env.COINGECKO_API_URL = 'https://cg-down.test';
+  process.env.COINOBRIKA_API_URL = 'https://cp-down.test';
+  process.env.BINANCE_API_URL = 'https://binance-down.test';
+  process.env.NOBITEX_API_URL = 'https://nobitex-only.test';
+  global.fetch = async (input) => {
+    const url = String(input);
+    if (url.includes('cg-down') || url.includes('cp-down') || url.includes('binance-down')) {
+      return new Response('failed', { status: 503 });
+    }
+    if (url.includes('nobitex-only.test')) {
+      return json({
+        stats: {
+          'usdt-irt': { latest: '60000' },
+          'btc-irt': { latest: '6000000', dayChange: '1.5', volumeSrc: '10' },
+          'eth-irt': { latest: '200000', dayChange: '-0.5', volumeSrc: '5' },
+        },
+      });
+    }
+    throw new Error(`Unexpected URL ${url}`);
+  };
+
+  const result = await getCryptoMarketData({ forceRefresh: true });
+  assert.ok(result.assets.length >= 2);
+  const btc = result.assets.find((asset) => asset.symbol === 'BTC');
+  assert.ok(btc);
+  assert.equal(btc!.priceUsd, 100);
+  assert.equal(btc!.priceIrt, 6_000_000);
+  assert.equal(btc!.sources.market, 'nobitex');
+  assert.equal(result.providers.nobitex, 'live');
+  assert.equal(result.providers.coingecko, 'unavailable');
+  assert.equal(result.providers.coinpaprika, 'unavailable');
+  assert.equal(result.global.source, 'nobitex');
+});
+
+test('returns an empty success payload when every provider is down', async () => {
+  process.env.COINGECKO_API_URL = 'https://cg-all-down.test';
+  process.env.COINOBRIKA_API_URL = 'https://cp-all-down.test';
+  process.env.BINANCE_API_URL = 'https://binance-all-down.test';
+  process.env.NOBITEX_API_URL = 'https://nobitex-all-down.test';
+  global.fetch = async () => new Response('failed', { status: 503 });
+
+  const result = await getCryptoMarketData({ forceRefresh: true });
+  assert.deepEqual(result.assets, []);
+  assert.equal(result.providers.coingecko, 'unavailable');
+  assert.equal(result.providers.coinpaprika, 'unavailable');
+  assert.equal(result.providers.nobitex, 'unavailable');
+  assert.equal(result.currency, 'USD');
+});

@@ -397,35 +397,208 @@ function applyBinancePrices(asset: CryptoMarketAsset, prices: Map<string, number
   return { ...asset, priceUsd: fastPrice, sources: { ...asset.sources, price: 'binance' } };
 }
 
+/** Curated majors used when CoinGecko/CoinPaprika are unreachable (common on IR hosts). */
+const NOBITEX_FALLBACK_ASSETS: Array<{ id: string; symbol: string; name: string; rank: number }> = [
+  { id: 'bitcoin', symbol: 'BTC', name: 'Bitcoin', rank: 1 },
+  { id: 'ethereum', symbol: 'ETH', name: 'Ethereum', rank: 2 },
+  { id: 'tether', symbol: 'USDT', name: 'Tether', rank: 3 },
+  { id: 'binancecoin', symbol: 'BNB', name: 'BNB', rank: 4 },
+  { id: 'solana', symbol: 'SOL', name: 'Solana', rank: 5 },
+  { id: 'ripple', symbol: 'XRP', name: 'XRP', rank: 6 },
+  { id: 'cardano', symbol: 'ADA', name: 'Cardano', rank: 7 },
+  { id: 'dogecoin', symbol: 'DOGE', name: 'Dogecoin', rank: 8 },
+  { id: 'tron', symbol: 'TRX', name: 'TRON', rank: 9 },
+  { id: 'toncoin', symbol: 'TON', name: 'Toncoin', rank: 10 },
+  { id: 'shiba-inu', symbol: 'SHIB', name: 'Shiba Inu', rank: 11 },
+  { id: 'polkadot', symbol: 'DOT', name: 'Polkadot', rank: 12 },
+  { id: 'litecoin', symbol: 'LTC', name: 'Litecoin', rank: 13 },
+  { id: 'chainlink', symbol: 'LINK', name: 'Chainlink', rank: 14 },
+  { id: 'bitcoin-cash', symbol: 'BCH', name: 'Bitcoin Cash', rank: 15 },
+  { id: 'uniswap', symbol: 'UNI', name: 'Uniswap', rank: 16 },
+  { id: 'near', symbol: 'NEAR', name: 'NEAR Protocol', rank: 17 },
+  { id: 'stellar', symbol: 'XLM', name: 'Stellar', rank: 18 },
+  { id: 'cosmos', symbol: 'ATOM', name: 'Cosmos', rank: 19 },
+  { id: 'filecoin', symbol: 'FIL', name: 'Filecoin', rank: 20 },
+];
+
+function emptyMarketSnapshot(): MarketSnapshot {
+  return {
+    assets: [],
+    global: {
+      marketCap: 0,
+      volume24h: 0,
+      btcDominance: 0,
+      marketCapChange24h: 0,
+      activeCryptocurrencies: null,
+      source: 'nobitex',
+    },
+    providers: {
+      coingecko: 'unavailable',
+      binance: 'unavailable',
+      coinpaprika: 'unavailable',
+      nobitex: 'unavailable',
+    },
+  };
+}
+
+function nobitexPairPrice(
+  stats: NobitexStats,
+  symbol: string
+): { priceIrt: number | null; priceIrr: number | null; change24h: number; volumeSrc: number | null; dayLow: number | null; dayHigh: number | null } {
+  const key = symbol.toLowerCase();
+  const irtPair = stats[`${key}-irt`];
+  const rlsPair = stats[`${key}-rls`];
+  const pair = irtPair || rlsPair;
+  if (!pair) {
+    return { priceIrt: null, priceIrr: null, change24h: 0, volumeSrc: null, dayLow: null, dayHigh: null };
+  }
+  const latest = numberOrNull(pair.latest);
+  const isIrt = Boolean(irtPair);
+  const priceIrt = latest === null ? null : isIrt ? latest : latest / 10;
+  const priceIrr = priceIrt === null ? null : priceIrt * 10;
+  const dayLowRaw = numberOrNull(pair.dayLow);
+  const dayHighRaw = numberOrNull(pair.dayHigh);
+  return {
+    priceIrt,
+    priceIrr,
+    change24h: numberOrZero(pair.dayChange),
+    volumeSrc: numberOrNull(pair.volumeSrc),
+    dayLow: dayLowRaw === null ? null : isIrt ? dayLowRaw : dayLowRaw / 10,
+    dayHigh: dayHighRaw === null ? null : isIrt ? dayHighRaw : dayHighRaw / 10,
+  };
+}
+
+async function loadNobitexMarket(ids: string[], symbols: string[], limit: number): Promise<MarketSnapshot | null> {
+  const catalogueSymbols = NOBITEX_FALLBACK_ASSETS.map((asset) => asset.symbol);
+  const nobitex = await loadNobitexStats(catalogueSymbols);
+  if (!nobitex) return null;
+
+  const usdtIrr = nobitex.usdtIrr;
+  const built = NOBITEX_FALLBACK_ASSETS.map((meta) => {
+    const local = nobitexPairPrice(nobitex.stats, meta.symbol);
+    // usdtIrr from loadNobitexStats is the raw usdt-irt `latest` (toman), despite the name.
+    const usdtIrt = usdtIrr;
+    const priceUsd =
+      meta.symbol === 'USDT'
+        ? 1
+        : local.priceIrt !== null && usdtIrt
+          ? local.priceIrt / usdtIrt
+          : 0;
+    if (meta.symbol !== 'USDT' && (!local.priceIrt || !usdtIrt)) {
+      return null;
+    }
+    const asset: CryptoMarketAsset = {
+      id: meta.id,
+      name: meta.name,
+      symbol: meta.symbol,
+      imageUrl: null,
+      rank: meta.rank,
+      priceUsd,
+      priceIrr: local.priceIrr,
+      priceIrt: local.priceIrt,
+      change24h: local.change24h,
+      change7d: 0,
+      change30d: 0,
+      volume24h: local.volumeSrc ?? 0,
+      marketCap: 0,
+      fullyDilutedValuation: null,
+      high24h: local.dayHigh !== null && usdtIrt ? local.dayHigh / usdtIrt : null,
+      low24h: local.dayLow !== null && usdtIrt ? local.dayLow / usdtIrt : null,
+      athUsd: null,
+      athChangePercentage: null,
+      athDate: null,
+      atlUsd: null,
+      circulatingSupply: null,
+      totalSupply: null,
+      maxSupply: null,
+      sparkline: [],
+      sources: { market: 'nobitex', price: 'nobitex', local: local.priceIrr !== null ? 'nobitex-direct' : null },
+    };
+    return asset;
+  }).filter((asset): asset is CryptoMarketAsset => asset !== null);
+
+  const assets = selectAssets(built, ids, symbols, limit);
+  if (!assets.length && (ids.length || symbols.length)) {
+    // Explicit filter matched nothing — still a successful provider response.
+    return {
+      assets: [],
+      global: {
+        marketCap: 0,
+        volume24h: 0,
+        btcDominance: 0,
+        marketCapChange24h: 0,
+        activeCryptocurrencies: built.length,
+        source: 'nobitex',
+      },
+      providers: {
+        coingecko: 'unavailable',
+        binance: 'unavailable',
+        coinpaprika: 'unavailable',
+        nobitex: 'live',
+      },
+    };
+  }
+  if (!assets.length) return null;
+
+  const btc = built.find((asset) => asset.symbol === 'BTC');
+  return {
+    assets,
+    global: {
+      marketCap: 0,
+      volume24h: built.reduce((sum, asset) => sum + asset.volume24h, 0),
+      btcDominance: 0,
+      marketCapChange24h: btc?.change24h ?? 0,
+      activeCryptocurrencies: built.length,
+      source: 'nobitex',
+    },
+    providers: {
+      coingecko: 'unavailable',
+      binance: 'unavailable',
+      coinpaprika: 'unavailable',
+      nobitex: 'live',
+    },
+  };
+}
+
 async function loadSnapshot(ids: string[], symbols: string[], limit: number): Promise<MarketSnapshot> {
   const coinGecko = await loadCoinGecko(ids, symbols, limit);
   const coinPaprika = coinGecko ? null : await loadCoinPaprika(ids, symbols, limit);
-  const market = coinGecko || coinPaprika;
-  if (!market) throw new Error('No crypto market provider is available');
 
-  const baseAssets = coinGecko
-    ? coinGecko.assets.map(coingeckoToAsset)
-    : (coinPaprika?.assets || []).map(coinpaprikaToAsset);
-  const requestedSymbols = baseAssets.map((asset) => asset.symbol);
-  const [binancePrices, nobitex] = await Promise.all([
-    loadBinancePrices(requestedSymbols),
-    loadNobitexStats(requestedSymbols),
-  ]);
-  const assets = baseAssets.map((asset) => {
-    const withFastPrice = applyBinancePrices(asset, binancePrices);
-    return nobitex ? applyNobitexPrices(withFastPrice, nobitex) : withFastPrice;
-  });
+  if (coinGecko || coinPaprika) {
+    const market = coinGecko || coinPaprika!;
+    const baseAssets = coinGecko
+      ? coinGecko.assets.map(coingeckoToAsset)
+      : (coinPaprika?.assets || []).map(coinpaprikaToAsset);
+    const requestedSymbols = baseAssets.map((asset) => asset.symbol);
+    const [binancePrices, nobitex] = await Promise.all([
+      loadBinancePrices(requestedSymbols),
+      loadNobitexStats(requestedSymbols),
+    ]);
+    const assets = baseAssets.map((asset) => {
+      const withFastPrice = applyBinancePrices(asset, binancePrices);
+      return nobitex ? applyNobitexPrices(withFastPrice, nobitex) : withFastPrice;
+    });
 
-  return {
-    assets,
-    global: market.global,
-    providers: {
-      coingecko: coinGecko ? 'live' : 'unavailable',
-      binance: binancePrices.size ? 'live' : 'standby',
-      coinpaprika: coinGecko ? 'standby' : 'live',
-      nobitex: nobitex ? 'live' : 'unavailable',
-    },
-  };
+    return {
+      assets,
+      global: market.global,
+      providers: {
+        coingecko: coinGecko ? 'live' : 'unavailable',
+        binance: binancePrices.size ? 'live' : 'standby',
+        coinpaprika: coinGecko ? 'standby' : 'live',
+        nobitex: nobitex ? 'live' : 'unavailable',
+      },
+    };
+  }
+
+  const nobitexMarket = await loadNobitexMarket(ids, symbols, limit);
+  if (nobitexMarket) {
+    console.warn('[crypto] Serving Nobitex-only market snapshot after CoinGecko/CoinPaprika failure');
+    return nobitexMarket;
+  }
+
+  console.warn('[crypto] All market providers unavailable; returning empty snapshot');
+  return emptyMarketSnapshot();
 }
 
 async function refreshCryptoMarketData(options?: { ids?: string[]; symbols?: string[]; limit?: number }): Promise<CryptoMarketResponse> {
@@ -469,7 +642,13 @@ export async function getCryptoMarketData(options?: { ids?: string[]; symbols?: 
       console.warn('[crypto] Serving stale market cache after provider failure');
       return stale.value;
     }
-    throw error;
+    console.warn('[crypto] Provider refresh failed with no stale cache:', error instanceof Error ? error.message : error);
+    const empty: CryptoMarketResponse = {
+      generatedAt: new Date().toISOString(),
+      currency: 'USD',
+      ...emptyMarketSnapshot(),
+    };
+    return empty;
   }
 }
 

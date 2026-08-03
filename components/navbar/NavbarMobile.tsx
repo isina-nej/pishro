@@ -90,10 +90,10 @@ const NavbarMobile = ({
               href="/login"
               className={clsx(
                 "border transition-colors pr-2 pl-2 py-1.5 rounded-lg text-sm ml-2",
-                !isDark
+                isDark
                   ? "border-border hover:bg-background/20 text-foreground"
-                  : "border-mySecondary hover:bg-mySecondary/10",
-                isOpen ? "border-border" : "border-mySecondary"
+                  : "border-muted-foreground/50 text-muted-foreground hover:bg-muted/60",
+                isOpen ? "border-border" : ""
               )}
             >
               <span className="flex items-center gap-1 font-medium text-xs">
@@ -108,7 +108,7 @@ const NavbarMobile = ({
       {isMounted && (
         <div
           className={clsx(
-            "fixed inset-0 z-[9998] flex flex-col pt-20 bg-mySecondary transition-opacity duration-300 ease-out md:hidden overflow-hidden",
+            "fixed inset-0 z-[9998] flex flex-col pt-20 bg-background transition-opacity duration-300 ease-out md:hidden overflow-hidden",
             isOpen
               ? "opacity-100 pointer-events-auto"
               : "opacity-0 pointer-events-none"

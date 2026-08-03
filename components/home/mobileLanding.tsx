@@ -127,28 +127,28 @@ const HeroSection = ({
           initial={{ opacity: 0, y: 60 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="w-full rounded-[2rem] border border-border/15 bg-[#0F2A1F]/55 p-6 shadow-2xl backdrop-blur-2xl"
+          className="w-full rounded-[2rem] border border-white/15 bg-[#0F2A1F]/72 p-6 shadow-2xl backdrop-blur-2xl"
         >
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-card/10 px-4 py-2 backdrop-blur-md"
+            className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#D4B06A]/35 bg-black/20 px-4 py-2 backdrop-blur-md"
           >
-            <Sparkles className="w-4 h-4 text-premium" />
-            <span className="text-foreground text-sm font-medium">
+            <Sparkles className="w-4 h-4 text-[#D4B06A]" />
+            <span className="home-on-dark text-sm font-medium">
               پیشرو در مسیر موفقیت شما
             </span>
           </motion.div>
 
           {/* Title */}
-          <h1 className="text-foreground text-4xl sm:text-5xl font-extrabold leading-tight mb-4">
+          <h1 className="home-on-dark text-4xl sm:text-5xl font-extrabold leading-tight mb-4">
             {title || "پیشرو بزرگترین مؤسسه سرمایه‌ گذاری در ایران"}
           </h1>
 
           {/* Description */}
-          <p className="text-foreground/80 text-base sm:text-lg leading-relaxed mb-6 max-w-lg">
+          <p className="home-on-dark-muted text-base sm:text-lg leading-relaxed mb-6 max-w-lg">
             آموزش تخصصی بورس، بازارهای مالی و سرمایه‌گذاری از صفر تا صد
           </p>
 
@@ -157,7 +157,7 @@ const HeroSection = ({
             href={ctaLink || "/business-consulting"}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-2 rounded-full bg-card px-8 py-4 font-bold text-[#0B3D2E] shadow-xl transition-all hover:bg-primary"
+            className="inline-flex items-center gap-2 rounded-full bg-[#FBF9F5] px-8 py-4 font-bold text-[#0B3D2E] shadow-xl transition-all hover:bg-[#1A6B45] hover:text-white"
           >
             <span>{subtitle || "شروع مسیر موفقیت"}</span>
             <ArrowLeft className="w-5 h-5" />
@@ -268,7 +268,7 @@ const SlidesSwiperSection = ({ slides }: { slides: SlideData[] }) => {
           <h2 className="text-foreground text-3xl sm:text-4xl font-extrabold mb-3">
             خدمات ویژه پیشرو
           </h2>
-          <p className="text-foreground/60 text-base sm:text-lg">
+          <p className="text-muted-foreground text-base sm:text-lg">
             راهکارهای حرفه‌ای برای موفقیت شما
           </p>
         </motion.div>
@@ -295,9 +295,9 @@ const SlidesSwiperSection = ({ slides }: { slides: SlideData[] }) => {
             className="!pb-16"
             style={
               {
-                "--swiper-pagination-color": "#F4B896",
-                "--swiper-pagination-bullet-inactive-color": "#ffffff40",
-                "--swiper-pagination-bullet-inactive-opacity": "1",
+                "--swiper-pagination-color": "#B8913A",
+                "--swiper-pagination-bullet-inactive-color": "#5A615C",
+                "--swiper-pagination-bullet-inactive-opacity": "0.45",
               } as React.CSSProperties
             }
           >
@@ -320,7 +320,7 @@ const SlidesSwiperSection = ({ slides }: { slides: SlideData[] }) => {
                     <h3 className="text-foreground text-2xl font-bold leading-tight">
                       {slide.title}
                     </h3>
-                    <p className="text-foreground/70 text-sm leading-relaxed line-clamp-3">
+                    <p className="text-muted-foreground text-sm leading-relaxed line-clamp-3">
                       {slide.text}
                     </p>
                   </div>

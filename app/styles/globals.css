@@ -57,16 +57,16 @@ h3 {
      */
     --background: 43 31% 95%; /* #F7F5F0 warm ivory */
     --foreground: 144 9% 11%; /* #1A1F1C */
-    --card: 0 0% 100%; /* #FFFFFF */
+    --card: 40 33% 98%; /* #FBF9F5 soft ivory — less pure-white glare */
     --card-foreground: 144 9% 11%;
-    --popover: 0 0% 100%;
+    --popover: 40 33% 98%;
     --popover-foreground: 144 9% 11%;
     --primary: 152 70% 14%; /* #0B3D2E */
     --primary-foreground: 0 0% 100%;
     --secondary: 40 25% 91%; /* #EDE9E1 */
     --secondary-foreground: 144 9% 11%;
     --muted: 40 25% 91%; /* #EDE9E1 */
-    --muted-foreground: 140 4% 44%; /* #6B736E */
+    --muted-foreground: 140 5% 36%; /* #5A615C — WCAG-friendlier on ivory */
     --accent: 144 28% 93%; /* #E8F2EC tint/selected */
     --accent-foreground: 152 70% 14%;
     --destructive: 0 72% 42%;
@@ -94,15 +94,15 @@ h3 {
     --body-background: #F7F5F0;
     --header-background: rgba(247, 245, 240, 0.85);
     --text-primary: #1A1F1C;
-    --text-secondary: #6B736E;
+    --text-secondary: #5A615C;
     --btn-primary-bg: #0B3D2E;
     --btn-primary-hover: #1A6B45;
     --btn-secondary-bg: #EDE9E1;
     --btn-secondary-hover: #D9D4C8;
-    --card-background: #FFFFFF;
+    --card-background: #FBF9F5;
     --border-color: #D9D4C8;
     --footer-background: #EDE9E1;
-    --text-muted: #6B736E;
+    --text-muted: #5A615C;
     --dark-bg-hidden: #EDE9E1;
     --neutral-button-bg: #EDE9E1;
     --neutral-button-hover: #D9D4C8;
@@ -124,7 +124,7 @@ h3 {
     --secondary: 156 16% 12%; /* #1A2420 */
     --secondary-foreground: 143 21% 93%;
     --muted: 156 16% 12%; /* #1A2420 */
-    --muted-foreground: 141 10% 60%; /* #8FA396 */
+    --muted-foreground: 141 12% 64%; /* #9AADA2 — clearer on #0A100E / #121A16 */
     --accent: 156 16% 14%;
     --accent-foreground: 143 21% 93%;
     --destructive: 0 72% 62%;
@@ -150,7 +150,7 @@ h3 {
     --body-background: #0A100E;
     --header-background: rgba(10, 16, 14, 0.85);
     --text-primary: #E8F0EB;
-    --text-secondary: #8FA396;
+    --text-secondary: #9AADA2;
     --btn-primary-bg: #2F9E68;
     --btn-primary-hover: #1A6B45;
     --btn-secondary-bg: #1A2420;
@@ -158,7 +158,7 @@ h3 {
     --card-background: #121A16;
     --border-color: #243028;
     --footer-background: #121A16;
-    --text-muted: #8FA396;
+    --text-muted: #9AADA2;
     --dark-bg-hidden: #121A16;
     --neutral-button-bg: #1A2420;
     --neutral-button-hover: #243028;
@@ -454,12 +454,14 @@ html.dark
 .home-shell,
 .public-page-shell {
   --home-ink: #1A1F1C;
-  --home-muted: #6B736E;
+  --home-muted: #5A615C;
   --home-deep: #0B3D2E;
   --home-glow: #1A6B45;
   --home-gold: #B8913A;
-  --home-glass: rgba(255, 255, 255, 0.72);
-  --home-glass-border: rgba(217, 212, 200, 0.85);
+  --home-on-dark: #E8F0EB;
+  --home-on-dark-muted: #B8C5BC;
+  --home-glass: rgba(251, 249, 245, 0.88);
+  --home-glass-border: rgba(217, 212, 200, 0.92);
   position: relative;
   isolation: isolate;
   color: var(--home-ink);
@@ -469,12 +471,14 @@ html.dark
 .dark .home-shell,
 .dark .public-page-shell {
   --home-ink: #E8F0EB;
-  --home-muted: #8FA396;
+  --home-muted: #9AADA2;
   --home-deep: #0F2A1F;
-  --home-glow: #2F9E68;
+  --home-glow: #2A8A5C; /* slightly less neon than interactive #2F9E68 */
   --home-gold: #D4B06A;
-  --home-glass: rgba(18, 26, 22, 0.72);
-  --home-glass-border: rgba(36, 48, 40, 0.9);
+  --home-on-dark: #E8F0EB;
+  --home-on-dark-muted: #B8C5BC;
+  --home-glass: rgba(18, 26, 22, 0.88);
+  --home-glass-border: rgba(36, 48, 40, 0.95);
   background: #0A100E;
 }
 
@@ -484,24 +488,24 @@ html.dark
   min-height: 100vh;
   color: var(--home-ink);
   background:
-    radial-gradient(circle at 92% 8%, rgba(26, 107, 69, 0.12), transparent 28rem),
-    radial-gradient(circle at 4% 58%, rgba(184, 145, 58, 0.1), transparent 25rem),
+    radial-gradient(circle at 92% 8%, rgba(26, 107, 69, 0.08), transparent 28rem),
+    radial-gradient(circle at 4% 58%, rgba(184, 145, 58, 0.07), transparent 25rem),
     linear-gradient(180deg, #F7F5F0 0%, #EDE9E1 52%, #F7F5F0 100%);
 }
 
 .dark .public-page-shell {
   background:
-    radial-gradient(circle at 92% 8%, rgba(47, 158, 104, 0.12), transparent 28rem),
-    radial-gradient(circle at 4% 58%, rgba(212, 176, 106, 0.07), transparent 25rem),
+    radial-gradient(circle at 92% 8%, rgba(47, 158, 104, 0.07), transparent 28rem),
+    radial-gradient(circle at 4% 58%, rgba(212, 176, 106, 0.05), transparent 25rem),
     linear-gradient(180deg, #0A100E 0%, #0F2A1F 52%, #0A100E 100%);
 }
 
 .public-page-panel {
   border: 1px solid var(--home-glass-border);
   background: var(--home-glass);
-  box-shadow: 0 28px 80px rgba(11, 61, 46, 0.1);
-  backdrop-filter: blur(22px) saturate(130%);
-  -webkit-backdrop-filter: blur(22px) saturate(130%);
+  box-shadow: 0 28px 80px rgba(11, 61, 46, 0.08);
+  backdrop-filter: blur(22px) saturate(120%);
+  -webkit-backdrop-filter: blur(22px) saturate(120%);
 }
 
 .dark .public-page-panel {
@@ -509,16 +513,16 @@ html.dark
 }
 
 .public-page-card {
-  border: 1px solid rgba(217, 212, 200, 0.7);
-  background: rgba(255, 255, 255, 0.7);
-  box-shadow: 0 16px 50px rgba(11, 61, 46, 0.08);
-  backdrop-filter: blur(16px) saturate(125%);
-  -webkit-backdrop-filter: blur(16px) saturate(125%);
+  border: 1px solid rgba(217, 212, 200, 0.75);
+  background: rgba(251, 249, 245, 0.9);
+  box-shadow: 0 16px 50px rgba(11, 61, 46, 0.06);
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
 }
 
 .dark .public-page-card {
-  border-color: rgba(36, 48, 40, 0.9);
-  background: rgba(18, 26, 22, 0.72);
+  border-color: rgba(36, 48, 40, 0.95);
+  background: rgba(18, 26, 22, 0.9);
   box-shadow: 0 16px 50px rgba(0, 0, 0, 0.22);
 }
 
@@ -538,15 +542,15 @@ html.dark
   overflow-x: clip;
   overflow-y: visible;
   background:
-    radial-gradient(circle at 90% 8%, rgba(26, 107, 69, 0.14), transparent 28rem),
-    radial-gradient(circle at 4% 47%, rgba(184, 145, 58, 0.12), transparent 25rem),
+    radial-gradient(circle at 90% 8%, rgba(26, 107, 69, 0.09), transparent 28rem),
+    radial-gradient(circle at 4% 47%, rgba(184, 145, 58, 0.07), transparent 25rem),
     linear-gradient(180deg, #F7F5F0 0%, #EDE9E1 47%, #F7F5F0 100%);
 }
 
 .dark .home-ambient-stage {
   background:
-    radial-gradient(circle at 90% 8%, rgba(47, 158, 104, 0.12), transparent 28rem),
-    radial-gradient(circle at 4% 47%, rgba(212, 176, 106, 0.08), transparent 25rem),
+    radial-gradient(circle at 90% 8%, rgba(47, 158, 104, 0.07), transparent 28rem),
+    radial-gradient(circle at 4% 47%, rgba(212, 176, 106, 0.05), transparent 25rem),
     linear-gradient(180deg, #0A100E 0%, #0F2A1F 47%, #0A100E 100%);
 }
 
@@ -573,9 +577,9 @@ html.dark
 .home-glass-panel {
   border: 1px solid var(--home-glass-border);
   background: var(--home-glass);
-  box-shadow: 0 30px 80px rgba(11, 61, 46, 0.1);
-  backdrop-filter: blur(24px) saturate(130%);
-  -webkit-backdrop-filter: blur(24px) saturate(130%);
+  box-shadow: 0 30px 80px rgba(11, 61, 46, 0.08);
+  backdrop-filter: blur(24px) saturate(120%);
+  -webkit-backdrop-filter: blur(24px) saturate(120%);
 }
 
 .dark .home-glass-panel {
@@ -583,17 +587,25 @@ html.dark
 }
 
 .home-glass-card {
-  border: 1px solid rgba(217, 212, 200, 0.7);
-  background: rgba(255, 255, 255, 0.65);
-  box-shadow: 0 16px 50px rgba(11, 61, 46, 0.08);
-  backdrop-filter: blur(16px) saturate(125%);
-  -webkit-backdrop-filter: blur(16px) saturate(125%);
+  border: 1px solid rgba(217, 212, 200, 0.75);
+  background: rgba(251, 249, 245, 0.9);
+  box-shadow: 0 16px 50px rgba(11, 61, 46, 0.06);
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
 }
 
 .dark .home-glass-card {
-  border-color: rgba(36, 48, 40, 0.9);
-  background: rgba(18, 26, 22, 0.72);
+  border-color: rgba(36, 48, 40, 0.95);
+  background: rgba(18, 26, 22, 0.9);
   box-shadow: 0 16px 50px rgba(0, 0, 0, 0.22);
+}
+
+/* Text locked to dark emerald panels (hero / calculator) — theme-independent */
+.home-on-dark {
+  color: var(--home-on-dark, #E8F0EB);
+}
+.home-on-dark-muted {
+  color: var(--home-on-dark-muted, #B8C5BC);
 }
 
 .home-news-stage {
@@ -609,7 +621,7 @@ html.dark
 .home-shell .swiper-pagination-bullet {
   width: 8px !important;
   height: 8px !important;
-  background: rgba(107, 115, 110, 0.45) !important;
+  background: rgba(90, 97, 92, 0.5) !important;
 }
 
 .home-shell .swiper-pagination-bullet-active {

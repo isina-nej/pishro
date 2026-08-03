@@ -1,4 +1,4 @@
-export type MarketDataSource = 'coingecko' | 'coinpaprika';
+export type MarketDataSource = 'coingecko' | 'coinpaprika' | 'nobitex';
 export type PriceDataSource = 'binance' | MarketDataSource;
 export type LocalPriceSource = 'nobitex-direct' | 'nobitex-usdt' | null;
 export type ProviderStatus = 'live' | 'fallback' | 'standby' | 'unavailable';

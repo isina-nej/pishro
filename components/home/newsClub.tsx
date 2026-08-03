@@ -60,14 +60,14 @@ const NewsClub = () => {
         <div className="flex-1 w-full flex flex-col md:h-full justify-end gap-6 md:gap-10 items-center order-1 md:order-2">
           <div className="w-full aspect-[1.1] md:aspect-[661/504] flex flex-col justify-between">
             <div className="">
-              <span className="mb-4 mt-2 inline-flex rounded-full border border-primary/15 bg-card/60 px-4 py-2 text-[11px] font-bold text-primary md:mt-16">همیشه یک گام جلوتر</span>
-              <h4 className="flex justify-center gap-2 text-5xl font-black leading-none tracking-tight text-[#0B3D2E] sm:text-6xl md:justify-start md:gap-3 md:text-start lg:text-7xl">
+              <span className="mb-4 mt-2 inline-flex rounded-full border border-primary/20 bg-card/70 px-4 py-2 text-[11px] font-bold text-primary md:mt-16">همیشه یک گام جلوتر</span>
+              <h4 className="flex justify-center gap-2 text-5xl font-black leading-none tracking-tight text-foreground sm:text-6xl md:justify-start md:gap-3 md:text-start lg:text-7xl">
                 <span className="inline-block">باشگاه</span>
-                <span className="inline-block text-[#8E8E8E] -translate-y-1">
+                <span className="inline-block text-premium -translate-y-1">
                   پیشرو
                 </span>
               </h4>
-              <p className="mt-4 md:mt-6 text-center md:text-right text-sm sm:text-base md:text-lg text-muted-foreground dark:text-textSecondary leading-relaxed md:pl-[60px] xl:pl-[128px] pr-1">
+              <p className="mt-4 md:mt-6 text-center md:text-right text-sm sm:text-base md:text-lg text-muted-foreground leading-relaxed md:pl-[60px] xl:pl-[128px] pr-1">
                 با عضویت در باشگاه خبری پیشرو، از تازه‌ترین مقالات آموزشی، نکات
                 تخصصی و تحلیل‌های روز دنیای دیجیتال باخبر شوید و همیشه یک گام
                 جلوتر از رقبا بمانید. جدیدترین مطالب مستقیماً در تلفن همراه شما
@@ -81,12 +81,12 @@ const NewsClub = () => {
               <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-3">
                 <Input
                   {...register("phone")}
-                  className="ltr ml-0 h-10 max-w-[100%] rounded-full border-border/70 bg-card/70 !text-base shadow-inner backdrop-blur-xl placeholder:text-base sm:ml-2 sm:h-12 sm:max-w-[290px] sm:!text-lg sm:placeholder:text-lg/10/10"
+                  className="ltr ml-0 h-10 max-w-[100%] rounded-full border-border/70 bg-card/70 !text-base shadow-inner backdrop-blur-xl placeholder:text-base placeholder:text-muted-foreground sm:ml-2 sm:h-12 sm:max-w-[290px] sm:!text-lg sm:placeholder:text-lg"
                   placeholder="09115829721"
                 />
                 <Button
                   type="submit"
-                  className="h-10 w-full rounded-full bg-[#0B3D2E] px-8 text-base font-bold text-foreground shadow-lg transition hover:-translate-y-0.5 hover:bg-[#1A6B45] sm:h-12 sm:px-16 sm:text-lg md:w-fit"
+                  className="h-10 w-full rounded-full bg-primary px-8 text-base font-bold text-primary-foreground shadow-lg transition hover:-translate-y-0.5 hover:bg-[#1A6B45] sm:h-12 sm:px-16 sm:text-lg md:w-fit"
                 >
                   عضویت
                 </Button>
