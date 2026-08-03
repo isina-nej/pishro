@@ -56,8 +56,11 @@ export async function middleware(request: NextRequest) {
     const token = getAdminTokenFromRequest(request);
 
     if (!token) {
+      // Admin UI pages: hard redirect so unauthenticated visitors never render the shell.
       if (pathname.startsWith('/admin/') && !pathname.startsWith('/api')) {
-        return NextResponse.next();
+        const loginUrl = new URL('/admin/login', request.url);
+        loginUrl.searchParams.set('next', pathname);
+        return NextResponse.redirect(loginUrl);
       }
 
       return NextResponse.json(

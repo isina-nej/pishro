@@ -1,11 +1,15 @@
 import Header from "./header";
-import Questions from "./questions";
+import Questions, { type FaqItem } from "./questions";
 
-const FaqPageContent = () => {
+interface FaqPageContentProps {
+  items: FaqItem[];
+}
+
+const FaqPageContent = ({ items }: FaqPageContentProps) => {
   return (
     <div>
       <Header />
-      <Questions />
+      <Questions items={items} />
     </div>
   );
 };

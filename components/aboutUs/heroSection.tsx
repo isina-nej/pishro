@@ -57,14 +57,14 @@ const HeroSection = ({
       </div>
 
       <div className="container-md relative z-10 py-24">
-        <div className="mx-auto max-w-5xl rounded-[2.25rem] border border-border/15 bg-[#091a28]/50 p-7 text-center text-foreground shadow-2xl backdrop-blur-2xl sm:p-10">
+        <div className="mx-auto max-w-5xl rounded-[2.25rem] border border-white/15 bg-[#091a28]/75 p-7 text-center text-white shadow-2xl backdrop-blur-2xl sm:p-10">
           {/* Badge */}
           {badgeText && (
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 rounded-full border border-border/25 bg-card/10 px-6 py-2 mt-2 mb-6 text-primary-foreground shadow-sm backdrop-blur-sm"
+              className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-6 py-2 mt-2 mb-6 text-white shadow-sm backdrop-blur-sm"
             >
               <HiSparkles className="text-premium text-xl" />
               <span className="text-sm font-medium">{badgeText}</span>
@@ -76,7 +76,7 @@ const HeroSection = ({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight px-4"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-[1.35] px-4 text-white"
           >
             {subtitle && (
               <>
@@ -93,7 +93,7 @@ const HeroSection = ({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed mb-8 text-foreground/90 px-4"
+              className="text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed mb-8 text-white/85 px-4"
             >
               {description}
             </motion.p>
@@ -112,7 +112,7 @@ const HeroSection = ({
                 return (
                   <div
                     key={index}
-                    className={`group rounded-3xl border border-border/15 bg-card/[0.08] p-6 text-primary-foreground shadow-xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-card/15 ${
+                    className={`group rounded-3xl border border-white/15 bg-white/[0.08] p-6 text-white shadow-xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-white/15 ${
                       index === statsData.length - 1 &&
                       statsData.length % 3 !== 0
                         ? "sm:col-span-2 md:col-span-1"
@@ -124,10 +124,10 @@ const HeroSection = ({
                         <IconComponent className="text-3xl md:text-4xl text-premium" />
                       </div>
                     </div>
-                    <div className="text-3xl md:text-4xl font-bold mb-2">
+                    <div className="text-3xl md:text-4xl font-bold mb-2 text-white">
                       {stat.value}
                     </div>
-                    <div className="text-foreground/80 text-sm md:text-base">
+                    <div className="text-white/80 text-sm md:text-base">
                       {stat.label}
                     </div>
                   </div>
