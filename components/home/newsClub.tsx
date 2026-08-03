@@ -86,7 +86,7 @@ const NewsClub = () => {
                 />
                 <Button
                   type="submit"
-                  className="h-10 w-full rounded-full bg-[#112b3a] px-8 text-base font-bold text-primary-foreground shadow-lg transition hover:-translate-y-0.5 hover:bg-[#214254] sm:h-12 sm:px-16 sm:text-lg md:w-fit"
+                  className="h-10 w-full rounded-full bg-[#112b3a] px-8 text-base font-bold text-foreground shadow-lg transition hover:-translate-y-0.5 hover:bg-[#214254] sm:h-12 sm:px-16 sm:text-lg md:w-fit"
                 >
                   عضویت
                 </Button>

@@ -197,7 +197,7 @@ export default function PurchasedCourseContent({
                 </video>
                 <div className="border-t border-border/10 bg-card px-4 py-3 text-primary-foreground">
                   <div className="mb-3 flex items-center gap-3">
-                    <span className="w-11 text-xs font-bold text-primary-foreground/70">
+                    <span className="w-11 text-xs font-bold text-foreground/70">
                       {formatPlaybackTime(currentTime)}
                     </span>
                     <input
@@ -213,7 +213,7 @@ export default function PurchasedCourseContent({
                       aria-label="نوار پیشرفت ویدیو"
                       className="h-2 flex-1 accent-myGolden"
                     />
-                    <span className="w-11 text-left text-xs font-bold text-primary-foreground/70">
+                    <span className="w-11 text-left text-xs font-bold text-foreground/70">
                       {formatPlaybackTime(duration)}
                     </span>
                   </div>
@@ -254,7 +254,7 @@ export default function PurchasedCourseContent({
                       </button>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-2 text-xs font-bold text-primary-foreground/80">
+                    <div className="flex flex-wrap items-center gap-2 text-xs font-bold text-foreground/80">
                       <select
                         value={playbackRate}
                         onChange={(e) => changePlaybackRate(Number(e.target.value))}
@@ -371,7 +371,7 @@ function LessonListItem({
         className={cn(
           "flex w-full items-center gap-3 rounded-xl p-3 text-right transition-colors",
           active
-            ? "bg-mySecondary text-primary-foreground shadow-sm dark:bg-myGolden"
+            ? "bg-mySecondary text-foreground shadow-sm dark:bg-myGolden"
             : "text-muted-foreground hover:bg-muted dark:text-textPrimary dark:hover:bg-darkBgHidden"
         )}
       >
@@ -394,7 +394,7 @@ function LessonListItem({
             className={cn(
               "mt-1 flex items-center gap-1 text-xs",
               active
-                ? "text-primary-foreground/80/70"
+                ? "text-foreground/80/70"
                 : "text-muted-foreground dark:text-textSecondary"
             )}
           >

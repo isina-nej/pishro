@@ -4,7 +4,7 @@ export const LoadingPlaceholder = () => {
   return (
     <div>
       {/* skeleton hero */}
-      <section className="relative overflow-hidden bg-[#0d1b2a] pb-32 pt-36 text-primary-foreground animate-pulse">
+      <section className="relative overflow-hidden bg-[#0d1b2a] pb-32 pt-36 text-foreground animate-pulse">
         <div className="absolute inset-0 bg-gradient-to-b from-card/90 via-card/40 to-card/80" />
         <div className="container-xl relative z-10">
           <div className="max-w-3xl space-y-6">

@@ -105,7 +105,7 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
               transition={{ delay: 0.3 + index * 0.1, type: "spring" }}
               className="absolute top-3 left-3 z-20"
             >
-              <div className="bg-gradient-to-br from-myPrimary to-destructive text-primary-foreground px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
+              <div className="bg-gradient-to-br from-myPrimary to-destructive text-foreground px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
                 <Tag className="w-3.5 h-3.5" />
                 <span className="text-xs font-bold">
                   {data.discountPercent}٪ تخفیف
@@ -255,13 +255,13 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
             <Trash2 className="w-4 h-4" />
           </motion.button>
 
-          <div className="flex items-center gap-3 text-primary-foreground">
+          <div className="flex items-center gap-3 text-foreground">
             <div className="p-3 bg-card dark:bg-cardBg rounded-xl backdrop-blur-sm">
               <BarChart3 className="w-6 h-6" />
             </div>
             <div>
               <h6 className="font-bold text-lg">سبد سرمایه‌ گذاری</h6>
-              <p className="text-sm text-primary-foreground/80">
+              <p className="text-sm text-foreground/80">
                 {getRiskLabel(data.portfolioType)}
               </p>
             </div>

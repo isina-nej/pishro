@@ -110,13 +110,13 @@ const SliderNavigation = ({
   >
     <button
       onClick={onPrev}
-      className="text-primary-foreground/80 hover:text-primary-foreground transition-colors z-50"
+      className="text-foreground/80 hover:text-foreground transition-colors z-50"
     >
       <HiChevronRight className="w-8 h-8 sm:w-12 sm:h-12 md:w-14 md:h-14" />
     </button>
     <button
       onClick={onNext}
-      className="text-primary-foreground/80 hover:text-primary-foreground transition-colors z-50"
+      className="text-foreground/80 hover:text-foreground transition-colors z-50"
     >
       <HiChevronLeft className="w-8 h-8 sm:w-12 sm:h-12 md:w-14 md:h-14" />
     </button>

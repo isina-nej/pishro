@@ -107,7 +107,7 @@ const Footer = () => {
                     >
                       {React.cloneElement(social.icon, {
                         className:
-                          "size-5 text-[#80878C] dark:text-textSecondary group-hover:text-primary-foreground transition-colors",
+                          "size-5 text-[#80878C] dark:text-textSecondary group-hover:text-foreground transition-colors",
                       })}
                     </Link>
                   ))}
@@ -129,7 +129,7 @@ const Footer = () => {
                   />
                   <button
                     type="submit"
-                    className="absolute left-1 top-1 h-8 px-4 bg-myPrimary text-primary-foreground text-xs rounded-md hover:bg-myPrimary/90 transition-colors font-medium"
+                    className="absolute left-1 top-1 h-8 px-4 bg-myPrimary text-foreground text-xs rounded-md hover:bg-myPrimary/90 transition-colors font-medium"
                   >
                     عضویت
                   </button>

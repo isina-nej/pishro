@@ -98,7 +98,7 @@ const CoursesSec = () => {
 
           <Link
             href={selectedCategory.href}
-            className="flex items-center gap-1 bg-mySecondary text-primary-foreground px-4 py-1.5 rounded-lg text-sm font-bold hover:opacity-90 transition"
+            className="flex items-center gap-1 bg-mySecondary text-foreground px-4 py-1.5 rounded-lg text-sm font-bold hover:opacity-90 transition"
           >
             <Folder size={16} />
             <span>صفحه {selectedCategory.label}</span>

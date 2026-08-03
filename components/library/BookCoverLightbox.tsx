@@ -94,7 +94,7 @@ export const BookCoverLightbox = ({
               {/* Title */}
               {title && (
                 <motion.div
-                  className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background/80 to-transparent p-6 text-primary-foreground"
+                  className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background/80 to-transparent p-6 text-foreground"
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.1 }}

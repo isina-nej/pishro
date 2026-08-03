@@ -132,7 +132,7 @@ export default function CoursesGridClient({ courses }: Props) {
 
           <Link
             href={selectedCategory.href}
-            className="flex items-center gap-1 whitespace-nowrap rounded-full bg-[#112b3a] px-4 py-2 text-xs font-bold text-primary-foreground shadow-lg transition hover:-translate-y-0.5 hover:bg-[#214254] sm:text-sm"
+            className="flex items-center gap-1 whitespace-nowrap rounded-full bg-[#112b3a] px-4 py-2 text-xs font-bold text-foreground shadow-lg transition hover:-translate-y-0.5 hover:bg-[#214254] sm:text-sm"
           >
             <Folder size={16} />
             <span>صفحه {selectedCategory.label}</span>

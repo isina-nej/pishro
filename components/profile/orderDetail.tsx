@@ -31,13 +31,13 @@ const OrderDetail = ({ order }: OrderDetailProps) => {
     switch (status) {
       case "paid":
         return {
-          icon: <FaCheckCircle className="text-success-foreground w-3.5" />,
+          icon: <FaCheckCircle className="text-foreground w-3.5" />,
           text: "پرداخت شده",
           bgColor: "bg-success",
         };
       case "failed":
         return {
-          icon: <FaTimesCircle className="text-destructive-foreground w-3.5" />,
+          icon: <FaTimesCircle className="text-foreground w-3.5" />,
           text: "ناموفق",
           bgColor: "bg-destructive",
         };

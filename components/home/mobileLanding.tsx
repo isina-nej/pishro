@@ -137,18 +137,18 @@ const HeroSection = ({
             className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-card/10 px-4 py-2 backdrop-blur-md"
           >
             <Sparkles className="w-4 h-4 text-premium" />
-            <span className="text-primary-foreground text-sm font-medium">
+            <span className="text-foreground text-sm font-medium">
               پیشرو در مسیر موفقیت شما
             </span>
           </motion.div>
 
           {/* Title */}
-          <h1 className="text-primary-foreground text-4xl sm:text-5xl font-extrabold leading-tight mb-4">
+          <h1 className="text-foreground text-4xl sm:text-5xl font-extrabold leading-tight mb-4">
             {title || "پیشرو بزرگترین مؤسسه سرمایه‌ گذاری در ایران"}
           </h1>
 
           {/* Description */}
-          <p className="text-primary-foreground/80 text-base sm:text-lg leading-relaxed mb-6 max-w-lg">
+          <p className="text-foreground/80 text-base sm:text-lg leading-relaxed mb-6 max-w-lg">
             آموزش تخصصی بورس، بازارهای مالی و سرمایه‌گذاری از صفر تا صد
           </p>
 
@@ -226,11 +226,11 @@ const FeatureCardsSection = ({ overlayTexts }: { overlayTexts?: string[] }) => {
             <div className="relative z-10">
               <div className="flex items-start gap-3 mb-3">
                 <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-border/20 bg-card/10">
-                  <span className="text-primary-foreground text-sm font-bold">
+                  <span className="text-foreground text-sm font-bold">
                     {index + 1}
                   </span>
                 </div>
-                <h3 className="text-primary-foreground text-lg sm:text-xl font-bold leading-relaxed flex-1">
+                <h3 className="text-foreground text-lg sm:text-xl font-bold leading-relaxed flex-1">
                   {text.includes("پیشرو") ? (
                     <>
                       {text.split("پیشرو")[0]}
@@ -265,10 +265,10 @@ const SlidesSwiperSection = ({ slides }: { slides: SlideData[] }) => {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="text-primary-foreground text-3xl sm:text-4xl font-extrabold mb-3">
+          <h2 className="text-foreground text-3xl sm:text-4xl font-extrabold mb-3">
             خدمات ویژه پیشرو
           </h2>
-          <p className="text-primary-foreground/60 text-base sm:text-lg">
+          <p className="text-foreground/60 text-base sm:text-lg">
             راهکارهای حرفه‌ای برای موفقیت شما
           </p>
         </motion.div>
@@ -317,10 +317,10 @@ const SlidesSwiperSection = ({ slides }: { slides: SlideData[] }) => {
 
                   {/* Content */}
                   <div className="absolute bottom-0 left-0 right-0 p-6 space-y-3">
-                    <h3 className="text-primary-foreground text-2xl font-bold leading-tight">
+                    <h3 className="text-foreground text-2xl font-bold leading-tight">
                       {slide.title}
                     </h3>
-                    <p className="text-primary-foreground/70 text-sm leading-relaxed line-clamp-3">
+                    <p className="text-foreground/70 text-sm leading-relaxed line-clamp-3">
                       {slide.text}
                     </p>
                   </div>

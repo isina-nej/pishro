@@ -182,7 +182,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background/70 to-transparent pt-8 pb-4 px-4 sm:px-6">
             <div className="flex flex-col items-start gap-3">
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-primary-foreground line-clamp-2">
+                <h1 className="text-xl sm:text-2xl font-bold text-foreground line-clamp-2">
                   {course.subject}
                 </h1>
                 {course.category && (
@@ -197,7 +197,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                 className={`inline-flex items-center justify-center gap-5 px-2.5 py-15 rounded-lg font-sbold transition text-sm whitespace-nowrap ${
                   isInCart
                     ? "bg-accent text-primary-foreground cursor-not-allowed"
-                    : "bg-mySecondary text-primary-foreground hover:opacity-90"
+                    : "bg-mySecondary text-foreground hover:opacity-90"
                 }`}
               >
                 <ShoppingCart size={40} className="sm:w-55 sm:h-55" />
@@ -286,7 +286,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                 <Clock size={18} className="text-mySecondary flex-shrink-0" />
                 <div className="min-w-0">
                   <p className="text-xs text-muted-foreground dark:text-textSecondary">مدت دوره</p>
-                  <p className="font-bold text-sm sm:text-base text-primary-foreground truncate">{course.time}</p>
+                  <p className="font-bold text-sm sm:text-base text-foreground truncate">{course.time}</p>
                 </div>
               </div>
             )}
@@ -295,7 +295,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                 <Users size={18} className="text-mySecondary flex-shrink-0" />
                 <div className="min-w-0">
                   <p className="text-xs text-muted-foreground dark:text-textSecondary">دانشجویان</p>
-                  <p className="font-bold text-sm sm:text-base text-primary-foreground truncate">
+                  <p className="font-bold text-sm sm:text-base text-foreground truncate">
                     {course.students.toLocaleString("fa-IR")}
                   </p>
                 </div>
@@ -306,7 +306,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                 <Video size={18} className="text-mySecondary flex-shrink-0" />
                 <div className="min-w-0">
                   <p className="text-xs text-muted-foreground dark:text-textSecondary">تعداد ویدیو</p>
-                  <p className="font-bold text-sm sm:text-base text-primary-foreground">{course.videosCount}</p>
+                  <p className="font-bold text-sm sm:text-base text-foreground">{course.videosCount}</p>
                 </div>
               </div>
             )}
@@ -315,7 +315,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                 <span className="text-lg sm:text-2xl flex-shrink-0">👨‍🏫</span>
                 <div className="min-w-0">
                   <p className="text-xs text-muted-foreground dark:text-textSecondary">مدرس</p>
-                  <p className="font-bold text-xs sm:text-sm text-primary-foreground truncate">{course.instructor}</p>
+                  <p className="font-bold text-xs sm:text-sm text-foreground truncate">{course.instructor}</p>
                 </div>
               </div>
             )}

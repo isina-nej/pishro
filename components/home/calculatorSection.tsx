@@ -97,7 +97,7 @@ const CalculatorSection = () => {
   }, [amount, duration, selectedFund]);
 
   return (
-    <section className="relative mt-8 min-h-[600px] w-full overflow-hidden py-8 text-primary-foreground md:mt-20 md:min-h-screen">
+    <section className="relative mt-8 min-h-[600px] w-full overflow-hidden py-8 text-foreground md:mt-20 md:min-h-screen">
       <div className="absolute inset-x-4 inset-y-8 rounded-[2.5rem] bg-gradient-to-br from-[#102d42]/95 via-[#16384e]/95 to-[#0a2233]/95 shadow-2xl shadow-[#0b2234]/20 md:inset-x-8" />
       <div className="absolute inset-x-4 inset-y-8 rounded-[2.5rem] border border-border/10 bg-[url('/images/utiles/pattern1.svg')] opacity-[0.08] md:inset-x-8" />
 
@@ -126,7 +126,7 @@ const CalculatorSection = () => {
                 {/* نوع صندوق سرمایه‌ گذاری */}
                 <div className="rounded-3xl border border-border/15 bg-card/[0.08] px-4 py-4 text-primary-foreground shadow-xl backdrop-blur-xl sm:px-6">
                   <p className="text-center text-lg font-semibold mb-4 flex items-center justify-center gap-2">
-                    <BarChart3 size={22} className="text-primary-foreground" />
+                    <BarChart3 size={22} className="text-foreground" />
                     نوع صندوق سرمایه‌ گذاری
                   </p>
 
@@ -137,7 +137,7 @@ const CalculatorSection = () => {
                         onClick={() => handleSelectFund(fund)}
                         className={`px-5 py-2 rounded-full border transition-all  ${
                           selectedFund.key === fund.key
-                            ? "bg-mySecondary text-primary-foreground border-mySecondary"
+                            ? "bg-mySecondary text-foreground border-mySecondary"
                             : "bg-muted text-mySecondary border-border hover:bg-muted dark:border-borderColor dark:bg-darkBgHidden dark:text-textPrimary dark:hover:bg-cardBg"
                         }`}
                       >
@@ -150,7 +150,7 @@ const CalculatorSection = () => {
                 {/* مبلغ سرمایه‌ گذاری */}
                 <div className="rounded-3xl border border-border/15 bg-card/[0.08] px-4 py-4 text-primary-foreground shadow-xl backdrop-blur-xl sm:px-6">
                   <p className="text-center text-lg font-bold mb-8 flex items-center justify-center gap-2">
-                    <Wallet size={24} className="text-primary-foreground" />
+                    <Wallet size={24} className="text-foreground" />
                     مبلغ سرمایه‌ گذاری
                   </p>
 
@@ -200,7 +200,7 @@ const CalculatorSection = () => {
                     </button>
                   </div>
 
-                  <p className="mt-6 text-center font-bold text-primary-foreground">
+                  <p className="mt-6 text-center font-bold text-foreground">
                     {formatNumber(amount)}
                     <span className="font-normal">تومان</span>
                   </p>
@@ -209,7 +209,7 @@ const CalculatorSection = () => {
                 {/* مدت سرمایه‌ گذاری */}
                 <div className="rounded-3xl border border-border/15 bg-card/[0.08] px-4 py-4 text-primary-foreground shadow-xl backdrop-blur-xl sm:px-6">
                   <p className="text-center text-lg font-bold mb-8 flex items-center justify-center gap-2">
-                    <Clock size={24} className="text-primary-foreground" />
+                    <Clock size={24} className="text-foreground" />
                     مدت سرمایه‌ گذاری
                   </p>
 
@@ -259,7 +259,7 @@ const CalculatorSection = () => {
                     </button>
                   </div>
 
-                  <p className="mt-6 text-center font-bold text-primary-foreground">{duration} ماهه</p>
+                  <p className="mt-6 text-center font-bold text-foreground">{duration} ماهه</p>
                 </div>
               </div>
 
@@ -321,7 +321,7 @@ const CalculatorSection = () => {
 
                 <Link
                   href="/investment-plans"
-                  className="mt-10 px-16 w-full sm:w-fit bg-mySecondary border border-mySecondary text-primary-foreground rounded-full py-4 font-bold text-center hover:bg-mySecondary/30 hover:border-border transition-colors"
+                  className="mt-10 px-16 w-full sm:w-fit bg-mySecondary border border-mySecondary text-foreground rounded-full py-4 font-bold text-center hover:bg-mySecondary/30 hover:border-border transition-colors"
                 >
                   سرمایه‌ گذاری
                 </Link>

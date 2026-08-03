@@ -210,7 +210,7 @@ const NewsPageContent = () => {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={handleResetFilters}
-                      className="mt-4 px-6 py-3 rounded-full bg-gradient-to-r from-mySecondary to-mySecondary/80 text-primary-foreground font-medium text-sm transition-all duration-200 shadow-lg shadow-mySecondary/30 hover:shadow-xl hover:shadow-mySecondary/40"
+                      className="mt-4 px-6 py-3 rounded-full bg-gradient-to-r from-mySecondary to-mySecondary/80 text-foreground font-medium text-sm transition-all duration-200 shadow-lg shadow-mySecondary/30 hover:shadow-xl hover:shadow-mySecondary/40"
                     >
                       حذف تمام فیلترها
                     </motion.button>

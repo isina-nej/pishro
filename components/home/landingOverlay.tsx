@@ -216,7 +216,7 @@ const OverlayMainText = ({
         <span className="h-2 w-2 rounded-full bg-[#86e7f2] shadow-[0_0_16px_#86e7f2]" />
         آموزش، تحلیل و سرمایه‌گذاری در یک مسیر
       </div>
-      <h1 className="max-w-3xl text-4xl font-black leading-[1.35] tracking-tight text-primary-foreground sm:text-5xl lg:text-6xl xl:text-7xl">
+      <h1 className="max-w-3xl text-4xl font-black leading-[1.35] tracking-tight text-foreground sm:text-5xl lg:text-6xl xl:text-7xl">
         {title || "خوش آمدید به خانواده بزرگ پیشرو"}
       </h1>
       <p className="mt-5 max-w-2xl text-base leading-8 text-muted-foreground/85">

@@ -155,7 +155,7 @@ export const CourseDetailsModal = ({
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
-            className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-lg bg-gradient-to-b from-card to-card text-primary-foreground"
+            className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-lg bg-gradient-to-b from-card to-card text-foreground"
           >
             {/* Header with Image */}
             <div className="relative h-80 w-full overflow-hidden">
@@ -267,7 +267,7 @@ export const CourseDetailsModal = ({
                   className={`flex items-center gap-2 rounded-lg px-4 py-2 font-bold transition ${
                     isInCart
                       ? "bg-accent text-primary-foreground cursor-not-allowed"
-                      : "bg-mySecondary text-primary-foreground hover:shadow-lg"
+                      : "bg-mySecondary text-foreground hover:shadow-lg"
                   }`}
                 >
                   <ShoppingCart className="h-5 w-5" />
@@ -320,8 +320,8 @@ export const CourseDetailsModal = ({
                   onClick={() => setActiveTab("درباره")}
                   className={`border-b-2 py-4 font-medium transition ${
                     activeTab === "درباره"
-                      ? "border-primary text-primary-foreground"
-                      : "border-transparent text-muted-foreground hover:text-primary-foreground"
+                      ? "border-primary text-foreground"
+                      : "border-transparent text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   درباره
@@ -330,8 +330,8 @@ export const CourseDetailsModal = ({
                   onClick={() => setActiveTab("نقدها")}
                   className={`border-b-2 py-4 font-medium transition ${
                     activeTab === "نقدها"
-                      ? "border-primary text-primary-foreground"
-                      : "border-transparent text-muted-foreground hover:text-primary-foreground"
+                      ? "border-primary text-foreground"
+                      : "border-transparent text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   نقدها

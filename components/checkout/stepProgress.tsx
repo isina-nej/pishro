@@ -56,7 +56,7 @@ const StepProgress = ({ currentStep }: StepProgressProps) => {
               >
                 <Icon
                   className={`w-6 h-6 ${
-                    isActive || isCompleted ? "text-primary-foreground" : "text-muted-foreground dark:text-textSecondary"
+                    isActive || isCompleted ? "text-foreground" : "text-muted-foreground dark:text-textSecondary"
                   }`}
                 />
               </motion.div>

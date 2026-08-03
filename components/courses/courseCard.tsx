@@ -82,7 +82,7 @@ export const CourseCard = ({ course }: CourseCardProps) => {
             className="absolute inset-0 flex items-center justify-center"
           >
             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-card dark:bg-cardBg backdrop-blur hover:bg-card">
-              <Play className="h-8 w-8 fill-white text-primary-foreground" />
+              <Play className="h-8 w-8 fill-white text-foreground" />
             </div>
           </motion.div>
 
@@ -111,7 +111,7 @@ export const CourseCard = ({ course }: CourseCardProps) => {
 
         {/* Course info */}
         <div className="mt-3 space-y-2">
-          <h3 className="line-clamp-2 font-semibold text-primary-foreground transition group-hover:text-primary">
+          <h3 className="line-clamp-2 font-semibold text-foreground transition group-hover:text-primary">
             {course.subject}
           </h3>
 
@@ -124,7 +124,7 @@ export const CourseCard = ({ course }: CourseCardProps) => {
             className={`w-full flex items-center justify-center gap-1 rounded-lg px-3 py-2 font-semibold text-sm transition ${
               isInCart
                 ? "bg-accent/70 text-primary-foreground cursor-not-allowed"
-                : "bg-mySecondary text-primary-foreground hover:shadow-lg hover:scale-105"
+                : "bg-mySecondary text-foreground hover:shadow-lg hover:scale-105"
             }`}
           >
             <ShoppingCart className="h-4 w-4" />
@@ -153,7 +153,7 @@ export const CourseCard = ({ course }: CourseCardProps) => {
 
           {/* Price */}
           <div className="flex items-center gap-2 pt-2">
-            <span className="text-lg font-bold text-primary-foreground">
+            <span className="text-lg font-bold text-foreground">
               {freeCourse ? "رایگان" : discountedPrice.toLocaleString("fa-IR")}
             </span>
             {course.discountPercent && course.discountPercent > 0 && (

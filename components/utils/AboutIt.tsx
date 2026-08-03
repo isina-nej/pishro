@@ -28,8 +28,8 @@ const AboutIt = () => {
   return (
     <div className="container-xl mb-20 -mt-24 z-30 relative">
       <div className="flex items-center mb-8">
-        <StarIcon className="size-8 text-primary-foreground ml-3 mb-2" />
-        <h4 className="font-bold text-2xl text-primary-foreground">
+        <StarIcon className="size-8 text-foreground ml-3 mb-2" />
+        <h4 className="font-bold text-2xl text-foreground">
           آنچه برای شروع نیاز دارید
         </h4>
       </div>
@@ -85,7 +85,7 @@ const HoverCard = ({ title, description, onHover }: HoverCardProps) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className={cn(
-        "rounded-xl p-6 h-[300px] text-primary-foreground transition-all duration-300 ease-in-out shadow-lg cursor-pointer group relative overflow-hidden",
+        "rounded-xl p-6 h-[300px] text-foreground transition-all duration-300 ease-in-out shadow-lg cursor-pointer group relative overflow-hidden",
         `bg-gradient-to-br from-[#214254] to-[#3a6073]`
       )}
     >

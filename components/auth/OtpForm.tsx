@@ -215,7 +215,7 @@ export function OtpForm({
         onClick={handleVerify}
         disabled={code.length !== 4 || isLoading}
         className={cn(
-          "w-full h-12 bg-[#d52a16] hover:bg-[#b82414] text-primary-foreground font-bold text-lg transition-all duration-200",
+          "w-full h-12 bg-[#d52a16] hover:bg-[#b82414] text-foreground font-bold text-lg transition-all duration-200",
           "disabled:opacity-50 disabled:cursor-not-allowed",
           code.length === 4 && !isLoading && "shadow-lg shadow-[#d52a16]/30"
         )}

@@ -60,7 +60,7 @@ const NavbarMobile = ({
           "fixed top-0 left-0 w-full flex justify-between items-center md:hidden py-2 px-4 z-[9999] transition-transform duration-300",
           isHidden ? "-translate-y-full" : "translate-y-0",
           isOpen
-            ? "bg-transparent text-primary-foreground border-b border-border/20"
+            ? "bg-transparent text-foreground border-b border-border/20"
             : "bg-card dark:bg-cardBg shadow-md"
         )}
       >
@@ -91,7 +91,7 @@ const NavbarMobile = ({
               className={clsx(
                 "border transition-colors pr-2 pl-2 py-1.5 rounded-lg text-sm ml-2",
                 !isDark
-                  ? "border-border hover:bg-background/20 text-primary-foreground"
+                  ? "border-border hover:bg-background/20 text-foreground"
                   : "border-mySecondary hover:bg-mySecondary/10",
                 isOpen ? "border-border" : "border-mySecondary"
               )}
@@ -123,7 +123,7 @@ const NavbarMobile = ({
             <NavbarLinks
               navbarData={navbarData}
               onClick={closeMenu}
-              className="flex flex-col items-start gap-6 px-4 text-lg text-primary-foreground"
+              className="flex flex-col items-start gap-6 px-4 text-lg text-foreground"
             />
             <div className="flex flex-col items-center mt-10 pb-10 gap-4">
               <NavbarActions isDark={true} />

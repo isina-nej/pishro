@@ -72,7 +72,7 @@ const PortfoliosDisplay = () => {
                   <div
                     className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${theme.gradient} flex items-center justify-center mb-6 shadow-lg`}
                   >
-                    <Icon className="text-primary-foreground" size={32} />
+                    <Icon className="text-foreground" size={32} />
                   </div>
 
                   {/* Title & Description */}

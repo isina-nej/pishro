@@ -59,9 +59,9 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
 
                 {/* Name on Image */}
-                <div className="absolute bottom-6 right-6 text-primary-foreground">
+                <div className="absolute bottom-6 right-6 text-foreground">
                   <h3 className="text-2xl font-bold mb-1">{member.name}</h3>
-                  <p className="text-primary-foreground/90 font-medium">{member.role}</p>
+                  <p className="text-foreground/90 font-medium">{member.role}</p>
                 </div>
               </div>
             )}
@@ -124,7 +124,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
                       href={member.linkedinUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 min-w-[120px] bg-myPrimary/10 hover:bg-myPrimary text-myPrimary hover:text-primary-foreground py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
+                      className="flex-1 min-w-[120px] bg-myPrimary/10 hover:bg-myPrimary text-myPrimary hover:text-foreground py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
                     >
                       <LuLinkedin />
                       <span>لینکدین</span>
@@ -133,7 +133,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
                   {member.emailUrl && (
                     <a
                       href={member.emailUrl}
-                      className="flex-1 min-w-[120px] bg-mySecondary/10 hover:bg-mySecondary text-mySecondary hover:text-primary-foreground py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
+                      className="flex-1 min-w-[120px] bg-mySecondary/10 hover:bg-mySecondary text-mySecondary hover:text-foreground py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
                     >
                       <LuMail />
                       <span>ایمیل</span>

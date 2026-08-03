@@ -194,7 +194,7 @@ export function ForgotPasswordForm({
             type="submit"
             disabled={isLoading}
             className={cn(
-              "mt-6 w-full h-12 max-w-[306px] bg-[#d52a16] text-primary-foreground font-bold text-lg mx-auto",
+              "mt-6 w-full h-12 max-w-[306px] bg-[#d52a16] text-foreground font-bold text-lg mx-auto",
               isLoading && "opacity-80 cursor-not-allowed"
             )}
           >
@@ -262,7 +262,7 @@ export function ForgotPasswordForm({
           type="submit"
           disabled={isLoading}
           className={cn(
-            "mt-6 w-full h-12 max-w-[306px] bg-[#d52a16] text-primary-foreground font-bold text-lg mx-auto",
+            "mt-6 w-full h-12 max-w-[306px] bg-[#d52a16] text-foreground font-bold text-lg mx-auto",
             isLoading && "opacity-80 cursor-not-allowed"
           )}
         >

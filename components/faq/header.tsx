@@ -1,7 +1,7 @@
 const Header = () => {
   return (
     <div
-      className="relative h-[320px] bg-no-repeat bg-cover bg-center flex justify-center text-primary-foreground"
+      className="relative h-[320px] bg-no-repeat bg-cover bg-center flex justify-center text-foreground"
       style={{ backgroundImage: `url('/images/faq/header.png')` }}
     >
       {/* Overlay */}

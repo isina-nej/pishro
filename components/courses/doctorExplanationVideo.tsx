@@ -28,7 +28,7 @@ export default function DoctorExplanationVideo({
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className="text-base flex items-center gap-2 px-6 py-6 border-2 border-myPrimary text-myPrimary hover:bg-myPrimary hover:text-primary-foreground transition-all duration-300 rounded-full font-bold"
+          className="text-base flex items-center gap-2 px-6 py-6 border-2 border-myPrimary text-myPrimary hover:bg-myPrimary hover:text-foreground transition-all duration-300 rounded-full font-bold"
         >
           <IoPlayCircle size={20} />
           توضیحات خانم دکتر

@@ -103,7 +103,7 @@ export function DesktopScroller({
               {/* right section */}
               <div className="z-10 flex h-full flex-1 flex-col justify-between py-10 pr-12 pl-8 xl:py-14">
                 <div>
-                  <h4 className="mb-8 text-4xl font-semibold text-primary-foreground xl:text-5xl">
+                  <h4 className="mb-8 text-4xl font-semibold text-foreground xl:text-5xl">
                     از مزایای پیشرو بودن
                   </h4>
 
@@ -125,7 +125,7 @@ export function DesktopScroller({
                           className={clsx(
                             "text-base transition-all",
                             i === index
-                              ? "text-primary-foreground font-semibold"
+                              ? "text-foreground font-semibold"
                               : "text-muted-foreground dark:text-textSecondary"
                           )}
                         >

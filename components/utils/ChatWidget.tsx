@@ -63,11 +63,11 @@ const ChatWidget = () => {
             className="fixed bottom-[16px] left-4 w-80 h-[90%] bg-card dark:bg-cardBg shadow-lg rounded-lg flex flex-col z-50"
           >
             {/* هدر */}
-            <div className="flex items-center justify-between bg-[#173046] text-primary-foreground p-4 py-2 rounded-t-lg">
+            <div className="flex items-center justify-between bg-[#173046] text-foreground p-4 py-2 rounded-t-lg">
               <span className="font-bold">پشتیبانی آنلاین</span>
               <Button
                 variant="outline"
-                className="bg-transparent hover:bg-transparent hover:scale-105 hover:text-primary-foreground group"
+                className="bg-transparent hover:bg-transparent hover:scale-105 hover:text-foreground group"
                 onClick={toggleChat}
               >
                 <X className="size-5 group-hover:rotate-180 transition-all" />
@@ -105,7 +105,7 @@ const ChatWidget = () => {
                   {topics.map((topic, index) => (
                     <button
                       key={index}
-                      className="rtl text-primary-foreground bg-[#173046] hover:bg-[#173046]/95 py-1.5 px-4 text-sm font-normal rounded-md"
+                      className="rtl text-foreground bg-[#173046] hover:bg-[#173046]/95 py-1.5 px-4 text-sm font-normal rounded-md"
                       onClick={() => setSelectedTopic(topic)}
                     >
                       {topic}
@@ -121,7 +121,7 @@ const ChatWidget = () => {
       {/* دکمه باز کردن چت */}
       <Button
         onClick={toggleChat}
-        className="fixed bottom-4 left-4 bg-[#173046] text-primary-foreground rounded-full size-16 p-4 shadow-lg hover:bg-[#173046]/95 z-40 flex justify-center items-center"
+        className="fixed bottom-4 left-4 bg-[#173046] text-foreground rounded-full size-16 p-4 shadow-lg hover:bg-[#173046]/95 z-40 flex justify-center items-center"
       >
         <IoChatbubblesOutline style={{ width: "40px", height: "40px" }} />
       </Button>

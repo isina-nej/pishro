@@ -135,7 +135,7 @@ const NewsCard = ({ data }: NewsCardProps) => {
           <div className="space-y-3">
             {data.author && (
               <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-mySecondary to-mySecondary/70 flex items-center justify-center text-primary-foreground text-xs font-bold flex-shrink-0 shadow-md">
+                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-mySecondary to-mySecondary/70 flex items-center justify-center text-foreground text-xs font-bold flex-shrink-0 shadow-md">
                   {data.author.charAt(0)}
                 </div>
                 <p className="text-xs sm:text-sm text-muted-foreground font-medium truncate">

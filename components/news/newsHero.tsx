@@ -72,7 +72,7 @@ export const NewsHero = ({ stats }: NewsHeroProps) => {
   };
 
   return (
-    <section className="relative overflow-hidden pb-40 pt-32 text-primary-foreground lg:pb-48">
+    <section className="relative overflow-hidden pb-40 pt-32 text-foreground lg:pb-48">
       {/* Background with enhanced gradient */}
       <div className="absolute inset-0">
         <Image
@@ -127,7 +127,7 @@ export const NewsHero = ({ stats }: NewsHeroProps) => {
                 به‌روزترین اخبار
               </span>
               <br />
-              <span className="text-primary-foreground">دنیای سرمایه‌گذاری</span>
+              <span className="text-foreground">دنیای سرمایه‌گذاری</span>
             </motion.h1>
           </div>
 

@@ -47,7 +47,7 @@ const CtaSection = ({
         </div>
 
         <div className="relative z-10 p-12 md:p-16">
-          <div className="max-w-4xl mx-auto text-center text-primary-foreground">
+          <div className="max-w-4xl mx-auto text-center text-foreground">
             {/* Badge */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
@@ -74,7 +74,7 @@ const CtaSection = ({
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="text-base sm:text-lg md:text-xl text-primary-foreground/90 mb-10 leading-relaxed max-w-2xl mx-auto px-4"
+              className="text-base sm:text-lg md:text-xl text-foreground/90 mb-10 leading-relaxed max-w-2xl mx-auto px-4"
             >
               {ctaDescription}
             </motion.p>

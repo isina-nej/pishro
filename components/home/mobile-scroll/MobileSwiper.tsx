@@ -162,7 +162,7 @@ export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
                   initial="enter"
                   animate="center"
                   exit="exit"
-                  className="text-base font-extrabold leading-7 text-primary-foreground sm:text-lg"
+                  className="text-base font-extrabold leading-7 text-foreground sm:text-lg"
                 >
                   {currentStep.text}
                 </motion.h6>

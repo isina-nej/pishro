@@ -15,7 +15,7 @@ interface CoursesHeroProps {
 
 export const CoursesHero = ({ stats }: CoursesHeroProps) => {
   return (
-    <section className="relative overflow-hidden pb-32 pt-36 text-primary-foreground">
+    <section className="relative overflow-hidden pb-32 pt-36 text-foreground">
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image

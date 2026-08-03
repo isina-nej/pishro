@@ -167,7 +167,7 @@ export const NewsFilterControls = ({
               className={cn(
                 "px-4 py-3 rounded-xl text-sm font-medium text-start transition-all duration-200 border",
                 selectedCategory === category
-                  ? "border-[#112b3a] bg-[#112b3a] text-primary-foreground shadow-lg"
+                  ? "border-[#112b3a] bg-[#112b3a] text-foreground shadow-lg"
                   : "border-border/60 bg-card/55 text-[#405c6b] hover:border-primary/50 hover:bg-card/80/10/5 dark:hover:bg-card/10",
                 disabled && "pointer-events-none opacity-60"
               )}

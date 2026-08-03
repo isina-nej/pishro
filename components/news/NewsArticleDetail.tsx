@@ -258,13 +258,13 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
                 </div>
 
                 {/* Title */}
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-primary-foreground leading-tight mb-4">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-foreground leading-tight mb-4">
                   {article.title}
                 </h1>
 
                 {/* Excerpt */}
                 {article.excerpt && (
-                  <p className="max-w-2xl text-base sm:text-lg text-primary-foreground leading-relaxed">
+                  <p className="max-w-2xl text-base sm:text-lg text-foreground leading-relaxed">
                     {article.excerpt}
                   </p>
                 )}
@@ -293,7 +293,7 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
             <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
               {article.author && (
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary flex items-center justify-center text-primary-foreground font-bold text-xs">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary flex items-center justify-center text-foreground font-bold text-xs">
                     {article.author.charAt(0)}
                   </div>
                   <span>{article.author}</span>

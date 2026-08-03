@@ -61,14 +61,14 @@ const PayMain = () => {
         className="bg-card dark:bg-cardBg rounded-2xl shadow-lg border border-border dark:border-borderColor overflow-hidden"
       >
         {/* Header */}
-        <div className="bg-gradient-to-l from-myGolden to-premium p-5 text-primary-foreground">
+        <div className="bg-gradient-to-l from-myGolden to-premium p-5 text-foreground">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-card dark:bg-cardBg backdrop-blur-sm rounded-xl flex items-center justify-center">
               <Receipt className="w-6 h-6" />
             </div>
             <div>
               <p className="font-bold text-lg">بررسی نهایی سفارش</p>
-              <p className="text-xs text-primary-foreground/90">
+              <p className="text-xs text-foreground/90">
                 جزئیات دوره‌های خریداری شده
               </p>
             </div>
@@ -146,7 +146,7 @@ const PayMain = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 bg-myPrimary rounded-xl flex items-center justify-center">
-                      <Receipt className="w-6 h-6 text-primary-foreground" />
+                      <Receipt className="w-6 h-6 text-foreground" />
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground dark:text-textSecondary font-medium">

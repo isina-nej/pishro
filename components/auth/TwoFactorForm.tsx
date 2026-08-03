@@ -113,7 +113,7 @@ export function TwoFactorForm({
         <Button
           type="submit"
           disabled={isLoading || isRequestingOTP || code.length !== 6}
-          className="w-full bg-gradient-to-r from-mySecondary to-myBlue text-primary-foreground py-3 rounded-xl font-bold hover:shadow-lg transition-all duration-300 disabled:opacity-50"
+          className="w-full bg-gradient-to-r from-mySecondary to-myBlue text-foreground py-3 rounded-xl font-bold hover:shadow-lg transition-all duration-300 disabled:opacity-50"
         >
           {isLoading ? (
             <>

@@ -123,7 +123,7 @@ export function AuthForm({ variant, onSubmit, onForgotPassword }: AuthFormProps)
         type="submit"
         disabled={isLoading}
         className={cn(
-          "mt-6 w-full h-10 max-w-[306px] bg-[#d52a16] text-primary-foreground font-bold text-xl mx-auto",
+          "mt-6 w-full h-10 max-w-[306px] bg-[#d52a16] text-foreground font-bold text-xl mx-auto",
           isLoading && "opacity-80 cursor-not-allowed"
         )}
       >

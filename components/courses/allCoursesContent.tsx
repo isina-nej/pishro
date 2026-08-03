@@ -33,7 +33,7 @@ export default function AllCoursesContent({
   return (
     <div className="w-full min-h-screen bg-muted dark:bg-darkBgHidden">
       {/* Hero Header */}
-      <div className="bg-gradient-to-br from-myPrimary to-mySecondary text-primary-foreground py-12 pt-24 sm:py-16 sm:pt-28 md:py-20 md:pt-32">
+      <div className="bg-gradient-to-br from-myPrimary to-mySecondary text-foreground py-12 pt-24 sm:py-16 sm:pt-28 md:py-20 md:pt-32">
         <div className="container mx-auto px-4">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}

@@ -92,7 +92,7 @@ const CourseCard = ({ data, link: _link }: CourseCardProps) => {
               onClick={handleAddToCart}
               initial={{ opacity: 0, scale: 0.8 }}
               whileHover={{ scale: 1.05 }}
-              className="absolute bottom-2 right-2 bg-mySecondary text-primary-foreground px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1 hover:shadow-lg transition"
+              className="absolute bottom-2 right-2 bg-mySecondary text-foreground px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1 hover:shadow-lg transition"
             >
               <ShoppingCart size={14} />
               {freeCourse ? "رایگان" : "خرید"}
@@ -142,7 +142,7 @@ const CourseCard = ({ data, link: _link }: CourseCardProps) => {
       <div className="absolute -bottom-5 w-full flex justify-center pl-6">
         <button
           onClick={handleAddToCart}
-          className="w-48 rounded-full bg-[#112b3a] py-2 text-sm font-bold text-primary-foreground shadow-lg transition hover:-translate-y-0.5 hover:bg-[#214254] sm:text-base"
+          className="w-48 rounded-full bg-[#112b3a] py-2 text-sm font-bold text-foreground shadow-lg transition hover:-translate-y-0.5 hover:bg-[#214254] sm:text-base"
         >
           {freeCourse ? "ثبت‌نام رایگان" : "افزودن به سبد خرید"}
         </button>

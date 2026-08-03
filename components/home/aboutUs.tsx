@@ -79,7 +79,7 @@ const AboutUs: React.FC = () => {
 
           <Link
             href="/about-us"
-            className="absolute left-6 bottom-6 inline-flex items-center justify-center rounded-full bg-mySecondary px-8 py-4 text-lg font-medium text-primary-foreground shadow-2xl shadow-mySecondary/30 transition-transform duration-300 hover:-translate-y-1 hover:scale-105"
+            className="absolute left-6 bottom-6 inline-flex items-center justify-center rounded-full bg-mySecondary px-8 py-4 text-lg font-medium text-foreground shadow-2xl shadow-mySecondary/30 transition-transform duration-300 hover:-translate-y-1 hover:scale-105"
           >
             بیشتر
           </Link>

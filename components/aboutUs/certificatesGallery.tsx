@@ -66,7 +66,7 @@ const CertificatesGallery = ({ certificates }: CertificatesGalleryProps) => {
 
                   {/* Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="absolute bottom-0 left-0 right-0 p-6 text-primary-foreground">
+                    <div className="absolute bottom-0 left-0 right-0 p-6 text-foreground">
                       <div className="flex items-center gap-2 mb-2">
                         <LuAward className="text-premium" />
                         <h3 className="font-bold text-lg">{cert.title}</h3>

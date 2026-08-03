@@ -21,7 +21,7 @@ const NavbarDesktop = ({ isDark, navbarData }: NavbarDesktopProps) => {
     <div
       className={`absolute top-0 w-full z-[100] pt-4 md:pt-8 pb-4 md:pb-8 text-xs px-2 sm:px-8 md:px-[60px] flex flex-col md:flex-row justify-between items-center transition-colors duration-300 ${
         isDark
-          ? "text-primary-foreground bg-gradient-to-b from-background/70 via-background/40 to-transparent backdrop-blur-[2px]"
+          ? "text-foreground bg-gradient-to-b from-background/70 via-background/40 to-transparent backdrop-blur-[2px]"
           : "text-mySecondary bg-transparent"
       }`}
       onMouseLeave={() => setIsIndicatorActive(false)}

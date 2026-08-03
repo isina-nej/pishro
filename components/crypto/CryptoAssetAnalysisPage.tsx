@@ -49,7 +49,7 @@ export default function CryptoAssetAnalysisPage({ id }: { id: string }) {
   const asset = data?.asset;
   const rangePosition = useMemo(() => asset?.high24h && asset.low24h && asset.high24h > asset.low24h ? Math.min(100, Math.max(0, ((asset.priceUsd - asset.low24h) / (asset.high24h - asset.low24h)) * 100)) : 50, [asset]);
 
-  return <main className="relative min-h-screen overflow-hidden bg-[#07111f] pb-14 pt-20 text-primary-foreground md:pt-28" dir="rtl">
+  return <main className="relative min-h-screen overflow-hidden bg-[#07111f] pb-14 pt-20 text-foreground md:pt-28" dir="rtl">
     <div className="pointer-events-none absolute inset-0"><div className="absolute -right-48 -top-20 h-[34rem] w-[34rem] rounded-full bg-primary/12 blur-3xl" /><div className="absolute -left-44 top-1/3 h-[30rem] w-[30rem] rounded-full bg-accent/10 blur-3xl" /></div>
     <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
       <Link href="/crypto-prices" className="mb-6 inline-flex items-center gap-2 rounded-full border border-border/10 bg-card/[0.05] px-4 py-2 text-xs text-muted-foreground transition hover:bg-card/10 hover:text-primary-foreground"><ArrowRight className="h-4 w-4" />بازگشت به بازار</Link>

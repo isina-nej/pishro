@@ -133,7 +133,7 @@ const CalculatorSection = () => {
   };
 
   return (
-    <section className="relative w-full min-h-[600px] md:min-h-screen bg-gradient-to-br from-[#152c44] via-[#1a3a54] to-[#152c44] text-primary-foreground overflow-hidden mt-44">
+    <section className="relative w-full min-h-[600px] md:min-h-screen bg-gradient-to-br from-[#152c44] via-[#1a3a54] to-[#152c44] text-foreground overflow-hidden mt-44">
       {/* pattern background */}
       <div className="absolute inset-0 bg-[url('/images/utiles/pattern1.svg')] opacity-10 z-0" />
 
@@ -173,7 +173,7 @@ const CalculatorSection = () => {
                     }
                     className={`px-5 py-2 rounded-full border transition-all  ${
                       portfolio === item.key
-                        ? "bg-mySecondary text-primary-foreground border-mySecondary"
+                        ? "bg-mySecondary text-foreground border-mySecondary"
                         : "bg-muted text-mySecondary border-border hover:bg-muted dark:border-borderColor dark:bg-darkBgHidden dark:text-textPrimary dark:hover:bg-cardBg"
                     }`}
                   >
@@ -380,7 +380,7 @@ const CalculatorSection = () => {
               <button
                 onClick={handleAddToCart}
                 disabled={isAddingToCart}
-                className="mt-4 w-full bg-gradient-to-r from-mySecondary to-premium hover:from-mySecondary/90 hover:to-premium text-primary-foreground font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+                className="mt-4 w-full bg-gradient-to-r from-mySecondary to-premium hover:from-mySecondary/90 hover:to-premium text-foreground font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
               >
                 <ShoppingCart size={20} />
                 {isAddingToCart ? "در حال افزودن..." : "افزودن به سبد خرید"}

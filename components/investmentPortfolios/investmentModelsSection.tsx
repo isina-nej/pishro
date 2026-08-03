@@ -310,7 +310,7 @@ const InvestmentModelsSection = () => {
               >
                 {/* Header با gradient - با ارتفاع یکسان */}
                 <div
-                  className={`bg-gradient-to-br ${model.gradient} p-8 text-primary-foreground min-h-[200px] md:min-h-[220px] flex flex-col justify-center`}
+                  className={`bg-gradient-to-br ${model.gradient} p-8 text-foreground min-h-[200px] md:min-h-[220px] flex flex-col justify-center`}
                 >
                   <div className="flex items-center gap-4 mb-4">
                     <div className="w-16 h-16 rounded-2xl bg-card/15 text-primary-foreground backdrop-blur-sm flex items-center justify-center">
@@ -322,7 +322,7 @@ const InvestmentModelsSection = () => {
                       </h3>
                     </div>
                   </div>
-                  <p className="text-primary-foreground/90 leading-relaxed line-clamp-4">
+                  <p className="text-foreground/90 leading-relaxed line-clamp-4">
                     {model.description}
                   </p>
                 </div>
@@ -389,7 +389,7 @@ const InvestmentModelsSection = () => {
                         ? scrollToCalculator()
                         : setOpenModal(model.type as "in-person" | "online")
                     }
-                    className={`group w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-gradient-to-r ${model.gradient} text-primary-foreground font-bold text-lg hover:shadow-lg transition-all`}
+                    className={`group w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-gradient-to-r ${model.gradient} text-foreground font-bold text-lg hover:shadow-lg transition-all`}
                   >
                     {model.ctaText}
                     <ArrowRight

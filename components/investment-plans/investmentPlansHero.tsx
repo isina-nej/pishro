@@ -68,7 +68,7 @@ export const InvestmentPlansHero = ({
   };
 
   return (
-    <section className="relative overflow-hidden pb-20 pt-28 text-primary-foreground min-h-[90vh] flex items-center">
+    <section className="relative overflow-hidden pb-20 pt-28 text-foreground min-h-[90vh] flex items-center">
       {/* Background Video with Parallax Effect */}
       <div className="absolute inset-0">
         <motion.div
@@ -177,7 +177,7 @@ export const InvestmentPlansHero = ({
               <Button
                 onClick={scrollToModels}
                 size="lg"
-                className="bg-gradient-to-r from-primary to-primary hover:from-primary hover:to-primary text-primary-foreground shadow-xl shadow-emerald-500/25 hover:shadow-2xl hover:shadow-emerald-500/40 transition-all duration-300 px-8 py-6 text-lg font-semibold rounded-2xl"
+                className="bg-gradient-to-r from-primary to-primary hover:from-primary hover:to-primary text-foreground shadow-xl shadow-emerald-500/25 hover:shadow-2xl hover:shadow-emerald-500/40 transition-all duration-300 px-8 py-6 text-lg font-semibold rounded-2xl"
               >
                 شروع سرمایه‌گذاری
               </Button>
@@ -235,7 +235,7 @@ export const InvestmentPlansHero = ({
                       }
                     : undefined
                 }
-                className={`group relative overflow-hidden rounded-3xl border border-border/15 bg-[#091a28]/50 p-6 text-primary-foreground ${
+                className={`group relative overflow-hidden rounded-3xl border border-border/15 bg-[#091a28]/50 p-6 text-foreground ${
                   isMobile ? "backdrop-blur-sm" : "backdrop-blur-2xl"
                 } shadow-xl transition-all duration-300 hover:bg-card/15`}
               >
@@ -245,7 +245,7 @@ export const InvestmentPlansHero = ({
                   </span>
 
                   <div className="flex flex-col gap-1">
-                    <span className="text-3xl font-bold text-primary-foreground">
+                    <span className="text-3xl font-bold text-foreground">
                       {item.value}
                     </span>
                     <span className="text-sm text-muted-foreground font-medium">
@@ -308,7 +308,7 @@ export const InvestmentPlansHero = ({
             <span className="text-xs text-muted-foreground font-medium">
               مشاهده سبدها
             </span>
-            <ArrowDown className="h-5 w-5 text-primary-foreground/60" />
+            <ArrowDown className="h-5 w-5 text-foreground/60" />
           </div>
         </div>
       )}

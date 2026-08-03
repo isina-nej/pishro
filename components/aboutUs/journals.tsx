@@ -51,7 +51,7 @@ const Journals = ({ news }: JournalsProps) => {
             className="public-page-card group rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
           >
             {/* Icon Badge */}
-            <div className="inline-flex bg-gradient-to-br from-myPrimary to-mySecondary text-primary-foreground p-4 rounded-xl mb-6 group-hover:scale-110 transition-transform">
+            <div className="inline-flex bg-gradient-to-br from-myPrimary to-mySecondary text-foreground p-4 rounded-xl mb-6 group-hover:scale-110 transition-transform">
               <LuNewspaper className="text-2xl" />
             </div>
 

@@ -156,7 +156,7 @@ export function VideoPlayer({
         <div className="absolute inset-0 flex items-center justify-center bg-background bg-opacity-50 rounded-lg">
           <div className="flex flex-col items-center">
             <div className="w-12 h-12 border-4 border-border border-t-transparent rounded-full animate-spin" />
-            <p className="mt-4 text-primary-foreground text-sm">در حال بارگذاری...</p>
+            <p className="mt-4 text-foreground text-sm">در حال بارگذاری...</p>
           </div>
         </div>
       )}
@@ -178,7 +178,7 @@ export function VideoPlayer({
                 d="M12 8v4m0 4h.01M21 12a9 9 0 1-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <p className="text-primary-foreground text-lg font-semibold mb-2">
+            <p className="text-foreground text-lg font-semibold mb-2">
               خطا در پخش ویدیو
             </p>
             <p className="text-muted-foreground text-sm">{error}</p>

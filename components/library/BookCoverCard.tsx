@@ -80,7 +80,7 @@ export const BookCoverCard = ({
             className="absolute top-0 right-0 left-0 flex justify-between p-3"
             variants={badgeVariants}
           >
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-accent/95 to-accent/95 px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-lg backdrop-blur-sm border border-accent/30">
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-accent/95 to-accent/95 px-3 py-1.5 text-xs font-semibold text-foreground shadow-lg backdrop-blur-sm border border-accent/30">
               <TrendingUp className="h-3 w-3" />
               {book.status}
             </div>
@@ -93,7 +93,7 @@ export const BookCoverCard = ({
               />
 
               {/* Rating Badge */}
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-premium/95 to-premium/95 px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-lg backdrop-blur-sm border border-premium/30">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-premium/95 to-premium/95 px-3 py-1.5 text-xs font-semibold text-foreground shadow-lg backdrop-blur-sm border border-premium/30">
                 <Star className="h-3.5 w-3.5 fill-white" />
                 {book.rating.toFixed(1)}
               </div>
@@ -101,7 +101,7 @@ export const BookCoverCard = ({
           </motion.div>
 
           {/* Category Overlay - Bottom - More Transparent */}
-          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background/60 via-background/20 to-transparent p-4 text-primary-foreground">
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background/60 via-background/20 to-transparent p-4 text-foreground">
             <p className="text-xs font-semibold text-premium mb-1 uppercase tracking-wider">
               {book.category}
             </p>

@@ -72,7 +72,7 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
             <HiUsers className="text-5xl" />
           </motion.div>
 
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-primary-foreground mb-4 drop-shadow-2xl">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-foreground mb-4 drop-shadow-2xl">
             همایش آنلاین
           </h1>
 
@@ -80,7 +80,7 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-xl md:text-2xl text-primary-foreground/90 max-w-2xl mx-auto"
+            className="text-xl md:text-2xl text-foreground/90 max-w-2xl mx-auto"
           >
             به همایش ما خوش آمدید
           </motion.p>
@@ -118,7 +118,7 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
                     animate={{ x: [0, 5, 0] }}
                     transition={{ duration: 1.5, repeat: Infinity }}
                   >
-                    <HiArrowLeft className="text-3xl text-primary-foreground" />
+                    <HiArrowLeft className="text-3xl text-foreground" />
                   </motion.div>
                 </div>
               </motion.button>
@@ -131,7 +131,7 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
             transition={{ duration: 0.8, delay: 0.8 }}
             className="relative rounded-2xl border border-border/20 bg-card/10 px-12 py-6 text-primary-foreground shadow-2xl backdrop-blur-xl"
           >
-            <p className="text-xl md:text-2xl text-primary-foreground/80">
+            <p className="text-xl md:text-2xl text-foreground/80">
               در حال حاضر همایشی برگزار نمی‌شود
             </p>
           </motion.div>
@@ -142,7 +142,7 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 1.2 }}
-          className="absolute bottom-8 text-primary-foreground/60 text-sm"
+          className="absolute bottom-8 text-foreground/60 text-sm"
         >
           <motion.div
             animate={{ opacity: [0.5, 1, 0.5] }}

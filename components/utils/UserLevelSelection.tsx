@@ -113,7 +113,7 @@ const UserLevelSection = ({ categorySlug }: UserLevelSectionProps) => {
           {levels.map((levelItem, i) => (
             <div
               key={i}
-              className="relative flex flex-col items-center justify-between bg-mySecondary text-primary-foreground rounded-2xl sm:rounded-3xl h-auto min-h-[320px] sm:min-h-[350px] md:h-[390px] w-full max-w-[320px] sm:max-w-[350px] md:max-w-[390px] px-6 sm:px-7 md:px-8 py-8 sm:py-9 md:py-10 shadow-sm hover:shadow-lg transition-transform duration-300 hover:scale-105"
+              className="relative flex flex-col items-center justify-between bg-mySecondary text-foreground rounded-2xl sm:rounded-3xl h-auto min-h-[320px] sm:min-h-[350px] md:h-[390px] w-full max-w-[320px] sm:max-w-[350px] md:max-w-[390px] px-6 sm:px-7 md:px-8 py-8 sm:py-9 md:py-10 shadow-sm hover:shadow-lg transition-transform duration-300 hover:scale-105"
             >
               <div className="bg-card dark:bg-cardBg size-20 sm:size-[88px] md:size-24 flex items-center justify-center rounded-full shadow-md">
                 <div className="text-2xl sm:text-3xl md:text-4xl">
@@ -199,7 +199,7 @@ const UserLevelSection = ({ categorySlug }: UserLevelSectionProps) => {
                             key={j}
                             className={`flex items-center gap-2 border rounded-lg p-2.5 sm:p-3 cursor-pointer transition-all duration-200 text-sm sm:text-base ${
                               answers.get(q.id) === opt.text
-                                ? "bg-mySecondary text-primary-foreground border-mySecondary"
+                                ? "bg-mySecondary text-foreground border-mySecondary"
                                 : "bg-muted dark:bg-darkBgHidden hover:bg-muted dark:hover:bg-cardBg dark:bg-cardBg"
                             }`}
                           >
@@ -232,7 +232,7 @@ const UserLevelSection = ({ categorySlug }: UserLevelSectionProps) => {
                               key={j}
                               className={`flex items-center gap-2 border rounded-lg p-2.5 sm:p-3 cursor-pointer transition-all duration-200 text-sm sm:text-base ${
                                 isChecked
-                                  ? "bg-mySecondary text-primary-foreground border-mySecondary"
+                                  ? "bg-mySecondary text-foreground border-mySecondary"
                                   : "bg-muted dark:bg-darkBgHidden hover:bg-muted dark:hover:bg-cardBg dark:bg-cardBg"
                               }`}
                             >

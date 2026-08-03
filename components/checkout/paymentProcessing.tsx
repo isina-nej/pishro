@@ -62,7 +62,7 @@ const PaymentProcessing = () => {
           <div className="relative">
             <div className="absolute inset-0 bg-primary rounded-full blur-xl opacity-50"></div>
             <div className="relative bg-gradient-to-br from-primary to-accent p-6 rounded-full">
-              <CreditCard className="w-12 h-12 text-primary-foreground" />
+              <CreditCard className="w-12 h-12 text-foreground" />
             </div>
           </div>
         </motion.div>
@@ -116,7 +116,7 @@ const PaymentProcessing = () => {
         {/* Manual redirect button (in case auto-redirect fails) */}
         <motion.button
           onClick={() => (window.location.href = payUrl)}
-          className="mt-6 w-full bg-gradient-to-r from-primary to-accent text-primary-foreground py-3 px-6 rounded-lg font-semibold hover:from-primary hover:to-accent transition-all duration-300 flex items-center justify-center gap-2 group"
+          className="mt-6 w-full bg-gradient-to-r from-primary to-accent text-foreground py-3 px-6 rounded-lg font-semibold hover:from-primary hover:to-accent transition-all duration-300 flex items-center justify-center gap-2 group"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >

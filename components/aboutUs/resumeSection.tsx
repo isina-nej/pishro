@@ -85,7 +85,7 @@ const ResumeSection = ({ resumeItems }: ResumeSectionProps) => {
 
               {/* Icon */}
               <div
-                className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${gradientColor} text-primary-foreground mb-6 group-hover:scale-110 transition-transform relative z-10`}
+                className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${gradientColor} text-foreground mb-6 group-hover:scale-110 transition-transform relative z-10`}
               >
                 <IconComponent className="text-4xl" />
               </div>
