@@ -85,8 +85,12 @@ export async function getNews(params?: GetNewsParams) {
 
 export async function getNewsBySlug(slug: string) {
   try {
+    // خبرهای تایم‌دار تا رسیدن زمان انتشارشان قابل مشاهده نیستند
     const articles = await query<NewsArticle>(
-      `SELECT * FROM NewsArticle WHERE slug = ? AND published = 1 LIMIT 1`,
+      `SELECT * FROM NewsArticle
+        WHERE slug = ? AND published = 1
+          AND (publishedAt IS NULL OR publishedAt <= NOW())
+        LIMIT 1`,
       [slug]
     );
     

@@ -23,6 +23,12 @@ export async function GET(req: NextRequest) {
 
     const where: Prisma.NewsArticleWhereInput = {
       published: true, // Only show published articles
+      // خبرهای تایم‌دار تا رسیدن زمان انتشارشان نمایش داده نمی‌شوند.
+      // publishedAt خالی یعنی خبر قدیمی بدون تاریخ انتشار — آن‌ها نمایش داده می‌شوند.
+      OR: [
+        { publishedAt: null },
+        { publishedAt: { lte: new Date() } },
+      ],
     };
 
     if (category) {
@@ -30,9 +36,14 @@ export async function GET(req: NextRequest) {
     }
 
     if (search) {
-      where.OR = [
-        { title: { contains: search } },
-        { excerpt: { contains: search } },
+      // OR سطح بالا برای زمان انتشار رزرو شده، پس جستجو داخل AND می‌رود
+      where.AND = [
+        {
+          OR: [
+            { title: { contains: search } },
+            { excerpt: { contains: search } },
+          ],
+        },
       ];
     }
 
