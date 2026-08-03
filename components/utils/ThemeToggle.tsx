@@ -5,25 +5,38 @@ import { useEffect, useState } from 'react';
 import { Moon, Sun } from 'lucide-react';
 
 export default function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  if (!mounted) return null;
+  if (!mounted) {
+    return (
+      <span
+        className="inline-flex h-9 w-9 items-center justify-center rounded-lg"
+        aria-hidden="true"
+      />
+    );
+  }
+
+  // Use resolvedTheme (never 'system') so the icon and the next theme are
+  // always derived from what is actually applied.
+  const isDark = resolvedTheme === 'dark';
 
   return (
     <button
-      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className="p-2 rounded-lg bg-gray-100 dark:bg-cardBg hover:bg-gray-200 dark:hover:bg-darkBgHidden transition-colors"
-      aria-label="Toggle dark mode"
+      type="button"
+      onClick={() => setTheme(isDark ? 'light' : 'dark')}
+      className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 text-slate-700 transition-colors hover:bg-gray-200 dark:bg-cardBg dark:text-textSecondary dark:hover:bg-darkBgHidden"
+      aria-label={isDark ? 'روشن کردن حالت روز' : 'روشن کردن حالت شب'}
+      title={isDark ? 'تغییر به حالت روز' : 'تغییر به حالت شب'}
     >
-      {theme === 'dark' ? (
-        <Sun className="w-5 h-5 text-yellow-500" />
+      {isDark ? (
+        <Sun className="h-5 w-5 text-myGolden" />
       ) : (
-        <Moon className="w-5 h-5 text-slate-700 dark:text-textSecondary" />
+        <Moon className="h-5 w-5 text-mySecondary" />
       )}
     </button>
   );
