@@ -72,8 +72,30 @@ interface MarketSnapshot {
   providers: ProviderState;
 }
 
-let cachedSnapshot: { expiresAt: number; staleUntil: number; value: CryptoMarketResponse } | null = null;
-let marketRequest: Promise<CryptoMarketResponse> | null = null;
+interface CacheEntry {
+  expiresAt: number;
+  staleUntil: number;
+  value: CryptoMarketResponse;
+}
+
+// Keyed by request shape, not global. crypto-asset-detail-service asks for
+// { ids: [id], limit: 1 }, so with a single shared slot one visit to an asset
+// page poisoned the cache with a one-item snapshot and the market list served
+// that same single asset for the rest of the TTL.
+const cacheStore = new Map<string, CacheEntry>();
+const inflightRequests = new Map<string, Promise<CryptoMarketResponse>>();
+const MAX_CACHE_ENTRIES = 200;
+
+function cacheKeyFor(ids: string[], symbols: string[], limit: number): string {
+  return JSON.stringify([limit, [...ids].sort(), [...symbols].sort()]);
+}
+
+function pruneExpired(now: number) {
+  if (cacheStore.size <= MAX_CACHE_ENTRIES) return;
+  for (const [key, entry] of cacheStore) {
+    if (entry.staleUntil <= now) cacheStore.delete(key);
+  }
+}
 
 function numberOrNull(value: unknown): number | null {
   const parsed = typeof value === 'number' ? value : Number(value);
@@ -396,27 +418,41 @@ async function refreshCryptoMarketData(options?: { ids?: string[]; symbols?: str
   const snapshot = await loadSnapshot(ids, symbols, limit);
   const value: CryptoMarketResponse = { generatedAt: new Date().toISOString(), currency: 'USD', ...snapshot };
   const now = Date.now();
-  cachedSnapshot = { expiresAt: now + CACHE_TTL_MS, staleUntil: now + STALE_CACHE_TTL_MS, value };
+  pruneExpired(now);
+  cacheStore.set(cacheKeyFor(ids, symbols, limit), {
+    expiresAt: now + CACHE_TTL_MS,
+    staleUntil: now + STALE_CACHE_TTL_MS,
+    value,
+  });
   return value;
 }
 
 export async function getCryptoMarketData(options?: { ids?: string[]; symbols?: string[]; limit?: number; forceRefresh?: boolean }): Promise<CryptoMarketResponse> {
+  const { ids, symbols, limit } = assetRequestOptions(options);
+  const key = cacheKeyFor(ids, symbols, limit);
   const now = Date.now();
-  if (!options?.forceRefresh && cachedSnapshot && cachedSnapshot.expiresAt > now) return cachedSnapshot.value;
 
-  // Coalesce the two initial client fetches and periodic refreshes into one upstream request.
-  if (!marketRequest) {
-    marketRequest = refreshCryptoMarketData(options).finally(() => {
-      marketRequest = null;
+  const cached = cacheStore.get(key);
+  if (!options?.forceRefresh && cached && cached.expiresAt > now) return cached.value;
+
+  // Coalesce concurrent callers, but only those asking for the same thing —
+  // sharing one promise across different shapes handed the market list whatever
+  // an asset-detail request happened to be fetching.
+  let request = inflightRequests.get(key);
+  if (!request) {
+    request = refreshCryptoMarketData(options).finally(() => {
+      inflightRequests.delete(key);
     });
+    inflightRequests.set(key, request);
   }
 
   try {
-    return await marketRequest;
+    return await request;
   } catch (error) {
-    if (cachedSnapshot && cachedSnapshot.staleUntil > now) {
+    const stale = cacheStore.get(key);
+    if (stale && stale.staleUntil > now) {
       console.warn('[crypto] Serving stale market cache after provider failure');
-      return cachedSnapshot.value;
+      return stale.value;
     }
     throw error;
   }
