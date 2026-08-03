@@ -59,41 +59,17 @@ jobs:
       - name: Test
         run: npm test
 
-  # Requires these repository secrets (Settings > Secrets and variables > Actions):
-  #   DEPLOY_HOST     VPS address
-  #   DEPLOY_USER     SSH user (currently root)
-  #   DEPLOY_SSH_KEY  private key whose public half is in that user's authorized_keys
-  #   DEPLOY_PORT     optional, defaults to 22
-  deploy:
-    name: Deploy to VPS
-    needs: verify
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    environment: production
-    steps:
-      - name: Pull, build and restart over SSH
-        uses: appleboy/ssh-action@v1.2.5
-        with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_SSH_KEY }}
-          port: ${{ secrets.DEPLOY_PORT || 22 }}
-          # npm ci + next build on the VPS can outrun the 10m default.
-          command_timeout: 20m
-          script: |
-            set -euo pipefail
-            cd /opt/pishro
-
-            # --ff-only rather than reset --hard: if the server has drifted,
-            # fail loudly instead of silently discarding whatever is there.
-            git fetch --prune origin
-            git pull --ff-only origin main
-
-            npm ci
-            npm run build
-
-            # Only reached when the build above succeeded, so a broken build
-            # leaves the currently running process untouched. Restarts only
-            # this app — the `pishbini` process on the same box is not ours.
-            pm2 restart pishro-app --update-env
-            pm2 save
+# There is deliberately no deploy job here.
+#
+# GitHub's runners cannot open a TCP connection to the VPS — the block is
+# upstream of the box (ufw already allows 22 from anywhere and sshd listens on
+# *:22), so `appleboy/ssh-action` only ever reached "dial tcp: i/o timeout".
+#
+# A self-hosted runner would solve the reachability problem, but this repository
+# is public: any fork could then run arbitrary code on the production server
+# through a pull request. That trade is not worth making.
+#
+# So deployment is pull-based instead. The server polls origin/main on a timer
+# and deploys itself — see scripts/deploy-from-main.sh. It only ever runs code
+# that is already on main, which is push-protected, so the public repo adds no
+# attack surface. This workflow's job is to tell you whether main is green.
