@@ -9,6 +9,13 @@ const DEFAULT_ASSET_IDS: string[] = [];
 const DEFAULT_SYMBOLS: string[] = [];
 const DEFAULT_MARKET_LIMIT = 150;
 const REQUEST_TIMEOUT_MS = 12_000;
+// Binance and Nobitex only refine prices CoinGecko has already supplied, so a
+// slow or unreachable one must not hold the whole response hostage. Binance is
+// unreachable from the Iranian VPS ("[crypto] Binance unavailable: fetch
+// failed") and was burning the full 12s on every refresh, which is most of the
+// ~17s the endpoint took in production regardless of how many assets were asked
+// for. Nobitex answers in well under a second, so it is unaffected.
+const ENRICHMENT_TIMEOUT_MS = 4_000;
 const CACHE_TTL_MS = 30_000;
 const STALE_CACHE_TTL_MS = 10 * 60_000;
 
@@ -171,9 +178,9 @@ function parseJson(text: string): unknown {
   return JSON.parse(text) as unknown;
 }
 
-async function fetchJson<T>(url: string, init?: RequestInit): Promise<T> {
+async function fetchJson<T>(url: string, init?: RequestInit, timeoutMs = REQUEST_TIMEOUT_MS): Promise<T> {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
     const response = await fetch(url, {
@@ -264,7 +271,11 @@ async function loadCoinPaprika(ids: string[], symbols: string[], limit: number):
 
 async function loadBinancePrices(symbols: string[]): Promise<Map<string, number>> {
   try {
-    const data = await fetchJson<Array<{ symbol: string; price: string }>>(`${binanceBaseUrl()}/ticker/price`);
+    const data = await fetchJson<Array<{ symbol: string; price: string }>>(
+      `${binanceBaseUrl()}/ticker/price`,
+      undefined,
+      ENRICHMENT_TIMEOUT_MS
+    );
     const wanted = new Set(symbols.map((symbol) => `${symbol.toUpperCase()}USDT`));
     return new Map(
       data.filter((item) => wanted.has(item.symbol)).map((item) => [item.symbol.replace(/USDT$/, ''), numberOrZero(item.price)])
@@ -282,7 +293,11 @@ function normalizeNobitexSymbol(symbol: string): string {
 async function loadNobitexStats(symbols: string[]): Promise<{ stats: NobitexStats; usdtIrr: number | null } | null> {
   try {
     const requested = symbols.map(normalizeNobitexSymbol);
-    const stats = await fetchJson<{ stats?: NobitexStats }>(`${nobitexBaseUrl()}/market/stats`);
+    const stats = await fetchJson<{ stats?: NobitexStats }>(
+      `${nobitexBaseUrl()}/market/stats`,
+      undefined,
+      ENRICHMENT_TIMEOUT_MS
+    );
     const allStats = stats.stats || {};
     const selectedStats = Object.fromEntries(
       Object.entries(allStats).filter(([pair]) => {
