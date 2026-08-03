@@ -52,7 +52,7 @@ const MobileLanding = ({
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
 
   return (
-    <div ref={containerRef} className="relative w-full bg-[#071520]">
+    <div ref={containerRef} className="relative w-full bg-[#0A100E]">
       {/* Hero Section */}
       <HeroSection
         title={mainHeroTitle}
@@ -127,7 +127,7 @@ const HeroSection = ({
           initial={{ opacity: 0, y: 60 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="w-full rounded-[2rem] border border-border/15 bg-[#091a28]/50 p-6 shadow-2xl backdrop-blur-2xl"
+          className="w-full rounded-[2rem] border border-border/15 bg-[#0F2A1F]/55 p-6 shadow-2xl backdrop-blur-2xl"
         >
           {/* Badge */}
           <motion.div
@@ -157,7 +157,7 @@ const HeroSection = ({
             href={ctaLink || "/business-consulting"}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-2 rounded-full bg-card px-8 py-4 font-bold text-[#112b3a] shadow-xl transition-all hover:bg-primary"
+            className="inline-flex items-center gap-2 rounded-full bg-card px-8 py-4 font-bold text-[#0B3D2E] shadow-xl transition-all hover:bg-primary"
           >
             <span>{subtitle || "شروع مسیر موفقیت"}</span>
             <ArrowLeft className="w-5 h-5" />
@@ -206,7 +206,7 @@ const FeatureCardsSection = ({ overlayTexts }: { overlayTexts?: string[] }) => {
   ];
 
   return (
-    <section className="relative w-full overflow-x-hidden bg-[#071520] px-6 py-16">
+    <section className="relative w-full overflow-x-hidden bg-[#0A100E] px-6 py-16">
       <div className="max-w-4xl mx-auto space-y-6">
         {texts.map((text, index) => (
           <motion.div

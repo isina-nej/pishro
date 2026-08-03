@@ -42,7 +42,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
         </p>
 
         {/* User Info */}
-        <div className="flex items-center gap-3 border-t border-[#214254]/10 pt-4/10">
+        <div className="flex items-center gap-3 border-t border-primary/10 pt-4/10">
           <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-premium/20">
             <Image
               src={testimonial.avatar}
@@ -52,7 +52,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
             />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="truncate text-sm font-semibold text-[#112b3a]">
+            <p className="truncate text-sm font-semibold text-[#0B3D2E]">
               {testimonial.name}
             </p>
             <p className="truncate text-xs text-[#637987]">

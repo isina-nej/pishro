@@ -98,7 +98,7 @@ const CalculatorSection = () => {
 
   return (
     <section className="relative mt-8 min-h-[600px] w-full overflow-hidden py-8 text-foreground md:mt-20 md:min-h-screen">
-      <div className="absolute inset-x-4 inset-y-8 rounded-[2.5rem] bg-gradient-to-br from-[#102d42]/95 via-[#16384e]/95 to-[#0a2233]/95 shadow-2xl shadow-[#0b2234]/20 md:inset-x-8" />
+      <div className="absolute inset-x-4 inset-y-8 rounded-[2.5rem] bg-gradient-to-br from-[#0F2A1F]/95 via-[#0B3D2E]/95 to-[#0A100E]/95 shadow-2xl shadow-[#0B3D2E]/25 md:inset-x-8" />
       <div className="absolute inset-x-4 inset-y-8 rounded-[2.5rem] border border-border/10 bg-[url('/images/utiles/pattern1.svg')] opacity-[0.08] md:inset-x-8" />
 
       <div className="container-xl relative z-10 flex flex-col justify-center py-10 md:py-16">
@@ -107,7 +107,7 @@ const CalculatorSection = () => {
           <h4 className="font-bold text-3xl sm:text-4xl md:text-5xl mb-2 md:mb-4 mt-10 md:mt-0">
             ماشین حساب
           </h4>
-          <p className="text-base md:text-lg lg:text-xl leading-relaxed text-muted-foreground max-w-2xl mx-auto bg-[#152c44]/70">
+          <p className="text-base md:text-lg lg:text-xl leading-relaxed text-muted-foreground max-w-2xl mx-auto bg-[#0F2A1F]/70">
             با انتخاب نوع صندوق سرمایه‌ گذاری، مبلغ و مدت، میزان بازده خود را
             مشاهده کنید.
           </p>
@@ -270,7 +270,7 @@ const CalculatorSection = () => {
                 </p>
 
                 {/* Result box */}
-                <div className="relative flex flex-col items-center justify-center rounded-3xl border border-border/60 bg-card/90 px-4 pb-4 pt-8 text-3xl font-medium text-[#112b3a] shadow-2xl backdrop-blur-xl">
+                <div className="relative flex flex-col items-center justify-center rounded-3xl border border-border/60 bg-card/90 px-4 pb-4 pt-8 text-3xl font-medium text-[#0B3D2E] shadow-2xl backdrop-blur-xl">
                   {/* قیمت و درصد سود */}
                   <div className="flex items-center justify-between w-full gap-4 mb-4">
                     {/* مبلغ کل - سمت راست */}
@@ -374,7 +374,7 @@ const CalculatorSection = () => {
           {/* 💻 مشاوره آنلاین */}
           <Drawer>
             <DrawerTrigger asChild>
-              <button className="group relative flex w-full items-center justify-center gap-2 rounded-xl border border-primary bg-card px-10 py-4 font-medium text-mySecondary shadow-lg shadow-blue-950/5 transition-all hover:border-primary hover:bg-primary sm:w-auto dark:border-borderColor dark:bg-cardBg dark:text-textPrimary dark:hover:bg-darkBgHidden">
+              <button className="group relative flex w-full items-center justify-center gap-2 rounded-xl border border-primary bg-card px-10 py-4 font-medium text-mySecondary shadow-lg shadow-primary/10 transition-all hover:border-primary hover:bg-primary sm:w-auto dark:border-borderColor dark:bg-cardBg dark:text-textPrimary dark:hover:bg-darkBgHidden">
                 <Send className="h-5 w-5 text-primary transition-transform group-hover:scale-110" />
                 رزرو مشاوره آنلاین
               </button>

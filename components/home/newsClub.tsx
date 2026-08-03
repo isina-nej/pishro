@@ -42,7 +42,7 @@ const NewsClub = () => {
   };
 
   return (
-    <section className="relative mx-auto mt-10 min-h-[480px] w-[calc(100%-2rem)] overflow-hidden rounded-[2.5rem] border border-border/60 bg-card/55 pb-8 pt-4 shadow-2xl shadow-[#214254]/10 backdrop-blur-2xl/10/[0.05] md:mt-0 md:h-screen md:w-[calc(100%-4rem)] md:pb-0 md:pt-8">
+    <section className="relative mx-auto mt-10 min-h-[480px] w-[calc(100%-2rem)] overflow-hidden rounded-[2.5rem] border border-border/60 bg-card/55 pb-8 pt-4 shadow-2xl shadow-primary/10 backdrop-blur-2xl/10/[0.05] md:mt-0 md:h-screen md:w-[calc(100%-4rem)] md:pb-0 md:pt-8">
       <div className="container-xl flex h-full flex-col items-center gap-3 md:flex-row md:items-center md:gap-8">
         <div className="md:flex-1 w-full flex items-end md:h-full justify-center md:justify-start order-2 md:order-1 mt-10 md:mt-0">
           {/* wrapper با نسبت درست */}
@@ -60,8 +60,8 @@ const NewsClub = () => {
         <div className="flex-1 w-full flex flex-col md:h-full justify-end gap-6 md:gap-10 items-center order-1 md:order-2">
           <div className="w-full aspect-[1.1] md:aspect-[661/504] flex flex-col justify-between">
             <div className="">
-              <span className="mb-4 mt-2 inline-flex rounded-full border border-[#214254]/10 bg-card/60 px-4 py-2 text-[11px] font-bold text-[#214254]/10/5 md:mt-16">همیشه یک گام جلوتر</span>
-              <h4 className="flex justify-center gap-2 text-5xl font-black leading-none tracking-tight text-[#112b3a] sm:text-6xl md:justify-start md:gap-3 md:text-start lg:text-7xl">
+              <span className="mb-4 mt-2 inline-flex rounded-full border border-primary/15 bg-card/60 px-4 py-2 text-[11px] font-bold text-primary md:mt-16">همیشه یک گام جلوتر</span>
+              <h4 className="flex justify-center gap-2 text-5xl font-black leading-none tracking-tight text-[#0B3D2E] sm:text-6xl md:justify-start md:gap-3 md:text-start lg:text-7xl">
                 <span className="inline-block">باشگاه</span>
                 <span className="inline-block text-[#8E8E8E] -translate-y-1">
                   پیشرو
@@ -86,7 +86,7 @@ const NewsClub = () => {
                 />
                 <Button
                   type="submit"
-                  className="h-10 w-full rounded-full bg-[#112b3a] px-8 text-base font-bold text-foreground shadow-lg transition hover:-translate-y-0.5 hover:bg-[#214254] sm:h-12 sm:px-16 sm:text-lg md:w-fit"
+                  className="h-10 w-full rounded-full bg-[#0B3D2E] px-8 text-base font-bold text-foreground shadow-lg transition hover:-translate-y-0.5 hover:bg-[#1A6B45] sm:h-12 sm:px-16 sm:text-lg md:w-fit"
                 >
                   عضویت
                 </Button>

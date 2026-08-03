@@ -18,7 +18,7 @@ const BusinessConsulting = () => {
         <h3 className="text-4xl leading-[3.5rem] font-extrabold mb-4">
           {businessConsultingData.title}
         </h3>
-        <p className="text-xl leading-9 text-[#707177] text-center">
+        <p className="text-xl leading-9 text-[#6B736E] text-center">
           {businessConsultingData.text}
         </p>
 
@@ -28,7 +28,7 @@ const BusinessConsulting = () => {
             animate={{ scale: [1, 1.05, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
             whileHover={{ scale: 1.1 }}
-            className="text-foreground text-xl px-12 py-4 rounded-full bg-[#344052] font-bold overflow-hidden shadow-lg hover:shadow-xl"
+            className="text-foreground text-xl px-12 py-4 rounded-full bg-[#0B3D2E] font-bold overflow-hidden shadow-lg hover:shadow-xl"
           >
             شروع کنیم
           </motion.button>

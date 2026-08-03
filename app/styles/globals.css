@@ -49,136 +49,119 @@ h3 {
     direction: rtl;
     writing-mode: horizontal-tb;
     text-orientation: mixed;
-    
+
     /*
-     * Light Mode — Pishro public site.
-     * Palette combines the admin RoyalGreen family (deep green primary),
-     * the brand gold (#F9AD03) as accent, and a navy ink (#10293A) for text.
+     * Light Mode — سایت عمومی: Royal Emerald + Warm Gold.
+     * ترکیب تقریبی: ~70% خنثی گرم، ~20–25% سبز سلطنتی، ~5–10% طلا.
+     * پنل ادمین (.royal-theme) جداست و دست‌نخورده می‌ماند.
      */
-    /*
-     * مقادیر زیر عیناً از .royal-theme (پالت پنل) کپی شده‌اند تا سایت عمومی و
-     * پنل یک پالت واحد داشته باشند. اگر خواستید رنگی عوض شود، در هر دو بلوک
-     * عوضش کنید — یا بهتر، همین‌جا و در .royal-theme به یک مقدار مشترک برسانید.
-     */
-    --background: 0 0% 100%;
-    --foreground: 0 0% 4%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 4%;
+    --background: 43 31% 95%; /* #F7F5F0 warm ivory */
+    --foreground: 144 9% 11%; /* #1A1F1C */
+    --card: 0 0% 100%; /* #FFFFFF */
+    --card-foreground: 144 9% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 4%;
-    --primary: 152 71% 18%;
+    --popover-foreground: 144 9% 11%;
+    --primary: 152 70% 14%; /* #0B3D2E */
     --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 95%;
-    --accent-foreground: 0 0% 9%;
+    --secondary: 40 25% 91%; /* #EDE9E1 */
+    --secondary-foreground: 144 9% 11%;
+    --muted: 40 25% 91%; /* #EDE9E1 */
+    --muted-foreground: 140 4% 44%; /* #6B736E */
+    --accent: 144 28% 93%; /* #E8F2EC tint/selected */
+    --accent-foreground: 152 70% 14%;
     --destructive: 0 72% 42%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 144 61% 30%;
-    --chart-1: 152 71% 18%;
-    --chart-2: 144 61% 30%;
-    --chart-3: 38 45% 57%;
-    --chart-4: 197 37% 24%;
-    --chart-5: 27 87% 67%;
+    --border: 43 18% 82%; /* #D9D4C8 */
+    --input: 43 18% 82%;
+    --ring: 152 70% 14%;
+    --chart-1: 152 70% 14%;
+    --chart-2: 149 61% 26%; /* #1A6B45 hover */
+    --chart-3: 41 52% 47%; /* #B8913A gold */
+    --chart-4: 152 40% 30%;
+    --chart-5: 40 45% 70%;
     --radius: 0.5rem;
 
-    /* توکن‌های معنایی پنل، تا سایت هم همان‌ها را داشته باشد */
-    --success: 142 71% 27%;
+    --success: 149 61% 26%;
     --success-foreground: 0 0% 100%;
-    --premium: 38 40% 45%;
+    --premium: 41 52% 47%; /* #B8913A — فقط لهجهٔ پرمیوم */
     --premium-foreground: 0 0% 100%;
-    --surface-selected: 152 40% 96%;
-    --nav-active-bg: 152 71% 92%;
-    --icon-brand: 144 55% 26%;
+    --surface-selected: 144 28% 93%; /* #E8F2EC */
+    --nav-active-bg: 144 28% 93%;
+    --icon-brand: 149 61% 26%;
 
-    /*
-     * متغیرهای برند قدیمی. حذفشان نکردم چون هنوز ده‌ها کامپوننت عمومی صدایشان
-     * می‌زنند؛ ولی مقدارشان حالا از همان پالت پنل می‌آید تا رنگ سومی وارد نشود.
-     */
-    --brand-color: #A17F45;
-    --body-background: #FFFFFF;
-    --header-background: rgba(255, 255, 255, 0.8);
-    --text-primary: #0A0A0A;
-    --text-secondary: #737373;
-    --btn-primary-bg: #0D4E30;
-    --btn-primary-hover: #1E7B43;
-    --btn-secondary-bg: #F5F5F5;
-    --btn-secondary-hover: #E5E5E5;
+    /* متغیرهای برند قدیمی — به پالت Emerald/Gold نگاشت شده‌اند */
+    --brand-color: #B8913A;
+    --body-background: #F7F5F0;
+    --header-background: rgba(247, 245, 240, 0.85);
+    --text-primary: #1A1F1C;
+    --text-secondary: #6B736E;
+    --btn-primary-bg: #0B3D2E;
+    --btn-primary-hover: #1A6B45;
+    --btn-secondary-bg: #EDE9E1;
+    --btn-secondary-hover: #D9D4C8;
     --card-background: #FFFFFF;
-    --border-color: #E5E5E5;
-    --footer-background: #F5F5F5;
-    --text-muted: #737373;
-    --dark-bg-hidden: #F5F5F5;
-    --neutral-button-bg: #F5F5F5;
-    --neutral-button-hover: #E5E5E5;
+    --border-color: #D9D4C8;
+    --footer-background: #EDE9E1;
+    --text-muted: #6B736E;
+    --dark-bg-hidden: #EDE9E1;
+    --neutral-button-bg: #EDE9E1;
+    --neutral-button-hover: #D9D4C8;
   }
 
   .dark {
     /*
-     * Dark Mode — Pishro public site.
-     *
-     * سطوح خنثی روی خانواده‌ی سبز royal (hue ~152) هستند، نه navy.
-     * پیش‌تر فقط --primary سبز بود و بقیه روی hue 200 مانده بودند، که چون سایت
-     * پیش‌فرض تاریک رندر می‌شود، کل صفحه آبی دیده می‌شد با یک لهجه‌ی سبز.
-     * روشنایی و اشباع هر توکن نسبت به قبل دست‌نخورده مانده تا کنتراست تغییر نکند
-     * — فقط رنگ‌مایه چرخیده است.
+     * Dark Mode — سایت عمومی: سبز-سیاه (نه navy).
+     * پس‌زمینه #0A100E و سطوح روی hue ~150؛ لهجهٔ طلا #D4B06A.
      */
-    /* عیناً از .dark .royal-theme — رجوع کنید به توضیح بلوک :root */
-    --background: 220 20% 4%;
-    --foreground: 0 0% 96%;
-    --card: 220 15% 7%;
-    --card-foreground: 0 0% 96%;
-    --popover: 220 15% 7%;
-    --popover-foreground: 0 0% 96%;
-    --primary: 144 61% 40%;
-    --primary-foreground: 220 20% 8%;
-    --secondary: 220 12% 14%;
-    --secondary-foreground: 0 0% 92%;
-    --muted: 220 12% 12%;
-    --muted-foreground: 0 0% 63%;
-    --accent: 220 12% 16%;
-    --accent-foreground: 0 0% 96%;
+    --background: 140 23% 5%; /* #0A100E */
+    --foreground: 143 21% 93%; /* #E8F0EB */
+    --card: 150 18% 9%; /* #121A16 */
+    --card-foreground: 143 21% 93%;
+    --popover: 150 18% 9%;
+    --popover-foreground: 143 21% 93%;
+    --primary: 152 54% 40%; /* #2F9E68 */
+    --primary-foreground: 156 47% 11%; /* #0F2A1F */
+    --secondary: 156 16% 12%; /* #1A2420 */
+    --secondary-foreground: 143 21% 93%;
+    --muted: 156 16% 12%; /* #1A2420 */
+    --muted-foreground: 141 10% 60%; /* #8FA396 */
+    --accent: 156 16% 14%;
+    --accent-foreground: 143 21% 93%;
     --destructive: 0 72% 62%;
-    --destructive-foreground: 220 20% 8%;
-    --border: 220 10% 18%;
-    --input: 220 10% 18%;
-    --ring: 144 61% 40%;
-    --chart-1: 152 71% 30%;
-    --chart-2: 144 61% 40%;
-    --chart-3: 38 45% 57%;
-    --chart-4: 197 47% 44%;
-    --chart-5: 27 87% 60%;
+    --destructive-foreground: 156 47% 11%;
+    --border: 140 14% 16%; /* #243028 */
+    --input: 140 14% 16%;
+    --ring: 152 54% 40%;
+    --chart-1: 152 54% 40%;
+    --chart-2: 149 45% 32%;
+    --chart-3: 40 55% 62%; /* #D4B06A */
+    --chart-4: 152 35% 28%;
+    --chart-5: 40 40% 50%;
 
-    /* توکن‌های معنایی پنل */
-    --success: 142 71% 39%;
-    --success-foreground: 220 20% 8%;
-    --premium: 38 45% 57%;
-    --premium-foreground: 220 20% 8%;
-    --surface-selected: 152 30% 10%;
-    --nav-active-bg: 152 71% 13%;
-    --icon-brand: 144 61% 30%;
+    --success: 152 54% 40%;
+    --success-foreground: 156 47% 11%;
+    --premium: 40 55% 62%; /* #D4B06A */
+    --premium-foreground: 156 47% 11%;
+    --surface-selected: 152 25% 12%;
+    --nav-active-bg: 152 30% 14%;
+    --icon-brand: 152 54% 40%;
 
-    /* متغیرهای برند قدیمی، با مقادیر همان پالت پنل */
-    --brand-color: #C39F60;
-    --body-background: #080A0C;
-    --header-background: rgba(8, 10, 12, 0.8);
-    --text-primary: #F5F5F5;
-    --text-secondary: #A1A1A1;
-    --btn-primary-bg: #0D4E30;
-    --btn-primary-hover: #1E7B43;
-    --btn-secondary-bg: #1F2228;
-    --btn-secondary-hover: #24272E;
-    --card-background: #0F1115;
-    --border-color: #292C32;
-    --footer-background: #0F1115;
-    --text-muted: #A1A1A1;
-    --dark-bg-hidden: #0F1115;
-    --neutral-button-bg: #1F2228;
-    --neutral-button-hover: #24272E;
+    --brand-color: #D4B06A;
+    --body-background: #0A100E;
+    --header-background: rgba(10, 16, 14, 0.85);
+    --text-primary: #E8F0EB;
+    --text-secondary: #8FA396;
+    --btn-primary-bg: #2F9E68;
+    --btn-primary-hover: #1A6B45;
+    --btn-secondary-bg: #1A2420;
+    --btn-secondary-hover: #243028;
+    --card-background: #121A16;
+    --border-color: #243028;
+    --footer-background: #121A16;
+    --text-muted: #8FA396;
+    --dark-bg-hidden: #121A16;
+    --neutral-button-bg: #1A2420;
+    --neutral-button-hover: #243028;
   }
 
   /*
@@ -302,7 +285,7 @@ html:not(.dark)
   :where(button, a, [role="button"])[class~="bg-white"][class~="text-slate-200"],
 html:not(.dark)
   :where(button, a, [role="button"])[class~="bg-white"][class~="text-slate-300"] {
-  color: #214254;
+  color: #0B3D2E;
 }
 
 html.dark
@@ -464,32 +447,35 @@ html.dark
 .swiper-pagination-bullet-active {
   width: 40px !important;
   height: 12px !important;
-  background: #214254 !important;
+  background: #0B3D2E !important;
 }
 
-/* Home landing visual system */
+/* Home landing visual system — Royal Emerald + Warm Gold */
 .home-shell,
 .public-page-shell {
-  --home-ink: #112b3a;
-  --home-muted: #637987;
-  --home-navy: #0b2234;
-  --home-cyan: #86e7f2;
-  --home-gold: #f6b94a;
-  --home-glass: rgba(255, 255, 255, 0.66);
-  --home-glass-border: rgba(255, 255, 255, 0.72);
+  --home-ink: #1A1F1C;
+  --home-muted: #6B736E;
+  --home-deep: #0B3D2E;
+  --home-glow: #1A6B45;
+  --home-gold: #B8913A;
+  --home-glass: rgba(255, 255, 255, 0.72);
+  --home-glass-border: rgba(217, 212, 200, 0.85);
   position: relative;
   isolation: isolate;
   color: var(--home-ink);
-  background: #eef5f8;
+  background: #F7F5F0;
 }
 
 .dark .home-shell,
 .dark .public-page-shell {
-  --home-ink: #eef8fb;
-  --home-muted: #91a7b4;
-  --home-glass: rgba(13, 36, 52, 0.64);
-  --home-glass-border: rgba(255, 255, 255, 0.1);
-  background: #071520;
+  --home-ink: #E8F0EB;
+  --home-muted: #8FA396;
+  --home-deep: #0F2A1F;
+  --home-glow: #2F9E68;
+  --home-gold: #D4B06A;
+  --home-glass: rgba(18, 26, 22, 0.72);
+  --home-glass-border: rgba(36, 48, 40, 0.9);
+  background: #0A100E;
 }
 
 .public-page-shell {
@@ -498,22 +484,22 @@ html.dark
   min-height: 100vh;
   color: var(--home-ink);
   background:
-    radial-gradient(circle at 92% 8%, rgba(91, 207, 224, 0.15), transparent 28rem),
-    radial-gradient(circle at 4% 58%, rgba(246, 185, 74, 0.1), transparent 25rem),
-    linear-gradient(180deg, #eaf3f7 0%, #f8fafb 52%, #edf5f7 100%);
+    radial-gradient(circle at 92% 8%, rgba(26, 107, 69, 0.12), transparent 28rem),
+    radial-gradient(circle at 4% 58%, rgba(184, 145, 58, 0.1), transparent 25rem),
+    linear-gradient(180deg, #F7F5F0 0%, #EDE9E1 52%, #F7F5F0 100%);
 }
 
 .dark .public-page-shell {
   background:
-    radial-gradient(circle at 92% 8%, rgba(52, 182, 202, 0.11), transparent 28rem),
-    radial-gradient(circle at 4% 58%, rgba(246, 185, 74, 0.07), transparent 25rem),
-    linear-gradient(180deg, #071520 0%, #0b1d2a 52%, #081722 100%);
+    radial-gradient(circle at 92% 8%, rgba(47, 158, 104, 0.12), transparent 28rem),
+    radial-gradient(circle at 4% 58%, rgba(212, 176, 106, 0.07), transparent 25rem),
+    linear-gradient(180deg, #0A100E 0%, #0F2A1F 52%, #0A100E 100%);
 }
 
 .public-page-panel {
   border: 1px solid var(--home-glass-border);
   background: var(--home-glass);
-  box-shadow: 0 28px 80px rgba(24, 60, 78, 0.12);
+  box-shadow: 0 28px 80px rgba(11, 61, 46, 0.1);
   backdrop-filter: blur(22px) saturate(130%);
   -webkit-backdrop-filter: blur(22px) saturate(130%);
 }
@@ -523,21 +509,21 @@ html.dark
 }
 
 .public-page-card {
-  border: 1px solid rgba(255, 255, 255, 0.58);
-  background: rgba(255, 255, 255, 0.56);
-  box-shadow: 0 16px 50px rgba(24, 60, 78, 0.1);
+  border: 1px solid rgba(217, 212, 200, 0.7);
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 16px 50px rgba(11, 61, 46, 0.08);
   backdrop-filter: blur(16px) saturate(125%);
   -webkit-backdrop-filter: blur(16px) saturate(125%);
 }
 
 .dark .public-page-card {
-  border-color: rgba(255, 255, 255, 0.09);
-  background: rgba(16, 42, 59, 0.58);
+  border-color: rgba(36, 48, 40, 0.9);
+  background: rgba(18, 26, 22, 0.72);
   box-shadow: 0 16px 50px rgba(0, 0, 0, 0.22);
 }
 
 .public-page-shell :where(a, button, input, [role="button"]):focus-visible {
-  outline: 2px solid var(--home-cyan);
+  outline: 2px solid var(--home-glow);
   outline-offset: 3px;
 }
 
@@ -552,16 +538,16 @@ html.dark
   overflow-x: clip;
   overflow-y: visible;
   background:
-    radial-gradient(circle at 90% 8%, rgba(91, 207, 224, 0.18), transparent 28rem),
-    radial-gradient(circle at 4% 47%, rgba(246, 185, 74, 0.13), transparent 25rem),
-    linear-gradient(180deg, #e9f3f7 0%, #f7fafb 47%, #edf5f7 100%);
+    radial-gradient(circle at 90% 8%, rgba(26, 107, 69, 0.14), transparent 28rem),
+    radial-gradient(circle at 4% 47%, rgba(184, 145, 58, 0.12), transparent 25rem),
+    linear-gradient(180deg, #F7F5F0 0%, #EDE9E1 47%, #F7F5F0 100%);
 }
 
 .dark .home-ambient-stage {
   background:
-    radial-gradient(circle at 90% 8%, rgba(52, 182, 202, 0.12), transparent 28rem),
-    radial-gradient(circle at 4% 47%, rgba(246, 185, 74, 0.08), transparent 25rem),
-    linear-gradient(180deg, #071520 0%, #0b1d2a 47%, #081722 100%);
+    radial-gradient(circle at 90% 8%, rgba(47, 158, 104, 0.12), transparent 28rem),
+    radial-gradient(circle at 4% 47%, rgba(212, 176, 106, 0.08), transparent 25rem),
+    linear-gradient(180deg, #0A100E 0%, #0F2A1F 47%, #0A100E 100%);
 }
 
 .home-ambient-stage::before {
@@ -572,8 +558,8 @@ html.dark
   right: -8rem;
   width: min(80vw, 68rem);
   height: 86%;
-  border: 1px solid rgba(213, 42, 22, 0.16);
-  border-left-color: rgba(246, 185, 74, 0.35);
+  border: 1px solid rgba(11, 61, 46, 0.14);
+  border-left-color: rgba(184, 145, 58, 0.35);
   border-bottom-color: transparent;
   border-radius: 52% 48% 38% 62%;
   transform: rotate(-8deg);
@@ -587,7 +573,7 @@ html.dark
 .home-glass-panel {
   border: 1px solid var(--home-glass-border);
   background: var(--home-glass);
-  box-shadow: 0 30px 80px rgba(24, 60, 78, 0.12);
+  box-shadow: 0 30px 80px rgba(11, 61, 46, 0.1);
   backdrop-filter: blur(24px) saturate(130%);
   -webkit-backdrop-filter: blur(24px) saturate(130%);
 }
@@ -597,16 +583,16 @@ html.dark
 }
 
 .home-glass-card {
-  border: 1px solid rgba(255, 255, 255, 0.56);
-  background: rgba(255, 255, 255, 0.52);
-  box-shadow: 0 16px 50px rgba(24, 60, 78, 0.09);
+  border: 1px solid rgba(217, 212, 200, 0.7);
+  background: rgba(255, 255, 255, 0.65);
+  box-shadow: 0 16px 50px rgba(11, 61, 46, 0.08);
   backdrop-filter: blur(16px) saturate(125%);
   -webkit-backdrop-filter: blur(16px) saturate(125%);
 }
 
 .dark .home-glass-card {
-  border-color: rgba(255, 255, 255, 0.09);
-  background: rgba(16, 42, 59, 0.58);
+  border-color: rgba(36, 48, 40, 0.9);
+  background: rgba(18, 26, 22, 0.72);
   box-shadow: 0 16px 50px rgba(0, 0, 0, 0.22);
 }
 
@@ -616,20 +602,24 @@ html.dark
 }
 
 .home-shell :where(a, button, input):focus-visible {
-  outline: 2px solid var(--home-cyan);
+  outline: 2px solid var(--home-glow);
   outline-offset: 3px;
 }
 
 .home-shell .swiper-pagination-bullet {
   width: 8px !important;
   height: 8px !important;
-  background: rgba(99, 121, 135, 0.5) !important;
+  background: rgba(107, 115, 110, 0.45) !important;
 }
 
 .home-shell .swiper-pagination-bullet-active {
   width: 28px !important;
   height: 8px !important;
-  background: linear-gradient(90deg, #214254, #5bcfe0) !important;
+  background: linear-gradient(90deg, #0B3D2E, #B8913A) !important;
+}
+
+.dark .home-shell .swiper-pagination-bullet-active {
+  background: linear-gradient(90deg, #2F9E68, #D4B06A) !important;
 }
 
 @media (max-width: 768px) {

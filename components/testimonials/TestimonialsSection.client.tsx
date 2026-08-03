@@ -34,8 +34,8 @@ const TestimonialsSectionClient: React.FC<TestimonialsSectionClientProps> = ({
       <div className="relative z-10">
         {/* Header */}
         <div className="text-center mb-16 px-4">
-          <span className="mb-4 inline-flex rounded-full border border-[#214254]/10 bg-card/55 px-4 py-2 text-[11px] font-bold text-[#214254] backdrop-blur-xl/10/5">اعتماد ساخته‌شده با تجربه</span>
-          <h2 className="mb-4 text-4xl font-black tracking-tight text-[#112b3a] lg:text-5xl">
+          <span className="mb-4 inline-flex rounded-full border border-primary/15 bg-card/55 px-4 py-2 text-[11px] font-bold text-primary backdrop-blur-xl/10/5">اعتماد ساخته‌شده با تجربه</span>
+          <h2 className="mb-4 text-4xl font-black tracking-tight text-[#0B3D2E] lg:text-5xl">
             {title}
           </h2>
           <p className="mx-auto max-w-2xl text-lg text-[#637987]">

@@ -113,10 +113,10 @@ export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
     >
       <div className="sticky top-0 flex h-[100dvh] w-full flex-col overflow-hidden">
         <div className="relative z-20 flex flex-col items-center gap-1 px-6 pt-8 text-center">
-          <span className="mb-1 rounded-full border border-[#214254]/10 bg-card/55 px-4 py-1.5 text-[11px] font-bold text-[#214254] backdrop-blur-xl/10/5">
+          <span className="mb-1 rounded-full border border-primary/15 bg-card/55 px-4 py-1.5 text-[11px] font-bold text-primary backdrop-blur-xl/10/5">
             تجربه یکپارچه مالی
           </span>
-          <h4 className="text-2xl font-black tracking-tight text-[#112b3a] sm:text-3xl">
+          <h4 className="text-2xl font-black tracking-tight text-[#0B3D2E] sm:text-3xl">
             سامانه پیشرو
           </h4>
           <p className="text-xs leading-5 text-muted-foreground dark:text-textSecondary sm:text-sm">
@@ -132,8 +132,8 @@ export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
               className={clsx(
                 "h-1.5 rounded-full transition-all duration-500",
                 i === index
-                  ? "w-8 bg-gradient-to-r from-[#5bcfe0] to-primary"
-                  : "w-1.5 bg-[#214254]/20/20"
+                  ? "w-8 bg-gradient-to-r from-primary to-premium"
+                  : "w-1.5 bg-primary/20"
               )}
             />
           ))}
@@ -143,7 +143,7 @@ export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
           className="relative z-10 mt-5 flex flex-1 items-center justify-center px-5 pb-8"
           style={{ perspective: "1300px" }}
         >
-          <div className="home-glass-panel relative flex h-full max-h-[600px] w-full max-w-sm flex-col items-center overflow-hidden rounded-[32px] bg-gradient-to-br from-[#12344b]/95 via-[#183c53]/90 to-[#0d2435]/95 px-5 pt-7">
+          <div className="home-glass-panel relative flex h-full max-h-[600px] w-full max-w-sm flex-col items-center overflow-hidden rounded-[32px] bg-gradient-to-br from-[#0F2A1F]/95 via-[#0B3D2E]/90 to-[#0A100E]/95 px-5 pt-7">
             <motion.div
               className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-primary/15 blur-3xl"
               style={{ x: useTransform(cycle, (v) => Math.sin(v) * 16) }}
@@ -219,12 +219,12 @@ export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
               {currentStep.link ? (
                 <a
                   href={currentStep.link}
-                  className="inline-block rounded-full bg-card px-8 py-2.5 text-xs font-bold text-[#112b3a] shadow-xl transition hover:bg-primary sm:text-sm"
+                  className="inline-block rounded-full bg-card px-8 py-2.5 text-xs font-bold text-[#0B3D2E] shadow-xl transition hover:bg-primary sm:text-sm"
                 >
                   اطلاعات بیشتر
                 </a>
               ) : (
-                <button className="cursor-default rounded-full bg-card px-8 py-2.5 text-xs font-bold text-[#112b3a] shadow-xl sm:text-sm">
+                <button className="cursor-default rounded-full bg-card px-8 py-2.5 text-xs font-bold text-[#0B3D2E] shadow-xl sm:text-sm">
                   اطلاعات بیشتر
                 </button>
               )}
@@ -237,18 +237,18 @@ export function MobileSwiper({ steps: providedSteps }: MobileSwiperProps = {}) {
             style={{ opacity: hintOpacity }}
             className="pointer-events-none absolute bottom-4 left-0 right-0 z-20 flex flex-col items-center gap-1"
           >
-            <span className="text-[11px] font-semibold text-[#214254]/60/50">
+            <span className="text-[11px] font-semibold text-primary/60">
               برای ادامه اسکرول کنید
             </span>
             <motion.span
               animate={{ y: [0, 6, 0] }}
               transition={{ duration: 1.4, repeat: Infinity }}
-              className="h-6 w-4 rounded-full border border-[#214254]/30/30"
+              className="h-6 w-4 rounded-full border border-primary/30"
             >
               <motion.span
                 animate={{ y: [0, 8, 0], opacity: [1, 0, 1] }}
                 transition={{ duration: 1.4, repeat: Infinity }}
-                className="mx-auto mt-1 block h-1.5 w-1.5 rounded-full bg-[#214254]/60/60"
+                className="mx-auto mt-1 block h-1.5 w-1.5 rounded-full bg-primary/60"
               />
             </motion.span>
           </motion.div>

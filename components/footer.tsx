@@ -69,7 +69,7 @@ const Footer = () => {
             <div className="md:col-span-2 lg:col-span-3 space-y-6">
               <div className="flex flex-row md:flex-col-reverse">
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-[#214254] dark:text-textPrimary mb-2 md:mt-6">
+                  <p className="text-sm font-medium text-[#0B3D2E] dark:text-textPrimary mb-2 md:mt-6">
                     پشتیبانی و تماس
                   </p>
                   <Link
@@ -142,7 +142,7 @@ const Footer = () => {
               {/* بخش وسط - Categories */}
               <div className="md:col-span-1 lg:col-span-2 space-y-6">
                 <div>
-                  <h6 className="text-sm font-semibold text-[#214254] dark:text-textPrimary mb-4">
+                  <h6 className="text-sm font-semibold text-[#0B3D2E] dark:text-textPrimary mb-4">
                     دسته بندی ها
                   </h6>
                   <ul className="flex flex-col gap-3">
@@ -163,7 +163,7 @@ const Footer = () => {
               {/* بخش راست - Services & Guide */}
               <div className="md:col-span-1 lg:col-span-2 space-y-6">
                 <div>
-                  <h6 className="text-sm font-semibold text-[#214254] dark:text-textPrimary mb-4">
+                  <h6 className="text-sm font-semibold text-[#0B3D2E] dark:text-textPrimary mb-4">
                     خدمات مشتریان
                   </h6>
                   <ul className="flex flex-col gap-3">
@@ -181,7 +181,7 @@ const Footer = () => {
                 </div>
 
                 <div>
-                  <h6 className="text-sm font-semibold text-[#214254] dark:text-textPrimary mb-4">
+                  <h6 className="text-sm font-semibold text-[#0B3D2E] dark:text-textPrimary mb-4">
                     راهنمای خرید
                   </h6>
                   <ul className="flex flex-col gap-3">
@@ -203,7 +203,7 @@ const Footer = () => {
             {/* بخش آخر - About */}
             <div className="md:col-span-4 lg:col-span-3 space-y-6">
               <div>
-                <h5 className="text-sm font-semibold text-[#214254] dark:text-textPrimary mb-4">
+                <h5 className="text-sm font-semibold text-[#0B3D2E] dark:text-textPrimary mb-4">
                   درباره پیشرو
                 </h5>
                 <p className="text-xs text-[#80878C] dark:text-textSecondary leading-6 max-w-lg">

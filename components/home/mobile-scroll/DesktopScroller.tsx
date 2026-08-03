@@ -83,8 +83,8 @@ export function DesktopScroller({
     >
       <div className="sticky top-0 grid h-screen grid-rows-[auto_minmax(0,1fr)] gap-5 py-6 container-xl">
         <div className="relative z-10 flex w-full flex-col items-start justify-start px-8 xl:px-20">
-          <span className="mb-2 rounded-full border border-[#214254]/10 bg-card/50 px-4 py-2 text-xs font-bold text-[#214254] backdrop-blur-xl/10/5">تجربه یکپارچه مالی</span>
-          <h4 className="mb-1 text-4xl font-black tracking-tight text-[#112b3a] xl:text-5xl">سامانه پیشرو</h4>
+          <span className="mb-2 rounded-full border border-primary/15 bg-card/50 px-4 py-2 text-xs font-bold text-primary backdrop-blur-xl/10/5">تجربه یکپارچه مالی</span>
+          <h4 className="mb-1 text-4xl font-black tracking-tight text-[#0B3D2E] xl:text-5xl">سامانه پیشرو</h4>
           <p className="text-sm text-muted-foreground dark:text-textSecondary xl:text-base">
             سامانه <span className="text-myPrimary">پیشرو</span>، مشاور و همراه
             مالی شما در مسیر پیشرفت
@@ -93,7 +93,7 @@ export function DesktopScroller({
 
         <div className="min-h-0 w-full overflow-hidden pb-4">
           <div className="home-glass-panel relative h-full min-h-[520px] w-full overflow-hidden rounded-[40px]">
-            <div className="absolute inset-0 overflow-hidden rounded-[38px] bg-gradient-to-br from-[#12344b]/95 via-[#183c53]/90 to-[#0d2435]/95">
+            <div className="absolute inset-0 overflow-hidden rounded-[38px] bg-gradient-to-br from-[#0F2A1F]/95 via-[#0B3D2E]/90 to-[#0A100E]/95">
               <div className="absolute -right-32 -top-36 h-96 w-96 rounded-full bg-primary/15 blur-3xl" />
               <div className="absolute -bottom-28 left-1/4 h-80 w-80 rounded-full bg-premium/10 blur-3xl" />
               <div className="absolute inset-y-0 left-0 w-[38%] border-r border-border/10 bg-card/[0.06] backdrop-blur-2xl" />
@@ -139,12 +139,12 @@ export function DesktopScroller({
                     {steps[index].link ? (
                       <a
                         href={steps[index].link}
-                        className="inline-block rounded-full border border-border/20 bg-card px-10 py-3 font-bold text-[#112b3a] shadow-xl transition hover:-translate-y-0.5 hover:bg-primary"
+                        className="inline-block rounded-full border border-border/20 bg-card px-10 py-3 font-bold text-[#0B3D2E] shadow-xl transition hover:-translate-y-0.5 hover:bg-primary"
                       >
                         اطلاعات بیشتر
                       </a>
                     ) : (
-                      <button className="cursor-default rounded-full border border-border/20 bg-card px-10 py-3 font-bold text-[#112b3a] shadow-xl">
+                      <button className="cursor-default rounded-full border border-border/20 bg-card px-10 py-3 font-bold text-[#0B3D2E] shadow-xl">
                         اطلاعات بیشتر
                       </button>
                     )}

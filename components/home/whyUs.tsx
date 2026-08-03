@@ -27,13 +27,13 @@ const WhyUs = () => {
       <h2 className="text-4xl text-center">چرا پیشرو</h2>
 
       {/* لیست لیبل‌ها */}
-      <div className="my-16 flex gap-28 justify-center text-xl text-[#717a86]">
+      <div className="my-16 flex gap-28 justify-center text-xl text-[#6B736E]">
         {whyUsData.map((item, idx) => (
           <h4
             key={idx}
             className={cn(
               "cursor-pointer relative pb-6 font-iransans font-bold",
-              idx === index ? "text-[#172b3d]" : ""
+              idx === index ? "text-[#0B3D2E]" : ""
             )}
             onClick={() => setIndex(idx)}
           >
@@ -61,13 +61,13 @@ const WhyUs = () => {
               exit="exit"
               transition={{ duration: 0.3 }}
             >
-              <h4 className="text-4xl leading-[56px] font-bold font-iransans text-[#172b3d] mb-4">
+              <h4 className="text-4xl leading-[56px] font-bold font-iransans text-[#0B3D2E] mb-4">
                 {whyUsData[index].title}
               </h4>
-              <p className="text-xl text-[#707177] leading-9 whitespace-pre-line text-justify">
+              <p className="text-xl text-[#6B736E] leading-9 whitespace-pre-line text-justify">
                 {whyUsData[index].text}
               </p>
-              <button className="rounded-full text-[#344052] hover:text-foreground hover:bg-[#344052] transition-all duration-300 font-bold px-4 py-2.5 border-2 border-[#344052] flex items-center justify-center w-fit mt-4">
+              <button className="rounded-full text-[#0B3D2E] hover:text-primary-foreground hover:bg-[#0B3D2E] transition-all duration-300 font-bold px-4 py-2.5 border-2 border-[#0B3D2E] flex items-center justify-center w-fit mt-4">
                 <Link
                   href={whyUsData[index].btnHref}
                   className="flex items-center gap-2"
