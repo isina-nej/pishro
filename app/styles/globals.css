@@ -56,23 +56,24 @@ h3 {
      * the brand gold (#F9AD03) as accent, and a navy ink (#10293A) for text.
      */
     --background: 150 33% 99%;
-    --foreground: 200 45% 13%;
+    /* جوهر متن هم به خانواده‌ی سبز آمد؛ hue 200 در متن‌های تیره آبی خوانده می‌شد */
+    --foreground: 152 42% 12%;
     --card: 0 0% 100%;
-    --card-foreground: 200 45% 13%;
+    --card-foreground: 152 42% 12%;
     --popover: 0 0% 100%;
-    --popover-foreground: 200 45% 13%;
+    --popover-foreground: 152 42% 12%;
     --primary: 152 71% 18%;
     --primary-foreground: 0 0% 100%;
     --secondary: 150 22% 95%;
-    --secondary-foreground: 200 40% 16%;
+    --secondary-foreground: 152 38% 15%;
     --muted: 150 16% 95%;
-    --muted-foreground: 200 12% 40%;
+    --muted-foreground: 152 10% 38%;
     --accent: 150 30% 93%;
     --accent-foreground: 152 71% 18%;
     --destructive: 9 82% 46%;
     --destructive-foreground: 0 0% 100%;
-    --border: 200 20% 88%;
-    --input: 200 20% 88%;
+    --border: 150 18% 87%;
+    --input: 150 18% 87%;
     --ring: 152 60% 28%;
     --chart-1: 152 71% 22%;
     --chart-2: 43 96% 50%;
@@ -103,51 +104,56 @@ h3 {
   .dark {
     /*
      * Dark Mode — Pishro public site.
-     * Deep navy-green neutral surfaces with a brighter RoyalGreen primary and
-     * the brand gold accent, matching the light palette's identity.
+     *
+     * سطوح خنثی روی خانواده‌ی سبز royal (hue ~152) هستند، نه navy.
+     * پیش‌تر فقط --primary سبز بود و بقیه روی hue 200 مانده بودند، که چون سایت
+     * پیش‌فرض تاریک رندر می‌شود، کل صفحه آبی دیده می‌شد با یک لهجه‌ی سبز.
+     * روشنایی و اشباع هر توکن نسبت به قبل دست‌نخورده مانده تا کنتراست تغییر نکند
+     * — فقط رنگ‌مایه چرخیده است.
      */
-    --background: 200 40% 5%;
+    --background: 152 30% 5%;
     --foreground: 0 0% 92%;
-    --card: 200 28% 8%;
+    --card: 152 22% 8%;
     --card-foreground: 0 0% 92%;
-    --popover: 200 28% 8%;
+    --popover: 152 22% 8%;
     --popover-foreground: 0 0% 92%;
     --primary: 152 55% 42%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 200 18% 15%;
+    --secondary: 152 15% 15%;
     --secondary-foreground: 0 0% 92%;
-    --muted: 200 16% 14%;
+    --muted: 152 14% 14%;
     --muted-foreground: 0 0% 65%;
-    --accent: 200 20% 18%;
+    --accent: 152 18% 18%;
     --accent-foreground: 0 0% 96%;
     --destructive: 9 72% 52%;
     --destructive-foreground: 0 0% 98%;
-    --border: 200 16% 18%;
-    --input: 200 16% 18%;
+    --border: 152 14% 18%;
+    --input: 152 14% 18%;
     --ring: 152 55% 42%;
     --chart-1: 152 55% 45%;
     --chart-2: 43 90% 58%;
+    /* نمودارها عمداً متنوع می‌مانند — یکدست‌کردنشان سری‌ها را تفکیک‌ناپذیر می‌کند */
     --chart-3: 200 45% 55%;
     --chart-4: 9 72% 58%;
     --chart-5: 173 58% 45%;
 
-    /* Pishro Brand Colors — Dark values (green/gold on deep navy surfaces) */
+    /* Pishro Brand Colors — Dark values (green/gold on deep green surfaces) */
     --brand-color: #F9AD03;
-    --body-background: #0A141B;
-    --header-background: rgba(8, 15, 20, 0.8);
+    --body-background: #0A1A12;
+    --header-background: rgba(8, 20, 14, 0.8);
     --text-primary: #EAF1EE;
     --text-secondary: #9DB0AA;
     --btn-primary-bg: #1CB561;
     --btn-primary-hover: #17924E;
-    --btn-secondary-bg: #17242B;
-    --btn-secondary-hover: #1F2F37;
-    --card-background: #101C24;
+    --btn-secondary-bg: #172B22;
+    --btn-secondary-hover: #1F372C;
+    --card-background: #10231A;
     --border-color: #FFFFFF1F;
-    --footer-background: #0C171E;
+    --footer-background: #0C1D15;
     --text-muted: #7C8A86;
-    --dark-bg-hidden: #0A141B;
-    --neutral-button-bg: #2A3A42;
-    --neutral-button-hover: #33454E;
+    --dark-bg-hidden: #0A1A12;
+    --neutral-button-bg: #294235;
+    --neutral-button-hover: #324D41;
   }
 
   /*
