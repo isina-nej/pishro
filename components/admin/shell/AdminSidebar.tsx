@@ -14,6 +14,7 @@ import {
   LogOut,
   Menu,
   PieChart,
+  ScrollText,
   Settings,
   Ticket,
   TrendingUp,
@@ -72,6 +73,9 @@ export const navSections: NavSection[] = [
     items: [
       { href: '/admin/users', label: 'کاربران', icon: Users, key: 'users', roles: ['ADMIN', 'MODERATOR'] },
       { href: '/admin/reports', label: 'گزارش‌ها', icon: BarChart3, key: 'reports', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
+      // فقط ADMIN: گزارش نشان می‌دهد چه کسی چه کرده، و روت /api/admin/logs هم
+      // همین محدودیت را دارد — منو نباید چیزی را نشان دهد که API رد می‌کند.
+      { href: '/admin/logs', label: 'گزارش فعالیت‌ها', icon: ScrollText, key: 'logs', roles: ['ADMIN'] },
       { href: '/admin/settings', label: 'تنظیمات', icon: Settings, key: 'settings', roles: ['ADMIN'], disabled: true },
     ],
   },

@@ -23,7 +23,10 @@ import {
   CreateCustomerSegmentSchema,
   type CreateCustomerSegmentInput,
 } from '@/lib/schemas/crm-segment-schema';
-import { useCreateCrmSegment, useCrmSegments } from '@/lib/hooks/useCrmSegments';
+import { useCreateCrmSegment, useCrmSegments, crmSegmentKeys } from '@/lib/hooks/useCrmSegments';
+import { BulkActionBar } from '@/components/admin/data-table/BulkActionBar';
+import { SelectionCheckbox } from '@/components/admin/data-table/SelectionCheckbox';
+import { useBulkSelection } from '@/lib/hooks/useBulkSelection';
 
 export const dynamic = 'force-dynamic';
 
@@ -53,6 +56,7 @@ function ruleSummary(rules: CreateCustomerSegmentInput['rules']): string[] {
 
 export default function CrmSegmentsPage() {
   const { data: segments, isLoading } = useCrmSegments();
+  const { selectedIds, setSelectedIds, clear, onDone } = useBulkSelection(crmSegmentKeys.all);
   const createSegment = useCreateCrmSegment();
   const [open, setOpen] = useState(false);
 
@@ -113,7 +117,15 @@ export default function CrmSegmentsPage() {
             <Link key={segment.id} href={`/admin/crm/segments/${segment.id}`}>
               <Card className="h-full space-y-3 p-5 transition-colors hover:border-primary">
                 <div className="flex items-center justify-between">
-                  <Users className="h-4 w-4 text-muted-foreground" />
+                  <div className="flex items-center gap-2">
+                    <SelectionCheckbox
+                      id={segment.id}
+                      selectedIds={selectedIds}
+                      onChange={setSelectedIds}
+                      label={`انتخاب ${segment.name}`}
+                    />
+                    <Users className="h-4 w-4 text-muted-foreground" />
+                  </div>
                   <h3 className="text-right text-sm font-semibold text-foreground">
                     {segment.name}
                   </h3>
@@ -140,6 +152,14 @@ export default function CrmSegmentsPage() {
           ))}
         </div>
       )}
+
+      <BulkActionBar
+        entity="segment"
+        entityLabel="سگمنت"
+        selectedIds={selectedIds}
+        onClear={clear}
+        onDone={onDone}
+      />
     </AdminPageShell>
   );
 }

@@ -19,7 +19,10 @@ import {
 import {
   type CrmCustomerListItem,
   useCrmCustomersList,
+  crmCustomerKeys,
 } from '@/lib/hooks/useCrmCustomer';
+import { BulkActionBar } from '@/components/admin/data-table/BulkActionBar';
+import { useBulkSelection } from '@/lib/hooks/useBulkSelection';
 
 export const dynamic = 'force-dynamic';
 
@@ -52,6 +55,9 @@ export default function CrmCustomersPage() {
   );
 
   const { data, isLoading } = useCrmCustomersList(page, limit, filters);
+  const { selectedIds, setSelectedIds, clear, onDone } = useBulkSelection(
+    crmCustomerKeys.all
+  );
 
   const columns = useMemo<ColumnDef<CrmCustomerListItem, unknown>[]>(
     () => [
@@ -190,6 +196,20 @@ export default function CrmCustomersPage() {
           onPageChange={setPage}
           emptyTitle="مشتری‌ای یافت نشد"
           emptyDescription="با تغییر جستجو یا فیلترها دوباره تلاش کنید."
+          enableSelection
+          selectedIds={selectedIds}
+          onSelectedIdsChange={setSelectedIds}
+        />
+
+        {/* حذف مشتری عمداً غیرفعال است: به سفارش، تراکنش و ثبت‌نام دوره وصل
+            است و حذفش سابقه‌ی مالی را می‌برد. آرشیو همان کار را می‌کند. */}
+        <BulkActionBar
+          entity="customer"
+          entityLabel="مشتری"
+          selectedIds={selectedIds}
+          onClear={clear}
+          onDone={onDone}
+          allowDelete={false}
         />
       </div>
     </AdminPageShell>
