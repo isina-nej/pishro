@@ -27,6 +27,9 @@ print_error() {
 
 # Set config path to be local to the script
 export RCLONE_CONFIG=./rclone.conf
+# Force rclone (a Go program) to use the system's DNS resolver
+export GODEBUG=netdns=go
+
 
 
 # 1. Install rclone if not exists
