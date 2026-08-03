@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { DigitalBook } from "@prisma/client";
+import type { DigitalBook } from "@/lib/types/db";
 import { ApiResponse, PaginatedData } from "@/lib/api-response";
 import { getBaseUrl } from "@/lib/get-base-url";
 

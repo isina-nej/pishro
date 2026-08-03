@@ -97,7 +97,7 @@ export function extractPlainText(markdown: string): string {
   if (!markdown) return '';
 
   // Remove markdown syntax
-  let text = markdown
+  const text = markdown
     // Remove headings
     .replace(/^#+\s+/gm, '')
     // Remove bold/italic
@@ -178,7 +178,7 @@ export function isMarkdownSafe(markdown: string): boolean {
 export function sanitizeMarkdown(markdown: string): string {
   if (!markdown) return '';
 
-  let sanitized = markdown
+  const sanitized = markdown
     // Remove script tags
     .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
     // Remove style tags

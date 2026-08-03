@@ -6,7 +6,6 @@ import {
   updateSkyRoomClass as updateClassMySQL,
   deleteSkyRoomClass as deleteClassMySQL,
 } from "./skyroom-mysql";
-import type { SkyRoomClass } from "@prisma/client";
 
 /**
  * دریافت لینک همایش منتشر شده

@@ -1,15 +1,25 @@
 // app/components/utils/CoursesSec.server.tsx
 import CoursesGridClient from "./CoursesGrid.client";
 import * as db from "@/lib/db";
+import type { Course } from "@/lib/types/db";
+
+/** Course columns joined with the flattened Category columns selected below */
+type CourseWithCategoryColumns = Course & {
+  categoryId: string | null;
+  categorySlug: string | null;
+  categoryTitle: string | null;
+  categoryIcon: string | null;
+};
 
 export default async function CoursesSec() {
   try {
     // Fetch only 6 featured courses for home page
-    const courses = await db.query<any>(
+    const courses = await db.query<CourseWithCategoryColumns>(
       `SELECT 
         c.id, c.subject, c.price, c.img, c.rating, c.description, 
         c.discountPercent, c.time, c.students, c.videosCount, c.instructor,
         c.slug, c.level, c.language, c.featured, c.views, c.status,
+        c.prerequisites, c.learningGoals, c.published, c.tagIds,
         cat.id as categoryId, cat.slug as categorySlug, 
         cat.title as categoryTitle, cat.icon as categoryIcon
       FROM Course c
@@ -20,15 +30,20 @@ export default async function CoursesSec() {
     );
 
     // Map database results to match component expectations
-    const mappedCourses = courses.map((course: any) => ({
+    const mappedCourses = courses.map((course) => ({
       ...course,
-      category: course.categoryId ? {
-        id: course.categoryId,
-        slug: course.categorySlug,
-        title: course.categoryTitle,
-        color: null,
-        icon: course.categoryIcon,
-      } : null,
+      // LEFT JOIN, so guard on the joined columns rather than just the FK -
+      // a course pointing at a missing category yields no category at all
+      category:
+        course.categoryId && course.categorySlug && course.categoryTitle
+          ? {
+              id: course.categoryId,
+              slug: course.categorySlug,
+              title: course.categoryTitle,
+              color: null,
+              icon: course.categoryIcon,
+            }
+          : null,
     }));
 
     return <CoursesGridClient courses={mappedCourses} />;

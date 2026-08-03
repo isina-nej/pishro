@@ -1,7 +1,6 @@
 // @/app/api/video/token/route.ts
 import { auth } from "@/auth";
 import { NextRequest } from "next/server";
-import { prisma } from "@/lib/prisma";
 import {
   successResponse,
   errorResponse,
@@ -68,7 +67,7 @@ export async function POST(req: NextRequest) {
     // بررسی دسترسی کاربر به حداقل یکی از درس‌ها
     if (lessonsWithVideo.length > 0) {
       const hasAccess = await Promise.any(
-        lessonsWithVideo.map((lesson: any) =>
+        lessonsWithVideo.map((lesson) =>
           checkUserAccessToLesson(session.user.id!, lesson.id)
         )
       ).catch(() => false);

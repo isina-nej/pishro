@@ -1,3 +1,4 @@
+import type { User, Otp, TempUser } from "@prisma/client";
 import { query, execute } from "@/lib/db";
 import {
   successResponse,
@@ -22,7 +23,7 @@ export async function POST(req: Request) {
     }
 
     // Get OTP from database
-    const otps = await query<any>(
+    const otps = await query<Otp>(
       `SELECT * FROM Otp WHERE phone = ? LIMIT 1`,
       [phone]
     );
@@ -40,7 +41,7 @@ export async function POST(req: Request) {
     }
 
     // Get temp user
-    const tempUsers = await query<any>(
+    const tempUsers = await query<TempUser>(
       `SELECT * FROM TempUser WHERE phone = ? LIMIT 1`,
       [phone]
     );
@@ -55,7 +56,7 @@ export async function POST(req: Request) {
     const tempUser = tempUsers[0];
 
     // Check if user already exists
-    const existingUsers = await query<any>(
+    const existingUsers = await query<Pick<User, "id">>(
       `SELECT id FROM User WHERE phone = ? LIMIT 1`,
       [phone]
     );

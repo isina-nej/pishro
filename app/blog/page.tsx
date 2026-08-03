@@ -145,6 +145,7 @@ export default function BlogListPage() {
                       {/* Cover Image */}
                       {post.coverImage && (
                         <div className="relative h-48 overflow-hidden bg-gray-200 dark:bg-gray-800">
+                          {/* eslint-disable-next-line @next/next/no-img-element -- cover image URL is arbitrary, host is not in next.config remotePatterns */}
                           <img
                             src={post.coverImage}
                             alt={post.title}

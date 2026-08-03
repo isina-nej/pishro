@@ -83,6 +83,21 @@ export function extractHeadings(content: string): Array<{ level: number; text: s
   return headings;
 }
 
+/** A formatting mark attached to a ProseMirror text node */
+export interface ProseMirrorMark {
+  type: string;
+  attrs?: Record<string, unknown>;
+}
+
+/** Minimal ProseMirror document node - only the parts this app walks/renders */
+export interface ProseMirrorNode {
+  type?: string;
+  text?: string;
+  marks?: ProseMirrorMark[];
+  attrs?: Record<string, unknown>;
+  content?: ProseMirrorNode[];
+}
+
 /**
  * Extract summary from ProseMirror JSON content
  */
@@ -92,7 +107,7 @@ export function extractProseMirrorSummary(jsonString: string, maxChars: number =
     if (!parsed || parsed.type !== 'doc') return '';
     
     let text = '';
-    const collectText = (content: any[]): void => {
+    const collectText = (content: ProseMirrorNode[]): void => {
       for (const node of content) {
         if (node.type === 'text') {
           text += node.text || '';

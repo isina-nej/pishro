@@ -162,10 +162,18 @@ export interface Category {
   updatedAt?: Date | null;
 }
 
+/** One line of an order, as stored in the `Order.items` JSON column */
+export interface OrderItem {
+  courseId: string;
+  title: string;
+  price: number;
+  discountPercent?: number | null;
+}
+
 export interface Order {
   id: string;
   userId?: string | null;
-  items: any;
+  items: OrderItem[];
   total: number;
   status: OrderStatus;
   paymentRef?: string | null;
@@ -229,7 +237,7 @@ export interface ContentBlock {
   id: string;
   newsId: string;
   type: BlockType;
-  content: any;
+  content: Record<string, unknown>;
   sortOrder: number;
   createdAt?: Date | null;
   updatedAt?: Date | null;
@@ -309,7 +317,7 @@ export interface QuizQuestion {
   quizId: string;
   question: string;
   questionType: QuestionType;
-  options: any;
+  options: { text: string; isCorrect?: boolean }[];
   correctAnswer?: boolean | null;
   explanation?: string | null;
   points: number;

@@ -15,7 +15,7 @@ export interface UseMDXEditorOptions {
   articleId?: string;
   autoSaveEnabled?: boolean;
   autoSaveInterval?: number;
-  onSuccess?: (article: any) => void;
+  onSuccess?: (article: unknown) => void;
   onError?: (error: Error) => void;
 }
 

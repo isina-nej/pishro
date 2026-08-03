@@ -3,7 +3,7 @@
  * GET /api/admin/dashboard/payments/monthly?period=monthly|yearly - دریافت داده‌های پرداخت ماهانه
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
 import {
   errorResponse,

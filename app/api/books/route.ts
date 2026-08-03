@@ -7,7 +7,6 @@ import { NextRequest } from "next/server";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import {
-  successResponse,
   errorResponse,
   paginatedResponse,
   ErrorCodes,
@@ -70,13 +69,12 @@ export async function GET(req: NextRequest) {
         orderBy = { createdAt: "desc" };
     }
 
-    // Fetch books (without DateTime fields due to Prisma MongoDB adapter issue)
     const [books, total] = await Promise.all([
       prisma.digitalBook.findMany({
         where,
         skip,
         take: limit,
-        orderBy: { [sort === "newest" ? "id" : sort]: "desc" },
+        orderBy,
       }),
       prisma.digitalBook.count({ where }),
     ]);

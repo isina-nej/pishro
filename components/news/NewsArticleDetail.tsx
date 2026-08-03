@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import MarkdownPreview from '@/components/BlockNews/MarkdownPreview';
 import ArticlePreviewCard from '@/components/news/ArticlePreviewCard';
 import type { NewsArticle } from "@prisma/client";
+import type { ProseMirrorNode, ProseMirrorMark } from "@/lib/utils/article-utils";
 import { format } from 'date-fns';
 import { faIR } from 'date-fns/locale/fa-IR';
 import Link from "next/link";
@@ -22,7 +23,7 @@ function isProseMirrorDoc(content: string): boolean {
   }
 }
 
-function renderProseMirrorMarks(text: string, marks?: Array<{ type: string; attrs?: Record<string, any> }>): React.ReactNode {
+function renderProseMirrorMarks(text: string, marks?: ProseMirrorMark[]): React.ReactNode {
   if (!marks?.length) return text;
 
   return marks.reduce<React.ReactNode>((child, mark) => {
@@ -36,7 +37,7 @@ function renderProseMirrorMarks(text: string, marks?: Array<{ type: string; attr
       case 'link':
         return (
           <a
-            href={mark.attrs?.href || '#'}
+            href={String(mark.attrs?.href ?? '#')}
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-600 dark:text-blue-400 hover:underline"
@@ -54,14 +55,14 @@ function renderProseMirrorMarks(text: string, marks?: Array<{ type: string; attr
   }, text);
 }
 
-function renderProseMirrorNode(node: any, key: string): React.ReactNode {
+function renderProseMirrorNode(node: ProseMirrorNode | undefined, key: string): React.ReactNode {
   if (!node) return null;
 
   if (node.type === 'text') {
-    return <React.Fragment key={key}>{renderProseMirrorMarks(node.text, node.marks)}</React.Fragment>;
+    return <React.Fragment key={key}>{renderProseMirrorMarks(node.text ?? "", node.marks)}</React.Fragment>;
   }
 
-  const renderChildren = (children?: any[]) =>
+  const renderChildren = (children?: ProseMirrorNode[]) =>
     (children || []).map((child, index) => renderProseMirrorNode(child, `${key}-${index}`));
 
   switch (node.type) {
@@ -82,7 +83,7 @@ function renderProseMirrorNode(node: any, key: string): React.ReactNode {
         level === 5 && 'text-lg md:text-xl mb-4 mt-6',
         level === 6 && 'text-base md:text-lg mb-4 mt-5',
       ].filter(Boolean).join(' ');
-      const HeadingTag = `h${level}` as any;
+      const HeadingTag = `h${Math.min(Math.max(Number(level) || 1, 1), 6)}` as `h${1|2|3|4|5|6}`;
       return (
         <HeadingTag key={key} className={headingClasses}>
           {renderChildren(node.content)}
@@ -127,9 +128,9 @@ function renderProseMirrorNode(node: any, key: string): React.ReactNode {
     case 'hardBreak':
       return <br key={key} />;
     case 'image': {
-      const src = node.attrs?.src || '';
-      const alt = node.attrs?.alt || 'تصویر مقاله';
-      const title = node.attrs?.title || alt;
+      const src = String(node.attrs?.src ?? '');
+      const alt = String(node.attrs?.alt ?? 'تصویر مقاله');
+      const title = String(node.attrs?.title ?? alt);
       return (
         <div key={key} className="my-12 flex justify-center px-4">
           <figure className="w-full max-w-4xl text-center">
@@ -163,7 +164,7 @@ function renderProseMirrorContent(jsonString: string) {
   try {
     const parsed = JSON.parse(jsonString);
     if (!parsed || parsed.type !== 'doc') return null;
-    return parsed.content?.map((node: any, index: number) => renderProseMirrorNode(node, `pm-${index}`));
+    return parsed.content?.map((node: ProseMirrorNode, index: number) => renderProseMirrorNode(node, `pm-${index}`));
   } catch {
     return null;
   }

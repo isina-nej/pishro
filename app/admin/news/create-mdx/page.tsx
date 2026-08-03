@@ -9,8 +9,14 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { MDXNewsEditor } from '@/components/news/MDXNewsEditor';
+
+/** Imperative handle MDXNewsEditor exposes via its ref */
+interface EditorHandle {
+  getMarkdown: () => Promise<string>;
+  setMarkdown: (markdown: string) => void;
+  focus: () => void;
+}
 import toast from 'react-hot-toast';
-import Link from 'next/link';
 
 interface CreateArticleData {
   title: string;
@@ -34,7 +40,7 @@ export default function CreateNewsWithMDXPage() {
 
   // Track content
   const editorContentRef = useRef<string>('');
-  const editorRef = useRef<any>(null);
+  const editorRef = useRef<EditorHandle | null>(null);
   const lastSavedRef = useRef<CreateArticleData>({
     title: '',
     content: '',
@@ -173,7 +179,7 @@ export default function CreateNewsWithMDXPage() {
         throw new Error(error.message || 'خطا در انتشار');
       }
 
-      const result = await response.json();
+      await response.json();
       toast.success('مقاله منتشر شد');
 
       // Redirect to news management or detail page
@@ -247,6 +253,7 @@ export default function CreateNewsWithMDXPage() {
                 initialTitle={title}
                 initialContent={editorContentRef.current}
                 onContentChange={handleContentChange}
+                onTitleChange={setTitle}
                 articleId={articleId || undefined}
                 placeholder="محتوا را اینجا بنویسید..."
                 autoSaveEnabled={false}

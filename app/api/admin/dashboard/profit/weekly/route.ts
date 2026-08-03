@@ -3,7 +3,7 @@
  * GET /api/admin/dashboard/profit/weekly?period=this_week|last_week - دریافت داده‌های سود هفتگی
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
 import {
   errorResponse,

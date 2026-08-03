@@ -1,3 +1,5 @@
+/** CourseSave is a raw-SQL-only table - no Prisma model exists for it */
+interface CourseSaveRow { id: string }
 import { NextRequest } from "next/server";
 import { successResponse, errorResponse, ErrorCodes } from "@/lib/api-response";
 import { query } from "@/lib/db";
@@ -20,7 +22,7 @@ export async function POST(req: NextRequest) {
     const userId = "test-user-1";
 
     // Check if already saved
-    const existing = await query<any>(
+    const existing = await query<CourseSaveRow>(
       `SELECT id FROM CourseSave WHERE userId = ? AND courseId = ? LIMIT 1`,
       [userId, courseId]
     );

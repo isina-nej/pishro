@@ -43,7 +43,7 @@ export async function POST(req: Request) {
     }
 
     // 🧮 Calculate total from real DB data (with discount applied)
-    const total = courses.reduce((sum: number, course: any) => {
+    const total = courses.reduce((sum: number, course) => {
       const finalPrice = course.discountPercent
         ? Math.round(course.price * (1 - course.discountPercent / 100))
         : course.price;
@@ -54,11 +54,11 @@ export async function POST(req: Request) {
     const order = await prisma.order.create({
       data: {
         userId,
-        items: courses.map((c: any) => ({ courseId: c.id })), // stored as JSON
+        items: courses.map((c) => ({ courseId: c.id })), // stored as JSON
         total,
         status: "PENDING",
         orderItems: {
-          create: courses.map((course: any) => {
+          create: courses.map((course) => {
             const finalPrice = course.discountPercent
               ? Math.round(course.price * (1 - course.discountPercent / 100))
               : course.price;

@@ -1,3 +1,4 @@
+import { getApiErrorMessage } from "@/lib/utils/api-error";
 // @/lib/hooks/useChapters.ts
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api-client";
@@ -23,10 +24,6 @@ interface CreateChapterInput {
 
 interface UpdateChapterInput {
   title?: string;
-}
-
-interface ReorderInput {
-  order: string[];
 }
 
 export const chapterKeys = {
@@ -88,10 +85,8 @@ export function useCreateChapter() {
       });
       toast.success("فصل با موفقیت ایجاد شد");
     },
-    onError: (error: any) => {
-      const message =
-        error?.response?.data?.message || "خطا در ایجاد فصل";
-      toast.error(message);
+    onError: (error) => {
+      toast.error(getApiErrorMessage(error, "خطا در ایجاد فصل"));
     },
   });
 }
@@ -122,10 +117,8 @@ export function useUpdateChapter() {
       });
       toast.success("فصل با موفقیت به‌روز شد");
     },
-    onError: (error: any) => {
-      const message =
-        error?.response?.data?.message || "خطا در به‌روزرسانی فصل";
-      toast.error(message);
+    onError: (error) => {
+      toast.error(getApiErrorMessage(error, "خطا در به‌روزرسانی فصل"));
     },
   });
 }
@@ -137,7 +130,7 @@ export function useDeleteChapter() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, courseId }: { id: string; courseId: string }) => {
+    mutationFn: async ({ id }: { id: string; courseId: string }) => {
       await api.delete(`/api/admin/chapters/${id}`);
     },
     onSuccess: (_, { courseId }) => {
@@ -146,10 +139,8 @@ export function useDeleteChapter() {
       });
       toast.success("فصل با موفقیت حذف شد");
     },
-    onError: (error: any) => {
-      const message =
-        error?.response?.data?.message || "خطا در حذف فصل";
-      toast.error(message);
+    onError: (error) => {
+      toast.error(getApiErrorMessage(error, "خطا در حذف فصل"));
     },
   });
 }
@@ -180,10 +171,8 @@ export function useReorderChapters() {
       });
       toast.success("ترتیب فصل‌ها با موفقیت به‌روز شد");
     },
-    onError: (error: any) => {
-      const message =
-        error?.response?.data?.message || "خطا در ترتیب فصل‌ها";
-      toast.error(message);
+    onError: (error) => {
+      toast.error(getApiErrorMessage(error, "خطا در ترتیب فصل‌ها"));
     },
   });
 }
@@ -218,10 +207,8 @@ export function useReorderLessons() {
       });
       toast.success("ترتیب درس‌ها با موفقیت به‌روز شد");
     },
-    onError: (error: any) => {
-      const message =
-        error?.response?.data?.message || "خطا در ترتیب درس‌ها";
-      toast.error(message);
+    onError: (error) => {
+      toast.error(getApiErrorMessage(error, "خطا در ترتیب درس‌ها"));
     },
   });
 }

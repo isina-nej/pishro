@@ -254,7 +254,7 @@ export interface FrontMatter {
   author?: string;
   date?: string;
   tags?: string[];
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export function extractFrontMatter(markdown: string): { metadata: FrontMatter; content: string } {

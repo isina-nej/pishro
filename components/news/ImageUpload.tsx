@@ -33,7 +33,7 @@ export function ImageUpload({
     if (!file) return;
 
     // Validate file type
-    if (!IMAGE_UPLOAD_CONFIG.allowedFormats.includes(file.type as any)) {
+    if (!(IMAGE_UPLOAD_CONFIG.allowedFormats as readonly string[]).includes(file.type)) {
       setError('Invalid file type. Please use JPEG, PNG, WebP, or GIF.');
       return;
     }
@@ -134,6 +134,7 @@ export function ImageUpload({
         {/* Preview */}
         {preview && (
           <div style={{ marginBottom: '1rem' }}>
+            {/* eslint-disable-next-line @next/next/no-img-element -- preview is a data: URL from FileReader, next/image cannot optimize it */}
             <img
               src={preview}
               alt="Preview"

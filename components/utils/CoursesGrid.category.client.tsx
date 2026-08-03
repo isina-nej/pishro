@@ -1,7 +1,7 @@
-import type { Prisma } from '@prisma/client';
-// Client Component برای نمایش دوره‌های یک دسته‌بندی با فیلتر سطح
 "use client";
 
+// Client Component برای نمایش دوره‌های یک دسته‌بندی با فیلتر سطح
+import type { Prisma, Tag } from "@prisma/client";
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -15,7 +15,9 @@ import {
 import CourseCard from "./courseCard";
 import type { Course, CourseLevel } from "@/lib/types/db";
 
-// Type for Course with relations from getCategoryCourses
+// Type for Course with relations from getCategoryCourses. The Prisma relation
+// is `tags` (a CourseTags join model); the server component flattens it into
+// `relatedTags` before passing the data down.
 type CourseWithRelations = Prisma.CourseGetPayload<{
   include: {
     category: {
@@ -26,7 +28,11 @@ type CourseWithRelations = Prisma.CourseGetPayload<{
         color: true;
       };
     };
-    relatedTags: true;
+    tags: {
+      include: {
+        tag: true;
+      };
+    };
     _count: {
       select: {
         enrollments: true;
@@ -36,14 +42,16 @@ type CourseWithRelations = Prisma.CourseGetPayload<{
   };
 }>;
 
-// Type for serialized course with string dates (from server component)
-type SerializedCourseWithRelations = Omit<CourseWithRelations, "createdAt" | "updatedAt" | "relatedTags"> & {
+type SerializedTag = Omit<Tag, "createdAt" | "updatedAt"> & {
   createdAt: string;
   updatedAt: string;
-  relatedTags: Array<Omit<CourseWithRelations["relatedTags"][number], "createdAt" | "updatedAt"> & {
-    createdAt: string;
-    updatedAt: string;
-  }>;
+};
+
+// Type for serialized course with string dates (from server component)
+type SerializedCourseWithRelations = Omit<CourseWithRelations, "createdAt" | "updatedAt" | "tags"> & {
+  createdAt: string;
+  updatedAt: string;
+  relatedTags: SerializedTag[];
 };
 
 const levelOptions = [
@@ -158,7 +166,12 @@ export default function CoursesGridCategoryClient({
               transition={{ duration: 0.6, delay: idx * 0.1, ease: "easeOut" }}
               className="w-full"
             >
-              <CourseCard data={course as any} link={courseLink} />
+              {/* Dates were serialized to strings when crossing the server
+                  boundary; CourseCard only reads them for display. */}
+              <CourseCard
+                data={course as unknown as Course}
+                link={courseLink}
+              />
             </motion.div>
           );
         })}

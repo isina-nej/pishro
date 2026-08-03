@@ -14,9 +14,11 @@ import React, {
   ReactNode,
 } from 'react';
 import { EditorContent } from '@tiptap/react';
+import type { Editor } from '@tiptap/core';
 import { useEditor } from '@/lib/hooks/useEditor';
 import { useAutoSave } from '@/lib/hooks/useAutoSave';
 import { EDITOR_CONFIG } from '@/lib/editor-config';
+import type { EditorState } from '@/lib/editor-extensions';
 import { BlockTypeSelector } from '@/components/news/BlockTypeSelector';
 import styles from '@/styles/editor.module.css';
 
@@ -28,7 +30,7 @@ export interface NewsEditorProps {
   maxLength?: number;
   articleId?: string;
   onContentChange?: (content: string) => void;
-  onSave?: (data: any) => void;
+  onSave?: (data: unknown) => void;
   onError?: (error: Error) => void;
   showStatusBar?: boolean;
   showToolbar?: boolean;
@@ -66,7 +68,7 @@ export function NewsEditor({
   }, [onContentChange]);
 
   // Initialize editor
-  const { editor, editorState, getContent, getText, isReady } = useEditor({
+  const { editor, editorState, isReady } = useEditor({
     initialContent,
     placeholder,
     readonly,
@@ -243,6 +245,16 @@ export function NewsEditor({
 /**
  * Editor Toolbar Component
  */
+interface EditorToolbarProps {
+  editor: Editor | null;
+  editorState: EditorState | null;
+  onToggleFormat: (format: string) => void;
+  onInsertImage: () => void;
+  onInsertHeading: (level: 1 | 2 | 3) => void;
+  onInsertCodeBlock: () => void;
+  darkMode?: boolean;
+}
+
 function EditorToolbar({
   editor,
   editorState,
@@ -251,7 +263,7 @@ function EditorToolbar({
   onInsertHeading,
   onInsertCodeBlock,
   darkMode,
-}: any) {
+}: EditorToolbarProps) {
   if (!editor || !editorState) return null;
 
   return (
@@ -458,7 +470,7 @@ function EditorStatusBar({
   readonly,
   darkMode,
 }: {
-  editor: any;
+  editor: Editor | null;
   saveStatus: string;
   lastSavedAt: Date | null;
   readonly: boolean;

@@ -3,43 +3,15 @@
  * Server-side HTML content sanitization for XSS prevention
  */
 
-export interface SanitizationOptions {
-  allowedTags?: string[];
-  allowedAttributes?: Record<string, string[]>;
-}
-
-const DEFAULT_ALLOWED_TAGS = [
-  'p',
-  'h1',
-  'h2',
-  'h3',
-  'blockquote',
-  'ul',
-  'ol',
-  'li',
-  'pre',
-  'hr',
-  'strong',
-  'b',
-  'em',
-  'i',
-  'u',
-  's',
-  'del',
-  'a',
-  'code',
-  'br',
-  'img',
-];
-
 /**
  * Basic HTML content sanitization to prevent XSS attacks
  * Removes dangerous scripts and event handlers
+ *
+ * NOTE: this is a deny-list regex sanitizer and is inherently bypassable.
+ * For new code paths that render user-supplied HTML, use `isomorphic-dompurify`
+ * (see `lib/markdown-processor.ts`) instead of this function.
  */
-export function sanitizeContent(
-  html: string,
-  options?: SanitizationOptions
-): string {
+export function sanitizeContent(html: string): string {
   if (!html || typeof html !== 'string') {
     return '';
   }

@@ -28,8 +28,6 @@ import {
   Minus,
   Eye,
   EyeOff,
-  Copy,
-  Redo,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

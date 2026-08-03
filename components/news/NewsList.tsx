@@ -45,7 +45,8 @@ const NewsList = () => {
           author: newsItem.author ?? null,
           publishedAt: newsItem.publishedAt ?? null,
           createdAt: newsItem.createdAt ?? new Date(),
-        } as any} />
+          tags: Array.isArray(newsItem.tags) ? (newsItem.tags as string[]) : [],
+        }} />
       ))}
     </div>
   );

@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
 import { prisma } from "@/lib/prisma";
-import { successResponse, errorResponse } from "@/lib/api-response";
+import { successResponse, errorResponse, ErrorCodes } from "@/lib/api-response";
 import { QuestionType } from "@prisma/client";
 
 export const dynamic = "force-dynamic";
@@ -439,7 +439,11 @@ const quizData = [
 export async function POST(_req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(_req);
-console.log("🌱 شروع Seed کردن آزمون‌های تعیین سطح...");
+    if (!adminAuth) {
+      return errorResponse("احراز هویت نشده است", ErrorCodes.UNAUTHORIZED);
+    }
+
+    console.log("🌱 شروع Seed کردن آزمون‌های تعیین سطح...");
 
     const results = {
       created: [] as string[],

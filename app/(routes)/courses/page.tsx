@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { query } from "@/lib/db";
 import CoursesPageContent from "@/components/courses/coursesPageContent";
 import type { Course, Category } from "@/lib/types/db";
+import { CourseLevel, CourseStatus, Language } from "@/lib/types/db";
 
 export const metadata: Metadata = {
   title: "همه دوره‌ها | پیشرو",
@@ -62,12 +63,12 @@ function convertCourse(row: CourseRow): Course {
     updatedAt: row.updatedAt ? new Date(row.updatedAt) : undefined,
     categoryId: row.categoryId || undefined,
     slug: row.slug || undefined,
-    level: (row.level as any) || undefined,
-    language: 'FA' as any,
+    level: (row.level as CourseLevel) || undefined,
+    language: Language.FA,
     prerequisites: [],
     learningGoals: [],
     instructor: row.instructor || undefined,
-    status: 'ACTIVE' as any,
+    status: CourseStatus.ACTIVE,
     published: !!row.published,
     featured: false,
     views: 0,

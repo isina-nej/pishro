@@ -1,4 +1,8 @@
 import { query } from "@/lib/db";
+import type {
+  InvestmentModelFeature,
+  InvestmentModelContact,
+} from "@/types/landing";
 
 interface InvestmentModel {
   id: string;
@@ -9,14 +13,14 @@ interface InvestmentModel {
   icon?: string;
   color?: string;
   gradient?: string;
-  features?: any;
-  benefits?: any;
+  features?: InvestmentModelFeature[] | string | null;
+  benefits?: string[] | string | null;
   ctaText?: string;
   ctaLink?: string;
   ctaIsScroll: boolean;
   contactTitle?: string;
   contactDescription?: string;
-  contacts?: any;
+  contacts?: InvestmentModelContact[] | string | null;
   order: number;
   published: boolean;
   createdAt: string;

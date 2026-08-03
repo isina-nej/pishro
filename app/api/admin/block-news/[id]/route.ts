@@ -12,7 +12,6 @@ import {
 } from '@/lib/api-response';
 import { getAdminAuth } from '@/lib/auth-simple';
 import { deleteNews, getNews, updateNewsMetadata } from '@/lib/services/block-news-service';
-import { UpdateNewsSchema } from '@/lib/schemas/block-news-schema';
 import type { UpdateNewsRequest } from '@/lib/types/block-news';
 
 export async function GET(

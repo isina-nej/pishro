@@ -31,10 +31,10 @@ export const ImageManager: React.FC<ImageManagerProps> = ({ editor, darkMode = f
     aspectRatio: 1,
   });
 
-  if (!editor) return null;
-
   // Get current image data
   const getCurrentImage = useCallback(() => {
+    if (!editor) return null;
+
     const { node } = editor.getAttributes('image');
     if (!node) return null;
 
@@ -66,6 +66,8 @@ export const ImageManager: React.FC<ImageManagerProps> = ({ editor, darkMode = f
 
   // Update image
   const handleSave = useCallback(() => {
+    if (!editor) return;
+
     if (!imageData.src) {
       alert('Please enter image URL');
       return;
@@ -87,6 +89,8 @@ export const ImageManager: React.FC<ImageManagerProps> = ({ editor, darkMode = f
 
   // Delete image
   const handleDelete = useCallback(() => {
+    if (!editor) return;
+
     if (confirm('Delete this image?')) {
       editor.chain().focus().deleteSelection().run();
       setIsOpen(false);
@@ -122,6 +126,9 @@ export const ImageManager: React.FC<ImageManagerProps> = ({ editor, darkMode = f
       height: 225,
     }));
   };
+
+  // Hooks above must run unconditionally - bail out only after they are declared
+  if (!editor) return null;
 
   const buttonClasses = [
     'px-3 py-2 text-sm rounded transition-colors',
@@ -167,6 +174,7 @@ export const ImageManager: React.FC<ImageManagerProps> = ({ editor, darkMode = f
                   }`}
                   style={{ height: `${Math.min(imageData.height, 200)}px` }}
                 >
+                  {/* eslint-disable-next-line @next/next/no-img-element -- user-entered image URL, host is not in next.config remotePatterns */}
                   <img
                     src={imageData.src}
                     alt={imageData.alt}

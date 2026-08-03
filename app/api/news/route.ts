@@ -1,7 +1,6 @@
 import { NextRequest } from "next/server";
 import { PrismaClient, Prisma } from "@prisma/client";
 import {
-  successResponse,
   errorResponse,
   paginatedResponse,
   ErrorCodes,

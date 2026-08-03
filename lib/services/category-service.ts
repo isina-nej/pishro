@@ -6,7 +6,20 @@
 
 import * as db from "@/lib/db";
 import { prisma } from "@/lib/prisma";
-import { Prisma, PageContentType, CourseLevel } from "@prisma/client";
+import { Prisma, PageContentType, CourseLevel, type Tag } from "@prisma/client";
+
+/**
+ * Raw `SELECT * FROM Category` row.
+ *
+ * Read through the raw mysql2 pool, so the `Json` columns can arrive either as
+ * a JSON string or already parsed depending on the driver/column setup - they
+ * are normalised in place below before the row is returned.
+ */
+type CategoryRow = Omit<Prisma.CategoryGetPayload<object>, "statsBoxes" | "metaKeywords"> & {
+  statsBoxes: string | unknown[] | null;
+  metaKeywords: string | string[] | null;
+  tagIds: string | string[] | null;
+};
 
 /**
  * Type for category with full relations
@@ -77,7 +90,7 @@ export async function getCategoryBySlug(
 ): Promise<CategoryWithRelations | null> {
   try {
     // Fetch category
-    const categories = await db.query<any>(
+    const categories = await db.query<CategoryRow>(
       `SELECT * FROM Category WHERE slug = ? AND published = true`,
       [slug]
     );
@@ -89,15 +102,15 @@ export async function getCategoryBySlug(
     const category = categories[0];
     
     // Initialize relations with empty arrays
-    let contentData: any[] = [];
-    let tagsData: any[] = [];
-    let coursesData: any[] = [];
-    let faqsData: any[] = [];
-    let commentsData: any[] = [];
+    const contentData: CategoryWithRelations["content"] = [];
+    const tagsData: CategoryWithRelations["tags"] = [];
+    const coursesData: CategoryWithRelations["courses"] = [];
+    let faqsData: CategoryWithRelations["faqs"] = [];
+    const commentsData: CategoryWithRelations["comments"] = [];
 
     // Try to fetch related FAQs (this table exists)
     try {
-      faqsData = await db.query<any>(
+      faqsData = await db.query<CategoryWithRelations["faqs"][number]>(
         `SELECT * FROM FAQ WHERE categoryId = ?`,
         [category.id]
       );
@@ -109,7 +122,7 @@ export async function getCategoryBySlug(
     if (category.statsBoxes && typeof category.statsBoxes === 'string') {
       try {
         category.statsBoxes = JSON.parse(category.statsBoxes);
-      } catch (e) {
+      } catch {
         category.statsBoxes = [];
       }
     } else if (!category.statsBoxes) {
@@ -119,7 +132,7 @@ export async function getCategoryBySlug(
     if (category.metaKeywords && typeof category.metaKeywords === 'string') {
       try {
         category.metaKeywords = JSON.parse(category.metaKeywords);
-      } catch (e) {
+      } catch {
         category.metaKeywords = [];
       }
     } else if (!category.metaKeywords) {
@@ -129,7 +142,7 @@ export async function getCategoryBySlug(
     if (category.tagIds && typeof category.tagIds === 'string') {
       try {
         category.tagIds = JSON.parse(category.tagIds);
-      } catch (e) {
+      } catch {
         category.tagIds = [];
       }
     } else if (!category.tagIds) {
@@ -156,7 +169,7 @@ export async function getCategoryBySlug(
  */
 export async function getAllCategorySlugs(): Promise<string[]> {
   try {
-    const categories = await db.query<any>(
+    const categories = await db.query<{ slug: string }>(
       `SELECT slug FROM Category WHERE published = true ORDER BY \`order\` ASC`
     );
 
@@ -179,7 +192,7 @@ export async function getCategoryTags(
   limit: number = 20
 ) {
   try {
-    const tags = await db.query<any>(
+    const tags = await db.query<Tag>(
       `SELECT t.* FROM Tag t
        INNER JOIN Category c ON t.id IN (SELECT JSON_UNQUOTE(JSON_EXTRACT(c.tagIds, CONCAT('$[', idx, ']'))) 
                                           FROM (SELECT 0 as idx UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4

@@ -44,7 +44,7 @@ export default function AddToCartButton({ course }: AddToCartButtonProps) {
       return;
     }
 
-    addToCart(course as any);
+    addToCart(course);
     toast.success(`«${course.subject}» به سبد خرید اضافه شد 🛒`);
   };
 

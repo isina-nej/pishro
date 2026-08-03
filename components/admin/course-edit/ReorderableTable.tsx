@@ -2,26 +2,25 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
 
-interface Column {
+interface Column<T> {
   key: string;
   label: string;
   width?: string;
-  render?: (item: any) => React.ReactNode;
+  render?: (item: T) => React.ReactNode;
 }
 
-interface Action {
+interface Action<T> {
   label: string;
-  onClick: (item: any) => void;
+  onClick: (item: T) => void;
   variant?: 'primary' | 'secondary' | 'danger';
 }
 
 interface ReorderableTableProps<T extends { id: string }> {
   items: T[];
   onReorder: (newOrder: T[]) => Promise<void>;
-  columns: Column[];
-  actions?: Action[];
+  columns: Column<T>[];
+  actions?: Action<T>[];
 }
 
 export default function ReorderableTable<T extends { id: string }>({
@@ -93,7 +92,9 @@ export default function ReorderableTable<T extends { id: string }>({
               <td className="py-3 px-4 text-sm text-gray-500">{index + 1}</td>
               {columns.map((col) => (
                 <td key={col.key} className="py-3 px-4">
-                  {col.render ? col.render(item) : (item as any)[col.key]}
+                  {col.render
+                    ? col.render(item)
+                    : String((item as Record<string, unknown>)[col.key] ?? '')}
                 </td>
               ))}
               {actions.length > 0 && (

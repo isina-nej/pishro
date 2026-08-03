@@ -1,4 +1,5 @@
-import { query } from "@/lib/db";
+import { query, type QueryValues } from "@/lib/db";
+import type { InvestmentModelsPage, InvestmentModel } from "@prisma/client";
 import { 
   getInvestmentModelsPage as getPageMySQL, 
   getInvestmentModelsPageById as getPageByIdMySQL 
@@ -38,7 +39,7 @@ export async function getAllInvestmentModelsPagesForAdmin(options: {
 
     let whereClause = "";
     let countWhereClause = "";
-    const params: any[] = [];
+    const params: QueryValues = [];
 
     if (published !== null && published !== undefined) {
       whereClause = "WHERE published = ?";
@@ -54,7 +55,7 @@ export async function getAllInvestmentModelsPagesForAdmin(options: {
     const total = countResult?.[0]?.count || 0;
 
     // Get paginated results
-    const items = await query<any>(
+    const items = await query<InvestmentModelsPage>(
       `SELECT * FROM InvestmentModelsPage ${whereClause} ORDER BY createdAt DESC LIMIT ? OFFSET ?`,
       [...params, limit, offset]
     );
@@ -100,7 +101,7 @@ export async function updateInvestmentModelsPage(id: string, data: InvestmentMod
   try {
     const now = new Date().toISOString();
     const updates: string[] = [];
-    const params: any[] = [];
+    const params: QueryValues = [];
 
     if (data.additionalInfoTitle !== undefined) {
       updates.push("additionalInfoTitle = ?");
@@ -160,7 +161,7 @@ export async function deleteInvestmentModelsPage(id: string) {
  */
 export async function getInvestmentModelById(id: string) {
   try {
-    const result = await query<any>(
+    const result = await query<InvestmentModel>(
       `SELECT * FROM InvestmentModel WHERE id = ? LIMIT 1`,
       [id]
     );

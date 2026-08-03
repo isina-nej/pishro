@@ -29,7 +29,6 @@ const LoginPage = () => {
     // 2FA
     twoFactorStep,
     twoFactorMethod,
-    twoFactorToken,
     handleVerify2FA,
     handleBackFrom2FA,
     handleRequestSMSOTP,
@@ -107,7 +106,6 @@ const LoginPage = () => {
             ) : twoFactorStep && twoFactorMethod ? (
               <TwoFactorForm
                 method={twoFactorMethod}
-                token={twoFactorToken}
                 onVerify={handleVerify2FA}
                 onBack={handleBackFrom2FA}
                 onRequestSMS={

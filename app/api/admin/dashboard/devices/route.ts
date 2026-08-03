@@ -3,7 +3,7 @@
  * GET /api/admin/dashboard/devices?period=monthly|yearly - دریافت آمار دستگاه‌ها
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { getAdminAuth } from "@/lib/auth-simple";
 import {
   errorResponse,
