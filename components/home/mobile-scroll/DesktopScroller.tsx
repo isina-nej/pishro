@@ -83,9 +83,9 @@ export function DesktopScroller({
     >
       <div className="sticky top-0 grid h-screen grid-rows-[auto_minmax(0,1fr)] gap-5 py-6 container-xl">
         <div className="relative z-10 flex w-full flex-col items-start justify-start px-8 xl:px-20">
-          <span className="mb-2 rounded-full border border-[#214254]/10 bg-white/50 px-4 py-2 text-xs font-bold text-[#214254] backdrop-blur-xl dark:border-white/10 dark:bg-white/5 dark:text-cyan-100">تجربه یکپارچه مالی</span>
-          <h4 className="mb-1 text-4xl font-black tracking-tight text-[#112b3a] dark:text-white xl:text-5xl">سامانه پیشرو</h4>
-          <p className="text-sm text-gray-500 dark:text-textSecondary xl:text-base">
+          <span className="mb-2 rounded-full border border-[#214254]/10 bg-card/50 px-4 py-2 text-xs font-bold text-[#214254] backdrop-blur-xl/10/5">تجربه یکپارچه مالی</span>
+          <h4 className="mb-1 text-4xl font-black tracking-tight text-[#112b3a] xl:text-5xl">سامانه پیشرو</h4>
+          <p className="text-sm text-muted-foreground dark:text-textSecondary xl:text-base">
             سامانه <span className="text-myPrimary">پیشرو</span>، مشاور و همراه
             مالی شما در مسیر پیشرفت
           </p>
@@ -94,16 +94,16 @@ export function DesktopScroller({
         <div className="min-h-0 w-full overflow-hidden pb-4">
           <div className="home-glass-panel relative h-full min-h-[520px] w-full overflow-hidden rounded-[40px]">
             <div className="absolute inset-0 overflow-hidden rounded-[38px] bg-gradient-to-br from-[#12344b]/95 via-[#183c53]/90 to-[#0d2435]/95">
-              <div className="absolute -right-32 -top-36 h-96 w-96 rounded-full bg-cyan-300/15 blur-3xl" />
-              <div className="absolute -bottom-28 left-1/4 h-80 w-80 rounded-full bg-amber-300/10 blur-3xl" />
-              <div className="absolute inset-y-0 left-0 w-[38%] border-r border-white/10 bg-white/[0.06] backdrop-blur-2xl" />
+              <div className="absolute -right-32 -top-36 h-96 w-96 rounded-full bg-primary/15 blur-3xl" />
+              <div className="absolute -bottom-28 left-1/4 h-80 w-80 rounded-full bg-premium/10 blur-3xl" />
+              <div className="absolute inset-y-0 left-0 w-[38%] border-r border-border/10 bg-card/[0.06] backdrop-blur-2xl" />
             </div>
 
             <div className="w-full h-full flex items-center justify-center">
               {/* right section */}
               <div className="z-10 flex h-full flex-1 flex-col justify-between py-10 pr-12 pl-8 xl:py-14">
                 <div>
-                  <h4 className="mb-8 text-4xl font-semibold text-white xl:text-5xl">
+                  <h4 className="mb-8 text-4xl font-semibold text-primary-foreground xl:text-5xl">
                     از مزایای پیشرو بودن
                   </h4>
 
@@ -117,16 +117,16 @@ export function DesktopScroller({
                           className={clsx(
                             "size-2 rounded-full border transition-all",
                             i === index
-                              ? "bg-white dark:bg-cardBg border-white"
-                              : "bg-gray-600 border-gray-500"
+                              ? "bg-card dark:bg-cardBg border-border"
+                              : "bg-accent border-border"
                           )}
                         />
                         <span
                           className={clsx(
                             "text-base transition-all",
                             i === index
-                              ? "text-white font-semibold"
-                              : "text-gray-400 dark:text-textSecondary"
+                              ? "text-primary-foreground font-semibold"
+                              : "text-muted-foreground dark:text-textSecondary"
                           )}
                         >
                           {step.text}
@@ -139,12 +139,12 @@ export function DesktopScroller({
                     {steps[index].link ? (
                       <a
                         href={steps[index].link}
-                        className="inline-block rounded-full border border-white/20 bg-white px-10 py-3 font-bold text-[#112b3a] shadow-xl transition hover:-translate-y-0.5 hover:bg-cyan-50"
+                        className="inline-block rounded-full border border-border/20 bg-card px-10 py-3 font-bold text-[#112b3a] shadow-xl transition hover:-translate-y-0.5 hover:bg-primary"
                       >
                         اطلاعات بیشتر
                       </a>
                     ) : (
-                      <button className="cursor-default rounded-full border border-white/20 bg-white px-10 py-3 font-bold text-[#112b3a] shadow-xl">
+                      <button className="cursor-default rounded-full border border-border/20 bg-card px-10 py-3 font-bold text-[#112b3a] shadow-xl">
                         اطلاعات بیشتر
                       </button>
                     )}

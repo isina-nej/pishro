@@ -31,10 +31,10 @@ const LandingVideo = ({ vidSrc, title, main }: LandingVideoProps) => {
       {title && (
         <>
           {/* Overlay for Dark Effect */}
-          <div className="absolute top-0 left-0 w-full h-full bg-black/40"></div>
+          <div className="absolute top-0 left-0 w-full h-full bg-background/40"></div>
 
           {/* Content (Optional) */}
-          <div className="relative z-10 flex justify-center items-center h-full text-white">
+          <div className="relative z-10 flex justify-center items-center h-full text-primary-foreground">
             <h1 className="text-4xl font-bold">{title}</h1>
           </div>
         </>

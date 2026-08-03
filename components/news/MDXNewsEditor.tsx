@@ -66,10 +66,10 @@ interface EditorRef {
  * Loading fallback component
  */
 const EditorLoadingFallback = () => (
-  <div className="flex items-center justify-center h-64 bg-slate-100 dark:bg-slate-900 rounded-lg">
+  <div className="flex items-center justify-center h-64 bg-muted rounded-lg">
     <div className="text-center">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4" />
-      <p className="text-slate-600 dark:text-slate-400">بارگذاری ویرایشگر...</p>
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4" />
+      <p className="text-muted-foreground">بارگذاری ویرایشگر...</p>
     </div>
   </div>
 );
@@ -402,7 +402,7 @@ export const MDXNewsEditor = React.forwardRef<
               onTitleChange?.(e.target.value);
             }}
             placeholder="عنوان مقاله..."
-            className={`w-full px-4 py-3 text-2xl font-bold rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition ${
+            className={`w-full px-4 py-3 text-2xl font-bold rounded-lg border border-border bg-card text-foreground placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition ${
               readonly ? 'opacity-50 cursor-not-allowed' : ''
             }`}
             readOnly={readonly}

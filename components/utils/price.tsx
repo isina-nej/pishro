@@ -29,21 +29,21 @@ const Price = ({ price, discount = 0 }: PriceProps) => {
 
   if (finalPrice === 0) {
     return (
-      <div className="flex items-center gap-1 text-emerald-600 text-base font-bold">
+      <div className="flex items-center gap-1 text-primary text-base font-bold">
         <span>رایگان</span>
       </div>
     );
   }
 
   return (
-    <div className="flex items-center gap-1 text-red-600 text-base font-bold">
+    <div className="flex items-center gap-1 text-destructive text-base font-bold">
       {/* Price */}
       <span className="">{formatPrice(finalPrice)}</span>
       <span>تومان</span>
 
       {/* Discount Badge */}
       {discount > 0 && (
-        <span className="bg-red-600 text-white text-xs font-bold rounded-full px-2 pb-0 pt-0.5">
+        <span className="bg-destructive text-primary-foreground text-xs font-bold rounded-full px-2 pb-0 pt-0.5">
           %{discount}
         </span>
       )}

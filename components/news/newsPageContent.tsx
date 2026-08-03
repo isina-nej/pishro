@@ -64,9 +64,9 @@ const NewsPageContent = () => {
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-              className="mx-auto h-12 w-12 rounded-full border-4 border-slate-200 dark:border-slate-700 border-t-mySecondary"
+              className="mx-auto h-12 w-12 rounded-full border-4 border-border border-t-mySecondary"
             />
-            <p className="mt-4 text-sm text-gray-600 dark:text-textSecondary">در حال بارگذاری اخبار...</p>
+            <p className="mt-4 text-sm text-muted-foreground dark:text-textSecondary">در حال بارگذاری اخبار...</p>
           </div>
         </div>
       </div>
@@ -117,10 +117,10 @@ const NewsPageContent = () => {
               <div className="flex flex-col gap-4 sm:gap-6">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">
-                      نمایش <span className="font-semibold text-slate-700 dark:text-slate-300">{filteredNews.length}</span> از <span className="font-semibold text-slate-700 dark:text-slate-300">{news.length}</span> خبر
+                    <p className="text-sm text-muted-foreground mb-2">
+                      نمایش <span className="font-semibold text-muted-foreground">{filteredNews.length}</span> از <span className="font-semibold text-muted-foreground">{news.length}</span> خبر
                     </p>
-                    <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-foreground">
                       آخرین اخبار پیشرو
                     </h2>
                   </div>
@@ -141,9 +141,9 @@ const NewsPageContent = () => {
                   <motion.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="text-sm text-slate-600 dark:text-slate-400 pt-2 border-t border-slate-200/50 dark:border-slate-700/50"
+                    className="text-sm text-muted-foreground pt-2 border-t border-border/50/50"
                   >
-                    نتایج جستجو برای: <span className="font-semibold text-slate-900 dark:text-white">«{query}»</span>
+                    نتایج جستجو برای: <span className="font-semibold text-foreground">«{query}»</span>
                   </motion.p>
                 )}
               </div>
@@ -182,9 +182,9 @@ const NewsPageContent = () => {
                 className="public-page-panel rounded-[2rem] p-12 sm:p-16"
               >
                 <div className="flex min-h-[320px] flex-col items-center justify-center gap-6 text-center">
-                  <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
                     <svg
-                      className="w-8 h-8 text-slate-400"
+                      className="w-8 h-8 text-muted-foreground"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -198,10 +198,10 @@ const NewsPageContent = () => {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-lg font-semibold text-slate-700 dark:text-slate-200">
+                    <p className="text-lg font-semibold text-muted-foreground">
                       هیچ خبری پیدا نشد
                     </p>
-                    <p className="max-w-sm text-sm text-slate-500 dark:text-slate-400 mt-2">
+                    <p className="max-w-sm text-sm text-muted-foreground mt-2">
                       متأسفانه با فیلترهای فعلی خبری برای نمایش وجود ندارد. سعی کنید فیلترها را تغییر دهید.
                     </p>
                   </div>
@@ -210,7 +210,7 @@ const NewsPageContent = () => {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={handleResetFilters}
-                      className="mt-4 px-6 py-3 rounded-full bg-gradient-to-r from-mySecondary to-mySecondary/80 text-white font-medium text-sm transition-all duration-200 shadow-lg shadow-mySecondary/30 hover:shadow-xl hover:shadow-mySecondary/40"
+                      className="mt-4 px-6 py-3 rounded-full bg-gradient-to-r from-mySecondary to-mySecondary/80 text-primary-foreground font-medium text-sm transition-all duration-200 shadow-lg shadow-mySecondary/30 hover:shadow-xl hover:shadow-mySecondary/40"
                     >
                       حذف تمام فیلترها
                     </motion.button>

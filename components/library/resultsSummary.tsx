@@ -9,12 +9,12 @@ export const ResultsSummary = ({ query, count }: ResultsSummaryProps) => {
   const hasQuery = query.trim().length > 0;
 
   return (
-    <div className="mt-8 rounded-2xl border border-slate-200 bg-white dark:bg-cardBg px-4 py-5 shadow-sm">
+    <div className="mt-8 rounded-2xl border border-border bg-card dark:bg-cardBg px-4 py-5 shadow-sm">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <h3 className="text-lg font-semibold text-slate-900">
+        <h3 className="text-lg font-semibold text-foreground">
           {hasQuery ? `نتایج جستجو برای "${query.trim()}"` : "نتایج فیلتر شده"}
         </h3>
-        <span className="text-sm text-slate-500">
+        <span className="text-sm text-muted-foreground">
           {count > 0
             ? `${count} عنوان مطابق با فیلترهای شما یافت شد.`
             : "موردی مطابق فیلترها پیدا نشد."}

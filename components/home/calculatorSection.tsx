@@ -97,9 +97,9 @@ const CalculatorSection = () => {
   }, [amount, duration, selectedFund]);
 
   return (
-    <section className="relative mt-8 min-h-[600px] w-full overflow-hidden py-8 text-white md:mt-20 md:min-h-screen">
+    <section className="relative mt-8 min-h-[600px] w-full overflow-hidden py-8 text-primary-foreground md:mt-20 md:min-h-screen">
       <div className="absolute inset-x-4 inset-y-8 rounded-[2.5rem] bg-gradient-to-br from-[#102d42]/95 via-[#16384e]/95 to-[#0a2233]/95 shadow-2xl shadow-[#0b2234]/20 md:inset-x-8" />
-      <div className="absolute inset-x-4 inset-y-8 rounded-[2.5rem] border border-white/10 bg-[url('/images/utiles/pattern1.svg')] opacity-[0.08] md:inset-x-8" />
+      <div className="absolute inset-x-4 inset-y-8 rounded-[2.5rem] border border-border/10 bg-[url('/images/utiles/pattern1.svg')] opacity-[0.08] md:inset-x-8" />
 
       <div className="container-xl relative z-10 flex flex-col justify-center py-10 md:py-16">
         {/* Header */}
@@ -107,14 +107,14 @@ const CalculatorSection = () => {
           <h4 className="font-bold text-3xl sm:text-4xl md:text-5xl mb-2 md:mb-4 mt-10 md:mt-0">
             ماشین حساب
           </h4>
-          <p className="text-base md:text-lg lg:text-xl leading-relaxed text-gray-200 max-w-2xl mx-auto bg-[#152c44]/70">
+          <p className="text-base md:text-lg lg:text-xl leading-relaxed text-muted-foreground max-w-2xl mx-auto bg-[#152c44]/70">
             با انتخاب نوع صندوق سرمایه‌ گذاری، مبلغ و مدت، میزان بازده خود را
             مشاهده کنید.
           </p>
         </div>
 
         {fundsLoading || !selectedFund ? (
-          <div className="flex items-center justify-center py-20 text-lg text-gray-300">
+          <div className="flex items-center justify-center py-20 text-lg text-muted-foreground">
             در حال بارگذاری صندوق‌های سرمایه‌گذاری...
           </div>
         ) : (
@@ -124,9 +124,9 @@ const CalculatorSection = () => {
               {/* Controls */}
               <div className="flex flex-col w-full lg:w-7/12 gap-4 px-1 md:px-0">
                 {/* نوع صندوق سرمایه‌ گذاری */}
-                <div className="rounded-3xl border border-white/15 bg-white/[0.08] px-4 py-4 text-white shadow-xl backdrop-blur-xl sm:px-6">
+                <div className="rounded-3xl border border-border/15 bg-card/[0.08] px-4 py-4 text-primary-foreground shadow-xl backdrop-blur-xl sm:px-6">
                   <p className="text-center text-lg font-semibold mb-4 flex items-center justify-center gap-2">
-                    <BarChart3 size={22} className="text-white" />
+                    <BarChart3 size={22} className="text-primary-foreground" />
                     نوع صندوق سرمایه‌ گذاری
                   </p>
 
@@ -137,8 +137,8 @@ const CalculatorSection = () => {
                         onClick={() => handleSelectFund(fund)}
                         className={`px-5 py-2 rounded-full border transition-all  ${
                           selectedFund.key === fund.key
-                            ? "bg-mySecondary text-white border-mySecondary"
-                            : "bg-gray-100 text-mySecondary border-gray-300 hover:bg-gray-200 dark:border-borderColor dark:bg-darkBgHidden dark:text-textPrimary dark:hover:bg-cardBg"
+                            ? "bg-mySecondary text-primary-foreground border-mySecondary"
+                            : "bg-muted text-mySecondary border-border hover:bg-muted dark:border-borderColor dark:bg-darkBgHidden dark:text-textPrimary dark:hover:bg-cardBg"
                         }`}
                       >
                         {fund.name}
@@ -148,16 +148,16 @@ const CalculatorSection = () => {
                 </div>
 
                 {/* مبلغ سرمایه‌ گذاری */}
-                <div className="rounded-3xl border border-white/15 bg-white/[0.08] px-4 py-4 text-white shadow-xl backdrop-blur-xl sm:px-6">
+                <div className="rounded-3xl border border-border/15 bg-card/[0.08] px-4 py-4 text-primary-foreground shadow-xl backdrop-blur-xl sm:px-6">
                   <p className="text-center text-lg font-bold mb-8 flex items-center justify-center gap-2">
-                    <Wallet size={24} className="text-white" />
+                    <Wallet size={24} className="text-primary-foreground" />
                     مبلغ سرمایه‌ گذاری
                   </p>
 
                   <div className="flex items-start justify-between gap-4">
                     <button
                       onClick={() => setAmount((prev) => getNext(prev, amountSteps))}
-                      className="flex size-6 items-center justify-center rounded-full border border-white/15 bg-white/10 text-2xl font-bold text-white transition hover:bg-white/20 active:scale-95 md:size-10"
+                      className="flex size-6 items-center justify-center rounded-full border border-border/15 bg-card/10 text-2xl font-bold text-primary-foreground transition hover:bg-card/20 active:scale-95 md:size-10"
                     >
                       <span className="mt-1">+</span>
                     </button>
@@ -186,7 +186,7 @@ const CalculatorSection = () => {
                         }}
                       />
                       {/* ⬇️ Label range below slider */}
-                      <div className="md:mx-2 mt-3 flex flex-row-reverse justify-between text-sm text-slate-200">
+                      <div className="md:mx-2 mt-3 flex flex-row-reverse justify-between text-sm text-muted-foreground">
                         <p>{formatNumber(selectedFund.minAmount)} تومان</p>
                         <p>{formatNumber(selectedFund.maxAmount)} تومان</p>
                       </div>
@@ -194,29 +194,29 @@ const CalculatorSection = () => {
 
                     <button
                       onClick={() => setAmount((prev) => getPrev(prev, amountSteps))}
-                      className="flex size-6 items-center justify-center rounded-full border border-white/15 bg-white/10 text-2xl font-bold text-white transition hover:bg-white/20 active:scale-95 md:size-10"
+                      className="flex size-6 items-center justify-center rounded-full border border-border/15 bg-card/10 text-2xl font-bold text-primary-foreground transition hover:bg-card/20 active:scale-95 md:size-10"
                     >
                       <span className="mt-1">−</span>
                     </button>
                   </div>
 
-                  <p className="mt-6 text-center font-bold text-white">
+                  <p className="mt-6 text-center font-bold text-primary-foreground">
                     {formatNumber(amount)}
                     <span className="font-normal">تومان</span>
                   </p>
                 </div>
 
                 {/* مدت سرمایه‌ گذاری */}
-                <div className="rounded-3xl border border-white/15 bg-white/[0.08] px-4 py-4 text-white shadow-xl backdrop-blur-xl sm:px-6">
+                <div className="rounded-3xl border border-border/15 bg-card/[0.08] px-4 py-4 text-primary-foreground shadow-xl backdrop-blur-xl sm:px-6">
                   <p className="text-center text-lg font-bold mb-8 flex items-center justify-center gap-2">
-                    <Clock size={24} className="text-white" />
+                    <Clock size={24} className="text-primary-foreground" />
                     مدت سرمایه‌ گذاری
                   </p>
 
                   <div className="flex items-center justify-between gap-4">
                     <button
                       onClick={() => setDuration((prev) => getNext(prev, durationSteps))}
-                      className="flex size-6 items-center justify-center rounded-full border border-white/15 bg-white/10 text-2xl font-bold text-white transition hover:bg-white/20 active:scale-95 md:size-10"
+                      className="flex size-6 items-center justify-center rounded-full border border-border/15 bg-card/10 text-2xl font-bold text-primary-foreground transition hover:bg-card/20 active:scale-95 md:size-10"
                     >
                       <span className="mt-1">+</span>
                     </button>
@@ -245,7 +245,7 @@ const CalculatorSection = () => {
                         }}
                       />
                       {/* ⬇️ Label range below slider */}
-                      <div className="sm:mx-2 mt-3 flex flex-row-reverse justify-between text-sm text-slate-200">
+                      <div className="sm:mx-2 mt-3 flex flex-row-reverse justify-between text-sm text-muted-foreground">
                         <p>{selectedFund.minDuration} ماه</p>
                         <p>{selectedFund.maxDuration} ماه</p>
                       </div>
@@ -253,24 +253,24 @@ const CalculatorSection = () => {
 
                     <button
                       onClick={() => setDuration((prev) => getPrev(prev, durationSteps))}
-                      className="flex size-6 items-center justify-center rounded-full border border-white/15 bg-white/10 text-2xl font-bold text-white transition hover:bg-white/20 active:scale-95 md:size-10"
+                      className="flex size-6 items-center justify-center rounded-full border border-border/15 bg-card/10 text-2xl font-bold text-primary-foreground transition hover:bg-card/20 active:scale-95 md:size-10"
                     >
                       <span className="mt-1">−</span>
                     </button>
                   </div>
 
-                  <p className="mt-6 text-center font-bold text-white">{duration} ماهه</p>
+                  <p className="mt-6 text-center font-bold text-primary-foreground">{duration} ماهه</p>
                 </div>
               </div>
 
               {/* Result */}
-              <div className="flex h-[-webkit-fill-available] w-full flex-col items-center justify-center rounded-3xl border border-white/15 bg-white/[0.08] p-4 shadow-2xl backdrop-blur-xl md:mb-0 md:mt-0 md:p-10 lg:w-5/12">
+              <div className="flex h-[-webkit-fill-available] w-full flex-col items-center justify-center rounded-3xl border border-border/15 bg-card/[0.08] p-4 shadow-2xl backdrop-blur-xl md:mb-0 md:mt-0 md:p-10 lg:w-5/12">
                 <p className="text-center text-2xl font-bold mb-8">
                   نتیجه سرمایه‌ گذاریت
                 </p>
 
                 {/* Result box */}
-                <div className="relative flex flex-col items-center justify-center rounded-3xl border border-white/60 bg-white/90 px-4 pb-4 pt-8 text-3xl font-medium text-[#112b3a] shadow-2xl backdrop-blur-xl">
+                <div className="relative flex flex-col items-center justify-center rounded-3xl border border-border/60 bg-card/90 px-4 pb-4 pt-8 text-3xl font-medium text-[#112b3a] shadow-2xl backdrop-blur-xl">
                   {/* قیمت و درصد سود */}
                   <div className="flex items-center justify-between w-full gap-4 mb-4">
                     {/* مبلغ کل - سمت راست */}
@@ -282,16 +282,16 @@ const CalculatorSection = () => {
                         separator=","
                         formattingFn={(n) => formatNumber(n)}
                       />
-                      <span className="mr-2 mt-1 text-lg font-bold text-slate-500 dark:text-textSecondary">
+                      <span className="mr-2 mt-1 text-lg font-bold text-muted-foreground dark:text-textSecondary">
                         تومان
                       </span>
                     </div>
                     {/* درصد سود ماهیانه - سمت چپ */}
-                    <div className="flex flex-col items-center bg-gradient-to-br from-orange-100 to-orange-50 rounded-xl px-4 py-3 shadow-sm border border-orange-200 dark:border-orange-800">
-                      <p className="text-xs text-orange-600 dark:text-orange-400 font-medium mb-1">
+                    <div className="flex flex-col items-center bg-gradient-to-br from-premium to-premium rounded-xl px-4 py-3 shadow-sm border border-premium">
+                      <p className="text-xs text-premium font-medium mb-1">
                         سود ماهیانه
                       </p>
-                      <p className="text-2xl font-bold text-orange-700 dark:text-orange-300">
+                      <p className="text-2xl font-bold text-premium">
                         {(selectedFund.monthlyRate * 100).toFixed(0)}٪
                       </p>
                     </div>
@@ -299,10 +299,10 @@ const CalculatorSection = () => {
 
                   {/* 🛡 پیام تضمین سرمایه */}
                   {selectedFund.description && (
-                    <div className="mt-4 flex items-start gap-2 bg-green-100 dark:bg-green-950 border border-green-300 dark:border-green-800 rounded-xl px-4 py-3 text-green-700 dark:text-green-300 text-sm font-medium shadow-sm">
+                    <div className="mt-4 flex items-start gap-2 bg-primary border border-primary rounded-xl px-4 py-3 text-primary text-sm font-medium shadow-sm">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5"
+                        className="w-5 h-5 text-primary flex-shrink-0 mt-0.5"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -321,7 +321,7 @@ const CalculatorSection = () => {
 
                 <Link
                   href="/investment-plans"
-                  className="mt-10 px-16 w-full sm:w-fit bg-mySecondary border border-mySecondary text-white rounded-full py-4 font-bold text-center hover:bg-mySecondary/30 hover:border-white transition-colors"
+                  className="mt-10 px-16 w-full sm:w-fit bg-mySecondary border border-mySecondary text-primary-foreground rounded-full py-4 font-bold text-center hover:bg-mySecondary/30 hover:border-border transition-colors"
                 >
                   سرمایه‌ گذاری
                 </Link>
@@ -335,36 +335,36 @@ const CalculatorSection = () => {
           {/* 📍 مشاوره حضوری */}
           <Drawer>
             <DrawerTrigger asChild>
-              <button className="group relative flex w-full items-center justify-center gap-2 rounded-xl border border-green-200 bg-white px-10 py-4 font-medium text-mySecondary shadow-lg shadow-green-950/5 transition-all hover:border-green-400 hover:bg-green-50 sm:w-auto dark:border-borderColor dark:bg-cardBg dark:text-textPrimary dark:hover:bg-darkBgHidden">
-                <PhoneCall className="h-5 w-5 text-green-600 transition-transform group-hover:scale-110 dark:text-green-400" />
+              <button className="group relative flex w-full items-center justify-center gap-2 rounded-xl border border-primary bg-card px-10 py-4 font-medium text-mySecondary shadow-lg shadow-green-950/5 transition-all hover:border-primary hover:bg-primary sm:w-auto dark:border-borderColor dark:bg-cardBg dark:text-textPrimary dark:hover:bg-darkBgHidden">
+                <PhoneCall className="h-5 w-5 text-primary transition-transform group-hover:scale-110" />
                 رزرو مشاوره حضوری
               </button>
             </DrawerTrigger>
-            <DrawerContent className="p-6 rounded-t-2xl border-t bg-white dark:bg-cardBg shadow-2xl">
+            <DrawerContent className="p-6 rounded-t-2xl border-t bg-card dark:bg-cardBg shadow-2xl">
               <DrawerHeader className="text-center">
                 <div className="flex justify-center">
-                  <PhoneCall className="text-green-600 dark:text-green-400 h-10 w-10" />
+                  <PhoneCall className="text-primary h-10 w-10" />
                 </div>
-                <DrawerTitle className="text-2xl font-bold text-slate-200 mt-2">
+                <DrawerTitle className="text-2xl font-bold text-muted-foreground mt-2">
                   مشاوره حضوری
                 </DrawerTitle>
-                <DrawerDescription className="text-center text-gray-600 dark:text-textSecondary mt-1">
+                <DrawerDescription className="text-center text-muted-foreground dark:text-textSecondary mt-1">
                   برای رزرو مشاوره حضوری با ما تماس بگیرید:
                 </DrawerDescription>
               </DrawerHeader>
               <div className="text-center mt-4 space-y-3">
-                <p className="text-xl font-semibold text-green-700 dark:text-green-300 tracking-tight">
+                <p className="text-xl font-semibold text-primary tracking-tight">
                   {contactInfo.mobile}
                 </p>
                 <a
                   href={`tel:${contactInfo.mobileTel}`}
-                  className="inline-block px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md font-medium transition"
+                  className="inline-block px-6 py-2 bg-primary hover:bg-primary text-primary-foreground rounded-md font-medium transition"
                 >
                   تماس بگیرید
                 </a>
               </div>
               <DrawerFooter>
-                <DrawerClose className="block mt-6 text-sm text-gray-400 dark:text-textSecondary hover:text-gray-600 dark:hover:text-textSecondary underline text-center">
+                <DrawerClose className="block mt-6 text-sm text-muted-foreground dark:text-textSecondary hover:text-muted-foreground dark:hover:text-textSecondary underline text-center">
                   <XIcon className="inline-block" />
                 </DrawerClose>
               </DrawerFooter>
@@ -374,37 +374,37 @@ const CalculatorSection = () => {
           {/* 💻 مشاوره آنلاین */}
           <Drawer>
             <DrawerTrigger asChild>
-              <button className="group relative flex w-full items-center justify-center gap-2 rounded-xl border border-blue-200 bg-white px-10 py-4 font-medium text-mySecondary shadow-lg shadow-blue-950/5 transition-all hover:border-blue-400 hover:bg-blue-50 sm:w-auto dark:border-borderColor dark:bg-cardBg dark:text-textPrimary dark:hover:bg-darkBgHidden">
-                <Send className="h-5 w-5 text-blue-600 transition-transform group-hover:scale-110 dark:text-blue-400" />
+              <button className="group relative flex w-full items-center justify-center gap-2 rounded-xl border border-primary bg-card px-10 py-4 font-medium text-mySecondary shadow-lg shadow-blue-950/5 transition-all hover:border-primary hover:bg-primary sm:w-auto dark:border-borderColor dark:bg-cardBg dark:text-textPrimary dark:hover:bg-darkBgHidden">
+                <Send className="h-5 w-5 text-primary transition-transform group-hover:scale-110" />
                 رزرو مشاوره آنلاین
               </button>
             </DrawerTrigger>
-            <DrawerContent className="p-6 rounded-t-2xl border-t bg-white dark:bg-cardBg shadow-2xl">
+            <DrawerContent className="p-6 rounded-t-2xl border-t bg-card dark:bg-cardBg shadow-2xl">
               <DrawerHeader className="text-center">
                 <div className="flex justify-center">
-                  <Send className="text-blue-600 dark:text-blue-400 h-10 w-10" />
+                  <Send className="text-primary h-10 w-10" />
                 </div>
-                <DrawerTitle className="text-2xl font-bold text-slate-200 mt-2">
+                <DrawerTitle className="text-2xl font-bold text-muted-foreground mt-2">
                   مشاوره آنلاین
                 </DrawerTitle>
-                <DrawerDescription className="text-center text-gray-600 dark:text-textSecondary mt-1">
+                <DrawerDescription className="text-center text-muted-foreground dark:text-textSecondary mt-1">
                   برای دریافت مشاوره آنلاین از طریق تلگرام پیام دهید:
                 </DrawerDescription>
               </DrawerHeader>
               <div className="text-center mt-4 space-y-3">
-                <p className="text-xl font-semibold text-blue-700 dark:text-blue-300 tracking-tight">
+                <p className="text-xl font-semibold text-primary tracking-tight">
                   @InvestmentSupport
                 </p>
                 <Link
                   href="https://t.me/amirhossein_v2"
                   target="_blank"
-                  className="inline-block px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition"
+                  className="inline-block px-6 py-2 bg-primary hover:bg-primary text-primary-foreground rounded-md font-medium transition"
                 >
                   پیام در تلگرام
                 </Link>
               </div>
               <DrawerFooter>
-                <DrawerClose className="block mt-6 text-sm text-gray-400 dark:text-textSecondary hover:text-gray-600 dark:hover:text-textSecondary underline text-center">
+                <DrawerClose className="block mt-6 text-sm text-muted-foreground dark:text-textSecondary hover:text-muted-foreground dark:hover:text-textSecondary underline text-center">
                   <XIcon className="inline-block" />
                 </DrawerClose>
               </DrawerFooter>

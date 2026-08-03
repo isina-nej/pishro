@@ -28,7 +28,7 @@ const BusinessConsulting = () => {
             animate={{ scale: [1, 1.05, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
             whileHover={{ scale: 1.1 }}
-            className="text-white text-xl px-12 py-4 rounded-full bg-[#344052] font-bold overflow-hidden shadow-lg hover:shadow-xl"
+            className="text-primary-foreground text-xl px-12 py-4 rounded-full bg-[#344052] font-bold overflow-hidden shadow-lg hover:shadow-xl"
           >
             شروع کنیم
           </motion.button>

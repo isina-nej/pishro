@@ -64,7 +64,7 @@ export const CourseCard = ({ course }: CourseCardProps) => {
         onClick={() => setIsModalOpen(true)}
         className="group cursor-pointer"
       >
-        <div className="relative h-48 w-full overflow-hidden rounded-lg bg-slate-700">
+        <div className="relative h-48 w-full overflow-hidden rounded-lg bg-accent">
           {course.img && (
             <Image
               src={course.img}
@@ -73,7 +73,7 @@ export const CourseCard = ({ course }: CourseCardProps) => {
               className="object-cover transition-transform duration-300 group-hover:scale-110"
             />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
 
           {/* Play button overlay */}
           <motion.div
@@ -81,14 +81,14 @@ export const CourseCard = ({ course }: CourseCardProps) => {
             whileHover={{ opacity: 1, scale: 1 }}
             className="absolute inset-0 flex items-center justify-center"
           >
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white dark:bg-cardBg backdrop-blur hover:bg-white">
-              <Play className="h-8 w-8 fill-white text-white" />
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-card dark:bg-cardBg backdrop-blur hover:bg-card">
+              <Play className="h-8 w-8 fill-white text-primary-foreground" />
             </div>
           </motion.div>
 
           {/* Rating badge */}
-          <div className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 backdrop-blur">
-            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+          <div className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-background/60 px-2 py-1 backdrop-blur">
+            <Star className="h-4 w-4 fill-yellow-400 text-premium" />
             <span className="text-sm font-semibold">
               {course.rating?.toFixed(1) || "0"}
             </span>
@@ -96,14 +96,14 @@ export const CourseCard = ({ course }: CourseCardProps) => {
 
           {/* Discount badge */}
           {course.discountPercent && course.discountPercent > 0 && (
-            <div className="absolute left-3 top-3 rounded-full bg-red-500 px-2 py-1 text-xs font-bold text-white">
+            <div className="absolute left-3 top-3 rounded-full bg-destructive px-2 py-1 text-xs font-bold text-primary-foreground">
               {course.discountPercent}%
             </div>
           )}
 
           {/* Featured badge */}
           {course.featured && (
-            <div className="absolute right-3 bottom-3 rounded-full bg-blue-500 px-2 py-1 text-xs font-bold text-white">
+            <div className="absolute right-3 bottom-3 rounded-full bg-primary px-2 py-1 text-xs font-bold text-primary-foreground">
               ویژه
             </div>
           )}
@@ -111,7 +111,7 @@ export const CourseCard = ({ course }: CourseCardProps) => {
 
         {/* Course info */}
         <div className="mt-3 space-y-2">
-          <h3 className="line-clamp-2 font-semibold text-white transition group-hover:text-blue-400">
+          <h3 className="line-clamp-2 font-semibold text-primary-foreground transition group-hover:text-primary">
             {course.subject}
           </h3>
 
@@ -123,20 +123,20 @@ export const CourseCard = ({ course }: CourseCardProps) => {
             disabled={isInCart}
             className={`w-full flex items-center justify-center gap-1 rounded-lg px-3 py-2 font-semibold text-sm transition ${
               isInCart
-                ? "bg-gray-500/70 text-white cursor-not-allowed"
-                : "bg-mySecondary text-white hover:shadow-lg hover:scale-105"
+                ? "bg-accent/70 text-primary-foreground cursor-not-allowed"
+                : "bg-mySecondary text-primary-foreground hover:shadow-lg hover:scale-105"
             }`}
           >
             <ShoppingCart className="h-4 w-4" />
             {freeCourse ? "ثبت‌نام رایگان" : isInCart ? "افزوده شد" : "خرید"}
           </motion.button>
 
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-muted-foreground">
             مدرس: {course.instructor || "نامشخص"}
           </p>
 
           {/* Stats row */}
-          <div className="flex gap-3 text-xs text-slate-400">
+          <div className="flex gap-3 text-xs text-muted-foreground">
             {course.time && (
               <div className="flex items-center gap-1">
                 <Clock className="h-3 w-3" />
@@ -153,11 +153,11 @@ export const CourseCard = ({ course }: CourseCardProps) => {
 
           {/* Price */}
           <div className="flex items-center gap-2 pt-2">
-            <span className="text-lg font-bold text-white">
+            <span className="text-lg font-bold text-primary-foreground">
               {freeCourse ? "رایگان" : discountedPrice.toLocaleString("fa-IR")}
             </span>
             {course.discountPercent && course.discountPercent > 0 && (
-              <span className="text-sm text-slate-400 line-through">
+              <span className="text-sm text-muted-foreground line-through">
                 {course.price?.toLocaleString("fa-IR")}
               </span>
             )}

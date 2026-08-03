@@ -20,10 +20,10 @@ export default function AllCoursesContent({
   if (categoriesWithCourses.length === 0) {
     return (
       <div className="container mx-auto px-4 py-20 text-center">
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-textPrimary mb-4">
+        <h1 className="text-3xl font-bold text-foreground dark:text-textPrimary mb-4">
           هیچ دوره‌ای یافت نشد
         </h1>
-        <p className="text-gray-600 dark:text-textSecondary">
+        <p className="text-muted-foreground dark:text-textSecondary">
           در حال حاضر دوره‌ای برای نمایش وجود ندارد.
         </p>
       </div>
@@ -31,9 +31,9 @@ export default function AllCoursesContent({
   }
 
   return (
-    <div className="w-full min-h-screen bg-gray-50 dark:bg-darkBgHidden">
+    <div className="w-full min-h-screen bg-muted dark:bg-darkBgHidden">
       {/* Hero Header */}
-      <div className="bg-gradient-to-br from-myPrimary to-mySecondary text-white py-12 pt-24 sm:py-16 sm:pt-28 md:py-20 md:pt-32">
+      <div className="bg-gradient-to-br from-myPrimary to-mySecondary text-primary-foreground py-12 pt-24 sm:py-16 sm:pt-28 md:py-20 md:pt-32">
         <div className="container mx-auto px-4">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -78,11 +78,11 @@ export default function AllCoursesContent({
                   </div>
                 )}
                 <div>
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 dark:text-textPrimary">
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground dark:text-textPrimary">
                     {category.title}
                   </h2>
                   {category.description && (
-                    <p className="text-sm sm:text-base text-gray-600 dark:text-textSecondary mt-1">
+                    <p className="text-sm sm:text-base text-muted-foreground dark:text-textSecondary mt-1">
                       {category.description}
                     </p>
                   )}
@@ -126,7 +126,7 @@ export default function AllCoursesContent({
 
             {/* Divider */}
             {categoryIndex < categoriesWithCourses.length - 1 && (
-              <div className="mt-8 border-b-2 border-gray-200 dark:border-borderColor" />
+              <div className="mt-8 border-b-2 border-border dark:border-borderColor" />
             )}
           </motion.section>
         ))}

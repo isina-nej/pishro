@@ -19,8 +19,8 @@ export default async function SkyRoomClassesPage() {
       <main className="w-full h-screen">
         <Suspense
           fallback={
-            <div className="h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-purple-900 to-pink-900">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white" />
+            <div className="h-screen flex items-center justify-center bg-gradient-to-br from-primary via-accent to-destructive">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-border" />
             </div>
           }
         >
@@ -32,12 +32,12 @@ export default async function SkyRoomClassesPage() {
     console.error("Error loading skyroom page:", error);
     return (
       <main className="w-full h-screen">
-        <div className="h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-900 via-purple-900 to-pink-900">
-          <h1 className="text-3xl font-bold text-white mb-4">خطا در بارگذاری صفحه</h1>
-          <p className="text-white/80 mb-6">متأسفانه مشکلی در بارگذاری همایش پیش آمد</p>
+        <div className="h-screen flex flex-col items-center justify-center bg-gradient-to-br from-primary via-accent to-destructive">
+          <h1 className="text-3xl font-bold text-primary-foreground mb-4">خطا در بارگذاری صفحه</h1>
+          <p className="text-primary-foreground/80 mb-6">متأسفانه مشکلی در بارگذاری همایش پیش آمد</p>
           <Link
             href="/"
-            className="px-8 py-3 bg-white dark:bg-cardBg text-blue-900 dark:text-textPrimary rounded-lg font-semibold hover:bg-gray-100 dark:hover:bg-darkBgHidden transition inline-block"
+            className="px-8 py-3 bg-card dark:bg-cardBg text-primary dark:text-textPrimary rounded-lg font-semibold hover:bg-muted dark:hover:bg-darkBgHidden transition inline-block"
           >
             بازگشت به صفحه اصلی
           </Link>

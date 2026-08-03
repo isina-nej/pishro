@@ -21,11 +21,11 @@ const StepListTablet = ({
   sectionSubtitle,
 }: StepListTabletProps) => {
   return (
-    <section className="hidden md:flex lg:hidden flex-col items-center px-10 py-20 bg-white dark:bg-cardBg">
-      <h2 className="text-4xl font-extrabold text-gray-800 dark:text-textPrimary mb-6 text-center">
+    <section className="hidden md:flex lg:hidden flex-col items-center px-10 py-20 bg-card dark:bg-cardBg">
+      <h2 className="text-4xl font-extrabold text-foreground dark:text-textPrimary mb-6 text-center">
         {sectionTitle}
       </h2>
-      <p className="text-gray-600 dark:text-textSecondary text-center mb-12 max-w-xl leading-7">
+      <p className="text-muted-foreground dark:text-textSecondary text-center mb-12 max-w-xl leading-7">
         {sectionSubtitle}
       </p>
 
@@ -38,7 +38,7 @@ const StepListTablet = ({
             transition={{ duration: 0.6, delay: index * 0.1 }}
             viewport={{ once: true }}
             className={clsx(
-              "relative bg-gray-50 dark:bg-darkBgHidden rounded-2xl p-8 shadow-sm w-[80%] sm:w-[70%]",
+              "relative bg-muted dark:bg-darkBgHidden rounded-2xl p-8 shadow-sm w-[80%] sm:w-[70%]",
               {
                 "self-start": index === 0,
                 "self-center": index === 1,
@@ -47,11 +47,11 @@ const StepListTablet = ({
             )}
           >
             {/* دایره و چراغ چشمک‌زن */}
-            <div className="absolute -top-6 right-6 bg-gray-100 dark:bg-cardBg rounded-full size-14 flex items-center justify-center z-20">
+            <div className="absolute -top-6 right-6 bg-muted dark:bg-cardBg rounded-full size-14 flex items-center justify-center z-20">
               <div className="relative flex items-center justify-center">
-                <div className="size-6 rounded-full bg-yellow-300 z-10" />
+                <div className="size-6 rounded-full bg-premium z-10" />
                 <motion.div
-                  className="absolute size-6 rounded-full bg-yellow-300"
+                  className="absolute size-6 rounded-full bg-premium"
                   initial={{ scale: 1, opacity: 0.8 }}
                   animate={{ scale: [1, 1.8, 1], opacity: [0.8, 0, 0.8] }}
                   transition={{
@@ -67,14 +67,14 @@ const StepListTablet = ({
             <div className="relative z-20 pt-6">
               {""}
               {/* 👈 اینجا z-20 اضافه شد */}
-              <h3 className="text-xl font-bold text-gray-900 dark:text-textPrimary mb-3">
+              <h3 className="text-xl font-bold text-foreground dark:text-textPrimary mb-3">
                 {step.title}
               </h3>
-              <p className="text-gray-600 dark:text-textSecondary leading-7">{step.description}</p>
+              <p className="text-muted-foreground dark:text-textSecondary leading-7">{step.description}</p>
             </div>
 
             {/* عدد بزرگ در پس‌زمینه */}
-            <p className="absolute text-[100px] font-black text-gray-200 left-2 -bottom-8 select-none z-10">
+            <p className="absolute text-[100px] font-black text-muted-foreground left-2 -bottom-8 select-none z-10">
               {step.id}
             </p>
           </motion.div>

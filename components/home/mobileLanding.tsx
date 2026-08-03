@@ -106,7 +106,7 @@ const HeroSection = ({
       {/* Video Background */}
       <div className="absolute inset-0 w-full h-full">
         {!videoLoaded && (
-          <div className="absolute inset-0 bg-gradient-to-b from-mySecondary/30 via-myPrimary/20 to-black animate-pulse" />
+          <div className="absolute inset-0 bg-gradient-to-b from-mySecondary/30 via-myPrimary/20 to-background animate-pulse" />
         )}
         <video
           autoPlay
@@ -118,7 +118,7 @@ const HeroSection = ({
         >
           <source src={videoUrl || "/videos/aboutUs.webm"} type="video/webm" />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background" />
       </div>
 
       {/* Content */}
@@ -127,28 +127,28 @@ const HeroSection = ({
           initial={{ opacity: 0, y: 60 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="w-full rounded-[2rem] border border-white/15 bg-[#091a28]/50 p-6 shadow-2xl backdrop-blur-2xl"
+          className="w-full rounded-[2rem] border border-border/15 bg-[#091a28]/50 p-6 shadow-2xl backdrop-blur-2xl"
         >
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-100/20 bg-white/10 px-4 py-2 backdrop-blur-md"
+            className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-card/10 px-4 py-2 backdrop-blur-md"
           >
-            <Sparkles className="w-4 h-4 text-yellow-400" />
-            <span className="text-white text-sm font-medium">
+            <Sparkles className="w-4 h-4 text-premium" />
+            <span className="text-primary-foreground text-sm font-medium">
               پیشرو در مسیر موفقیت شما
             </span>
           </motion.div>
 
           {/* Title */}
-          <h1 className="text-white text-4xl sm:text-5xl font-extrabold leading-tight mb-4">
+          <h1 className="text-primary-foreground text-4xl sm:text-5xl font-extrabold leading-tight mb-4">
             {title || "پیشرو بزرگترین مؤسسه سرمایه‌ گذاری در ایران"}
           </h1>
 
           {/* Description */}
-          <p className="text-white/80 text-base sm:text-lg leading-relaxed mb-6 max-w-lg">
+          <p className="text-primary-foreground/80 text-base sm:text-lg leading-relaxed mb-6 max-w-lg">
             آموزش تخصصی بورس، بازارهای مالی و سرمایه‌گذاری از صفر تا صد
           </p>
 
@@ -157,7 +157,7 @@ const HeroSection = ({
             href={ctaLink || "/business-consulting"}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 font-bold text-[#112b3a] shadow-xl transition-all hover:bg-cyan-50"
+            className="inline-flex items-center gap-2 rounded-full bg-card px-8 py-4 font-bold text-[#112b3a] shadow-xl transition-all hover:bg-primary"
           >
             <span>{subtitle || "شروع مسیر موفقیت"}</span>
             <ArrowLeft className="w-5 h-5" />
@@ -174,9 +174,9 @@ const HeroSection = ({
           <motion.div
             animate={{ y: [0, 10, 0] }}
             transition={{ duration: 1.5, repeat: Infinity }}
-            className="w-6 h-10 border-2 border-white/30 rounded-full flex items-start justify-center p-2"
+            className="w-6 h-10 border-2 border-border/30 rounded-full flex items-start justify-center p-2"
           >
-            <motion.div className="w-1.5 h-1.5 bg-white dark:bg-cardBg rounded-full" />
+            <motion.div className="w-1.5 h-1.5 bg-card dark:bg-cardBg rounded-full" />
           </motion.div>
         </motion.div>
       </div>
@@ -199,10 +199,10 @@ const FeatureCardsSection = ({ overlayTexts }: { overlayTexts?: string[] }) => {
     overlayTexts && overlayTexts.length > 0 ? overlayTexts : defaultTexts;
 
   const gradients = [
-    "from-blue-500/20 to-purple-500/20",
-    "from-green-500/20 to-emerald-500/20",
-    "from-orange-500/20 to-red-500/20",
-    "from-pink-500/20 to-rose-500/20",
+    "from-primary/20 to-accent/20",
+    "from-primary/20 to-primary/20",
+    "from-premium/20 to-destructive/20",
+    "from-destructive/20 to-destructive/20",
   ];
 
   return (
@@ -215,22 +215,22 @@ const FeatureCardsSection = ({ overlayTexts }: { overlayTexts?: string[] }) => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.6, delay: index * 0.1 }}
-            className={`relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br ${
+            className={`relative overflow-hidden rounded-3xl border border-border/10 bg-gradient-to-br ${
               gradients[index % gradients.length]
             } p-6 shadow-2xl backdrop-blur-xl`}
           >
             {/* Decorative Background */}
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/5 to-transparent rounded-full blur-3xl" />
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-card/5 to-transparent rounded-full blur-3xl" />
 
             {/* Content */}
             <div className="relative z-10">
               <div className="flex items-start gap-3 mb-3">
-                <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/10">
-                  <span className="text-white text-sm font-bold">
+                <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-border/20 bg-card/10">
+                  <span className="text-primary-foreground text-sm font-bold">
                     {index + 1}
                   </span>
                 </div>
-                <h3 className="text-white text-lg sm:text-xl font-bold leading-relaxed flex-1">
+                <h3 className="text-primary-foreground text-lg sm:text-xl font-bold leading-relaxed flex-1">
                   {text.includes("پیشرو") ? (
                     <>
                       {text.split("پیشرو")[0]}
@@ -255,7 +255,7 @@ const FeatureCardsSection = ({ overlayTexts }: { overlayTexts?: string[] }) => {
 // =================================================
 const SlidesSwiperSection = ({ slides }: { slides: SlideData[] }) => {
   return (
-    <section className="relative w-full bg-gradient-to-b from-black via-gray-950 to-black py-20 px-6 overflow-x-hidden">
+    <section className="relative w-full bg-gradient-to-b from-background via-card to-background py-20 px-6 overflow-x-hidden">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <motion.div
@@ -265,10 +265,10 @@ const SlidesSwiperSection = ({ slides }: { slides: SlideData[] }) => {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="text-white text-3xl sm:text-4xl font-extrabold mb-3">
+          <h2 className="text-primary-foreground text-3xl sm:text-4xl font-extrabold mb-3">
             خدمات ویژه پیشرو
           </h2>
-          <p className="text-white/60 text-base sm:text-lg">
+          <p className="text-primary-foreground/60 text-base sm:text-lg">
             راهکارهای حرفه‌ای برای موفقیت شما
           </p>
         </motion.div>
@@ -303,7 +303,7 @@ const SlidesSwiperSection = ({ slides }: { slides: SlideData[] }) => {
           >
             {slides.map((slide, index) => (
               <SwiperSlide key={index}>
-                <div className="relative w-full h-[420px] bg-gradient-to-br from-gray-900 to-black rounded-3xl overflow-hidden shadow-2xl border border-white/10">
+                <div className="relative w-full h-[420px] bg-gradient-to-br from-card to-background rounded-3xl overflow-hidden shadow-2xl border border-border/10">
                   {/* Image */}
                   <div className="relative w-full h-56">
                     <Image
@@ -312,15 +312,15 @@ const SlidesSwiperSection = ({ slides }: { slides: SlideData[] }) => {
                       fill
                       className="object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background/60" />
                   </div>
 
                   {/* Content */}
                   <div className="absolute bottom-0 left-0 right-0 p-6 space-y-3">
-                    <h3 className="text-white text-2xl font-bold leading-tight">
+                    <h3 className="text-primary-foreground text-2xl font-bold leading-tight">
                       {slide.title}
                     </h3>
-                    <p className="text-white/70 text-sm leading-relaxed line-clamp-3">
+                    <p className="text-primary-foreground/70 text-sm leading-relaxed line-clamp-3">
                       {slide.text}
                     </p>
                   </div>

@@ -153,8 +153,8 @@ export function ForgotPasswordForm({
       <div className="mt-8 flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
         {/* Header */}
         <div className="text-center space-y-2 mb-4">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-textPrimary">تنظیم رمز عبور جدید</h2>
-          <p className="text-sm text-gray-600 dark:text-textSecondary">
+          <h2 className="text-xl font-bold text-foreground dark:text-textPrimary">تنظیم رمز عبور جدید</h2>
+          <p className="text-sm text-muted-foreground dark:text-textSecondary">
             لطفاً رمز عبور جدید خود را وارد کنید
           </p>
         </div>
@@ -194,14 +194,14 @@ export function ForgotPasswordForm({
             type="submit"
             disabled={isLoading}
             className={cn(
-              "mt-6 w-full h-12 max-w-[306px] bg-[#d52a16] text-white font-bold text-lg mx-auto",
+              "mt-6 w-full h-12 max-w-[306px] bg-[#d52a16] text-primary-foreground font-bold text-lg mx-auto",
               isLoading && "opacity-80 cursor-not-allowed"
             )}
           >
             {isLoading ? (
               <div className="flex items-center justify-center gap-2">
                 در حال تغییر رمز عبور
-                <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-border border-t-transparent" />
               </div>
             ) : (
               "تغییر رمز عبور"
@@ -220,7 +220,7 @@ export function ForgotPasswordForm({
         variant="ghost"
         onClick={onBack}
         disabled={isLoading}
-        className="self-start -mt-4 text-gray-600 dark:text-textSecondary hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-cardBg dark:bg-cardBg transition-colors"
+        className="self-start -mt-4 text-muted-foreground dark:text-textSecondary hover:text-foreground hover:bg-muted dark:hover:bg-cardBg dark:bg-cardBg transition-colors"
       >
         <ArrowRight className="ml-2 h-4 w-4" />
         بازگشت
@@ -228,8 +228,8 @@ export function ForgotPasswordForm({
 
       {/* Header */}
       <div className="text-center space-y-2 mb-4">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-textPrimary">فراموشی رمز عبور</h2>
-        <p className="text-sm text-gray-600 dark:text-textSecondary">
+        <h2 className="text-xl font-bold text-foreground dark:text-textPrimary">فراموشی رمز عبور</h2>
+        <p className="text-sm text-muted-foreground dark:text-textSecondary">
           شماره موبایل خود را وارد کنید تا کد بازیابی برای شما ارسال شود
         </p>
       </div>
@@ -245,7 +245,7 @@ export function ForgotPasswordForm({
           icon={
             <Phone
               className={cn(
-                phoneErrors.phone && (phoneSubmitted || phoneTouched.phone) && "text-red-500"
+                phoneErrors.phone && (phoneSubmitted || phoneTouched.phone) && "text-destructive"
               )}
             />
           }
@@ -262,14 +262,14 @@ export function ForgotPasswordForm({
           type="submit"
           disabled={isLoading}
           className={cn(
-            "mt-6 w-full h-12 max-w-[306px] bg-[#d52a16] text-white font-bold text-lg mx-auto",
+            "mt-6 w-full h-12 max-w-[306px] bg-[#d52a16] text-primary-foreground font-bold text-lg mx-auto",
             isLoading && "opacity-80 cursor-not-allowed"
           )}
         >
           {isLoading ? (
             <div className="flex items-center justify-center gap-2">
               در حال ارسال کد
-              <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-border border-t-transparent" />
             </div>
           ) : (
             "ارسال کد بازیابی"

@@ -20,11 +20,11 @@ const StepListMobile = ({
   sectionSubtitle,
 }: StepListMobileProps) => {
   return (
-    <section className="block md:hidden px-6 py-12 bg-white dark:bg-cardBg">
-      <h2 className="text-3xl font-extrabold text-gray-800 dark:text-textPrimary text-center mb-4">
+    <section className="block md:hidden px-6 py-12 bg-card dark:bg-cardBg">
+      <h2 className="text-3xl font-extrabold text-foreground dark:text-textPrimary text-center mb-4">
         {sectionTitle}
       </h2>
-      <p className="text-gray-600 dark:text-textSecondary text-center mb-10 leading-7">
+      <p className="text-muted-foreground dark:text-textSecondary text-center mb-10 leading-7">
         {sectionSubtitle}
       </p>
 
@@ -36,15 +36,15 @@ const StepListMobile = ({
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
             viewport={{ once: true }}
-            className="bg-gray-50 dark:bg-darkBgHidden rounded-xl p-6 shadow-sm relative"
+            className="bg-muted dark:bg-darkBgHidden rounded-xl p-6 shadow-sm relative"
           >
-            <div className="absolute -top-5 left-5 bg-yellow-300 text-white font-bold rounded-full size-10 flex items-center justify-center text-lg shadow-md">
+            <div className="absolute -top-5 left-5 bg-premium text-primary-foreground font-bold rounded-full size-10 flex items-center justify-center text-lg shadow-md">
               {step.id}
             </div>
-            <h3 className="text-xl font-bold text-gray-900 dark:text-textPrimary mb-2">
+            <h3 className="text-xl font-bold text-foreground dark:text-textPrimary mb-2">
               {step.title}
             </h3>
-            <p className="text-gray-600 dark:text-textSecondary leading-7">{step.description}</p>
+            <p className="text-muted-foreground dark:text-textSecondary leading-7">{step.description}</p>
           </motion.div>
         ))}
       </div>

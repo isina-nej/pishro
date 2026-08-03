@@ -89,14 +89,14 @@ const Landing3 = ({ data }: Landing3Props) => {
             )}
           </h4>
 
-          <p className="text-gray-600 dark:text-textSecondary text-sm sm:text-base md:text-lg leading-relaxed max-w-xl">
+          <p className="text-muted-foreground dark:text-textSecondary text-sm sm:text-base md:text-lg leading-relaxed max-w-xl">
             {description}
           </p>
 
           {/* 🔘 دکمه‌ها */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 sm:pt-5">
             <button
-              className="px-5 sm:px-6 py-2.5 sm:py-3 bg-mySecondary text-white border border-mySecondary font-semibold rounded-xl shadow-md transition-transform duration-300 ease-in-out text-sm sm:text-base hover:scale-105 hover:-rotate-1 active:scale-95"
+              className="px-5 sm:px-6 py-2.5 sm:py-3 bg-mySecondary text-primary-foreground border border-mySecondary font-semibold rounded-xl shadow-md transition-transform duration-300 ease-in-out text-sm sm:text-base hover:scale-105 hover:-rotate-1 active:scale-95"
             >
               {button1}
             </button>
@@ -114,12 +114,12 @@ const Landing3 = ({ data }: Landing3Props) => {
               {features.map((item, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-2.5 sm:gap-3 bg-gray-50 dark:bg-darkBgHidden sm:bg-transparent rounded-lg sm:rounded-none px-3 py-2.5 sm:px-0 sm:py-0"
+                  className="flex items-center gap-2.5 sm:gap-3 bg-muted dark:bg-darkBgHidden sm:bg-transparent rounded-lg sm:rounded-none px-3 py-2.5 sm:px-0 sm:py-0"
                 >
                   <div className="text-xl sm:text-2xl lg:text-3xl flex-shrink-0">
                     {item.icon}
                   </div>
-                  <p className="text-gray-700 dark:text-textPrimary font-medium text-sm sm:text-base">
+                  <p className="text-muted-foreground dark:text-textPrimary font-medium text-sm sm:text-base">
                     {item.text}
                   </p>
                 </div>
@@ -133,7 +133,7 @@ const Landing3 = ({ data }: Landing3Props) => {
           {/* container-md برای باکس‌های شناور - برای موبایل بزرگتر */}
           <div className="relative size-[100%] sm:size-[380px] md:size-[450px] lg:size-[520px] flex items-center justify-center overflow-visible">
             {/* تصویر اصلی */}
-            <div className="size-[320px] sm:size-[350px] md:size-[420px] lg:size-[495px] rounded-full bg-emerald-500 flex items-center justify-center relative shadow-lg">
+            <div className="size-[320px] sm:size-[350px] md:size-[420px] lg:size-[495px] rounded-full bg-primary flex items-center justify-center relative shadow-lg">
               <Image
                 src={image}
                 alt={title}
@@ -156,7 +156,7 @@ const Landing3 = ({ data }: Landing3Props) => {
                   ease: "easeInOut",
                 }}
                 className={clsx(
-                  "absolute bg-white dark:bg-cardBg dark:bg-cardBg/95 backdrop-blur-sm p-1.5 sm:p-3 md:p-4 lg:p-5 rounded-lg sm:rounded-xl shadow-xl border border-gray-100 dark:border-borderColor flex items-center gap-0.5 sm:gap-2 cursor-default z-10",
+                  "absolute bg-card dark:bg-cardBg dark:bg-cardBg/95 backdrop-blur-sm p-1.5 sm:p-3 md:p-4 lg:p-5 rounded-lg sm:rounded-xl shadow-xl border border-border dark:border-borderColor flex items-center gap-0.5 sm:gap-2 cursor-default z-10",
                   // برای موبایل: باکس‌ها را کوچکتر و در لبه‌ها قرار بده تا از کادر خارج نشوند
                   "max-w-[85px] sm:max-w-none",
                   box.col
@@ -196,7 +196,7 @@ const Landing3 = ({ data }: Landing3Props) => {
                   <span className="text-mySecondary font-bold text-sm sm:text-lg md:text-xl lg:text-2xl">
                     {box.number}
                   </span>
-                  <p className="text-gray-800 dark:text-textPrimary font-medium text-[10px] sm:text-xs md:text-sm lg:whitespace-nowrap break-words sm:whitespace-nowrap">
+                  <p className="text-foreground dark:text-textPrimary font-medium text-[10px] sm:text-xs md:text-sm lg:whitespace-nowrap break-words sm:whitespace-nowrap">
                     {box.text}
                   </p>
                 </div>
@@ -290,7 +290,7 @@ const Landing3 = ({ data }: Landing3Props) => {
                 )}
                 {item.suffix}
               </span>
-              <p className="text-gray-600 dark:text-textSecondary mt-1 sm:mt-2 font-medium text-xs sm:text-sm md:text-base lg:text-lg text-center">
+              <p className="text-muted-foreground dark:text-textSecondary mt-1 sm:mt-2 font-medium text-xs sm:text-sm md:text-base lg:text-lg text-center">
                 {item.label}
               </p>
             </motion.div>

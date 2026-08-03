@@ -100,7 +100,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center gap-2">
               <label className="w-full sm:w-[110px] block text-xs font-medium text-foreground">
-                نام <span className="text-red-500">*</span>
+                نام <span className="text-destructive">*</span>
               </label>
               <input
                 type="text"
@@ -110,7 +110,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
               />
             </div>
             {errors.firstName && (
-              <p className="text-red-500 text-xs mt-1 sm:mr-[110px]">
+              <p className="text-destructive text-xs mt-1 sm:mr-[110px]">
                 {errors.firstName.message}
               </p>
             )}
@@ -120,7 +120,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center gap-2">
               <label className="w-full sm:w-[110px] block text-xs font-medium text-foreground">
-                نام خانوادگی <span className="text-red-500">*</span>
+                نام خانوادگی <span className="text-destructive">*</span>
               </label>
               <input
                 type="text"
@@ -130,7 +130,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
               />
             </div>
             {errors.lastName && (
-              <p className="text-red-500 text-xs mt-1 sm:mr-[110px]">
+              <p className="text-destructive text-xs mt-1 sm:mr-[110px]">
                 {errors.lastName.message}
               </p>
             )}
@@ -140,7 +140,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center gap-2">
               <label className="w-full sm:w-[110px] block text-xs font-medium text-foreground">
-                شماره تماس <span className="text-red-500">*</span>
+                شماره تماس <span className="text-destructive">*</span>
               </label>
               <input
                 type="tel"
@@ -150,7 +150,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
               />
             </div>
             {errors.phone && (
-              <p className="text-red-500 text-xs mt-1 sm:mr-[110px]">
+              <p className="text-destructive text-xs mt-1 sm:mr-[110px]">
                 {errors.phone.message}
               </p>
             )}
@@ -160,7 +160,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center gap-2">
               <label className="w-full sm:w-[110px] block text-xs font-medium text-foreground">
-                نشانی ایمیل <span className="text-red-500">*</span>
+                نشانی ایمیل <span className="text-destructive">*</span>
               </label>
               <input
                 type="email"
@@ -170,7 +170,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
               />
             </div>
             {errors.email && (
-              <p className="text-red-500 text-xs mt-1 sm:mr-[110px]">
+              <p className="text-destructive text-xs mt-1 sm:mr-[110px]">
                 {errors.email.message}
               </p>
             )}
@@ -190,7 +190,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
               />
             </div>
             {errors.nationalCode && (
-              <p className="text-red-500 text-xs mt-1 sm:mr-[110px]">
+              <p className="text-destructive text-xs mt-1 sm:mr-[110px]">
                 {errors.nationalCode.message}
               </p>
             )}
@@ -221,7 +221,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
               />
             </div>
             {errors.birthDate && (
-              <p className="text-red-500 text-xs mt-1 sm:mr-[110px]">
+              <p className="text-destructive text-xs mt-1 sm:mr-[110px]">
                 {errors.birthDate.message as string}
               </p>
             )}

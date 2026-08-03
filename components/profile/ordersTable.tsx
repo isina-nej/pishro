@@ -32,7 +32,7 @@ const OrdersTable = () => {
         return <Badge variant="success">پرداخت شده</Badge>;
       case "pending":
         return (
-          <span className="px-3 py-1 text-xs font-medium rounded-full bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300">
+          <span className="px-3 py-1 text-xs font-medium rounded-full bg-premium text-premium/40">
             در انتظار پرداخت
           </span>
         );

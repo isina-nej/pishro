@@ -44,11 +44,11 @@ export const CoursesFilterControls = ({
   disabled = false,
 }: CoursesFilterControlsProps) => {
   return (
-    <div className="flex flex-col gap-6 border-b border-[#214254]/10 pb-8 dark:border-white/10">
+    <div className="flex flex-col gap-6 border-b border-[#214254]/10 pb-8/10">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-col gap-3 md:flex-row md:items-center">
-          <h2 className="text-xl font-bold text-slate-900 dark:text-textPrimary">دوره‌های آموزشی</h2>
-          <p className="text-sm text-slate-500 dark:text-textSecondary">
+          <h2 className="text-xl font-bold text-foreground dark:text-textPrimary">دوره‌های آموزشی</h2>
+          <p className="text-sm text-muted-foreground dark:text-textSecondary">
             دوره‌ها را بر اساس دسته‌بندی، سطح دشواری و موضوع مورد نظر خود فیلتر کنید.
           </p>
         </div>
@@ -60,7 +60,7 @@ export const CoursesFilterControls = ({
           >
             <SelectTrigger
               className={cn(
-                "w-full min-w-[180px] rounded-2xl border-white/60 bg-white/60 text-[#112b3a] shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-white/5 dark:text-white",
+                "w-full min-w-[180px] rounded-2xl border-border/60 bg-card/60 text-[#112b3a] shadow-sm backdrop-blur-xl/10/5",
                 disabled && "opacity-60"
               )}
               aria-disabled={disabled}
@@ -83,7 +83,7 @@ export const CoursesFilterControls = ({
           >
             <SelectTrigger
               className={cn(
-                "w-full min-w-[180px] rounded-2xl border-white/60 bg-white/60 text-[#112b3a] shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-white/5 dark:text-white",
+                "w-full min-w-[180px] rounded-2xl border-border/60 bg-card/60 text-[#112b3a] shadow-sm backdrop-blur-xl/10/5",
                 disabled && "opacity-60"
               )}
               aria-disabled={disabled}
@@ -104,15 +104,15 @@ export const CoursesFilterControls = ({
       <div className="flex flex-col gap-4">
         <div
           className={cn(
-            "flex items-center gap-3 rounded-2xl border border-white/60 bg-white/60 p-3 shadow-inner backdrop-blur-xl dark:border-white/10 dark:bg-white/5",
+            "flex items-center gap-3 rounded-2xl border border-border/60 bg-card/60 p-3 shadow-inner backdrop-blur-xl/10/5",
             disabled && "opacity-60"
           )}
         >
-          <Search className="h-4 w-4 text-slate-400" />
+          <Search className="h-4 w-4 text-muted-foreground" />
           <input
             value={query}
             onChange={(event) => onQueryChange(event.target.value)}
-            className="w-full bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400 dark:text-textPrimary dark:placeholder:text-textSecondary"
+            className="w-full bg-transparent text-sm text-muted-foreground outline-none placeholder:text-muted-foreground dark:text-textPrimary dark:placeholder:text-textSecondary"
             placeholder="جستجوی سریع در بین دوره‌ها"
             disabled={disabled}
             aria-disabled={disabled}
@@ -120,7 +120,7 @@ export const CoursesFilterControls = ({
           {hasActiveFilters && (
             <button
               onClick={onResetFilters}
-              className="whitespace-nowrap text-xs font-semibold text-slate-500 transition-colors hover:text-slate-800 dark:text-textSecondary dark:hover:text-textPrimary"
+              className="whitespace-nowrap text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground dark:text-textSecondary dark:hover:text-textPrimary"
               disabled={disabled}
             >
               حذف فیلترها

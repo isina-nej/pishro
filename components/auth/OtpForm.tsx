@@ -120,7 +120,7 @@ export function OtpForm({
           variant="ghost"
           onClick={onBack}
           disabled={isLoading}
-          className="self-start -mt-4 text-gray-600 dark:text-textSecondary hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-cardBg dark:bg-cardBg transition-colors"
+          className="self-start -mt-4 text-muted-foreground dark:text-textSecondary hover:text-foreground hover:bg-muted dark:hover:bg-cardBg dark:bg-cardBg transition-colors"
         >
           <ArrowRight className="ml-2 h-4 w-4" />
           بازگشت
@@ -134,10 +134,10 @@ export function OtpForm({
         </div>
 
         <div className="text-center space-y-2">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-textPrimary">تأیید شماره تلفن</h2>
-          <p className="text-sm text-gray-600 dark:text-textSecondary leading-relaxed max-w-sm">
+          <h2 className="text-xl font-bold text-foreground dark:text-textPrimary">تأیید شماره تلفن</h2>
+          <p className="text-sm text-muted-foreground dark:text-textSecondary leading-relaxed max-w-sm">
             کد ۴ رقمی ارسال‌شده به شماره{""}
-            <span className="font-bold text-gray-900 dark:text-textPrimary dir-ltr inline-block">
+            <span className="font-bold text-foreground dark:text-textPrimary dir-ltr inline-block">
               {phone}
             </span>{""}
             را وارد کنید
@@ -165,7 +165,7 @@ export function OtpForm({
                   className={cn(
                     "w-14 h-14 text-2xl font-bold border-2 rounded-lg transition-all duration-200",
                     code.length > index && "border-[#3dc37b] bg-[#3dc37b]/5",
-                    isComplete && "border-green-500 bg-green-50"
+                    isComplete && "border-primary bg-primary"
                   )}
                 />
               ))}
@@ -175,7 +175,7 @@ export function OtpForm({
 
         {/* Success Indicator */}
         {isComplete && (
-          <div className="flex items-center gap-2 text-green-600 dark:text-green-400 animate-in fade-in slide-in-from-top-2 duration-300">
+          <div className="flex items-center gap-2 text-primary animate-in fade-in slide-in-from-top-2 duration-300">
             <CheckCircle2 className="w-5 h-5" />
             <span className="text-sm font-medium">در حال تأیید...</span>
           </div>
@@ -186,21 +186,21 @@ export function OtpForm({
       <div className="flex flex-col items-center gap-3">
         {countdown > 0 ? (
           <div className="text-center space-y-1">
-            <p className="text-sm text-gray-600 dark:text-textSecondary">زمان باقی‌مانده برای ارسال مجدد</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-textPrimary tabular-nums dir-ltr">
+            <p className="text-sm text-muted-foreground dark:text-textSecondary">زمان باقی‌مانده برای ارسال مجدد</p>
+            <p className="text-2xl font-bold text-foreground dark:text-textPrimary tabular-nums dir-ltr">
               {minutes}:{seconds.toString().padStart(2, "0")}
             </p>
           </div>
         ) : (
           <Button
-            className="w-48 h-11 hover:bg-gray-50 dark:hover:bg-darkBgHidden dark:bg-darkBgHidden border-2 border-gray-300 dark:border-borderColor hover:border-[#3dc37b] transition-colors"
+            className="w-48 h-11 hover:bg-muted dark:hover:bg-darkBgHidden dark:bg-darkBgHidden border-2 border-border dark:border-borderColor hover:border-[#3dc37b] transition-colors"
             variant="outline"
             onClick={handleResendClick}
             disabled={isLoading}
           >
             {isLoading ? (
               <div className="flex items-center justify-center gap-2">
-                <span className="h-4 w-4 animate-spin rounded-full border-2 border-gray-600 border-t-transparent" />
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-border border-t-transparent" />
                 در حال ارسال...
               </div>
             ) : (
@@ -215,14 +215,14 @@ export function OtpForm({
         onClick={handleVerify}
         disabled={code.length !== 4 || isLoading}
         className={cn(
-          "w-full h-12 bg-[#d52a16] hover:bg-[#b82414] text-white font-bold text-lg transition-all duration-200",
+          "w-full h-12 bg-[#d52a16] hover:bg-[#b82414] text-primary-foreground font-bold text-lg transition-all duration-200",
           "disabled:opacity-50 disabled:cursor-not-allowed",
           code.length === 4 && !isLoading && "shadow-lg shadow-[#d52a16]/30"
         )}
       >
         {isLoading ? (
           <div className="flex items-center justify-center gap-2">
-            <span className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+            <span className="h-5 w-5 animate-spin rounded-full border-2 border-border border-t-transparent" />
             در حال تأیید...
           </div>
         ) : (
@@ -231,7 +231,7 @@ export function OtpForm({
       </Button>
 
       {/* Helper Text */}
-      <p className="text-xs text-center text-gray-500 dark:text-textSecondary -mt-4">
+      <p className="text-xs text-center text-muted-foreground dark:text-textSecondary -mt-4">
         در صورت دریافت نکردن کد، پس از اتمام زمان می‌توانید مجدداً درخواست دهید
       </p>
     </div>

@@ -148,14 +148,14 @@ export const CourseDetailsModal = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 p-4"
         >
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
-            className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-lg bg-gradient-to-b from-slate-900 to-slate-950 text-white"
+            className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-lg bg-gradient-to-b from-card to-card text-primary-foreground"
           >
             {/* Header with Image */}
             <div className="relative h-80 w-full overflow-hidden">
@@ -167,12 +167,12 @@ export const CourseDetailsModal = ({
                   className="object-cover"
                 />
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
 
               {/* Close Button */}
               <button
                 onClick={onClose}
-                className="absolute right-4 top-4 z-10 rounded-full bg-white dark:bg-cardBg p-2 backdrop-blur hover:bg-white"
+                className="absolute right-4 top-4 z-10 rounded-full bg-card dark:bg-cardBg p-2 backdrop-blur hover:bg-card"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -181,7 +181,7 @@ export const CourseDetailsModal = ({
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white dark:bg-cardBg p-4 backdrop-blur hover:bg-white"
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-card dark:bg-cardBg p-4 backdrop-blur hover:bg-card"
               >
                 <Play className="h-8 w-8 fill-white" />
               </motion.button>
@@ -191,18 +191,18 @@ export const CourseDetailsModal = ({
                 <h1 className="text-4xl font-bold">{course.subject}</h1>
                 <div className="mt-3 flex items-center gap-4">
                   <div className="flex items-center gap-2">
-                    <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                    <Star className="h-5 w-5 fill-yellow-400 text-premium" />
                     <span className="text-lg font-semibold">
                       {course.rating?.toFixed(1) || "0"}
                     </span>
                   </div>
-                  <span className="text-sm text-slate-300">IMDB</span>
+                  <span className="text-sm text-muted-foreground">IMDB</span>
                 </div>
               </div>
             </div>
 
             {/* Action Buttons */}
-            <div className="border-b border-white/10 px-6 py-4">
+            <div className="border-b border-border/10 px-6 py-4">
               <div className="flex gap-3">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -211,8 +211,8 @@ export const CourseDetailsModal = ({
                   disabled={isLoading}
                   className={`flex items-center gap-2 rounded-lg px-4 py-2 font-medium transition ${
                     liked === "LIKE"
-                      ? "bg-blue-600 text-white"
-                      : "bg-white dark:bg-cardBg/10 text-mySecondary dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-cardBg/20"
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-card dark:bg-cardBg/10 text-mySecondary hover:bg-muted dark:hover:bg-cardBg/20"
                   }`}
                 >
                   <ThumbsUp className="h-5 w-5" />
@@ -226,8 +226,8 @@ export const CourseDetailsModal = ({
                   disabled={isLoading}
                   className={`flex items-center gap-2 rounded-lg px-4 py-2 font-medium transition ${
                     liked === "DISLIKE"
-                      ? "bg-red-600 text-white"
-                      : "bg-white dark:bg-cardBg/10 text-mySecondary dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-cardBg/20"
+                      ? "bg-destructive text-primary-foreground"
+                      : "bg-card dark:bg-cardBg/10 text-mySecondary hover:bg-muted dark:hover:bg-cardBg/20"
                   }`}
                 >
                   <ThumbsDown className="h-5 w-5" />
@@ -241,8 +241,8 @@ export const CourseDetailsModal = ({
                   disabled={isLoading}
                   className={`flex items-center gap-2 rounded-lg px-4 py-2 font-medium transition ${
                     saved
-                      ? "bg-purple-600 text-white"
-                      : "bg-white dark:bg-cardBg/10 text-mySecondary dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-cardBg/20"
+                      ? "bg-accent text-primary-foreground"
+                      : "bg-card dark:bg-cardBg/10 text-mySecondary hover:bg-muted dark:hover:bg-cardBg/20"
                   }`}
                 >
                   <Bookmark className={`h-5 w-5 ${saved ? "fill-current" : ""}`} />
@@ -253,7 +253,7 @@ export const CourseDetailsModal = ({
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleShare}
-                  className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 font-medium text-mySecondary transition hover:bg-slate-50 dark:bg-cardBg/10 dark:text-slate-300 dark:hover:bg-cardBg/20"
+                  className="flex items-center gap-2 rounded-lg bg-card px-4 py-2 font-medium text-mySecondary transition hover:bg-muted dark:bg-cardBg/10 dark:hover:bg-cardBg/20"
                 >
                   <Share2 className="h-5 w-5" />
                   اشتراک‌گذاری
@@ -266,8 +266,8 @@ export const CourseDetailsModal = ({
                   disabled={isInCart}
                   className={`flex items-center gap-2 rounded-lg px-4 py-2 font-bold transition ${
                     isInCart
-                      ? "bg-gray-600 dark:bg-gray-700 text-white cursor-not-allowed"
-                      : "bg-mySecondary text-white hover:shadow-lg"
+                      ? "bg-accent text-primary-foreground cursor-not-allowed"
+                      : "bg-mySecondary text-primary-foreground hover:shadow-lg"
                   }`}
                 >
                   <ShoppingCart className="h-5 w-5" />
@@ -277,34 +277,34 @@ export const CourseDetailsModal = ({
             </div>
 
             {/* Course Info Grid */}
-            <div className="border-b border-white/10 px-6 py-6">
+            <div className="border-b border-border/10 px-6 py-6">
               <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                <div className="rounded-lg bg-white dark:bg-cardBg p-3 backdrop-blur">
-                  <div className="text-sm text-slate-400">مدت</div>
+                <div className="rounded-lg bg-card dark:bg-cardBg p-3 backdrop-blur">
+                  <div className="text-sm text-muted-foreground">مدت</div>
                   <div className="mt-1 flex items-center gap-2 text-lg font-semibold">
                     <Clock className="h-4 w-4" />
                     {course.time}
                   </div>
                 </div>
 
-                <div className="rounded-lg bg-white dark:bg-cardBg p-3 backdrop-blur">
-                  <div className="text-sm text-slate-400">سطح</div>
+                <div className="rounded-lg bg-card dark:bg-cardBg p-3 backdrop-blur">
+                  <div className="text-sm text-muted-foreground">سطح</div>
                   <div className="mt-1 flex items-center gap-2 text-lg font-semibold">
                     <BarChart3 className="h-4 w-4" />
                     {course.level || "نامشخص"}
                   </div>
                 </div>
 
-                <div className="rounded-lg bg-white dark:bg-cardBg p-3 backdrop-blur">
-                  <div className="text-sm text-slate-400">دانشجویان</div>
+                <div className="rounded-lg bg-card dark:bg-cardBg p-3 backdrop-blur">
+                  <div className="text-sm text-muted-foreground">دانشجویان</div>
                   <div className="mt-1 flex items-center gap-2 text-lg font-semibold">
                     <Users className="h-4 w-4" />
                     {course.students || 0}
                   </div>
                 </div>
 
-                <div className="rounded-lg bg-white dark:bg-cardBg p-3 backdrop-blur">
-                  <div className="text-sm text-slate-400">ویدیوها</div>
+                <div className="rounded-lg bg-card dark:bg-cardBg p-3 backdrop-blur">
+                  <div className="text-sm text-muted-foreground">ویدیوها</div>
                   <div className="mt-1 flex items-center gap-2 text-lg font-semibold">
                     <BookOpen className="h-4 w-4" />
                     {course.videosCount || 0}
@@ -314,14 +314,14 @@ export const CourseDetailsModal = ({
             </div>
 
             {/* Tabs */}
-            <div className="border-b border-white/10 px-6">
+            <div className="border-b border-border/10 px-6">
               <div className="flex gap-6">
                 <button
                   onClick={() => setActiveTab("درباره")}
                   className={`border-b-2 py-4 font-medium transition ${
                     activeTab === "درباره"
-                      ? "border-blue-500 text-white"
-                      : "border-transparent text-slate-400 hover:text-white"
+                      ? "border-primary text-primary-foreground"
+                      : "border-transparent text-muted-foreground hover:text-primary-foreground"
                   }`}
                 >
                   درباره
@@ -330,8 +330,8 @@ export const CourseDetailsModal = ({
                   onClick={() => setActiveTab("نقدها")}
                   className={`border-b-2 py-4 font-medium transition ${
                     activeTab === "نقدها"
-                      ? "border-blue-500 text-white"
-                      : "border-transparent text-slate-400 hover:text-white"
+                      ? "border-primary text-primary-foreground"
+                      : "border-transparent text-muted-foreground hover:text-primary-foreground"
                   }`}
                 >
                   نقدها
@@ -349,24 +349,24 @@ export const CourseDetailsModal = ({
                 >
                   <div>
                     <h3 className="text-xl font-bold">درباره این دوره</h3>
-                    <p className="mt-3 text-slate-300 leading-relaxed">
+                    <p className="mt-3 text-muted-foreground leading-relaxed">
                       {course.description}
                     </p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
                     <div>
-                      <div className="text-sm text-slate-400">مدرس</div>
+                      <div className="text-sm text-muted-foreground">مدرس</div>
                       <div className="mt-1 font-semibold">{course.instructor || "نامشخص"}</div>
                     </div>
                     <div>
-                      <div className="text-sm text-slate-400">زبان</div>
+                      <div className="text-sm text-muted-foreground">زبان</div>
                       <div className="mt-1 font-semibold">
                         {course.language === "FA" ? "فارسی" : "انگلیسی"}
                       </div>
                     </div>
                     <div>
-                      <div className="text-sm text-slate-400">قیمت</div>
+                      <div className="text-sm text-muted-foreground">قیمت</div>
                       <div className="mt-1 font-semibold">
                         {freeCourse ? "رایگان" : `${course.price?.toLocaleString("fa-IR")} تومان`}
                       </div>
@@ -379,7 +379,7 @@ export const CourseDetailsModal = ({
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="text-center text-slate-400"
+                  className="text-center text-muted-foreground"
                 >
                   <p>نقدی برای این دوره ثبت نشده است.</p>
                 </motion.div>

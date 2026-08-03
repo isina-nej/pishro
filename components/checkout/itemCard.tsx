@@ -68,13 +68,13 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
   const getRiskColor = (type: string) => {
     switch (type) {
       case "low":
-        return "text-green-600 dark:text-green-400 bg-green-50";
+        return "text-primary bg-primary";
       case "medium":
-        return "text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900";
+        return "text-premium bg-premium";
       case "high":
-        return "text-red-600 bg-red-50";
+        return "text-destructive bg-destructive";
       default:
-        return "text-gray-600 dark:text-textSecondary bg-gray-50 dark:bg-darkBgHidden";
+        return "text-muted-foreground dark:text-textSecondary bg-muted dark:bg-darkBgHidden";
     }
   };
 
@@ -93,7 +93,7 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
           delay: index * 0.1,
           ease: "easeOut",
         }}
-        className="w-full h-fit max-w-[410px] bg-white dark:bg-cardBg shadow-lg hover:shadow-xl rounded-2xl overflow-hidden border border-gray-100 dark:border-borderColor transition-all duration-300 group"
+        className="w-full h-fit max-w-[410px] bg-card dark:bg-cardBg shadow-lg hover:shadow-xl rounded-2xl overflow-hidden border border-border dark:border-borderColor transition-all duration-300 group"
       >
         {/* Image with overlay */}
         <div className="relative w-full aspect-[16/9] overflow-hidden">
@@ -105,7 +105,7 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
               transition={{ delay: 0.3 + index * 0.1, type: "spring" }}
               className="absolute top-3 left-3 z-20"
             >
-              <div className="bg-gradient-to-br from-myPrimary to-red-600 text-white px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
+              <div className="bg-gradient-to-br from-myPrimary to-destructive text-primary-foreground px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
                 <Tag className="w-3.5 h-3.5" />
                 <span className="text-xs font-bold">
                   {data.discountPercent}٪ تخفیف
@@ -120,17 +120,17 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
             disabled={isRemoving}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            className="absolute top-3 right-3 z-20 p-2.5 text-white bg-red-500/90 hover:bg-red-600 rounded-full shadow-lg backdrop-blur-sm transition-all duration-200 disabled:opacity-50"
+            className="absolute top-3 right-3 z-20 p-2.5 text-primary-foreground bg-destructive/90 hover:bg-destructive rounded-full shadow-lg backdrop-blur-sm transition-all duration-200 disabled:opacity-50"
             aria-label="حذف از سبد خرید"
           >
             <Trash2 className="w-4 h-4" />
           </motion.button>
 
           {/* Image */}
-          <div className="relative size-full bg-gradient-to-br from-gray-100 to-gray-200">
+          <div className="relative size-full bg-gradient-to-br from-muted to-muted">
             {imageError ? (
               <div className="size-full flex flex-col items-center justify-center gap-3">
-                <div className="w-16 h-16 rounded-full bg-gray-300 dark:bg-darkBgHidden flex items-center justify-center">
+                <div className="w-16 h-16 rounded-full bg-accent dark:bg-darkBgHidden flex items-center justify-center">
                   <Image
                     src="/images/logo.png"
                     alt="placeholder"
@@ -139,7 +139,7 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
                     className="opacity-50"
                   />
                 </div>
-                <span className="text-gray-400 dark:text-textSecondary text-sm">
+                <span className="text-muted-foreground dark:text-textSecondary text-sm">
                   تصویر در دسترس نیست
                 </span>
               </div>
@@ -153,7 +153,7 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
                   onError={() => setImageError(true)}
                 />
                 {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </>
             )}
           </div>
@@ -162,17 +162,17 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
         {/* Content */}
         <div className="p-5 space-y-4">
           {/* Title */}
-          <h6 className="font-bold text-lg text-gray-900 dark:text-textPrimary line-clamp-2 min-h-[3.5rem] leading-relaxed">
+          <h6 className="font-bold text-lg text-foreground dark:text-textPrimary line-clamp-2 min-h-[3.5rem] leading-relaxed">
             {data.subject}
           </h6>
 
           {/* Description */}
-          <p className="text-sm text-gray-600 dark:text-textSecondary line-clamp-2 min-h-[2.5rem] leading-relaxed">
+          <p className="text-sm text-muted-foreground dark:text-textSecondary line-clamp-2 min-h-[2.5rem] leading-relaxed">
             {data.description || "توضیحات دوره در دسترس نیست"}
           </p>
 
           {/* Divider */}
-          <div className="border-t border-gray-200 dark:border-borderColor" />
+          <div className="border-t border-border dark:border-borderColor" />
 
           {/* Price Section */}
           <div className="space-y-3">
@@ -182,7 +182,7 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.4 + index * 0.1 }}
-                className="flex items-center gap-2 text-green-600 dark:text-green-400 bg-green-50 px-3 py-2 rounded-lg"
+                className="flex items-center gap-2 text-primary bg-primary px-3 py-2 rounded-lg"
               >
                 <TrendingDown className="w-4 h-4" />
                 <span className="text-xs font-medium">
@@ -195,10 +195,10 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
             {/* Prices */}
             <div className="flex items-end justify-between">
               <div className="space-y-1">
-                <p className="text-xs text-gray-500 dark:text-textSecondary font-medium">قیمت نهایی</p>
+                <p className="text-xs text-muted-foreground dark:text-textSecondary font-medium">قیمت نهایی</p>
                 <div className="flex items-center gap-2">
                   {hasDiscount && originalPrice && (
-                    <span className="text-sm text-gray-400 dark:text-textSecondary line-through">
+                    <span className="text-sm text-muted-foreground dark:text-textSecondary line-through">
                       {originalPrice.toLocaleString("fa-IR")}
                     </span>
                   )}
@@ -210,12 +210,12 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.5 + index * 0.1 }}
                   className={`text-2xl font-black ${
-                    hasDiscount ? "text-myPrimary" : "text-gray-900 dark:text-textPrimary"
+                    hasDiscount ? "text-myPrimary" : "text-foreground dark:text-textPrimary"
                   }`}
                 >
                   {data.price.toLocaleString("fa-IR")}
                 </motion.p>
-                <span className="text-xs text-gray-500 dark:text-textSecondary font-medium">تومان</span>
+                <span className="text-xs text-muted-foreground dark:text-textSecondary font-medium">تومان</span>
               </div>
             </div>
           </div>
@@ -239,29 +239,29 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
           delay: index * 0.1,
           ease: "easeOut",
         }}
-        className="w-full h-fit max-w-[410px] bg-white dark:bg-cardBg shadow-lg hover:shadow-xl rounded-2xl overflow-hidden border border-gray-100 dark:border-borderColor transition-all duration-300 group"
+        className="w-full h-fit max-w-[410px] bg-card dark:bg-cardBg shadow-lg hover:shadow-xl rounded-2xl overflow-hidden border border-border dark:border-borderColor transition-all duration-300 group"
       >
         {/* Header with delete button */}
-        <div className="relative w-full bg-gradient-to-br from-mySecondary to-emerald-700 p-6">
+        <div className="relative w-full bg-gradient-to-br from-mySecondary to-primary p-6">
           {/* Delete Button */}
           <motion.button
             onClick={handleRemove}
             disabled={isRemoving}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            className="absolute top-3 right-3 z-20 p-2.5 text-white bg-red-500/90 hover:bg-red-600 rounded-full shadow-lg backdrop-blur-sm transition-all duration-200 disabled:opacity-50"
+            className="absolute top-3 right-3 z-20 p-2.5 text-primary-foreground bg-destructive/90 hover:bg-destructive rounded-full shadow-lg backdrop-blur-sm transition-all duration-200 disabled:opacity-50"
             aria-label="حذف از سبد خرید"
           >
             <Trash2 className="w-4 h-4" />
           </motion.button>
 
-          <div className="flex items-center gap-3 text-white">
-            <div className="p-3 bg-white dark:bg-cardBg rounded-xl backdrop-blur-sm">
+          <div className="flex items-center gap-3 text-primary-foreground">
+            <div className="p-3 bg-card dark:bg-cardBg rounded-xl backdrop-blur-sm">
               <BarChart3 className="w-6 h-6" />
             </div>
             <div>
               <h6 className="font-bold text-lg">سبد سرمایه‌ گذاری</h6>
-              <p className="text-sm text-white/80">
+              <p className="text-sm text-primary-foreground/80">
                 {getRiskLabel(data.portfolioType)}
               </p>
             </div>
@@ -273,22 +273,22 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
           {/* Portfolio Details */}
           <div className="grid grid-cols-2 gap-3">
             {/* Amount */}
-            <div className="flex items-start gap-2 p-3 bg-blue-50 rounded-lg">
-              <Wallet className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" />
+            <div className="flex items-start gap-2 p-3 bg-primary rounded-lg">
+              <Wallet className="w-5 h-5 text-primary mt-0.5" />
               <div>
-                <p className="text-xs text-gray-600 dark:text-textSecondary mb-1">مبلغ سرمایه</p>
-                <p className="text-sm font-bold text-gray-900 dark:text-textPrimary">
+                <p className="text-xs text-muted-foreground dark:text-textSecondary mb-1">مبلغ سرمایه</p>
+                <p className="text-sm font-bold text-foreground dark:text-textPrimary">
                   {data.portfolioAmount.toLocaleString("fa-IR")} تومان
                 </p>
               </div>
             </div>
 
             {/* Duration */}
-            <div className="flex items-start gap-2 p-3 bg-purple-50 rounded-lg">
-              <Clock className="w-5 h-5 text-purple-600 mt-0.5" />
+            <div className="flex items-start gap-2 p-3 bg-accent rounded-lg">
+              <Clock className="w-5 h-5 text-accent mt-0.5" />
               <div>
-                <p className="text-xs text-gray-600 dark:text-textSecondary mb-1">مدت زمان</p>
-                <p className="text-sm font-bold text-gray-900 dark:text-textPrimary">
+                <p className="text-xs text-muted-foreground dark:text-textSecondary mb-1">مدت زمان</p>
+                <p className="text-sm font-bold text-foreground dark:text-textPrimary">
                   {data.portfolioDuration} ماه
                 </p>
               </div>
@@ -307,25 +307,25 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
           </div>
 
           {/* Expected Return */}
-          <div className="bg-green-50 p-3 rounded-lg">
-            <p className="text-xs text-gray-600 dark:text-textSecondary mb-1 text-center">
+          <div className="bg-primary p-3 rounded-lg">
+            <p className="text-xs text-muted-foreground dark:text-textSecondary mb-1 text-center">
               بازده تخمینی
             </p>
-            <p className="text-lg font-bold text-green-700 dark:text-green-300 text-center">
+            <p className="text-lg font-bold text-primary text-center">
               {data.expectedReturn.toLocaleString("fa-IR")} تومان
             </p>
-            <p className="text-xs text-gray-500 dark:text-textSecondary text-center mt-1">
+            <p className="text-xs text-muted-foreground dark:text-textSecondary text-center mt-1">
               نرخ ماهیانه: {(data.monthlyRate * 100).toFixed(0)}٪
             </p>
           </div>
 
           {/* Divider */}
-          <div className="border-t border-gray-200 dark:border-borderColor" />
+          <div className="border-t border-border dark:border-borderColor" />
 
           {/* Price Section */}
           <div className="flex items-end justify-between">
             <div className="space-y-1">
-              <p className="text-xs text-gray-500 dark:text-textSecondary font-medium">هزینه سبد</p>
+              <p className="text-xs text-muted-foreground dark:text-textSecondary font-medium">هزینه سبد</p>
             </div>
             <div className="flex flex-col items-end">
               <motion.p
@@ -336,7 +336,7 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
               >
                 {data.price.toLocaleString("fa-IR")}
               </motion.p>
-              <span className="text-xs text-gray-500 dark:text-textSecondary font-medium">تومان</span>
+              <span className="text-xs text-muted-foreground dark:text-textSecondary font-medium">تومان</span>
             </div>
           </div>
         </div>

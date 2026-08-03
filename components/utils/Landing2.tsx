@@ -25,14 +25,14 @@ const Landing2 = ({ imageUrl, title, titleColor = "#fff" }: LandingProps) => {
       />
 
       {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black/55 z-10" />
+      <div className="absolute inset-0 bg-background/55 z-10" />
 
       {/* White bottom gradient overlay */}
-      <div className="absolute inset-x-0 bottom-0 h-[160px] bg-gradient-to-t from-black/80 via-black/30 to-transparent z-20 pointer-events-none" />
+      <div className="absolute inset-x-0 bottom-0 h-[160px] bg-gradient-to-t from-background/80 via-background/30 to-transparent z-20 pointer-events-none" />
 
       {/* Title with animation */}
       <div className="absolute inset-0 z-30 flex items-center justify-center px-4 text-center">
-        <h1 className="text-white text-3xl md:text-5xl font-bold drop-shadow-md mb-12">
+        <h1 className="text-primary-foreground text-3xl md:text-5xl font-bold drop-shadow-md mb-12">
           به دنیای{""}
           <span
             className="inline-block text:4xl md:text-7xl"

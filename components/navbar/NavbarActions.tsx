@@ -34,7 +34,7 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ isDark }) => {
           className={clsx(
             "border transition-colors pr-5 pl-4 py-1.5 rounded-lg",
             isDark
-              ? "border-white hover:bg-black/20 text-white"
+              ? "border-border hover:bg-background/20 text-primary-foreground"
               : "border-mySecondary hover:bg-mySecondary/10"
           )}
         >
@@ -49,12 +49,12 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ isDark }) => {
           <FiShoppingCart
             className={clsx(
               "size-6 transition-colors",
-              isDark ? "text-white" : "text-mySecondary"
+              isDark ? "text-primary-foreground" : "text-mySecondary"
             )}
           />
           {cartCount > 0 && (
             <span
-              className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center"
+              className="absolute -top-2 -right-2 bg-destructive text-primary-foreground text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center"
               aria-label={`تعداد محصولات در سبد: ${cartCount}`}
             >
               {cartCount}
@@ -67,7 +67,7 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ isDark }) => {
       <div
         className={clsx(
           "flex items-center gap-2 text-xs sm:text-sm md:text-base",
-          isDark ? "text-white" : "text-mySecondary"
+          isDark ? "text-primary-foreground" : "text-mySecondary"
         )}
       >
         <ThemeToggle />

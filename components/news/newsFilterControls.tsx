@@ -56,29 +56,29 @@ export const NewsFilterControls = ({
       <div className="space-y-2">
         <div className="flex items-center gap-2">
           <Filter className="w-5 h-5 text-mySecondary" />
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">فیلترها</h2>
+          <h2 className="text-xl font-bold text-foreground">فیلترها</h2>
         </div>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
+        <p className="text-sm text-muted-foreground">
           اخبار را بر اساس علاقه و زمان خود بسازید
         </p>
       </div>
 
       {/* Search Input */}
       <div className="space-y-2">
-        <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">
+        <label className="block text-sm font-semibold text-muted-foreground">
           جستجو
         </label>
         <div
           className={cn(
-            "flex items-center gap-3 rounded-2xl border border-white/60 bg-white/60 p-3 shadow-inner backdrop-blur-xl transition-all focus-within:border-cyan-300/60 dark:border-white/10 dark:bg-white/5",
+            "flex items-center gap-3 rounded-2xl border border-border/60 bg-card/60 p-3 shadow-inner backdrop-blur-xl transition-all focus-within:border-primary/60/10/5",
             disabled && "opacity-60"
           )}
         >
-          <Search className="h-4 w-4 text-slate-400" />
+          <Search className="h-4 w-4 text-muted-foreground" />
           <input
             value={query}
             onChange={(event) => onQueryChange(event.target.value)}
-            className="w-full bg-transparent text-sm text-slate-600 dark:text-slate-300 outline-none placeholder-slate-400"
+            className="w-full bg-transparent text-sm text-muted-foreground outline-none placeholder-slate-400"
             placeholder="جستجو در اخبار..."
             disabled={disabled}
             aria-disabled={disabled}
@@ -86,7 +86,7 @@ export const NewsFilterControls = ({
           {query && (
             <button
               onClick={() => onQueryChange("")}
-              className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+              className="text-muted-foreground hover:text-muted-foreground dark:hover:text-muted-foreground transition-colors"
               aria-label="Clear search"
             >
               <X className="w-4 h-4" />
@@ -98,7 +98,7 @@ export const NewsFilterControls = ({
       {/* Sort and Time Range */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">
+          <label className="block text-sm font-semibold text-muted-foreground">
             مرتب‌سازی
           </label>
           <Select
@@ -108,7 +108,7 @@ export const NewsFilterControls = ({
           >
             <SelectTrigger
               className={cn(
-                "w-full rounded-2xl border-white/60 bg-white/60 backdrop-blur-xl dark:border-white/10 dark:bg-white/5",
+                "w-full rounded-2xl border-border/60 bg-card/60 backdrop-blur-xl/10/5",
                 disabled && "opacity-60"
               )}
               aria-disabled={disabled}
@@ -126,7 +126,7 @@ export const NewsFilterControls = ({
         </div>
 
         <div className="space-y-2">
-          <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">
+          <label className="block text-sm font-semibold text-muted-foreground">
             بازه زمانی
           </label>
           <Select
@@ -136,7 +136,7 @@ export const NewsFilterControls = ({
           >
             <SelectTrigger
               className={cn(
-                "w-full rounded-2xl border-white/60 bg-white/60 backdrop-blur-xl dark:border-white/10 dark:bg-white/5",
+                "w-full rounded-2xl border-border/60 bg-card/60 backdrop-blur-xl/10/5",
                 disabled && "opacity-60"
               )}
               aria-disabled={disabled}
@@ -156,7 +156,7 @@ export const NewsFilterControls = ({
 
       {/* Categories */}
       <div className="space-y-3">
-        <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">
+        <label className="block text-sm font-semibold text-muted-foreground">
           دسته‌بندی
         </label>
         <div className="flex flex-col gap-2">
@@ -167,8 +167,8 @@ export const NewsFilterControls = ({
               className={cn(
                 "px-4 py-3 rounded-xl text-sm font-medium text-start transition-all duration-200 border",
                 selectedCategory === category
-                  ? "border-[#112b3a] bg-[#112b3a] text-white shadow-lg"
-                  : "border-white/60 bg-white/55 text-[#405c6b] hover:border-cyan-300/50 hover:bg-white/80 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10",
+                  ? "border-[#112b3a] bg-[#112b3a] text-primary-foreground shadow-lg"
+                  : "border-border/60 bg-card/55 text-[#405c6b] hover:border-primary/50 hover:bg-card/80/10/5 dark:hover:bg-card/10",
                 disabled && "pointer-events-none opacity-60"
               )}
               aria-pressed={selectedCategory === category}
@@ -190,7 +190,7 @@ export const NewsFilterControls = ({
         <button
           onClick={onResetFilters}
           disabled={disabled}
-          className="w-full px-4 py-3 rounded-xl text-sm font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-200 border border-slate-200 dark:border-slate-700"
+          className="w-full px-4 py-3 rounded-xl text-sm font-semibold bg-muted text-muted-foreground hover:bg-muted dark:hover:bg-accent transition-all duration-200 border border-border"
         >
           ✕ حذف تمام فیلترها
         </button>

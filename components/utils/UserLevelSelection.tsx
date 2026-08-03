@@ -113,9 +113,9 @@ const UserLevelSection = ({ categorySlug }: UserLevelSectionProps) => {
           {levels.map((levelItem, i) => (
             <div
               key={i}
-              className="relative flex flex-col items-center justify-between bg-mySecondary text-white rounded-2xl sm:rounded-3xl h-auto min-h-[320px] sm:min-h-[350px] md:h-[390px] w-full max-w-[320px] sm:max-w-[350px] md:max-w-[390px] px-6 sm:px-7 md:px-8 py-8 sm:py-9 md:py-10 shadow-sm hover:shadow-lg transition-transform duration-300 hover:scale-105"
+              className="relative flex flex-col items-center justify-between bg-mySecondary text-primary-foreground rounded-2xl sm:rounded-3xl h-auto min-h-[320px] sm:min-h-[350px] md:h-[390px] w-full max-w-[320px] sm:max-w-[350px] md:max-w-[390px] px-6 sm:px-7 md:px-8 py-8 sm:py-9 md:py-10 shadow-sm hover:shadow-lg transition-transform duration-300 hover:scale-105"
             >
-              <div className="bg-white dark:bg-cardBg size-20 sm:size-[88px] md:size-24 flex items-center justify-center rounded-full shadow-md">
+              <div className="bg-card dark:bg-cardBg size-20 sm:size-[88px] md:size-24 flex items-center justify-center rounded-full shadow-md">
                 <div className="text-2xl sm:text-3xl md:text-4xl">
                   {levelItem.icon}
                 </div>
@@ -123,12 +123,12 @@ const UserLevelSection = ({ categorySlug }: UserLevelSectionProps) => {
               <h3 className="text-2xl sm:text-3xl font-bold mt-4 sm:mt-5 md:mt-6">
                 {levelItem.title}
               </h3>
-              <p className="text-xs sm:text-sm text-gray-200 leading-6 sm:leading-7 px-2">
+              <p className="text-xs sm:text-sm text-muted-foreground leading-6 sm:leading-7 px-2">
                 برای ارزیابی سطح خود، آزمون زیر را انجام دهید.
               </p>
               <button
                 onClick={handleOpenDialog}
-                className="mt-4 sm:mt-5 md:mt-6 px-8 sm:px-10 md:px-12 py-3 sm:py-3.5 md:py-4 bg-white dark:bg-cardBg text-mySecondary dark:text-textPrimary text-sm sm:text-base md:text-lg font-semibold rounded-full hover:scale-105 transition-all w-full sm:w-auto"
+                className="mt-4 sm:mt-5 md:mt-6 px-8 sm:px-10 md:px-12 py-3 sm:py-3.5 md:py-4 bg-card dark:bg-cardBg text-mySecondary dark:text-textPrimary text-sm sm:text-base md:text-lg font-semibold rounded-full hover:scale-105 transition-all w-full sm:w-auto"
                 aria-label={`شروع آزمون ${levelItem.title}`}
               >
                 آزمون تعیین سطح
@@ -146,19 +146,19 @@ const UserLevelSection = ({ categorySlug }: UserLevelSectionProps) => {
               {quiz?.title || "آزمون تعیین سطح سرمایه‌ گذاری"}
             </DialogTitle>
             {quiz?.description && (
-              <p className="text-sm text-gray-600 dark:text-textSecondary mt-2">{quiz.description}</p>
+              <p className="text-sm text-muted-foreground dark:text-textSecondary mt-2">{quiz.description}</p>
             )}
           </DialogHeader>
 
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
               <FaSpinner className="animate-spin text-mySecondary text-3xl" />
-              <span className="mr-3 text-gray-600 dark:text-textSecondary">
+              <span className="mr-3 text-muted-foreground dark:text-textSecondary">
                 در حال بارگذاری آزمون...
               </span>
             </div>
           ) : error ? (
-            <div className="text-center py-8 text-red-600">
+            <div className="text-center py-8 text-destructive">
               خطا در بارگذاری آزمون. لطفاً دوباره تلاش کنید.
             </div>
           ) : quizFinished ? (
@@ -178,7 +178,7 @@ const UserLevelSection = ({ categorySlug }: UserLevelSectionProps) => {
             <>
               {/* Time limit indicator */}
               {quiz.timeLimit && (
-                <div className="text-sm text-gray-600 dark:text-textSecondary mb-2">
+                <div className="text-sm text-muted-foreground dark:text-textSecondary mb-2">
                   زمان: {quiz.timeLimit} دقیقه
                 </div>
               )}
@@ -199,8 +199,8 @@ const UserLevelSection = ({ categorySlug }: UserLevelSectionProps) => {
                             key={j}
                             className={`flex items-center gap-2 border rounded-lg p-2.5 sm:p-3 cursor-pointer transition-all duration-200 text-sm sm:text-base ${
                               answers.get(q.id) === opt.text
-                                ? "bg-mySecondary text-white border-mySecondary"
-                                : "bg-gray-50 dark:bg-darkBgHidden hover:bg-gray-100 dark:hover:bg-cardBg dark:bg-cardBg"
+                                ? "bg-mySecondary text-primary-foreground border-mySecondary"
+                                : "bg-muted dark:bg-darkBgHidden hover:bg-muted dark:hover:bg-cardBg dark:bg-cardBg"
                             }`}
                           >
                             <input
@@ -232,8 +232,8 @@ const UserLevelSection = ({ categorySlug }: UserLevelSectionProps) => {
                               key={j}
                               className={`flex items-center gap-2 border rounded-lg p-2.5 sm:p-3 cursor-pointer transition-all duration-200 text-sm sm:text-base ${
                                 isChecked
-                                  ? "bg-mySecondary text-white border-mySecondary"
-                                  : "bg-gray-50 dark:bg-darkBgHidden hover:bg-gray-100 dark:hover:bg-cardBg dark:bg-cardBg"
+                                  ? "bg-mySecondary text-primary-foreground border-mySecondary"
+                                  : "bg-muted dark:bg-darkBgHidden hover:bg-muted dark:hover:bg-cardBg dark:bg-cardBg"
                               }`}
                             >
                               <input

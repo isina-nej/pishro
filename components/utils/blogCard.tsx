@@ -25,7 +25,7 @@ const BlogCard = ({ title, date, description, img, link }: BlogCardProps) => {
         {imageError ? (
           // نمایش کنتینر جایگزین در صورت بروز خطا
           <div className="size-full flex items-center justify-center">
-            <span className="text-gray-400 dark:text-textSecondary">تصویر در دسترس نیست</span>
+            <span className="text-muted-foreground dark:text-textSecondary">تصویر در دسترس نیست</span>
           </div>
         ) : (
           // تصویر اصلی
@@ -41,7 +41,7 @@ const BlogCard = ({ title, date, description, img, link }: BlogCardProps) => {
           <Date date={date} />
         </div>
       </div>
-      <div className="p-4 bg-white dark:bg-cardBg">
+      <div className="p-4 bg-card dark:bg-cardBg">
         <h4 className="text-lg font-bold text-center mb-3">{title}</h4>
         <p className="text-[#4d4d4d] font-medium text-sm">{description}</p>
       </div>

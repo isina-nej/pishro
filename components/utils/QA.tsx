@@ -41,14 +41,14 @@ const QAModal = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-[#214254] hover:bg-green-900 text-white text-lg px-12 py-8 rounded-lg shadow-lg">
+        <Button className="bg-[#214254] hover:bg-primary text-primary-foreground text-lg px-12 py-8 rounded-lg shadow-lg">
           مشاوره سرمایه گذاری
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-lg bg-white dark:bg-cardBg rounded-xl shadow-2xl">
+      <DialogContent className="max-w-lg bg-card dark:bg-cardBg rounded-xl shadow-2xl">
         <DialogHeader>
-          <DialogTitle className="rtl text-xl font-bold text-gray-800 dark:text-textPrimary">
+          <DialogTitle className="rtl text-xl font-bold text-foreground dark:text-textPrimary">
             فرم ثبت‌نام سایت سرمایه‌ گذاری
           </DialogTitle>
         </DialogHeader>
@@ -56,14 +56,14 @@ const QAModal = () => {
         <div className="space-y-4 mt-4">
           {fakeQuestions.map((q) => (
             <div key={q.id} className="space-y-2">
-              <p className="text-gray-700 dark:text-textPrimary font-medium">{q.question}</p>
+              <p className="text-muted-foreground dark:text-textPrimary font-medium">{q.question}</p>
 
               {q.type === "text" && (
                 <Input
                   placeholder="پاسخ خود را وارد کنید"
                   value={answers[q.id] || ""}
                   onChange={(e) => handleChange(q.id, e.target.value)}
-                  className="bg-gray-50 dark:bg-darkBgHidden"
+                  className="bg-muted dark:bg-darkBgHidden"
                 />
               )}
 
@@ -72,13 +72,13 @@ const QAModal = () => {
                   placeholder="پاسخ خود را وارد کنید"
                   value={answers[q.id] || ""}
                   onChange={(e) => handleChange(q.id, e.target.value)}
-                  className="bg-gray-50 dark:bg-darkBgHidden"
+                  className="bg-muted dark:bg-darkBgHidden"
                 />
               )}
 
               {q.type === "select" && q.options && (
                 <Select onValueChange={(val) => handleChange(q.id, val)}>
-                  <SelectTrigger className="bg-gray-50 dark:bg-darkBgHidden rtl">
+                  <SelectTrigger className="bg-muted dark:bg-darkBgHidden rtl">
                     <SelectValue placeholder="انتخاب کنید" />
                   </SelectTrigger>
                   <SelectContent>
@@ -97,7 +97,7 @@ const QAModal = () => {
         <DialogFooter className="mt-6">
           <Button
             onClick={handleSubmit}
-            className="w-full bg-[#214254] hover:bg-green-900 text-white font-semibold"
+            className="w-full bg-[#214254] hover:bg-primary text-primary-foreground font-semibold"
           >
             ثبت اطلاعات
           </Button>

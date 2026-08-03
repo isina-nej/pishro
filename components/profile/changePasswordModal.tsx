@@ -120,7 +120,7 @@ export function ChangePasswordModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/50">
       <div className="bg-card rounded-lg w-full max-w-md mx-4 p-6 relative animate-in fade-in zoom-in-95 duration-300">
         {/* Close Button */}
         <button
@@ -155,7 +155,7 @@ export function ChangePasswordModal({
               {isLoading ? (
                 <div className="flex items-center justify-center gap-2">
                   در حال ارسال کد
-                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-border border-t-transparent" />
                 </div>
               ) : (
                 "ارسال کد تایید"
@@ -235,7 +235,7 @@ export function ChangePasswordModal({
                 {isLoading ? (
                   <div className="flex items-center justify-center gap-2">
                     در حال تغییر رمز عبور
-                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-border border-t-transparent" />
                   </div>
                 ) : (
                   "تغییر رمز عبور"

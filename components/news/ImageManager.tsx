@@ -133,9 +133,9 @@ export const ImageManager: React.FC<ImageManagerProps> = ({ editor, darkMode = f
   const buttonClasses = [
     'px-3 py-2 text-sm rounded transition-colors',
     editor.isActive('image')
-      ? 'bg-blue-500 text-white'
-      : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300',
-    darkMode ? 'dark:bg-gray-700' : '',
+      ? 'bg-primary text-primary-foreground'
+      : 'bg-muted text-muted-foreground',
+    darkMode ? '' : '',
   ]
     .filter(Boolean)
     .join(' ');
@@ -154,12 +154,12 @@ export const ImageManager: React.FC<ImageManagerProps> = ({ editor, darkMode = f
 
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          className="fixed inset-0 bg-background bg-opacity-50 flex items-center justify-center z-50"
           onClick={() => setIsOpen(false)}
         >
           <div
-            className={`bg-white rounded-lg shadow-lg p-6 w-full max-w-md max-h-96 overflow-y-auto ${
-              darkMode ? 'dark:bg-gray-800' : ''
+            className={`bg-card rounded-lg shadow-lg p-6 w-full max-w-md max-h-96 overflow-y-auto ${
+              darkMode ? '' : ''
             }`}
             onClick={(e) => e.stopPropagation()}
           >
@@ -169,8 +169,8 @@ export const ImageManager: React.FC<ImageManagerProps> = ({ editor, darkMode = f
               {/* Image Preview */}
               {imageData.src && (
                 <div
-                  className={`w-full bg-gray-100 rounded-md overflow-hidden flex items-center justify-center ${
-                    darkMode ? 'dark:bg-gray-700' : ''
+                  className={`w-full bg-muted rounded-md overflow-hidden flex items-center justify-center ${
+                    darkMode ? '' : ''
                   }`}
                   style={{ height: `${Math.min(imageData.height, 200)}px` }}
                 >
@@ -195,8 +195,8 @@ export const ImageManager: React.FC<ImageManagerProps> = ({ editor, darkMode = f
                   value={imageData.src}
                   onChange={(e) => setImageData((prev) => ({ ...prev, src: e.target.value }))}
                   placeholder="https://example.com/image.jpg"
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    darkMode ? 'dark:bg-gray-700 dark:border-gray-600' : ''
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${
+                    darkMode ? '' : ''
                   }`}
                 />
               </div>
@@ -209,8 +209,8 @@ export const ImageManager: React.FC<ImageManagerProps> = ({ editor, darkMode = f
                   value={imageData.alt}
                   onChange={(e) => setImageData((prev) => ({ ...prev, alt: e.target.value }))}
                   placeholder="Image description"
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    darkMode ? 'dark:bg-gray-700 dark:border-gray-600' : ''
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${
+                    darkMode ? '' : ''
                   }`}
                 />
               </div>
@@ -225,8 +225,8 @@ export const ImageManager: React.FC<ImageManagerProps> = ({ editor, darkMode = f
                     onChange={(e) => updateWidth(parseInt(e.target.value))}
                     min="50"
                     max="1920"
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      darkMode ? 'dark:bg-gray-700 dark:border-gray-600' : ''
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${
+                      darkMode ? '' : ''
                     }`}
                   />
                 </div>
@@ -238,23 +238,23 @@ export const ImageManager: React.FC<ImageManagerProps> = ({ editor, darkMode = f
                     onChange={(e) => updateHeight(parseInt(e.target.value))}
                     min="50"
                     max="1920"
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      darkMode ? 'dark:bg-gray-700 dark:border-gray-600' : ''
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${
+                      darkMode ? '' : ''
                     }`}
                   />
                 </div>
               </div>
 
               {/* Aspect Ratio Info */}
-              <div className="text-sm text-gray-600 dark:text-gray-400">
+              <div className="text-sm text-muted-foreground">
                 Aspect Ratio: {imageData.aspectRatio.toFixed(2)}:1
               </div>
 
               {/* Reset Button */}
               <button
                 onClick={resetSize}
-                className={`w-full px-3 py-2 text-sm border rounded-md hover:bg-gray-50 transition-colors ${
-                  darkMode ? 'dark:hover:bg-gray-700' : ''
+                className={`w-full px-3 py-2 text-sm border rounded-md hover:bg-muted transition-colors ${
+                  darkMode ? 'dark:hover:bg-accent' : ''
                 }`}
                 type="button"
               >
@@ -266,15 +266,15 @@ export const ImageManager: React.FC<ImageManagerProps> = ({ editor, darkMode = f
             <div className="flex gap-3 mt-6">
               <button
                 onClick={handleDelete}
-                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+                className="px-4 py-2 bg-destructive text-primary-foreground rounded-md hover:bg-destructive transition-colors"
                 type="button"
               >
                 Delete
               </button>
               <button
                 onClick={() => setIsOpen(false)}
-                className={`px-4 py-2 border rounded-md hover:bg-gray-100 transition-colors ${
-                  darkMode ? 'dark:hover:bg-gray-700' : ''
+                className={`px-4 py-2 border rounded-md hover:bg-muted transition-colors ${
+                  darkMode ? 'dark:hover:bg-accent' : ''
                 }`}
                 type="button"
               >
@@ -282,7 +282,7 @@ export const ImageManager: React.FC<ImageManagerProps> = ({ editor, darkMode = f
               </button>
               <button
                 onClick={handleSave}
-                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors ml-auto"
+                className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary transition-colors ml-auto"
                 type="button"
               >
                 Save

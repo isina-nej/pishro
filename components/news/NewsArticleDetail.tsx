@@ -34,14 +34,14 @@ function renderProseMirrorMarks(text: string, marks?: ProseMirrorMark[]): React.
       case 'italic':
         return <em>{child}</em>;
       case 'code':
-        return <code className="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded font-mono text-sm">{child}</code>;
+        return <code className="bg-muted px-2 py-1 rounded font-mono text-sm">{child}</code>;
       case 'link':
         return (
           <a
             href={String(mark.attrs?.href ?? '#')}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-600 dark:text-blue-400 hover:underline"
+            className="text-primary hover:underline"
           >
             {child}
           </a>
@@ -69,14 +69,14 @@ function renderProseMirrorNode(node: ProseMirrorNode | undefined, key: string): 
   switch (node.type) {
     case 'paragraph':
       return (
-        <p key={key} className="text-base md:text-lg leading-relaxed mb-6 text-right text-slate-800 dark:text-slate-200">
+        <p key={key} className="text-base md:text-lg leading-relaxed mb-6 text-right text-foreground">
           {renderChildren(node.content)}
         </p>
       );
     case 'heading': {
       const level = node.attrs?.level || 1;
       const headingClasses = [
-        'text-right tracking-tight text-slate-900 dark:text-slate-100',
+        'text-right tracking-tight text-foreground',
         level === 1 && 'text-4xl md:text-5xl mb-8 mt-10',
         level === 2 && 'text-3xl md:text-4xl mb-7 mt-9',
         level === 3 && 'text-2xl md:text-3xl mb-6 mt-8',
@@ -95,20 +95,20 @@ function renderProseMirrorNode(node: ProseMirrorNode | undefined, key: string): 
       return (
         <blockquote
           key={key}
-          className="my-10 border-r-4 rtl:border-r-0 rtl:border-l-4 border-slate-400/90 bg-slate-50 dark:bg-slate-950/70 p-6 rounded-3xl text-right italic text-slate-700 dark:text-slate-200 shadow-sm"
+          className="my-10 border-r-4 rtl:border-r-0 rtl:border-l-4 border-border/90 bg-muted/70 p-6 rounded-3xl text-right italic text-muted-foreground shadow-sm"
         >
           {renderChildren(node.content)}
         </blockquote>
       );
     case 'bulletList':
       return (
-        <ul key={key} className="my-8 text-right text-slate-800 dark:text-slate-200 space-y-3 list-disc list-inside mr-6">
+        <ul key={key} className="my-8 text-right text-foreground space-y-3 list-disc list-inside mr-6">
           {renderChildren(node.content)}
         </ul>
       );
     case 'orderedList':
       return (
-        <ol key={key} className="my-8 text-right text-slate-800 dark:text-slate-200 space-y-3 list-decimal list-inside mr-6">
+        <ol key={key} className="my-8 text-right text-foreground space-y-3 list-decimal list-inside mr-6">
           {renderChildren(node.content)}
         </ol>
       );
@@ -120,12 +120,12 @@ function renderProseMirrorNode(node: ProseMirrorNode | undefined, key: string): 
       );
     case 'codeBlock':
       return (
-        <pre key={key} className="my-8 overflow-x-auto rounded-3xl border border-slate-200 bg-slate-950 p-4 text-sm text-slate-100 shadow-sm">
+        <pre key={key} className="my-8 overflow-x-auto rounded-3xl border border-border bg-card p-4 text-sm text-primary-foreground shadow-sm">
           <code>{node.content?.[0]?.text || ''}</code>
         </pre>
       );
     case 'horizontalRule':
-      return <hr key={key} className="my-12 border-t border-slate-300 dark:border-slate-700" />;
+      return <hr key={key} className="my-12 border-t border-border" />;
     case 'hardBreak':
       return <br key={key} />;
     case 'image': {
@@ -148,7 +148,7 @@ function renderProseMirrorNode(node: ProseMirrorNode | undefined, key: string): 
               />
             </div>
             {title && (
-              <figcaption className="mt-4 text-sm text-slate-500 dark:text-slate-400 italic">
+              <figcaption className="mt-4 text-sm text-muted-foreground italic">
                 {title}
               </figcaption>
             )}
@@ -222,14 +222,14 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
   return (
     <>
       {/* Enhanced Sticky Progress Bar */}
-      <div className="sticky top-0 z-40 h-1.5 w-full overflow-hidden bg-white dark:bg-slate-950 shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50">
+      <div className="sticky top-0 z-40 h-1.5 w-full overflow-hidden bg-card shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 shadow-lg shadow-cyan-500/50 transition-all duration-300 ease-out"
+          className="h-full rounded-full bg-gradient-to-r from-primary via-primary to-primary shadow-lg shadow-cyan-500/50 transition-all duration-300 ease-out"
           style={{ width: `${progress}%` }}
         />
       </div>
 
-      <div className="w-full bg-white dark:bg-slate-950">
+      <div className="w-full bg-card">
         {/* Hero Section with Image */}
         {article.coverImage && (
           <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] overflow-hidden">
@@ -241,30 +241,30 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
               priority
             />
             {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
             
             {/* Header Content Overlay */}
             <div className="absolute inset-0 flex flex-col justify-end">
               <div className="max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12">
                 {/* Category and Date */}
                 <div className="flex flex-wrap items-center gap-3 mb-6">
-                  <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-400/40 backdrop-blur-sm">
-                    <span className="inline-block w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-                    <span className="text-sm font-semibold text-cyan-300">{article.category}</span>
+                  <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary/20 to-primary/20 border border-primary/40 backdrop-blur-sm">
+                    <span className="inline-block w-2 h-2 rounded-full bg-primary animate-pulse" />
+                    <span className="text-sm font-semibold text-primary">{article.category}</span>
                   </span>
                   {formattedDate && (
-                    <span className="text-sm text-slate-300">{formattedDate}</span>
+                    <span className="text-sm text-muted-foreground">{formattedDate}</span>
                   )}
                 </div>
 
                 {/* Title */}
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-4">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-primary-foreground leading-tight mb-4">
                   {article.title}
                 </h1>
 
                 {/* Excerpt */}
                 {article.excerpt && (
-                  <p className="max-w-2xl text-base sm:text-lg text-slate-100 leading-relaxed">
+                  <p className="max-w-2xl text-base sm:text-lg text-primary-foreground leading-relaxed">
                     {article.excerpt}
                   </p>
                 )}
@@ -278,22 +278,22 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
           <div className="mb-8 flex items-center gap-3 text-sm">
             <Link
               href="/news"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200/50 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-900/50 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border/50/50 bg-muted/50 text-muted-foreground hover:bg-muted dark:hover:bg-card transition-all duration-200"
             >
               <span>←</span>
               <span>بازگشت</span>
             </Link>
-            <span className="text-slate-400">/</span>
-            <span className="text-slate-600 dark:text-slate-400">{readingTime} دقیقه مطالعه</span>
+            <span className="text-muted-foreground">/</span>
+            <span className="text-muted-foreground">{readingTime} دقیقه مطالعه</span>
             <BookmarkButton type="news" itemId={article.id} showLabel className="ms-auto" />
           </div>
 
           {/* Article Meta */}
-          <div className="flex flex-wrap items-center justify-between gap-4 py-6 border-b border-slate-200/50 dark:border-slate-800/50 mb-12">
-            <div className="flex flex-wrap items-center gap-6 text-sm text-slate-600 dark:text-slate-400">
+          <div className="flex flex-wrap items-center justify-between gap-4 py-6 border-b border-border/50/50 mb-12">
+            <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
               {article.author && (
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center text-white font-bold text-xs">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary flex items-center justify-center text-primary-foreground font-bold text-xs">
                     {article.author.charAt(0)}
                   </div>
                   <span>{article.author}</span>
@@ -311,7 +311,7 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
                 {articleTags.slice(0, 3).map((tag) => (
                   <span
                     key={tag}
-                    className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-medium"
+                    className="px-3 py-1 rounded-full bg-muted text-muted-foreground text-xs font-medium"
                   >
                     #{tag}
                   </span>
@@ -322,30 +322,30 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
 
         <article className="mx-auto">
         {/* Content Wrapper with Magazine-style Styling */}
-        <div className="rounded-3xl border border-slate-200/50 dark:border-slate-800/50 bg-gradient-to-br from-white via-slate-50 to-white dark:from-slate-950/50 dark:via-slate-900/30 dark:to-slate-950/50 p-8 sm:p-10 md:p-12 shadow-xl dark:shadow-2xl dark:shadow-slate-900/50 mb-12">
+        <div className="rounded-3xl border border-border/50/50 bg-gradient-to-br from-card via-muted to-card/50/30/50 p-8 sm:p-10 md:p-12 shadow-xl dark:shadow-2xl dark:shadow-slate-900/50 mb-12">
           {/* Auto-detect and render content based on type */}
           {article.contentHtml ? (
             /* Pre-rendered HTML from markdown (RECOMMENDED) - Fastest load time */
             <div
-              className="prose prose-lg max-w-none space-y-6 text-right text-base md:text-lg leading-[1.9] text-slate-800 dark:text-slate-200 
-              [&_p]:text-slate-800 [&_p]:dark:text-slate-200 [&_p]:mb-7
-              [&_h1]:text-4xl [&_h1]:md:text-5xl [&_h1]:font-black [&_h1]:text-slate-900 [&_h1]:dark:text-slate-100 [&_h1]:mb-8 [&_h1]:mt-12 
-              [&_h2]:text-3xl [&_h2]:md:text-4xl [&_h2]:font-bold [&_h2]:text-slate-900 [&_h2]:dark:text-slate-100 [&_h2]:mb-7 [&_h2]:mt-10 [&_h2]:pt-6 [&_h2]:border-t [&_h2]:border-slate-200 [&_h2]:dark:border-slate-800
-              [&_h3]:text-2xl [&_h3]:md:text-3xl [&_h3]:font-bold [&_h3]:text-slate-900 [&_h3]:dark:text-slate-100 [&_h3]:mb-6 [&_h3]:mt-9
-              [&_h4]:text-xl [&_h4]:md:text-2xl [&_h4]:font-semibold [&_h4]:text-slate-900 [&_h4]:dark:text-slate-100 [&_h4]:mb-5 [&_h4]:mt-8
-              [&_strong]:font-bold [&_strong]:text-slate-900 [&_strong]:dark:text-slate-100
-              [&_em]:italic [&_em]:text-slate-700 [&_em]:dark:text-slate-300
-              [&_code]:bg-slate-900 [&_code]:dark:bg-slate-800 [&_code]:text-slate-100 [&_code]:px-2.5 [&_code]:py-1 [&_code]:rounded [&_code]:font-mono [&_code]:text-sm
-              [&_pre]:bg-slate-900 [&_pre]:text-slate-100 [&_pre]:p-6 [&_pre]:rounded-2xl [&_pre]:overflow-x-auto [&_pre]:my-8 [&_pre]:shadow-lg [&_pre]:border [&_pre]:border-slate-700
-              [&_blockquote]:border-r-4 [&_blockquote]:rtl:border-r-0 [&_blockquote]:rtl:border-l-4 [&_blockquote]:border-cyan-500 [&_blockquote]:bg-gradient-to-r [&_blockquote]:from-cyan-50/50 [&_blockquote]:to-blue-50/50 [&_blockquote]:dark:from-cyan-900/10 [&_blockquote]:dark:to-blue-900/10 [&_blockquote]:p-6 [&_blockquote]:rounded-2xl [&_blockquote]:italic [&_blockquote]:text-slate-700 [&_blockquote]:dark:text-slate-300 [&_blockquote]:shadow-sm [&_blockquote]:my-10
-              [&_ul]:space-y-3 [&_ul]:list-disc [&_ul]:list-inside [&_ul]:mr-2 [&_ul]:my-8 [&_ul]:text-slate-800 [&_ul]:dark:text-slate-200
-              [&_ol]:space-y-3 [&_ol]:list-decimal [&_ol]:list-inside [&_ol]:mr-2 [&_ol]:my-8 [&_ol]:text-slate-800 [&_ol]:dark:text-slate-200
-              [&_li]:leading-relaxed [&_li]:text-slate-700 [&_li]:dark:text-slate-300
-              [&_a]:text-cyan-600 [&_a]:dark:text-cyan-400 [&_a]:font-medium [&_a]:hover:underline [&_a]:transition
-              [&_hr]:my-12 [&_hr]:border-slate-200 [&_hr]:dark:border-slate-700
+              className="prose prose-lg max-w-none space-y-6 text-right text-base md:text-lg leading-[1.9] text-foreground 
+              [&_p]:text-foreground [&_p]: [&_p]:mb-7
+              [&_h1]:text-4xl [&_h1]:md:text-5xl [&_h1]:font-black [&_h1]:text-foreground [&_h1]: [&_h1]:mb-8 [&_h1]:mt-12 
+              [&_h2]:text-3xl [&_h2]:md:text-4xl [&_h2]:font-bold [&_h2]:text-foreground [&_h2]: [&_h2]:mb-7 [&_h2]:mt-10 [&_h2]:pt-6 [&_h2]:border-t [&_h2]:border-border [&_h2]:
+              [&_h3]:text-2xl [&_h3]:md:text-3xl [&_h3]:font-bold [&_h3]:text-foreground [&_h3]: [&_h3]:mb-6 [&_h3]:mt-9
+              [&_h4]:text-xl [&_h4]:md:text-2xl [&_h4]:font-semibold [&_h4]:text-foreground [&_h4]: [&_h4]:mb-5 [&_h4]:mt-8
+              [&_strong]:font-bold [&_strong]:text-foreground [&_strong]:
+              [&_em]:italic [&_em]:text-muted-foreground [&_em]:
+              [&_code]:bg-card [&_code]: [&_code]:text-primary-foreground [&_code]:px-2.5 [&_code]:py-1 [&_code]:rounded [&_code]:font-mono [&_code]:text-sm
+              [&_pre]:bg-card [&_pre]:text-primary-foreground [&_pre]:p-6 [&_pre]:rounded-2xl [&_pre]:overflow-x-auto [&_pre]:my-8 [&_pre]:shadow-lg [&_pre]:border [&_pre]:border-border
+              [&_blockquote]:border-r-4 [&_blockquote]:rtl:border-r-0 [&_blockquote]:rtl:border-l-4 [&_blockquote]:border-primary [&_blockquote]:bg-gradient-to-r [&_blockquote]:from-primary/50 [&_blockquote]:to-primary/50 [&_blockquote]:/10 [&_blockquote]:/10 [&_blockquote]:p-6 [&_blockquote]:rounded-2xl [&_blockquote]:italic [&_blockquote]:text-muted-foreground [&_blockquote]: [&_blockquote]:shadow-sm [&_blockquote]:my-10
+              [&_ul]:space-y-3 [&_ul]:list-disc [&_ul]:list-inside [&_ul]:mr-2 [&_ul]:my-8 [&_ul]:text-foreground [&_ul]:
+              [&_ol]:space-y-3 [&_ol]:list-decimal [&_ol]:list-inside [&_ol]:mr-2 [&_ol]:my-8 [&_ol]:text-foreground [&_ol]:
+              [&_li]:leading-relaxed [&_li]:text-muted-foreground [&_li]:
+              [&_a]:text-primary [&_a]: [&_a]:font-medium [&_a]:hover:underline [&_a]:transition
+              [&_hr]:my-12 [&_hr]:border-border [&_hr]:
               [&_table]:w-full [&_table]:my-8 [&_table]:border-collapse [&_table]:text-sm
-              [&_th]:bg-slate-100 [&_th]:dark:bg-slate-800 [&_th]:p-3 [&_th]:text-right [&_th]:font-semibold [&_th]:border [&_th]:border-slate-200 [&_th]:dark:border-slate-700
-              [&_td]:p-3 [&_td]:border [&_td]:border-slate-200 [&_td]:dark:border-slate-700"
+              [&_th]:bg-muted [&_th]: [&_th]:p-3 [&_th]:text-right [&_th]:font-semibold [&_th]:border [&_th]:border-border [&_th]:
+              [&_td]:p-3 [&_td]:border [&_td]:border-border [&_td]:"
               dangerouslySetInnerHTML={{ __html: contentToDisplay }}
             />
           ) : article.contentType === 'MARKDOWN' ? (
@@ -362,34 +362,34 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
             />
           ) : isProseMirrorDoc(article.content) ? (
             /* ProseMirror JSON format */
-            <div className="space-y-6 text-right text-base md:text-lg leading-[1.85] text-slate-800 dark:text-slate-200">
+            <div className="space-y-6 text-right text-base md:text-lg leading-[1.85] text-foreground">
               {renderProseMirrorContent(article.content)}
             </div>
           ) : (
             /* Raw HTML content */
             <div
-              className="space-y-6 text-right text-base md:text-lg leading-[1.85] text-slate-800 dark:text-slate-200 [&_p]:text-slate-800 [&_p]:dark:text-slate-200 [&_h1]:text-4xl [&_h1]:md:text-5xl [&_h1]:font-black [&_h1]:text-slate-900 [&_h1]:dark:text-slate-100 [&_h2]:text-3xl [&_h2]:md:text-4xl [&_h2]:font-bold [&_h2]:text-slate-900 [&_h2]:dark:text-slate-100 [&_h3]:text-2xl [&_h3]:md:text-3xl [&_h3]:font-bold [&_h3]:text-slate-900 [&_h3]:dark:text-slate-100 [&_strong]:font-bold [&_em]:italic [&_code]:bg-slate-100 [&_code]:dark:bg-slate-800 [&_code]:px-2 [&_code]:py-1 [&_code]:rounded [&_code]:font-mono [&_code]:text-sm [&_blockquote]:border-r-4 [&_blockquote]:rtl:border-r-0 [&_blockquote]:rtl:border-l-4 [&_blockquote]:border-slate-400/90 [&_blockquote]:bg-slate-50 [&_blockquote]:dark:bg-slate-950/70 [&_blockquote]:p-6 [&_blockquote]:rounded-3xl [&_blockquote]:italic [&_blockquote]:text-slate-700 [&_blockquote]:dark:text-slate-200 [&_blockquote]:shadow-sm [&_ul]:space-y-3 [&_ul]:list-disc [&_ul]:list-inside [&_ul]:mr-6 [&_ol]:space-y-3 [&_ol]:list-decimal [&_ol]:list-inside [&_ol]:mr-6 [&_li]:leading-relaxed [&_a]:text-blue-600 [&_a]:dark:text-blue-400 [&_a]:hover:underline"
+              className="space-y-6 text-right text-base md:text-lg leading-[1.85] text-foreground [&_p]:text-foreground [&_p]: [&_h1]:text-4xl [&_h1]:md:text-5xl [&_h1]:font-black [&_h1]:text-foreground [&_h1]: [&_h2]:text-3xl [&_h2]:md:text-4xl [&_h2]:font-bold [&_h2]:text-foreground [&_h2]: [&_h3]:text-2xl [&_h3]:md:text-3xl [&_h3]:font-bold [&_h3]:text-foreground [&_h3]: [&_strong]:font-bold [&_em]:italic [&_code]:bg-muted [&_code]: [&_code]:px-2 [&_code]:py-1 [&_code]:rounded [&_code]:font-mono [&_code]:text-sm [&_blockquote]:border-r-4 [&_blockquote]:rtl:border-r-0 [&_blockquote]:rtl:border-l-4 [&_blockquote]:border-border/90 [&_blockquote]:bg-muted [&_blockquote]:/70 [&_blockquote]:p-6 [&_blockquote]:rounded-3xl [&_blockquote]:italic [&_blockquote]:text-muted-foreground [&_blockquote]: [&_blockquote]:shadow-sm [&_ul]:space-y-3 [&_ul]:list-disc [&_ul]:list-inside [&_ul]:mr-6 [&_ol]:space-y-3 [&_ol]:list-decimal [&_ol]:list-inside [&_ol]:mr-6 [&_li]:leading-relaxed [&_a]:text-primary [&_a]: [&_a]:hover:underline"
               dangerouslySetInnerHTML={{ __html: article.content }}
             />
           )}
         </div>
 
         {/* Article Meta Footer */}
-        <div className="border-t border-slate-200/50 dark:border-slate-800/50 pt-8">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 text-sm text-slate-600 dark:text-slate-400">
+        <div className="border-t border-border/50/50 pt-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 text-sm text-muted-foreground">
             <div className="flex flex-col gap-2">
               {article.author && (
-                <p className="text-slate-700 dark:text-slate-300 font-medium">
-                  <span className="text-slate-500 dark:text-slate-400">نوشتار توسط:</span> {article.author}
+                <p className="text-muted-foreground font-medium">
+                  <span className="text-muted-foreground">نوشتار توسط:</span> {article.author}
                 </p>
               )}
               {article.publishedAt && (
-                <time dateTime={new Date(article.publishedAt).toISOString()} className="text-slate-600 dark:text-slate-400">
+                <time dateTime={new Date(article.publishedAt).toISOString()} className="text-muted-foreground">
                   {format(new Date(article.publishedAt), 'd MMMM yyyy', { locale: faIR })}
                 </time>
               )}
             </div>
-            <div className="flex items-center gap-4 text-xs font-medium text-slate-500 dark:text-slate-500">
+            <div className="flex items-center gap-4 text-xs font-medium text-muted-foreground">
               <span>~{readingTime} دقیقه مطالعه</span>
               {article.views !== undefined && (
                 <span>{article.views.toLocaleString('fa-IR')} بازدید</span>

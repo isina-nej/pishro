@@ -28,8 +28,8 @@ const AboutIt = () => {
   return (
     <div className="container-xl mb-20 -mt-24 z-30 relative">
       <div className="flex items-center mb-8">
-        <StarIcon className="size-8 text-white ml-3 mb-2" />
-        <h4 className="font-bold text-2xl text-gray-50">
+        <StarIcon className="size-8 text-primary-foreground ml-3 mb-2" />
+        <h4 className="font-bold text-2xl text-primary-foreground">
           آنچه برای شروع نیاز دارید
         </h4>
       </div>
@@ -85,7 +85,7 @@ const HoverCard = ({ title, description, onHover }: HoverCardProps) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className={cn(
-        "rounded-xl p-6 h-[300px] text-white transition-all duration-300 ease-in-out shadow-lg cursor-pointer group relative overflow-hidden",
+        "rounded-xl p-6 h-[300px] text-primary-foreground transition-all duration-300 ease-in-out shadow-lg cursor-pointer group relative overflow-hidden",
         `bg-gradient-to-br from-[#214254] to-[#3a6073]`
       )}
     >
@@ -94,7 +94,7 @@ const HoverCard = ({ title, description, onHover }: HoverCardProps) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: hovered ? 0.45 : 0 }}
         transition={{ duration: 0.3 }}
-        className="absolute inset-0 bg-black z-10"
+        className="absolute inset-0 bg-background z-10"
       />
 
       {/* Title */}
@@ -130,7 +130,7 @@ const HoverCard = ({ title, description, onHover }: HoverCardProps) => {
         transition={{ duration: 0.4, delay: 0.2 }}
         className="absolute bottom-6 left-0 right-0 z-30 flex justify-center"
       >
-        <motion.button className="px-5 py-2 text-sm md:text-base rounded-full border border-white/70 bg-transparent text-white transition-all duration-300 hover:bg-red-500 hover:border-red-500 hover:text-white">
+        <motion.button className="px-5 py-2 text-sm md:text-base rounded-full border border-border/70 bg-transparent text-primary-foreground transition-all duration-300 hover:bg-destructive hover:border-destructive hover:text-primary-foreground">
           مطالعه بیشتر
         </motion.button>
       </motion.div>

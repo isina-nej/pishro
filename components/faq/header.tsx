@@ -1,7 +1,7 @@
 const Header = () => {
   return (
     <div
-      className="relative h-[320px] bg-no-repeat bg-cover bg-center flex justify-center text-white"
+      className="relative h-[320px] bg-no-repeat bg-cover bg-center flex justify-center text-primary-foreground"
       style={{ backgroundImage: `url('/images/faq/header.png')` }}
     >
       {/* Overlay */}
@@ -14,7 +14,7 @@ const Header = () => {
 
       {/* Content */}
       <div className="relative w-full mt-[130px] mx-[90px] z-20">
-        <h1 className="text-2xl text-black dark:text-textPrimary text-center md:text-[28px] font-bold">
+        <h1 className="text-2xl text-foreground dark:text-textPrimary text-center md:text-[28px] font-bold">
           چه ابهامی دارید؟
         </h1>
       </div>

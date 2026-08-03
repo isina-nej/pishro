@@ -56,8 +56,8 @@ const NavbarPopover = ({ item }: NavbarPopoverProps) => {
           "py-5 pr-3 pl-7 mt-4 min-w-[80px] w-fit -mr-0",
           "rounded-lg z-[200] border shadow-2xl",
           isDark
-            ? "text-gray-100 border-white/15 shadow-black/20 ring-1 ring-white/10"
-            : "text-gray-900 dark:text-textPrimary border-white/35 shadow-black/10 ring-1 ring-white/20",
+            ? "text-primary-foreground border-border/15 shadow-black/20 ring-1 ring-white/10"
+            : "text-foreground dark:text-textPrimary border-border/35 shadow-black/10 ring-1 ring-white/20",
           // Override zoom animations that break backdrop-filter - use opacity only
           "!transform-none data-[state=closed]:!zoom-out-95 data-[state=open]:!zoom-in-95"
         )}

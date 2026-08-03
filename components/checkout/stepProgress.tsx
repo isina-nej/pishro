@@ -17,10 +17,10 @@ const StepProgress = ({ currentStep }: StepProgressProps) => {
   const currentIndex = steps.findIndex((step) => step.id === currentStep);
 
   return (
-    <div className="w-full bg-white dark:bg-cardBg rounded-xl shadow-md p-6 mb-8">
+    <div className="w-full bg-card dark:bg-cardBg rounded-xl shadow-md p-6 mb-8">
       <div className="flex items-center justify-between relative">
         {/* Progress Line */}
-        <div className="absolute top-6 right-0 left-0 h-1 bg-gray-200 dark:bg-darkBgHidden -z-10">
+        <div className="absolute top-6 right-0 left-0 h-1 bg-muted dark:bg-darkBgHidden -z-10">
           <motion.div
             className="h-full bg-gradient-to-l from-myPrimary to-myGolden"
             initial={{ width: "0%" }}
@@ -48,7 +48,7 @@ const StepProgress = ({ currentStep }: StepProgressProps) => {
                     ? "bg-gradient-to-br from-myPrimary to-myGolden shadow-lg"
                     : isCompleted
                     ? "bg-gradient-to-br from-mySecondary to-myBlue"
-                    : "bg-gray-200 dark:bg-darkBgHidden"
+                    : "bg-muted dark:bg-darkBgHidden"
                 }`}
                 initial={{ scale: 0.8 }}
                 animate={{ scale: isActive ? 1.1 : 1 }}
@@ -56,7 +56,7 @@ const StepProgress = ({ currentStep }: StepProgressProps) => {
               >
                 <Icon
                   className={`w-6 h-6 ${
-                    isActive || isCompleted ? "text-white" : "text-gray-400 dark:text-textSecondary"
+                    isActive || isCompleted ? "text-primary-foreground" : "text-muted-foreground dark:text-textSecondary"
                   }`}
                 />
               </motion.div>
@@ -68,7 +68,7 @@ const StepProgress = ({ currentStep }: StepProgressProps) => {
                     ? "text-myPrimary font-bold"
                     : isCompleted
                     ? "text-mySecondary"
-                    : "text-gray-400 dark:text-textSecondary"
+                    : "text-muted-foreground dark:text-textSecondary"
                 }`}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}

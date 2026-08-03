@@ -10,11 +10,11 @@ interface BookGridProps {
 export const BookGrid = ({ books }: BookGridProps) => {
   if (!books.length) {
     return (
-      <div className="mt-16 flex flex-col items-center justify-center gap-3 rounded-3xl border border-dashed border-slate-300 bg-slate-50 py-16 text-center">
-        <h4 className="text-lg font-semibold text-slate-700 dark:text-textSecondary">
+      <div className="mt-16 flex flex-col items-center justify-center gap-3 rounded-3xl border border-dashed border-border bg-muted py-16 text-center">
+        <h4 className="text-lg font-semibold text-muted-foreground dark:text-textSecondary">
           کتابی با این مشخصات پیدا نکردیم
         </h4>
-        <p className="max-w-md text-sm text-slate-500">
+        <p className="max-w-md text-sm text-muted-foreground">
           فیلترهای فعال را تغییر دهید یا دسته‌بندی دیگری را انتخاب کنید. ما هر
           هفته کتاب‌های جدیدی به کتابخانه اضافه می‌کنیم.
         </p>

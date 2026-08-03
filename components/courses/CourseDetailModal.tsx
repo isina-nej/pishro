@@ -150,9 +150,9 @@ export default function CourseDetailModal({ course, trigger }: Props) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="max-w-4xl w-full sm:w-[95vw] max-h-screen sm:max-h-[90vh] overflow-y-auto p-0 bg-white text-slate-900 dark:bg-gray-950 dark:text-textPrimary rounded-none sm:rounded-lg flex flex-col">
+      <DialogContent className="max-w-4xl w-full sm:w-[95vw] max-h-screen sm:max-h-[90vh] overflow-y-auto p-0 bg-card text-foreground dark:text-textPrimary rounded-none sm:rounded-lg flex flex-col">
         {/* Header with Video Player */}
-        <div className="relative w-full h-64 sm:h-80 bg-black flex items-center justify-center overflow-hidden flex-shrink-0 group">
+        <div className="relative w-full h-64 sm:h-80 bg-background flex items-center justify-center overflow-hidden flex-shrink-0 group">
           {/* Video or Image */}
           {course.introVideoUrl ? (
             <video
@@ -179,14 +179,14 @@ export default function CourseDetailModal({ course, trigger }: Props) {
           )}
 
           {/* Title Overlay - Bottom of Video */}
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/70 to-transparent pt-8 pb-4 px-4 sm:px-6">
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background/70 to-transparent pt-8 pb-4 px-4 sm:px-6">
             <div className="flex flex-col items-start gap-3">
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-white line-clamp-2">
+                <h1 className="text-xl sm:text-2xl font-bold text-primary-foreground line-clamp-2">
                   {course.subject}
                 </h1>
                 {course.category && (
-                  <span className="inline-block mt-2 rounded-full border border-white/20 bg-white/15 px-3 py-1 text-xs sm:text-lg font-bold text-white backdrop-blur">
+                  <span className="inline-block mt-2 rounded-full border border-border/20 bg-card/15 px-3 py-1 text-xs sm:text-lg font-bold text-primary-foreground backdrop-blur">
                     {course.category.title}
                   </span>
                 )}
@@ -196,8 +196,8 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                 disabled={isInCart}
                 className={`inline-flex items-center justify-center gap-5 px-2.5 py-15 rounded-lg font-sbold transition text-sm whitespace-nowrap ${
                   isInCart
-                    ? "bg-gray-600 text-white cursor-not-allowed"
-                    : "bg-mySecondary text-white hover:opacity-90"
+                    ? "bg-accent text-primary-foreground cursor-not-allowed"
+                    : "bg-mySecondary text-primary-foreground hover:opacity-90"
                 }`}
               >
                 <ShoppingCart size={40} className="sm:w-55 sm:h-55" />
@@ -215,8 +215,8 @@ export default function CourseDetailModal({ course, trigger }: Props) {
               title="پسندیدم"
               className={`p-2 sm:p-2.5 rounded-lg font-medium transition flex items-center justify-center ${
                 liked === "LIKE"
-                  ? "bg-blue-600 text-white"
-                  : "bg-black/20 text-white hover:bg-white/20 dark:bg-cardBg/20"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-background/20 text-primary-foreground hover:bg-card/20 dark:bg-cardBg/20"
               }`}
             >
               <ThumbsUp size={18} />
@@ -229,8 +229,8 @@ export default function CourseDetailModal({ course, trigger }: Props) {
               title="نپسندیدم"
               className={`p-2 sm:p-2.5 rounded-lg font-medium transition flex items-center justify-center ${
                 liked === "DISLIKE"
-                  ? "bg-red-600 text-white"
-                  : "bg-black/20 text-white hover:bg-white/20 dark:bg-cardBg/20"
+                  ? "bg-destructive text-primary-foreground"
+                  : "bg-background/20 text-primary-foreground hover:bg-card/20 dark:bg-cardBg/20"
               }`}
             >
               <ThumbsDown size={18} />
@@ -240,14 +240,14 @@ export default function CourseDetailModal({ course, trigger }: Props) {
             <BookmarkButton
               type="course"
               itemId={course.id}
-              className="size-9 rounded-lg border-0 bg-black/20 text-white hover:bg-white/20 dark:bg-cardBg/20"
+              className="size-9 rounded-lg border-0 bg-background/20 text-primary-foreground hover:bg-card/20 dark:bg-cardBg/20"
             />
 
             {/* Share Button */}
             <button
               onClick={handleShare}
               title="اشتراک"
-              className="p-2 sm:p-2.5 rounded-lg font-medium bg-black/20 text-white hover:bg-white/20 dark:bg-cardBg/20 transition flex items-center justify-center"
+              className="p-2 sm:p-2.5 rounded-lg font-medium bg-background/20 text-primary-foreground hover:bg-card/20 dark:bg-cardBg/20 transition flex items-center justify-center"
             >
               <Share2 size={18} />
             </button>
@@ -255,7 +255,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
 
           {/* Discount Badge */}
           {course.discountPercent && (
-            <div className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+            <div className="absolute top-4 left-4 bg-destructive text-primary-foreground px-3 py-1 rounded-full text-sm font-bold">
               {course.discountPercent}% تخفیف
             </div>
           )}
@@ -268,25 +268,25 @@ export default function CourseDetailModal({ course, trigger }: Props) {
             {course.rating && (
               <div className="flex items-center gap-2 mb-3">
                 <RatingStars rating={course.rating} />
-                <span className="text-xs sm:text-sm text-slate-500 dark:text-textSecondary">
+                <span className="text-xs sm:text-sm text-muted-foreground dark:text-textSecondary">
                   ({course.rating.toFixed(1)})
                 </span>
               </div>
             )}
 
             {course.description && (
-              <p className="text-slate-600 dark:text-textSecondary text-sm sm:text-base">{course.description}</p>
+              <p className="text-muted-foreground dark:text-textSecondary text-sm sm:text-base">{course.description}</p>
             )}
           </div>
 
           {/* Course Stats Grid */}
-          {/* <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 mb-6 sm:mb-8 pb-6 sm:pb-8 border-b border-gray-800">
+          {/* <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 mb-6 sm:mb-8 pb-6 sm:pb-8 border-b border-border">
             {course.time && (
               <div className="flex items-center gap-2 sm:gap-3">
                 <Clock size={18} className="text-mySecondary flex-shrink-0" />
                 <div className="min-w-0">
-                  <p className="text-xs text-gray-500 dark:text-textSecondary">مدت دوره</p>
-                  <p className="font-bold text-sm sm:text-base text-white truncate">{course.time}</p>
+                  <p className="text-xs text-muted-foreground dark:text-textSecondary">مدت دوره</p>
+                  <p className="font-bold text-sm sm:text-base text-primary-foreground truncate">{course.time}</p>
                 </div>
               </div>
             )}
@@ -294,8 +294,8 @@ export default function CourseDetailModal({ course, trigger }: Props) {
               <div className="flex items-center gap-2 sm:gap-3">
                 <Users size={18} className="text-mySecondary flex-shrink-0" />
                 <div className="min-w-0">
-                  <p className="text-xs text-gray-500 dark:text-textSecondary">دانشجویان</p>
-                  <p className="font-bold text-sm sm:text-base text-white truncate">
+                  <p className="text-xs text-muted-foreground dark:text-textSecondary">دانشجویان</p>
+                  <p className="font-bold text-sm sm:text-base text-primary-foreground truncate">
                     {course.students.toLocaleString("fa-IR")}
                   </p>
                 </div>
@@ -305,8 +305,8 @@ export default function CourseDetailModal({ course, trigger }: Props) {
               <div className="flex items-center gap-2 sm:gap-3">
                 <Video size={18} className="text-mySecondary flex-shrink-0" />
                 <div className="min-w-0">
-                  <p className="text-xs text-gray-500 dark:text-textSecondary">تعداد ویدیو</p>
-                  <p className="font-bold text-sm sm:text-base text-white">{course.videosCount}</p>
+                  <p className="text-xs text-muted-foreground dark:text-textSecondary">تعداد ویدیو</p>
+                  <p className="font-bold text-sm sm:text-base text-primary-foreground">{course.videosCount}</p>
                 </div>
               </div>
             )}
@@ -314,8 +314,8 @@ export default function CourseDetailModal({ course, trigger }: Props) {
               <div className="flex items-center gap-2 sm:gap-3">
                 <span className="text-lg sm:text-2xl flex-shrink-0">👨‍🏫</span>
                 <div className="min-w-0">
-                  <p className="text-xs text-gray-500 dark:text-textSecondary">مدرس</p>
-                  <p className="font-bold text-xs sm:text-sm text-white truncate">{course.instructor}</p>
+                  <p className="text-xs text-muted-foreground dark:text-textSecondary">مدرس</p>
+                  <p className="font-bold text-xs sm:text-sm text-primary-foreground truncate">{course.instructor}</p>
                 </div>
               </div>
             )}
@@ -323,7 +323,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
 
           {/* Tabs */}
           <div className="mb-6 sm:mb-8">
-            <div className="flex gap-3 sm:gap-4 border-b border-slate-200 dark:border-gray-800 mb-4 sm:mb-6 overflow-x-auto">
+            <div className="flex gap-3 sm:gap-4 border-b border-border mb-4 sm:mb-6 overflow-x-auto">
               {["about", "lessons", "reviews"].map((tab) => (
                 <button
                   key={tab}
@@ -331,7 +331,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                   className={`pb-3 font-bold border-b-2 transition text-sm sm:text-base whitespace-nowrap ${
                     activeTab === tab
                       ? "border-mySecondary text-mySecondary"
-                      : "border-transparent text-slate-500 dark:text-textSecondary hover:text-slate-800 dark:hover:text-gray-300"
+                      : "border-transparent text-muted-foreground dark:text-textSecondary hover:text-foreground dark:hover:text-muted-foreground"
                   }`}
                 >
                   {tab === "about" && "درباره"}
@@ -347,8 +347,8 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                 <div className="space-y-3 sm:space-y-4">
                   {course.description && (
                     <div>
-                      <h3 className="font-bold text-base sm:text-lg mb-2 text-slate-900 dark:text-white">توضیحات</h3>
-                      <p className="text-slate-600 dark:text-textSecondary leading-relaxed text-sm sm:text-base">
+                      <h3 className="font-bold text-base sm:text-lg mb-2 text-foreground">توضیحات</h3>
+                      <p className="text-muted-foreground dark:text-textSecondary leading-relaxed text-sm sm:text-base">
                         {course.description}
                       </p>
                     </div>
@@ -356,12 +356,12 @@ export default function CourseDetailModal({ course, trigger }: Props) {
 
                   {course.learningGoals && course.learningGoals.length > 0 && (
                     <div>
-                      <h3 className="font-bold text-base sm:text-lg mb-2 text-slate-900 dark:text-white">اهداف یادگیری</h3>
+                      <h3 className="font-bold text-base sm:text-lg mb-2 text-foreground">اهداف یادگیری</h3>
                       <ul className="space-y-2">
                         {course.learningGoals.map((goal, idx) => (
                           <li key={idx} className="flex items-start gap-2">
                             <span className="text-mySecondary mt-1 flex-shrink-0">✓</span>
-                            <span className="text-slate-600 dark:text-textSecondary text-sm sm:text-base">{goal}</span>
+                            <span className="text-muted-foreground dark:text-textSecondary text-sm sm:text-base">{goal}</span>
                           </li>
                         ))}
                       </ul>
@@ -372,10 +372,10 @@ export default function CourseDetailModal({ course, trigger }: Props) {
 
               {activeTab === "lessons" && (
                 <div className="space-y-2">
-                  <p className="text-slate-600 dark:text-textSecondary text-sm sm:text-base">
+                  <p className="text-muted-foreground dark:text-textSecondary text-sm sm:text-base">
                     این دوره دارای {course.videosCount} درس است.
                   </p>
-                  <p className="text-xs sm:text-sm text-slate-500 dark:text-textSecondary">
+                  <p className="text-xs sm:text-sm text-muted-foreground dark:text-textSecondary">
                     برای مشاهده درس‌ها صفحه کامل دوره را باز کنید.
                   </p>
                 </div>
@@ -386,14 +386,14 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                   {course.rating && (
                     <div className="flex items-center gap-4">
                       <div>
-                        <div className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">
+                        <div className="text-3xl sm:text-4xl font-bold text-foreground">
                           {course.rating.toFixed(1)}
                         </div>
                         <RatingStars rating={course.rating} />
                       </div>
                     </div>
                   )}
-                  <p className="text-slate-600 dark:text-textSecondary text-xs sm:text-sm">
+                  <p className="text-muted-foreground dark:text-textSecondary text-xs sm:text-sm">
                     برای مشاهده تمام نظرات کاربران صفحه کامل دوره را باز کنید.
                   </p>
                 </div>
@@ -402,14 +402,14 @@ export default function CourseDetailModal({ course, trigger }: Props) {
           </div>
 
           {/* Price & Action Buttons */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 pt-6 sm:pt-8 border-t border-slate-200 dark:border-gray-800">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 pt-6 sm:pt-8 border-t border-border">
             <div className="flex-1">
               <div className="flex items-baseline gap-2">
                 <span className="text-2xl sm:text-3xl font-bold text-mySecondary">
                   {freeCourse ? "رایگان" : formatPrice(finalPrice)}
                 </span>
                 {course.discountPercent && (
-                  <span className="text-base sm:text-lg text-gray-600 dark:text-textSecondary line-through">
+                  <span className="text-base sm:text-lg text-muted-foreground dark:text-textSecondary line-through">
                     {formatPrice(course.price)}
                   </span>
                 )}
@@ -420,8 +420,8 @@ export default function CourseDetailModal({ course, trigger }: Props) {
               onClick={() => setIsFavorite(!isFavorite)}
               className={`p-3 rounded-lg transition flex-shrink-0 ${
                 isFavorite
-                  ? "bg-red-500 text-white"
-                  : "bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-gray-800 dark:text-textSecondary dark:hover:bg-gray-700 dark:hover:text-gray-300"
+                  ? "bg-destructive text-primary-foreground"
+                  : "bg-muted text-muted-foreground hover:bg-muted hover:text-foreground dark:text-textSecondary dark:hover:bg-accent dark:hover:text-muted-foreground"
               }`}
             >
               <Heart size={20} fill={isFavorite ? "currentColor" : "none"} />

@@ -22,14 +22,14 @@ export const FeaturedRow = ({ books }: FeaturedRowProps) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <h3 className="text-lg font-bold text-slate-900">
+          <h3 className="text-lg font-bold text-foreground">
             🌟 پیشنهادهای ویژه کتابخانه
           </h3>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-muted-foreground">
             کتاب‌هایی که بیشترین امتیاز و بازدید را این هفته داشته‌اند
           </p>
         </motion.div>
-        <Button variant="ghost" className="text-slate-600 hover:text-slate-900">
+        <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
           مشاهده همه پیشنهادها
         </Button>
       </div>

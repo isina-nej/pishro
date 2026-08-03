@@ -83,8 +83,8 @@ export default function CoursesGridClient({ courses }: Props) {
 
         {/* Title & Description */}
         <div className="flex-1 flex flex-col items-center">
-          <span className="mb-3 rounded-full border border-[#214254]/10 bg-white/55 px-4 py-2 text-[11px] font-bold text-[#214254] backdrop-blur-xl dark:border-white/10 dark:bg-white/5 dark:text-cyan-100">مسیر یادگیری شما</span>
-          <h2 className="flex items-center justify-center gap-2 text-2xl font-black tracking-tight text-[#112b3a] dark:text-white sm:gap-2.5 sm:text-3xl md:gap-3 md:text-4xl lg:text-5xl">
+          <span className="mb-3 rounded-full border border-[#214254]/10 bg-card/55 px-4 py-2 text-[11px] font-bold text-[#214254] backdrop-blur-xl/10/5">مسیر یادگیری شما</span>
+          <h2 className="flex items-center justify-center gap-2 text-2xl font-black tracking-tight text-[#112b3a] sm:gap-2.5 sm:text-3xl md:gap-3 md:text-4xl lg:text-5xl">
             <span>دوره‌ها</span>
             <div className="relative w-12 h-6 sm:w-14 sm:h-7 md:w-16 md:h-8">
               <Image
@@ -104,7 +104,7 @@ export default function CoursesGridClient({ courses }: Props) {
         <div className="relative flex items-center justify-center lg:justify-end gap-2 sm:gap-3 mt-3 lg:mt-2 w-full lg:w-[340px] px-4 lg:px-0">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-1 rounded-full border border-white/60 bg-white/60 px-4 py-2 text-xs font-bold text-[#112b3a] shadow-sm backdrop-blur-xl transition hover:bg-white/80 hover:shadow-md dark:border-white/10 dark:bg-white/5 dark:text-white sm:text-sm">
+              <button className="flex items-center gap-1 rounded-full border border-border/60 bg-card/60 px-4 py-2 text-xs font-bold text-[#112b3a] shadow-sm backdrop-blur-xl transition hover:bg-card/80 hover:shadow-md/10/5 sm:text-sm">
                 <ChevronDown size={16} />
                 <span>{selectedCategory.label}</span>
               </button>
@@ -112,13 +112,13 @@ export default function CoursesGridClient({ courses }: Props) {
 
             <DropdownMenuContent
               align="end"
-              className="w-40 bg-white dark:bg-cardBg border border-gray-200 dark:border-borderColor rounded-lg shadow-lg"
+              className="w-40 bg-card dark:bg-cardBg border border-border dark:border-borderColor rounded-lg shadow-lg"
             >
               {categories.map((cat) => (
                 <DropdownMenuItem
                   key={cat.href}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`cursor-pointer rtl text-right text-xs px-2 py-2 hover:bg-gray-100 dark:hover:bg-cardBg dark:bg-cardBg dark:hover:bg-cardBg dark:bg-cardBg dark:hover:bg-cardBg dark:bg-cardBg dark:bg-cardBg ${
+                  className={`cursor-pointer rtl text-right text-xs px-2 py-2 hover:bg-muted dark:hover:bg-cardBg dark:bg-cardBg dark:hover:bg-cardBg dark:bg-cardBg dark:hover:bg-cardBg dark:bg-cardBg dark:bg-cardBg ${
                     cat.label === selectedCategory.label
                       ? "font-bold text-mySecondary"
                       : ""
@@ -132,7 +132,7 @@ export default function CoursesGridClient({ courses }: Props) {
 
           <Link
             href={selectedCategory.href}
-            className="flex items-center gap-1 whitespace-nowrap rounded-full bg-[#112b3a] px-4 py-2 text-xs font-bold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-[#214254] sm:text-sm"
+            className="flex items-center gap-1 whitespace-nowrap rounded-full bg-[#112b3a] px-4 py-2 text-xs font-bold text-primary-foreground shadow-lg transition hover:-translate-y-0.5 hover:bg-[#214254] sm:text-sm"
           >
             <Folder size={16} />
             <span>صفحه {selectedCategory.label}</span>
@@ -145,10 +145,10 @@ export default function CoursesGridClient({ courses }: Props) {
         <div className="mt-6 sm:mt-8 md:mt-12 lg:mt-16 w-full flex flex-col items-center justify-center py-16 sm:py-20 md:py-24">
           <div className="text-center">
             <div className="text-6xl sm:text-7xl mb-4">📚</div>
-            <h3 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-textPrimary mb-2">
+            <h3 className="text-xl sm:text-2xl font-bold text-foreground dark:text-textPrimary mb-2">
               دوره‌ای در این دسته‌بندی یافت نشد
             </h3>
-            <p className="text-gray-600 dark:text-textSecondary text-sm sm:text-base">
+            <p className="text-muted-foreground dark:text-textSecondary text-sm sm:text-base">
               لطفاً دسته‌بندی دیگری را انتخاب کنید
             </p>
           </div>
@@ -160,10 +160,10 @@ export default function CoursesGridClient({ courses }: Props) {
         <div className="mt-6 sm:mt-8 md:mt-12 lg:mt-16 w-full flex flex-col items-center justify-center py-16 sm:py-20 md:py-24">
           <div className="text-center">
             <div className="text-6xl sm:text-7xl mb-4">🎓</div>
-            <h3 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-textPrimary mb-2">
+            <h3 className="text-xl sm:text-2xl font-bold text-foreground dark:text-textPrimary mb-2">
               به زودی دوره‌های جدید اضافه می‌شود
             </h3>
-            <p className="text-gray-600 dark:text-textSecondary text-sm sm:text-base">
+            <p className="text-muted-foreground dark:text-textSecondary text-sm sm:text-base">
               در حال حاضر دوره‌ای برای نمایش وجود ندارد
             </p>
           </div>

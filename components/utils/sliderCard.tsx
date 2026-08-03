@@ -15,7 +15,7 @@ const SliderCard = ({ item }: SliderCardProps) => {
     <div
       className={`
         h-[200px] px-6 py-12 rounded-[8px] transition-all duration-500
-      bg-[#212121] text-white
+      bg-[#212121] text-primary-foreground
       `}
     >
       <div className="flex justify-between items-center ltr">
@@ -33,7 +33,7 @@ const SliderCard = ({ item }: SliderCardProps) => {
       <div>
         <Link
           href={item.link}
-          className="h-10 w-full rounded-[3px] bg-[#0f0f0f] text-white flex items-center justify-center mt-5 text-sm font-semibold"
+          className="h-10 w-full rounded-[3px] bg-[#0f0f0f] text-primary-foreground flex items-center justify-center mt-5 text-sm font-semibold"
         >
           Watch Market
         </Link>

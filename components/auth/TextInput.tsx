@@ -23,13 +23,13 @@ export const TextInput = ({
         id={id}
         placeholder={placeholder}
         className={cn(
-          "mt-1 pr-10 block w-full rounded-none border-0 border-b border-black focus-visible:ring-0 focus-visible:bg-gray-100 dark:bg-cardBg",
-          error && "border-red-500"
+          "mt-1 pr-10 block w-full rounded-none border-0 border-b border-black focus-visible:ring-0 focus-visible:bg-muted dark:bg-cardBg",
+          error && "border-destructive"
         )}
         {...props}
       />
       {icon && <div className="absolute bottom-2 right-2">{icon}</div>}
     </div>
-    {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+    {error && <p className="text-destructive text-sm mt-1">{error}</p>}
   </div>
 );

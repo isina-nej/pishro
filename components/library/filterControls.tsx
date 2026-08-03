@@ -46,11 +46,11 @@ export const FilterControls = ({
   disabled = false,
 }: FilterControlsProps) => {
   return (
-    <div className="flex flex-col gap-6 border-b border-slate-200 pb-8">
+    <div className="flex flex-col gap-6 border-b border-border pb-8">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-col gap-3 md:flex-row md:items-center">
-          <h2 className="text-xl font-bold text-slate-900">کتاب‌ها</h2>
-          <p className="text-sm text-slate-500">
+          <h2 className="text-xl font-bold text-foreground">کتاب‌ها</h2>
+          <p className="text-sm text-muted-foreground">
             کتابخانه را بر اساس علاقه خود فیلتر کنید و پیشنهادهای جدید را
             ببینید.
           </p>
@@ -63,7 +63,7 @@ export const FilterControls = ({
           >
             <SelectTrigger
               className={cn(
-                "w-full min-w-[180px] rounded-2xl border-slate-200 bg-white dark:bg-cardBg",
+                "w-full min-w-[180px] rounded-2xl border-border bg-card dark:bg-cardBg",
                 disabled && "opacity-60"
               )}
               aria-disabled={disabled}
@@ -86,7 +86,7 @@ export const FilterControls = ({
           >
             <SelectTrigger
               className={cn(
-                "w-full min-w-[180px] rounded-2xl border-slate-200 bg-white dark:bg-cardBg",
+                "w-full min-w-[180px] rounded-2xl border-border bg-card dark:bg-cardBg",
                 disabled && "opacity-60"
               )}
               aria-disabled={disabled}
@@ -107,15 +107,15 @@ export const FilterControls = ({
       <div className="flex flex-col gap-4">
         <div
           className={cn(
-            "flex items-center gap-3 rounded-2xl border border-slate-200 bg-white dark:bg-cardBg p-3 shadow-sm",
+            "flex items-center gap-3 rounded-2xl border border-border bg-card dark:bg-cardBg p-3 shadow-sm",
             disabled && "opacity-60"
           )}
         >
-          <Search className="h-4 w-4 text-slate-400" />
+          <Search className="h-4 w-4 text-muted-foreground" />
           <input
             value={query}
             onChange={(event) => onQueryChange(event.target.value)}
-            className="w-full bg-transparent text-sm text-slate-600 outline-none"
+            className="w-full bg-transparent text-sm text-muted-foreground outline-none"
             placeholder="جستجوی سریع در بین کتاب‌ها"
             disabled={disabled}
             aria-disabled={disabled}
@@ -123,7 +123,7 @@ export const FilterControls = ({
           {hasActiveFilters && (
             <button
               onClick={onResetFilters}
-              className="whitespace-nowrap text-xs font-semibold text-slate-500 transition-colors hover:text-slate-800"
+              className="whitespace-nowrap text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
               disabled={disabled}
             >
               حذف فیلترها
@@ -139,8 +139,8 @@ export const FilterControls = ({
               className={cn(
                 "whitespace-nowrap rounded-full border px-4 py-2 text-sm font-medium transition-all",
                 selectedCategory === category
-                  ? "border-slate-900 bg-slate-900 text-white shadow"
-                  : "border-slate-200 bg-white dark:bg-cardBg text-slate-600 hover:bg-slate-100",
+                  ? "border-border bg-card text-primary-foreground shadow"
+                  : "border-border bg-card dark:bg-cardBg text-muted-foreground hover:bg-muted",
                 disabled && "pointer-events-none opacity-60"
               )}
               aria-pressed={selectedCategory === category}

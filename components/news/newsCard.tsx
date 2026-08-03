@@ -44,13 +44,13 @@ const NewsCard = ({ data }: NewsCardProps) => {
 
   const getCategoryColor = (category: string) => {
     const colors: Record<string, { bg: string; text: string; icon: string }> = {
-      اخبار: { bg: "from-cyan-500/20 to-blue-500/20", text: "from-cyan-400 to-blue-400", icon: "bg-cyan-500/20 text-cyan-300" },
-      آموزش: { bg: "from-purple-500/20 to-pink-500/20", text: "from-purple-400 to-pink-400", icon: "bg-purple-500/20 text-purple-300" },
-      فناوری: { bg: "from-emerald-500/20 to-green-500/20", text: "from-emerald-400 to-green-400", icon: "bg-emerald-500/20 text-emerald-300" },
-      رویداد: { bg: "from-orange-500/20 to-red-500/20", text: "from-orange-400 to-red-400", icon: "bg-orange-500/20 text-orange-300" },
-      پروژه: { bg: "from-indigo-500/20 to-violet-500/20", text: "from-indigo-400 to-violet-400", icon: "bg-indigo-500/20 text-indigo-300" },
+      اخبار: { bg: "from-primary/20 to-primary/20", text: "from-primary to-primary", icon: "bg-primary/20 text-primary" },
+      آموزش: { bg: "from-accent/20 to-destructive/20", text: "from-accent to-destructive", icon: "bg-accent/20 text-accent" },
+      فناوری: { bg: "from-primary/20 to-primary/20", text: "from-primary to-primary", icon: "bg-primary/20 text-primary" },
+      رویداد: { bg: "from-premium/20 to-destructive/20", text: "from-premium to-destructive", icon: "bg-premium/20 text-premium" },
+      پروژه: { bg: "from-primary/20 to-accent/20", text: "from-primary to-accent", icon: "bg-primary/20 text-primary" },
     };
-    return colors[category] || { bg: "from-cyan-500/20 to-blue-500/20", text: "from-cyan-400 to-blue-400", icon: "bg-cyan-500/20 text-cyan-300" };
+    return colors[category] || { bg: "from-primary/20 to-primary/20", text: "from-primary to-primary", icon: "bg-primary/20 text-primary" };
   };
 
   const readingTime = getReadingTime(data.content || data.excerpt);
@@ -70,7 +70,7 @@ const NewsCard = ({ data }: NewsCardProps) => {
         href={`/news/${data.slug}`}
       >
         {/* Image Container */}
-        <div className="relative w-full h-56 sm:h-60 md:h-64 overflow-hidden bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-800 dark:to-slate-900">
+        <div className="relative w-full h-56 sm:h-60 md:h-64 overflow-hidden bg-gradient-to-br from-muted to-card">
           <Image
             src={data.coverImage ?? "/images/default-news.jpg"}
             alt={data.title}
@@ -82,7 +82,7 @@ const NewsCard = ({ data }: NewsCardProps) => {
 
           {/* Category Badge */}
           <div className="absolute top-4 right-4 z-10">
-            <div className={`bg-gradient-to-r ${categoryColor.bg} backdrop-blur-xl px-3 py-2 rounded-full border border-white/20`}>
+            <div className={`bg-gradient-to-r ${categoryColor.bg} backdrop-blur-xl px-3 py-2 rounded-full border border-border/20`}>
               <span className={`text-xs sm:text-sm font-bold bg-gradient-to-r ${categoryColor.text} bg-clip-text text-transparent`}>
                 {data.category}
               </span>
@@ -94,22 +94,22 @@ const NewsCard = ({ data }: NewsCardProps) => {
             <BookmarkButton
               type="news"
               itemId={data.id}
-              className="backdrop-blur-xl border-white/20"
+              className="backdrop-blur-xl border-border/20"
             />
           </div>
 
           {/* Overlay gradient on hover */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </div>
 
         <div className="flex flex-col justify-between flex-1 p-5 sm:p-6">
           {/* Title and Excerpt */}
           <div className="space-y-3 mb-4">
-            <h3 className="font-bold text-base sm:text-lg md:text-xl text-slate-900 dark:text-white leading-tight group-hover:text-mySecondary transition-colors duration-300 line-clamp-2">
+            <h3 className="font-bold text-base sm:text-lg md:text-xl text-foreground leading-tight group-hover:text-mySecondary transition-colors duration-300 line-clamp-2">
               {data.title}
             </h3>
 
-            <p className="font-normal text-sm text-slate-600 dark:text-textSecondary leading-relaxed line-clamp-2">
+            <p className="font-normal text-sm text-muted-foreground dark:text-textSecondary leading-relaxed line-clamp-2">
               {data.excerpt}
             </p>
 
@@ -119,7 +119,7 @@ const NewsCard = ({ data }: NewsCardProps) => {
                 {data.tags.slice(0, 2).map((tag) => (
                   <span
                     key={tag}
-                    className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700/50"
+                    className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium bg-muted/50 text-muted-foreground border border-border/50"
                   >
                     #{tag}
                   </span>
@@ -129,23 +129,23 @@ const NewsCard = ({ data }: NewsCardProps) => {
           </div>
 
           {/* Divider */}
-          <div className="h-px bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-700 to-transparent mb-4" />
+          <div className="h-px bg-gradient-to-r from-transparent via-muted to-transparent mb-4" />
 
           {/* Author and Meta Info */}
           <div className="space-y-3">
             {data.author && (
               <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-mySecondary to-mySecondary/70 flex items-center justify-center text-white text-xs font-bold flex-shrink-0 shadow-md">
+                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-mySecondary to-mySecondary/70 flex items-center justify-center text-primary-foreground text-xs font-bold flex-shrink-0 shadow-md">
                   {data.author.charAt(0)}
                 </div>
-                <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-medium truncate">
+                <p className="text-xs sm:text-sm text-muted-foreground font-medium truncate">
                   {data.author}
                 </p>
               </div>
             )}
 
             {/* Meta Information */}
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs text-slate-500 dark:text-slate-400">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs text-muted-foreground">
               {data.publishedAt && (
                 <div className="flex items-center gap-1.5">
                   <Calendar className="w-3.5 h-3.5 flex-shrink-0" />
@@ -166,7 +166,7 @@ const NewsCard = ({ data }: NewsCardProps) => {
           </div>
 
           {/* Read More Link */}
-          <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800/50 flex items-center justify-between">
+          <div className="mt-4 pt-4 border-t border-border/50 flex items-center justify-between">
             <span className="text-xs font-semibold text-mySecondary">مطالعه بیشتر</span>
             <ArrowLeft className="w-4 h-4 text-mySecondary group-hover:translate-x-1 transition-transform" />
           </div>

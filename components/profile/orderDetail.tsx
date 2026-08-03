@@ -43,9 +43,9 @@ const OrderDetail = ({ order }: OrderDetailProps) => {
         };
       default:
         return {
-          icon: <FaRegClock className="w-3.5 text-amber-900" />,
+          icon: <FaRegClock className="w-3.5 text-premium" />,
           text: "در انتظار پرداخت",
-          bgColor: "bg-amber-400",
+          bgColor: "bg-premium",
         };
     }
   };

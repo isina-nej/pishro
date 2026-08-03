@@ -44,7 +44,7 @@ const getStatusBadge = (status: string) => {
 
   if (status === "pending") {
     return (
-      <span className="inline-flex rounded-full bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-700 ring-1 ring-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:ring-amber-900">
+      <span className="inline-flex rounded-full bg-premium px-2.5 py-1 text-xs font-bold text-premium ring-1 ring-premium/40">
         در انتظار پرداخت
       </span>
     );
@@ -283,25 +283,25 @@ const ProfileMainContent = () => {
             label: "دوره‌های فعال",
             value: stats?.totalEnrollments || 0,
             icon: GraduationCap,
-            tone: "text-blue-700 bg-blue-50 dark:text-blue-300 dark:bg-blue-950/40",
+            tone: "text-primary bg-primary/40",
           },
           {
             label: "میانگین پیشرفت",
             value: `${averageProgress}%`,
             icon: TrendingUp,
-            tone: "text-emerald-700 bg-emerald-50 dark:text-emerald-300 dark:bg-emerald-950/40",
+            tone: "text-primary bg-primary/40",
           },
           {
             label: "سفارش‌ها",
             value: stats?.totalOrders || 0,
             icon: ShoppingBag,
-            tone: "text-orange-700 bg-orange-50 dark:text-orange-300 dark:bg-orange-950/40",
+            tone: "text-premium bg-premium/40",
           },
           {
             label: "پرداخت موفق اخیر",
             value: paidOrders,
             icon: CreditCard,
-            tone: "text-violet-700 bg-violet-50 dark:text-violet-300 dark:bg-violet-950/40",
+            tone: "text-accent bg-accent/40",
           },
         ].map((item) => {
           const Icon = item.icon;
@@ -407,7 +407,7 @@ const ProfileMainContent = () => {
 
           <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
             <div className="flex items-center gap-3">
-              <span className="flex size-11 items-center justify-center rounded-xl bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300">
+              <span className="flex size-11 items-center justify-center rounded-xl bg-premium text-premium/40">
                 <Clock3 className="size-5" />
               </span>
               <div>

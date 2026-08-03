@@ -16,14 +16,14 @@ const RatingStars = ({ rating }: RatingStarsProps) => {
           <div key={i} className="relative w-4 h-4">
             {/* empty star (gray background) */}
             <Star
-              className="absolute inset-0 text-gray-200 fill-gray-200"
+              className="absolute inset-0 text-muted-foreground fill-gray-200"
               size={16}
             />
 
             {isFull && (
               // full star
               <Star
-                className="absolute inset-0 text-yellow-400 fill-yellow-400"
+                className="absolute inset-0 text-premium fill-yellow-400"
                 size={16}
               />
             )}
@@ -31,7 +31,7 @@ const RatingStars = ({ rating }: RatingStarsProps) => {
             {isHalf && (
               // half star (mask right side)
               <Star
-                className="absolute inset-0 text-yellow-400 fill-yellow-400"
+                className="absolute inset-0 text-premium fill-yellow-400"
                 size={16}
                 style={{ clipPath: "inset(0 50% 0 0)" }} // show only left half
               />

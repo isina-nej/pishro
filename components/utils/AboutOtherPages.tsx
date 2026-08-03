@@ -65,7 +65,7 @@ const AboutOtherPages = ({ data }: AboutOtherPagesProps) => {
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4">
             <Link
               href="#"
-              className="px-6 sm:px-8 py-2.5 sm:py-3 w-full sm:w-1/2 flex justify-center items-center rounded-full text-sm sm:text-base md:text-lg font-bold bg-[#214254] text-white hover:bg-[#214254]/5 hover:text-[#214254] hover:border-[#214254] border transition-all"
+              className="px-6 sm:px-8 py-2.5 sm:py-3 w-full sm:w-1/2 flex justify-center items-center rounded-full text-sm sm:text-base md:text-lg font-bold bg-[#214254] text-primary-foreground hover:bg-[#214254]/5 hover:text-[#214254] hover:border-[#214254] border transition-all"
               aria-label={button1}
             >
               {button1}
@@ -75,7 +75,7 @@ const AboutOtherPages = ({ data }: AboutOtherPagesProps) => {
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
                 <button
-                  className="px-6 sm:px-8 py-2.5 sm:py-3 w-full sm:w-1/2 flex justify-center items-center rounded-full text-sm sm:text-base md:text-lg font-bold border-2 border-[#FFA135] bg-[#FFA135] text-white hover:text-[#FFA135] hover:bg-transparent transition-all"
+                  className="px-6 sm:px-8 py-2.5 sm:py-3 w-full sm:w-1/2 flex justify-center items-center rounded-full text-sm sm:text-base md:text-lg font-bold border-2 border-[#FFA135] bg-[#FFA135] text-primary-foreground hover:text-[#FFA135] hover:bg-transparent transition-all"
                   aria-label={button2}
                 >
                   {button2}
@@ -87,7 +87,7 @@ const AboutOtherPages = ({ data }: AboutOtherPagesProps) => {
                 <div className="sr-only">
                   <DialogTitle>فیلم توضیحات</DialogTitle>
                 </div>
-                <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-black">
+                <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-background">
                   <video
                     src="/videos/landing-vid.webm" // مسیر ویدیوی خودت رو اینجا بزار
                     controls

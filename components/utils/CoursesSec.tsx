@@ -37,7 +37,7 @@ const CoursesSec = () => {
   if (loading)
     return (
       <section className="flex justify-center items-center h-64">
-        <p className="text-gray-500 dark:text-textSecondary">در حال بارگذاری...</p>
+        <p className="text-muted-foreground dark:text-textSecondary">در حال بارگذاری...</p>
       </section>
     );
 
@@ -70,7 +70,7 @@ const CoursesSec = () => {
         <div className="relative flex items-center justify-end gap-3 mt-2 w-[260px]">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-1 bg-white dark:bg-cardBg border border-gray-300 dark:border-borderColor px-3 py-1.5 rounded-lg shadow-sm hover:shadow-md transition text-sm font-bold">
+              <button className="flex items-center gap-1 bg-card dark:bg-cardBg border border-border dark:border-borderColor px-3 py-1.5 rounded-lg shadow-sm hover:shadow-md transition text-sm font-bold">
                 <ChevronDown size={16} />
                 <span>{selectedCategory.label}</span>
               </button>
@@ -78,13 +78,13 @@ const CoursesSec = () => {
 
             <DropdownMenuContent
               align="end"
-              className="w-40 bg-white dark:bg-cardBg border border-gray-200 dark:border-borderColor rounded-lg shadow-lg"
+              className="w-40 bg-card dark:bg-cardBg border border-border dark:border-borderColor rounded-lg shadow-lg"
             >
               {categories.map((cat) => (
                 <DropdownMenuItem
                   key={cat.href}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`cursor-pointer rtl text-right text-sm px-4 py-2 hover:bg-gray-100 dark:hover:bg-cardBg dark:bg-cardBg dark:hover:bg-cardBg dark:bg-cardBg dark:hover:bg-cardBg dark:bg-cardBg dark:bg-cardBg ${
+                  className={`cursor-pointer rtl text-right text-sm px-4 py-2 hover:bg-muted dark:hover:bg-cardBg dark:bg-cardBg dark:hover:bg-cardBg dark:bg-cardBg dark:hover:bg-cardBg dark:bg-cardBg dark:bg-cardBg ${
                     cat.label === selectedCategory.label
                       ? "font-bold text-mySecondary"
                       : ""
@@ -98,7 +98,7 @@ const CoursesSec = () => {
 
           <Link
             href={selectedCategory.href}
-            className="flex items-center gap-1 bg-mySecondary text-white px-4 py-1.5 rounded-lg text-sm font-bold hover:opacity-90 transition"
+            className="flex items-center gap-1 bg-mySecondary text-primary-foreground px-4 py-1.5 rounded-lg text-sm font-bold hover:opacity-90 transition"
           >
             <Folder size={16} />
             <span>صفحه {selectedCategory.label}</span>

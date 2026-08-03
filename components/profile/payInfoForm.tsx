@@ -102,7 +102,7 @@ const PayInfoForm = forwardRef((props, ref) => {
               />
             </div>
             {errors.cardNumber && (
-              <p className="text-red-500 text-xs mt-1 mr-[150px]">
+              <p className="text-destructive text-xs mt-1 mr-[150px]">
                 {errors.cardNumber.message}
               </p>
             )}
@@ -130,7 +130,7 @@ const PayInfoForm = forwardRef((props, ref) => {
               </div>
             </div>
             {errors.shebaNumber && (
-              <p className="text-red-500 text-xs mt-1 mr-[150px]">
+              <p className="text-destructive text-xs mt-1 mr-[150px]">
                 {errors.shebaNumber.message}
               </p>
             )}
@@ -151,7 +151,7 @@ const PayInfoForm = forwardRef((props, ref) => {
               />
             </div>
             {errors.accountOwner && (
-              <p className="text-red-500 text-xs mt-1 mr-[150px]">
+              <p className="text-destructive text-xs mt-1 mr-[150px]">
                 {errors.accountOwner.message}
               </p>
             )}

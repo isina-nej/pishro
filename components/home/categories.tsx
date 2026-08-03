@@ -47,10 +47,10 @@ const Categories = () => {
                 className="object-cover transition-all duration-300 group-hover:scale-105 group-hover:brightness-110"
               />
               {/* Dark overlay */}
-              <div className="absolute inset-0 bg-black opacity-50 transition-all duration-300 group-hover:opacity-30"></div>
+              <div className="absolute inset-0 bg-background opacity-50 transition-all duration-300 group-hover:opacity-30"></div>
               {/* Centered text */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-lg font-medium text-white transition-all duration-300 group-hover:text-xl">
+                <span className="text-lg font-medium text-primary-foreground transition-all duration-300 group-hover:text-xl">
                   {item.label}
                 </span>
               </div>

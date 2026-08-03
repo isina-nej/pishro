@@ -21,7 +21,7 @@ const TransactionsTable = () => {
         return <Badge variant="success">موفق</Badge>;
       case "pending":
         return (
-          <span className="inline-flex px-2 py-1 text-xs rounded-full bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300">
+          <span className="inline-flex px-2 py-1 text-xs rounded-full bg-premium text-premium/40">
             در انتظار
           </span>
         );

@@ -55,50 +55,66 @@ h3 {
      * Palette combines the admin RoyalGreen family (deep green primary),
      * the brand gold (#F9AD03) as accent, and a navy ink (#10293A) for text.
      */
-    --background: 150 33% 99%;
-    /* جوهر متن هم به خانواده‌ی سبز آمد؛ hue 200 در متن‌های تیره آبی خوانده می‌شد */
-    --foreground: 152 42% 12%;
+    /*
+     * مقادیر زیر عیناً از .royal-theme (پالت پنل) کپی شده‌اند تا سایت عمومی و
+     * پنل یک پالت واحد داشته باشند. اگر خواستید رنگی عوض شود، در هر دو بلوک
+     * عوضش کنید — یا بهتر، همین‌جا و در .royal-theme به یک مقدار مشترک برسانید.
+     */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 4%;
     --card: 0 0% 100%;
-    --card-foreground: 152 42% 12%;
+    --card-foreground: 0 0% 4%;
     --popover: 0 0% 100%;
-    --popover-foreground: 152 42% 12%;
+    --popover-foreground: 0 0% 4%;
     --primary: 152 71% 18%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 150 22% 95%;
-    --secondary-foreground: 152 38% 15%;
-    --muted: 150 16% 95%;
-    --muted-foreground: 152 10% 38%;
-    --accent: 150 30% 93%;
-    --accent-foreground: 152 71% 18%;
-    --destructive: 9 82% 46%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 150 18% 87%;
-    --input: 150 18% 87%;
-    --ring: 152 60% 28%;
-    --chart-1: 152 71% 22%;
-    --chart-2: 43 96% 50%;
-    --chart-3: 200 45% 25%;
-    --chart-4: 9 76% 55%;
-    --chart-5: 173 58% 39%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 95%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 144 61% 30%;
+    --chart-1: 152 71% 18%;
+    --chart-2: 144 61% 30%;
+    --chart-3: 38 45% 57%;
+    --chart-4: 197 37% 24%;
+    --chart-5: 27 87% 67%;
     --radius: 0.5rem;
 
-    /* Pishro Brand Colors — Light values (green/gold/navy on light surfaces) */
-    --brand-color: #F9AD03;
-    --body-background: #F4F8F6;
+    /* توکن‌های معنایی پنل، تا سایت هم همان‌ها را داشته باشد */
+    --success: 142 71% 32%;
+    --success-foreground: 0 0% 100%;
+    --premium: 38 40% 45%;
+    --premium-foreground: 0 0% 100%;
+    --surface-selected: 152 40% 96%;
+    --nav-active-bg: 152 71% 92%;
+    --icon-brand: 144 55% 26%;
+
+    /*
+     * متغیرهای برند قدیمی. حذفشان نکردم چون هنوز ده‌ها کامپوننت عمومی صدایشان
+     * می‌زنند؛ ولی مقدارشان حالا از همان پالت پنل می‌آید تا رنگ سومی وارد نشود.
+     */
+    --brand-color: #A17F45;
+    --body-background: #FFFFFF;
     --header-background: rgba(255, 255, 255, 0.8);
-    --text-primary: #10293A;
-    --text-secondary: #4A5B66;
-    --btn-primary-bg: #1CB561;
-    --btn-primary-hover: #17924E;
-    --btn-secondary-bg: #E7EDEA;
-    --btn-secondary-hover: #D7E1DC;
+    --text-primary: #0A0A0A;
+    --text-secondary: #737373;
+    --btn-primary-bg: #0D4E30;
+    --btn-primary-hover: #1E7B43;
+    --btn-secondary-bg: #F5F5F5;
+    --btn-secondary-hover: #E5E5E5;
     --card-background: #FFFFFF;
-    --border-color: rgba(16, 41, 58, 0.12);
-    --footer-background: #F1F6F3;
-    --text-muted: #6D7176;
-    --dark-bg-hidden: #ECF2EF;
-    --neutral-button-bg: #E7EDEA;
-    --neutral-button-hover: #D7E1DC;
+    --border-color: #E5E5E5;
+    --footer-background: #F5F5F5;
+    --text-muted: #737373;
+    --dark-bg-hidden: #F5F5F5;
+    --neutral-button-bg: #F5F5F5;
+    --neutral-button-hover: #E5E5E5;
   }
 
   .dark {
@@ -111,49 +127,58 @@ h3 {
      * روشنایی و اشباع هر توکن نسبت به قبل دست‌نخورده مانده تا کنتراست تغییر نکند
      * — فقط رنگ‌مایه چرخیده است.
      */
-    --background: 152 30% 5%;
-    --foreground: 0 0% 92%;
-    --card: 152 22% 8%;
-    --card-foreground: 0 0% 92%;
-    --popover: 152 22% 8%;
-    --popover-foreground: 0 0% 92%;
-    --primary: 152 55% 42%;
+    /* عیناً از .dark .royal-theme — رجوع کنید به توضیح بلوک :root */
+    --background: 220 20% 4%;
+    --foreground: 0 0% 96%;
+    --card: 220 15% 7%;
+    --card-foreground: 0 0% 96%;
+    --popover: 220 15% 7%;
+    --popover-foreground: 0 0% 96%;
+    --primary: 152 71% 18%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 152 15% 15%;
+    --secondary: 220 12% 14%;
     --secondary-foreground: 0 0% 92%;
-    --muted: 152 14% 14%;
-    --muted-foreground: 0 0% 65%;
-    --accent: 152 18% 18%;
+    --muted: 220 12% 12%;
+    --muted-foreground: 0 0% 63%;
+    --accent: 220 12% 16%;
     --accent-foreground: 0 0% 96%;
-    --destructive: 9 72% 52%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
-    --border: 152 14% 18%;
-    --input: 152 14% 18%;
-    --ring: 152 55% 42%;
-    --chart-1: 152 55% 45%;
-    --chart-2: 43 90% 58%;
-    /* نمودارها عمداً متنوع می‌مانند — یکدست‌کردنشان سری‌ها را تفکیک‌ناپذیر می‌کند */
-    --chart-3: 200 45% 55%;
-    --chart-4: 9 72% 58%;
-    --chart-5: 173 58% 45%;
+    --border: 220 10% 18%;
+    --input: 220 10% 18%;
+    --ring: 144 61% 30%;
+    --chart-1: 152 71% 30%;
+    --chart-2: 144 61% 40%;
+    --chart-3: 38 45% 57%;
+    --chart-4: 197 47% 44%;
+    --chart-5: 27 87% 60%;
 
-    /* Pishro Brand Colors — Dark values (green/gold on deep green surfaces) */
-    --brand-color: #F9AD03;
-    --body-background: #0A1A12;
-    --header-background: rgba(8, 20, 14, 0.8);
-    --text-primary: #EAF1EE;
-    --text-secondary: #9DB0AA;
-    --btn-primary-bg: #1CB561;
-    --btn-primary-hover: #17924E;
-    --btn-secondary-bg: #172B22;
-    --btn-secondary-hover: #1F372C;
-    --card-background: #10231A;
-    --border-color: #FFFFFF1F;
-    --footer-background: #0C1D15;
-    --text-muted: #7C8A86;
-    --dark-bg-hidden: #0A1A12;
-    --neutral-button-bg: #294235;
-    --neutral-button-hover: #324D41;
+    /* توکن‌های معنایی پنل */
+    --success: 142 71% 39%;
+    --success-foreground: 0 0% 100%;
+    --premium: 38 45% 57%;
+    --premium-foreground: 220 20% 8%;
+    --surface-selected: 152 30% 10%;
+    --nav-active-bg: 152 71% 13%;
+    --icon-brand: 144 61% 30%;
+
+    /* متغیرهای برند قدیمی، با مقادیر همان پالت پنل */
+    --brand-color: #C39F60;
+    --body-background: #080A0C;
+    --header-background: rgba(8, 10, 12, 0.8);
+    --text-primary: #F5F5F5;
+    --text-secondary: #A1A1A1;
+    --btn-primary-bg: #0D4E30;
+    --btn-primary-hover: #1E7B43;
+    --btn-secondary-bg: #1F2228;
+    --btn-secondary-hover: #24272E;
+    --card-background: #0F1115;
+    --border-color: #292C32;
+    --footer-background: #0F1115;
+    --text-muted: #A1A1A1;
+    --dark-bg-hidden: #0F1115;
+    --neutral-button-bg: #1F2228;
+    --neutral-button-hover: #24272E;
   }
 
   /*

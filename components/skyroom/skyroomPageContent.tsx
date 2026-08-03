@@ -26,28 +26,28 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
           <source src="/videos/aboutUs.webm" type="video/webm" />
         </video>
       </div>
-      <div className="absolute inset-0 bg-black/40 pointer-events-none z-0"></div>
+      <div className="absolute inset-0 bg-background/40 pointer-events-none z-0"></div>
       {/* Dark Shadow Overlay */}
-      <div className="absolute inset-0 bg-black/50 shadow-2xl pointer-events-none z-1" style={{
+      <div className="absolute inset-0 bg-background/50 shadow-2xl pointer-events-none z-1" style={{
         boxShadow: "inset 0 80px rgba(0, 0, 0.8), 120px 0.6)"
       }}></div>
 
       {/* Animated Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-950/20 via-purple-950/20 to-pink-950/20 pointer-events-none z-0">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-accent/20 to-destructive/20 pointer-events-none z-0">
         {/* Floating Shapes */}
         <div className="absolute inset-0 overflow-hidden">
           <motion.div
-            className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"
+            className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl"
             animate={{ x: [0, 100, 0], y: [0, -100, 0], scale: [1, 1.2, 1] }}
             transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.div
-            className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"
+            className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl"
             animate={{ x: [0, -100, 0], y: [0, 100, 0], scale: [1, 1.3, 1] }}
             transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.div
-            className="absolute top-1/2 left-1/2 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl"
+            className="absolute top-1/2 left-1/2 w-96 h-96 bg-destructive/10 rounded-full blur-3xl"
             animate={{ x: [0, 50, 0], y: [0, -50, 0], scale: [1, 1.1, 1] }}
             transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
           />
@@ -67,12 +67,12 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ duration: 0.6, delay: 0.4, type: "spring" }}
-            className="inline-flex items-center justify-center size-24 mb-6 rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md"
+            className="inline-flex items-center justify-center size-24 mb-6 rounded-full border border-border/20 bg-card/10 text-primary-foreground backdrop-blur-md"
           >
             <HiUsers className="text-5xl" />
           </motion.div>
 
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-4 drop-shadow-2xl">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-primary-foreground mb-4 drop-shadow-2xl">
             همایش آنلاین
           </h1>
 
@@ -80,7 +80,7 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-xl md:text-2xl text-white/90 max-w-2xl mx-auto"
+            className="text-xl md:text-2xl text-primary-foreground/90 max-w-2xl mx-auto"
           >
             به همایش ما خوش آمدید
           </motion.p>
@@ -95,7 +95,7 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
             className="relative group"
           >
             {/* Glow Effect */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl blur-xl opacity-70 group-hover:opacity-100 transition duration-500 group-hover:duration-200 animate-pulse" />
+            <div className="absolute -inset-1 bg-gradient-to-r from-primary via-accent to-destructive rounded-2xl blur-xl opacity-70 group-hover:opacity-100 transition duration-500 group-hover:duration-200 animate-pulse" />
 
             <Link
               href={meetingLink}
@@ -106,9 +106,9 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="relative overflow-hidden rounded-2xl border border-white/20 bg-white/10 px-12 py-6 text-white shadow-2xl backdrop-blur-xl group"
+                className="relative overflow-hidden rounded-2xl border border-border/20 bg-card/10 px-12 py-6 text-primary-foreground shadow-2xl backdrop-blur-xl group"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-card/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
 
                 <div className="relative flex items-center gap-4">
                   <span className="text-2xl md:text-3xl font-bold drop-shadow-lg">
@@ -118,7 +118,7 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
                     animate={{ x: [0, 5, 0] }}
                     transition={{ duration: 1.5, repeat: Infinity }}
                   >
-                    <HiArrowLeft className="text-3xl text-white" />
+                    <HiArrowLeft className="text-3xl text-primary-foreground" />
                   </motion.div>
                 </div>
               </motion.button>
@@ -129,9 +129,9 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.8 }}
-            className="relative rounded-2xl border border-white/20 bg-white/10 px-12 py-6 text-white shadow-2xl backdrop-blur-xl"
+            className="relative rounded-2xl border border-border/20 bg-card/10 px-12 py-6 text-primary-foreground shadow-2xl backdrop-blur-xl"
           >
-            <p className="text-xl md:text-2xl text-white/80">
+            <p className="text-xl md:text-2xl text-primary-foreground/80">
               در حال حاضر همایشی برگزار نمی‌شود
             </p>
           </motion.div>
@@ -142,7 +142,7 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 1.2 }}
-          className="absolute bottom-8 text-white/60 text-sm"
+          className="absolute bottom-8 text-primary-foreground/60 text-sm"
         >
           <motion.div
             animate={{ opacity: [0.5, 1, 0.5] }}

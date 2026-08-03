@@ -46,7 +46,7 @@ const BookDetail = ({ bookId }: BookDetailProps) => {
       <div className="container-xl py-20 flex justify-center items-center min-h-[600px]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-textSecondary">در حال بارگذاری...</p>
+          <p className="mt-4 text-muted-foreground dark:text-textSecondary">در حال بارگذاری...</p>
         </div>
       </div>
     );
@@ -55,7 +55,7 @@ const BookDetail = ({ bookId }: BookDetailProps) => {
   if (error || !book) {
     return (
       <div className="container-xl py-20 flex justify-center items-center min-h-[600px]">
-        <div className="text-center text-red-500">
+        <div className="text-center text-destructive">
           <p className="text-xl font-bold">خطا در بارگذاری کتاب</p>
           <p className="text-sm mt-2">{error?.message || "کتاب یافت نشد"}</p>
         </div>
@@ -77,39 +77,39 @@ const BookDetail = ({ bookId }: BookDetailProps) => {
                   title={book.title}
                 />
               )}
-              <div className="bg-gray-50 dark:bg-darkBgHidden rounded-xl p-4 space-y-3">
+              <div className="bg-muted dark:bg-darkBgHidden rounded-xl p-4 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600 dark:text-textSecondary">امتیاز:</span>
+                  <span className="text-sm text-muted-foreground dark:text-textSecondary">امتیاز:</span>
                   <div className="flex items-center gap-1">
-                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                    <Star className="w-4 h-4 fill-yellow-400 text-premium" />
                     <span className="font-bold">
                       {book.rating.toFixed(1)}
                     </span>
-                    <span className="text-xs text-gray-500 dark:text-textSecondary">
+                    <span className="text-xs text-muted-foreground dark:text-textSecondary">
                       ({book.votes} رای)
                     </span>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600 dark:text-textSecondary">بازدید:</span>
+                  <span className="text-sm text-muted-foreground dark:text-textSecondary">بازدید:</span>
                   <div className="flex items-center gap-1">
-                    <Eye className="w-4 h-4 text-gray-400 dark:text-textSecondary" />
+                    <Eye className="w-4 h-4 text-muted-foreground dark:text-textSecondary" />
                     <span className="font-medium">{book.views}</span>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600 dark:text-textSecondary">دانلود:</span>
+                  <span className="text-sm text-muted-foreground dark:text-textSecondary">دانلود:</span>
                   <div className="flex items-center gap-1">
-                    <Download className="w-4 h-4 text-gray-400 dark:text-textSecondary" />
+                    <Download className="w-4 h-4 text-muted-foreground dark:text-textSecondary" />
                     <span className="font-medium">{book.downloads}</span>
                   </div>
                 </div>
 
                 {book.readingTime && (
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 dark:text-textSecondary">زمان مطالعه:</span>
+                    <span className="text-sm text-muted-foreground dark:text-textSecondary">زمان مطالعه:</span>
                     <span className="font-medium">{book.readingTime}</span>
                   </div>
                 )}
@@ -166,18 +166,18 @@ const BookDetail = ({ bookId }: BookDetailProps) => {
                 {book.status.map((status) => (
                   <span
                     key={status}
-                    className="px-3 py-1 bg-green-100 dark:bg-green-950 text-green-700 dark:text-green-300 rounded-full text-sm font-medium"
+                    className="px-3 py-1 bg-primary text-primary rounded-full text-sm font-medium"
                   >
                     {status}
                   </span>
                 ))}
               </div>
 
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-textPrimary mb-2">
+              <h1 className="text-3xl md:text-4xl font-bold text-foreground dark:text-textPrimary mb-2">
                 {book.title}
               </h1>
 
-              <p className="text-xl text-gray-600 dark:text-textSecondary mb-4">
+              <p className="text-xl text-muted-foreground dark:text-textSecondary mb-4">
                 نوشته: {book.author}
               </p>
             </div>
@@ -185,37 +185,37 @@ const BookDetail = ({ bookId }: BookDetailProps) => {
             {/* Book Info Grid */}
             <div className="grid sm:grid-cols-2 gap-4">
               {book.publisher && (
-                <div className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-darkBgHidden rounded-lg">
-                  <Building className="w-5 h-5 text-gray-400 dark:text-textSecondary mt-0.5" />
+                <div className="flex items-start gap-3 p-4 bg-muted dark:bg-darkBgHidden rounded-lg">
+                  <Building className="w-5 h-5 text-muted-foreground dark:text-textSecondary mt-0.5" />
                   <div>
-                    <p className="text-xs text-gray-500 dark:text-textSecondary mb-1">ناشر</p>
+                    <p className="text-xs text-muted-foreground dark:text-textSecondary mb-1">ناشر</p>
                     <p className="font-medium">{book.publisher}</p>
                   </div>
                 </div>
               )}
 
-              <div className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-darkBgHidden rounded-lg">
-                <Calendar className="w-5 h-5 text-gray-400 dark:text-textSecondary mt-0.5" />
+              <div className="flex items-start gap-3 p-4 bg-muted dark:bg-darkBgHidden rounded-lg">
+                <Calendar className="w-5 h-5 text-muted-foreground dark:text-textSecondary mt-0.5" />
                 <div>
-                  <p className="text-xs text-gray-500 dark:text-textSecondary mb-1">سال انتشار</p>
+                  <p className="text-xs text-muted-foreground dark:text-textSecondary mb-1">سال انتشار</p>
                   <p className="font-medium">{book.year}</p>
                 </div>
               </div>
 
               {book.pages && (
-                <div className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-darkBgHidden rounded-lg">
-                  <FileText className="w-5 h-5 text-gray-400 dark:text-textSecondary mt-0.5" />
+                <div className="flex items-start gap-3 p-4 bg-muted dark:bg-darkBgHidden rounded-lg">
+                  <FileText className="w-5 h-5 text-muted-foreground dark:text-textSecondary mt-0.5" />
                   <div>
-                    <p className="text-xs text-gray-500 dark:text-textSecondary mb-1">تعداد صفحات</p>
+                    <p className="text-xs text-muted-foreground dark:text-textSecondary mb-1">تعداد صفحات</p>
                     <p className="font-medium">{book.pages}</p>
                   </div>
                 </div>
               )}
 
-              <div className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-darkBgHidden rounded-lg">
-                <Globe className="w-5 h-5 text-gray-400 dark:text-textSecondary mt-0.5" />
+              <div className="flex items-start gap-3 p-4 bg-muted dark:bg-darkBgHidden rounded-lg">
+                <Globe className="w-5 h-5 text-muted-foreground dark:text-textSecondary mt-0.5" />
                 <div>
-                  <p className="text-xs text-gray-500 dark:text-textSecondary mb-1">زبان</p>
+                  <p className="text-xs text-muted-foreground dark:text-textSecondary mb-1">زبان</p>
                   <p className="font-medium">{book.language}</p>
                 </div>
               </div>
@@ -229,7 +229,7 @@ const BookDetail = ({ bookId }: BookDetailProps) => {
                   {book.formats.map((format) => (
                     <span
                       key={format}
-                      className="px-4 py-2 bg-blue-50 text-blue-700 dark:text-blue-300 rounded-lg text-sm font-medium"
+                      className="px-4 py-2 bg-primary text-primary rounded-lg text-sm font-medium"
                     >
                       {format}
                     </span>
@@ -241,7 +241,7 @@ const BookDetail = ({ bookId }: BookDetailProps) => {
             {/* Description */}
             <div>
               <h3 className="text-lg font-bold mb-3">درباره کتاب</h3>
-              <p className="text-gray-700 dark:text-textPrimary leading-relaxed">{book.description}</p>
+              <p className="text-muted-foreground dark:text-textPrimary leading-relaxed">{book.description}</p>
             </div>
 
             {/* Tags */}
@@ -252,7 +252,7 @@ const BookDetail = ({ bookId }: BookDetailProps) => {
                   {book.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="px-3 py-1 bg-gray-100 dark:bg-cardBg text-gray-700 dark:text-textPrimary rounded-full text-sm"
+                      className="px-3 py-1 bg-muted dark:bg-cardBg text-muted-foreground dark:text-textPrimary rounded-full text-sm"
                     >
                       #{tag}
                     </span>
@@ -264,7 +264,7 @@ const BookDetail = ({ bookId }: BookDetailProps) => {
             {/* ISBN */}
             {book.isbn && (
               <div className="pt-4 border-t">
-                <p className="text-sm text-gray-500 dark:text-textSecondary">
+                <p className="text-sm text-muted-foreground dark:text-textSecondary">
                   ISBN: <span className="font-mono">{book.isbn}</span>
                 </p>
               </div>

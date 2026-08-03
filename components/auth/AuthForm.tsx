@@ -77,7 +77,7 @@ export function AuthForm({ variant, onSubmit, onForgotPassword }: AuthFormProps)
         id="username"
         label="شماره تلفن"
         placeholder="شماره تلفن"
-        icon={<Phone className={cn(errors.username && (isSubmitted || touchedFields.username) && "text-red-500")} />}
+        icon={<Phone className={cn(errors.username && (isSubmitted || touchedFields.username) && "text-destructive")} />}
         {...register("username")}
         error={(isSubmitted || touchedFields.username) ? errors.username?.message as string : undefined}
         disabled={isLoading}
@@ -123,14 +123,14 @@ export function AuthForm({ variant, onSubmit, onForgotPassword }: AuthFormProps)
         type="submit"
         disabled={isLoading}
         className={cn(
-          "mt-6 w-full h-10 max-w-[306px] bg-[#d52a16] text-white font-bold text-xl mx-auto",
+          "mt-6 w-full h-10 max-w-[306px] bg-[#d52a16] text-primary-foreground font-bold text-xl mx-auto",
           isLoading && "opacity-80 cursor-not-allowed"
         )}
       >
         {isLoading ? (
           <div className="flex items-center justify-center gap-2">
             {variant === "login" ? "در حال ورود" : "در حال ثبت‌نام"}
-            <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-border border-t-transparent" />
           </div>
         ) : variant === "login" ? (
           "ورود"

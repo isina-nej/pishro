@@ -92,7 +92,7 @@ const CourseCard = ({ data, link: _link }: CourseCardProps) => {
               onClick={handleAddToCart}
               initial={{ opacity: 0, scale: 0.8 }}
               whileHover={{ scale: 1.05 }}
-              className="absolute bottom-2 right-2 bg-mySecondary text-white px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1 hover:shadow-lg transition"
+              className="absolute bottom-2 right-2 bg-mySecondary text-primary-foreground px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1 hover:shadow-lg transition"
             >
               <ShoppingCart size={14} />
               {freeCourse ? "رایگان" : "خرید"}
@@ -106,14 +106,14 @@ const CourseCard = ({ data, link: _link }: CourseCardProps) => {
         className="flex-1 flex flex-col justify-between mt-2"
       >
         <div className="flex justify-between items-center">
-          <h4 className="text-xs sm:text-sm text-slate-500 dark:text-textSecondary font-bold">
+          <h4 className="text-xs sm:text-sm text-muted-foreground dark:text-textSecondary font-bold">
             {data.subject}
           </h4>
           <RatingStars rating={data.rating || 2.5} />
         </div>
 
         <div className="mt-1 flex flex-col">
-          <p className="font-bold text-sm sm:text-sm text-gray-800 dark:text-textPrimary line-clamp-2">
+          <p className="font-bold text-sm sm:text-sm text-foreground dark:text-textPrimary line-clamp-2">
             {data.description || "بدون توضیح"}
           </p>
 
@@ -124,14 +124,14 @@ const CourseCard = ({ data, link: _link }: CourseCardProps) => {
 
         <motion.div
           initial={{ opacity: 1 }}
-          className="mt-1 pt-1.5 flex justify-between text-slate-500 dark:text-textSecondary font-bold text-xs sm:text-sm border-t border-dashed border-slate-200 dark:border-borderColor"
+          className="mt-1 pt-1.5 flex justify-between text-muted-foreground dark:text-textSecondary font-bold text-xs sm:text-sm border-t border-dashed border-border dark:border-borderColor"
         >
           <span className="flex items-center gap-1">
-            <Users size={16} className="text-gray-900 dark:text-textPrimary" />
+            <Users size={16} className="text-foreground dark:text-textPrimary" />
             {data.students ?? 1} دوره آموز
           </span>
           <span className="flex items-center gap-1">
-            <Video size={16} className="text-gray-900 dark:text-textPrimary" />
+            <Video size={16} className="text-foreground dark:text-textPrimary" />
             {data.videosCount ?? 1} ویدئو تخصصی
           </span>
           <FormatTime time={data.time || "0:00"} />
@@ -142,7 +142,7 @@ const CourseCard = ({ data, link: _link }: CourseCardProps) => {
       <div className="absolute -bottom-5 w-full flex justify-center pl-6">
         <button
           onClick={handleAddToCart}
-          className="w-48 rounded-full bg-[#112b3a] py-2 text-sm font-bold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-[#214254] sm:text-base"
+          className="w-48 rounded-full bg-[#112b3a] py-2 text-sm font-bold text-primary-foreground shadow-lg transition hover:-translate-y-0.5 hover:bg-[#214254] sm:text-base"
         >
           {freeCourse ? "ثبت‌نام رایگان" : "افزودن به سبد خرید"}
         </button>

@@ -60,7 +60,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="w-full bg-white dark:bg-footerBg mt-8 border-t border-gray-200 dark:border-borderColor">
+    <footer className="w-full bg-card dark:bg-footerBg mt-8 border-t border-border dark:border-borderColor">
       {/* Main Footer Content */}
       <div className="container-xl">
         <div className="pt-12 md:pt-16 pb-8 md:pb-12 xl:px-10">
@@ -107,7 +107,7 @@ const Footer = () => {
                     >
                       {React.cloneElement(social.icon, {
                         className:
-                          "size-5 text-[#80878C] dark:text-textSecondary group-hover:text-white transition-colors",
+                          "size-5 text-[#80878C] dark:text-textSecondary group-hover:text-primary-foreground transition-colors",
                       })}
                     </Link>
                   ))}
@@ -129,7 +129,7 @@ const Footer = () => {
                   />
                   <button
                     type="submit"
-                    className="absolute left-1 top-1 h-8 px-4 bg-myPrimary text-white text-xs rounded-md hover:bg-myPrimary/90 transition-colors font-medium"
+                    className="absolute left-1 top-1 h-8 px-4 bg-myPrimary text-primary-foreground text-xs rounded-md hover:bg-myPrimary/90 transition-colors font-medium"
                   >
                     عضویت
                   </button>
@@ -238,7 +238,7 @@ const Footer = () => {
         </div>
 
         {/* Footer Bottom */}
-        <div className="border-t border-gray-200 dark:border-borderColor py-4 md:py-6 xl:px-10">
+        <div className="border-t border-border dark:border-borderColor py-4 md:py-6 xl:px-10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-[#80878C] dark:text-textSecondary">
             <p className="text-center md:text-right">
               © {new Date().getFullYear()} پیشرو سرمایه. تمامی حقوق محفوظ است.

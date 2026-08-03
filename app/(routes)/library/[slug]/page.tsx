@@ -76,12 +76,12 @@ export default function BookDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col bg-white dark:bg-background">
+      <div className="min-h-screen flex flex-col bg-card dark:bg-background">
         <Navbar />
         <main className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-            <p className="mt-4 text-slate-600 dark:text-slate-300">در حال بارگذاری...</p>
+            <p className="mt-4 text-muted-foreground">در حال بارگذاری...</p>
           </div>
         </main>
         <Footer />
@@ -91,20 +91,20 @@ export default function BookDetailPage() {
 
   if (error || !book) {
     return (
-      <div className="min-h-screen flex flex-col bg-white dark:bg-background">
+      <div className="min-h-screen flex flex-col bg-card dark:bg-background">
         <Navbar />
         <main className="flex-1 flex items-center justify-center">
           <div className="text-center max-w-md">
-            <BookOpen className="mx-auto h-16 w-16 text-slate-300 mb-4" />
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+            <BookOpen className="mx-auto h-16 w-16 text-muted-foreground mb-4" />
+            <h1 className="text-2xl font-bold text-foreground mb-2">
               {error || 'کتاب پیدا نشد'}
             </h1>
-            <p className="text-slate-600 dark:text-slate-300 mb-6">
+            <p className="text-muted-foreground mb-6">
               ممکن است این کتاب حذف شده باشد یا دسترسی محدود داشته باشد.
             </p>
             <button
               onClick={() => router.back()}
-              className="inline-flex items-center px-6 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors"
+              className="inline-flex items-center px-6 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
             >
               بازگشت
             </button>
@@ -116,7 +116,7 @@ export default function BookDetailPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-background">
+    <div className="min-h-screen flex flex-col bg-card dark:bg-background">
       <Navbar />
       
       <main className="flex-1">
@@ -127,7 +127,7 @@ export default function BookDetailPage() {
               {/* Book Cover */}
               <div className="flex justify-center md:justify-start">
                 <div className="relative w-full max-w-xs">
-                  <div className="aspect-[3/4] relative rounded-2xl overflow-hidden shadow-2xl bg-slate-100 dark:bg-slate-800">
+                  <div className="aspect-[3/4] relative rounded-2xl overflow-hidden shadow-2xl bg-muted">
                     {book.cover ? (
                       <Image
                         src={book.cover}
@@ -138,7 +138,7 @@ export default function BookDetailPage() {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <BookOpen className="h-16 w-16 text-slate-400" />
+                        <BookOpen className="h-16 w-16 text-muted-foreground" />
                       </div>
                     )}
                   </div>
@@ -154,10 +154,10 @@ export default function BookDetailPage() {
 
                 {/* Title */}
                 <div>
-                  <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-2">
+                  <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
                     {book.title}
                   </h1>
-                  <p className="text-lg text-slate-600 dark:text-slate-300 flex items-center gap-2">
+                  <p className="text-lg text-muted-foreground flex items-center gap-2">
                     <User className="h-5 w-5" />
                     {book.author}
                   </p>
@@ -172,50 +172,50 @@ export default function BookDetailPage() {
                           key={i}
                           className={`h-5 w-5 ${
                             i < Math.round(book.rating)
-                              ? 'fill-amber-400 text-amber-400'
-                              : 'text-slate-300'
+                              ? 'fill-amber-400 text-premium'
+                              : 'text-muted-foreground'
                           }`}
                         />
                       ))}
                     </div>
                     <span className="font-bold text-lg">{book.rating.toFixed(1)}</span>
-                    <span className="text-slate-500">({book.votes} نظر)</span>
+                    <span className="text-muted-foreground">({book.votes} نظر)</span>
                   </div>
                 </div>
 
                 {/* Stats */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800">
+                  <div className="flex items-center gap-3 p-3 rounded-lg bg-muted">
                     <Eye className="h-5 w-5 text-primary" />
                     <div>
-                      <p className="text-xs text-slate-500">بازدیدها</p>
+                      <p className="text-xs text-muted-foreground">بازدیدها</p>
                       <p className="font-semibold">{book.views.toLocaleString('fa-IR')}</p>
                     </div>
                   </div>
                   
-                  <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800">
-                    <Download className="h-5 w-5 text-green-600" />
+                  <div className="flex items-center gap-3 p-3 rounded-lg bg-muted">
+                    <Download className="h-5 w-5 text-primary" />
                     <div>
-                      <p className="text-xs text-slate-500">دانلودها</p>
+                      <p className="text-xs text-muted-foreground">دانلودها</p>
                       <p className="font-semibold">{book.downloads.toLocaleString('fa-IR')}</p>
                     </div>
                   </div>
                   
                   {book.pages && (
-                    <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800">
-                      <BookOpen className="h-5 w-5 text-blue-600" />
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-muted">
+                      <BookOpen className="h-5 w-5 text-primary" />
                       <div>
-                        <p className="text-xs text-slate-500">صفحات</p>
+                        <p className="text-xs text-muted-foreground">صفحات</p>
                         <p className="font-semibold">{book.pages}</p>
                       </div>
                     </div>
                   )}
                   
                   {book.year && (
-                    <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800">
-                      <Calendar className="h-5 w-5 text-purple-600" />
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-muted">
+                      <Calendar className="h-5 w-5 text-accent" />
                       <div>
-                        <p className="text-xs text-slate-500">سال</p>
+                        <p className="text-xs text-muted-foreground">سال</p>
                         <p className="font-semibold">{book.year}</p>
                       </div>
                     </div>
@@ -231,7 +231,7 @@ export default function BookDetailPage() {
                     className="justify-center px-6 py-3 font-semibold"
                   />
                   {book.fileUrl && (
-                    <button className="flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors font-semibold">
+                    <button className="flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-semibold">
                       <Download className="h-5 w-5" />
                       دانلود کتاب
                     </button>
@@ -243,8 +243,8 @@ export default function BookDetailPage() {
                     </button>
                   )}
                   {book.price && (
-                    <div className="flex items-center gap-2 px-6 py-3 rounded-lg bg-slate-50 dark:bg-slate-800">
-                      <DollarSign className="h-5 w-5 text-green-600" />
+                    <div className="flex items-center gap-2 px-6 py-3 rounded-lg bg-muted">
+                      <DollarSign className="h-5 w-5 text-primary" />
                       <span className="font-semibold">{book.price.toLocaleString('fa-IR')} تومان</span>
                     </div>
                   )}
@@ -255,13 +255,13 @@ export default function BookDetailPage() {
         </div>
 
         {/* Description Section */}
-        <div className="py-12 md:py-16 px-4 md:px-6 border-t border-slate-200 dark:border-slate-800">
+        <div className="py-12 md:py-16 px-4 md:px-6 border-t border-border">
           <div className="container mx-auto max-w-6xl">
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">
+            <h2 className="text-2xl font-bold text-foreground mb-6">
               درباره این کتاب
             </h2>
             <div className="prose dark:prose-invert max-w-none">
-              <p className="text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
+              <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
                 {book.description}
               </p>
             </div>
@@ -270,26 +270,26 @@ export default function BookDetailPage() {
             <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
               {book.publisher && (
                 <div>
-                  <h3 className="font-semibold text-slate-900 dark:text-white mb-2">ناشر</h3>
-                  <p className="text-slate-600 dark:text-slate-300">{book.publisher}</p>
+                  <h3 className="font-semibold text-foreground mb-2">ناشر</h3>
+                  <p className="text-muted-foreground">{book.publisher}</p>
                 </div>
               )}
               {book.isbn && (
                 <div>
-                  <h3 className="font-semibold text-slate-900 dark:text-white mb-2">ISBN</h3>
-                  <p className="text-slate-600 dark:text-slate-300">{book.isbn}</p>
+                  <h3 className="font-semibold text-foreground mb-2">ISBN</h3>
+                  <p className="text-muted-foreground">{book.isbn}</p>
                 </div>
               )}
               {book.language && (
                 <div>
-                  <h3 className="font-semibold text-slate-900 dark:text-white mb-2">زبان</h3>
-                  <p className="text-slate-600 dark:text-slate-300">{book.language}</p>
+                  <h3 className="font-semibold text-foreground mb-2">زبان</h3>
+                  <p className="text-muted-foreground">{book.language}</p>
                 </div>
               )}
               {book.readingTime && (
                 <div>
-                  <h3 className="font-semibold text-slate-900 dark:text-white mb-2">مدت زمان مطالعه</h3>
-                  <p className="text-slate-600 dark:text-slate-300">{book.readingTime}</p>
+                  <h3 className="font-semibold text-foreground mb-2">مدت زمان مطالعه</h3>
+                  <p className="text-muted-foreground">{book.readingTime}</p>
                 </div>
               )}
             </div>
@@ -297,12 +297,12 @@ export default function BookDetailPage() {
             {/* Tags */}
             {book.tags && book.tags.length > 0 && (
               <div className="mt-8">
-                <h3 className="font-semibold text-slate-900 dark:text-white mb-4">برچسب‌ها</h3>
+                <h3 className="font-semibold text-foreground mb-4">برچسب‌ها</h3>
                 <div className="flex flex-wrap gap-2">
                   {book.tags.map((tag: string | { name: string }, index: number) => (
                     <span
                       key={index}
-                      className="px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm"
+                      className="px-4 py-2 rounded-full bg-muted text-muted-foreground text-sm"
                     >
                       {typeof tag === 'string' ? tag : tag.name}
                     </span>

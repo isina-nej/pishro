@@ -81,7 +81,7 @@ const CheckoutPageContent = () => {
   const isEmpty = items.length === 0;
 
   return (
-    <div className="min-h-screen mt-16 bg-gradient-to-br from-gray-50 via-white to-gray-100">
+    <div className="min-h-screen mt-16 bg-gradient-to-br from-muted via-card to-muted">
       <div className="container-xl pt-8 pb-20">
         {/* Page Header */}
         <motion.div
@@ -90,12 +90,12 @@ const CheckoutPageContent = () => {
           transition={{ duration: 0.5 }}
           className="mb-8"
         >
-          <h1 className="text-4xl font-black text-gray-900 dark:text-textPrimary mb-2">
+          <h1 className="text-4xl font-black text-foreground dark:text-textPrimary mb-2">
             {step === "shoppingCart" && "سبد خرید شما"}
             {step === "pay" && "تکمیل خرید"}
             {step === "result" && "نتیجه پرداخت"}
           </h1>
-          <p className="text-gray-600 dark:text-textSecondary">
+          <p className="text-muted-foreground dark:text-textSecondary">
             {step === "shoppingCart" &&
               "دوره‌های انتخابی خود را بررسی و خرید کنید"}
             {step === "pay" && "روش پرداخت را انتخاب کنید"}

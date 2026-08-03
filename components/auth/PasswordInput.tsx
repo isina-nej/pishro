@@ -23,15 +23,15 @@ export const PasswordInput = ({
           type={show ? "text" : "password"}
           placeholder={placeholder}
           className={cn(
-            "mt-1 pr-10 pl-8 block w-full rounded-none border-0 border-b border-black focus-visible:ring-0 focus-visible:bg-gray-100 dark:bg-cardBg",
-            error && "border-red-500"
+            "mt-1 pr-10 pl-8 block w-full rounded-none border-0 border-b border-black focus-visible:ring-0 focus-visible:bg-muted dark:bg-cardBg",
+            error && "border-destructive"
           )}
           {...props}
         />
         <Lock
           className={cn(
             "absolute bottom-2 right-2 size-5",
-            error && "text-red-500"
+            error && "text-destructive"
           )}
         />
         {show ? (
@@ -46,7 +46,7 @@ export const PasswordInput = ({
           />
         )}
       </div>
-      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+      {error && <p className="text-destructive text-sm mt-1">{error}</p>}
     </div>
   );
 };

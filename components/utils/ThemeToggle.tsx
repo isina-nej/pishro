@@ -29,7 +29,7 @@ export default function ThemeToggle() {
     <button
       type="button"
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
-      className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 text-slate-700 transition-colors hover:bg-gray-200 dark:bg-cardBg dark:text-textSecondary dark:hover:bg-darkBgHidden"
+      className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-muted text-muted-foreground transition-colors hover:bg-muted dark:bg-cardBg dark:text-textSecondary dark:hover:bg-darkBgHidden"
       aria-label={isDark ? 'روشن کردن حالت روز' : 'روشن کردن حالت شب'}
       title={isDark ? 'تغییر به حالت روز' : 'تغییر به حالت شب'}
     >

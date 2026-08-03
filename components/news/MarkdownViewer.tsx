@@ -5,7 +5,7 @@ import { Suspense } from 'react';
 
 const MDXEditorComponent = dynamic(
   () => import('./MDXEditorComponent'),
-  { ssr: false, loading: () => <div className="p-8 text-center text-slate-500">در حال بارگذاری...</div> }
+  { ssr: false, loading: () => <div className="p-8 text-center text-muted-foreground">در حال بارگذاری...</div> }
 );
 
 interface MarkdownViewerProps {
@@ -15,7 +15,7 @@ interface MarkdownViewerProps {
 
 export default function MarkdownViewer({ content, className = '' }: MarkdownViewerProps) {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-slate-500">در حال بارگذاری...</div>}>
+    <Suspense fallback={<div className="p-8 text-center text-muted-foreground">در حال بارگذاری...</div>}>
       <MDXEditorComponent content={content} className={className} />
     </Suspense>
   );

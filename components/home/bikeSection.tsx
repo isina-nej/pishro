@@ -112,9 +112,9 @@ const BikeSection = () => {
                 delay: item.delay + 1.2,
               },
             }}
-            className="absolute px-3 py-2 md:px-6 md:py-3 rounded-xl bg-white dark:bg-cardBg backdrop-blur-md border border-white/60 shadow-lg will-change-transform"
+            className="absolute px-3 py-2 md:px-6 md:py-3 rounded-xl bg-card dark:bg-cardBg backdrop-blur-md border border-border/60 shadow-lg will-change-transform"
           >
-            <p className="text-base md:text-lg lg:text-xl font-semibold text-gray-800 dark:text-textPrimary whitespace-nowrap">
+            <p className="text-base md:text-lg lg:text-xl font-semibold text-foreground dark:text-textPrimary whitespace-nowrap">
               {item.text}
             </p>
           </motion.div>

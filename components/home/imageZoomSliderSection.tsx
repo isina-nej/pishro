@@ -110,13 +110,13 @@ const SliderNavigation = ({
   >
     <button
       onClick={onPrev}
-      className="text-white/80 hover:text-white transition-colors z-50"
+      className="text-primary-foreground/80 hover:text-primary-foreground transition-colors z-50"
     >
       <HiChevronRight className="w-8 h-8 sm:w-12 sm:h-12 md:w-14 md:h-14" />
     </button>
     <button
       onClick={onNext}
-      className="text-white/80 hover:text-white transition-colors z-50"
+      className="text-primary-foreground/80 hover:text-primary-foreground transition-colors z-50"
     >
       <HiChevronLeft className="w-8 h-8 sm:w-12 sm:h-12 md:w-14 md:h-14" />
     </button>
@@ -231,7 +231,7 @@ const ImageZoomSliderSection = ({
                           scale: isActive ? bgScale : otherSlidesScale,
                         }}
                         transition={{ duration: 0.4 }}
-                        className="relative w-full aspect-[16/10] overflow-hidden rounded-2xl border border-white/10 shadow-2xl shadow-black/40 sm:aspect-[16/9] sm:rounded-[2rem]"
+                        className="relative w-full aspect-[16/10] overflow-hidden rounded-2xl border border-border/10 shadow-2xl shadow-black/40 sm:aspect-[16/9] sm:rounded-[2rem]"
                       >
                         <Image
                           src={slide.src}

@@ -27,7 +27,7 @@ const Result = () => {
   if (!status) {
     return (
       <main className="flex items-center justify-center min-h-[400px]">
-        <p className="text-gray-600 dark:text-textSecondary text-lg">در حال بررسی پرداخت...</p>
+        <p className="text-muted-foreground dark:text-textSecondary text-lg">در حال بررسی پرداخت...</p>
       </main>
     );
   }
@@ -35,10 +35,10 @@ const Result = () => {
   if (loading) {
     return (
       <main className="flex items-center justify-center min-h-[400px]">
-        <span className="ml-2 text-gray-600 dark:text-textSecondary text-sm">
+        <span className="ml-2 text-muted-foreground dark:text-textSecondary text-sm">
           در حال بارگذاری سفارش...
         </span>
-        <Loader2 className="w-6 h-6 animate-spin text-gray-500 dark:text-textSecondary" />
+        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground dark:text-textSecondary" />
       </main>
     );
   }
@@ -46,8 +46,8 @@ const Result = () => {
   if (error) {
     return (
       <main className="flex flex-col items-center justify-center min-h-[400px]">
-        <p className="text-red-600 font-semibold mb-2">خطا در دریافت سفارش</p>
-        <p className="text-gray-500 dark:text-textSecondary text-sm">{error}</p>
+        <p className="text-destructive font-semibold mb-2">خطا در دریافت سفارش</p>
+        <p className="text-muted-foreground dark:text-textSecondary text-sm">{error}</p>
       </main>
     );
   }
@@ -75,7 +75,7 @@ const Result = () => {
       <h2
         className={clsx(
           "font-iransans text-2xl font-bold mb-2",
-          status === "success" ? "text-green-600 dark:text-green-400" : "text-red-600"
+          status === "success" ? "text-primary" : "text-destructive"
         )}
       >
         {status === "success"
@@ -84,39 +84,39 @@ const Result = () => {
       </h2>
 
       {order && (
-        <div className="w-full max-w-3xl bg-white dark:bg-cardBg shadow-md rounded-xl mt-10 p-6 border border-gray-100 dark:border-borderColor">
+        <div className="w-full max-w-3xl bg-card dark:bg-cardBg shadow-md rounded-xl mt-10 p-6 border border-border dark:border-borderColor">
           <div className="flex flex-col md:flex-row md:justify-between md:items-center border-b pb-4 mb-5">
             <div>
-              <p className="text-sm text-gray-500 dark:text-textSecondary">شماره سفارش</p>
-              <p className="font-semibold text-gray-800 dark:text-textPrimary">{order.id}</p>
+              <p className="text-sm text-muted-foreground dark:text-textSecondary">شماره سفارش</p>
+              <p className="font-semibold text-foreground dark:text-textPrimary">{order.id}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500 dark:text-textSecondary">تاریخ ثبت</p>
-              <p className="font-semibold text-gray-800 dark:text-textPrimary">
+              <p className="text-sm text-muted-foreground dark:text-textSecondary">تاریخ ثبت</p>
+              <p className="font-semibold text-foreground dark:text-textPrimary">
                 {format(new Date(order.createdAt), "yyyy/MM/dd - HH:mm")}
               </p>
             </div>
           </div>
 
           <div className="mb-6">
-            <p className="text-gray-700 dark:text-textPrimary font-semibold mb-3">
+            <p className="text-muted-foreground dark:text-textPrimary font-semibold mb-3">
               دوره‌های خریداری‌شده
             </p>
             <ul className="space-y-3">
               {order.items.map((item) => (
                 <li
                   key={item.courseId}
-                  className="flex justify-between items-center bg-gray-50 dark:bg-darkBgHidden px-4 py-3 rounded-lg border border-gray-100 dark:border-borderColor"
+                  className="flex justify-between items-center bg-muted dark:bg-darkBgHidden px-4 py-3 rounded-lg border border-border dark:border-borderColor"
                 >
                   <div>
-                    <p className="font-medium text-gray-800 dark:text-textPrimary">{item.title}</p>
+                    <p className="font-medium text-foreground dark:text-textPrimary">{item.title}</p>
                     {item.discountPercent ? (
-                      <p className="text-xs text-gray-500 dark:text-textSecondary">
+                      <p className="text-xs text-muted-foreground dark:text-textSecondary">
                         تخفیف {item.discountPercent}٪
                       </p>
                     ) : null}
                   </div>
-                  <span className="font-semibold text-gray-700 dark:text-textPrimary">
+                  <span className="font-semibold text-muted-foreground dark:text-textPrimary">
                     {item.price?.toLocaleString("fa-IR")} تومان
                   </span>
                 </li>
@@ -126,31 +126,31 @@ const Result = () => {
 
           <div className="border-t pt-4 flex flex-col gap-2">
             <div className="flex justify-between">
-              <p className="text-gray-600 dark:text-textSecondary">مبلغ کل</p>
-              <p className="font-semibold text-gray-800 dark:text-textPrimary">
+              <p className="text-muted-foreground dark:text-textSecondary">مبلغ کل</p>
+              <p className="font-semibold text-foreground dark:text-textPrimary">
                 {order.total.toLocaleString("fa-IR")} تومان
               </p>
             </div>
 
             {order.paymentRef && (
               <div className="flex justify-between">
-                <p className="text-gray-600 dark:text-textSecondary">کد پیگیری</p>
-                <p className="font-semibold text-gray-800 dark:text-textPrimary">
+                <p className="text-muted-foreground dark:text-textSecondary">کد پیگیری</p>
+                <p className="font-semibold text-foreground dark:text-textPrimary">
                   {order.paymentRef}
                 </p>
               </div>
             )}
 
             <div className="flex justify-between">
-              <p className="text-gray-600 dark:text-textSecondary">وضعیت سفارش</p>
+              <p className="text-muted-foreground dark:text-textSecondary">وضعیت سفارش</p>
               <span
                 className={clsx(
                   "px-3 py-1 rounded-full text-sm font-medium",
                   order.status.toUpperCase() === "PAID"
-                    ? "bg-green-100 dark:bg-green-950 text-green-700 dark:text-green-300"
+                    ? "bg-primary text-primary"
                     : order.status.toUpperCase() === "FAILED"
-                    ? "bg-red-100 text-red-700"
-                    : "bg-yellow-100 text-yellow-700"
+                    ? "bg-destructive text-destructive"
+                    : "bg-premium text-premium"
                 )}
               >
                 {order.status.toUpperCase() === "PAID"

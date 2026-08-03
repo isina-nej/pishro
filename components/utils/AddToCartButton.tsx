@@ -53,8 +53,8 @@ export default function AddToCartButton({ course }: AddToCartButtonProps) {
       onClick={handleAddToCart}
       className={`flex items-center gap-2 px-6 py-3 rounded-full font-bold text-base shadow-lg hover:opacity-90 transition ${
         !freeCourse && isInCart
-          ? "bg-gray-400 dark:bg-darkBgHidden dark:bg-gray-500 dark:bg-gray-50 dark:bg-darkBgHidden0 text-white cursor-not-allowed"
-          : "bg-mySecondary text-white"
+          ? "bg-accent dark:bg-darkBgHidden dark:bg-darkBgHidden0 text-primary-foreground cursor-not-allowed"
+          : "bg-mySecondary text-primary-foreground"
       }`}
       disabled={!freeCourse && isInCart}
     >

@@ -105,9 +105,9 @@ export const LinkManager: React.FC<LinkManagerProps> = ({ editor, darkMode = fal
   const buttonClasses = [
     'px-3 py-2 text-sm rounded transition-colors',
     hasLink
-      ? 'bg-blue-500 text-white'
-      : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300',
-    darkMode ? 'dark:bg-gray-700' : '',
+      ? 'bg-primary text-primary-foreground'
+      : 'bg-muted text-muted-foreground',
+    darkMode ? '' : '',
   ]
     .filter(Boolean)
     .join(' ');
@@ -126,12 +126,12 @@ export const LinkManager: React.FC<LinkManagerProps> = ({ editor, darkMode = fal
 
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          className="fixed inset-0 bg-background bg-opacity-50 flex items-center justify-center z-50"
           onClick={() => setIsOpen(false)}
         >
           <div
-            className={`bg-white rounded-lg shadow-lg p-6 w-full max-w-md ${
-              darkMode ? 'dark:bg-gray-800' : ''
+            className={`bg-card rounded-lg shadow-lg p-6 w-full max-w-md ${
+              darkMode ? '' : ''
             }`}
             onClick={(e) => e.stopPropagation()}
           >
@@ -148,8 +148,8 @@ export const LinkManager: React.FC<LinkManagerProps> = ({ editor, darkMode = fal
                   value={linkData.url}
                   onChange={(e) => updateLinkData({ url: e.target.value })}
                   placeholder="https://example.com"
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    darkMode ? 'dark:bg-gray-700 dark:border-gray-600' : ''
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${
+                    darkMode ? '' : ''
                   }`}
                 />
               </div>
@@ -162,8 +162,8 @@ export const LinkManager: React.FC<LinkManagerProps> = ({ editor, darkMode = fal
                   value={linkData.text}
                   onChange={(e) => updateLinkData({ text: e.target.value })}
                   placeholder="Link text"
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    darkMode ? 'dark:bg-gray-700 dark:border-gray-600' : ''
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${
+                    darkMode ? '' : ''
                   }`}
                 />
               </div>
@@ -188,7 +188,7 @@ export const LinkManager: React.FC<LinkManagerProps> = ({ editor, darkMode = fal
               {isEditing && (
                 <button
                   onClick={handleRemove}
-                  className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+                  className="px-4 py-2 bg-destructive text-primary-foreground rounded-md hover:bg-destructive transition-colors"
                   type="button"
                 >
                   Remove
@@ -196,8 +196,8 @@ export const LinkManager: React.FC<LinkManagerProps> = ({ editor, darkMode = fal
               )}
               <button
                 onClick={() => setIsOpen(false)}
-                className={`px-4 py-2 border rounded-md hover:bg-gray-100 transition-colors ${
-                  darkMode ? 'dark:hover:bg-gray-700' : ''
+                className={`px-4 py-2 border rounded-md hover:bg-muted transition-colors ${
+                  darkMode ? 'dark:hover:bg-accent' : ''
                 }`}
                 type="button"
               >
@@ -205,7 +205,7 @@ export const LinkManager: React.FC<LinkManagerProps> = ({ editor, darkMode = fal
               </button>
               <button
                 onClick={handleSave}
-                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors ml-auto"
+                className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary transition-colors ml-auto"
                 type="button"
               >
                 {isEditing ? 'Update' : 'Insert'}
