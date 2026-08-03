@@ -1,6 +1,10 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { getCryptoMarketData } from '@/lib/services/crypto-market-service';
+import {
+  DEFAULT_MARKET_LIMIT,
+  getCryptoMarketData,
+  parseCryptoMarketQuery,
+} from '@/lib/services/crypto-market-service';
 
 const originalFetch = global.fetch;
 const originalEnv = {
@@ -17,6 +21,24 @@ function json(data: unknown) {
 test.afterEach(() => {
   global.fetch = originalFetch;
   Object.assign(process.env, originalEnv);
+});
+
+test('an absent ?limit falls back to the full market limit, not one asset', () => {
+  // The crypto page fetches /api/public/crypto-market with no query string at
+  // all, so this is the path that actually runs in production.
+  assert.equal(parseCryptoMarketQuery(new URLSearchParams()).limit, DEFAULT_MARKET_LIMIT);
+  assert.equal(parseCryptoMarketQuery(new URLSearchParams('limit=')).limit, DEFAULT_MARKET_LIMIT);
+});
+
+test('an explicit ?limit is honoured, clamped, and validated', () => {
+  const limitOf = (qs: string) => parseCryptoMarketQuery(new URLSearchParams(qs)).limit;
+  assert.equal(limitOf('limit=25'), 25);
+  assert.equal(limitOf('limit=1'), 1);
+  assert.equal(limitOf(`limit=${DEFAULT_MARKET_LIMIT + 500}`), DEFAULT_MARKET_LIMIT);
+  assert.equal(limitOf('limit=0'), DEFAULT_MARKET_LIMIT);
+  assert.equal(limitOf('limit=-5'), DEFAULT_MARKET_LIMIT);
+  assert.equal(limitOf('limit=abc'), DEFAULT_MARKET_LIMIT);
+  assert.equal(limitOf('limit=1.5'), DEFAULT_MARKET_LIMIT);
 });
 
 test('uses CoinGecko market data, Binance price, and Nobitex toman price', async () => {

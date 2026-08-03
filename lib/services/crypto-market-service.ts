@@ -91,8 +91,14 @@ function toQueryList(value: string | null, fallback: string[], max = 150): strin
 }
 
 function toLimit(value: string | null): number {
+  // An absent ?limit must fall through to the default. Testing Number.isInteger
+  // first cannot do that: a missing param is null, Number(null) is 0, and
+  // Number.isInteger(0) is true — so the default branch was unreachable and
+  // Math.max(0, 1) clamped every default request down to a single asset.
+  if (!value) return DEFAULT_MARKET_LIMIT;
   const parsed = Number(value);
-  return Number.isInteger(parsed) ? Math.min(Math.max(parsed, 1), DEFAULT_MARKET_LIMIT) : DEFAULT_MARKET_LIMIT;
+  if (!Number.isInteger(parsed) || parsed < 1) return DEFAULT_MARKET_LIMIT;
+  return Math.min(parsed, DEFAULT_MARKET_LIMIT);
 }
 
 function coingeckoMarketUrl(limit: number, ids: string[] = []): string {
