@@ -4,37 +4,37 @@ const prisma = new PrismaClient();
 
 const miniSlider2Images = [
   {
-    imageUrl: "/images/home/landing-slider/p07.jpg",
+    imageUrl: "/images/home/landing-slider/p07.webp",
     row: 2,
     order: 1,
     published: true,
   },
   {
-    imageUrl: "/images/home/landing-slider/p08.jpg",
+    imageUrl: "/images/home/landing-slider/p08.webp",
     row: 2,
     order: 2,
     published: true,
   },
   {
-    imageUrl: "/images/home/landing-slider/p09.jpg",
+    imageUrl: "/images/home/landing-slider/p09.webp",
     row: 2,
     order: 3,
     published: true,
   },
   {
-    imageUrl: "/images/home/landing-slider/p10.jpg",
+    imageUrl: "/images/home/landing-slider/p10.webp",
     row: 2,
     order: 4,
     published: true,
   },
   {
-    imageUrl: "/images/home/landing-slider/p11.jpg",
+    imageUrl: "/images/home/landing-slider/p11.webp",
     row: 2,
     order: 5,
     published: true,
   },
   {
-    imageUrl: "/images/home/landing-slider/p12.jpg",
+    imageUrl: "/images/home/landing-slider/p12.webp",
     row: 2,
     order: 6,
     published: true,

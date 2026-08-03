@@ -305,12 +305,15 @@ const SlidesSwiperSection = ({ slides }: { slides: SlideData[] }) => {
               <SwiperSlide key={index}>
                 <div className="relative w-full h-[420px] bg-gradient-to-br from-card to-background rounded-3xl overflow-hidden shadow-2xl border border-border/10">
                   {/* Image */}
-                  <div className="relative w-full h-56">
+                  <div className="relative w-full h-56 bg-[#121a17]">
                     <Image
                       src={slide.src}
                       alt={slide.title}
                       fill
+                      sizes="(max-width: 768px) 90vw, 640px"
                       className="object-cover"
+                      loading={index === 0 ? "eager" : "lazy"}
+                      priority={index === 0}
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background/60" />
                   </div>

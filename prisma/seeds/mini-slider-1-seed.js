@@ -28,13 +28,13 @@ const miniSlider1Images = [
     published: true,
   },
   {
-    imageUrl: "/images/home/landing-slider/p05.jpg",
+    imageUrl: "/images/home/landing-slider/p05.webp",
     row: 1,
     order: 5,
     published: true,
   },
   {
-    imageUrl: "/images/home/landing-slider/p06.jpg",
+    imageUrl: "/images/home/landing-slider/p06.webp",
     row: 1,
     order: 6,
     published: true,

@@ -39,7 +39,7 @@ const homeSlides = [
     title: "تحلیل بنیادی بازارها",
     description:
       "شناخت عوامل بنیادی تأثیرگذار بر بازارهای مالی و تصمیم‌گیری آگاهانه در سرمایه‌ گذاری",
-    imageUrl: "/images/home/landing-slider/p05.jpg",
+    imageUrl: "/images/home/landing-slider/p05.webp",
     order: 5,
     published: true,
   },

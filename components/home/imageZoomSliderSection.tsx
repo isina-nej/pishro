@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useMemo, useCallback } from "react";
+import { useRef, useState, useMemo, useCallback, useEffect } from "react";
 import {
   motion,
   useScroll,
@@ -23,6 +23,16 @@ type SlideData = {
   title: string;
   text: string;
 };
+
+const SLIDE_SIZES =
+  "(max-width: 640px) 100vw, (max-width: 1024px) 85vw, 70vw";
+const NEAR_SLIDE_DISTANCE = 1;
+
+function circularDistance(a: number, b: number, length: number) {
+  if (length <= 0) return 0;
+  const diff = Math.abs(a - b);
+  return Math.min(diff, length - diff);
+}
 
 /* ------------------------------------------------------------------ */
 /* 🧠 Hook: Handles all scroll-based animations and scale transitions */
@@ -140,6 +150,7 @@ const ImageZoomSliderSection = ({
   const sectionRef = useRef<HTMLDivElement>(null);
   const swiperRef = useRef<SwiperType | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [shouldLoadImages, setShouldLoadImages] = useState(false);
 
   const {
     parentScroll,
@@ -154,18 +165,41 @@ const ImageZoomSliderSection = ({
 
   const [showMiniSlider, setShowMiniSlider] = useState(false);
 
+  // Mount images only when the album is near the viewport (avoids decode spike)
+  useEffect(() => {
+    const node = sectionRef.current;
+    if (!node || shouldLoadImages) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          setShouldLoadImages(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "280px 0px", threshold: 0.01 }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [shouldLoadImages]);
+
   // ✅ Listen to bgScale value changes
   useMotionValueEvent(bgScale, "change", (latest) => {
     if (latest <= 1.01) setShowMiniSlider(true);
     else setShowMiniSlider(false);
   });
 
-  const slides = useMemo(() => (slidesData?.length ? [...slidesData, ...slidesData] : []), [slidesData]);
+  // Keep original slide count — enough for Swiper loop without doubling decode cost
+  const slides = useMemo(
+    () => (slidesData?.length ? slidesData : []),
+    [slidesData]
+  );
 
   // 🌀 Control autoplay based on visibility
   useMotionValueEvent(sectionScroll, "change", (latestSection) => {
     const swiper = swiperRef.current;
-    if (!swiper) return;
+    if (!swiper?.autoplay) return;
 
     const textsGone = parentScroll.get() > 0.98;
     const inView = latestSection > 0 && latestSection < 1;
@@ -177,6 +211,17 @@ const ImageZoomSliderSection = ({
   // 🧭 Callbacks for cleaner handlers
   const handlePrev = useCallback(() => swiperRef.current?.slidePrev(), []);
   const handleNext = useCallback(() => swiperRef.current?.slideNext(), []);
+
+  const shouldRenderSlideImage = useCallback(
+    (index: number) => {
+      if (!shouldLoadImages) return false;
+      return (
+        circularDistance(index, activeIndex, slides.length) <=
+        NEAR_SLIDE_DISTANCE
+      );
+    },
+    [activeIndex, shouldLoadImages, slides.length]
+  );
 
   return (
     <>
@@ -193,10 +238,14 @@ const ImageZoomSliderSection = ({
             >
               <Swiper
                 modules={[Autoplay]}
-                onSwiper={(swiper) => (swiperRef.current = swiper)}
+                onSwiper={(swiper) => {
+                  swiperRef.current = swiper;
+                  swiper.autoplay?.stop();
+                }}
                 slidesPerView={1}
                 centeredSlides
                 loop={slides.length >= 4}
+                watchSlidesProgress
                 allowTouchMove={false}
                 spaceBetween={15}
                 autoplay={{
@@ -219,49 +268,36 @@ const ImageZoomSliderSection = ({
               >
                 {slides.map((slide, index) => {
                   const isActive = activeIndex === index;
+                  const renderImage = shouldRenderSlideImage(index);
                   return (
                     <SwiperSlide
-                      key={index}
+                      key={`${slide.src}-${index}`}
                       className={clsx("relative", isActive ? "z-20" : "z-0")}
                     >
-                      {/* Main Image */}
                       <motion.div
                         style={{
                           opacity: isActive ? 1 : otherSlidesOpacity,
                           scale: isActive ? bgScale : otherSlidesScale,
                         }}
                         transition={{ duration: 0.4 }}
-                        className="relative w-full aspect-[16/10] overflow-hidden rounded-2xl border border-border/10 shadow-2xl shadow-black/40 sm:aspect-[16/9] sm:rounded-[2rem]"
+                        className="relative w-full aspect-[16/10] overflow-hidden rounded-2xl border border-border/10 bg-[#121a17] shadow-2xl shadow-black/40 sm:aspect-[16/9] sm:rounded-[2rem]"
                       >
-                        <Image
-                          src={slide.src}
-                          alt={`slide-${index}`}
-                          fill
-                          className="object-cover"
-                          priority={index === 0}
-                        />
-
+                        {renderImage ? (
+                          <Image
+                            src={slide.src}
+                            alt={slide.title || `slide-${index + 1}`}
+                            fill
+                            sizes={SLIDE_SIZES}
+                            className="object-cover"
+                            priority={index === 0 && shouldLoadImages}
+                            loading={
+                              index === 0 && shouldLoadImages
+                                ? "eager"
+                                : "lazy"
+                            }
+                          />
+                        ) : null}
                       </motion.div>
-
-                      {/* Zoomed Overlay */}
-                      {isActive && (
-                        <>
-                          <motion.div
-                            style={{ scale: bgScale }}
-                            className="absolute inset-0 z-10 rounded-3xl overflow-hidden"
-                          >
-                            <div className="size-full relative">
-                              <Image
-                                src={slide.src}
-                                alt="Zoom Background"
-                                fill
-                                className="object-cover"
-                                priority={index === 0}
-                              />
-                            </div>
-                          </motion.div>
-                        </>
-                      )}
                     </SwiperSlide>
                   );
                 })}
