@@ -51,7 +51,7 @@ rclone config create "$REMOTE_NAME" s3 \
     endpoint "$ENDPOINT"
 
 # Check if config was created
-if ! rclone config dump | grep -q "\[$REMOTE_NAME\]"; then
+if ! grep -q "\[$REMOTE_NAME\]" "$RCLONE_CONFIG"; then
     print_error "Failed to create rclone config. Please check permissions."
 fi
 print_success "rclone config '$REMOTE_NAME' created/updated."
