@@ -82,7 +82,7 @@ export const NewsHero = ({ stats }: NewsHeroProps) => {
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-card/85 via-card/70 to-card/85" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/15 to-black/55" />
       </div>
 
       {/* Animated floating elements */}
@@ -102,11 +102,11 @@ export const NewsHero = ({ stats }: NewsHeroProps) => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-12 max-w-4xl space-y-6 rounded-[2rem] border border-border/15 bg-[#091a28]/45 p-7 shadow-2xl backdrop-blur-2xl sm:p-9 lg:mb-16"
+          className="mb-12 max-w-4xl space-y-6 rounded-[2rem] border border-white/20 bg-black/40 p-7 shadow-2xl shadow-black/30 sm:p-9 lg:mb-16 text-white"
         >
           {/* Badge */}
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
-            <span className="inline-flex items-center gap-2 rounded-full border border-border/20 bg-card/10 px-4 py-2 text-sm font-medium text-primary-foreground backdrop-blur-sm hover:border-border/30 transition-colors">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-medium text-white">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-75 animate-ping"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
@@ -123,11 +123,11 @@ export const NewsHero = ({ stats }: NewsHeroProps) => {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="text-4xl font-black !leading-tight md:text-6xl lg:text-7xl"
             >
-              <span className="bg-gradient-to-r from-foreground via-primary to-primary bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-white via-emerald-200 to-amber-200 bg-clip-text text-transparent">
                 به‌روزترین اخبار
               </span>
               <br />
-              <span className="text-foreground">دنیای سرمایه‌گذاری</span>
+              <span className="text-white">دنیای سرمایه‌گذاری</span>
             </motion.h1>
           </div>
 
@@ -136,7 +136,7 @@ export const NewsHero = ({ stats }: NewsHeroProps) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="max-w-2xl text-lg text-muted-foreground md:text-xl leading-relaxed"
+            className="max-w-2xl text-lg leading-relaxed text-white/80 md:text-xl"
           >
             تازه‌ترین اخبار، تحلیل‌ها و بینش‌های بازار سرمایه که توسط تیم تحریریه پیشرو با دقت انتخاب شده‌اند تا شما همیشه یک قدم جلوتر باشید.
           </motion.p>
@@ -154,7 +154,7 @@ export const NewsHero = ({ stats }: NewsHeroProps) => {
               key={item.label}
               variants={itemVariants}
               whileHover={{ y: -5 }}
-              className="group relative overflow-hidden rounded-3xl border border-border/15 bg-[#091a28]/45 px-6 py-5 shadow-xl backdrop-blur-2xl transition-all duration-300 hover:-translate-y-1 hover:border-border/25 hover:bg-card/15"
+              className="group relative overflow-hidden rounded-3xl border border-white/20 bg-black/40 px-6 py-5 text-white shadow-xl shadow-black/25 transition-all duration-300 hover:-translate-y-1 hover:bg-black/50"
             >
               {/* Background gradient effect */}
               <div className={`absolute -inset-1 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-100 blur transition-opacity duration-300 -z-10`} />
@@ -164,9 +164,9 @@ export const NewsHero = ({ stats }: NewsHeroProps) => {
                   <span className={`text-2xl md:text-3xl font-bold ${item.iconColor}`}>
                     {getStatValue(item.value).toLocaleString("fa-IR")}
                   </span>
-                  <span className="text-xs md:text-sm text-muted-foreground font-medium">{item.label}</span>
+                  <span className="text-xs md:text-sm font-medium text-white/75">{item.label}</span>
                 </div>
-                <div className={`${item.iconColor} p-2 rounded-xl bg-card/10 group-hover:bg-card/20 transition-colors`}>
+                <div className={`${item.iconColor} rounded-xl bg-white/10 p-2 transition-colors group-hover:bg-white/15`}>
                   {item.icon}
                 </div>
               </div>

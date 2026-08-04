@@ -47,17 +47,11 @@ const HeroSection = ({
         <source src="/videos/aboutUsLanding.webm" type="video/webm" />
       </video>
 
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-background/60"></div>
-
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-20 right-20 w-72 h-72 bg-card rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 left-20 w-96 h-96 bg-card rounded-full blur-3xl animate-pulse delay-1000"></div>
-      </div>
+      {/* Soft vignette — keep video clear */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/10 to-black/50" />
 
       <div className="container-md relative z-10 py-24">
-        <div className="mx-auto max-w-5xl rounded-[2.25rem] border border-white/15 bg-[#091a28]/75 p-7 text-center text-white shadow-2xl backdrop-blur-2xl sm:p-10">
+        <div className="mx-auto max-w-5xl rounded-[2.25rem] border border-white/20 bg-black/40 p-7 text-center text-white shadow-2xl shadow-black/30 sm:p-10">
           {/* Badge */}
           {badgeText && (
             <motion.div

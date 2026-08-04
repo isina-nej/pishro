@@ -90,8 +90,8 @@ export const InvestmentPlansHero = ({
             />
           </video>
         </motion.div>
-        {/* Enhanced Gradient Overlays */}
-        <div className="absolute inset-0 bg-background/60"></div>
+        {/* Soft vignette — keep video clear */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/10 to-black/50" />
       </div>
 
       {/* Animated Floating Elements - Disabled on mobile for performance */}
@@ -151,7 +151,7 @@ export const InvestmentPlansHero = ({
           className="flex flex-col gap-12"
         >
           {/* Header Section */}
-          <div className="mx-auto max-w-4xl space-y-8 rounded-[2.25rem] border border-white/15 bg-[#091a28]/75 p-7 text-center shadow-2xl backdrop-blur-2xl sm:p-10">
+          <div className="mx-auto max-w-4xl space-y-8 rounded-[2.25rem] border border-white/20 bg-black/40 p-7 text-center shadow-2xl shadow-black/30 sm:p-10">
             <motion.div variants={itemVariants} className="flex justify-center">
               <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/40 bg-emerald-500/15 px-6 py-2.5 text-sm font-medium text-emerald-200 shadow-lg shadow-emerald-500/10 backdrop-blur-sm">
                 <Sparkles className="h-4 w-4" />
@@ -235,9 +235,7 @@ export const InvestmentPlansHero = ({
                       }
                     : undefined
                 }
-                className={`group relative overflow-hidden rounded-3xl border border-white/15 bg-[#091a28]/75 p-6 text-white ${
-                  isMobile ? "backdrop-blur-sm" : "backdrop-blur-2xl"
-                } shadow-xl transition-all duration-300 hover:bg-[#091a28]/85`}
+                className="group relative overflow-hidden rounded-3xl border border-white/20 bg-black/40 p-6 text-white shadow-xl shadow-black/25 transition-all duration-300 hover:bg-black/50"
               >
                 <div className="relative flex flex-col items-center text-center gap-4">
                   <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-emerald-200 shadow-lg backdrop-blur-sm">
