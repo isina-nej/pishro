@@ -10,11 +10,21 @@ import { SiteSettings } from "@prisma/client";
 import {
   DEFAULT_PALETTE_ID,
   DEFAULT_THEME_MODE,
+  DEFAULT_USER_PANEL_PALETTE_ID,
   resolveThemeMode,
   type PaletteTokens,
   type SiteThemeMode,
 } from "@/lib/theme/landing-palettes";
 import { resolveSitePalette } from "@/lib/services/custom-palette-service";
+import {
+  DEFAULT_FAVICON_URL,
+  DEFAULT_LOGO_URL,
+  DEFAULT_OG_IMAGE_URL,
+  DEFAULT_SITE_DESCRIPTION,
+  DEFAULT_SITE_NAME,
+  resolveAssetUrl,
+} from "@/lib/site/branding";
+import { parseHiddenPages } from "@/lib/site/hidable-pages";
 
 /**
  * Type for updateable settings fields
@@ -27,11 +37,32 @@ export interface UpdateSettingsInput {
   supportPhone?: string | null;
   paletteId?: string;
   themeMode?: SiteThemeMode;
+  logoUrl?: string | null;
+  faviconUrl?: string | null;
+  ogImageUrl?: string | null;
+  hiddenPages?: string[];
+  userPanelPaletteId?: string;
 }
 
 export type PublicSiteTheme = {
   paletteId: string;
   themeMode: SiteThemeMode;
+  light: PaletteTokens;
+  dark: PaletteTokens;
+  nameFa: string;
+};
+
+export type PublicSiteChrome = {
+  siteName: string;
+  siteDescription: string;
+  logoUrl: string;
+  faviconUrl: string;
+  ogImageUrl: string;
+  hiddenPages: string[];
+};
+
+export type PublicUserPanelTheme = {
+  paletteId: string;
   light: PaletteTokens;
   dark: PaletteTokens;
   nameFa: string;
@@ -52,6 +83,8 @@ export async function getSettings(): Promise<SiteSettings> {
         data: {
           paletteId: DEFAULT_PALETTE_ID,
           themeMode: DEFAULT_THEME_MODE,
+          userPanelPaletteId: DEFAULT_USER_PANEL_PALETTE_ID,
+          hiddenPages: [],
         },
       });
     }
@@ -88,6 +121,83 @@ export async function getPublicSiteTheme(): Promise<PublicSiteTheme> {
     return {
       paletteId: resolved.id,
       themeMode: DEFAULT_THEME_MODE,
+      light: resolved.light,
+      dark: resolved.dark,
+      nameFa: resolved.nameFa,
+    };
+  }
+}
+
+/**
+ * Branding + visibility for chrome (nav/footer/metadata). Never throws.
+ */
+export async function getPublicSiteChrome(): Promise<PublicSiteChrome> {
+  try {
+    const settings = await prisma.siteSettings.findFirst({
+      select: {
+        siteName: true,
+        siteDescription: true,
+        logoUrl: true,
+        faviconUrl: true,
+        ogImageUrl: true,
+        hiddenPages: true,
+      },
+    });
+    return {
+      siteName: settings?.siteName?.trim() || DEFAULT_SITE_NAME,
+      siteDescription:
+        settings?.siteDescription?.trim() || DEFAULT_SITE_DESCRIPTION,
+      logoUrl: resolveAssetUrl(settings?.logoUrl, DEFAULT_LOGO_URL),
+      faviconUrl: resolveAssetUrl(
+        settings?.faviconUrl || settings?.logoUrl,
+        DEFAULT_FAVICON_URL
+      ),
+      ogImageUrl: resolveAssetUrl(
+        settings?.ogImageUrl || settings?.logoUrl,
+        DEFAULT_OG_IMAGE_URL
+      ),
+      hiddenPages: parseHiddenPages(settings?.hiddenPages),
+    };
+  } catch (error) {
+    console.error("Error fetching public site chrome:", error);
+    return {
+      siteName: DEFAULT_SITE_NAME,
+      siteDescription: DEFAULT_SITE_DESCRIPTION,
+      logoUrl: DEFAULT_LOGO_URL,
+      faviconUrl: DEFAULT_FAVICON_URL,
+      ogImageUrl: DEFAULT_OG_IMAGE_URL,
+      hiddenPages: [],
+    };
+  }
+}
+
+export async function getHiddenPages(): Promise<string[]> {
+  const chrome = await getPublicSiteChrome();
+  return chrome.hiddenPages;
+}
+
+/**
+ * Palette for the customer profile panel (`/profile`). Never throws.
+ */
+export async function getPublicUserPanelTheme(): Promise<PublicUserPanelTheme> {
+  try {
+    const settings = await prisma.siteSettings.findFirst({
+      select: { userPanelPaletteId: true },
+    });
+    const paletteId =
+      settings?.userPanelPaletteId ?? DEFAULT_USER_PANEL_PALETTE_ID;
+    const resolved = await resolveSitePalette(paletteId);
+    return {
+      paletteId: resolved.id,
+      light: resolved.light,
+      dark: resolved.dark,
+      nameFa: resolved.nameFa,
+    };
+  } catch (error) {
+    console.error("Error fetching user panel theme:", error);
+    const resolved = await resolveSitePalette(DEFAULT_USER_PANEL_PALETTE_ID);
+    return {
+      paletteId: resolved.id,
       light: resolved.light,
       dark: resolved.dark,
       nameFa: resolved.nameFa,
@@ -134,7 +244,7 @@ export async function getZarinpalMerchantId(): Promise<string | undefined> {
     // Return from DB if exists, otherwise fallback to env
     return settings.zarinpalMerchantId || process.env.ZARINPAL_MERCHANT_ID;
   } catch (error) {
-    console.error("Error getting Zarinpal merchant ID:", error);
+    console.error("Error getting Zarinpal Merchant ID:", error);
     // Fallback to environment variable
     return process.env.ZARINPAL_MERCHANT_ID;
   }

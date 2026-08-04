@@ -22,6 +22,8 @@ import {
   HiUser,
   HiOutlineReceiptTax,
   HiReceiptTax,
+  HiOutlineChatAlt2,
+  HiChatAlt2,
 } from "react-icons/hi";
 import { LogOut } from "lucide-react";
 
@@ -70,6 +72,12 @@ const ProfileAside = () => {
       outlinedIcon: <HiOutlineClipboardList />,
       filledIcon: <HiClipboardList />,
       link: "/profile/lists",
+    },
+    {
+      label: "تیکت و پشتیبانی",
+      outlinedIcon: <HiOutlineChatAlt2 />,
+      filledIcon: <HiChatAlt2 />,
+      link: "/profile/support",
     },
     {
       label: "تنظیمات پروفایل",

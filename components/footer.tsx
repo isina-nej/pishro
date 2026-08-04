@@ -4,11 +4,25 @@ import Link from "next/link";
 import React from "react";
 import { PiInstagramLogoThin } from "react-icons/pi";
 
-import Logo from "./utils/Logo";
+import SiteLogo from "@/components/branding/SiteLogo";
 import { useFooter } from "@/lib/hooks/useFooter";
 import { contactInfo } from "@/lib/constants/contact";
+import {
+  filterNavByHiddenPages,
+  isPathHidden,
+} from "@/lib/site/hidable-pages";
 
-const Footer = () => {
+type FooterProps = {
+  logoUrl?: string;
+  siteName?: string;
+  hiddenPages?: string[];
+};
+
+const Footer = ({
+  logoUrl,
+  siteName,
+  hiddenPages = [],
+}: FooterProps) => {
   const { showFooter } = useFooter();
 
   if (!showFooter) return null;
@@ -19,45 +33,31 @@ const Footer = () => {
       link: contactInfo.socials.instagram,
       name: "اینستاگرام",
     },
-    // {
-    //   icon: <CiLinkedin />,
-    //   link: "https://linkedin.com/company/pishro-financial",
-    //   name: "لینکدین",
-    // },
-    // {
-    //   icon: <SlSocialTwitter />,
-    //   link: "https://x.com/pishro_financial",
-    //   name: "توییتر",
-    // },
-    // {
-    //   icon: <PiWhatsappLogoThin />,
-    //   link: "https://wa.me/989121234567",
-    //   name: "واتساپ",
-    // },
-    // {
-    //   icon: <LiaTelegram />,
-    //   link: "https://t.me/pishro_financial",
-    //   name: "تلگرام",
-    // },
   ];
 
-  const categories = [
-    { label: "کریپتو", link: "/courses/cryptocurrency" },
-    { label: "بورس", link: "/courses/stock-market" },
-    { label: "متاورس", link: "/courses/metaverse" },
-    { label: "NFT", link: "/courses/nft" },
-    { label: "ایردراپ", link: "/courses/airdrop" },
-  ];
+  const categories = filterNavByHiddenPages(
+    [
+      { label: "کریپتو", link: "/courses/cryptocurrency" },
+      { label: "بورس", link: "/courses/stock-market" },
+      { label: "متاورس", link: "/courses/metaverse" },
+      { label: "NFT", link: "/courses/nft" },
+      { label: "ایردراپ", link: "/courses/airdrop" },
+    ],
+    hiddenPages
+  );
 
-  const customerService = [
-    { label: "سوال دارید؟", link: "/faq" },
-    { label: "درباره ما", link: "/about-us" },
-  ];
+  const customerService = filterNavByHiddenPages(
+    [
+      { label: "سوال دارید؟", link: "/faq" },
+      { label: "درباره ما", link: "/about-us" },
+    ],
+    hiddenPages
+  );
 
   const shoppingGuide = [
     { label: "شیوه ثبت سفارش", link: "/faq#order" },
     { label: "شیوه های پرداخت", link: "/faq#payment" },
-  ];
+  ].filter((item) => !isPathHidden(item.link.replace(/#.*$/, ""), hiddenPages));
 
   return (
     <footer className="w-full bg-card dark:bg-footerBg mt-8 border-t border-border dark:border-borderColor">
@@ -86,7 +86,7 @@ const Footer = () => {
                   </Link>
                 </div>
                 <div className="flex-1 md:ml-auto">
-                  <Logo />
+                  <SiteLogo logoUrl={logoUrl} siteName={siteName} />
                 </div>
               </div>
 
@@ -245,24 +245,30 @@ const Footer = () => {
               © {new Date().getFullYear()} پیشرو سرمایه. تمامی حقوق محفوظ است.
             </p>
             <div className="flex flex-wrap justify-center md:justify-end gap-4">
-              <Link
-                href="/about-us"
-                className="hover:text-primary transition-colors"
-              >
-                قوانین و مقررات
-              </Link>
-              <Link
-                href="/faq"
-                className="hover:text-primary transition-colors"
-              >
-                سوالات متداول
-              </Link>
-              <Link
-                href="/about-us"
-                className="hover:text-primary transition-colors"
-              >
-                حریم خصوصی
-              </Link>
+              {!isPathHidden("/about-us", hiddenPages) && (
+                <Link
+                  href="/about-us"
+                  className="hover:text-primary transition-colors"
+                >
+                  قوانین و مقررات
+                </Link>
+              )}
+              {!isPathHidden("/faq", hiddenPages) && (
+                <Link
+                  href="/faq"
+                  className="hover:text-primary transition-colors"
+                >
+                  سوالات متداول
+                </Link>
+              )}
+              {!isPathHidden("/about-us", hiddenPages) && (
+                <Link
+                  href="/about-us"
+                  className="hover:text-primary transition-colors"
+                >
+                  حریم خصوصی
+                </Link>
+              )}
             </div>
           </div>
         </div>
