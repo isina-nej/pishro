@@ -15,6 +15,14 @@ function getAdminTokenFromRequest(request: NextRequest): string | null {
   return null;
 }
 
+function withPathname(request: NextRequest): NextResponse {
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-pathname', request.nextUrl.pathname);
+  return NextResponse.next({
+    request: { headers: requestHeaders },
+  });
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const method = request.method;
@@ -29,7 +37,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (!pathname.startsWith('/admin') && !pathname.startsWith('/api/admin')) {
-    return NextResponse.next();
+    return withPathname(request);
   }
 
   if (pathname === '/admin') {
@@ -43,7 +51,7 @@ export async function middleware(request: NextRequest) {
     if (token) {
       return NextResponse.redirect(new URL('/admin/dashboard', request.url));
     }
-    return NextResponse.next();
+    return withPathname(request);
   }
 
   const isProtectedRoute =
@@ -70,12 +78,15 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  return withPathname(request);
 }
 
 export const config = {
   matcher: [
-    '/admin/:path*',
-    '/api/admin/:path*',
+    /*
+     * All app routes except static assets — so x-pathname is available
+     * for server-side hidden-page checks, while admin auth still runs.
+     */
+    '/((?!_next/static|_next/image|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff2?)$).*)',
   ],
 };
