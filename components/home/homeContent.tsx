@@ -26,6 +26,16 @@ export default async function HomePageContent() {
           <MobileScrollSectionServer />
         </div>
 
+        {/* Comments with fixed photo bg — directly after phone/mobile view */}
+        <div className="home-section-stage">
+          <TestimonialsSection
+            title="نظرات و تجربیات کاربران"
+            subtitle="بهترین‌های بازار چرا ما را انتخاب می‌کنند"
+            speed={50}
+            limit={15}
+          />
+        </div>
+
         <div className="home-section-stage">
           <CalculatorSection />
         </div>
@@ -33,13 +43,6 @@ export default async function HomePageContent() {
         <div className="home-section-stage">
           <CoursesSec />
         </div>
-
-        <TestimonialsSection
-          title="نظرات و تجربیات کاربران"
-          subtitle="بهترین‌های بازار چرا ما را انتخاب می‌کنند"
-          speed={50}
-          limit={15}
-        />
 
         <div className="home-section-stage home-news-stage">
           <NewsClub />
