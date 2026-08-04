@@ -10,21 +10,27 @@ import TestimonialsSection from "@/components/testimonials/TestimonialsSection.s
 
 import FloatingNotificationManager from "@/components/utils/floatingNotificationManager";
 import { getHiddenPages } from "@/lib/services/settings-service";
-import { isSectionHidden } from "@/lib/site/hidable-pages";
+import { createVisibility } from "@/lib/site/hidable-pages";
 
 export default async function HomePageContent() {
-  const hidden = await getHiddenPages();
-  const show = (sectionId: string) => !isSectionHidden(sectionId, hidden);
+  const { show } = createVisibility(await getHiddenPages());
 
   return (
     <div className="home-shell w-full transition-colors">
-      <div className="home-hero-stage">
-        <LandingOverlayServer showAlbum={show("home:album")} />
-      </div>
+      {(show("home:hero") || show("home:album")) && (
+        <div className="home-hero-stage">
+          <LandingOverlayServer
+            showHero={show("home:hero")}
+            showAlbum={show("home:album")}
+          />
+        </div>
+      )}
 
-      <div className="lg:hidden">
-        <MobileLandingServer />
-      </div>
+      {show("home:mobile-landing") && (
+        <div className="lg:hidden">
+          <MobileLandingServer />
+        </div>
+      )}
 
       <div className="home-ambient-stage">
         {show("home:mobile-view") && (
@@ -63,7 +69,7 @@ export default async function HomePageContent() {
         )}
       </div>
 
-      <FloatingNotificationManager />
+      {show("home:notifications") && <FloatingNotificationManager />}
     </div>
   );
 }

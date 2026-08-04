@@ -10,10 +10,12 @@ import {
 
 type LandingOverlayServerProps = {
   showAlbum?: boolean;
+  showHero?: boolean;
 };
 
 export default async function LandingOverlayServer({
   showAlbum = true,
+  showHero = true,
 }: LandingOverlayServerProps) {
   const [homeLanding, slides, miniSlider1, miniSlider2] = await Promise.all([
     getHomeLandingData(),
@@ -52,6 +54,7 @@ export default async function LandingOverlayServer({
       miniSlider1Data={miniSlider1Data}
       miniSlider2Data={miniSlider2Data}
       showAlbum={showAlbum}
+      showHero={showHero}
     />
   );
 }

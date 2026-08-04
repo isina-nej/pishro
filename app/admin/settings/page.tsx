@@ -392,7 +392,7 @@ export default function AdminSettingsPage() {
     { id: "site", label: "پالت سایت", icon: Palette },
     { id: "panel", label: "پالت پنل کاربر", icon: UserRound },
     { id: "branding", label: "لوگو و آیکن", icon: ImageIcon },
-    { id: "pages", label: "نمایش صفحات", icon: EyeOff },
+    { id: "pages", label: "مدیریت نمایش", icon: EyeOff },
   ];
 
   return (

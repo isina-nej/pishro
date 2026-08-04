@@ -5,6 +5,7 @@ import PortfoliosDisplay from "@/components/investmentPortfolios/portfoliosDispl
 import PortfolioSelectionForm from "@/components/investmentPortfolios/portfolioSelectionForm";
 import InvestmentModelsSection from "@/components/investmentPortfolios/investmentModelsSection";
 import { InvestmentPlans, InvestmentPlan, InvestmentTag } from "@prisma/client";
+import { useVisibility } from "@/components/site/VisibilityProvider";
 
 interface InvestmentPlansPageContentProps {
   investmentPlansData: InvestmentPlans & {
@@ -16,25 +17,31 @@ interface InvestmentPlansPageContentProps {
 const InvestmentPlansPageContent = ({
   investmentPlansData,
 }: InvestmentPlansPageContentProps) => {
+  const { show } = useVisibility();
+
   return (
     <div className="public-page-shell text-foreground dark:text-textPrimary">
-      {/* Hero Section - New Design */}
-      <InvestmentPlansHero investmentPlansData={investmentPlansData} />
+      {show("investment:hero") && (
+        <InvestmentPlansHero investmentPlansData={investmentPlansData} />
+      )}
 
-      {/* Investment Models Section */}
-      <div id="investment-models">
-        <InvestmentModelsSection />
-      </div>
+      {show("investment:models") && (
+        <div id="investment-models">
+          <InvestmentModelsSection />
+        </div>
+      )}
 
-      {/* Portfolios Display from investment-portfolios */}
-      <div id="plans-section">
-        <PortfoliosDisplay />
-      </div>
+      {show("investment:portfolios") && (
+        <div id="plans-section">
+          <PortfoliosDisplay />
+        </div>
+      )}
 
-      {/* Portfolio Selection Form with Add to Cart Button */}
-      <div id="portfolio-selection">
-        <PortfolioSelectionForm />
-      </div>
+      {show("investment:selection") && (
+        <div id="portfolio-selection">
+          <PortfolioSelectionForm />
+        </div>
+      )}
     </div>
   );
 };

@@ -10,6 +10,7 @@ import { ResultsSummary } from "./resultsSummary";
 import { FeaturedRow } from "./featuredRow";
 import { BookGrid } from "./bookGrid";
 import { LoadingPlaceholder } from "./loadingPlaceholder";
+import { useVisibility } from "@/components/site/VisibilityProvider";
 
 type BooksQueryReturn = {
   data?: {
@@ -22,6 +23,7 @@ type BooksQueryReturn = {
 };
 
 const LibraryPageContent = () => {
+  const { show } = useVisibility();
   // Fetch books from API (با تایپ مشخص برای دسترسی به refetch)
   const { data: booksData, isLoading } = useBooksList({
     page: 1,
@@ -66,38 +68,48 @@ const LibraryPageContent = () => {
         <LoadingPlaceholder />
       ) : (
         <>
-          <LibraryHero stats={stats} />
+          {show("library:hero") && <LibraryHero stats={stats} />}
 
-          <section className="relative -mt-16 z-10">
-            <div className="container-xl space-y-12">
-              <div className="rounded-3xl border border-border/30 bg-card dark:bg-cardBg px-5 py-8 shadow-lg backdrop-blur">
-                <FilterControls
-                  categories={categories}
-                  selectedCategory={selectedCategory}
-                  onCategoryChange={setCategory}
-                  query={query}
-                  onQueryChange={setQuery}
-                  formatOptions={formatOptions}
-                  selectedFormat={selectedFormat}
-                  onFormatChange={setFormat}
-                  sortOptions={sortOptions}
-                  selectedSort={selectedSort}
-                  onSortChange={setSort}
-                  hasActiveFilters={hasActiveFilters}
-                  onResetFilters={handleResetFilters}
-                  disabled={false}
-                />
+          {(show("library:filters") ||
+            show("library:featured") ||
+            show("library:grid")) && (
+            <section className="relative -mt-16 z-10">
+              <div className="container-xl space-y-12">
+                <div className="rounded-3xl border border-border/30 bg-card dark:bg-cardBg px-5 py-8 shadow-lg backdrop-blur">
+                  {show("library:filters") && (
+                    <FilterControls
+                      categories={categories}
+                      selectedCategory={selectedCategory}
+                      onCategoryChange={setCategory}
+                      query={query}
+                      onQueryChange={setQuery}
+                      formatOptions={formatOptions}
+                      selectedFormat={selectedFormat}
+                      onFormatChange={setFormat}
+                      sortOptions={sortOptions}
+                      selectedSort={selectedSort}
+                      onSortChange={setSort}
+                      hasActiveFilters={hasActiveFilters}
+                      onResetFilters={handleResetFilters}
+                      disabled={false}
+                    />
+                  )}
 
-                {hasActiveFilters ? (
-                  <ResultsSummary query={query} count={filteredBooks.length} />
-                ) : (
-                  <FeaturedRow books={featuredBooks} />
-                )}
+                  {show("library:featured") &&
+                    (hasActiveFilters ? (
+                      <ResultsSummary
+                        query={query}
+                        count={filteredBooks.length}
+                      />
+                    ) : (
+                      <FeaturedRow books={featuredBooks} />
+                    ))}
 
-                <BookGrid books={filteredBooks} />
+                  {show("library:grid") && <BookGrid books={filteredBooks} />}
+                </div>
               </div>
-            </div>
-          </section>
+            </section>
+          )}
         </>
       )}
     </div>

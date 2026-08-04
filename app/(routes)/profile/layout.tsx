@@ -1,11 +1,20 @@
 // app/profile/layout.tsx
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import ProfileHeader from "@/components/profile/profileHeader";
 import ProfileAside from "@/components/profile/profileAside";
 import UserPanelThemeShell from "@/components/theme/UserPanelPaletteApplier";
-import { getPublicUserPanelTheme } from "@/lib/services/settings-service";
+import {
+  getHiddenPages,
+  getPublicUserPanelTheme,
+} from "@/lib/services/settings-service";
+import {
+  firstVisibleProfilePath,
+  isItemHidden,
+  profilePathToVisibilityId,
+} from "@/lib/site/hidable-pages";
 import { auth } from "@/auth";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "پیشرو",
@@ -23,7 +32,21 @@ export default async function ProfileLayout({
     redirect("/login");
   }
 
-  const panelTheme = await getPublicUserPanelTheme();
+  const [panelTheme, hiddenPages] = await Promise.all([
+    getPublicUserPanelTheme(),
+    getHiddenPages(),
+  ]);
+
+  const headerStore = await headers();
+  const pathname = headerStore.get("x-pathname") || "/profile/acc";
+  const profileId = profilePathToVisibilityId(pathname);
+  if (profileId && isItemHidden(profileId, hiddenPages)) {
+    const fallback = firstVisibleProfilePath(hiddenPages);
+    if (fallback && fallback !== pathname) {
+      redirect(fallback);
+    }
+    notFound();
+  }
 
   return (
     <UserPanelThemeShell
@@ -34,7 +57,7 @@ export default async function ProfileLayout({
     >
       <ProfileHeader />
       <div className="container-xl w-full flex flex-col gap-5 px-4 md:flex-row md:px-0">
-        <ProfileAside />
+        <ProfileAside hiddenPages={hiddenPages} />
         <main className="w-full min-w-0">{children}</main>
       </div>
     </UserPanelThemeShell>

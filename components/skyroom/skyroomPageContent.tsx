@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import { HiUsers, HiArrowLeft } from "react-icons/hi";
 import Link from "next/link";
+import { useVisibility } from "@/components/site/VisibilityProvider";
 
 interface SkyRoomPageContentProps {
   meetingLink: string | null;
@@ -11,6 +12,11 @@ interface SkyRoomPageContentProps {
 const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
   meetingLink,
 }) => {
+  const { show } = useVisibility();
+  if (!show("skyroom:landing")) {
+    return null;
+  }
+
   return (
     <div className="relative h-screen w-full overflow-hidden">
       {/* Background Video Layer */}

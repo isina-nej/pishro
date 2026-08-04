@@ -1,6 +1,10 @@
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
-import { isPathHidden } from "@/lib/site/hidable-pages";
+import {
+  isPathHidden,
+  isItemHidden,
+  profilePathToVisibilityId,
+} from "@/lib/site/hidable-pages";
 
 type HiddenPageGuardProps = {
   hiddenPages: string[];
@@ -8,7 +12,7 @@ type HiddenPageGuardProps = {
 };
 
 /**
- * Server-side gate for admin-hidden main pages (true 404, SEO-safe).
+ * Server-side gate for admin-hidden pages and profile menu items.
  */
 export default async function HiddenPageGuard({
   hiddenPages,
@@ -18,13 +22,25 @@ export default async function HiddenPageGuard({
   const pathname = headerStore.get("x-pathname") || "/";
 
   if (
-    pathname.startsWith("/profile") ||
     pathname.startsWith("/login") ||
-    pathname.startsWith("/checkout") ||
     pathname.startsWith("/admin") ||
     pathname.startsWith("/api")
   ) {
     return <>{children}</>;
+  }
+
+  // Profile routes: hide individual menu destinations
+  if (pathname.startsWith("/profile")) {
+    const profileId = profilePathToVisibilityId(pathname);
+    if (profileId && isItemHidden(profileId, hiddenPages)) {
+      notFound();
+    }
+    return <>{children}</>;
+  }
+
+  // Checkout can be fully disabled
+  if (pathname.startsWith("/checkout") && isPathHidden("/checkout", hiddenPages)) {
+    notFound();
   }
 
   if (isPathHidden(pathname, hiddenPages)) {
