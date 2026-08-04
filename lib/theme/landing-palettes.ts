@@ -1,9 +1,15 @@
 /**
- * Ten landing preview palettes — each with light + dark token sets.
- * Applied live on the home page via LandingPalettePreview.
+ * Ten site color palettes — each with light + dark token sets.
+ * Selected palette is stored in SiteSettings.paletteId (admin panel)
+ * and applied site-wide via SitePaletteApplier.
  */
 
 export type PaletteMode = "light" | "dark";
+export type SiteThemeMode = "light" | "dark" | "system";
+
+export const DEFAULT_PALETTE_ID = "emerald-trust";
+export const DEFAULT_THEME_MODE: SiteThemeMode = "system";
+export const SITE_THEME_MODES: SiteThemeMode[] = ["light", "dark", "system"];
 
 /** Channels for shadcn HSL tokens: "H S% L%" (no hsl() wrapper). */
 export type HslChannels = string;
@@ -1206,6 +1212,26 @@ export function getLandingPalette(id: string): LandingPalette | undefined {
   return LANDING_PALETTES.find((p) => p.id === id);
 }
 
+export function resolvePaletteId(id: string | null | undefined): string {
+  if (id && LANDING_PALETTES.some((p) => p.id === id)) return id;
+  return DEFAULT_PALETTE_ID;
+}
+
+export function resolveThemeMode(
+  mode: string | null | undefined
+): SiteThemeMode {
+  if (mode === "light" || mode === "dark" || mode === "system") return mode;
+  return DEFAULT_THEME_MODE;
+}
+
+export function isValidPaletteId(id: string): boolean {
+  return LANDING_PALETTES.some((p) => p.id === id);
+}
+
+export function isValidThemeMode(mode: string): mode is SiteThemeMode {
+  return SITE_THEME_MODES.includes(mode as SiteThemeMode);
+}
+
 /** Apply palette tokens as CSS custom properties on root + home shells. */
 export function applyPaletteTokens(
   root: HTMLElement,
@@ -1357,4 +1383,5 @@ export function clearPaletteTokens(root: HTMLElement): void {
   }
 }
 
+/** Preview-only storage key (legacy floating preview). */
 export const PALETTE_STORAGE_KEY = "pishro-landing-palette-preview";

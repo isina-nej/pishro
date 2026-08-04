@@ -1320,6 +1320,12 @@ model SiteSettings {
   supportEmail    String?
   supportPhone    String?
 
+  // ظاهر عمومی سایت — پالت از lib/theme/landing-palettes.ts
+  /// شناسه پالت (مثلاً emerald-trust)
+  paletteId String @default("emerald-trust")
+  /// حالت پیش‌فرض تم: light | dark | system
+  themeMode String @default("system")
+
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
 }

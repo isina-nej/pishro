@@ -5,6 +5,8 @@ import { Toaster } from "react-hot-toast";
 import "@/app/styles/globals.css";
 import ReactQueryProvider from "@/lib/providers/ReactQueryProvider";
 import ThemeProvider from "@/lib/providers/ThemeProvider";
+import SitePaletteApplier from "@/components/theme/SitePaletteApplier";
+import { getPublicSiteTheme } from "@/lib/services/settings-service";
 
 const charismaExtraBold = localFont({
   src: "../public/font/CharismaTF-ExtraBold.woff2",
@@ -22,7 +24,7 @@ const charismaRegular = localFont({
 
 const montserrat = localFont({
   src: "../public/font/Montserrat-VariableFont.woff2",
-  weight: "100 900", // محدوده وزن فونت متغیر
+  weight: "100 900",
   style: "normal",
   variable: "--font-montserrat",
 });
@@ -48,17 +50,25 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const siteTheme = await getPublicSiteTheme();
+
   return (
     <html lang="fa" suppressHydrationWarning>
       <body
         className={`font-yekan ${charismaExtraBold.variable} ${charismaRegular.variable} ${montserrat.variable} rtl bg-background text-foreground transition-colors duration-300 ease-in-out`}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange={false}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme={siteTheme.themeMode}
+          enableSystem={siteTheme.themeMode === "system"}
+          disableTransitionOnChange={false}
+        >
+          <SitePaletteApplier paletteId={siteTheme.paletteId} />
           <ReactQueryProvider>
             {children}
             <Toaster

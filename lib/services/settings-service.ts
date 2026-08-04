@@ -7,17 +7,36 @@
 
 import { prisma } from "@/lib/prisma";
 import { SiteSettings } from "@prisma/client";
+import {
+  DEFAULT_PALETTE_ID,
+  DEFAULT_THEME_MODE,
+  resolvePaletteId,
+  resolveThemeMode,
+  type SiteThemeMode,
+} from "@/lib/theme/landing-palettes";
 
 /**
  * Type for updateable settings fields
  */
 export interface UpdateSettingsInput {
-  zarinpalMerchantId?: string;
-  siteName?: string;
-  siteDescription?: string;
-  supportEmail?: string;
-  supportPhone?: string;
+  zarinpalMerchantId?: string | null;
+  siteName?: string | null;
+  siteDescription?: string | null;
+  supportEmail?: string | null;
+  supportPhone?: string | null;
+  paletteId?: string;
+  themeMode?: SiteThemeMode;
 }
+
+export type PublicSiteTheme = {
+  paletteId: string;
+  themeMode: SiteThemeMode;
+};
+
+const FALLBACK_THEME: PublicSiteTheme = {
+  paletteId: DEFAULT_PALETTE_ID,
+  themeMode: DEFAULT_THEME_MODE,
+};
 
 /**
  * Get site settings (creates default if not exists)
@@ -31,7 +50,10 @@ export async function getSettings(): Promise<SiteSettings> {
     // If no settings exist, create default record
     if (!settings) {
       settings = await prisma.siteSettings.create({
-        data: {},
+        data: {
+          paletteId: DEFAULT_PALETTE_ID,
+          themeMode: DEFAULT_THEME_MODE,
+        },
       });
     }
 
@@ -39,6 +61,25 @@ export async function getSettings(): Promise<SiteSettings> {
   } catch (error) {
     console.error("Error fetching settings:", error);
     throw new Error("خطا در دریافت تنظیمات");
+  }
+}
+
+/**
+ * Public theme for the live site — never throws; falls back to defaults.
+ */
+export async function getPublicSiteTheme(): Promise<PublicSiteTheme> {
+  try {
+    const settings = await prisma.siteSettings.findFirst({
+      select: { paletteId: true, themeMode: true },
+    });
+    if (!settings) return FALLBACK_THEME;
+    return {
+      paletteId: resolvePaletteId(settings.paletteId),
+      themeMode: resolveThemeMode(settings.themeMode),
+    };
+  } catch (error) {
+    console.error("Error fetching public site theme:", error);
+    return FALLBACK_THEME;
   }
 }
 

@@ -5,6 +5,7 @@
  */
 
 import { NextRequest } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getAdminAuth } from "@/lib/auth-simple";
 import {
   errorResponse,
@@ -16,8 +17,12 @@ import {
 import {
   getSettings,
   updateSettings,
-  UpdateSettingsInput
+  UpdateSettingsInput,
 } from "@/lib/services/settings-service";
+import {
+  isValidPaletteId,
+  isValidThemeMode,
+} from "@/lib/theme/landing-palettes";
 
 /**
  * GET /api/admin/settings
@@ -26,17 +31,9 @@ import {
 export async function GET(_req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(_req);
-if (!adminAuth) {
-      return errorResponse(
-        "لطفا وارد شوید",
-        ErrorCodes.UNAUTHORIZED,
-        undefined,
-        HttpStatus.UNAUTHORIZED
-      );
-    }
     if (!adminAuth) {
       return errorResponse(
-        "دسترسی محدود به ادمین",
+        "لطفا وارد شوید",
         ErrorCodes.UNAUTHORIZED,
         undefined,
         HttpStatus.UNAUTHORIZED
@@ -58,15 +55,6 @@ if (!adminAuth) {
 /**
  * PATCH /api/admin/settings
  * Update site settings (Admin only)
- *
- * Request body:
- * {
- *   zarinpalMerchantId?: string;
- *   siteName?: string;
- *   siteDescription?: string;
- *   supportEmail?: string;
- *   supportPhone?: string;
- * }
  */
 export async function PATCH(req: NextRequest) {
   try {
@@ -80,10 +68,17 @@ export async function PATCH(req: NextRequest) {
       );
     }
 
-    // Parse request body
-    const body: UpdateSettingsInput = await req.json();
+    if (adminAuth.role !== "ADMIN") {
+      return errorResponse(
+        "فقط ادمین می‌تواند تنظیمات را تغییر دهد",
+        ErrorCodes.FORBIDDEN,
+        undefined,
+        HttpStatus.FORBIDDEN
+      );
+    }
 
-    // Validate at least one field is provided
+    const body = (await req.json()) as UpdateSettingsInput;
+
     if (Object.keys(body).length === 0) {
       return validationError(
         { fields: "حداقل یک فیلد برای به‌روزرسانی الزامی است" },
@@ -91,7 +86,6 @@ export async function PATCH(req: NextRequest) {
       );
     }
 
-    // Validate zarinpalMerchantId format if provided (should be 36 characters)
     if (
       body.zarinpalMerchantId !== undefined &&
       body.zarinpalMerchantId !== null &&
@@ -101,15 +95,35 @@ export async function PATCH(req: NextRequest) {
         return validationError(
           {
             zarinpalMerchantId:
-              "شناسه پذیرنده باید 36 کاراکتر باشد (فرمت UUID)"
+              "شناسه پذیرنده باید 36 کاراکتر باشد (فرمت UUID)",
           },
           "فرمت شناسه پذیرنده صحیح نیست"
         );
       }
     }
 
-    // Update settings
+    if (body.paletteId !== undefined) {
+      if (!isValidPaletteId(body.paletteId)) {
+        return validationError(
+          { paletteId: "شناسه پالت معتبر نیست" },
+          "پالت رنگی انتخاب‌شده معتبر نیست"
+        );
+      }
+    }
+
+    if (body.themeMode !== undefined) {
+      if (!isValidThemeMode(body.themeMode)) {
+        return validationError(
+          { themeMode: "حالت تم باید light، dark یا system باشد" },
+          "حالت تم معتبر نیست"
+        );
+      }
+    }
+
     const updated = await updateSettings(body);
+
+    // Apply new palette / default theme on the public site immediately
+    revalidatePath("/", "layout");
 
     return successResponse(updated, "تنظیمات با موفقیت به‌روزرسانی شد");
   } catch (error) {

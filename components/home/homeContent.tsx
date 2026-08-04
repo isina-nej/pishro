@@ -9,7 +9,6 @@ import NewsClub from "./newsClub";
 import TestimonialsSection from "@/components/testimonials/TestimonialsSection.server";
 
 import FloatingNotificationManager from "@/components/utils/floatingNotificationManager";
-import LandingPalettePreview from "./LandingPalettePreview";
 
 export default async function HomePageContent() {
   return (
@@ -48,7 +47,6 @@ export default async function HomePageContent() {
       </div>
 
       <FloatingNotificationManager />
-      <LandingPalettePreview />
     </div>
   );
 }

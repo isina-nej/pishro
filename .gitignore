@@ -60,3 +60,8 @@ graphify-out/
 rclone.conf
 rclone_test_file.txt
 npm-install.log
+
+.mysql-data/
+.mysql-run/
+.mysql-log/
+.mysql-*/

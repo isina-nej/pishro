@@ -15,13 +15,13 @@ import {
   Menu,
   PieChart,
   ScrollText,
-  Settings,
   Ticket,
   TrendingUp,
   LayoutTemplate,
   Users,
   UsersRound,
   X,
+  Palette,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -78,7 +78,7 @@ export const navSections: NavSection[] = [
       // فقط ADMIN: گزارش نشان می‌دهد چه کسی چه کرده، و روت /api/admin/logs هم
       // همین محدودیت را دارد — منو نباید چیزی را نشان دهد که API رد می‌کند.
       { href: '/admin/logs', label: 'گزارش فعالیت‌ها', icon: ScrollText, key: 'logs', roles: ['ADMIN'] },
-      { href: '/admin/settings', label: 'تنظیمات', icon: Settings, key: 'settings', roles: ['ADMIN'], disabled: true },
+      { href: '/admin/settings', label: 'ظاهر سایت', icon: Palette, key: 'settings', roles: ['ADMIN'] },
     ],
   },
 ];
