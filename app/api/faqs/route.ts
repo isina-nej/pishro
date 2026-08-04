@@ -1,11 +1,13 @@
 import { NextRequest } from "next/server";
-import { Prisma } from "@prisma/client";
+import { FAQCategory, Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import {
   errorResponse,
   paginatedResponse,
   ErrorCodes,
 } from "@/lib/api-response";
+
+const FAQ_CATEGORIES = new Set<string>(Object.values(FAQCategory));
 
 /**
  * Public FAQs API
@@ -24,8 +26,8 @@ export async function GET(req: NextRequest) {
       published: true,
     };
 
-    if (faqCategory) {
-      where.faqCategory = faqCategory as Prisma.EnumFAQCategoryFilter["equals"];
+    if (faqCategory && FAQ_CATEGORIES.has(faqCategory)) {
+      where.faqCategory = faqCategory as FAQCategory;
     }
     if (featured === "true") {
       where.featured = true;

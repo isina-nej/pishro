@@ -18,7 +18,7 @@ async function getPublishedFaqs() {
 
     // Seed generator can repeat question copy — keep first occurrence only.
     const seen = new Set<string>();
-    const unique = [];
+    const unique: Array<{ id: string; question: string; answer: string }> = [];
     for (const row of rows) {
       const key = row.question.trim();
       if (seen.has(key)) continue;

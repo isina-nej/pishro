@@ -50,7 +50,7 @@ async function saveSettings(body: {
 }
 
 export default function AdminSettingsPage() {
-  const { user, loading: authLoading } = useAdminAuth();
+  const { user, isLoading: authLoading } = useAdminAuth();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [paletteId, setPaletteId] = useState(DEFAULT_PALETTE_ID);
