@@ -496,10 +496,13 @@ html.dark
   isolation: isolate;
   min-height: 100vh;
   color: var(--home-ink);
-  background:
-    radial-gradient(circle at 92% 8%, rgba(var(--home-glow-rgb), 0.08), transparent 28rem),
-    radial-gradient(circle at 4% 58%, rgba(var(--home-gold-rgb), 0.07), transparent 25rem),
-    linear-gradient(180deg, var(--home-bg) 0%, var(--home-bg-mid) 52%, var(--home-bg) 100%);
+  /* Light: flat wash only — no soft radial “halos” */
+  background: linear-gradient(
+    180deg,
+    var(--home-bg) 0%,
+    var(--home-bg-mid) 52%,
+    var(--home-bg) 100%
+  );
 }
 
 .dark .public-page-shell {
@@ -550,10 +553,13 @@ html.dark
   z-index: 1;
   overflow-x: clip;
   overflow-y: visible;
-  background:
-    radial-gradient(circle at 90% 8%, rgba(var(--home-glow-rgb), 0.09), transparent 28rem),
-    radial-gradient(circle at 4% 47%, rgba(var(--home-gold-rgb), 0.07), transparent 25rem),
-    linear-gradient(180deg, var(--home-bg) 0%, var(--home-bg-mid) 47%, var(--home-bg) 100%);
+  /* Light: no radial glow blobs (they read as a white halo) */
+  background: linear-gradient(
+    180deg,
+    var(--home-bg) 0%,
+    var(--home-bg-mid) 47%,
+    var(--home-bg) 100%
+  );
 }
 
 .dark .home-ambient-stage {
@@ -563,7 +569,12 @@ html.dark
     linear-gradient(180deg, var(--home-bg) 0%, var(--home-bg-mid) 47%, var(--home-bg) 100%);
 }
 
+/* Decorative orb outline — dark only; in light it looks like a pale halo */
 .home-ambient-stage::before {
+  content: none;
+}
+
+.dark .home-ambient-stage::before {
   content: "";
   position: absolute;
   z-index: -1;

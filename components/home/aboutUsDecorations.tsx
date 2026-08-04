@@ -3,8 +3,6 @@ import Image from "next/image";
 export const AboutUsDecorations = () => {
   return (
     <>
-      {/* circle */}
-      <div className="absolute top-0 right-0 size-[456px] bg-[#E8F2EC] rounded-full -z-10"></div>
       {/* arrow */}
       <div className="absolute top-10 right-16 size-[140px] -z-10 -rotate-[15deg]">
         <Image src={"/icons/circle-arrow-left.svg"} fill alt="پیکان" />

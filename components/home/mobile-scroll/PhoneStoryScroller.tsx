@@ -209,8 +209,8 @@ export function PhoneStoryScroller({
           className="pointer-events-none absolute inset-0 -z-10"
           aria-hidden
         >
-          <div className="absolute left-1/2 top-1/3 h-[50vmin] w-[50vmin] -translate-x-1/2 rounded-full bg-primary/[0.06] blur-3xl" />
-          <div className="absolute bottom-1/4 right-[10%] h-[35vmin] w-[35vmin] rounded-full bg-premium/[0.06] blur-3xl" />
+          <div className="absolute left-1/2 top-1/3 hidden h-[50vmin] w-[50vmin] -translate-x-1/2 rounded-full bg-primary/[0.06] blur-3xl dark:block" />
+          <div className="absolute bottom-1/4 right-[10%] hidden h-[35vmin] w-[35vmin] rounded-full bg-premium/[0.06] blur-3xl dark:block" />
         </div>
 
         <div className="container-xl flex min-h-0 flex-1 flex-col px-4 py-6 lg:px-8 lg:py-8">
