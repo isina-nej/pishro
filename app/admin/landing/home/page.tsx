@@ -326,18 +326,27 @@ function MobileStepsEditor() {
 
   if (isLoading) return <AdminLoadingState />;
 
+  const contentType = str(editing?.contentType || 'IMAGE') === 'PAGE' ? 'PAGE' : 'IMAGE';
+
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm text-muted-foreground">
+          هر تعداد قدم که بخواهید اضافه کنید. داخل قاب موبایل می‌تواند تصویر یا یک صفحه از سایت باشد.
+          الان {steps.length} قدم دارید.
+        </p>
         <Button
           onClick={() =>
             setEditing({
               stepNumber: steps.length + 1,
               title: '',
               description: '',
+              contentType: 'IMAGE',
               imageUrl: '',
-              coverImageUrl: '',
+              pageUrl: '',
+              coverImageUrl: '/images/home/mobile-scroll/mobile.webp',
               gradient: '',
+              link: '',
               order: steps.length + 1,
               published: true,
             })
@@ -349,21 +358,103 @@ function MobileStepsEditor() {
       </div>
       {editing && (
         <Card className="space-y-3 p-4">
-          <TextField label="شماره قدم" value={str(editing.stepNumber)} onChange={(v) => setEditing({ ...editing, stepNumber: Number(v) || 1 })} dir="ltr" />
-          <TextField label="عنوان" value={str(editing.title)} onChange={(v) => setEditing({ ...editing, title: v })} />
-          <TextField label="توضیح" value={str(editing.description)} onChange={(v) => setEditing({ ...editing, description: v })} multiline />
-          <TextField label="تصویر داخل موبایل" value={str(editing.imageUrl)} onChange={(v) => setEditing({ ...editing, imageUrl: v })} dir="ltr" />
-          <TextField label="کاور موبایل" value={str(editing.coverImageUrl)} onChange={(v) => setEditing({ ...editing, coverImageUrl: v })} dir="ltr" />
-          <TextField label="کلاس گرادیان" value={str(editing.gradient)} onChange={(v) => setEditing({ ...editing, gradient: v })} dir="ltr" />
-          <PublishedSwitch checked={Boolean(editing.published)} onChange={(v) => setEditing({ ...editing, published: v })} />
+          <TextField
+            label="شماره قدم"
+            value={str(editing.stepNumber)}
+            onChange={(v) => setEditing({ ...editing, stepNumber: Number(v) || 1 })}
+            dir="ltr"
+          />
+          <TextField
+            label="عنوان"
+            value={str(editing.title)}
+            onChange={(v) => setEditing({ ...editing, title: v })}
+          />
+          <TextField
+            label="توضیح (کنار موبایل)"
+            value={str(editing.description)}
+            onChange={(v) => setEditing({ ...editing, description: v })}
+            multiline
+          />
+
+          <div className="space-y-2">
+            <p className="text-sm font-medium">محتوای داخل موبایل</p>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                type="button"
+                size="sm"
+                variant={contentType === 'IMAGE' ? 'default' : 'outline'}
+                onClick={() => setEditing({ ...editing, contentType: 'IMAGE' })}
+              >
+                تصویر
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant={contentType === 'PAGE' ? 'default' : 'outline'}
+                onClick={() => setEditing({ ...editing, contentType: 'PAGE' })}
+              >
+                صفحه سایت
+              </Button>
+            </div>
+          </div>
+
+          {contentType === 'IMAGE' ? (
+            <TextField
+              label="آدرس تصویر داخل موبایل"
+              value={str(editing.imageUrl)}
+              onChange={(v) => setEditing({ ...editing, imageUrl: v })}
+              dir="ltr"
+            />
+          ) : (
+            <TextField
+              label="آدرس صفحه (مسیر داخلی مثل /courses یا لینک کامل)"
+              value={str(editing.pageUrl)}
+              onChange={(v) => setEditing({ ...editing, pageUrl: v })}
+              dir="ltr"
+            />
+          )}
+
+          <TextField
+            label="کاور/قاب موبایل (اختیاری)"
+            value={str(editing.coverImageUrl)}
+            onChange={(v) => setEditing({ ...editing, coverImageUrl: v })}
+            dir="ltr"
+          />
+          <TextField
+            label="لینک «اطلاعات بیشتر» (اختیاری)"
+            value={str(editing.link)}
+            onChange={(v) => setEditing({ ...editing, link: v })}
+            dir="ltr"
+          />
+          <TextField
+            label="ترتیب نمایش"
+            value={str(editing.order)}
+            onChange={(v) => setEditing({ ...editing, order: Number(v) || 0 })}
+            dir="ltr"
+          />
+          <PublishedSwitch
+            checked={Boolean(editing.published)}
+            onChange={(v) => setEditing({ ...editing, published: v })}
+          />
           <div className="flex gap-2">
             <Button
               onClick={async () => {
+                const payload: Dict = {
+                  stepNumber: num(editing.stepNumber, 1),
+                  title: str(editing.title),
+                  description: str(editing.description),
+                  contentType,
+                  coverImageUrl: str(editing.coverImageUrl) || null,
+                  link: str(editing.link) || null,
+                  order: num(editing.order, num(editing.stepNumber, 1)),
+                  published: Boolean(editing.published),
+                  imageUrl: contentType === 'IMAGE' ? str(editing.imageUrl) || null : null,
+                  pageUrl: contentType === 'PAGE' ? str(editing.pageUrl) || null : null,
+                };
                 if (editing.id) {
-                  const { id, ...rest } = editing;
-                  await update.mutateAsync({ id: str(id), ...rest });
+                  await update.mutateAsync({ id: str(editing.id), ...payload });
                 } else {
-                  await create.mutateAsync(editing);
+                  await create.mutateAsync(payload);
                 }
                 setEditing(null);
               }}
@@ -377,30 +468,40 @@ function MobileStepsEditor() {
         </Card>
       )}
       <div className="grid gap-3">
-        {(steps as Dict[]).map((step) => (
-          <Card key={str(step.id)} className="flex items-start justify-between gap-3 p-4">
-            <div>
-              <p className="font-medium">
-                قدم {num(step.stepNumber)} — {str(step.title)}
-              </p>
-              <p className="text-sm text-muted-foreground line-clamp-2">{str(step.description)}</p>
-            </div>
-            <div className="flex gap-1">
-              <Button size="icon" variant="ghost" onClick={() => setEditing(step)}>
-                <Pencil className="size-4" />
-              </Button>
-              <Button
-                size="icon"
-                variant="ghost"
-                onClick={() => {
-                  if (window.confirm('حذف این قدم؟')) remove.mutate(str(step.id));
-                }}
-              >
-                <Trash2 className="size-4" />
-              </Button>
-            </div>
-          </Card>
-        ))}
+        {(steps as Dict[]).map((step) => {
+          const type = str(step.contentType) === 'PAGE' ? 'PAGE' : 'IMAGE';
+          return (
+            <Card key={str(step.id)} className="flex items-start justify-between gap-3 p-4">
+              <div>
+                <p className="font-medium">
+                  قدم {num(step.stepNumber)} — {str(step.title)}
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {type === 'PAGE'
+                    ? `صفحه: ${str(step.pageUrl) || '—'}`
+                    : `تصویر: ${str(step.imageUrl) || '—'}`}
+                </p>
+                <p className="text-sm text-muted-foreground line-clamp-2">
+                  {str(step.description)}
+                </p>
+              </div>
+              <div className="flex gap-1">
+                <Button size="icon" variant="ghost" onClick={() => setEditing(step)}>
+                  <Pencil className="size-4" />
+                </Button>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => {
+                    if (window.confirm('حذف این قدم؟')) remove.mutate(str(step.id));
+                  }}
+                >
+                  <Trash2 className="size-4" />
+                </Button>
+              </div>
+            </Card>
+          );
+        })}
       </div>
     </div>
   );

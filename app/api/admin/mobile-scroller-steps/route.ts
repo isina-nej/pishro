@@ -5,7 +5,6 @@
  */
 
 import { NextRequest } from "next/server";
-import { getAdminAuth } from "@/lib/auth-simple";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import {
@@ -13,42 +12,29 @@ import {
   paginatedResponse,
   createdResponse,
   ErrorCodes,
-  validationError,
   HttpStatus,
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";
+import {
+  parseZodBody,
+  requireAdminUser,
+  stripNulls,
+} from "@/lib/admin/landing-cms-api";
+import { MobileScrollerStepUpsertSchema } from "@/lib/schemas/landing-cms-schema";
 
 export async function GET(req: NextRequest) {
   try {
-    const adminAuth = await getAdminAuth(req);
-if (!adminAuth) {
-      return errorResponse(
-        "لطفا وارد شوید",
-        ErrorCodes.UNAUTHORIZED,
-        undefined,
-        HttpStatus.UNAUTHORIZED
-      );
-    }
-    if (!adminAuth) {
-      return errorResponse(
-        "دسترسی محدود. فقط ادمین.",
-        ErrorCodes.UNAUTHORIZED,
-        undefined,
-        HttpStatus.UNAUTHORIZED
-      );
-    }
+    const { response } = requireAdminUser(req);
+    if (response) return response;
 
     const searchParams = req.nextUrl.searchParams;
 
-    // Pagination
+    // Pagination — allow large lists so admins can manage many steps
     const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
-    const limit = Math.min(100, parseInt(searchParams.get("limit") || "20"));
+    const limit = Math.min(500, parseInt(searchParams.get("limit") || "100"));
     const skip = (page - 1) * limit;
 
-    // Filters
     const published = searchParams.get("published");
-
-    // Build where clause
     const where: Prisma.MobileScrollerStepWhereInput = {};
 
     if (published === "true") {
@@ -57,13 +43,12 @@ if (!adminAuth) {
       where.published = false;
     }
 
-    // Fetch mobile scroller steps
     const [items, total] = await Promise.all([
       prisma.mobileScrollerStep.findMany({
         where,
         skip,
         take: limit,
-        orderBy: { order: "asc" }
+        orderBy: [{ order: "asc" }, { stepNumber: "asc" }],
       }),
       prisma.mobileScrollerStep.count({ where }),
     ]);
@@ -80,61 +65,46 @@ if (!adminAuth) {
 
 export async function POST(req: NextRequest) {
   try {
-    const adminAuth = await getAdminAuth(req);
-if (!adminAuth) {
-      return errorResponse(
-        "لطفا وارد شوید",
-        ErrorCodes.UNAUTHORIZED,
-        undefined,
-        HttpStatus.UNAUTHORIZED
-      );
-    }
-    if (!adminAuth) {
-      return errorResponse(
-        "دسترسی محدود. فقط ادمین.",
-        ErrorCodes.UNAUTHORIZED,
-        undefined,
-        HttpStatus.UNAUTHORIZED
-      );
-    }
+    const { response } = requireAdminUser(req);
+    if (response) return response;
 
     const body = await req.json();
-    const {
-      stepNumber,
-      title,
-      description,
-      imageUrl,
-      coverImageUrl,
-      gradient,
-      order = 0,
-      published = false
-    } = body;
+    const parsed = parseZodBody(MobileScrollerStepUpsertSchema, body);
+    if (parsed.response) return parsed.response;
 
-    // Validation
-    if (!stepNumber || !title || !description) {
-      return validationError({
-        stepNumber: !stepNumber ? "شماره مرحله الزامی است" : "",
-        title: !title ? "عنوان الزامی است" : "",
-        description: !description ? "توضیحات الزامی است" : ""
-      });
-    }
+    const data = stripNulls(parsed.data as Record<string, unknown>) as {
+      stepNumber: number;
+      title: string;
+      description: string;
+      contentType?: "IMAGE" | "PAGE";
+      imageUrl?: string | null;
+      pageUrl?: string | null;
+      coverImageUrl?: string | null;
+      gradient?: string | null;
+      link?: string | null;
+      order?: number;
+      published?: boolean;
+    };
 
-    // Normalize image URLs (extract original URLs from Next.js optimization URLs)
-    const normalizedImageUrl = normalizeImageUrl(imageUrl);
-    const normalizedCoverImageUrl = normalizeImageUrl(coverImageUrl);
+    const contentType = data.contentType ?? "IMAGE";
+    const normalizedImageUrl =
+      contentType === "IMAGE" ? normalizeImageUrl(data.imageUrl) : null;
+    const normalizedCoverImageUrl = normalizeImageUrl(data.coverImageUrl);
 
-    // Create mobile scroller step
     const item = await prisma.mobileScrollerStep.create({
       data: {
-        stepNumber,
-        title,
-        description,
+        stepNumber: data.stepNumber,
+        title: data.title,
+        description: data.description,
+        contentType,
         imageUrl: normalizedImageUrl,
+        pageUrl: contentType === "PAGE" ? data.pageUrl?.trim() || null : null,
         coverImageUrl: normalizedCoverImageUrl,
-        gradient,
-        order,
-        published
-      }
+        gradient: data.gradient ?? null,
+        link: data.link ?? null,
+        order: data.order ?? data.stepNumber,
+        published: data.published ?? true,
+      },
     });
 
     return createdResponse(item, "مرحله اسکرولر موبایل با موفقیت ایجاد شد");
@@ -142,7 +112,9 @@ if (!adminAuth) {
     console.error("Error creating mobile scroller step:", error);
     return errorResponse(
       "خطا در ایجاد مرحله اسکرولر موبایل",
-      ErrorCodes.DATABASE_ERROR
+      ErrorCodes.DATABASE_ERROR,
+      undefined,
+      HttpStatus.INTERNAL_SERVER_ERROR
     );
   }
 }

@@ -157,7 +157,8 @@ export function useDeleteHomeMiniSlider() {
 export function useAdminMobileSteps() {
   return useQuery({
     queryKey: landingCmsKeys.mobileSteps(),
-    queryFn: () => listItems<Record<string, unknown>>("/api/admin/mobile-scroller-steps?limit=100"),
+    queryFn: () =>
+      listItems<Record<string, unknown>>("/api/admin/mobile-scroller-steps?limit=500"),
   });
 }
 

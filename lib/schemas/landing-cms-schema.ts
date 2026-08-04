@@ -63,18 +63,88 @@ export const HomeMiniSliderUpsertSchema = z.object({
 });
 export const HomeMiniSliderUpdateSchema = HomeMiniSliderUpsertSchema.partial();
 
-export const MobileScrollerStepUpsertSchema = z.object({
+const mobilePageUrlSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .refine(
+    (value) => value.startsWith("/") || /^https?:\/\//i.test(value),
+    "آدرس صفحه باید مسیر داخلی (مثل /courses) یا لینک http(s) باشد"
+  );
+
+function refineMobileScrollerContent(
+  data: {
+    contentType?: "IMAGE" | "PAGE";
+    imageUrl?: string | null;
+    pageUrl?: string | null;
+  },
+  ctx: z.RefinementCtx,
+  opts: { requireContent: boolean }
+) {
+  const type = data.contentType ?? "IMAGE";
+  if (type === "PAGE") {
+    if (!data.pageUrl || !String(data.pageUrl).trim()) {
+      if (opts.requireContent || data.contentType === "PAGE") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["pageUrl"],
+          message: "برای نوع «صفحه سایت» آدرس صفحه الزامی است",
+        });
+      }
+      return;
+    }
+    const parsed = mobilePageUrlSchema.safeParse(data.pageUrl);
+    if (!parsed.success) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["pageUrl"],
+        message: parsed.error.issues[0]?.message || "آدرس صفحه نامعتبر است",
+      });
+    }
+    return;
+  }
+
+  if (
+    opts.requireContent &&
+    (!data.imageUrl || !String(data.imageUrl).trim())
+  ) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["imageUrl"],
+      message: "برای نوع «تصویر» آدرس تصویر داخل موبایل الزامی است",
+    });
+  }
+}
+
+const MobileScrollerStepBaseSchema = z.object({
   stepNumber: z.number().int().min(1, "شماره قدم الزامی است"),
   title: z.string().min(1, "عنوان الزامی است"),
   description: z.string().min(1, "توضیحات الزامی است"),
+  contentType: z.enum(["IMAGE", "PAGE"]).optional(),
   imageUrl: optionalString,
+  pageUrl: optionalString,
   coverImageUrl: optionalString,
   gradient: optionalString,
   link: optionalString,
   order: z.number().int().optional(),
   published: z.boolean().optional(),
 });
-export const MobileScrollerStepUpdateSchema = MobileScrollerStepUpsertSchema.partial();
+
+export const MobileScrollerStepUpsertSchema = MobileScrollerStepBaseSchema.superRefine(
+  (data, ctx) => refineMobileScrollerContent(data, ctx, { requireContent: true })
+);
+
+export const MobileScrollerStepUpdateSchema = MobileScrollerStepBaseSchema.partial().superRefine(
+  (data, ctx) => {
+    if (data.contentType === "PAGE" || data.pageUrl != null) {
+      refineMobileScrollerContent(
+        { contentType: data.contentType ?? "PAGE", pageUrl: data.pageUrl, imageUrl: data.imageUrl },
+        ctx,
+        { requireContent: Boolean(data.contentType === "PAGE") }
+      );
+    }
+  }
+);
 
 export const AboutPageUpsertSchema = z.object({
   heroTitle: z.string().min(1, "عنوان هیرو الزامی است"),

@@ -874,8 +874,11 @@ model MobileScrollerStep {
   stepNumber    Int
   title         String
   description   String
-  imageUrl      String? // تصویر داخل موبایل (مثل in-mobile-1.svg)
-  coverImageUrl String? // تصویر پس‌زمینه موبایل
+  /// IMAGE = تصویر داخل قاب | PAGE = لود صفحه سایت (iframe)
+  contentType   String  @default("IMAGE")
+  imageUrl      String? // تصویر داخل موبایل (وقتی contentType=IMAGE)
+  pageUrl       String? // مسیر/آدرس صفحه (وقتی contentType=PAGE) مثلاً /courses
+  coverImageUrl String? // تصویر قاب موبایل (bezel)
   gradient      String? // کلاس CSS برای gradient
   link          String? // لینک دکمه اطلاعات بیشتر
 
