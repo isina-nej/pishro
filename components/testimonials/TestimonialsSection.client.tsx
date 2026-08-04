@@ -19,9 +19,8 @@ const TestimonialsSectionClient: React.FC<TestimonialsSectionClientProps> = ({
   testimonials = [],
   speed = 50,
 }) => {
-  if (testimonials.length === 0) {
-    return null;
-  }
+  // Section must stay on the page even if the list is temporarily empty
+  const items = testimonials.length > 0 ? testimonials : [];
 
   return (
     <section
@@ -61,7 +60,13 @@ const TestimonialsSectionClient: React.FC<TestimonialsSectionClientProps> = ({
           <div className="pointer-events-none absolute bottom-0 right-0 top-0 z-20 w-24 bg-gradient-to-l from-[var(--home-bg,#F7F5F0)]/90 via-[var(--home-bg,#F7F5F0)]/40 to-transparent dark:from-black/70 dark:via-black/30 lg:w-40" />
 
           <div className="w-full overflow-hidden">
-            <MarqueeTrack testimonials={testimonials} speed={speed} />
+            {items.length > 0 ? (
+              <MarqueeTrack testimonials={items} speed={speed} />
+            ) : (
+              <p className="px-4 text-center text-sm text-muted-foreground">
+                به‌زودی نظرات کاربران اینجا نمایش داده می‌شود.
+              </p>
+            )}
           </div>
         </div>
 

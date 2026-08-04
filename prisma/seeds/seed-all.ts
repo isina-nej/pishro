@@ -11,6 +11,7 @@ import { seedCategories } from "./seed-categories";
 import { seedTags } from "./seed-tags";
 import { seedLandingPages } from "./landing-seed";
 import { seedInvestmentFunds } from "./seed-investment-funds";
+import { seedHomeTestimonials } from "./seed-home-testimonials";
 
 const prisma = new PrismaClient();
 
@@ -95,27 +96,32 @@ async function seedAll() {
     console.log("   2. Categories");
     console.log("   3. Tags");
     console.log("   4. Landing Pages (home / about / consulting / plans)");
-    console.log("   5. Investment Funds\n");
+    console.log("   5. Investment Funds");
+    console.log("   6. Home Testimonials (featured comments)\n");
     console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
 
-    console.log("👑 [1/5] Admin Users");
+    console.log("👑 [1/6] Admin Users");
     summary.adminUsers = await seedAdminUsers();
     console.log("");
 
-    console.log("📁 [2/5] Categories");
+    console.log("📁 [2/6] Categories");
     summary.categories = await seedCategories();
     console.log("");
 
-    console.log("🏷️  [3/5] Tags");
+    console.log("🏷️  [3/6] Tags");
     summary.tags = await seedTags();
     console.log("");
 
-    console.log("🏠 [4/5] Landing Pages");
+    console.log("🏠 [4/6] Landing Pages");
     summary.landing = await seedLandingPages();
     console.log("");
 
-    console.log("💰 [5/5] Investment Funds");
+    console.log("💰 [5/6] Investment Funds");
     summary.investmentFunds = await seedInvestmentFunds();
+    console.log("");
+
+    console.log("💬 [6/6] Home Testimonials");
+    summary.homeTestimonials = await seedHomeTestimonials();
     console.log("");
 
     const endTime = Date.now();

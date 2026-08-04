@@ -168,7 +168,7 @@ model Comment {
   userCompany String?
 
   // Content
-  text   String
+  text   String @db.Text
   rating Int?
 
   // Relations
