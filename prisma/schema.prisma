@@ -1320,14 +1320,30 @@ model SiteSettings {
   supportEmail    String?
   supportPhone    String?
 
-  // ظاهر عمومی سایت — پالت از lib/theme/landing-palettes.ts
-  /// شناسه پالت (مثلاً emerald-trust)
+  // ظاهر عمومی سایت — پالت builtin یا custom:<id>
+  /// شناسه پالت (مثلاً emerald-trust یا custom:clxyz...)
   paletteId String @default("emerald-trust")
   /// حالت پیش‌فرض تم: light | dark | system
   themeMode String @default("system")
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
+}
+
+/// پالت رنگی سفارشی ساخته‌شده توسط ادمین
+model CustomSitePalette {
+  id          String  @id @default(cuid())
+  name        String
+  nameFa      String
+  description String  @default("")
+  /// JSON: EditablePaletteColors for light mode
+  lightColors Json
+  /// JSON: EditablePaletteColors for dark mode
+  darkColors  Json
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
+
+  @@index([createdAt])
 }
 
 // مدل برای صفحه مدل‌های سرمایه‌گذاری (InvestmentModelsSection)

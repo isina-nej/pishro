@@ -10,10 +10,11 @@ import { SiteSettings } from "@prisma/client";
 import {
   DEFAULT_PALETTE_ID,
   DEFAULT_THEME_MODE,
-  resolvePaletteId,
   resolveThemeMode,
+  type PaletteTokens,
   type SiteThemeMode,
 } from "@/lib/theme/landing-palettes";
+import { resolveSitePalette } from "@/lib/services/custom-palette-service";
 
 /**
  * Type for updateable settings fields
@@ -31,11 +32,9 @@ export interface UpdateSettingsInput {
 export type PublicSiteTheme = {
   paletteId: string;
   themeMode: SiteThemeMode;
-};
-
-const FALLBACK_THEME: PublicSiteTheme = {
-  paletteId: DEFAULT_PALETTE_ID,
-  themeMode: DEFAULT_THEME_MODE,
+  light: PaletteTokens;
+  dark: PaletteTokens;
+  nameFa: string;
 };
 
 /**
@@ -66,20 +65,33 @@ export async function getSettings(): Promise<SiteSettings> {
 
 /**
  * Public theme for the live site — never throws; falls back to defaults.
+ * Includes resolved light/dark tokens (builtin or custom).
  */
 export async function getPublicSiteTheme(): Promise<PublicSiteTheme> {
   try {
     const settings = await prisma.siteSettings.findFirst({
       select: { paletteId: true, themeMode: true },
     });
-    if (!settings) return FALLBACK_THEME;
+    const paletteId = settings?.paletteId ?? DEFAULT_PALETTE_ID;
+    const themeMode = resolveThemeMode(settings?.themeMode);
+    const resolved = await resolveSitePalette(paletteId);
     return {
-      paletteId: resolvePaletteId(settings.paletteId),
-      themeMode: resolveThemeMode(settings.themeMode),
+      paletteId: resolved.id,
+      themeMode,
+      light: resolved.light,
+      dark: resolved.dark,
+      nameFa: resolved.nameFa,
     };
   } catch (error) {
     console.error("Error fetching public site theme:", error);
-    return FALLBACK_THEME;
+    const resolved = await resolveSitePalette(DEFAULT_PALETTE_ID);
+    return {
+      paletteId: resolved.id,
+      themeMode: DEFAULT_THEME_MODE,
+      light: resolved.light,
+      dark: resolved.dark,
+      nameFa: resolved.nameFa,
+    };
   }
 }
 

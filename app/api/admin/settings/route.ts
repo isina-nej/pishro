@@ -19,10 +19,8 @@ import {
   updateSettings,
   UpdateSettingsInput,
 } from "@/lib/services/settings-service";
-import {
-  isValidPaletteId,
-  isValidThemeMode,
-} from "@/lib/theme/landing-palettes";
+import { isValidThemeMode } from "@/lib/theme/landing-palettes";
+import { isKnownPaletteId } from "@/lib/services/custom-palette-service";
 
 /**
  * GET /api/admin/settings
@@ -103,7 +101,8 @@ export async function PATCH(req: NextRequest) {
     }
 
     if (body.paletteId !== undefined) {
-      if (!isValidPaletteId(body.paletteId)) {
+      const known = await isKnownPaletteId(body.paletteId);
+      if (!known) {
         return validationError(
           { paletteId: "شناسه پالت معتبر نیست" },
           "پالت رنگی انتخاب‌شده معتبر نیست"

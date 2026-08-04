@@ -68,7 +68,11 @@ export default async function RootLayout({
           enableSystem={siteTheme.themeMode === "system"}
           disableTransitionOnChange={false}
         >
-          <SitePaletteApplier paletteId={siteTheme.paletteId} />
+          <SitePaletteApplier
+            paletteId={siteTheme.paletteId}
+            light={siteTheme.light}
+            dark={siteTheme.dark}
+          />
           <ReactQueryProvider>
             {children}
             <Toaster

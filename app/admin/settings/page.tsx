@@ -1,26 +1,62 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Check, Loader2, Moon, Palette, Save, Sun, Monitor } from "lucide-react";
+import {
+  Check,
+  Loader2,
+  Moon,
+  Palette,
+  Plus,
+  Save,
+  Sun,
+  Monitor,
+  Trash2,
+  Pencil,
+  X,
+} from "lucide-react";
 import toast from "react-hot-toast";
-import { AdminLoadingState, AdminPageShell } from "@/components/admin/AdminPageShell";
+import {
+  AdminLoadingState,
+  AdminPageShell,
+} from "@/components/admin/AdminPageShell";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import ColorField from "@/components/admin/theme/ColorField";
 import { useAdminAuth } from "@/lib/hooks/useAdminAuth";
 import {
   LANDING_PALETTES,
   DEFAULT_PALETTE_ID,
   DEFAULT_THEME_MODE,
+  type LandingPalette,
   type SiteThemeMode,
 } from "@/lib/theme/landing-palettes";
+import {
+  DEFAULT_EDITABLE_DARK,
+  DEFAULT_EDITABLE_LIGHT,
+  EDITABLE_COLOR_FIELDS,
+  buildTokensFromEditable,
+  type EditablePaletteColors,
+} from "@/lib/theme/custom-palette";
 import { cn } from "@/lib/utils";
 
 type SettingsPayload = {
   paletteId?: string;
   themeMode?: string;
-  siteName?: string | null;
-  supportPhone?: string | null;
-  zarinpalMerchantId?: string | null;
+};
+
+type CustomPaletteItem = {
+  id: string;
+  paletteId: string;
+  name: string;
+  nameFa: string;
+  description: string;
+  lightColors: EditablePaletteColors;
+  darkColors: EditablePaletteColors;
+  light: LandingPalette["light"];
+  dark: LandingPalette["dark"];
 };
 
 async function fetchSettings(): Promise<SettingsPayload> {
@@ -49,6 +85,34 @@ async function saveSettings(body: {
   return json.data as SettingsPayload;
 }
 
+async function fetchCustomPalettes(): Promise<CustomPaletteItem[]> {
+  const res = await fetch("/api/admin/palettes", { credentials: "include" });
+  const json = await res.json();
+  if (!res.ok || json.status !== "success") {
+    throw new Error(json.message || "خطا در دریافت پالت‌های سفارشی");
+  }
+  return json.data as CustomPaletteItem[];
+}
+
+type EditorState = {
+  id?: string;
+  name: string;
+  nameFa: string;
+  description: string;
+  lightColors: EditablePaletteColors;
+  darkColors: EditablePaletteColors;
+};
+
+function emptyEditor(): EditorState {
+  return {
+    name: "",
+    nameFa: "",
+    description: "",
+    lightColors: { ...DEFAULT_EDITABLE_LIGHT },
+    darkColors: { ...DEFAULT_EDITABLE_DARK },
+  };
+}
+
 export default function AdminSettingsPage() {
   const { user, isLoading: authLoading } = useAdminAuth();
   const [loading, setLoading] = useState(true);
@@ -59,25 +123,37 @@ export default function AdminSettingsPage() {
   const [savedThemeMode, setSavedThemeMode] =
     useState<SiteThemeMode>(DEFAULT_THEME_MODE);
   const [previewMode, setPreviewMode] = useState<"light" | "dark">("light");
+  const [customs, setCustoms] = useState<CustomPaletteItem[]>([]);
+  const [editorOpen, setEditorOpen] = useState(false);
+  const [editor, setEditor] = useState<EditorState>(emptyEditor);
+  const [editorTab, setEditorTab] = useState<"light" | "dark">("light");
+  const [savingCustom, setSavingCustom] = useState(false);
+
+  const reload = async () => {
+    const [settings, customList] = await Promise.all([
+      fetchSettings(),
+      fetchCustomPalettes(),
+    ]);
+    const nextPalette = settings.paletteId || DEFAULT_PALETTE_ID;
+    const nextMode =
+      settings.themeMode === "light" ||
+      settings.themeMode === "dark" ||
+      settings.themeMode === "system"
+        ? settings.themeMode
+        : DEFAULT_THEME_MODE;
+    setPaletteId(nextPalette);
+    setThemeMode(nextMode);
+    setSavedPaletteId(nextPalette);
+    setSavedThemeMode(nextMode);
+    setCustoms(customList);
+  };
 
   useEffect(() => {
     if (authLoading || !user) return;
     let cancelled = false;
     (async () => {
       try {
-        const data = await fetchSettings();
-        if (cancelled) return;
-        const nextPalette = data.paletteId || DEFAULT_PALETTE_ID;
-        const nextMode =
-          data.themeMode === "light" ||
-          data.themeMode === "dark" ||
-          data.themeMode === "system"
-            ? data.themeMode
-            : DEFAULT_THEME_MODE;
-        setPaletteId(nextPalette);
-        setThemeMode(nextMode);
-        setSavedPaletteId(nextPalette);
-        setSavedThemeMode(nextMode);
+        await reload();
       } catch (error) {
         toast.error(error instanceof Error ? error.message : "خطا در بارگذاری");
       } finally {
@@ -87,33 +163,134 @@ export default function AdminSettingsPage() {
     return () => {
       cancelled = true;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authLoading, user]);
 
-  const dirty =
-    paletteId !== savedPaletteId || themeMode !== savedThemeMode;
+  const dirty = paletteId !== savedPaletteId || themeMode !== savedThemeMode;
 
-  const selected = useMemo(
-    () => LANDING_PALETTES.find((p) => p.id === paletteId) ?? LANDING_PALETTES[0],
-    [paletteId]
-  );
+  const allPalettes: LandingPalette[] = useMemo(() => {
+    const customAsLanding: LandingPalette[] = customs.map((c) => ({
+      id: c.paletteId,
+      name: c.name,
+      nameFa: c.nameFa,
+      description: c.description || "پالت سفارشی",
+      light: c.light,
+      dark: c.dark,
+    }));
+    return [...LANDING_PALETTES, ...customAsLanding];
+  }, [customs]);
+
+  const selected =
+    allPalettes.find((p) => p.id === paletteId) ?? LANDING_PALETTES[0];
 
   const previewTokens =
     previewMode === "dark" ? selected.dark : selected.light;
+
+  const editorPreviewTokens = useMemo(() => {
+    const colors =
+      editorTab === "dark" ? editor.darkColors : editor.lightColors;
+    return buildTokensFromEditable(colors, editorTab);
+  }, [editor, editorTab]);
 
   const onSave = async () => {
     setSaving(true);
     try {
       const data = await saveSettings({ paletteId, themeMode });
       setSavedPaletteId(data.paletteId || paletteId);
-      setSavedThemeMode(
-        (data.themeMode as SiteThemeMode) || themeMode
-      );
+      setSavedThemeMode((data.themeMode as SiteThemeMode) || themeMode);
       toast.success("پالت رنگی سایت ذخیره شد");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "خطا در ذخیره");
     } finally {
       setSaving(false);
     }
+  };
+
+  const openCreate = () => {
+    setEditor(emptyEditor());
+    setEditorTab("light");
+    setEditorOpen(true);
+  };
+
+  const openEdit = (item: CustomPaletteItem) => {
+    setEditor({
+      id: item.id,
+      name: item.name,
+      nameFa: item.nameFa,
+      description: item.description,
+      lightColors: { ...item.lightColors },
+      darkColors: { ...item.darkColors },
+    });
+    setEditorTab("light");
+    setEditorOpen(true);
+  };
+
+  const saveCustom = async () => {
+    setSavingCustom(true);
+    try {
+      const payload = {
+        name: editor.name,
+        nameFa: editor.nameFa,
+        description: editor.description,
+        lightColors: editor.lightColors,
+        darkColors: editor.darkColors,
+      };
+      const url = editor.id
+        ? `/api/admin/palettes/${editor.id}`
+        : "/api/admin/palettes";
+      const method = editor.id ? "PATCH" : "POST";
+      const res = await fetch(url, {
+        method,
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const json = await res.json();
+      if (!res.ok || json.status !== "success") {
+        throw new Error(json.message || "خطا در ذخیره پالت سفارشی");
+      }
+      const saved = json.data as CustomPaletteItem;
+      toast.success(editor.id ? "پالت ویرایش شد" : "پالت سفارشی ساخته شد");
+      setEditorOpen(false);
+      await reload();
+      setPaletteId(saved.paletteId);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "خطا در ذخیره");
+    } finally {
+      setSavingCustom(false);
+    }
+  };
+
+  const removeCustom = async (item: CustomPaletteItem) => {
+    if (!window.confirm(`پالت «${item.nameFa}» حذف شود؟`)) return;
+    try {
+      const res = await fetch(`/api/admin/palettes/${item.id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      const json = await res.json();
+      if (!res.ok || json.status !== "success") {
+        throw new Error(json.message || "خطا در حذف");
+      }
+      toast.success("پالت حذف شد");
+      await reload();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "خطا در حذف");
+    }
+  };
+
+  const setEditorColor = (
+    mode: "light" | "dark",
+    key: keyof EditablePaletteColors,
+    hex: string
+  ) => {
+    setEditor((prev) => ({
+      ...prev,
+      [mode === "light" ? "lightColors" : "darkColors"]: {
+        ...(mode === "light" ? prev.lightColors : prev.darkColors),
+        [key]: hex,
+      },
+    }));
   };
 
   if (authLoading || loading) {
@@ -133,78 +310,153 @@ export default function AdminSettingsPage() {
   return (
     <AdminPageShell
       title="ظاهر سایت"
-      description="پالت رنگی عمومی سایت را انتخاب و ذخیره کنید. پس از ذخیره، روی لندینگ و صفحات عمومی اعمال می‌شود."
+      description="پالت آماده یا سفارشی را انتخاب و ذخیره کنید. برای پالت سفارشی می‌توانید کد رنگ بزنید یا با موس از رنگ‌چین انتخاب کنید."
       actions={
-        <Button
-          onClick={onSave}
-          disabled={!dirty || saving}
-          className="gap-2"
-        >
-          {saving ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Save className="h-4 w-4" />
-          )}
-          ذخیره تغییرات
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" onClick={openCreate} className="gap-2">
+            <Plus className="h-4 w-4" />
+            پالت سفارشی
+          </Button>
+          <Button onClick={onSave} disabled={!dirty || saving} className="gap-2">
+            {saving ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Save className="h-4 w-4" />
+            )}
+            ذخیره پالت فعال
+          </Button>
+        </div>
       }
     >
-      <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-        <Card className="space-y-4 p-4 sm:p-5">
-          <div className="flex items-center gap-2">
-            <Palette className="h-4 w-4 text-primary" />
-            <h2 className="text-sm font-bold">پالت رنگی</h2>
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {LANDING_PALETTES.map((palette, index) => {
-              const active = palette.id === paletteId;
-              const swatch = palette.light;
-              return (
-                <button
-                  key={palette.id}
-                  type="button"
-                  onClick={() => setPaletteId(palette.id)}
-                  className={cn(
-                    "rounded-2xl border p-3 text-right transition",
-                    active
-                      ? "border-primary ring-2 ring-primary/25"
-                      : "border-border hover:border-primary/40"
-                  )}
-                >
-                  <div
-                    className="mb-3 h-16 overflow-hidden rounded-xl"
-                    style={{
-                      background: `linear-gradient(135deg, ${swatch.homeDeep} 0%, ${swatch.homeGlow} 55%, ${swatch.homeGold} 100%)`,
-                    }}
-                  />
-                  <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <p className="text-sm font-bold">
-                        {index + 1}. {palette.nameFa}
-                      </p>
-                      <p className="mt-0.5 text-[11px] text-muted-foreground">
-                        {palette.name} — {palette.description}
-                      </p>
-                    </div>
-                    {active && (
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                        <Check className="h-3.5 w-3.5" />
-                      </span>
+      <div className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
+        <div className="space-y-4">
+          <Card className="space-y-4 p-4 sm:p-5">
+            <div className="flex items-center gap-2">
+              <Palette className="h-4 w-4 text-primary" />
+              <h2 className="text-sm font-bold">پالت‌های آماده</h2>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {LANDING_PALETTES.map((palette, index) => {
+                const active = palette.id === paletteId;
+                const swatch = palette.light;
+                return (
+                  <button
+                    key={palette.id}
+                    type="button"
+                    onClick={() => setPaletteId(palette.id)}
+                    className={cn(
+                      "rounded-2xl border p-3 text-right transition",
+                      active
+                        ? "border-primary ring-2 ring-primary/25"
+                        : "border-border hover:border-primary/40"
                     )}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </Card>
+                  >
+                    <div
+                      className="mb-3 h-14 overflow-hidden rounded-xl"
+                      style={{
+                        background: `linear-gradient(135deg, ${swatch.homeDeep} 0%, ${swatch.homeGlow} 55%, ${swatch.homeGold} 100%)`,
+                      }}
+                    />
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p className="text-sm font-bold">
+                          {index + 1}. {palette.nameFa}
+                        </p>
+                        <p className="mt-0.5 text-[11px] text-muted-foreground">
+                          {palette.description}
+                        </p>
+                      </div>
+                      {active && (
+                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                          <Check className="h-3.5 w-3.5" />
+                        </span>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </Card>
+
+          <Card className="space-y-4 p-4 sm:p-5">
+            <div className="flex items-center justify-between gap-2">
+              <h2 className="text-sm font-bold">پالت‌های سفارشی</h2>
+              <Button size="sm" variant="outline" onClick={openCreate} className="gap-1.5">
+                <Plus className="h-3.5 w-3.5" />
+                جدید
+              </Button>
+            </div>
+            {customs.length === 0 ? (
+              <p className="text-xs leading-6 text-muted-foreground">
+                هنوز پالت سفارشی ندارید. با «پالت سفارشی» یکی بسازید و رنگ‌ها را
+                با کد یا رنگ‌چین گرافیکی تنظیم کنید.
+              </p>
+            ) : (
+              <div className="space-y-2">
+                {customs.map((item) => {
+                  const active = item.paletteId === paletteId;
+                  return (
+                    <div
+                      key={item.id}
+                      className={cn(
+                        "flex items-center gap-3 rounded-xl border p-3",
+                        active
+                          ? "border-primary ring-2 ring-primary/20"
+                          : "border-border"
+                      )}
+                    >
+                      <button
+                        type="button"
+                        className="h-12 w-12 shrink-0 rounded-lg border border-border"
+                        style={{
+                          background: `linear-gradient(135deg, ${item.lightColors.primary}, ${item.lightColors.secondary} 55%, ${item.lightColors.accent})`,
+                        }}
+                        onClick={() => setPaletteId(item.paletteId)}
+                        title="انتخاب به‌عنوان پالت فعال"
+                      />
+                      <button
+                        type="button"
+                        className="min-w-0 flex-1 text-right"
+                        onClick={() => setPaletteId(item.paletteId)}
+                      >
+                        <p className="truncate text-sm font-bold">{item.nameFa}</p>
+                        <p className="truncate text-[11px] text-muted-foreground">
+                          {item.name}
+                          {item.description ? ` — ${item.description}` : ""}
+                        </p>
+                      </button>
+                      <div className="flex shrink-0 gap-1">
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          onClick={() => openEdit(item)}
+                          aria-label="ویرایش"
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          onClick={() => removeCustom(item)}
+                          aria-label="حذف"
+                        >
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </Card>
+        </div>
 
         <div className="space-y-4">
           <Card className="space-y-4 p-4 sm:p-5">
             <h2 className="text-sm font-bold">حالت پیش‌فرض تم</h2>
             <p className="text-xs leading-6 text-muted-foreground">
-              برای بازدیدکنندهٔ جدید اعمال می‌شود. کاربر همچنان می‌تواند با
-              دکمهٔ تم در هدر بین لایت و دارک جابه‌جا شود؛ پالت ذخیره‌شده برای
-              هر دو حالت استفاده می‌شود.
+              برای بازدیدکنندهٔ جدید. کاربر می‌تواند لایت/دارک را عوض کند؛ پالت
+              ذخیره‌شده برای هر دو حالت استفاده می‌شود.
             </p>
             <div className="grid grid-cols-3 gap-2">
               {(
@@ -234,32 +486,23 @@ export default function AdminSettingsPage() {
 
           <Card className="overflow-hidden p-0">
             <div className="flex items-center justify-between border-b border-border px-4 py-3">
-              <h2 className="text-sm font-bold">پیش‌نمایش پالت</h2>
+              <h2 className="text-sm font-bold">پیش‌نمایش پالت فعال</h2>
               <div className="flex rounded-lg bg-muted p-1">
-                <button
-                  type="button"
-                  onClick={() => setPreviewMode("light")}
-                  className={cn(
-                    "rounded-md px-2.5 py-1 text-[11px] font-bold",
-                    previewMode === "light"
-                      ? "bg-card shadow-sm"
-                      : "text-muted-foreground"
-                  )}
-                >
-                  لایت
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPreviewMode("dark")}
-                  className={cn(
-                    "rounded-md px-2.5 py-1 text-[11px] font-bold",
-                    previewMode === "dark"
-                      ? "bg-card shadow-sm"
-                      : "text-muted-foreground"
-                  )}
-                >
-                  دارک
-                </button>
+                {(["light", "dark"] as const).map((mode) => (
+                  <button
+                    key={mode}
+                    type="button"
+                    onClick={() => setPreviewMode(mode)}
+                    className={cn(
+                      "rounded-md px-2.5 py-1 text-[11px] font-bold",
+                      previewMode === mode
+                        ? "bg-card shadow-sm"
+                        : "text-muted-foreground"
+                    )}
+                  >
+                    {mode === "light" ? "لایت" : "دارک"}
+                  </button>
+                ))}
               </div>
             </div>
             <div
@@ -297,26 +540,6 @@ export default function AdminSettingsPage() {
                 >
                   آموزش و سرمایه‌گذاری در یک تجربهٔ یکپارچه
                 </p>
-                <div className="mt-3 flex gap-2">
-                  <span
-                    className="rounded-full px-3 py-1.5 text-[11px] font-bold"
-                    style={{
-                      background: previewTokens.homeBg,
-                      color: previewTokens.homeDeep,
-                    }}
-                  >
-                    شروع یادگیری
-                  </span>
-                  <span
-                    className="rounded-full border px-3 py-1.5 text-[11px] font-bold"
-                    style={{
-                      borderColor: "rgba(255,255,255,0.35)",
-                      color: previewTokens.homeOnDark,
-                    }}
-                  >
-                    طرح‌ها
-                  </span>
-                </div>
               </div>
               <div className="flex gap-2">
                 {[
@@ -338,12 +561,153 @@ export default function AdminSettingsPage() {
 
           {dirty && (
             <p className="text-xs text-amber-600 dark:text-amber-400">
-              تغییرات ذخیره نشده‌اند. برای اعمال روی سایت عمومی «ذخیره تغییرات»
-              را بزنید.
+              پالت/تم انتخاب‌شده هنوز ذخیره نشده. «ذخیره پالت فعال» را بزنید.
             </p>
           )}
         </div>
       </div>
+
+      {editorOpen && (
+        <div className="fixed inset-0 z-[90] flex items-end justify-center bg-black/50 p-3 sm:items-center">
+          <Card className="max-h-[92vh] w-full max-w-3xl overflow-y-auto p-4 sm:p-5">
+            <div className="mb-4 flex items-start justify-between gap-3">
+              <div>
+                <h2 className="text-base font-bold">
+                  {editor.id ? "ویرایش پالت سفارشی" : "پالت سفارشی جدید"}
+                </h2>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  کد رنگ (#RRGGBB) را تایپ کنید یا روی مربع رنگ کلیک کنید و با
+                  موس انتخاب کنید.
+                </p>
+              </div>
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={() => setEditorOpen(false)}
+                aria-label="بستن"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <Label className="text-xs font-semibold">نام فارسی</Label>
+                <Input
+                  value={editor.nameFa}
+                  onChange={(e) =>
+                    setEditor((p) => ({ ...p, nameFa: e.target.value }))
+                  }
+                  placeholder="مثلاً سبز اختصاصی"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs font-semibold">نام انگلیسی</Label>
+                <Input
+                  value={editor.name}
+                  onChange={(e) =>
+                    setEditor((p) => ({ ...p, name: e.target.value }))
+                  }
+                  placeholder="Custom Green"
+                  dir="ltr"
+                />
+              </div>
+              <div className="space-y-1.5 sm:col-span-2">
+                <Label className="text-xs font-semibold">توضیح</Label>
+                <Textarea
+                  value={editor.description}
+                  onChange={(e) =>
+                    setEditor((p) => ({ ...p, description: e.target.value }))
+                  }
+                  rows={2}
+                  placeholder="اختیاری"
+                />
+              </div>
+            </div>
+
+            <div className="mt-4 flex rounded-xl bg-muted p-1">
+              {(["light", "dark"] as const).map((mode) => (
+                <button
+                  key={mode}
+                  type="button"
+                  onClick={() => setEditorTab(mode)}
+                  className={cn(
+                    "flex-1 rounded-lg py-2 text-xs font-bold",
+                    editorTab === mode
+                      ? "bg-card shadow-sm"
+                      : "text-muted-foreground"
+                  )}
+                >
+                  {mode === "light" ? "رنگ‌های لایت" : "رنگ‌های دارک"}
+                </button>
+              ))}
+            </div>
+
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              {EDITABLE_COLOR_FIELDS.map((field) => (
+                <ColorField
+                  key={`${editorTab}-${field.key}`}
+                  label={field.label}
+                  hint={field.hint}
+                  value={
+                    editorTab === "light"
+                      ? editor.lightColors[field.key]
+                      : editor.darkColors[field.key]
+                  }
+                  onChange={(hex) => setEditorColor(editorTab, field.key, hex)}
+                />
+              ))}
+            </div>
+
+            <div
+              className="mt-5 rounded-2xl border border-border p-4"
+              style={{
+                background: editorPreviewTokens.homeBg,
+                color: editorPreviewTokens.homeInk,
+              }}
+            >
+              <p className="text-xs font-bold" style={{ color: editorPreviewTokens.homeMuted }}>
+                پیش‌نمایش لحظه‌ای ({editorTab === "light" ? "لایت" : "دارک"})
+              </p>
+              <div
+                className="mt-3 rounded-xl p-4"
+                style={{
+                  background: `linear-gradient(145deg, ${editorPreviewTokens.homeDeep}, ${editorPreviewTokens.homeGlow})`,
+                  color: editorPreviewTokens.homeOnDark,
+                }}
+              >
+                <p className="text-sm font-bold">پیشرو</p>
+                <p
+                  className="mt-1 text-[11px]"
+                  style={{ color: editorPreviewTokens.homeOnDarkMuted }}
+                >
+                  نمونه تیتر روی پالت سفارشی شما
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-5 flex flex-wrap justify-end gap-2">
+              <Button variant="outline" onClick={() => setEditorOpen(false)}>
+                انصراف
+              </Button>
+              <Button
+                onClick={saveCustom}
+                disabled={
+                  savingCustom || !editor.name.trim() || !editor.nameFa.trim()
+                }
+                className="gap-2"
+              >
+                {savingCustom ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Save className="h-4 w-4" />
+                )}
+                ذخیره پالت سفارشی
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
     </AdminPageShell>
   );
 }

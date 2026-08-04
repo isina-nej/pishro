@@ -9,7 +9,14 @@ import { getPublicSiteTheme } from "@/lib/services/settings-service";
 export async function GET() {
   try {
     const theme = await getPublicSiteTheme();
-    return successResponse(theme, "تم سایت");
+    return successResponse(
+      {
+        paletteId: theme.paletteId,
+        themeMode: theme.themeMode,
+        nameFa: theme.nameFa,
+      },
+      "تم سایت"
+    );
   } catch (error) {
     console.error("Error fetching site theme:", error);
     return errorResponse("خطا در دریافت تم سایت", ErrorCodes.DATABASE_ERROR);

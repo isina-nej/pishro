@@ -4,14 +4,15 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import {
-  getLandingPalette,
-  resolvePaletteId,
   applyPaletteTokens,
   type PaletteMode,
+  type PaletteTokens,
 } from "@/lib/theme/landing-palettes";
 
 type SitePaletteApplierProps = {
   paletteId: string;
+  light: PaletteTokens;
+  dark: PaletteTokens;
 };
 
 /**
@@ -20,25 +21,22 @@ type SitePaletteApplierProps = {
  */
 export default function SitePaletteApplier({
   paletteId,
+  light,
+  dark,
 }: SitePaletteApplierProps) {
   const { resolvedTheme } = useTheme();
   const pathname = usePathname();
-  const id = resolvePaletteId(paletteId);
 
   useEffect(() => {
-    const palette = getLandingPalette(id);
-    if (!palette) return;
-
     const mode: PaletteMode = resolvedTheme === "dark" ? "dark" : "light";
-    const tokens = mode === "dark" ? palette.dark : palette.light;
+    const tokens = mode === "dark" ? dark : light;
 
     const apply = () => {
       applyPaletteTokens(document.documentElement, tokens);
-      document.documentElement.dataset.sitePalette = id;
+      document.documentElement.dataset.sitePalette = paletteId;
     };
 
     apply();
-    // home-shell may mount a frame later on soft navigations
     const raf = requestAnimationFrame(apply);
     const t = window.setTimeout(apply, 50);
 
@@ -46,7 +44,7 @@ export default function SitePaletteApplier({
       cancelAnimationFrame(raf);
       window.clearTimeout(t);
     };
-  }, [id, resolvedTheme, pathname]);
+  }, [paletteId, light, dark, resolvedTheme, pathname]);
 
   return null;
 }
