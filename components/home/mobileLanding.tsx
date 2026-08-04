@@ -118,7 +118,8 @@ const HeroSection = ({
         >
           <source src={videoUrl || "/videos/aboutUs.webm"} type="video/webm" />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background" />
+        {/* فقط سایه پایین برای خوانایی متن — بدون هاله کدر روی کل ویدیو */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/55" />
       </div>
 
       {/* Content */}
@@ -127,7 +128,7 @@ const HeroSection = ({
           initial={{ opacity: 0, y: 60 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="w-full rounded-[2rem] border border-white/15 bg-[#0F2A1F]/72 p-6 shadow-2xl backdrop-blur-2xl"
+          className="w-full rounded-[2rem] border border-white/20 bg-black/40 p-6 shadow-2xl shadow-black/30"
         >
           {/* Badge */}
           <motion.div

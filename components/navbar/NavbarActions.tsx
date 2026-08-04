@@ -34,7 +34,7 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ isDark }) => {
           className={clsx(
             "border transition-colors pr-5 pl-4 py-1.5 rounded-lg",
             isDark
-              ? "border-border hover:bg-background/20 text-foreground"
+              ? "border-white/35 hover:bg-white/10 text-white"
               : "border-muted-foreground/50 text-muted-foreground hover:bg-muted/60"
           )}
         >
@@ -49,7 +49,7 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ isDark }) => {
           <FiShoppingCart
             className={clsx(
               "size-6 transition-colors",
-              isDark ? "text-foreground" : "text-muted-foreground"
+              isDark ? "text-white" : "text-muted-foreground"
             )}
           />
           {cartCount > 0 && (

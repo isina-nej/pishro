@@ -22,7 +22,7 @@ const HoverableLink = ({ label, href }: HoverableLinkProps) => {
       onMouseLeave={() => setIsHovered(false)}
       className={clsx(
         "relative px-2 py-1 text-sm transition duration-300",
-        isDark ? "text-foreground" : "text-muted-foreground"
+        isDark ? "text-white/95 hover:text-white" : "text-muted-foreground"
       )}
     >
       {/* Make the label span relative and inline-block */}
@@ -36,7 +36,7 @@ const HoverableLink = ({ label, href }: HoverableLinkProps) => {
               className={clsx(
                 "absolute right-0 -bottom-1 h-[2px]",
                 isDark
-                  ? "bg-foreground/40"
+                  ? "bg-white/70"
                   : "bg-muted-foreground/40"
               )}
               initial={{ scaleX: 0, opacity: 0 }}
