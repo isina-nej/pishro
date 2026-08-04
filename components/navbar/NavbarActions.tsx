@@ -67,7 +67,7 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ isDark }) => {
       <div
         className={clsx(
           "flex items-center gap-2 text-xs sm:text-sm md:text-base",
-          isDark ? "text-foreground" : "text-muted-foreground"
+          isDark ? "text-white" : "text-muted-foreground"
         )}
       >
         <ThemeToggle />
