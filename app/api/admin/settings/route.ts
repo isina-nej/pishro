@@ -22,7 +22,7 @@ import {
 import { isValidThemeMode } from "@/lib/theme/landing-palettes";
 import { isKnownPaletteId } from "@/lib/services/custom-palette-service";
 import {
-  HIDABLE_PAGE_PATHS,
+  HIDABLE_ITEM_IDS,
   parseHiddenPages,
 } from "@/lib/site/hidable-pages";
 
@@ -141,7 +141,7 @@ export async function PATCH(req: NextRequest) {
         );
       }
       const invalid = body.hiddenPages.filter(
-        (p) => typeof p !== "string" || !HIDABLE_PAGE_PATHS.has(p)
+        (p) => typeof p !== "string" || !HIDABLE_ITEM_IDS.has(p)
       );
       if (invalid.length) {
         return validationError(

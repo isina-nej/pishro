@@ -28,6 +28,8 @@ type LandingOverlayProps = {
   slides?: SlideData[];
   miniSlider1Data?: string[];
   miniSlider2Data?: string[];
+  /** When false, hide the album / zoom slider block after the hero. */
+  showAlbum?: boolean;
 };
 
 // =================================================
@@ -42,6 +44,7 @@ const LandingOverlay = ({
   slides,
   miniSlider1Data,
   miniSlider2Data,
+  showAlbum = true,
 }: LandingOverlayProps) => {
   const ref = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -126,15 +129,17 @@ const LandingOverlay = ({
         </div>
       </section>
 
-      {/* اسلایدر نهایی - فقط در دسکتاپ */}
-      <div className="hidden lg:block">
-        <ImageZoomSliderSection
-          parentRef={ref}
-          slides={slides}
-          miniSlider1Data={miniSlider1Data}
-          miniSlider2Data={miniSlider2Data}
-        />
-      </div>
+      {/* اسلایدر نهایی / آلبوم - فقط در دسکتاپ */}
+      {showAlbum && (
+        <div className="hidden lg:block">
+          <ImageZoomSliderSection
+            parentRef={ref}
+            slides={slides}
+            miniSlider1Data={miniSlider1Data}
+            miniSlider2Data={miniSlider2Data}
+          />
+        </div>
+      )}
     </>
   );
 };
