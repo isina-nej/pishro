@@ -117,7 +117,7 @@ npm install
 ### 2.5 فایل `.env`
 
 ```bash
-nano /opt/pishro/.env
+cp .env.example .env && nano /opt/pishro/.env
 ```
 
 حداقلی برای بالا آمدن سایت:

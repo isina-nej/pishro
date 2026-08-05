@@ -2,8 +2,11 @@
 // Simple JWT-based authentication without Prisma
 import jwt from 'jsonwebtoken';
 import { verifyAdminAccessToken, type AdminUser } from './admin-auth';
+import { getAuthSecret } from './env';
 
-const SECRET = process.env.NEXTAUTH_SECRET || 'default-secret';
+function getSecret() {
+  return getAuthSecret();
+}
 
 export interface AuthUser {
   id: string;
@@ -20,11 +23,8 @@ export interface AuthSession {
  */
 export function verifyToken(token: string): AuthUser | null {
   try {
-    const decoded = jwt.verify(token, SECRET) as AuthUser;
-    console.log('[verifyToken] Successfully verified token for user:', decoded.id);
-    return decoded;
-  } catch (error) {
-    console.error('[verifyToken] Token verification failed:', error instanceof Error ? error.message : error);
+    return jwt.verify(token, getSecret()) as AuthUser;
+  } catch {
     return null;
   }
 }
@@ -33,7 +33,7 @@ export function verifyToken(token: string): AuthUser | null {
  * Create JWT token
  */
 export function createToken(user: AuthUser): string {
-  return jwt.sign(user, SECRET, { expiresIn: '30d' });
+  return jwt.sign(user, getSecret(), { expiresIn: '30d' });
 }
 
 /**

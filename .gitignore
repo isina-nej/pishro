@@ -16,12 +16,16 @@ prisma/engines/
 .env.local
 .env.*.local
 
-# IDE
+# IDE / agent local config
 .vscode/
 .idea/
 *.code-workspace
 *.swp
 *.swo
+.claude/
+.codex/
+.uploads/
+workspace/.uploads/
 
 # OS
 .DS_Store

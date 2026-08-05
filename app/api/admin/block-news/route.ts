@@ -62,43 +62,27 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    console.log('[POST /admin/block-news] ===== REQUEST START =====');
-    console.log('[POST /admin/block-news] Method:', req.method);
-    console.log('[POST /admin/block-news] URL:', req.url);
-    console.log('[POST /admin/block-news] Headers:', Array.from(req.headers.entries()));
-    
-    const authHeader = req.headers.get('Authorization');
-    console.log('[POST /admin/block-news] Authorization header:', authHeader ? 'Present' : 'Missing');
-    
     const adminAuth = await getAdminAuth(req);
-    console.log('[POST /admin/block-news] Auth result:', adminAuth);
-    
+
     if (!adminAuth) {
-      console.warn('[POST /admin/block-news] No admin auth found');
       return errorResponse('ورود به سیستم الزامی است');
     }
 
     if (adminAuth.role !== 'ADMIN') {
-      console.warn('[POST /admin/block-news] User is not admin:', adminAuth.role);
       return errorResponse('دسترسی منحصر به مدیران است');
     }
 
     const body = (await req.json()) as CreateNewsRequest;
-    console.log('[POST /admin/block-news] Received body:', JSON.stringify(body, null, 2));
 
     // Validate input
     const validated = CreateNewsSchema.parse({
       ...body,
       authorId: adminAuth.id
     });
-    console.log('[POST /admin/block-news] Validated data:', JSON.stringify(validated, null, 2));
 
     const news = await createNews(validated);
-    console.log('[POST /admin/block-news] Created news:', JSON.stringify(news, null, 2));
 
     const response = createdResponse(news, 'خبر با موفقیت ایجاد شد');
-    console.log('[POST /admin/block-news] Sending response');
-    console.log('[POST /admin/block-news] ===== REQUEST END =====');
     return response;
   } catch (error: unknown) {
     console.error('[POST /admin/block-news] ===== ERROR =====');
