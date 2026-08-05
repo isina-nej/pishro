@@ -93,8 +93,8 @@ const cacheStore = new Map<string, CacheEntry>();
 const inflightRequests = new Map<string, Promise<CryptoMarketResponse>>();
 const MAX_CACHE_ENTRIES = 200;
 
-function cacheKeyFor(ids: string[], symbols: string[], limit: number): string {
-  return JSON.stringify([limit, [...ids].sort(), [...symbols].sort()]);
+function cacheKeyFor(ids: string[], symbols: string[], limit: number, page: number): string {
+  return JSON.stringify([limit, page, [...ids].sort(), [...symbols].sort()]);
 }
 
 function pruneExpired(now: number) {
@@ -130,12 +130,19 @@ function toLimit(value: string | null): number {
   return Math.min(parsed, DEFAULT_MARKET_LIMIT);
 }
 
-function coingeckoMarketUrl(limit: number, ids: string[] = []): string {
+function toPage(value: string | null): number {
+  if (!value) return 1;
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed) || parsed < 1) return 1;
+  return Math.min(parsed, Math.ceil(DEFAULT_MARKET_LIMIT));
+}
+
+function coingeckoMarketUrl(limit: number, ids: string[] = [], page = 1): string {
   const params = new URLSearchParams({
     vs_currency: 'usd',
     order: 'market_cap_desc',
     per_page: String(limit),
-    page: '1',
+    page: String(Math.max(1, page)),
     sparkline: 'true',
     price_change_percentage: '24h,7d,30d',
   });
@@ -151,26 +158,43 @@ function normalizeSymbolSet(symbols: string[]): Set<string> {
   return new Set(symbols.map((symbol) => symbol.toUpperCase()));
 }
 
-function selectAssets<T extends { id: string; symbol: string }>(assets: T[], ids: string[], symbols: string[], limit: number): T[] {
-  if (!ids.length && !symbols.length) return assets.slice(0, limit);
+function filterAssets<T extends { id: string; symbol: string }>(assets: T[], ids: string[], symbols: string[]): T[] {
+  if (!ids.length && !symbols.length) return assets;
   const idSet = normalizeIdSet(ids);
   const symbolSet = normalizeSymbolSet(symbols);
-  const matched = assets.filter((asset) => idSet.has(asset.id.toLowerCase()) || symbolSet.has(asset.symbol.toUpperCase()));
-  // If the requester explicitly asked for an empty list, don't fallback to the limit cut.
-  return matched.length ? matched.slice(0, limit) : matched;
+  return assets.filter((asset) => idSet.has(asset.id.toLowerCase()) || symbolSet.has(asset.symbol.toUpperCase()));
+}
+
+function takePage<T>(assets: T[], limit: number, page: number): T[] {
+  const start = (Math.max(1, page) - 1) * limit;
+  return assets.slice(start, start + limit);
+}
+
+function selectAssets<T extends { id: string; symbol: string }>(assets: T[], ids: string[], symbols: string[], limit: number, page = 1): T[] {
+  return takePage(filterAssets(assets, ids, symbols), limit, page);
+}
+
+function buildPagination(page: number, limit: number, assetCount: number) {
+  return {
+    page,
+    limit,
+    hasMore: assetCount >= limit && page * limit < DEFAULT_MARKET_LIMIT,
+  };
 }
 
 function imageForAsset(item: { image?: string | null }): string | null {
   return item.image || null;
 }
 
-function assetRequestOptions(options?: { ids?: string[]; symbols?: string[]; limit?: number }) {
+function assetRequestOptions(options?: { ids?: string[]; symbols?: string[]; limit?: number; page?: number }) {
   const ids = options?.ids || [];
   const symbols = options?.symbols || [];
+  const page = options?.page && Number.isInteger(options.page) && options.page > 0 ? options.page : 1;
   return {
     ids,
     symbols,
     limit: options?.limit || DEFAULT_MARKET_LIMIT,
+    page,
   };
 }
 
@@ -216,15 +240,19 @@ function providerHeaders(apiKey?: string) {
   return apiKey ? { 'x-cg-demo-api-key': apiKey } : undefined;
 }
 
-async function loadCoinGecko(ids: string[], symbols: string[], limit: number): Promise<{ assets: CoinGeckoMarketRow[]; global: CryptoGlobalMarket } | null> {
+async function loadCoinGecko(ids: string[], symbols: string[], limit: number, page: number): Promise<{ assets: CoinGeckoMarketRow[]; global: CryptoGlobalMarket } | null> {
   const headers = providerHeaders(process.env.COINGECKO_API_KEY);
+  // CoinGecko paginates server-side when listing the market. When the caller
+  // filters by ids/symbols we fetch that set (page 1) and page client-side.
+  const apiPage = ids.length || symbols.length ? 1 : page;
 
   try {
     const [markets, global] = await Promise.all([
-      fetchJson<CoinGeckoMarketRow[]>(coingeckoMarketUrl(limit, ids), { headers }),
+      fetchJson<CoinGeckoMarketRow[]>(coingeckoMarketUrl(limit, ids, apiPage), { headers }),
       fetchJson<JsonRecord>(`${coingeckoBaseUrl()}/global`, { headers }),
     ]);
-    const data = selectAssets(markets.filter((item) => item?.id), ids, symbols, limit);
+    const filtered = filterAssets(markets.filter((item) => item?.id), ids, symbols);
+    const data = ids.length || symbols.length ? takePage(filtered, limit, page) : filtered.slice(0, limit);
     const globalData = (global.data || {}) as JsonRecord;
     const marketCapPercentage = (globalData.market_cap_percentage || {}) as JsonRecord;
     return {
@@ -244,13 +272,13 @@ async function loadCoinGecko(ids: string[], symbols: string[], limit: number): P
   }
 }
 
-async function loadCoinPaprika(ids: string[], symbols: string[], limit: number): Promise<{ assets: CoinPaprikaTickerRow[]; global: CryptoGlobalMarket } | null> {
+async function loadCoinPaprika(ids: string[], symbols: string[], limit: number, page: number): Promise<{ assets: CoinPaprikaTickerRow[]; global: CryptoGlobalMarket } | null> {
   try {
     const [global, tickers] = await Promise.all([
       fetchJson<JsonRecord>(`${coinpaprikaBaseUrl()}/global`),
       fetchJson<CoinPaprikaTickerRow[]>(`${coinpaprikaBaseUrl()}/tickers?quotes=USD`),
     ]);
-    const assets = selectAssets(tickers, ids, symbols, limit);
+    const assets = selectAssets(tickers, ids, symbols, limit, page);
     const globalData = (global as JsonRecord);
     return {
       assets,
@@ -468,7 +496,7 @@ function nobitexPairPrice(
   };
 }
 
-async function loadNobitexMarket(ids: string[], symbols: string[], limit: number): Promise<MarketSnapshot | null> {
+async function loadNobitexMarket(ids: string[], symbols: string[], limit: number, page: number): Promise<MarketSnapshot | null> {
   const catalogueSymbols = NOBITEX_FALLBACK_ASSETS.map((asset) => asset.symbol);
   const nobitex = await loadNobitexStats(catalogueSymbols);
   if (!nobitex) return null;
@@ -517,7 +545,7 @@ async function loadNobitexMarket(ids: string[], symbols: string[], limit: number
     return asset;
   }).filter((asset): asset is CryptoMarketAsset => asset !== null);
 
-  const assets = selectAssets(built, ids, symbols, limit);
+  const assets = selectAssets(built, ids, symbols, limit, page);
   if (!assets.length && (ids.length || symbols.length)) {
     // Explicit filter matched nothing — still a successful provider response.
     return {
@@ -560,9 +588,9 @@ async function loadNobitexMarket(ids: string[], symbols: string[], limit: number
   };
 }
 
-async function loadSnapshot(ids: string[], symbols: string[], limit: number): Promise<MarketSnapshot> {
-  const coinGecko = await loadCoinGecko(ids, symbols, limit);
-  const coinPaprika = coinGecko ? null : await loadCoinPaprika(ids, symbols, limit);
+async function loadSnapshot(ids: string[], symbols: string[], limit: number, page: number): Promise<MarketSnapshot> {
+  const coinGecko = await loadCoinGecko(ids, symbols, limit, page);
+  const coinPaprika = coinGecko ? null : await loadCoinPaprika(ids, symbols, limit, page);
 
   if (coinGecko || coinPaprika) {
     const market = coinGecko || coinPaprika!;
@@ -591,7 +619,7 @@ async function loadSnapshot(ids: string[], symbols: string[], limit: number): Pr
     };
   }
 
-  const nobitexMarket = await loadNobitexMarket(ids, symbols, limit);
+  const nobitexMarket = await loadNobitexMarket(ids, symbols, limit, page);
   if (nobitexMarket) {
     console.warn('[crypto] Serving Nobitex-only market snapshot after CoinGecko/CoinPaprika failure');
     return nobitexMarket;
@@ -601,13 +629,18 @@ async function loadSnapshot(ids: string[], symbols: string[], limit: number): Pr
   return emptyMarketSnapshot();
 }
 
-async function refreshCryptoMarketData(options?: { ids?: string[]; symbols?: string[]; limit?: number }): Promise<CryptoMarketResponse> {
-  const { ids, symbols, limit } = assetRequestOptions(options);
-  const snapshot = await loadSnapshot(ids, symbols, limit);
-  const value: CryptoMarketResponse = { generatedAt: new Date().toISOString(), currency: 'USD', ...snapshot };
+async function refreshCryptoMarketData(options?: { ids?: string[]; symbols?: string[]; limit?: number; page?: number }): Promise<CryptoMarketResponse> {
+  const { ids, symbols, limit, page } = assetRequestOptions(options);
+  const snapshot = await loadSnapshot(ids, symbols, limit, page);
+  const value: CryptoMarketResponse = {
+    generatedAt: new Date().toISOString(),
+    currency: 'USD',
+    ...snapshot,
+    pagination: buildPagination(page, limit, snapshot.assets.length),
+  };
   const now = Date.now();
   pruneExpired(now);
-  cacheStore.set(cacheKeyFor(ids, symbols, limit), {
+  cacheStore.set(cacheKeyFor(ids, symbols, limit, page), {
     expiresAt: now + CACHE_TTL_MS,
     staleUntil: now + STALE_CACHE_TTL_MS,
     value,
@@ -615,9 +648,9 @@ async function refreshCryptoMarketData(options?: { ids?: string[]; symbols?: str
   return value;
 }
 
-export async function getCryptoMarketData(options?: { ids?: string[]; symbols?: string[]; limit?: number; forceRefresh?: boolean }): Promise<CryptoMarketResponse> {
-  const { ids, symbols, limit } = assetRequestOptions(options);
-  const key = cacheKeyFor(ids, symbols, limit);
+export async function getCryptoMarketData(options?: { ids?: string[]; symbols?: string[]; limit?: number; page?: number; forceRefresh?: boolean }): Promise<CryptoMarketResponse> {
+  const { ids, symbols, limit, page } = assetRequestOptions(options);
+  const key = cacheKeyFor(ids, symbols, limit, page);
   const now = Date.now();
 
   const cached = cacheStore.get(key);
@@ -647,6 +680,7 @@ export async function getCryptoMarketData(options?: { ids?: string[]; symbols?: 
       generatedAt: new Date().toISOString(),
       currency: 'USD',
       ...emptyMarketSnapshot(),
+      pagination: buildPagination(page, limit, 0),
     };
     return empty;
   }
@@ -657,6 +691,7 @@ export function parseCryptoMarketQuery(searchParams: URLSearchParams) {
     ids: toQueryList(searchParams.get('ids'), DEFAULT_ASSET_IDS),
     symbols: toQueryList(searchParams.get('symbols'), DEFAULT_SYMBOLS),
     limit: toLimit(searchParams.get('limit')),
+    page: toPage(searchParams.get('page')),
     forceRefresh: searchParams.get('refresh') === '1',
   };
 }

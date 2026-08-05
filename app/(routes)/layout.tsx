@@ -6,6 +6,7 @@ import ChatWidget from "@/components/utils/ChatWidget";
 import ScrollToTopButton from "@/components/utils/ScrollToTopButton";
 import FloatingCartButton from "@/components/utils/FloatingCartButton";
 import HiddenPageGuard from "@/components/site/HiddenPageGuard";
+import RouteProgressBar from "@/components/navigation/RouteProgressBar";
 import { VisibilityProvider } from "@/components/site/VisibilityProvider";
 import { SessionProvider } from "next-auth/react";
 import { getPublicSiteChrome } from "@/lib/services/settings-service";
@@ -32,6 +33,7 @@ export default async function RoutesLayout({
   return (
     <SessionProvider>
       <VisibilityProvider hiddenPages={hidden}>
+        <RouteProgressBar />
         {showNavbar && (
           <Navbar
             logoUrl={chrome.logoUrl}

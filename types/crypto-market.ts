@@ -44,11 +44,18 @@ export interface CryptoGlobalMarket {
   source: MarketDataSource;
 }
 
+export interface CryptoMarketPagination {
+  page: number;
+  limit: number;
+  hasMore: boolean;
+}
+
 export interface CryptoMarketResponse {
   generatedAt: string;
   currency: 'USD';
   global: CryptoGlobalMarket;
   assets: CryptoMarketAsset[];
+  pagination: CryptoMarketPagination;
   providers: {
     coingecko: ProviderStatus;
     binance: ProviderStatus;
