@@ -9,12 +9,14 @@ import NavbarPopover from "./navbarPopover";
 import HoverableLink from "./HoverableLink";
 import SiteLogo from "@/components/branding/SiteLogo";
 import type { NavLinkItem } from "./nav-config";
+import type { NavSocialLinks } from "./NavbarActions";
 
 interface NavbarDesktopProps {
   isDark: boolean;
   logoUrl?: string;
   siteName?: string;
   navbarData: NavLinkItem[];
+  socials?: NavSocialLinks;
 }
 
 function isActivePath(pathname: string | null, link: string) {
@@ -28,6 +30,7 @@ const NavbarDesktop = ({
   navbarData,
   logoUrl,
   siteName,
+  socials,
 }: NavbarDesktopProps) => {
   const pathname = usePathname();
   const [isIndicatorActive, setIsIndicatorActive] = useState(false);
@@ -101,7 +104,7 @@ const NavbarDesktop = ({
         </ul>
       </div>
 
-      <NavbarActions isDark={isDark} />
+      <NavbarActions isDark={isDark} socials={socials} />
     </div>
   );
 };

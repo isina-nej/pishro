@@ -25,6 +25,10 @@ import {
   HIDABLE_ITEM_IDS,
   parseHiddenPages,
 } from "@/lib/site/hidable-pages";
+import {
+  validateFooterContentInput,
+  validateNavbarItemsInput,
+} from "@/lib/site/chrome-content";
 
 /**
  * GET /api/admin/settings
@@ -150,6 +154,31 @@ export async function PATCH(req: NextRequest) {
         );
       }
       body.hiddenPages = parseHiddenPages(body.hiddenPages);
+    }
+
+    if (body.navbarItems !== undefined) {
+      const parsed = validateNavbarItemsInput(body.navbarItems);
+      if (!parsed) {
+        return validationError(
+          {
+            navbarItems:
+              "هر آیتم منو باید نام و مسیر معتبر داشته باشد (حداکثر ۲۴ مورد)",
+          },
+          "فرمت منوی صفحات معتبر نیست"
+        );
+      }
+      body.navbarItems = parsed;
+    }
+
+    if (body.footerContent !== undefined) {
+      const parsed = validateFooterContentInput(body.footerContent);
+      if (!parsed) {
+        return validationError(
+          { footerContent: "ساختار اطلاعات فوتر معتبر نیست" },
+          "فرمت محتوای فوتر معتبر نیست"
+        );
+      }
+      body.footerContent = parsed;
     }
 
     for (const key of ["logoUrl", "faviconUrl", "ogImageUrl"] as const) {

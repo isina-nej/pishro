@@ -1,18 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import {
-  Building2,
-  Mail,
-  MapPin,
-  Phone,
-} from "lucide-react";
+import { Building2, Mail, MapPin, Phone } from "lucide-react";
 import { FaInstagram, FaXTwitter } from "react-icons/fa6";
 import { RiTelegram2Fill } from "react-icons/ri";
 
 import SiteLogo from "@/components/branding/SiteLogo";
 import { useFooter } from "@/lib/hooks/useFooter";
-import { contactInfo } from "@/lib/constants/contact";
+import {
+  DEFAULT_FOOTER_CONTENT,
+  type ChromeLink,
+  type FooterContent,
+} from "@/lib/site/chrome-content";
 import {
   filterNavByHiddenPages,
   isPathHidden,
@@ -23,16 +22,15 @@ type FooterProps = {
   logoUrl?: string;
   siteName?: string;
   hiddenPages?: string[];
+  content?: FooterContent;
 };
-
-type FooterLink = { label: string; link: string };
 
 function FooterColumn({
   title,
   links,
 }: {
   title: string;
-  links: FooterLink[];
+  links: ChromeLink[];
 }) {
   if (!links.length) return null;
 
@@ -58,68 +56,47 @@ function FooterColumn({
   );
 }
 
+function visibleLinks(links: ChromeLink[], hiddenPages: string[]) {
+  return filterNavByHiddenPages(links, hiddenPages).filter(
+    (item) => !isPathHidden(item.link.replace(/#.*$/, ""), hiddenPages)
+  );
+}
+
 const Footer = ({
   logoUrl,
   siteName = "پیشرو",
   hiddenPages = [],
+  content,
 }: FooterProps) => {
   const { showFooter } = useFooter();
 
   if (!showFooter) return null;
 
+  const footer = content || DEFAULT_FOOTER_CONTENT;
   const brandName = siteName?.trim() || "پیشرو";
 
-  const discover = filterNavByHiddenPages(
-    [
-      { label: "صفحه اصلی", link: "/" },
-      { label: "اخبار", link: "/news" },
-      { label: "درباره ما", link: "/about-us" },
-      { label: "همایش‌ها", link: "/skyroom-classes" },
-    ],
-    hiddenPages
-  );
-
-  const learn = filterNavByHiddenPages(
-    [
-      { label: "دوره‌های آموزشی", link: "/courses" },
-      { label: "کتابخانه دیجیتال", link: "/library" },
-      { label: "کریپتو", link: "/courses/cryptocurrency" },
-      { label: "بورس", link: "/courses/stock-market" },
-    ],
-    hiddenPages
-  );
-
-  const invest = filterNavByHiddenPages(
-    [
-      { label: "قیمت ارزها", link: "/crypto-prices" },
-      { label: "سبدهای سرمایه‌گذاری", link: "/investment-plans" },
-      { label: "مشاوره کسب‌وکار", link: "/business-consulting" },
-    ],
-    hiddenPages
-  );
-
-  const support = [
-    { label: "سوالات متداول", link: "/faq" },
-    { label: "شیوه ثبت سفارش", link: "/faq#order" },
-    { label: "شیوه‌های پرداخت", link: "/faq#payment" },
-  ].filter((item) => !isPathHidden(item.link.replace(/#.*$/, ""), hiddenPages));
+  const discover = visibleLinks(footer.columns.discover.links, hiddenPages);
+  const learn = visibleLinks(footer.columns.learn.links, hiddenPages);
+  const invest = visibleLinks(footer.columns.invest.links, hiddenPages);
+  const support = visibleLinks(footer.columns.support.links, hiddenPages);
+  const legalLinks = visibleLinks(footer.legalLinks, hiddenPages);
 
   const socials = [
     {
       name: "اینستاگرام",
-      href: contactInfo.socials.instagram,
+      href: footer.instagram,
       icon: FaInstagram,
       hover: "hover:text-[#E1306C]",
     },
     {
       name: "تلگرام",
-      href: contactInfo.socials.telegram,
+      href: footer.telegram,
       icon: RiTelegram2Fill,
       hover: "hover:text-[#229ED9]",
     },
     {
       name: "ایکس",
-      href: contactInfo.socials.linkedin,
+      href: footer.twitter,
       icon: FaXTwitter,
       hover: "hover:text-foreground",
     },
@@ -129,20 +106,20 @@ const Footer = ({
     {
       icon: Phone,
       label: "تلفن ثابت",
-      value: contactInfo.phone,
-      href: `tel:${contactInfo.phoneTel}`,
+      value: footer.phone,
+      href: `tel:${footer.phoneTel}`,
     },
     {
       icon: Phone,
       label: "موبایل",
-      value: contactInfo.mobile,
-      href: `tel:${contactInfo.mobileTel}`,
+      value: footer.mobile,
+      href: `tel:${footer.mobileTel}`,
     },
     {
       icon: Mail,
       label: "ایمیل",
-      value: contactInfo.email,
-      href: `mailto:${contactInfo.email}`,
+      value: footer.email,
+      href: `mailto:${footer.email}`,
     },
   ];
 
@@ -166,8 +143,7 @@ const Footer = ({
           <div className="space-y-6 lg:col-span-4">
             <SiteLogo logoUrl={logoUrl} siteName={brandName} className="h-10 w-[128px]" />
             <p className="max-w-sm text-sm leading-7 text-muted-foreground">
-              {brandName} ارائه‌دهنده آموزش مالی، ابزارهای سرمایه‌گذاری و محتوای تخصصی
-              برای تصمیم‌گیری آگاهانه‌تر در بازارهای مالی است.
+              {footer.aboutText}
             </p>
 
             <div className="flex flex-wrap gap-2">
@@ -222,7 +198,7 @@ const Footer = ({
                 <span>
                   <span className="block text-[11px] text-muted-foreground">آدرس</span>
                   <span className="block text-sm leading-6 text-foreground">
-                    {contactInfo.address}
+                    {footer.address}
                   </span>
                 </span>
               </div>
@@ -230,10 +206,10 @@ const Footer = ({
           </div>
 
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 lg:col-span-8 lg:gap-6">
-            <FooterColumn title="کاوش" links={discover} />
-            <FooterColumn title="آموزش" links={learn} />
-            <FooterColumn title="سرمایه‌گذاری" links={invest} />
-            <FooterColumn title="پشتیبانی" links={support} />
+            <FooterColumn title={footer.columns.discover.title} links={discover} />
+            <FooterColumn title={footer.columns.learn.title} links={learn} />
+            <FooterColumn title={footer.columns.invest.title} links={invest} />
+            <FooterColumn title={footer.columns.support.title} links={support} />
           </div>
         </div>
 
@@ -258,30 +234,24 @@ const Footer = ({
               </a>
               <div className="hidden items-center gap-2 text-[11px] text-muted-foreground sm:flex">
                 <Building2 className="size-3.5 text-primary" />
-                ساعات پاسخ‌گویی: {contactInfo.businessHours.weekdays}
+                ساعات پاسخ‌گویی: {footer.weekdaysHours}
               </div>
             </div>
 
             <div className="flex flex-col items-center gap-3 text-xs text-muted-foreground md:items-end">
               <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 md:justify-end">
-                {!isPathHidden("/about-us", hiddenPages) && (
-                  <Link href="/about-us" className="transition-colors hover:text-primary">
-                    قوانین و مقررات
+                {legalLinks.map((item) => (
+                  <Link
+                    key={`${item.label}-${item.link}`}
+                    href={item.link}
+                    className="transition-colors hover:text-primary"
+                  >
+                    {item.label}
                   </Link>
-                )}
-                {!isPathHidden("/faq", hiddenPages) && (
-                  <Link href="/faq" className="transition-colors hover:text-primary">
-                    سوالات متداول
-                  </Link>
-                )}
-                {!isPathHidden("/about-us", hiddenPages) && (
-                  <Link href="/about-us" className="transition-colors hover:text-primary">
-                    حریم خصوصی
-                  </Link>
-                )}
+                ))}
               </div>
               <p className="text-center md:text-left">
-                © {new Date().getFullYear()} {brandName}. تمامی حقوق محفوظ است.
+                © {new Date().getFullYear()} {brandName}. {footer.copyrightSuffix}
               </p>
             </div>
           </div>

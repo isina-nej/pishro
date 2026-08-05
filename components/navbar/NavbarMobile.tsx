@@ -18,18 +18,21 @@ import { contactInfo } from "@/lib/constants/contact";
 import { useCartStore } from "@/stores/cart-store";
 import type { NavLinkItem } from "./nav-config";
 import { useState } from "react";
+import type { NavSocialLinks } from "./NavbarActions";
 
 type NavbarMobileProps = {
   isDark: boolean;
   navbarData: NavLinkItem[];
   logoUrl?: string;
   siteName?: string;
+  socials?: NavSocialLinks;
 };
 
 const NavbarMobile = ({
   navbarData,
   logoUrl,
   siteName,
+  socials,
 }: NavbarMobileProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const isHidden = useHideOnScroll({ disabled: isOpen });
@@ -194,7 +197,7 @@ const NavbarMobile = ({
                   <p className="text-[11px] text-muted-foreground">شبکه‌های اجتماعی</p>
                   <div className="flex items-center gap-1.5">
                     <Link
-                      href={contactInfo.socials.instagram}
+                      href={socials?.instagram || contactInfo.socials.instagram}
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="اینستاگرام"
@@ -203,7 +206,7 @@ const NavbarMobile = ({
                       <FaInstagram className="size-4" />
                     </Link>
                     <Link
-                      href={contactInfo.socials.telegram}
+                      href={socials?.telegram || contactInfo.socials.telegram}
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="تلگرام"
@@ -212,7 +215,7 @@ const NavbarMobile = ({
                       <RiTelegram2Fill className="size-4" />
                     </Link>
                     <Link
-                      href={contactInfo.socials.linkedin}
+                      href={socials?.twitter || contactInfo.socials.linkedin}
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="ایکس"

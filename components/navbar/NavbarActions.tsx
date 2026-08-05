@@ -11,15 +11,25 @@ import { useSession } from "next-auth/react";
 import { useCartStore } from "@/stores/cart-store";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 
+export type NavSocialLinks = {
+  instagram?: string;
+  telegram?: string;
+  twitter?: string;
+};
+
 interface NavbarActionsProps {
   isDark?: boolean;
+  socials?: NavSocialLinks;
 }
 
-const NavbarActions = ({ isDark }: NavbarActionsProps) => {
+const NavbarActions = ({ isDark, socials }: NavbarActionsProps) => {
   const { data: session } = useSession();
   const cartCount = useCartStore((state) => state.items.length);
   const authLink = session ? "/profile/acc" : "/login";
   const authLabel = session ? "داشبورد" : "ورود | ثبت‌نام";
+  const instagram = socials?.instagram || contactInfo.socials.instagram;
+  const telegram = socials?.telegram || contactInfo.socials.telegram;
+  const twitter = socials?.twitter || contactInfo.socials.linkedin;
 
   return (
     <div className="mt-2 flex w-full items-center justify-between gap-5 px-8 sm:justify-center sm:gap-8 md:mt-0 md:w-fit md:px-0">
@@ -67,7 +77,7 @@ const NavbarActions = ({ isDark }: NavbarActionsProps) => {
       >
         <ThemeToggle />
         <Link
-          href={contactInfo.socials.linkedin}
+          href={twitter}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="ایکس"
@@ -76,7 +86,7 @@ const NavbarActions = ({ isDark }: NavbarActionsProps) => {
           <FaXTwitter className="size-[18px]" />
         </Link>
         <Link
-          href={contactInfo.socials.instagram}
+          href={instagram}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="اینستاگرام"
@@ -85,7 +95,7 @@ const NavbarActions = ({ isDark }: NavbarActionsProps) => {
           <FaInstagram className="size-5" />
         </Link>
         <Link
-          href={contactInfo.socials.telegram}
+          href={telegram}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="تلگرام"

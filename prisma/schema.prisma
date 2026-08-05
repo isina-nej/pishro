@@ -1340,6 +1340,12 @@ model SiteSettings {
   /// پالت رنگی پنل کاربر (/profile) — همان شناسه‌های پالت سایت یا panel-royal-green
   userPanelPaletteId String @default("panel-royal-green")
 
+  /// آیتم‌های منوی اصلی — JSON: { label, link }[]
+  navbarItems Json?
+
+  /// محتوای کامل فوتر — JSON: FooterContent (تماس، لینک‌ها، درباره، سوشال)
+  footerContent Json?
+
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
 }

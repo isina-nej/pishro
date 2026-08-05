@@ -6,8 +6,10 @@ import {
   EyeOff,
   ImageIcon,
   Loader2,
+  Menu,
   Moon,
   Palette,
+  PanelBottom,
   Plus,
   Save,
   Sun,
@@ -31,6 +33,8 @@ import ColorField from "@/components/admin/theme/ColorField";
 import BrandingSection from "@/components/admin/settings/BrandingSection";
 import HiddenPagesSection from "@/components/admin/settings/HiddenPagesSection";
 import UserPanelPaletteSection from "@/components/admin/settings/UserPanelPaletteSection";
+import NavbarItemsSection from "@/components/admin/settings/NavbarItemsSection";
+import FooterContentSection from "@/components/admin/settings/FooterContentSection";
 import { useAdminAuth } from "@/lib/hooks/useAdminAuth";
 import {
   LANDING_PALETTES,
@@ -48,9 +52,17 @@ import {
   type EditablePaletteColors,
 } from "@/lib/theme/custom-palette";
 import { parseHiddenPages } from "@/lib/site/hidable-pages";
+import {
+  DEFAULT_FOOTER_CONTENT,
+  DEFAULT_NAVBAR_ITEMS,
+  parseFooterContent,
+  parseNavbarItems,
+  type FooterContent,
+  type NavbarItem,
+} from "@/lib/site/chrome-content";
 import { cn } from "@/lib/utils";
 
-type SettingsTab = "site" | "panel" | "branding" | "pages";
+type SettingsTab = "site" | "panel" | "branding" | "pages" | "nav" | "footer";
 
 type SettingsPayload = {
   paletteId?: string;
@@ -62,6 +74,8 @@ type SettingsPayload = {
   ogImageUrl?: string | null;
   hiddenPages?: unknown;
   userPanelPaletteId?: string;
+  navbarItems?: unknown;
+  footerContent?: unknown;
 };
 
 type CustomPaletteItem = {
@@ -154,6 +168,12 @@ export default function AdminSettingsPage() {
   const [faviconUrl, setFaviconUrl] = useState("");
   const [ogImageUrl, setOgImageUrl] = useState("");
   const [hiddenPages, setHiddenPages] = useState<string[]>([]);
+  const [navbarItems, setNavbarItems] = useState<NavbarItem[]>(
+    DEFAULT_NAVBAR_ITEMS.map((item) => ({ ...item }))
+  );
+  const [footerContent, setFooterContent] = useState<FooterContent>(
+    structuredClone(DEFAULT_FOOTER_CONTENT)
+  );
 
   const reload = async () => {
     const [settings, customList] = await Promise.all([
@@ -180,6 +200,8 @@ export default function AdminSettingsPage() {
     setFaviconUrl(settings.faviconUrl || "");
     setOgImageUrl(settings.ogImageUrl || "");
     setHiddenPages(parseHiddenPages(settings.hiddenPages));
+    setNavbarItems(parseNavbarItems(settings.navbarItems));
+    setFooterContent(parseFooterContent(settings.footerContent));
     setCustoms(customList);
   };
 
@@ -276,6 +298,32 @@ export default function AdminSettingsPage() {
     try {
       await saveSettings({ hiddenPages });
       toast.success("نمایش صفحات ذخیره شد");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "خطا در ذخیره");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const onSaveNavbarItems = async () => {
+    setSaving(true);
+    try {
+      const data = await saveSettings({ navbarItems });
+      setNavbarItems(parseNavbarItems(data.navbarItems));
+      toast.success("منوی صفحات ذخیره شد");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "خطا در ذخیره");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const onSaveFooterContent = async () => {
+    setSaving(true);
+    try {
+      const data = await saveSettings({ footerContent });
+      setFooterContent(parseFooterContent(data.footerContent));
+      toast.success("اطلاعات فوتر ذخیره شد");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "خطا در ذخیره");
     } finally {
@@ -392,13 +440,15 @@ export default function AdminSettingsPage() {
     { id: "site", label: "پالت سایت", icon: Palette },
     { id: "panel", label: "پالت پنل کاربر", icon: UserRound },
     { id: "branding", label: "لوگو و آیکن", icon: ImageIcon },
+    { id: "nav", label: "منوی صفحات", icon: Menu },
+    { id: "footer", label: "فوتر", icon: PanelBottom },
     { id: "pages", label: "مدیریت نمایش", icon: EyeOff },
   ];
 
   return (
     <AdminPageShell
       title="ظاهر سایت"
-      description="پالت سایت، پالت پنل کاربر، لوگو/آیکن و مخفی‌سازی صفحات اصلی را از اینجا مدیریت کنید."
+      description="پالت، لوگو، نام گزینه‌های منو، اطلاعات فوتر و نمایش صفحات را از اینجا مدیریت کنید."
       actions={
         tab === "site" ? (
           <div className="flex flex-wrap gap-2">
@@ -473,6 +523,24 @@ export default function AdminSettingsPage() {
           hiddenPages={hiddenPages}
           onChange={setHiddenPages}
           onSave={onSaveHiddenPages}
+          saving={saving}
+        />
+      )}
+
+      {tab === "nav" && (
+        <NavbarItemsSection
+          items={navbarItems}
+          onChange={setNavbarItems}
+          onSave={onSaveNavbarItems}
+          saving={saving}
+        />
+      )}
+
+      {tab === "footer" && (
+        <FooterContentSection
+          content={footerContent}
+          onChange={setFooterContent}
+          onSave={onSaveFooterContent}
           saving={saving}
         />
       )}
