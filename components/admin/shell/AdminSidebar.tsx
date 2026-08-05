@@ -6,6 +6,7 @@ import {
   BarChart3,
   Bitcoin,
   BookOpen,
+  CircleHelp,
   Contact,
   FileText,
   GraduationCap,
@@ -49,6 +50,7 @@ export const navSections: NavSection[] = [
   {
     items: [
       { href: '/admin/dashboard', label: 'داشبورد', icon: Home, key: 'dashboard', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
+      { href: '/admin/guide', label: 'آموزش پنل', icon: CircleHelp, key: 'guide', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
     ],
   },
   {

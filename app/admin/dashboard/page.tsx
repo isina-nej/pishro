@@ -6,6 +6,7 @@ import {
   ArrowLeft,
   BookOpen,
   CheckCircle2,
+  CircleHelp,
   Clock3,
   Eye,
   FileText,
@@ -73,6 +74,7 @@ function StatCard({
 }
 
 const managementLinks = [
+  { title: 'آموزش پنل', description: 'راهنمای کامل دسته‌بندی‌شدهٔ همه بخش‌ها', href: '/admin/guide', icon: CircleHelp },
   { title: 'مدیریت اخبار', description: 'ایجاد، ویرایش و انتشار خبرها', href: '/admin/block-news', icon: FileText },
   { title: 'مدیریت دوره‌ها', description: 'تعریف دوره و محتوای آموزشی', href: '/admin/courses', icon: GraduationCap },
   { title: 'کتابخانه دیجیتال', description: 'کنترل کتاب‌ها و وضعیت انتشار', href: '/admin/library', icon: BookOpen },
