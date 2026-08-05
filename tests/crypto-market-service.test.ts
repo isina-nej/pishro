@@ -24,8 +24,8 @@ test.afterEach(() => {
 });
 
 test('an absent ?limit falls back to the full market limit, not one asset', () => {
-  // The crypto page fetches /api/public/crypto-market with no query string at
-  // all, so this is the path that actually runs in production.
+  // Absent limit remains the full catalogue default for API clients that do
+  // not paginate; the crypto UI always sends an explicit limit + page.
   assert.equal(parseCryptoMarketQuery(new URLSearchParams()).limit, DEFAULT_MARKET_LIMIT);
   assert.equal(parseCryptoMarketQuery(new URLSearchParams('limit=')).limit, DEFAULT_MARKET_LIMIT);
 });
@@ -39,6 +39,56 @@ test('an explicit ?limit is honoured, clamped, and validated', () => {
   assert.equal(limitOf('limit=-5'), DEFAULT_MARKET_LIMIT);
   assert.equal(limitOf('limit=abc'), DEFAULT_MARKET_LIMIT);
   assert.equal(limitOf('limit=1.5'), DEFAULT_MARKET_LIMIT);
+});
+
+test('?page defaults to 1 and rejects invalid values', () => {
+  const pageOf = (qs: string) => parseCryptoMarketQuery(new URLSearchParams(qs)).page;
+  assert.equal(parseCryptoMarketQuery(new URLSearchParams()).page, 1);
+  assert.equal(pageOf('page=2'), 2);
+  assert.equal(pageOf('page=0'), 1);
+  assert.equal(pageOf('page=-3'), 1);
+  assert.equal(pageOf('page=abc'), 1);
+});
+
+test('paginated market responses expose hasMore metadata', async () => {
+  process.env.COINGECKO_API_URL = 'https://cg-page.test';
+  process.env.COINOBRIKA_API_URL = 'https://cp-page.test';
+  process.env.BINANCE_API_URL = 'https://binance-page.test';
+  process.env.NOBITEX_API_URL = 'https://nobitex-page.test';
+
+  const catalogue = Array.from({ length: 5 }, (_, index) => ({
+    id: `coin-${index + 1}`,
+    symbol: `c${index + 1}`,
+    name: `Coin ${index + 1}`,
+    market_cap_rank: index + 1,
+    current_price: 10 - index,
+  }));
+
+  global.fetch = async (input) => {
+    const url = String(input);
+    if (url.includes('cg-page.test/coins/markets')) {
+      const page = Number(new URL(url).searchParams.get('page') || '1');
+      const perPage = Number(new URL(url).searchParams.get('per_page') || '2');
+      const start = (page - 1) * perPage;
+      return json(catalogue.slice(start, start + perPage));
+    }
+    if (url.includes('cg-page.test/global')) {
+      return json({ data: { total_market_cap: { usd: 1 }, total_volume: { usd: 1 }, market_cap_percentage: { btc: 50 } } });
+    }
+    if (url.includes('binance-page.test') || url.includes('nobitex-page.test')) return json(url.includes('nobitex') ? { stats: {} } : []);
+    throw new Error(`Unexpected URL ${url}`);
+  };
+
+  const page1 = await getCryptoMarketData({ limit: 2, page: 1, forceRefresh: true });
+  assert.equal(page1.assets.length, 2);
+  assert.equal(page1.pagination.page, 1);
+  assert.equal(page1.pagination.limit, 2);
+  assert.equal(page1.pagination.hasMore, true);
+
+  const page2 = await getCryptoMarketData({ limit: 2, page: 2, forceRefresh: true });
+  assert.equal(page2.assets.length, 2);
+  assert.equal(page2.pagination.page, 2);
+  assert.notEqual(page1.assets[0].id, page2.assets[0].id);
 });
 
 test('uses CoinGecko market data, Binance price, and Nobitex toman price', async () => {
