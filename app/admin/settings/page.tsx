@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   Check,
+  EyeOff,
+  ImageIcon,
   Loader2,
   Moon,
   Palette,
@@ -12,6 +14,7 @@ import {
   Monitor,
   Trash2,
   Pencil,
+  UserRound,
   X,
 } from "lucide-react";
 import toast from "react-hot-toast";
@@ -25,11 +28,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import ColorField from "@/components/admin/theme/ColorField";
+import BrandingSection from "@/components/admin/settings/BrandingSection";
+import HiddenPagesSection from "@/components/admin/settings/HiddenPagesSection";
+import UserPanelPaletteSection from "@/components/admin/settings/UserPanelPaletteSection";
 import { useAdminAuth } from "@/lib/hooks/useAdminAuth";
 import {
   LANDING_PALETTES,
   DEFAULT_PALETTE_ID,
   DEFAULT_THEME_MODE,
+  DEFAULT_USER_PANEL_PALETTE_ID,
   type LandingPalette,
   type SiteThemeMode,
 } from "@/lib/theme/landing-palettes";
@@ -40,11 +47,21 @@ import {
   buildTokensFromEditable,
   type EditablePaletteColors,
 } from "@/lib/theme/custom-palette";
+import { parseHiddenPages } from "@/lib/site/hidable-pages";
 import { cn } from "@/lib/utils";
+
+type SettingsTab = "site" | "panel" | "branding" | "pages";
 
 type SettingsPayload = {
   paletteId?: string;
   themeMode?: string;
+  siteName?: string | null;
+  siteDescription?: string | null;
+  logoUrl?: string | null;
+  faviconUrl?: string | null;
+  ogImageUrl?: string | null;
+  hiddenPages?: unknown;
+  userPanelPaletteId?: string;
 };
 
 type CustomPaletteItem = {
@@ -68,10 +85,9 @@ async function fetchSettings(): Promise<SettingsPayload> {
   return json.data as SettingsPayload;
 }
 
-async function saveSettings(body: {
-  paletteId: string;
-  themeMode: SiteThemeMode;
-}): Promise<SettingsPayload> {
+async function saveSettings(
+  body: Record<string, unknown>
+): Promise<SettingsPayload> {
   const res = await fetch("/api/admin/settings", {
     method: "PATCH",
     credentials: "include",
@@ -117,6 +133,7 @@ export default function AdminSettingsPage() {
   const { user, isLoading: authLoading } = useAdminAuth();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [tab, setTab] = useState<SettingsTab>("site");
   const [paletteId, setPaletteId] = useState(DEFAULT_PALETTE_ID);
   const [themeMode, setThemeMode] = useState<SiteThemeMode>(DEFAULT_THEME_MODE);
   const [savedPaletteId, setSavedPaletteId] = useState(DEFAULT_PALETTE_ID);
@@ -128,6 +145,15 @@ export default function AdminSettingsPage() {
   const [editor, setEditor] = useState<EditorState>(emptyEditor);
   const [editorTab, setEditorTab] = useState<"light" | "dark">("light");
   const [savingCustom, setSavingCustom] = useState(false);
+  const [userPanelPaletteId, setUserPanelPaletteId] = useState(
+    DEFAULT_USER_PANEL_PALETTE_ID
+  );
+  const [siteName, setSiteName] = useState("");
+  const [siteDescription, setSiteDescription] = useState("");
+  const [logoUrl, setLogoUrl] = useState("");
+  const [faviconUrl, setFaviconUrl] = useState("");
+  const [ogImageUrl, setOgImageUrl] = useState("");
+  const [hiddenPages, setHiddenPages] = useState<string[]>([]);
 
   const reload = async () => {
     const [settings, customList] = await Promise.all([
@@ -145,6 +171,15 @@ export default function AdminSettingsPage() {
     setThemeMode(nextMode);
     setSavedPaletteId(nextPalette);
     setSavedThemeMode(nextMode);
+    setUserPanelPaletteId(
+      settings.userPanelPaletteId || DEFAULT_USER_PANEL_PALETTE_ID
+    );
+    setSiteName(settings.siteName || "");
+    setSiteDescription(settings.siteDescription || "");
+    setLogoUrl(settings.logoUrl || "");
+    setFaviconUrl(settings.faviconUrl || "");
+    setOgImageUrl(settings.ogImageUrl || "");
+    setHiddenPages(parseHiddenPages(settings.hiddenPages));
     setCustoms(customList);
   };
 
@@ -199,6 +234,48 @@ export default function AdminSettingsPage() {
       setSavedPaletteId(data.paletteId || paletteId);
       setSavedThemeMode((data.themeMode as SiteThemeMode) || themeMode);
       toast.success("پالت رنگی سایت ذخیره شد");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "خطا در ذخیره");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const onSavePanelPalette = async () => {
+    setSaving(true);
+    try {
+      await saveSettings({ userPanelPaletteId });
+      toast.success("پالت پنل کاربر ذخیره شد");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "خطا در ذخیره");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const onSaveBranding = async () => {
+    setSaving(true);
+    try {
+      await saveSettings({
+        siteName: siteName.trim() || null,
+        siteDescription: siteDescription.trim() || null,
+        logoUrl: logoUrl.trim() || null,
+        faviconUrl: faviconUrl.trim() || null,
+        ogImageUrl: ogImageUrl.trim() || null,
+      });
+      toast.success("برندینگ ذخیره شد");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "خطا در ذخیره");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const onSaveHiddenPages = async () => {
+    setSaving(true);
+    try {
+      await saveSettings({ hiddenPages });
+      toast.success("نمایش صفحات ذخیره شد");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "خطا در ذخیره");
     } finally {
@@ -307,27 +384,100 @@ export default function AdminSettingsPage() {
     );
   }
 
+  const tabs: {
+    id: SettingsTab;
+    label: string;
+    icon: typeof Palette;
+  }[] = [
+    { id: "site", label: "پالت سایت", icon: Palette },
+    { id: "panel", label: "پالت پنل کاربر", icon: UserRound },
+    { id: "branding", label: "لوگو و آیکن", icon: ImageIcon },
+    { id: "pages", label: "مدیریت نمایش", icon: EyeOff },
+  ];
+
   return (
     <AdminPageShell
       title="ظاهر سایت"
-      description="پالت آماده یا سفارشی را انتخاب و ذخیره کنید. برای پالت سفارشی می‌توانید کد رنگ بزنید یا با موس از رنگ‌چین انتخاب کنید."
+      description="پالت سایت، پالت پنل کاربر، لوگو/آیکن و مخفی‌سازی صفحات اصلی را از اینجا مدیریت کنید."
       actions={
-        <div className="flex flex-wrap gap-2">
-          <Button variant="outline" onClick={openCreate} className="gap-2">
-            <Plus className="h-4 w-4" />
-            پالت سفارشی
-          </Button>
-          <Button onClick={onSave} disabled={!dirty || saving} className="gap-2">
-            {saving ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Save className="h-4 w-4" />
-            )}
-            ذخیره پالت فعال
-          </Button>
-        </div>
+        tab === "site" ? (
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" onClick={openCreate} className="gap-2">
+              <Plus className="h-4 w-4" />
+              پالت سفارشی
+            </Button>
+            <Button onClick={onSave} disabled={!dirty || saving} className="gap-2">
+              {saving ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Save className="h-4 w-4" />
+              )}
+              ذخیره پالت فعال
+            </Button>
+          </div>
+        ) : undefined
       }
     >
+      <div className="mb-4 flex flex-wrap gap-2 rounded-2xl border border-border bg-card p-1.5">
+        {tabs.map(({ id, label, icon: Icon }) => (
+          <button
+            key={id}
+            type="button"
+            onClick={() => setTab(id)}
+            className={cn(
+              "inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold transition",
+              tab === id
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:bg-muted hover:text-foreground"
+            )}
+          >
+            <Icon className="h-3.5 w-3.5" />
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {tab === "panel" && (
+        <UserPanelPaletteSection
+          userPanelPaletteId={userPanelPaletteId}
+          customs={customs}
+          onChange={setUserPanelPaletteId}
+          onSave={onSavePanelPalette}
+          saving={saving}
+        />
+      )}
+
+      {tab === "branding" && (
+        <BrandingSection
+          siteName={siteName}
+          siteDescription={siteDescription}
+          logoUrl={logoUrl}
+          faviconUrl={faviconUrl}
+          ogImageUrl={ogImageUrl}
+          onChange={(patch) => {
+            if (patch.siteName !== undefined) setSiteName(patch.siteName);
+            if (patch.siteDescription !== undefined) {
+              setSiteDescription(patch.siteDescription);
+            }
+            if (patch.logoUrl !== undefined) setLogoUrl(patch.logoUrl);
+            if (patch.faviconUrl !== undefined) setFaviconUrl(patch.faviconUrl);
+            if (patch.ogImageUrl !== undefined) setOgImageUrl(patch.ogImageUrl);
+          }}
+          onSave={onSaveBranding}
+          saving={saving}
+        />
+      )}
+
+      {tab === "pages" && (
+        <HiddenPagesSection
+          hiddenPages={hiddenPages}
+          onChange={setHiddenPages}
+          onSave={onSaveHiddenPages}
+          saving={saving}
+        />
+      )}
+
+      {tab === "site" && (
       <div className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
         <div className="space-y-4">
           <Card className="space-y-4 p-4 sm:p-5">
@@ -566,6 +716,7 @@ export default function AdminSettingsPage() {
           )}
         </div>
       </div>
+      )}
 
       {editorOpen && (
         <div className="fixed inset-0 z-[90] flex items-end justify-center bg-black/50 p-3 sm:items-center">

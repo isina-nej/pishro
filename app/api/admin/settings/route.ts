@@ -21,6 +21,10 @@ import {
 } from "@/lib/services/settings-service";
 import { isValidThemeMode } from "@/lib/theme/landing-palettes";
 import { isKnownPaletteId } from "@/lib/services/custom-palette-service";
+import {
+  HIDABLE_ITEM_IDS,
+  parseHiddenPages,
+} from "@/lib/site/hidable-pages";
 
 /**
  * GET /api/admin/settings
@@ -115,6 +119,45 @@ export async function PATCH(req: NextRequest) {
         return validationError(
           { themeMode: "حالت تم باید light، dark یا system باشد" },
           "حالت تم معتبر نیست"
+        );
+      }
+    }
+
+    if (body.userPanelPaletteId !== undefined) {
+      const known = await isKnownPaletteId(body.userPanelPaletteId);
+      if (!known) {
+        return validationError(
+          { userPanelPaletteId: "شناسه پالت پنل کاربر معتبر نیست" },
+          "پالت رنگی پنل کاربر معتبر نیست"
+        );
+      }
+    }
+
+    if (body.hiddenPages !== undefined) {
+      if (!Array.isArray(body.hiddenPages)) {
+        return validationError(
+          { hiddenPages: "لیست صفحات باید آرایه باشد" },
+          "فرمت صفحات مخفی معتبر نیست"
+        );
+      }
+      const invalid = body.hiddenPages.filter(
+        (p) => typeof p !== "string" || !HIDABLE_ITEM_IDS.has(p)
+      );
+      if (invalid.length) {
+        return validationError(
+          { hiddenPages: "یک یا چند مسیر صفحه معتبر نیست" },
+          "مسیر صفحه مخفی نامعتبر است"
+        );
+      }
+      body.hiddenPages = parseHiddenPages(body.hiddenPages);
+    }
+
+    for (const key of ["logoUrl", "faviconUrl", "ogImageUrl"] as const) {
+      const value = body[key];
+      if (value !== undefined && value !== null && typeof value !== "string") {
+        return validationError(
+          { [key]: "آدرس تصویر باید رشته باشد" },
+          "فرمت آدرس تصویر معتبر نیست"
         );
       }
     }

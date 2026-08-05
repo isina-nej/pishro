@@ -1329,6 +1329,17 @@ model SiteSettings {
   /// حالت پیش‌فرض تم: light | dark | system
   themeMode String @default("system")
 
+  /// لوگو / فاویکون / تصویر اشتراک‌گذاری (OG) — مسیر آپلود یا URL
+  logoUrl    String?
+  faviconUrl String?
+  ogImageUrl String?
+
+  /// مسیر صفحاتی که از منو و دسترسی عمومی مخفی شده‌اند — JSON string[] مثل ["/courses"]
+  hiddenPages Json @default("[]")
+
+  /// پالت رنگی پنل کاربر (/profile) — همان شناسه‌های پالت سایت یا panel-royal-green
+  userPanelPaletteId String @default("panel-royal-green")
+
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
 }

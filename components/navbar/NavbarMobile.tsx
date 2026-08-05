@@ -8,12 +8,15 @@ import { HiMiniArrowLeftEndOnRectangle } from "react-icons/hi2";
 import NavbarLinks from "./NavbarLinks";
 import NavbarActions from "./NavbarActions";
 import useHideOnScroll from "./useHideOnScroll";
+import SiteLogo from "@/components/branding/SiteLogo";
 
 type NavbarLinksProps = React.ComponentProps<typeof NavbarLinks>;
 
 type NavbarMobileProps = {
   isDark: boolean;
   navbarData: NavbarLinksProps["navbarData"];
+  logoUrl?: string;
+  siteName?: string;
   transitionDuration?: number;
 };
 
@@ -47,6 +50,8 @@ const useMobileMenu = (transitionDuration: number) => {
 const NavbarMobile = ({
   isDark,
   navbarData,
+  logoUrl,
+  siteName,
   transitionDuration = DEFAULT_TRANSITION_DURATION,
 }: NavbarMobileProps) => {
   const { isMounted, isOpen, openMenu, closeMenu } =
@@ -83,7 +88,12 @@ const NavbarMobile = ({
                 <FiMenu />
               </button>
             )}
-            <span className="font-bold text-lg -mt-0.5">پیشرو</span>
+            <SiteLogo
+              logoUrl={logoUrl}
+              siteName={siteName}
+              className="h-8 w-[96px]"
+              priority
+            />
           </div>
           <div className="flex items-center gap-4">
             <Link

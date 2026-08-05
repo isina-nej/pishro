@@ -4,16 +4,24 @@ import React, { useState } from "react";
 import NavbarLinks from "./NavbarLinks";
 import NavbarActions from "./NavbarActions";
 import NavbarPopover from "./navbarPopover";
+import SiteLogo from "@/components/branding/SiteLogo";
 
 interface NavbarDesktopProps {
   isDark: boolean;
+  logoUrl?: string;
+  siteName?: string;
   navbarData: (
     | { label: string; link: string; data?: undefined }
     | { label: string; link: string; data: { label: string; link: string }[] }
   )[];
 }
 
-const NavbarDesktop = ({ isDark, navbarData }: NavbarDesktopProps) => {
+const NavbarDesktop = ({
+  isDark,
+  navbarData,
+  logoUrl,
+  siteName,
+}: NavbarDesktopProps) => {
   const [isIndicatorActive, setIsIndicatorActive] = useState(true);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
 
@@ -26,6 +34,15 @@ const NavbarDesktop = ({ isDark, navbarData }: NavbarDesktopProps) => {
       }`}
       onMouseLeave={() => setIsIndicatorActive(false)}
     >
+      <div className="mb-3 md:mb-0 md:ml-4 shrink-0">
+        <SiteLogo
+          logoUrl={logoUrl}
+          siteName={siteName}
+          priority
+          className={isDark ? "brightness-110" : undefined}
+        />
+      </div>
+
       {/* لیست منو */}
       <div className="relative w-full md:w-auto flex-1 flex justify-center md:justify-start">
         <ul className="h-full flex items-center gap-2 relative flex-wrap">

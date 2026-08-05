@@ -28,6 +28,10 @@ type LandingOverlayProps = {
   slides?: SlideData[];
   miniSlider1Data?: string[];
   miniSlider2Data?: string[];
+  /** When false, hide the album / zoom slider block after the hero. */
+  showAlbum?: boolean;
+  /** When false, skip the desktop video hero (album can still show). */
+  showHero?: boolean;
 };
 
 // =================================================
@@ -42,6 +46,8 @@ const LandingOverlay = ({
   slides,
   miniSlider1Data,
   miniSlider2Data,
+  showAlbum = true,
+  showHero = true,
 }: LandingOverlayProps) => {
   const ref = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -72,69 +78,73 @@ const LandingOverlay = ({
 
   return (
     <>
-      <section ref={ref} className="relative w-full hidden lg:block">
-        {/* ویدیو و اورلی تاریک */}
-        <div className="sticky top-0 h-screen w-full overflow-hidden">
-          <video
-            ref={videoRef}
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover -z-50"
-          >
-            <source
-              src={heroVideoUrl || "/videos/aboutUs.webm"}
-              type="video/webm"
-            />
-          </video>
+      {showHero && (
+        <section ref={ref} className="relative w-full hidden lg:block">
+          {/* ویدیو و اورلی تاریک */}
+          <div className="sticky top-0 h-screen w-full overflow-hidden">
+            <video
+              ref={videoRef}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover -z-50"
+            >
+              <source
+                src={heroVideoUrl || "/videos/aboutUs.webm"}
+                type="video/webm"
+              />
+            </video>
 
-          {/* اورلی تیره فقط هنگام اسکرول پایین‌تر — بدون هاله کدر روی ویدیو در ابتدا */}
-          <motion.div
-            style={{ opacity: overlayOpacity }}
-            className="absolute inset-0 bg-black/70"
+            {/* اورلی تیره فقط هنگام اسکرول پایین‌تر — بدون هاله کدر روی ویدیو در ابتدا */}
+            <motion.div
+              style={{ opacity: overlayOpacity }}
+              className="absolute inset-0 bg-black/70"
+            />
+          </div>
+
+          {/* متن روی ویدیو */}
+          <AnimatePresence mode="wait">
+            {!hideMainText && (
+              <motion.div
+                initial={{ opacity: 0, y: -60 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -60 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+                className="absolute top-0 z-10 hidden sm:block"
+              >
+                <OverlayMainText
+                  title={mainHeroTitle}
+                  subtitle={mainHeroSubtitle}
+                  ctaLink={mainHeroCta1Link}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* متن‌های اسکرولی */}
+          <div className="relative z-10 flex-col items-center justify-start hidden sm:flex">
+            <motion.div
+              style={{ opacity: textOpacity, backgroundColor: bgColor }}
+              className="w-full flex justify-center"
+            >
+              <OverlayText onEnter={setHideMainText} texts={overlayTexts} />
+            </motion.div>
+          </div>
+        </section>
+      )}
+
+      {/* اسلایدر نهایی / آلبوم - فقط در دسکتاپ */}
+      {showAlbum && (
+        <div className="hidden lg:block">
+          <ImageZoomSliderSection
+            parentRef={ref}
+            slides={slides}
+            miniSlider1Data={miniSlider1Data}
+            miniSlider2Data={miniSlider2Data}
           />
         </div>
-
-        {/* متن روی ویدیو */}
-        <AnimatePresence mode="wait">
-          {!hideMainText && (
-            <motion.div
-              initial={{ opacity: 0, y: -60 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -60 }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
-              className="absolute top-0 z-10 hidden sm:block"
-            >
-              <OverlayMainText
-                title={mainHeroTitle}
-                subtitle={mainHeroSubtitle}
-                ctaLink={mainHeroCta1Link}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* متن‌های اسکرولی */}
-        <div className="relative z-10 flex-col items-center justify-start hidden sm:flex">
-          <motion.div
-            style={{ opacity: textOpacity, backgroundColor: bgColor }}
-            className="w-full flex justify-center"
-          >
-            <OverlayText onEnter={setHideMainText} texts={overlayTexts} />
-          </motion.div>
-        </div>
-      </section>
-
-      {/* اسلایدر نهایی - فقط در دسکتاپ */}
-      <div className="hidden lg:block">
-        <ImageZoomSliderSection
-          parentRef={ref}
-          slides={slides}
-          miniSlider1Data={miniSlider1Data}
-          miniSlider2Data={miniSlider2Data}
-        />
-      </div>
+      )}
     </>
   );
 };

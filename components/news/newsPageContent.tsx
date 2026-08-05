@@ -9,6 +9,7 @@ import { NewsHero } from "./newsHero";
 import { NewsFilterControls } from "./newsFilterControls";
 import NewsCard from "./newsCard";
 import { Sparkles } from "lucide-react";
+import { useVisibility } from "@/components/site/VisibilityProvider";
 
 type NewsQueryReturn = {
   data?: {
@@ -20,6 +21,7 @@ type NewsQueryReturn = {
 };
 
 const NewsPageContent = () => {
+  const { show } = useVisibility();
   // Fetch news from API
   const { data: newsData, isLoading } = useNewsList({
     page: 1,
@@ -75,37 +77,46 @@ const NewsPageContent = () => {
 
   return (
     <div className="w-full pb-24">
-      <NewsHero stats={stats} />
+      {show("news:hero") && <NewsHero stats={stats} />}
 
       <section className="container-xl -mt-32 pb-16 relative z-10">
-        <div className="grid gap-10 lg:gap-12 xl:grid-cols-[340px_minmax(0,1fr)]">
+        <div
+          className={
+            show("news:filters")
+              ? "grid gap-10 lg:gap-12 xl:grid-cols-[340px_minmax(0,1fr)]"
+              : "grid gap-10"
+          }
+        >
           {/* Sidebar */}
-          <aside className="self-start">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-              className="public-page-panel sticky top-28 rounded-[2rem] p-6 sm:p-8"
-            >
-              <NewsFilterControls
-                categories={categories}
-                selectedCategory={selectedCategory}
-                onCategoryChange={setCategory}
-                query={query}
-                onQueryChange={setQuery}
-                sortOptions={sortOptions}
-                selectedSort={selectedSort}
-                onSortChange={setSort}
-                timeRange={timeRange}
-                onTimeRangeChange={setTimeRange}
-                hasActiveFilters={hasActiveFilters}
-                onResetFilters={handleResetFilters}
-                disabled={false}
-              />
-            </motion.div>
-          </aside>
+          {show("news:filters") && (
+            <aside className="self-start">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+                className="public-page-panel sticky top-28 rounded-[2rem] p-6 sm:p-8"
+              >
+                <NewsFilterControls
+                  categories={categories}
+                  selectedCategory={selectedCategory}
+                  onCategoryChange={setCategory}
+                  query={query}
+                  onQueryChange={setQuery}
+                  sortOptions={sortOptions}
+                  selectedSort={selectedSort}
+                  onSortChange={setSort}
+                  timeRange={timeRange}
+                  onTimeRangeChange={setTimeRange}
+                  hasActiveFilters={hasActiveFilters}
+                  onResetFilters={handleResetFilters}
+                  disabled={false}
+                />
+              </motion.div>
+            </aside>
+          )}
 
           {/* Main Content */}
+          {show("news:grid") && (
           <div className="space-y-8">
             {/* Header Section */}
             <motion.div
@@ -219,6 +230,7 @@ const NewsPageContent = () => {
               </motion.div>
             )}
           </div>
+          )}
         </div>
       </section>
     </div>

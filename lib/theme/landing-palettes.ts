@@ -8,6 +8,8 @@ export type PaletteMode = "light" | "dark";
 export type SiteThemeMode = "light" | "dark" | "system";
 
 export const DEFAULT_PALETTE_ID = "emerald-trust";
+/** Current profile/admin `.royal-theme` tokens — also selectable as a site palette. */
+export const DEFAULT_USER_PANEL_PALETTE_ID = "panel-royal-green";
 export const DEFAULT_THEME_MODE: SiteThemeMode = "system";
 export const SITE_THEME_MODES: SiteThemeMode[] = ["light", "dark", "system"];
 
@@ -86,6 +88,118 @@ function t(partial: PaletteTokens): PaletteTokens {
 }
 
 export const LANDING_PALETTES: LandingPalette[] = [
+  {
+    id: "panel-royal-green",
+    name: "Royal Green Panel",
+    nameFa: "سبز سلطنتی (پیش‌فرض پنل)",
+    description: "پالت فعلی پنل کاربر و ادمین — سفید/سبز سلطنتی",
+    light: t({
+      background: "0 0% 100%",
+      foreground: "0 0% 4%",
+      card: "0 0% 100%",
+      cardForeground: "0 0% 4%",
+      primary: "152 71% 18%",
+      primaryForeground: "0 0% 100%",
+      secondary: "0 0% 96%",
+      secondaryForeground: "0 0% 9%",
+      muted: "0 0% 96%",
+      mutedForeground: "0 0% 45%",
+      accent: "0 0% 95%",
+      accentForeground: "0 0% 9%",
+      border: "0 0% 90%",
+      input: "0 0% 90%",
+      ring: "144 61% 30%",
+      premium: "38 40% 45%",
+      premiumForeground: "0 0% 100%",
+      success: "142 71% 27%",
+      successForeground: "0 0% 100%",
+      surfaceSelected: "152 40% 96%",
+      navActiveBg: "152 71% 92%",
+      iconBrand: "144 55% 26%",
+      chart1: "152 71% 18%",
+      chart2: "144 61% 30%",
+      chart3: "38 45% 57%",
+      brandColor: "#B8913A",
+      bodyBackground: "#FFFFFF",
+      headerBackground: "rgba(255,255,255,0.9)",
+      textPrimary: "#0A0A0A",
+      textSecondary: "#737373",
+      btnPrimaryBg: "#0B3D2E",
+      btnPrimaryHover: "#1A6B45",
+      btnSecondaryBg: "#F5F5F5",
+      btnSecondaryHover: "#E5E5E5",
+      cardBackground: "#FFFFFF",
+      borderColor: "#E5E5E5",
+      footerBackground: "#F5F5F5",
+      textMuted: "#737373",
+      homeInk: "#0A0A0A",
+      homeMuted: "#737373",
+      homeDeep: "#0B3D2E",
+      homeGlow: "#1A6B45",
+      homeGold: "#B8913A",
+      homeOnDark: "#F5F5F5",
+      homeOnDarkMuted: "#A3A3A3",
+      homeGlass: "rgba(255,255,255,0.9)",
+      homeGlassBorder: "rgba(229,229,229,0.95)",
+      homeBg: "#FFFFFF",
+      homeBgMid: "#F5F5F5",
+      homeGlowRgb: "26,107,69",
+      homeGoldRgb: "184,145,58",
+    }),
+    dark: t({
+      background: "220 20% 4%",
+      foreground: "0 0% 96%",
+      card: "220 15% 7%",
+      cardForeground: "0 0% 96%",
+      primary: "144 61% 40%",
+      primaryForeground: "220 20% 8%",
+      secondary: "220 12% 14%",
+      secondaryForeground: "0 0% 92%",
+      muted: "220 12% 12%",
+      mutedForeground: "0 0% 63%",
+      accent: "220 12% 16%",
+      accentForeground: "0 0% 96%",
+      border: "220 10% 18%",
+      input: "220 10% 18%",
+      ring: "144 61% 40%",
+      premium: "38 45% 57%",
+      premiumForeground: "220 20% 8%",
+      success: "142 71% 39%",
+      successForeground: "220 20% 8%",
+      surfaceSelected: "152 30% 10%",
+      navActiveBg: "152 71% 13%",
+      iconBrand: "144 61% 30%",
+      chart1: "152 71% 30%",
+      chart2: "144 61% 40%",
+      chart3: "38 45% 57%",
+      brandColor: "#D4B06A",
+      bodyBackground: "#080A0E",
+      headerBackground: "rgba(8,10,14,0.9)",
+      textPrimary: "#F5F5F5",
+      textSecondary: "#A1A1AA",
+      btnPrimaryBg: "#2F9E68",
+      btnPrimaryHover: "#1B6B4A",
+      btnSecondaryBg: "#1A1F28",
+      btnSecondaryHover: "#252B36",
+      cardBackground: "#10141A",
+      borderColor: "#2A303C",
+      footerBackground: "#10141A",
+      textMuted: "#A1A1AA",
+      homeInk: "#F5F5F5",
+      homeMuted: "#A1A1AA",
+      homeDeep: "#0F2A1F",
+      homeGlow: "#2F9E68",
+      homeGold: "#D4B06A",
+      homeOnDark: "#F5F5F5",
+      homeOnDarkMuted: "#A1A1AA",
+      homeGlass: "rgba(16,20,26,0.92)",
+      homeGlassBorder: "rgba(42,48,60,0.95)",
+      homeBg: "#080A0E",
+      homeBgMid: "#10141A",
+      homeGlowRgb: "47,158,104",
+      homeGoldRgb: "212,176,106",
+    }),
+  },
   {
     id: "emerald-trust",
     name: "Emerald Trust",
@@ -1232,6 +1346,73 @@ export function isValidThemeMode(mode: string): mode is SiteThemeMode {
   return SITE_THEME_MODES.includes(mode as SiteThemeMode);
 }
 
+/** Apply palette tokens as CSS custom properties on a single element. */
+export function applyPaletteTokensToElement(
+  el: HTMLElement,
+  tokens: PaletteTokens
+): void {
+  const set = (name: string, value: string) => el.style.setProperty(name, value);
+
+  set("--background", tokens.background);
+  set("--foreground", tokens.foreground);
+  set("--card", tokens.card);
+  set("--card-foreground", tokens.cardForeground);
+  set("--popover", tokens.card);
+  set("--popover-foreground", tokens.cardForeground);
+  set("--primary", tokens.primary);
+  set("--primary-foreground", tokens.primaryForeground);
+  set("--secondary", tokens.secondary);
+  set("--secondary-foreground", tokens.secondaryForeground);
+  set("--muted", tokens.muted);
+  set("--muted-foreground", tokens.mutedForeground);
+  set("--accent", tokens.accent);
+  set("--accent-foreground", tokens.accentForeground);
+  set("--border", tokens.border);
+  set("--input", tokens.input);
+  set("--ring", tokens.ring);
+  set("--premium", tokens.premium);
+  set("--premium-foreground", tokens.premiumForeground);
+  set("--success", tokens.success);
+  set("--success-foreground", tokens.successForeground);
+  set("--surface-selected", tokens.surfaceSelected);
+  set("--nav-active-bg", tokens.navActiveBg);
+  set("--icon-brand", tokens.iconBrand);
+  set("--chart-1", tokens.chart1);
+  set("--chart-2", tokens.chart2);
+  set("--chart-3", tokens.chart3);
+
+  set("--brand-color", tokens.brandColor);
+  set("--body-background", tokens.bodyBackground);
+  set("--header-background", tokens.headerBackground);
+  set("--text-primary", tokens.textPrimary);
+  set("--text-secondary", tokens.textSecondary);
+  set("--btn-primary-bg", tokens.btnPrimaryBg);
+  set("--btn-primary-hover", tokens.btnPrimaryHover);
+  set("--btn-secondary-bg", tokens.btnSecondaryBg);
+  set("--btn-secondary-hover", tokens.btnSecondaryHover);
+  set("--card-background", tokens.cardBackground);
+  set("--border-color", tokens.borderColor);
+  set("--footer-background", tokens.footerBackground);
+  set("--text-muted", tokens.textMuted);
+  set("--dark-bg-hidden", tokens.cardBackground);
+  set("--neutral-button-bg", tokens.btnSecondaryBg);
+  set("--neutral-button-hover", tokens.btnSecondaryHover);
+
+  set("--home-ink", tokens.homeInk);
+  set("--home-muted", tokens.homeMuted);
+  set("--home-deep", tokens.homeDeep);
+  set("--home-glow", tokens.homeGlow);
+  set("--home-gold", tokens.homeGold);
+  set("--home-on-dark", tokens.homeOnDark);
+  set("--home-on-dark-muted", tokens.homeOnDarkMuted);
+  set("--home-glass", tokens.homeGlass);
+  set("--home-glass-border", tokens.homeGlassBorder);
+  set("--home-bg", tokens.homeBg);
+  set("--home-bg-mid", tokens.homeBgMid);
+  set("--home-glow-rgb", tokens.homeGlowRgb);
+  set("--home-gold-rgb", tokens.homeGoldRgb);
+}
+
 /** Apply palette tokens as CSS custom properties on root + home shells. */
 export function applyPaletteTokens(
   root: HTMLElement,
@@ -1247,67 +1428,7 @@ export function applyPaletteTokens(
   ];
 
   for (const el of targets) {
-    const set = (name: string, value: string) =>
-      el.style.setProperty(name, value);
-
-    set("--background", tokens.background);
-    set("--foreground", tokens.foreground);
-    set("--card", tokens.card);
-    set("--card-foreground", tokens.cardForeground);
-    set("--popover", tokens.card);
-    set("--popover-foreground", tokens.cardForeground);
-    set("--primary", tokens.primary);
-    set("--primary-foreground", tokens.primaryForeground);
-    set("--secondary", tokens.secondary);
-    set("--secondary-foreground", tokens.secondaryForeground);
-    set("--muted", tokens.muted);
-    set("--muted-foreground", tokens.mutedForeground);
-    set("--accent", tokens.accent);
-    set("--accent-foreground", tokens.accentForeground);
-    set("--border", tokens.border);
-    set("--input", tokens.input);
-    set("--ring", tokens.ring);
-    set("--premium", tokens.premium);
-    set("--premium-foreground", tokens.premiumForeground);
-    set("--success", tokens.success);
-    set("--success-foreground", tokens.successForeground);
-    set("--surface-selected", tokens.surfaceSelected);
-    set("--nav-active-bg", tokens.navActiveBg);
-    set("--icon-brand", tokens.iconBrand);
-    set("--chart-1", tokens.chart1);
-    set("--chart-2", tokens.chart2);
-    set("--chart-3", tokens.chart3);
-
-    set("--brand-color", tokens.brandColor);
-    set("--body-background", tokens.bodyBackground);
-    set("--header-background", tokens.headerBackground);
-    set("--text-primary", tokens.textPrimary);
-    set("--text-secondary", tokens.textSecondary);
-    set("--btn-primary-bg", tokens.btnPrimaryBg);
-    set("--btn-primary-hover", tokens.btnPrimaryHover);
-    set("--btn-secondary-bg", tokens.btnSecondaryBg);
-    set("--btn-secondary-hover", tokens.btnSecondaryHover);
-    set("--card-background", tokens.cardBackground);
-    set("--border-color", tokens.borderColor);
-    set("--footer-background", tokens.footerBackground);
-    set("--text-muted", tokens.textMuted);
-    set("--dark-bg-hidden", tokens.cardBackground);
-    set("--neutral-button-bg", tokens.btnSecondaryBg);
-    set("--neutral-button-hover", tokens.btnSecondaryHover);
-
-    set("--home-ink", tokens.homeInk);
-    set("--home-muted", tokens.homeMuted);
-    set("--home-deep", tokens.homeDeep);
-    set("--home-glow", tokens.homeGlow);
-    set("--home-gold", tokens.homeGold);
-    set("--home-on-dark", tokens.homeOnDark);
-    set("--home-on-dark-muted", tokens.homeOnDarkMuted);
-    set("--home-glass", tokens.homeGlass);
-    set("--home-glass-border", tokens.homeGlassBorder);
-    set("--home-bg", tokens.homeBg);
-    set("--home-bg-mid", tokens.homeBgMid);
-    set("--home-glow-rgb", tokens.homeGlowRgb);
-    set("--home-gold-rgb", tokens.homeGoldRgb);
+    applyPaletteTokensToElement(el, tokens);
   }
 }
 
