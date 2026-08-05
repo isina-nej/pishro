@@ -206,33 +206,3 @@ export function useChangeBlockNewsStatus() {
     },
   });
 }
-
-/**
- * GET /api/admin/block-news/[id]/blocks - Get all blocks for article
- * @deprecated - This hook is deprecated and will be removed. Use MarkdownEditor component instead.
- */
-// export function useBlockNewsBlocks(newsId: string) { ... }
-
-/**
- * POST /api/admin/block-news/[id]/blocks - Add new content block
- * @deprecated - This hook is deprecated and will be removed. Use MarkdownEditor component instead.
- */
-// export function useAddBlockNewsBlock(newsId: string) { ... }
-
-/**
- * PATCH /api/admin/block-news/[id]/blocks/[blockId] - Update block content
- * @deprecated - This hook is deprecated and will be removed. Use MarkdownEditor component instead.
- */
-// export function useUpdateBlockNewsBlock(newsId: string, blockId: string) { ... }
-
-/**
- * DELETE /api/admin/block-news/[id]/blocks/[blockId] - Delete content block
- * @deprecated - This hook is deprecated and will be removed. Use MarkdownEditor component instead.
- */
-// export function useDeleteBlockNewsBlock(newsId: string) { ... }
-
-/**
- * PATCH /api/admin/block-news/[id]/blocks/reorder - Reorder blocks
- * @deprecated - This hook is deprecated and will be removed. Use MarkdownEditor component instead.
- */
-// export function useReorderBlockNewsBlocks(newsId: string) { ... }

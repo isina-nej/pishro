@@ -119,7 +119,7 @@ describe('Sanitization Service', () => {
   });
 
   describe('sanitizeContent() — production call-site shapes', () => {
-    // app/api/news/create/route.ts:76,:80 — Tiptap output from lib/editor-extensions.ts
+    // Tiptap-style rich HTML that sanitizeHtml should preserve safely
     it('should pass editor output through unchanged', () => {
       const input =
         '<h1>Title</h1><p>Text with <strong>bold</strong> and <em>italic</em> and <code>code</code>.</p>' +
