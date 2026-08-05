@@ -68,7 +68,6 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    console.log('[PATCH /admin/block-news/:id] Request start');
 
     const adminAuth = await getAdminAuth(req);
     if (!adminAuth) {
@@ -91,10 +90,8 @@ export async function PATCH(
 
     const { id } = await params;
     const body = (await req.json()) as UpdateNewsRequest;
-    console.log('[PATCH /admin/block-news/:id] Received body:', JSON.stringify(body, null, 2));
 
     const news = await updateNewsMetadata(id, body);
-    console.log('[PATCH /admin/block-news/:id] Updated news:', JSON.stringify(news, null, 2));
 
     return successResponse(news, 'خبر با موفقیت به‌روزرسانی شد');
   } catch (error: unknown) {
@@ -132,7 +129,6 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    console.log('[DELETE /admin/block-news/:id] Request start');
 
     const adminAuth = await getAdminAuth(req);
     if (!adminAuth) {
@@ -154,7 +150,6 @@ export async function DELETE(
     }
 
     const { id } = await params;
-    console.log('[DELETE /admin/block-news/:id] Deleting news ID:', id);
 
     await deleteNews(id);
 

@@ -6,6 +6,24 @@ import mysql, { type ResultSetHeader, type ExecuteValues } from 'mysql2/promise'
 /** Values bound to the `?` placeholders of a parameterized query */
 export type QueryValues = ExecuteValues[];
 
+const isProduction = process.env.NODE_ENV === 'production';
+
+const missingDbEnv = ['DB_USER', 'DB_PASSWORD', 'DB_NAME'].filter(
+  (key) => !process.env[key]
+);
+
+if (isProduction && missingDbEnv.length > 0) {
+  throw new Error(
+    `[DB] Missing required env vars in production: ${missingDbEnv.join(', ')}`
+  );
+}
+
+if (!isProduction && missingDbEnv.length > 0) {
+  console.warn(
+    `[DB] Missing env vars: ${missingDbEnv.join(', ')}. Using development fallbacks.`
+  );
+}
+
 const dbConfig = {
   host: process.env.DB_HOST || 'localhost',
   port: parseInt(process.env.DB_PORT || '3306', 10),
@@ -17,16 +35,6 @@ const dbConfig = {
   queueLimit: 0,
   enableKeepAlive: true,
 };
-
-const missingDbEnv = ['DB_USER', 'DB_PASSWORD', 'DB_NAME'].filter(
-  (key) => !process.env[key]
-);
-
-if (missingDbEnv.length > 0) {
-  console.warn(
-    `[DB] Missing env vars: ${missingDbEnv.join(', ')}. Using fallback DB config for ${dbConfig.user}@${dbConfig.host}/${dbConfig.database}`
-  );
-}
 
 const pool = mysql.createPool(dbConfig);
 

@@ -17,8 +17,6 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    console.log('[PATCH /admin/block-news/:id/status] Request start');
-    console.log('[PATCH /admin/block-news/:id/status] Params:', params);
 
     const adminAuth = await getAdminAuth(req);
     if (!adminAuth) {
