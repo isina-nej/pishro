@@ -30,10 +30,13 @@ const NavbarPopover = ({ item }: NavbarPopoverProps) => {
       <HoverCardTrigger asChild>
         <Link
           href={item.link}
-          className="relative flex items-center gap-1 py-2 px-2"
+          className={cn(
+            "relative flex items-center gap-1 rounded-lg px-2.5 py-2 text-[13px] font-medium transition-colors",
+            isDark ? "text-white/95 hover:text-white" : "text-muted-foreground hover:text-foreground"
+          )}
         >
           {item.label}
-          <ChevronDown className="w-4 h-4" />
+          <ChevronDown className="h-3.5 w-3.5 opacity-70" />
         </Link>
       </HoverCardTrigger>
 
@@ -52,11 +55,9 @@ const NavbarPopover = ({ item }: NavbarPopoverProps) => {
           }
         }
         className={cn(
-          "flex flex-col gap-2 relative",
-          "py-5 pr-3 pl-7 mt-4 min-w-[80px] w-fit -mr-0",
-          "rounded-lg z-[200] border shadow-2xl",
-          "text-foreground border-border shadow-black/10",
-          // Override zoom animations that break backdrop-filter - use opacity only
+          "relative z-[200] mt-4 flex w-fit min-w-[160px] -mr-0 flex-col gap-1",
+          "rounded-2xl border border-border py-3 pr-2 pl-3 shadow-2xl shadow-black/10",
+          "text-foreground",
           "!transform-none data-[state=closed]:!zoom-out-95 data-[state=open]:!zoom-in-95"
         )}
         onAnimationStart={(e) => {
