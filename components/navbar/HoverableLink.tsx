@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import useIsDarkNavbar from "./useNavbarTheme";
 import clsx from "clsx";
 
@@ -14,6 +15,11 @@ interface HoverableLinkProps {
 const HoverableLink = ({ label, href }: HoverableLinkProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const isDark = useIsDarkNavbar();
+  const pathname = usePathname();
+  const active =
+    href === "/"
+      ? pathname === "/"
+      : Boolean(pathname && (pathname === href || pathname.startsWith(`${href}/`)));
 
   return (
     <Link
@@ -21,23 +27,24 @@ const HoverableLink = ({ label, href }: HoverableLinkProps) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={clsx(
-        "relative px-2 py-1 text-sm transition duration-300",
-        isDark ? "text-white/95 hover:text-white" : "text-muted-foreground"
+        "relative block px-2.5 py-2 text-[13px] font-medium tracking-tight transition duration-300",
+        isDark
+          ? active
+            ? "text-white"
+            : "text-white/90 hover:text-white"
+          : active
+            ? "text-foreground"
+            : "text-muted-foreground hover:text-foreground"
       )}
     >
-      {/* Make the label span relative and inline-block */}
       <span className="relative inline-block z-10">
         {label}
-
-        {/* AnimatePresence ensures exit animation works smoothly */}
         <AnimatePresence>
-          {isHovered && (
+          {(isHovered || active) && (
             <motion.span
               className={clsx(
-                "absolute right-0 -bottom-1 h-[2px]",
-                isDark
-                  ? "bg-white/70"
-                  : "bg-muted-foreground/40"
+                "absolute right-0 -bottom-1 h-[2px] rounded-full",
+                isDark ? "bg-white/80" : "bg-primary"
               )}
               initial={{ scaleX: 0, opacity: 0 }}
               animate={{ scaleX: 1, opacity: 1 }}

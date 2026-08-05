@@ -25,6 +25,15 @@ import {
   resolveAssetUrl,
 } from "@/lib/site/branding";
 import { parseHiddenPages } from "@/lib/site/hidable-pages";
+import {
+  DEFAULT_FOOTER_CONTENT,
+  DEFAULT_NAVBAR_ITEMS,
+  parseFooterContent,
+  parseNavbarItems,
+  type FooterContent,
+  type NavbarItem,
+} from "@/lib/site/chrome-content";
+import type { Prisma } from "@prisma/client";
 
 /**
  * Type for updateable settings fields
@@ -42,6 +51,8 @@ export interface UpdateSettingsInput {
   ogImageUrl?: string | null;
   hiddenPages?: string[];
   userPanelPaletteId?: string;
+  navbarItems?: NavbarItem[];
+  footerContent?: FooterContent;
 }
 
 export type PublicSiteTheme = {
@@ -59,6 +70,8 @@ export type PublicSiteChrome = {
   faviconUrl: string;
   ogImageUrl: string;
   hiddenPages: string[];
+  navbarItems: NavbarItem[];
+  footerContent: FooterContent;
 };
 
 export type PublicUserPanelTheme = {
@@ -141,6 +154,8 @@ export async function getPublicSiteChrome(): Promise<PublicSiteChrome> {
         faviconUrl: true,
         ogImageUrl: true,
         hiddenPages: true,
+        navbarItems: true,
+        footerContent: true,
       },
     });
     return {
@@ -157,6 +172,8 @@ export async function getPublicSiteChrome(): Promise<PublicSiteChrome> {
         DEFAULT_OG_IMAGE_URL
       ),
       hiddenPages: parseHiddenPages(settings?.hiddenPages),
+      navbarItems: parseNavbarItems(settings?.navbarItems),
+      footerContent: parseFooterContent(settings?.footerContent),
     };
   } catch (error) {
     console.error("Error fetching public site chrome:", error);
@@ -167,6 +184,8 @@ export async function getPublicSiteChrome(): Promise<PublicSiteChrome> {
       faviconUrl: DEFAULT_FAVICON_URL,
       ogImageUrl: DEFAULT_OG_IMAGE_URL,
       hiddenPages: [],
+      navbarItems: DEFAULT_NAVBAR_ITEMS.map((item) => ({ ...item })),
+      footerContent: structuredClone(DEFAULT_FOOTER_CONTENT),
     };
   }
 }
@@ -217,13 +236,31 @@ export async function updateSettings(
     // Get or create settings first
     const existingSettings = await getSettings();
 
-    // Update the settings
+    const {
+      navbarItems,
+      footerContent,
+      hiddenPages,
+      ...rest
+    } = data;
+
+    const prismaData: Prisma.SiteSettingsUpdateInput = {
+      ...rest,
+      updatedAt: new Date(),
+    };
+
+    if (hiddenPages !== undefined) {
+      prismaData.hiddenPages = hiddenPages;
+    }
+    if (navbarItems !== undefined) {
+      prismaData.navbarItems = navbarItems as Prisma.InputJsonValue;
+    }
+    if (footerContent !== undefined) {
+      prismaData.footerContent = footerContent as Prisma.InputJsonValue;
+    }
+
     const updated = await prisma.siteSettings.update({
       where: { id: existingSettings.id },
-      data: {
-        ...data,
-        updatedAt: new Date(),
-      },
+      data: prismaData,
     });
 
     return updated;

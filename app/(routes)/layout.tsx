@@ -39,6 +39,12 @@ export default async function RoutesLayout({
             logoUrl={chrome.logoUrl}
             siteName={chrome.siteName}
             hiddenPages={hidden}
+            navItems={chrome.navbarItems}
+            socials={{
+              instagram: chrome.footerContent.instagram,
+              telegram: chrome.footerContent.telegram,
+              twitter: chrome.footerContent.twitter,
+            }}
           />
         )}
         <HiddenPageGuard hiddenPages={hidden}>{children}</HiddenPageGuard>
@@ -47,6 +53,7 @@ export default async function RoutesLayout({
             logoUrl={chrome.logoUrl}
             siteName={chrome.siteName}
             hiddenPages={hidden}
+            content={chrome.footerContent}
           />
         )}
         {showScrollTop && <ScrollToTopButton />}
