@@ -92,18 +92,33 @@ function roleBadges(roles: GuideRole[]) {
   ));
 }
 
+function normalizeSearch(value: string) {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/ي/g, "ی")
+    .replace(/ك/g, "ک");
+}
+
 function articleMatchesQuery(article: GuideArticle, query: string) {
   if (!query) return true;
-  const haystack = [
-    article.title,
-    article.summary,
-    ...article.steps.map((s) => `${s.title} ${s.detail}`),
-    ...(article.tips ?? []),
-    ...(article.warnings ?? []),
-  ]
-    .join(" ")
-    .toLowerCase();
+  const haystack = normalizeSearch(
+    [
+      article.title,
+      article.summary,
+      ...article.steps.map((s) => `${s.title} ${s.detail}`),
+      ...(article.tips ?? []),
+      ...(article.warnings ?? []),
+    ].join(" ")
+  );
   return haystack.includes(query);
+}
+
+function categoryMatchesQuery(category: GuideCategory, query: string) {
+  if (!query) return true;
+  return normalizeSearch(`${category.title} ${category.description}`).includes(
+    query
+  );
 }
 
 function CategoryIcon({
@@ -256,13 +271,17 @@ export default function AdminGuidePage({ user }: { user: AdminUser }) {
   const [, startTransition] = useTransition();
 
   const filteredCategories = useMemo(() => {
-    const normalized = query.trim().toLowerCase();
-    return ADMIN_GUIDE_CATEGORIES.map((category) => ({
-      ...category,
-      articles: category.articles.filter((article) =>
-        articleMatchesQuery(article, normalized)
-      ),
-    })).filter((category) => category.articles.length > 0);
+    const normalized = normalizeSearch(query);
+    return ADMIN_GUIDE_CATEGORIES.map((category) => {
+      const categoryHit = categoryMatchesQuery(category, normalized);
+      return {
+        ...category,
+        articles: category.articles.filter(
+          (article) =>
+            categoryHit || articleMatchesQuery(article, normalized)
+        ),
+      };
+    }).filter((category) => category.articles.length > 0);
   }, [query]);
 
   const totalArticles = useMemo(
