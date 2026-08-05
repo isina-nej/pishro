@@ -1,80 +1,91 @@
 /**
  * Upload Configuration
  * مسیرهای مرکزی برای ذخیره‌سازی فایل‌ها
- * 
- * برای تغییر مسیر: فقط UPLOAD_BASE_DIR را در .env تغییر بدهید
- * همه چیز خودکار تنظیم می‌شود
+ *
+ * ریشه همیشه از storage-adapter گرفته می‌شود تا خارج از فولدر کد باشد.
+ * برای تغییر مسیر: فقط UPLOAD_BASE_DIR را در .env به یک مسیر مطلق خارج از پروژه بگذارید
+ * (پیش‌فرض: /opt/uploade) یا STORAGE_DRIVER=s3 برای فضای ابری.
  */
 
-import { join, resolve } from "path";
+import { join } from "path";
 import { mkdir, access } from "fs/promises";
 import { constants } from "fs";
+import { getStorageConfig } from "@/lib/services/storage-adapter";
 
-/**
- * Base upload directory
- * این دایرکتوری خارج از پروژه است و برای persistence استفاده می‌شود
- * می‌توانید در .env تنظیم کنید: UPLOAD_BASE_DIR="/opt/uploade"
- */
-let BASE_UPLOAD_DIR = process.env.UPLOAD_BASE_DIR || "/opt/uploade";
-
-// تبدیل مسیر نسبی به مطلق
-BASE_UPLOAD_DIR = resolve(BASE_UPLOAD_DIR);
-
-// Log کردن مسیر فعلی (فقط یک بار در startup)
-if (typeof globalThis !== "undefined" && !(globalThis as Record<string, unknown>).uploadConfigLogged) {
-  console.log(`📁 Upload Base Directory: ${BASE_UPLOAD_DIR}`);
-  (globalThis as Record<string, unknown>).uploadConfigLogged = true;
+function getBaseUploadDir(): string {
+  return getStorageConfig().storagePath;
 }
 
 /**
  * Books upload paths
  */
 export const BOOKS_UPLOAD_PATHS = {
-  // PDF files
   pdfs: {
-    dir: join(BASE_UPLOAD_DIR, "books", "pdfs"),
+    get dir() {
+      return join(getBaseUploadDir(), "books", "pdfs");
+    },
     url: "/api/uploads/books/pdfs",
   },
-  // Cover images
   covers: {
-    dir: join(BASE_UPLOAD_DIR, "books", "covers"),
+    get dir() {
+      return join(getBaseUploadDir(), "books", "covers");
+    },
     url: "/api/uploads/books/covers",
   },
-  // Audio files
   audio: {
-    dir: join(BASE_UPLOAD_DIR, "books", "audio"),
+    get dir() {
+      return join(getBaseUploadDir(), "books", "audio");
+    },
     url: "/api/uploads/books/audio",
   },
 };
 
 export const COURSES_UPLOAD_PATHS = {
   root: {
-    dir: join(BASE_UPLOAD_DIR, "courses"),
+    get dir() {
+      return join(getBaseUploadDir(), "courses");
+    },
     url: "/api/uploads/courses",
   },
   covers: {
-    dir: join(BASE_UPLOAD_DIR, "courses", "<courseId>", "cover"),
+    get dir() {
+      return join(getBaseUploadDir(), "courses", "<courseId>", "cover");
+    },
     url: "/api/uploads/courses/<courseId>/cover",
   },
   trailers: {
-    dir: join(BASE_UPLOAD_DIR, "courses", "<courseId>", "trailer"),
+    get dir() {
+      return join(getBaseUploadDir(), "courses", "<courseId>", "trailer");
+    },
     url: "/api/uploads/courses/<courseId>/trailer",
   },
   lessons: {
-    dir: join(BASE_UPLOAD_DIR, "courses", "<courseId>", "lessons", "<lessonId>"),
+    get dir() {
+      return join(
+        getBaseUploadDir(),
+        "courses",
+        "<courseId>",
+        "lessons",
+        "<lessonId>"
+      );
+    },
     url: "/api/uploads/courses/<courseId>/lessons/<lessonId>",
   },
 };
 
 export const IMAGES_UPLOAD_PATHS = {
   root: {
-    dir: join(BASE_UPLOAD_DIR, "images"),
+    get dir() {
+      return join(getBaseUploadDir(), "images");
+    },
     url: "/api/uploads/images",
   },
 };
 
 export const TEMP_UPLOAD_PATHS = {
-  dir: join(BASE_UPLOAD_DIR, "tmp"),
+  get dir() {
+    return join(getBaseUploadDir(), "tmp");
+  },
   url: "/api/uploads/tmp",
 };
 
@@ -83,7 +94,9 @@ export const TEMP_UPLOAD_PATHS = {
  */
 export const VIDEOS_UPLOAD_PATHS = {
   videos: {
-    dir: join(BASE_UPLOAD_DIR, "videos"),
+    get dir() {
+      return join(getBaseUploadDir(), "videos");
+    },
     url: "/api/uploads/videos",
   },
 };
@@ -93,7 +106,7 @@ export const VIDEOS_UPLOAD_PATHS = {
  */
 export function getAllUploadPaths() {
   return {
-    base: BASE_UPLOAD_DIR,
+    base: getBaseUploadDir(),
     temp: TEMP_UPLOAD_PATHS,
     books: BOOKS_UPLOAD_PATHS,
     courses: COURSES_UPLOAD_PATHS,
@@ -108,21 +121,17 @@ export function getAllUploadPaths() {
  */
 export async function ensureUploadDirExists(dirPath: string): Promise<void> {
   try {
-    // بررسی اینکه دایرکتوری موجود است یا نه
     try {
       await access(dirPath, constants.W_OK);
-      // اگر دایرکتوری موجود است، کاری نیست
       return;
     } catch {
       // دایرکتوری موجود نیست، ایجاد می‌کنیم
     }
 
-    // ایجاد دایرکتوری
     await mkdir(dirPath, { recursive: true });
     console.log(`✅ Upload directory created: ${dirPath}`);
   } catch (err) {
     console.error(`⚠️  Could not ensure directory: ${dirPath}`, err);
-    // ادامه می‌دهیم چون writeFile خود می‌تواند دایرکتوری ایجاد کند
   }
 }
 
@@ -130,11 +139,9 @@ export async function ensureUploadDirExists(dirPath: string): Promise<void> {
  * Helper function to get full file path from URL
  */
 export function getFilePathFromUrl(fileUrl: string): string {
-  // fileUrl might be like: /api/downloads/books/pdfs/book_123456_abc.pdf
-  // Extract filename and reconstruct full path
   const parts = fileUrl.split("/");
   const filename = parts[parts.length - 1];
-  
+
   if (fileUrl.includes("books/pdfs")) {
     return join(BOOKS_UPLOAD_PATHS.pdfs.dir, filename);
   } else if (fileUrl.includes("books/covers")) {
@@ -144,7 +151,7 @@ export function getFilePathFromUrl(fileUrl: string): string {
   } else if (fileUrl.includes("videos")) {
     return join(VIDEOS_UPLOAD_PATHS.videos.dir, filename);
   }
-  
+
   return "";
 }
 

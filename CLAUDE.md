@@ -46,7 +46,7 @@ This is a Next.js 15 (App Router) platform for Pishro, a Persian-language educat
 - CORS allow-lists are currently defined **twice**, independently: `ALLOWED_ORIGINS` in `lib/api-response.ts` and a separate list in `lib/cors.ts`. If you change allowed origins, update both (or consolidate) — they are not the same source of truth.
 
 ### File storage: two separate mechanisms
-- **Local disk** via `lib/services/storage-adapter.ts`: writes under `UPLOAD_BASE_DIR`/`UPLOAD_STORAGE_PATH` (default `/opt/uploade`), served through `/api/uploads` (default `UPLOAD_BASE_URL`). Includes `assertSafeStoragePath` to prevent path traversal — reuse it for any new file path from user input.
+- **Local disk** via `lib/services/storage-adapter.ts`: writes under `UPLOAD_BASE_DIR`/`UPLOAD_STORAGE_PATH` (default `/opt/uploade`, always resolved **outside the repo** — in-repo or relative paths are rejected), served through `/api/uploads` (default `UPLOAD_BASE_URL`). Includes `assertSafeStoragePath` to prevent path traversal — reuse it for any new file path from user input.
 - **S3-compatible object storage** via `lib/services/object-storage-service.ts` (`@aws-sdk/client-s3`), used specifically for course video uploads and HLS output; works against AWS or S3-compatible providers (Arvan Cloud, Liara, etc.) via `S3_ENDPOINT`/`S3_*` env vars.
 - Video transcoding to HLS (`lib/services/hls-transcoding-service.ts`) is designed to run in the `video-processor` container (`docker-compose.yml`, ffmpeg on Alpine) driven by `scripts/video-processor-worker.ts`, not in the Next.js server process.
 

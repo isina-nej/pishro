@@ -8,6 +8,7 @@ import { PersianDataGenerator } from "./persian-data-generator";
 import { fileURLToPath } from 'url';
 import { writeFileSync, mkdirSync } from "fs";
 import { join } from "path";
+import { getStorageConfig } from "@/lib/services/storage-adapter";
 
 const prisma = new PrismaClient();
 const generator = new PersianDataGenerator(12345);
@@ -19,7 +20,7 @@ const NEWS_COUNT = 30;
  */
 function createNewsImage(fileName: string, subfolder: string): void {
   try {
-    const uploadBaseDir = process.env.UPLOAD_BASE_DIR || join(process.cwd(), "uploads");
+    const uploadBaseDir = getStorageConfig().storagePath;
     const dir = join(uploadBaseDir, subfolder);
     mkdirSync(dir, { recursive: true });
     

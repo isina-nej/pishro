@@ -13,12 +13,19 @@ import {
   validationError,
   errorResponse
 } from "@/lib/api-response";
-import { getStorageDriver } from "@/lib/services/storage-adapter";
+import {
+  getStorageConfig,
+  getStorageDriver,
+} from "@/lib/services/storage-adapter";
 import { uploadFileStreamToS3 } from "@/lib/services/storage-s3";
 
-const UPLOAD_DIR = process.env.UPLOAD_BASE_DIR || path.join(process.cwd(), "uploads");
-const CHUNKS_DIR = path.join(UPLOAD_DIR, "chunks");
-const BOOKS_DIR = path.join(UPLOAD_DIR, "books", "pdfs");
+function getChunksDir(): string {
+  return path.join(getStorageConfig().storagePath, "chunks");
+}
+
+function getBooksDir(): string {
+  return path.join(getStorageConfig().storagePath, "books", "pdfs");
+}
 
 // CORS headers
 function corsHeaders(req: NextRequest) {
@@ -56,9 +63,12 @@ export async function POST(req: NextRequest) {
     }
     console.log("🔗 PDF finalize request received");
 
+    const booksDir = getBooksDir();
+    const chunksDir = getChunksDir();
+
     // Ensure directories exist
-    if (!existsSync(BOOKS_DIR)) {
-      await mkdir(BOOKS_DIR, { recursive: true });
+    if (!existsSync(booksDir)) {
+      await mkdir(booksDir, { recursive: true });
     }
 
     const body = await req.json();
@@ -74,14 +84,14 @@ export async function POST(req: NextRequest) {
     console.log(`📦 Combining ${totalChunks} chunks for file ${fileId}`);
 
     // Verify all chunks exist
-    const fileChunksDir = path.join(CHUNKS_DIR, fileId);
+    const fileChunksDir = path.join(chunksDir, fileId);
     if (!existsSync(fileChunksDir)) {
       throw new Error("دایرکتوری تکه‌های فایل پیدا نشد");
     }
 
     // Combine chunks
     const finalFileName = `${fileId}_${fileName}`;
-    const finalPath = path.join(BOOKS_DIR, finalFileName);
+    const finalPath = path.join(booksDir, finalFileName);
     
     const writeStream = createWriteStream(finalPath);
 
