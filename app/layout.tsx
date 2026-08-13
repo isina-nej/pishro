@@ -20,7 +20,7 @@ import {
   toAbsoluteAssetUrl,
 } from "@/lib/site/branding";
 import BootSplashDismiss from "@/components/loading/BootSplashDismiss";
-import ServiceWorkerRegister from "@/components/pwa/ServiceWorkerRegister";
+import KillServiceWorker from "@/components/pwa/KillServiceWorker";
 
 function escapeHtml(value: string) {
   return value
@@ -150,7 +150,7 @@ export default async function RootLayout({
           }}
         />
         <BootSplashDismiss />
-        <ServiceWorkerRegister />
+        <KillServiceWorker />
         <ThemeProvider
           attribute="class"
           defaultTheme={siteTheme.themeMode}
