@@ -10,6 +10,7 @@ import {
   Sparkles,
   X,
 } from "lucide-react";
+import { useSound } from "@/components/sound/SoundProvider";
 
 type Step = "topics" | "identity" | "chat";
 
@@ -33,38 +34,6 @@ const TOPICS = [
 ];
 
 const STORAGE_KEY = "pishro-live-chat-v1";
-
-function playChime(kind: "open" | "message" | "send" = "message") {
-  try {
-    const Ctx = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-    if (!Ctx) return;
-    const ctx = new Ctx();
-    const now = ctx.currentTime;
-    const freqs =
-      kind === "open"
-        ? [523.25, 659.25, 783.99]
-        : kind === "send"
-          ? [440, 554.37]
-          : [659.25, 880];
-
-    freqs.forEach((freq, index) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = "sine";
-      osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0.0001, now);
-      gain.gain.exponentialRampToValueAtTime(0.05, now + 0.02 + index * 0.04);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.28 + index * 0.05);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now + index * 0.05);
-      osc.stop(now + 0.35 + index * 0.05);
-    });
-    window.setTimeout(() => void ctx.close(), 800);
-  } catch {
-    // ignore audio failures
-  }
-}
 
 function loadStored() {
   try {
@@ -95,6 +64,7 @@ function saveStored(data: {
 }
 
 export default function ChatWidget() {
+  const { play } = useSound();
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState<Step>("topics");
   const [topic, setTopic] = useState<string | null>(null);
@@ -133,7 +103,7 @@ export default function ChatWidget() {
       if (next.length > knownCount.current) {
         const added = next.slice(knownCount.current);
         if (added.some((m) => m.sender === "ADMIN")) {
-          playChime("message");
+          play("chat");
         }
       }
       knownCount.current = next.length;
@@ -142,7 +112,7 @@ export default function ChatWidget() {
     } catch {
       // ignore poll errors
     }
-  }, [conversationId, visitorToken, scrollToBottom]);
+  }, [conversationId, visitorToken, scrollToBottom, play]);
 
   useEffect(() => {
     const stored = loadStored();
@@ -177,7 +147,6 @@ export default function ChatWidget() {
   const openWidget = () => {
     setIsOpen(true);
     setPulse(false);
-    playChime("open");
   };
 
   const startChat = async () => {
@@ -224,7 +193,7 @@ export default function ChatWidget() {
       });
       setDraft("");
       setStep("chat");
-      playChime("send");
+      play("send");
       scrollToBottom();
     } catch {
       setErrors({ form: "ارتباط با سرور برقرار نشد" });
@@ -245,7 +214,7 @@ export default function ChatWidget() {
       const json = await res.json();
       if (!res.ok || json.status !== "success") return;
       setDraft("");
-      playChime("send");
+      play("send");
       await refreshMessages();
     } finally {
       setBusy(false);
@@ -315,6 +284,7 @@ export default function ChatWidget() {
                           setTopic(item);
                           setStep("identity");
                         }}
+                        data-sound="chat"
                         className="rounded-2xl border border-border/60 bg-background/70 px-3 py-2.5 text-start text-sm font-medium text-foreground transition-colors hover:border-primary/40 hover:bg-primary/5"
                       >
                         {item}
@@ -383,6 +353,7 @@ export default function ChatWidget() {
                   <button
                     type="button"
                     disabled={busy}
+                    data-sound="off"
                     onClick={() => void startChat()}
                     className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-primary text-sm font-bold text-primary-foreground transition-transform duration-300 hover:scale-[1.02] disabled:opacity-60"
                   >
@@ -449,6 +420,7 @@ export default function ChatWidget() {
                       <button
                         type="button"
                         disabled={busy || !draft.trim()}
+                        data-sound="off"
                         onClick={() => void sendMessage()}
                         className="flex size-10 items-center justify-center rounded-2xl bg-primary text-primary-foreground transition-transform duration-300 hover:scale-110 disabled:opacity-50"
                         aria-label="ارسال"
@@ -466,6 +438,9 @@ export default function ChatWidget() {
 
       <motion.button
         type="button"
+        data-chat-fab
+        data-sound="chat"
+        data-sound-role="chat"
         onClick={() => (isOpen ? setIsOpen(false) : openWidget())}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}

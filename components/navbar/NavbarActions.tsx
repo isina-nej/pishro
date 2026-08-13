@@ -11,6 +11,7 @@ import { contactInfo } from "@/lib/constants/contact";
 import { useSession } from "next-auth/react";
 import { useCartStore } from "@/stores/cart-store";
 import ThemeToggle from "@/components/ui/ThemeToggle";
+import SoundMuteToggle from "@/components/sound/SoundMuteToggle";
 
 export type NavSocialLinks = {
   instagram?: string;
@@ -60,6 +61,8 @@ const NavbarActions = ({
         <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
           <Link
             href={authLink}
+            data-sound="auth"
+            data-sound-role="auth"
             className={cn(
               "inline-flex items-center gap-1.5 rounded-xl text-xs font-semibold transition-all duration-300",
               compact ? "px-2.5 py-2 xl:px-3.5" : "px-4 py-2",
@@ -78,6 +81,8 @@ const NavbarActions = ({
 
         <Link
           href="/checkout"
+          data-sound="cart"
+          data-sound-role="cart"
           className={iconBtn(isDark)}
           aria-label="سبد خرید"
         >
@@ -99,6 +104,13 @@ const NavbarActions = ({
           isDark ? "text-white" : "text-muted-foreground"
         )}
       >
+        <SoundMuteToggle
+          className={
+            isDark
+              ? "border border-white/20 bg-white/10 text-white hover:bg-white/18"
+              : undefined
+          }
+        />
         <ThemeToggle />
         <div
           className={cn(

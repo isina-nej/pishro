@@ -7,6 +7,8 @@ import ScrollToTopButton from "@/components/utils/ScrollToTopButton";
 import FloatingCartButton from "@/components/utils/FloatingCartButton";
 import HiddenPageGuard from "@/components/site/HiddenPageGuard";
 import RouteProgressBar from "@/components/navigation/RouteProgressBar";
+import { SoundProvider } from "@/components/sound/SoundProvider";
+import InteractionSounds from "@/components/sound/InteractionSounds";
 import { VisibilityProvider } from "@/components/site/VisibilityProvider";
 import { SessionProvider } from "next-auth/react";
 import { getPublicSiteChrome } from "@/lib/services/settings-service";
@@ -32,34 +34,37 @@ export default async function RoutesLayout({
 
   return (
     <SessionProvider>
-      <VisibilityProvider hiddenPages={hidden}>
-        <RouteProgressBar />
-        {showNavbar && (
-          <Navbar
-            logoUrl={chrome.logoUrl}
-            siteName={chrome.siteName}
-            hiddenPages={hidden}
-            navItems={chrome.navbarItems}
-            socials={{
-              instagram: chrome.footerContent.instagram,
-              telegram: chrome.footerContent.telegram,
-              twitter: chrome.footerContent.twitter,
-            }}
-          />
-        )}
-        <HiddenPageGuard hiddenPages={hidden}>{children}</HiddenPageGuard>
-        {showFooter && (
-          <Footer
-            logoUrl={chrome.logoUrl}
-            siteName={chrome.siteName}
-            hiddenPages={hidden}
-            content={chrome.footerContent}
-          />
-        )}
-        {showScrollTop && <ScrollToTopButton />}
-        {showCart && <FloatingCartButton />}
-        {showChat && <ChatWidget />}
-      </VisibilityProvider>
+      <SoundProvider>
+        <VisibilityProvider hiddenPages={hidden}>
+          <RouteProgressBar />
+          <InteractionSounds />
+          {showNavbar && (
+            <Navbar
+              logoUrl={chrome.logoUrl}
+              siteName={chrome.siteName}
+              hiddenPages={hidden}
+              navItems={chrome.navbarItems}
+              socials={{
+                instagram: chrome.footerContent.instagram,
+                telegram: chrome.footerContent.telegram,
+                twitter: chrome.footerContent.twitter,
+              }}
+            />
+          )}
+          <HiddenPageGuard hiddenPages={hidden}>{children}</HiddenPageGuard>
+          {showFooter && (
+            <Footer
+              logoUrl={chrome.logoUrl}
+              siteName={chrome.siteName}
+              hiddenPages={hidden}
+              content={chrome.footerContent}
+            />
+          )}
+          {showScrollTop && <ScrollToTopButton />}
+          {showCart && <FloatingCartButton />}
+          {showChat && <ChatWidget />}
+        </VisibilityProvider>
+      </SoundProvider>
     </SessionProvider>
   );
 }
