@@ -645,6 +645,41 @@ html.dark
   isolation: isolate;
 }
 
+/*
+ * Bridge the teal→blue lighting seam in the coins reel.
+ * Wide overlapping radials + a soft horizontal wash so green feels continuous into blue.
+ */
+.coins-hero-glow {
+  background:
+    radial-gradient(
+      ellipse 58% 70% at 18% 58%,
+      rgba(56, 190, 170, 0.28) 0%,
+      rgba(45, 160, 190, 0.14) 32%,
+      rgba(40, 120, 200, 0.06) 55%,
+      transparent 78%
+    ),
+    radial-gradient(
+      ellipse 70% 75% at 62% 55%,
+      rgba(68, 144, 216, 0.3) 0%,
+      rgba(30, 80, 210, 0.14) 38%,
+      transparent 74%
+    ),
+    radial-gradient(
+      ellipse 90% 55% at 42% 70%,
+      rgba(48, 170, 185, 0.12) 0%,
+      rgba(40, 110, 210, 0.1) 45%,
+      transparent 78%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(56, 190, 170, 0.1) 0%,
+      rgba(50, 165, 185, 0.08) 22%,
+      rgba(55, 130, 205, 0.1) 48%,
+      rgba(30, 70, 210, 0.12) 72%,
+      rgba(19, 51, 212, 0.08) 100%
+    );
+}
+
 .coins-hero-fade-top {
   background: linear-gradient(
     180deg,

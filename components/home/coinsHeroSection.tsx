@@ -75,9 +75,14 @@ export default function CoinsHeroSection({
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-[#000412]"
       />
+      {/* Soft dual glow — teal continues into blue so the join never reads as a hard cut */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[65%] bg-[radial-gradient(ellipse_at_50%_55%,_rgba(68,144,216,0.34)_0%,_rgba(19,51,212,0.14)_36%,_transparent_72%)]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[72%] coins-hero-glow"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-28 coins-hero-fade-bottom"
       />
 
       {/* Title only — no panel/background so coins are not covered */}
