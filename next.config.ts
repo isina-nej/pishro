@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
 const nextConfig: NextConfig = {
+  // Avoid picking a parent lockfile (e.g. ~/package-lock.json) as the workspace root.
+  outputFileTracingRoot: projectRoot,
   experimental: {
     // Middleware/proxy buffers request bodies before route handlers.
     // Keep this above the 500MB video validation limit to avoid truncated multipart uploads.

@@ -8,7 +8,7 @@ import {
 } from "@/lib/api-response";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { getZarinpalMerchantId } from "@/lib/services/settings-service";
-// import Zarinpal from "zarinpal-nodejs"; // (در آینده فعال می‌شود)
+// Zarinpal SDK removed — enable via official REST API when going live.
 
 export async function POST(req: Request) {
   try {
