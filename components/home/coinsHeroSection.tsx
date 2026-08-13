@@ -69,7 +69,7 @@ export default function CoinsHeroSection({
     <section
       dir="rtl"
       aria-label="هیرو پیشرو"
-      className="coins-hero relative w-full overflow-hidden text-[#F4F6F8]"
+      className="coins-hero relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen max-w-none overflow-hidden text-[#F4F6F8]"
     >
       <div
         aria-hidden
@@ -90,7 +90,7 @@ export default function CoinsHeroSection({
         </h1>
       </div>
 
-      <div className="coins-hero-reel relative z-[1] mx-auto w-full max-w-[1400px] overflow-hidden">
+      <div className="coins-hero-reel relative z-[1] w-screen max-w-none left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden">
         {/* Soft top/bottom color bridges only — keep full coins visible */}
         <div
           aria-hidden
@@ -109,7 +109,7 @@ export default function CoinsHeroSection({
           playsInline
           preload="auto"
           aria-hidden
-          className="pointer-events-none relative z-[1] block h-auto w-full select-none bg-transparent"
+          className="pointer-events-none relative z-[1] block h-auto min-w-full w-full max-w-none select-none bg-transparent object-cover object-center"
         />
       </div>
     </section>
