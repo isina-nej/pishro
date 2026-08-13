@@ -3,6 +3,7 @@
 import { useCallback, useEffect } from "react";
 import clsx from "clsx";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { FiMenu, FiShoppingCart, FiX } from "react-icons/fi";
 import { HiMiniArrowLeftEndOnRectangle } from "react-icons/hi2";
@@ -37,6 +38,8 @@ const NavbarMobile = ({
   const [isOpen, setIsOpen] = useState(false);
   const isHidden = useHideOnScroll({ disabled: isOpen });
   const { data: session } = useSession();
+  const pathname = usePathname();
+  const isHome = pathname === "/";
   const cartCount = useCartStore((state) => state.items.length);
   const authLink = session ? "/profile/acc" : "/login";
   const authLabel = session ? "داشبورد" : "ورود | ثبت‌نام";
@@ -66,7 +69,9 @@ const NavbarMobile = ({
           isHidden ? "-translate-y-full" : "translate-y-0",
           isOpen
             ? "border-b border-border/40 bg-background/80 text-foreground backdrop-blur-xl"
-            : "border-b border-border/30 bg-card/90 text-foreground shadow-sm backdrop-blur-md dark:bg-card/90"
+            : isHome
+              ? "border-b border-transparent bg-transparent text-white"
+              : "border-b border-border/30 bg-card/90 text-foreground shadow-sm backdrop-blur-md dark:bg-card/90"
         )}
       >
         <div className="relative flex w-full items-center justify-between">
