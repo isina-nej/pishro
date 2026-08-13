@@ -15,10 +15,6 @@ export default async function MobileLandingServer() {
 
   return (
     <MobileLanding
-      mainHeroTitle={homeLanding?.mainHeroTitle || 'پیشرو بزرگترین مؤسسه سرمایه‌ گذاری در ایران'}
-      mainHeroSubtitle={homeLanding?.mainHeroSubtitle || 'شروع مسیر موفقیت'}
-      mainHeroCta1Link={homeLanding?.mainHeroCta1Link || '/business-consulting'}
-      heroVideoUrl={homeLanding?.heroVideoUrl || '/videos/aboutUs.webm'}
       overlayTexts={homeLanding?.overlayTexts?.length ? homeLanding.overlayTexts : undefined}
       slides={slidesData}
     />
