@@ -87,7 +87,7 @@ export default function CoinsHeroSection({
         </h1>
       </div>
 
-      {/* Coins fill remaining viewport height, full bleed width */}
+      {/* Coins: always full-bleed left/right on every breakpoint */}
       <div className="coins-hero-reel relative z-[1] min-h-0 w-full overflow-hidden">
         <div
           aria-hidden
@@ -106,7 +106,7 @@ export default function CoinsHeroSection({
           playsInline
           preload="auto"
           aria-hidden
-          className="pointer-events-none absolute inset-0 z-[1] h-full w-full select-none bg-transparent object-contain object-bottom"
+          className="pointer-events-none absolute inset-0 z-[1] h-full w-full min-w-full max-w-none select-none bg-transparent object-cover object-bottom"
         />
       </div>
     </section>
