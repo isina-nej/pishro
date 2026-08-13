@@ -71,12 +71,13 @@ export async function GET(req: NextRequest) {
   }
 
   if (getStorageDriver() === 's3') {
-    // فایل‌های عمومی: ریدایرکت به CDN تا پهنای باند از روی سرور برداشته شود.
-    // (لینک‌های قدیمی /api/uploads/... که هنوز در دیتابیس مانده‌اند از این راه زنده می‌مانند.)
+    // فایل‌های عمومی: ریدایرکت دائمی به CDN تا مرورگر URL نهایی را کش کند.
     if (!isPrivateStoragePath(pathParam)) {
       return NextResponse.redirect(buildPublicUrl(pathParam), {
-        status: 302,
-        headers: { 'Cache-Control': 'public, max-age=3600' },
+        status: 301,
+        headers: {
+          'Cache-Control': 'public, max-age=31536000, immutable',
+        },
       });
     }
 
@@ -130,13 +131,31 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'File not found' }, { status: 404 });
     }
 
+    const isExact = resolvedPath === fullPath;
+    const cacheControl = isExact
+      ? 'public, max-age=31536000, immutable'
+      : 'public, max-age=300, stale-while-revalidate=86400';
+    const etag = `"${fileStat.size.toString(16)}-${Math.trunc(fileStat.mtimeMs).toString(16)}"`;
+    const ifNoneMatch = req.headers.get('if-none-match');
+    if (ifNoneMatch && ifNoneMatch === etag) {
+      return new NextResponse(null, {
+        status: 304,
+        headers: {
+          ETag: etag,
+          'Cache-Control': cacheControl,
+        },
+      });
+    }
+
     const fileStream = createReadStream(resolvedPath);
     return new NextResponse(Readable.toWeb(fileStream) as ReadableStream, {
       status: 200,
       headers: {
         'Content-Type': getMimeType(resolvedPath),
         'Content-Length': fileStat.size.toString(),
-        'Cache-Control': resolvedPath === fullPath ? 'public, max-age=31536000, immutable' : 'public, max-age=300',
+        'Cache-Control': cacheControl,
+        ETag: etag,
+        'Accept-Ranges': 'bytes',
       },
     });
   } catch {

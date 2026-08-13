@@ -34,7 +34,6 @@ const CourseCard = ({ data, link: _link }: CourseCardProps) => {
   const [imageError, setImageError] = useState(false);
   const addToCart = useCartStore((state) => state.addToCart);
   const imageSrc = data.img || "/images/courses/placeholder.png";
-  const isUploadImage = imageSrc.startsWith("/api/uploads/");
   const fallbackImage = "/images/courses/placeholder.png";
   const { data: session } = useSession();
   const freeCourse = isFreeCourse(data);
@@ -73,7 +72,7 @@ const CourseCard = ({ data, link: _link }: CourseCardProps) => {
           src={imageError ? fallbackImage : imageSrc}
           alt={data.subject}
           fill
-          unoptimized={isUploadImage}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           className="object-cover transition-transform duration-300 group-hover:scale-105"
           onError={() => setImageError(true)}
         />
