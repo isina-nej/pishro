@@ -21,6 +21,8 @@ import {
 } from "@/lib/site/branding";
 import BootSplashDismiss from "@/components/loading/BootSplashDismiss";
 import ServiceWorkerRegister from "@/components/pwa/ServiceWorkerRegister";
+import { SoundProvider } from "@/components/sound/SoundProvider";
+import GlobalUiEffects from "@/components/site/GlobalUiEffects";
 
 function escapeHtml(value: string) {
   return value
@@ -163,17 +165,20 @@ export default async function RootLayout({
             dark={siteTheme.dark}
           />
           <ReactQueryProvider>
-            {children}
-            <Toaster
-              position="top-center"
-              toastOptions={{
-                duration: 3000,
-                style: {
-                  fontSize: "14px",
-                  direction: "rtl",
-                },
-              }}
-            />
+            <SoundProvider>
+              {children}
+              <GlobalUiEffects />
+              <Toaster
+                position="top-center"
+                toastOptions={{
+                  duration: 3000,
+                  style: {
+                    fontSize: "14px",
+                    direction: "rtl",
+                  },
+                }}
+              />
+            </SoundProvider>
           </ReactQueryProvider>
         </ThemeProvider>
       </body>
