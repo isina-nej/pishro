@@ -7,12 +7,15 @@ export type CourseSortOption = "جدیدترین" | "محبوب‌ترین" | "�
 
 export interface CoursesFiltersHook {
   sortOptions: CourseSortOption[];
+  categories: { id: string; title: string }[];
   query: string;
   selectedSort: CourseSortOption;
   levelFilter: string;
+  categoryFilter: string;
   setQuery: (value: string) => void;
   setSort: (value: CourseSortOption) => void;
   setLevelFilter: (value: string) => void;
+  setCategoryFilter: (value: string) => void;
   filteredCourses: Course[];
   featuredCourses: Course[];
   stats: {
@@ -43,8 +46,27 @@ export const useCoursesFilters = (
   const [query, setQuery] = useState("");
   const [selectedSort, setSelectedSort] = useState<CourseSortOption>("جدیدترین");
   const [levelFilter, setLevelFilter] = useState("همه");
+  const [categoryFilter, setCategoryFilter] = useState("همه");
 
-  // تبدیل دوره‌ها از ساختار دسته‌بندی به یک آرایه مسطح
+  const categories = useMemo(
+    () =>
+      categoriesWithCourses.map((cat) => ({
+        id: cat.id,
+        title: cat.title,
+      })),
+    [categoriesWithCourses]
+  );
+
+  const courseCategoryMap = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const cat of categoriesWithCourses) {
+      for (const course of cat.courses) {
+        map.set(course.id, cat.id);
+      }
+    }
+    return map;
+  }, [categoriesWithCourses]);
+
   const allCourses = useMemo(() => {
     return categoriesWithCourses.flatMap((cat) => cat.courses);
   }, [categoriesWithCourses]);
@@ -54,18 +76,21 @@ export const useCoursesFilters = (
   const filteredCourses = useMemo(() => {
     const normalizedQuery = query.trim();
 
-    // تبدیل مقدار فارسی به enum
     const getLevelEnum = (persianLevel: string) => {
       const levelMap: Record<string, string> = {
-        "مقدماتی": "BEGINNER",
-        "متوسط": "INTERMEDIATE",
-        "پیشرفته": "ADVANCED",
+        مقدماتی: "BEGINNER",
+        متوسط: "INTERMEDIATE",
+        پیشرفته: "ADVANCED",
       };
       return levelMap[persianLevel];
     };
 
     return allCourses
-      .filter((course) => course.published) // فقط دوره‌های منتشر شده
+      .filter((course) => course.published)
+      .filter((course) => {
+        if (categoryFilter === "همه") return true;
+        return courseCategoryMap.get(course.id) === categoryFilter;
+      })
       .filter((course) => {
         if (levelFilter === "همه") return true;
         const enumLevel = getLevelEnum(levelFilter);
@@ -82,7 +107,14 @@ export const useCoursesFilters = (
       )
       .slice()
       .sort(sorters[selectedSort]);
-  }, [allCourses, query, selectedSort, levelFilter]);
+  }, [
+    allCourses,
+    courseCategoryMap,
+    query,
+    selectedSort,
+    levelFilter,
+    categoryFilter,
+  ]);
 
   const featuredCourses = useMemo(
     () =>
@@ -115,12 +147,15 @@ export const useCoursesFilters = (
 
   return {
     sortOptions,
+    categories,
     query,
     selectedSort,
     levelFilter,
+    categoryFilter,
     setQuery,
     setSort: setSelectedSort,
     setLevelFilter,
+    setCategoryFilter,
     filteredCourses,
     featuredCourses,
     stats,

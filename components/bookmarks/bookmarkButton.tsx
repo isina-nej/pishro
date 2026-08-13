@@ -1,9 +1,8 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { Bookmark } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useSession } from "next-auth/react";
 import { useIsBookmarked, useToggleBookmark } from "@/lib/hooks/useBookmarks";
 import type { BookmarkType } from "@/lib/schemas/bookmark-schema";
 
@@ -16,11 +15,11 @@ interface BookmarkButtonProps {
 }
 
 /**
- * دکمهٔ نشان‌کردن یک دوره/خبر/کتاب.
+ * دکمهٔ ذخیره در لیست کاربر (بوکمارک).
  *
- * وضعیت را از کش مشترک `useBookmarks` می‌خواند، پس چند دکمه در یک صفحه با هم
- * یک درخواست بیشتر نمی‌زنند. کاربر مهمان به صفحهٔ ورود می‌رود و بعد از ورود به
- * همین صفحه برمی‌گردد.
+ * فقط برای کاربر لاگین‌شده رندر می‌شود؛ مهمان اصلاً دکمه را نمی‌بیند.
+ * وضعیت از کش مشترک `useBookmarks` خوانده می‌شود تا چند دکمه در یک صفحه
+ * درخواست جدا نزنند.
  */
 const BookmarkButton = ({
   type,
@@ -28,11 +27,14 @@ const BookmarkButton = ({
   showLabel = false,
   className,
 }: BookmarkButtonProps) => {
-  const router = useRouter();
-  const pathname = usePathname();
   const { status } = useSession();
   const { isBookmarked } = useIsBookmarked(type, itemId);
   const toggle = useToggleBookmark();
+
+  // مهمان / در حال خواندن سشن: دکمه نمایش داده نمی‌شود.
+  if (status !== "authenticated") {
+    return null;
+  }
 
   // تا وقتی درخواست در راه است وضعیت برعکس نشان داده می‌شود تا کلیک بی‌درنگ
   // دیده شود؛ بعد از پاسخ، لیست تازه وضعیت واقعی را می‌نشاند.
@@ -42,16 +44,6 @@ const BookmarkButton = ({
     // کارت‌ها داخل Link هستند؛ کلیک روی این دکمه نباید صفحه را عوض کند.
     event.preventDefault();
     event.stopPropagation();
-
-    // تا وقتی سشن خوانده نشده معلوم نیست کاربر مهمان است یا نه؛ فرستادنش به
-    // صفحهٔ ورود در این لحظه یعنی بیرون‌انداختن کاربرِ وارد‌شده.
-    if (status === "loading") return;
-
-    if (status !== "authenticated") {
-      router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
-      return;
-    }
-
     toggle.mutate({ type, itemId, bookmarked: isBookmarked });
   };
 

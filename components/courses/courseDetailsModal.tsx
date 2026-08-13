@@ -5,9 +5,6 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
-  ThumbsUp,
-  ThumbsDown,
-  Bookmark,
   Share2,
   Play,
   Star,
@@ -21,6 +18,7 @@ import type { Course } from "@prisma/client";
 import { useCartStore } from "@/stores/cart-store";
 import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
+import BookmarkButton from "@/components/bookmarks/bookmarkButton";
 import {
   enrollFreeCourse,
   isFreeCourse,
@@ -39,9 +37,6 @@ export const CourseDetailsModal = ({
   onClose,
 }: CourseDetailsModalProps) => {
   const [activeTab, setActiveTab] = useState<"درباره" | "نقدها">("درباره");
-  const [liked, setLiked] = useState<"LIKE" | "DISLIKE" | null>(null);
-  const [saved, setSaved] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const addToCart = useCartStore((state) => state.addToCart);
   const items = useCartStore((state) => state.items);
   const { data: session } = useSession();
@@ -73,57 +68,6 @@ export const CourseDetailsModal = ({
     }
     addToCart(course as unknown as Parameters<typeof addToCart>[0]);
     toast.success(`«${course.subject}» به سبد خرید اضافه شد 🛒`);
-  };
-
-  const handleLike = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch("/api/courses/like", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ courseId: course.id, type: "LIKE" }),
-      });
-      if (response.ok) {
-        setLiked(liked === "LIKE" ? null : "LIKE");
-      }
-    } catch (error) {
-      console.error("Error liking course:", error);
-    }
-    setIsLoading(false);
-  };
-
-  const handleDislike = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch("/api/courses/like", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ courseId: course.id, type: "DISLIKE" }),
-      });
-      if (response.ok) {
-        setLiked(liked === "DISLIKE" ? null : "DISLIKE");
-      }
-    } catch (error) {
-      console.error("Error disliking course:", error);
-    }
-    setIsLoading(false);
-  };
-
-  const handleSave = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch("/api/courses/save", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ courseId: course.id }),
-      });
-      if (response.ok) {
-        setSaved(!saved);
-      }
-    } catch (error) {
-      console.error("Error saving course:", error);
-    }
-    setIsLoading(false);
   };
 
   const handleShare = async () => {
@@ -203,51 +147,13 @@ export const CourseDetailsModal = ({
 
             {/* Action Buttons */}
             <div className="border-b border-border/10 px-6 py-4">
-              <div className="flex gap-3">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleLike}
-                  disabled={isLoading}
-                  className={`flex items-center gap-2 rounded-lg px-4 py-2 font-medium transition ${
-                    liked === "LIKE"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-card dark:bg-cardBg/10 text-mySecondary hover:bg-muted dark:hover:bg-cardBg/20"
-                  }`}
-                >
-                  <ThumbsUp className="h-5 w-5" />
-                  پسندیدم
-                </motion.button>
-
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleDislike}
-                  disabled={isLoading}
-                  className={`flex items-center gap-2 rounded-lg px-4 py-2 font-medium transition ${
-                    liked === "DISLIKE"
-                      ? "bg-destructive text-primary-foreground"
-                      : "bg-card dark:bg-cardBg/10 text-mySecondary hover:bg-muted dark:hover:bg-cardBg/20"
-                  }`}
-                >
-                  <ThumbsDown className="h-5 w-5" />
-                  نپسندیدم
-                </motion.button>
-
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleSave}
-                  disabled={isLoading}
-                  className={`flex items-center gap-2 rounded-lg px-4 py-2 font-medium transition ${
-                    saved
-                      ? "bg-accent text-primary-foreground"
-                      : "bg-card dark:bg-cardBg/10 text-mySecondary hover:bg-muted dark:hover:bg-cardBg/20"
-                  }`}
-                >
-                  <Bookmark className={`h-5 w-5 ${saved ? "fill-current" : ""}`} />
-                  ذخیره
-                </motion.button>
+              <div className="flex flex-wrap gap-3">
+                <BookmarkButton
+                  type="course"
+                  itemId={course.id}
+                  showLabel
+                  className="rounded-lg border-border/40"
+                />
 
                 <motion.button
                   whileHover={{ scale: 1.05 }}
