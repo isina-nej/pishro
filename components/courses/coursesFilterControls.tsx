@@ -1,13 +1,7 @@
 "use client";
 
-import { Search } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Search, SlidersHorizontal, X } from "lucide-react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import type { CourseSortOption } from "./hooks/useCoursesFilters";
 
@@ -19,6 +13,9 @@ interface CoursesFilterControlsProps {
   onSortChange: (value: CourseSortOption) => void;
   levelFilter: string;
   onLevelFilterChange: (value: string) => void;
+  categories: { id: string; title: string }[];
+  categoryFilter: string;
+  onCategoryFilterChange: (value: string) => void;
   hasActiveFilters: boolean;
   onResetFilters: () => void;
   disabled?: boolean;
@@ -31,6 +28,62 @@ const levelOptions = [
   { label: "پیشرفته", value: "پیشرفته" },
 ];
 
+function ChipGroup({
+  label,
+  options,
+  value,
+  onChange,
+  layoutId,
+  disabled,
+}: {
+  label: string;
+  options: { label: string; value: string }[];
+  value: string;
+  onChange: (value: string) => void;
+  layoutId: string;
+  disabled?: boolean;
+}) {
+  return (
+    <div className="space-y-2.5">
+      <p className="text-[11px] font-semibold tracking-wide text-muted-foreground">
+        {label}
+      </p>
+      <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {options.map((option) => {
+          const active = value === option.value;
+          return (
+            <button
+              key={option.value}
+              type="button"
+              disabled={disabled}
+              onClick={() => onChange(option.value)}
+              aria-pressed={active}
+              className={cn(
+                "relative shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-colors duration-300",
+                active
+                  ? "text-primary-foreground"
+                  : "text-foreground/80 hover:text-foreground",
+                disabled && "pointer-events-none opacity-60"
+              )}
+            >
+              {active ? (
+                <motion.span
+                  layoutId={layoutId}
+                  className="absolute inset-0 rounded-full bg-primary shadow-lg shadow-primary/25"
+                  transition={{ type: "spring", stiffness: 380, damping: 28 }}
+                />
+              ) : (
+                <span className="absolute inset-0 rounded-full border border-border/70 bg-card/70 dark:bg-white/5" />
+              )}
+              <span className="relative z-10">{option.label}</span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export const CoursesFilterControls = ({
   query,
   onQueryChange,
@@ -39,94 +92,106 @@ export const CoursesFilterControls = ({
   onSortChange,
   levelFilter,
   onLevelFilterChange,
+  categories,
+  categoryFilter,
+  onCategoryFilterChange,
   hasActiveFilters,
   onResetFilters,
   disabled = false,
 }: CoursesFilterControlsProps) => {
-  return (
-    <div className="flex flex-col gap-6 border-b border-[#214254]/10 pb-8/10">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex flex-col gap-3 md:flex-row md:items-center">
-          <h2 className="text-xl font-bold text-foreground dark:text-textPrimary">دوره‌های آموزشی</h2>
-          <p className="text-sm text-muted-foreground dark:text-textSecondary">
-            دوره‌ها را بر اساس دسته‌بندی، سطح دشواری و موضوع مورد نظر خود فیلتر کنید.
-          </p>
-        </div>
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <Select
-            value={levelFilter}
-            onValueChange={onLevelFilterChange}
-            disabled={disabled}
-          >
-            <SelectTrigger
-              className={cn(
-                "w-full min-w-[180px] rounded-2xl border-border/60 bg-card/60 text-[#112b3a] shadow-sm backdrop-blur-xl/10/5",
-                disabled && "opacity-60"
-              )}
-              aria-disabled={disabled}
-            >
-              <SelectValue placeholder="سطح دوره" />
-            </SelectTrigger>
-            <SelectContent>
-              {levelOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+  const categoryOptions = [
+    { label: "همه", value: "همه" },
+    ...categories.map((cat) => ({ label: cat.title, value: cat.id })),
+  ];
 
-          <Select
-            value={selectedSort}
-            onValueChange={(v) => onSortChange(v as CourseSortOption)}
-            disabled={disabled}
-          >
-            <SelectTrigger
-              className={cn(
-                "w-full min-w-[180px] rounded-2xl border-border/60 bg-card/60 text-[#112b3a] shadow-sm backdrop-blur-xl/10/5",
-                disabled && "opacity-60"
-              )}
-              aria-disabled={disabled}
-            >
-              <SelectValue placeholder="مرتب‌سازی" />
-            </SelectTrigger>
-            <SelectContent>
-              {sortOptions.map((option) => (
-                <SelectItem key={option} value={option}>
-                  {option}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+  return (
+    <div className="flex flex-col gap-6 border-b border-border/40 pb-8">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex items-start gap-3">
+          <span className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-2xl bg-primary/15 text-primary">
+            <SlidersHorizontal className="size-4" />
+          </span>
+          <div>
+            <h2 className="text-xl font-bold text-foreground">دوره‌های آموزشی</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              دسته، سطح و مرتب‌سازی را انتخاب کنید
+            </p>
+          </div>
         </div>
+
+        {hasActiveFilters ? (
+          <motion.button
+            type="button"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={onResetFilters}
+            disabled={disabled}
+            className="inline-flex items-center gap-1.5 self-start rounded-full border border-border/60 bg-card/80 px-3.5 py-1.5 text-xs font-semibold text-foreground shadow-sm dark:bg-white/5"
+          >
+            <X className="size-3.5" />
+            پاک کردن فیلترها
+          </motion.button>
+        ) : null}
       </div>
 
-      <div className="flex flex-col gap-4">
-        <div
-          className={cn(
-            "flex items-center gap-3 rounded-2xl border border-border/60 bg-card/60 p-3 shadow-inner backdrop-blur-xl/10/5",
-            disabled && "opacity-60"
-          )}
-        >
-          <Search className="h-4 w-4 text-muted-foreground" />
-          <input
-            value={query}
-            onChange={(event) => onQueryChange(event.target.value)}
-            className="w-full bg-transparent text-sm text-muted-foreground outline-none placeholder:text-muted-foreground dark:text-textPrimary dark:placeholder:text-textSecondary"
-            placeholder="جستجوی سریع در بین دوره‌ها"
-            disabled={disabled}
-            aria-disabled={disabled}
-          />
-          {hasActiveFilters && (
-            <button
-              onClick={onResetFilters}
-              className="whitespace-nowrap text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground dark:text-textSecondary dark:hover:text-textPrimary"
-              disabled={disabled}
-            >
-              حذف فیلترها
-            </button>
-          )}
-        </div>
+      <div
+        className={cn(
+          "flex items-center gap-3 rounded-2xl border border-border/60 bg-card/70 px-4 py-3 shadow-inner backdrop-blur-xl dark:bg-white/5",
+          disabled && "opacity-60"
+        )}
+      >
+        <Search className="size-4 shrink-0 text-muted-foreground" />
+        <input
+          value={query}
+          onChange={(event) => onQueryChange(event.target.value)}
+          className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
+          placeholder="جستجوی سریع در بین دوره‌ها"
+          disabled={disabled}
+          aria-disabled={disabled}
+        />
+        {query ? (
+          <button
+            type="button"
+            onClick={() => onQueryChange("")}
+            className="text-muted-foreground transition-transform hover:scale-110 hover:text-foreground"
+            aria-label="پاک کردن جستجو"
+          >
+            <X className="size-4" />
+          </button>
+        ) : null}
+      </div>
+
+      <ChipGroup
+        label="دسته‌بندی"
+        options={categoryOptions}
+        value={categoryFilter}
+        onChange={onCategoryFilterChange}
+        layoutId="courses-category-pill"
+        disabled={disabled}
+      />
+
+      <div className="grid gap-5 lg:grid-cols-2">
+        <ChipGroup
+          label="سطح دوره"
+          options={levelOptions}
+          value={levelFilter}
+          onChange={onLevelFilterChange}
+          layoutId="courses-level-pill"
+          disabled={disabled}
+        />
+        <ChipGroup
+          label="مرتب‌سازی"
+          options={sortOptions.map((option) => ({
+            label: option,
+            value: option,
+          }))}
+          value={selectedSort}
+          onChange={(value) => onSortChange(value as CourseSortOption)}
+          layoutId="courses-sort-pill"
+          disabled={disabled}
+        />
       </div>
     </div>
   );

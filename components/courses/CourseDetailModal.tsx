@@ -5,7 +5,6 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import {
   ShoppingCart,
-  Heart,
   Share2,
   BarChart3,
   Target,
@@ -20,6 +19,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import RatingStars from "@/components/utils/RatingStars";
+import BookmarkButton from "@/components/bookmarks/bookmarkButton";
 import { useCartStore } from "@/stores/cart-store";
 import toast from "react-hot-toast";
 import type { Course } from "@/lib/types/db";
@@ -61,8 +61,6 @@ function formatToman(price: number) {
 export default function CourseDetailModal({ course, trigger }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("about");
-  const [liked, setLiked] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const addToCart = useCartStore((state) => state.addToCart);
   const items = useCartStore((state) => state.items);
   const { data: session } = useSession();
@@ -77,23 +75,6 @@ export default function CourseDetailModal({ course, trigger }: Props) {
     ...(course.category?.title ? [course.category.title] : []),
     ...((course.learningGoals as string[] | undefined) ?? []).slice(0, 3),
   ].slice(0, 4);
-
-  const handleLike = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch("/api/courses/like", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ courseId: course.id, type: "LIKE" }),
-      });
-      if (response.ok) {
-        setLiked((prev) => !prev);
-      }
-    } catch (error) {
-      console.error("Error liking course:", error);
-    }
-    setIsLoading(false);
-  };
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -187,25 +168,11 @@ export default function CourseDetailModal({ course, trigger }: Props) {
           </div>
 
           <div className="absolute end-4 top-4 z-10 flex items-center gap-2 sm:end-5 sm:top-5">
-            <motion.button
-              type="button"
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.96 }}
-              onClick={handleLike}
-              disabled={isLoading}
-              title="پسندیدم"
-              className={`flex size-10 items-center justify-center rounded-full border border-white/20 backdrop-blur-xl transition-colors ${
-                liked
-                  ? "bg-[#6B7F3C]/90 text-white"
-                  : "bg-white/12 text-white"
-              }`}
-            >
-              <Heart
-                size={18}
-                fill={liked ? "currentColor" : "none"}
-                strokeWidth={1.75}
-              />
-            </motion.button>
+            <BookmarkButton
+              type="course"
+              itemId={course.id}
+              className="size-10 border-white/20 bg-white/12 text-white backdrop-blur-xl hover:text-white data-[active]:bg-[#6B7F3C]/90 [[aria-pressed=true]]:border-[#6B7F3C]/50 [[aria-pressed=true]]:bg-[#6B7F3C]/90 [[aria-pressed=true]]:text-white"
+            />
             <motion.button
               type="button"
               whileHover={{ scale: 1.08 }}

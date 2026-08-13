@@ -23,23 +23,29 @@ const CoursesPageContent = ({
   const { show } = useVisibility();
   const {
     sortOptions,
+    categories,
     query,
     selectedSort,
     levelFilter,
+    categoryFilter,
     setQuery,
     setSort,
     setLevelFilter,
+    setCategoryFilter,
     filteredCourses,
     stats,
   } = useCoursesFilters(categoriesWithCourses);
 
   const hasActiveFilters =
-    query.trim().length > 0 || levelFilter !== "همه";
+    query.trim().length > 0 ||
+    levelFilter !== "همه" ||
+    categoryFilter !== "همه";
 
   const handleResetFilters = () => {
     setQuery("");
     setSort("جدیدترین");
     setLevelFilter("همه");
+    setCategoryFilter("همه");
   };
 
   // نگاشت دوره‌ها به دسته‌بندی‌ها برای لینک‌های صحیح
@@ -70,6 +76,9 @@ const CoursesPageContent = ({
                   onSortChange={setSort}
                   levelFilter={levelFilter}
                   onLevelFilterChange={setLevelFilter}
+                  categories={categories}
+                  categoryFilter={categoryFilter}
+                  onCategoryFilterChange={setCategoryFilter}
                   hasActiveFilters={hasActiveFilters}
                   onResetFilters={handleResetFilters}
                   disabled={false}

@@ -31,8 +31,10 @@ const NavbarPopover = ({ item }: NavbarPopoverProps) => {
         <Link
           href={item.link}
           className={cn(
-            "relative flex items-center gap-1 rounded-lg px-2.5 py-2 text-[13px] font-medium transition-colors",
-            isDark ? "text-white/95 hover:text-white" : "text-muted-foreground hover:text-foreground"
+            "relative flex items-center gap-1 whitespace-nowrap rounded-xl px-2 py-2 text-[11px] font-semibold transition-colors duration-300 lg:px-2.5 lg:text-xs xl:px-3 xl:text-[13px]",
+            isDark
+              ? "text-white/85 hover:text-white"
+              : "text-muted-foreground hover:text-foreground"
           )}
         >
           {item.label}

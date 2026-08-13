@@ -139,7 +139,7 @@ export const FilterControls = ({
               className={cn(
                 "whitespace-nowrap rounded-full border px-4 py-2 text-sm font-medium transition-all",
                 selectedCategory === category
-                  ? "border-border bg-card text-primary-foreground shadow"
+                  ? "border-primary bg-primary text-primary-foreground shadow"
                   : "border-border bg-card dark:bg-cardBg text-muted-foreground hover:bg-muted",
                 disabled && "pointer-events-none opacity-60"
               )}

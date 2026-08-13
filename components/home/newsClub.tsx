@@ -44,8 +44,18 @@ const NewsClub = () => {
   };
 
   return (
-    <section className="relative mx-auto mt-10 min-h-[480px] w-[calc(100%-2rem)] overflow-hidden rounded-[2.5rem] border border-border/60 bg-card/55 pb-8 pt-4 shadow-2xl shadow-primary/10 backdrop-blur-2xl/10/[0.05] md:mt-0 md:h-screen md:w-[calc(100%-4rem)] md:pb-0 md:pt-8">
-      <div className="container-xl flex h-full flex-col items-center gap-3 md:flex-row md:items-center md:gap-8">
+    <section className="relative mx-auto mt-10 min-h-[480px] w-[calc(100%-2rem)] overflow-hidden rounded-[2.5rem] border border-[var(--home-glass-border)] bg-[var(--home-glass)] pb-8 pt-4 shadow-2xl shadow-primary/10 backdrop-blur-2xl dark:border-[rgba(var(--home-glow-rgb),0.35)] dark:bg-[linear-gradient(160deg,rgba(15,42,31,0.96)_0%,rgba(18,26,22,0.92)_48%,rgba(10,16,14,0.95)_100%)] dark:shadow-[0_28px_90px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.07)] md:mt-0 md:h-screen md:w-[calc(100%-4rem)] md:pb-0 md:pt-8">
+      {/* subtle glow so the panel reads as a surface in dark mode */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-0 hidden dark:block"
+        style={{
+          background:
+            "radial-gradient(ellipse 70% 55% at 80% 20%, rgba(var(--home-glow-rgb), 0.18), transparent 60%), radial-gradient(ellipse 50% 40% at 10% 90%, rgba(var(--home-gold-rgb), 0.08), transparent 55%)",
+        }}
+      />
+
+      <div className="container-xl relative z-10 flex h-full flex-col items-center gap-3 md:flex-row md:items-center md:gap-8">
         <div className="order-2 mt-10 flex w-full items-end justify-center md:order-1 md:mt-0 md:h-full md:flex-1 md:justify-start">
           {/* wrapper با نسبت درست */}
           <div className="relative aspect-[1.3] w-full max-w-[400px] md:aspect-[661/504] md:max-w-full">
@@ -117,24 +127,24 @@ const NewsClub = () => {
 
       {/* decorations — olive-tinted to match theme */}
       <>
-        <div className="absolute -right-8 top-0 -z-10 hidden h-[50vh] w-[180px] md:block lg:h-[86vh] lg:w-[260px]">
+        <div className="pointer-events-none absolute -right-8 top-0 z-[1] hidden h-[50vh] w-[180px] md:block lg:h-[86vh] lg:w-[260px]">
           <Image
             src={"/images/home/news-club/right-vector.png"}
             fill
-            alt="دکور"
-            className="object-contain opacity-80"
+            alt=""
+            className="object-contain opacity-70 dark:opacity-90"
             style={{
               filter:
                 "brightness(0) saturate(100%) invert(46%) sepia(24%) saturate(900%) hue-rotate(42deg) brightness(95%) contrast(90%)",
             }}
           />
         </div>
-        <div className="absolute -left-10 bottom-0 -z-10 hidden h-[60vh] w-[140px] md:block lg:-left-24 lg:h-[90vh] lg:w-[240px]">
+        <div className="pointer-events-none absolute -left-10 bottom-0 z-[1] hidden h-[60vh] w-[140px] md:block lg:-left-24 lg:h-[90vh] lg:w-[240px]">
           <Image
             src={"/images/home/news-club/left-vector.png"}
             fill
-            alt="دکور"
-            className="object-contain opacity-80"
+            alt=""
+            className="object-contain opacity-70 dark:opacity-90"
             style={{
               filter:
                 "brightness(0) saturate(100%) invert(46%) sepia(24%) saturate(900%) hue-rotate(42deg) brightness(95%) contrast(90%)",
