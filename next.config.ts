@@ -46,9 +46,29 @@ const nextConfig: NextConfig = {
         pathname: "/uploads/**",
       },
       {
+        protocol: "https",
+        hostname: "pishrosarmaye.com",
+        pathname: "/api/uploads/**",
+      },
+      {
+        protocol: "https",
+        hostname: "www.pishrosarmaye.com",
+        pathname: "/api/uploads/**",
+      },
+      {
+        protocol: "https",
+        hostname: "pishrosarmaye.com",
+        pathname: "/uploads/**",
+      },
+      {
         protocol: "http",
         hostname: "localhost",
         pathname: "/uploads/**",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        pathname: "/api/uploads/**",
       },
       {
         protocol: "http",
@@ -57,19 +77,35 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "http",
+        hostname: "localhost:3000",
+        pathname: "/api/uploads/**",
+      },
+      {
+        protocol: "http",
         hostname: "localhost:3001",
         pathname: "/uploads/**",
       },
+      {
+        protocol: "http",
+        hostname: "localhost:3001",
+        pathname: "/api/uploads/**",
+      },
     ],
-    unoptimized: true,
+    // بهینه‌سازی Next Image فعال — نسخهٔ کوچک/WebP کش می‌شود تا هر رفرش ۲MB نکشد
+    unoptimized: false,
+    minimumCacheTTL: 60 * 60 * 24 * 30,
   },
   async headers() {
     const immutable = "public, max-age=31536000, immutable";
-    const day = "public, max-age=86400, stale-while-revalidate=604800";
+    const month = "public, max-age=2592000, stale-while-revalidate=604800";
     return [
       {
         source: "/_next/static/:path*",
         headers: [{ key: "Cache-Control", value: immutable }],
+      },
+      {
+        source: "/_next/image",
+        headers: [{ key: "Cache-Control", value: month }],
       },
       {
         source: "/font/:path*",
@@ -77,19 +113,19 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/logo/:path*",
-        headers: [{ key: "Cache-Control", value: day }],
+        headers: [{ key: "Cache-Control", value: month }],
       },
       {
         source: "/images/:path*",
-        headers: [{ key: "Cache-Control", value: day }],
+        headers: [{ key: "Cache-Control", value: month }],
       },
       {
         source: "/icons/:path*",
-        headers: [{ key: "Cache-Control", value: day }],
+        headers: [{ key: "Cache-Control", value: month }],
       },
       {
         source: "/videos/:path*",
-        headers: [{ key: "Cache-Control", value: day }],
+        headers: [{ key: "Cache-Control", value: month }],
       },
       {
         source: "/sw.js",
