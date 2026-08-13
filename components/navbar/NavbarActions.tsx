@@ -63,6 +63,7 @@ const NavbarActions = ({
             href={authLink}
             data-sound="auth"
             data-sound-role="auth"
+            data-cursor="button"
             className={cn(
               "inline-flex items-center gap-1.5 rounded-xl text-xs font-semibold transition-all duration-300",
               compact ? "px-2.5 py-2 xl:px-3.5" : "px-4 py-2",
@@ -83,6 +84,7 @@ const NavbarActions = ({
           href="/checkout"
           data-sound="cart"
           data-sound-role="cart"
+          data-cursor="cart"
           className={iconBtn(isDark)}
           aria-label="سبد خرید"
         >

@@ -2,10 +2,8 @@ import type { Metadata } from "next";
 
 import Navbar from "@/components/navbar/navbar";
 import Footer from "@/components/footer";
-import ChatWidget from "@/components/utils/ChatWidget";
-import ScrollToTopButton from "@/components/utils/ScrollToTopButton";
-import FloatingCartButton from "@/components/utils/FloatingCartButton";
 import HiddenPageGuard from "@/components/site/HiddenPageGuard";
+import PublicChromeExtras from "@/components/site/PublicChromeExtras";
 import RouteProgressBar from "@/components/navigation/RouteProgressBar";
 import { SoundProvider } from "@/components/sound/SoundProvider";
 import InteractionSounds from "@/components/sound/InteractionSounds";
@@ -60,9 +58,11 @@ export default async function RoutesLayout({
               content={chrome.footerContent}
             />
           )}
-          {showScrollTop && <ScrollToTopButton />}
-          {showCart && <FloatingCartButton />}
-          {showChat && <ChatWidget />}
+          <PublicChromeExtras
+            showChat={showChat}
+            showCart={showCart}
+            showScrollTop={showScrollTop}
+          />
         </VisibilityProvider>
       </SoundProvider>
     </SessionProvider>

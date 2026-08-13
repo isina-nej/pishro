@@ -26,6 +26,7 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
           muted
           loop
           playsInline
+          preload="metadata"
           poster="/images/home/c/main.webp"
           className="absolute inset-0 w-full h-full object-cover"
         >

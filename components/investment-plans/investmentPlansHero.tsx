@@ -82,6 +82,7 @@ export const InvestmentPlansHero = ({
             loop
             muted
             playsInline
+            preload="metadata"
             className="h-full w-full object-cover"
           >
             <source
