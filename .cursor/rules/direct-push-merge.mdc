@@ -1,0 +1,17 @@
+---
+description: After code changes, commit, push, and merge to main without waiting
+alwaysApply: true
+---
+
+# Direct push and merge
+
+Whenever meaningful code changes are completed in this repo:
+
+1. Commit on the current feature branch (concise message, only related files).
+2. Push the branch to `origin`.
+3. Create a PR into `main` (if none is open) and **merge it immediately** (`gh pr merge --merge`).
+4. Report the PR URL when done.
+
+Do not wait for a separate “commit / push / merge” request unless the user explicitly says not to merge yet.
+
+If Smart Mode blocks merging to `main`, retry with approval using the exact block reason — the user has pre-authorized this workflow.
