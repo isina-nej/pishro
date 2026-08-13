@@ -4,6 +4,7 @@ import {
   ensureCryptoMarketWarmer,
   getCryptoMarketData,
 } from '@/lib/services/crypto-market-service';
+import type { CryptoMarketResponse } from '@/types/crypto-market';
 
 export const metadata: Metadata = {
   title: 'قیمت لحظه‌ای ارزهای دیجیتال | پیشرو',
@@ -15,7 +16,7 @@ export const revalidate = 0;
 
 export default async function PublicCryptoPricesPage() {
   ensureCryptoMarketWarmer();
-  let initialData = null;
+  let initialData: CryptoMarketResponse | null = null;
   try {
     initialData = await getCryptoMarketData({ limit: 20, page: 1 });
   } catch (error) {
