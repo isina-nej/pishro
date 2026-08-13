@@ -35,14 +35,17 @@ const NavbarDesktop = ({
   const pathname = usePathname();
   const [isIndicatorActive, setIsIndicatorActive] = useState(false);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
+  const isHome = pathname === "/";
 
   return (
     <div
       className={clsx(
         "absolute top-0 z-[100] flex w-full flex-col items-center justify-between px-2 pb-4 pt-4 text-xs transition-colors duration-300 sm:px-8 md:flex-row md:px-[60px] md:pb-8 md:pt-8",
-        isDark
-          ? "bg-gradient-to-b from-black/65 via-black/35 to-transparent text-white"
-          : "bg-transparent text-muted-foreground"
+        isHome
+          ? "bg-transparent text-white"
+          : isDark
+            ? "bg-gradient-to-b from-black/65 via-black/35 to-transparent text-white"
+            : "bg-transparent text-muted-foreground"
       )}
       onMouseLeave={() => setIsIndicatorActive(false)}
     >
