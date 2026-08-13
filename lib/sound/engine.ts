@@ -49,6 +49,18 @@ const PRESETS: Record<SoundId, Tone[]> = {
     { freq: 880, type: "square", dur: 0.03, gain: 0.012 },
     { freq: 1174.66, type: "square", dur: 0.035, gain: 0.01, delay: 0.03 },
   ],
+  // پرتاب کوتاه رو به بالا — حس اشتراک‌گذاری
+  share: [
+    { freq: 523.25, type: "triangle", dur: 0.06, gain: 0.026 },
+    { freq: 698.46, type: "triangle", dur: 0.08, gain: 0.024, delay: 0.045 },
+    { freq: 932.33, type: "sine", dur: 0.1, gain: 0.018, delay: 0.1 },
+  ],
+  // پاپ نرم پر/خالی شدن بوکمارک
+  bookmark: [
+    { freq: 392, type: "sine", dur: 0.055, gain: 0.028 },
+    { freq: 587.33, type: "triangle", dur: 0.09, gain: 0.03, delay: 0.04 },
+    { freq: 784, type: "sine", dur: 0.07, gain: 0.016, delay: 0.11 },
+  ],
 };
 
 type AudioWindow = Window & {

@@ -9,7 +9,9 @@ export type SoundId =
   | "toggle"
   | "send"
   | "success"
-  | "market";
+  | "market"
+  | "share"
+  | "bookmark";
 
 export const SOUND_IDS: SoundId[] = [
   "click",
@@ -23,6 +25,8 @@ export const SOUND_IDS: SoundId[] = [
   "send",
   "success",
   "market",
+  "share",
+  "bookmark",
 ];
 
 export function isSoundId(value: string): value is SoundId {

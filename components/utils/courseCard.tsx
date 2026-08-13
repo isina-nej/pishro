@@ -9,7 +9,7 @@ import { FormatTime } from "./FormatTime";
 import RatingStars from "./RatingStars";
 import { useCartStore } from "@/stores/cart-store";
 import CourseDetailModal from "@/components/courses/CourseDetailModal";
-import BookmarkButton from "@/components/bookmarks/bookmarkButton";
+import CourseActionIcons from "@/components/courses/CourseActionIcons";
 import toast from "react-hot-toast";
 import type { Course } from "@/lib/types/db";
 import { useSession } from "next-auth/react";
@@ -63,68 +63,57 @@ const CourseCard = ({ data, link: _link }: CourseCardProps) => {
   const cardContent = (
     <div className="home-glass-card group relative flex w-full cursor-pointer flex-col rounded-3xl p-3 pb-8 transition duration-300 hover:-translate-y-1 hover:shadow-2xl"
     >
-      {/* Image section */}
+      {/* Image section — بدون تیتر/توضیح روی تصویر */}
       <motion.div
         transition={{ duration: 0.3, ease: "easeOut" }}
         className="relative w-full aspect-[464/238] overflow-hidden rounded-[1.15rem]"
       >
-        <>
-            <Image
-              key={imageError ? fallbackImage : imageSrc}
-              src={imageError ? fallbackImage : imageSrc}
-              alt={data.subject}
-              fill
-              unoptimized={isUploadImage}
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
-              onError={() => setImageError(true)}
-            />
-            {/* Bookmark - Top Left */}
-            <div className="absolute top-2 left-2 z-10">
-              <BookmarkButton
-                type="course"
-                itemId={data.id}
-                className="size-8 bg-background/80 backdrop-blur-sm"
-              />
-            </div>
+        <Image
+          key={imageError ? fallbackImage : imageSrc}
+          src={imageError ? fallbackImage : imageSrc}
+          alt={data.subject}
+          fill
+          unoptimized={isUploadImage}
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          onError={() => setImageError(true)}
+        />
 
-            {/* Purchase Button - Bottom Right */}
-            <motion.button
-              onClick={handleAddToCart}
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileHover={{ scale: 1.05 }}
-              className="absolute bottom-2 right-2 bg-mySecondary text-foreground px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1 hover:shadow-lg transition"
-            >
-              <ShoppingCart size={14} />
-              {freeCourse ? "رایگان" : "خرید"}
-            </motion.button>
-        </>
+        {/* Purchase Button - Bottom Right */}
+        <motion.button
+          onClick={handleAddToCart}
+          initial={{ opacity: 0, scale: 0.8 }}
+          whileHover={{ scale: 1.05 }}
+          className="absolute bottom-2 right-2 bg-mySecondary text-foreground px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1 hover:shadow-lg transition"
+        >
+          <ShoppingCart size={14} />
+          {freeCourse ? "رایگان" : "خرید"}
+        </motion.button>
       </motion.div>
 
-      {/* Content */}
+      {/* Share + Bookmark زیر تصویر */}
+      <div className="mt-2.5 flex items-center justify-between gap-2 px-0.5">
+        <CourseActionIcons
+          courseId={data.id}
+          subject={data.subject}
+          description={data.description}
+          slug={data.slug}
+          tone="surface"
+        />
+        <RatingStars rating={data.rating || 2.5} />
+      </div>
+
+      {/* Content — بدون تیتر و توضیح */}
       <motion.div
         transition={{ duration: 0.3, ease: "easeOut" }}
-        className="flex-1 flex flex-col justify-between mt-2"
+        className="mt-1.5 flex flex-1 flex-col justify-between"
       >
-        <div className="flex justify-between items-center">
-          <h4 className="text-xs sm:text-sm text-muted-foreground dark:text-textSecondary font-bold">
-            {data.subject}
-          </h4>
-          <RatingStars rating={data.rating || 2.5} />
-        </div>
-
-        <div className="mt-1 flex flex-col">
-          <p className="font-bold text-sm sm:text-sm text-foreground dark:text-textPrimary line-clamp-2">
-            {data.description || "بدون توضیح"}
-          </p>
-
-          <div className="flex justify-end">
-            <Price price={data.price} discount={data.discountPercent || 0} />
-          </div>
+        <div className="flex justify-end">
+          <Price price={data.price} discount={data.discountPercent || 0} />
         </div>
 
         <motion.div
           initial={{ opacity: 1 }}
-          className="mt-1 pt-1.5 flex justify-between text-muted-foreground dark:text-textSecondary font-bold text-xs sm:text-sm border-t border-dashed border-border dark:border-borderColor"
+          className="mt-1 flex justify-between border-t border-dashed border-border pt-1.5 text-xs font-bold text-muted-foreground dark:border-borderColor dark:text-textSecondary sm:text-sm"
         >
           <span className="flex items-center gap-1">
             <Users size={16} className="text-foreground dark:text-textPrimary" />

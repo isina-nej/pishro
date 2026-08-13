@@ -70,6 +70,14 @@ function resolveClickSound(target: EventTarget | null): SoundId | null {
     return 'chat';
   }
 
+  if (interactive.closest('[data-sound-role="bookmark"],[data-sound="bookmark"]')) {
+    return 'bookmark';
+  }
+
+  if (interactive.closest('[data-sound-role="share"],[data-sound="share"]')) {
+    return 'share';
+  }
+
   if (
     interactive.getAttribute('role') === 'switch' ||
     interactive.getAttribute('aria-pressed') != null ||
