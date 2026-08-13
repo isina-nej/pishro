@@ -8,7 +8,8 @@ type CoinsHeroSectionProps = {
 };
 
 /**
- * V32 coins hero — title + coins reel scaled to fit the viewport.
+ * V32 coins hero — full-bleed reel; width/height track the viewport.
+ * Source aspect: 1280×448.
  */
 export default function CoinsHeroSection({
   title = "پیشرو در مسیر سرمایه گذاری هوشمند",
@@ -75,7 +76,6 @@ export default function CoinsHeroSection({
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-[#000412]"
       />
-      {/* Soft dual glow — teal continues into blue so the join never reads as a hard cut */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[72%] coins-hero-glow"
@@ -85,19 +85,15 @@ export default function CoinsHeroSection({
         className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-28 coins-hero-fade-bottom"
       />
 
-      {/* Title only — no panel/background so coins are not covered */}
-      <div className="relative z-[1] flex shrink-0 items-end justify-center bg-transparent px-4 pb-1 pt-[4.5rem] text-center sm:px-6 sm:pb-2 md:pt-24 md:pb-3">
+      <div className="relative z-[3] flex shrink-0 items-end justify-center bg-transparent px-4 pb-1 pt-[4.5rem] text-center sm:px-6 sm:pb-2 md:pt-24 md:pb-3">
         <h1 className="m-0 max-w-[22ch] bg-transparent text-[clamp(1.15rem,2.4vw+0.55rem,2.45rem)] font-black leading-[1.3] tracking-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]">
           {title}
         </h1>
       </div>
 
-      {/*
-        Scale reel to page: grow as wide as possible, shrink on small
-        screens, never crop coins (object-contain + max bounds).
-      */}
-      <div className="relative z-[1] flex min-h-0 w-full flex-1 items-end justify-center overflow-hidden bg-transparent">
-        <div className="coins-hero-reel relative flex h-full max-h-full w-full max-w-full items-end justify-center overflow-hidden bg-transparent">
+      {/* Full-bleed: width = 100vw, height follows aspect ratio with the page */}
+      <div className="relative z-[1] min-h-0 w-full flex-1 overflow-hidden bg-transparent">
+        <div className="coins-hero-reel absolute inset-x-0 bottom-0 w-full">
           <video
             ref={videoRef}
             src={videoSrc}
@@ -107,7 +103,7 @@ export default function CoinsHeroSection({
             playsInline
             preload="metadata"
             aria-hidden
-            className="pointer-events-none relative z-[1] h-auto max-h-full w-full max-w-full select-none bg-transparent object-contain object-bottom"
+            className="coins-hero-video pointer-events-none relative z-[1] select-none bg-transparent"
           />
         </div>
       </div>
