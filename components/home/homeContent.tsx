@@ -2,7 +2,6 @@
 
 import CoinsHeroSection from "./coinsHeroSection";
 import LandingOverlayServer from "./landingOverlay.server";
-import MobileLandingServer from "./mobileLanding.server";
 import MobileScrollSectionServer from "./mobileScrollSection.server";
 import CalculatorSection from "./calculatorSection";
 import CoursesSec from "@/components/utils/CoursesSec.server";
@@ -20,10 +19,6 @@ export default async function HomePageContent() {
 
       <div className="hidden lg:block">
         <LandingOverlayServer />
-      </div>
-
-      <div className="lg:hidden">
-        <MobileLandingServer />
       </div>
 
       <div className="home-ambient-stage">
