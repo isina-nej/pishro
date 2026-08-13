@@ -1046,3 +1046,35 @@ html.cursor-pressed .site-cursor-ring {
   height: 10px;
   opacity: 0.85;
 }
+
+@keyframes course-glass-shine {
+  0% {
+    transform: translateX(-120%) rotate(18deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.9;
+  }
+  45% {
+    transform: translateX(280%) rotate(18deg);
+    opacity: 0.55;
+  }
+  100% {
+    transform: translateX(280%) rotate(18deg);
+    opacity: 0;
+  }
+}
+
+.course-glass-price {
+  isolation: isolate;
+}
+
+.course-glass-shine {
+  animation: course-glass-shine 4.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .course-glass-shine {
+    animation: none !important;
+  }
+}

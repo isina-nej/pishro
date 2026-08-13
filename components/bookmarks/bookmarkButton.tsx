@@ -50,21 +50,27 @@ const BookmarkButton = ({
   return (
     <button
       type="button"
+      data-sound="bookmark"
       onClick={handleClick}
       disabled={toggle.isPending}
       aria-pressed={active}
       aria-label={active ? "حذف از لیست من" : "ذخیره در لیست من"}
       title={active ? "حذف از لیست من" : "ذخیره در لیست من"}
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-full border transition-colors disabled:opacity-60",
+        "inline-flex items-center justify-center gap-2 rounded-full border transition-all duration-300 disabled:opacity-60",
         showLabel ? "px-4 py-2 text-sm font-medium" : "size-9",
         active
-          ? "border-mySecondary/40 bg-mySecondary/10 text-mySecondary"
+          ? "border-mySecondary/40 bg-mySecondary/10 text-mySecondary scale-105"
           : "border-border bg-background/80 text-muted-foreground hover:text-foreground",
         className
       )}
     >
-      <Bookmark className={cn("size-4 shrink-0", active && "fill-current")} />
+      <Bookmark
+        className={cn(
+          "size-4 shrink-0 transition-transform duration-300",
+          active && "fill-current scale-110"
+        )}
+      />
       {showLabel && <span>{active ? "ذخیره شد" : "ذخیره"}</span>}
     </button>
   );

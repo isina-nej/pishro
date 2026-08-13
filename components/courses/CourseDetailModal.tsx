@@ -5,7 +5,6 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import {
   ShoppingCart,
-  Share2,
   BarChart3,
   Target,
   TrendingUp,
@@ -19,7 +18,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import RatingStars from "@/components/utils/RatingStars";
-import BookmarkButton from "@/components/bookmarks/bookmarkButton";
+import CourseActionIcons from "@/components/courses/CourseActionIcons";
 import { useCartStore } from "@/stores/cart-store";
 import toast from "react-hot-toast";
 import type { Course } from "@/lib/types/db";
@@ -58,6 +57,13 @@ function formatToman(price: number) {
   return new Intl.NumberFormat("fa-IR").format(Math.round(price));
 }
 
+/** شیشه شفاف با شکست نور — متن با سایه دوتایی در لایت و دارک خوانا می‌ماند */
+const glassPriceClass =
+  "course-glass-price relative inline-flex w-full items-center justify-center gap-3 overflow-hidden rounded-2xl border border-white/55 px-5 py-3.5 text-sm font-semibold text-white shadow-[0_10px_36px_rgba(0,0,0,0.28),inset_0_1px_0_rgba(255,255,255,0.75),inset_0_-1px_0_rgba(255,255,255,0.12)] backdrop-blur-2xl backdrop-saturate-150 transition-transform sm:w-auto " +
+  "bg-[linear-gradient(135deg,rgba(255,255,255,0.42)_0%,rgba(255,255,255,0.12)_28%,rgba(255,255,255,0.06)_48%,rgba(255,255,255,0.22)_72%,rgba(255,255,255,0.1)_100%)] " +
+  "[text-shadow:0_1px_2px_rgba(0,0,0,0.85),0_0_10px_rgba(0,0,0,0.35),0_0_1px_rgba(0,0,0,0.9)] " +
+  "dark:border-white/40 dark:bg-[linear-gradient(135deg,rgba(255,255,255,0.28)_0%,rgba(255,255,255,0.06)_35%,rgba(255,255,255,0.14)_55%,rgba(255,255,255,0.05)_100%)]";
+
 export default function CourseDetailModal({ course, trigger }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("about");
@@ -75,29 +81,6 @@ export default function CourseDetailModal({ course, trigger }: Props) {
     ...(course.category?.title ? [course.category.title] : []),
     ...((course.learningGoals as string[] | undefined) ?? []).slice(0, 3),
   ].slice(0, 4);
-
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: course.subject,
-          text: course.description ?? undefined,
-          url: window.location.href,
-        });
-      } catch {
-        // cancelled
-      }
-    } else {
-      try {
-        await navigator.clipboard.writeText(
-          `${course.subject}\n${window.location.origin}/courses/${course.slug || ""}`
-        );
-        toast.success("لینک کپی شد");
-      } catch (err) {
-        console.error("Error copying to clipboard:", err);
-      }
-    }
-  };
 
   const handleAddToCart = async () => {
     if (freeCourse) {
@@ -127,8 +110,8 @@ export default function CourseDetailModal({ course, trigger }: Props) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="flex max-h-screen w-full max-w-3xl flex-col overflow-hidden rounded-none border-border/40 bg-[#0C0F0D] p-0 text-foreground sm:max-h-[88vh] sm:w-[92vw] sm:rounded-[1.75rem]">
-        {/* Hero */}
+      <DialogContent className="flex max-h-screen w-full max-w-3xl flex-col overflow-hidden rounded-none border-border/40 bg-[#0C1410] p-0 text-foreground sm:max-h-[88vh] sm:w-[92vw] sm:rounded-[1.75rem] dark:bg-[#080E0A]">
+        {/* Hero — فقط تصویر، بدون تیتر/توضیح/آیکن روی عکس */}
         <div className="relative h-72 flex-shrink-0 overflow-hidden sm:h-80">
           {course.introVideoUrl ? (
             <video
@@ -155,10 +138,8 @@ export default function CourseDetailModal({ course, trigger }: Props) {
             </div>
           )}
 
-          {/* Soft vignette */}
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/35" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-black/25" />
 
-          {/* Top actions on image */}
           <div className="absolute start-4 top-4 z-10 flex items-center gap-2 sm:start-5 sm:top-5">
             {course.discountPercent ? (
               <span className="rounded-full bg-[#6B7F3C] px-3 py-1 text-xs font-bold text-white">
@@ -167,37 +148,9 @@ export default function CourseDetailModal({ course, trigger }: Props) {
             ) : null}
           </div>
 
-          <div className="absolute end-4 top-4 z-10 flex items-center gap-2 sm:end-5 sm:top-5">
-            <BookmarkButton
-              type="course"
-              itemId={course.id}
-              className="size-10 border-white/20 bg-white/12 text-white backdrop-blur-xl hover:text-white data-[active]:bg-[#6B7F3C]/90 [[aria-pressed=true]]:border-[#6B7F3C]/50 [[aria-pressed=true]]:bg-[#6B7F3C]/90 [[aria-pressed=true]]:text-white"
-            />
-            <motion.button
-              type="button"
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.96 }}
-              onClick={handleShare}
-              title="اشتراک"
-              className="flex size-10 items-center justify-center rounded-full border border-white/20 bg-white/12 text-white backdrop-blur-xl"
-            >
-              <Share2 size={17} strokeWidth={1.75} />
-            </motion.button>
-          </div>
-
-          {/* Bottom hero content */}
-          <div className="absolute inset-x-0 bottom-0 z-10 px-4 pb-4 pt-16 sm:px-6 sm:pb-5">
-            <h1 className="max-w-[90%] text-xl font-semibold tracking-tight text-white sm:text-2xl">
-              {course.subject}
-            </h1>
-            {course.description ? (
-              <p className="mt-1.5 line-clamp-2 max-w-xl text-sm leading-relaxed text-white/70">
-                {course.description}
-              </p>
-            ) : null}
-
-            <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-              {/* Categories — clearer, spaced, animated (جای قبلی سبد) */}
+          {/* پایین تصویر: دسته‌ها + قیمت شیشه‌ای */}
+          <div className="absolute inset-x-0 bottom-0 z-10 px-4 pb-4 pt-12 sm:px-6 sm:pb-5">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               {categoryChips.length > 0 ? (
                 <div className="flex flex-wrap items-center justify-start gap-x-3 gap-y-2.5 sm:gap-x-4">
                   {categoryChips.map((label, idx) => {
@@ -216,12 +169,12 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                         className="flex min-w-[4.5rem] flex-col items-center gap-1.5"
                       >
                         <span
-                          className="flex size-11 items-center justify-center rounded-2xl border border-white/20 bg-white/12 text-white shadow-lg backdrop-blur-xl"
+                          className="flex size-11 items-center justify-center rounded-2xl border border-white/35 bg-white/15 text-white shadow-lg backdrop-blur-xl"
                           style={{ boxShadow: `0 0 0 1px ${OLIVE}33` }}
                         >
                           <Icon size={18} strokeWidth={1.6} color="#C5D49A" />
                         </span>
-                        <span className="max-w-[5.5rem] text-center text-[10px] font-medium leading-snug text-white/85 sm:text-[11px]">
+                        <span className="max-w-[5.5rem] text-center text-[10px] font-medium leading-snug text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.8)] sm:text-[11px]">
                           {label}
                         </span>
                       </motion.div>
@@ -232,18 +185,27 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                 <div />
               )}
 
-              {/* Glass cart + price — سمت دیگر تصویر */}
               <motion.button
                 type="button"
+                data-sound="cart"
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleAddToCart}
                 disabled={!freeCourse && isInCart}
-                className="inline-flex w-full items-center justify-center gap-3 rounded-2xl border border-white/25 bg-white/15 px-5 py-3.5 text-sm font-semibold text-white shadow-[0_8px_32px_rgba(0,0,0,0.25)] backdrop-blur-2xl transition-transform sm:w-auto"
+                className={glassPriceClass}
               >
-                <ShoppingCart size={18} strokeWidth={1.75} />
-                <span className="flex flex-col items-start leading-tight">
-                  <span className="text-[11px] font-medium text-white/70">
+                {/* شکست نور متحرک */}
+                <span
+                  aria-hidden
+                  className="course-glass-shine pointer-events-none absolute inset-y-[-40%] start-[-35%] w-[42%] rotate-[18deg] bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.55),rgba(255,255,255,0.08),transparent)] opacity-80 mix-blend-screen"
+                />
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_80%_at_12%_0%,rgba(255,255,255,0.45),transparent_45%),radial-gradient(90%_70%_at_88%_100%,rgba(180,220,255,0.18),transparent_50%)]"
+                />
+                <ShoppingCart size={18} strokeWidth={1.75} className="relative z-[1] drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)]" />
+                <span className="relative z-[1] flex flex-col items-start leading-tight">
+                  <span className="text-[11px] font-medium text-white/95">
                     {freeCourse
                       ? "ثبت‌نام رایگان"
                       : isInCart
@@ -255,7 +217,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                   </span>
                 </span>
                 {course.discountPercent && !freeCourse ? (
-                  <span className="text-xs text-white/45 line-through">
+                  <span className="relative z-[1] text-xs text-white/70 line-through [text-shadow:0_1px_2px_rgba(0,0,0,0.85)]">
                     {formatToman(course.price)}
                   </span>
                 ) : null}
@@ -264,8 +226,22 @@ export default function CourseDetailModal({ course, trigger }: Props) {
           </div>
         </div>
 
+        {/* آیکن اشتراک و بوکمارک — زیر تصویر */}
+        <div className="flex items-center justify-between gap-3 border-b border-white/8 bg-[#0C1410]/95 px-5 py-3 sm:px-7 dark:bg-[#080E0A]">
+          <CourseActionIcons
+            courseId={course.id}
+            subject={course.subject}
+            description={course.description}
+            slug={course.slug}
+            tone="on-media"
+          />
+          <h2 className="max-w-[70%] truncate text-end text-sm font-semibold text-white/90 sm:text-base">
+            {course.subject}
+          </h2>
+        </div>
+
         {/* Body */}
-        <div className="flex-1 overflow-y-auto px-5 py-5 sm:px-7 sm:py-6">
+        <div className="flex-1 overflow-y-auto bg-[#0C1410] px-5 py-5 sm:px-7 sm:py-6 dark:bg-[#080E0A]">
           {course.rating ? (
             <div className="mb-4 flex items-center gap-2">
               <RatingStars rating={course.rating} />
