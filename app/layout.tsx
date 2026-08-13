@@ -148,7 +148,7 @@ export default async function RootLayout({
         />
         <script
           dangerouslySetInnerHTML={{
-            __html: `setTimeout(function(){var s=document.getElementById('site-boot-splash');if(s&&!s.classList.contains('is-done')){s.classList.add('is-done');setTimeout(function(){s.remove()},500)}},9000);`,
+            __html: `(function(){function d(){var s=document.getElementById('site-boot-splash');if(!s||s.classList.contains('is-done'))return;s.classList.add('is-done');setTimeout(function(){s.remove()},320)}if(document.readyState==='complete'){d()}else{window.addEventListener('load',d,{once:true})}setTimeout(d,2200)})();`,
           }}
         />
         <BootSplashDismiss />

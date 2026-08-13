@@ -4,7 +4,6 @@ import Navbar from "@/components/navbar/navbar";
 import Footer from "@/components/footer";
 import HiddenPageGuard from "@/components/site/HiddenPageGuard";
 import PublicChromeExtras from "@/components/site/PublicChromeExtras";
-import RouteProgressBar from "@/components/navigation/RouteProgressBar";
 import { VisibilityProvider } from "@/components/site/VisibilityProvider";
 import { SessionProvider } from "next-auth/react";
 import { getPublicSiteChrome } from "@/lib/services/settings-service";
@@ -31,7 +30,6 @@ export default async function RoutesLayout({
   return (
     <SessionProvider>
       <VisibilityProvider hiddenPages={hidden}>
-        <RouteProgressBar />
         {showNavbar && (
           <Navbar
             logoUrl={chrome.logoUrl}
