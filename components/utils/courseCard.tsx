@@ -142,7 +142,7 @@ const CourseCard = ({ data, link: _link }: CourseCardProps) => {
       <div className="absolute -bottom-5 w-full flex justify-center pl-6">
         <button
           onClick={handleAddToCart}
-          className="w-48 rounded-full bg-[#0B3D2E] py-2 text-sm font-bold text-foreground shadow-lg transition hover:-translate-y-0.5 hover:bg-[#1A6B45] sm:text-base"
+          className="w-48 rounded-full bg-[#6B7F3C] py-2 text-sm font-bold text-white shadow-lg transition-transform duration-300 ease-out hover:scale-105 hover:bg-[#6B7F3C] active:scale-[1.02] sm:text-base"
         >
           {freeCourse ? "ثبت‌نام رایگان" : "افزودن به سبد خرید"}
         </button>

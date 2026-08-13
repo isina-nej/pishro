@@ -17,17 +17,17 @@ interface TestimonialCardProps {
 
 const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
   return (
-    <div className="flex-shrink-0 w-96 px-4 h-48">
-      <div className="home-glass-card flex h-full flex-col justify-between rounded-3xl p-6 transition duration-300 hover:-translate-y-1 hover:shadow-2xl">
+    <div className="h-auto w-96 flex-shrink-0 self-stretch px-4">
+      <div className="home-glass-card flex h-full min-h-48 flex-col justify-between rounded-3xl p-6 transition duration-300 hover:-translate-y-1 hover:shadow-2xl">
         {/* Star Rating */}
-        <div className="flex gap-1 mb-4">
+        <div className="mb-4 flex gap-1">
           {Array.from({ length: 5 }).map((_, i) => (
             <svg
               key={i}
-              className={`w-4 h-4 ${
+              className={`h-4 w-4 ${
                 i < testimonial.rating
-                  ? "text-premium fill-premium"
-                  : "text-muted-foreground/40 fill-muted-foreground/40"
+                  ? "fill-premium text-premium"
+                  : "fill-muted-foreground/40 text-muted-foreground/40"
               }`}
               viewBox="0 0 20 20"
             >
@@ -36,14 +36,14 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
           ))}
         </div>
 
-        {/* Review Text */}
-        <p className="mb-6 line-clamp-4 flex-grow text-sm leading-relaxed text-muted-foreground">
+        {/* Review Text — full comment, no clamp */}
+        <p className="mb-6 flex-grow whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
           «{testimonial.content}»
         </p>
 
         {/* User Info */}
         <div className="flex items-center gap-3 border-t border-border pt-4">
-          <div className="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-premium/20">
+          <div className="relative h-10 w-10 overflow-hidden rounded-full ring-2 ring-premium/20">
             <Image
               src={testimonial.avatar}
               alt={testimonial.name}
@@ -51,7 +51,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
               className="object-cover"
             />
           </div>
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-semibold text-foreground">
               {testimonial.name}
             </p>
