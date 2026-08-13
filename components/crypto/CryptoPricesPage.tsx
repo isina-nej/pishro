@@ -506,7 +506,7 @@ export default function CryptoPricesPage({
         {show('crypto:header') && (
         <div className="mb-7 flex items-center justify-between gap-4 rounded-3xl border border-border/60 bg-card/80 px-4 py-3 shadow-lg shadow-primary/5 backdrop-blur-2xl sm:px-5">
           <div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary shadow-lg shadow-primary/25"><CandlestickChart className="h-5 w-5 text-primary-foreground" /></div><div><p className="text-sm font-black tracking-tight text-foreground">پیشرو / بازارها</p><p className="hidden text-[10px] text-muted-foreground sm:block">داده زنده بازار دارایی‌های دیجیتال</p></div></div>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground"><button type="button" onClick={() => void loadInitial(true)} disabled={refreshing || initialLoading} className="flex items-center gap-1.5 rounded-full border border-border/60 bg-background/60 px-3 py-1.5 transition hover:scale-105 hover:bg-background disabled:opacity-50"><RefreshCw className={`h-3.5 w-3.5 ${refreshing ? 'animate-spin' : ''}`} />به‌روزرسانی</button><span className="hidden items-center gap-1.5 rounded-full border border-primary/25 bg-primary/10 px-3 py-1.5 text-foreground sm:flex"><span className={`h-1.5 w-1.5 rounded-full bg-primary ${initialLoading || loadingMore ? 'animate-pulse' : ''}`} />{error && !hasMarket ? 'آخرین داده موجود' : initialLoading || loadingMore ? 'در حال قیمت‌گذاری' : 'بازار فعال'}</span></div>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground"><button type="button" onClick={() => void loadInitial(true)} disabled={refreshing || initialLoading} className="flex items-center gap-1.5 rounded-full border border-border/60 bg-background/60 px-3 py-1.5 transition hover:scale-105 hover:bg-background disabled:opacity-50"><RefreshCw className={`h-3.5 w-3.5 ${refreshing ? 'animate-spin' : ''}`} />به‌روزرسانی</button><span className="hidden items-center gap-1.5 rounded-full border border-primary/25 bg-primary/10 px-3 py-1.5 text-foreground sm:flex"><span className={`h-1.5 w-1.5 rounded-full bg-primary ${initialLoading || loadingMore ? 'animate-pulse' : ''}`} />{error && !hasMarket ? 'آخرین داده موجود' : initialLoading || loadingMore ? <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" aria-label="بارگذاری" /> : 'بازار فعال'}</span></div>
         </div>
         )}
 
@@ -655,9 +655,8 @@ export default function CryptoPricesPage({
 
                 <div ref={sentinelRef} className="mt-4 flex min-h-10 items-center justify-center">
                   {loadingMore || (initialLoading && assets.length > 0) ? (
-                    <p className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                      در حال قیمت‌گذاری ارز بعدی...
+                    <p className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
+                      <Loader2 className="h-4 w-4 animate-spin text-primary" aria-label="بارگذاری" />
                     </p>
                   ) : hasMore && assets.length > 0 ? (
                     <p className="text-[11px] text-muted-foreground">برای دیدن ارزهای بیشتر اسکرول کنید</p>
