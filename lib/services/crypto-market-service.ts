@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import type {
   CryptoGlobalMarket,
   CryptoMarketAsset,
@@ -16,6 +18,7 @@ const ENRICHMENT_TIMEOUT_MS = 4_000;
 const CACHE_TTL_MS = 60_000;
 const STALE_CACHE_TTL_MS = 30 * 60_000;
 const WARMER_INTERVAL_MS = 55_000;
+const DISK_CACHE_PATH = path.join(process.cwd(), '.cache', 'crypto-market-snapshot.json');
 
 type JsonRecord = Record<string, unknown>;
 
@@ -26,6 +29,8 @@ interface ProviderState {
   coinlore: ProviderStatus;
   coincap: ProviderStatus;
   nobitex: ProviderStatus;
+  bitpin: ProviderStatus;
+  wallex: ProviderStatus;
 }
 
 interface MarketSnapshot {
@@ -193,12 +198,318 @@ function coincapBaseUrl() {
   return process.env.COINCAP_API_URL || 'https://api.coincap.io/v2';
 }
 
+function bitpinBaseUrl() {
+  return process.env.BITPIN_API_URL || 'https://api.bitpin.ir/api/v1';
+}
+
+function wallexBaseUrl() {
+  return process.env.WALLEX_API_URL || 'https://api.wallex.ir/v1';
+}
+
 function binanceBaseUrl() {
   return process.env.BINANCE_API_URL || 'https://api.binance.com/api/v3';
 }
 
 function nobitexBaseUrl() {
   return process.env.NOBITEX_API_URL || 'https://apiv2.nobitex.ir';
+}
+
+function truncateSparkline(values: number[], maxPoints = 48): number[] {
+  if (values.length <= maxPoints) return values;
+  const step = Math.ceil(values.length / maxPoints);
+  return values.filter((_, index) => index % step === 0).slice(-maxPoints);
+}
+
+function diskCacheEnabled() {
+  return process.env.CRYPTO_DISK_CACHE !== '0' && process.env.NODE_ENV !== 'test';
+}
+
+function readDiskSnapshot(): MarketSnapshot | null {
+  if (!diskCacheEnabled()) return null;
+  try {
+    if (!fs.existsSync(DISK_CACHE_PATH)) return null;
+    const raw = fs.readFileSync(DISK_CACHE_PATH, 'utf8');
+    const parsed = JSON.parse(raw) as MarketSnapshot;
+    if (!parsed?.assets?.length) return null;
+    return parsed;
+  } catch (error) {
+    console.warn(
+      '[crypto] Disk cache read failed:',
+      error instanceof Error ? error.message : error
+    );
+    return null;
+  }
+}
+
+function writeDiskSnapshot(snapshot: MarketSnapshot) {
+  if (!diskCacheEnabled()) return;
+  if (!snapshot.assets.length) return;
+  try {
+    fs.mkdirSync(path.dirname(DISK_CACHE_PATH), { recursive: true });
+    const slim: MarketSnapshot = {
+      ...snapshot,
+      assets: snapshot.assets.map((asset) => ({
+        ...asset,
+        sparkline: truncateSparkline(asset.sparkline),
+      })),
+    };
+    fs.writeFileSync(DISK_CACHE_PATH, JSON.stringify(slim));
+  } catch (error) {
+    console.warn(
+      '[crypto] Disk cache write failed:',
+      error instanceof Error ? error.message : error
+    );
+  }
+}
+
+function baseAssetShell(
+  symbol: string,
+  name: string,
+  rank: number,
+  market: MarketDataSource
+): CryptoMarketAsset {
+  return {
+    id: canonicalId(symbol, name),
+    name,
+    symbol: symbol.toUpperCase(),
+    imageUrl: null,
+    rank,
+    priceUsd: 0,
+    priceIrr: null,
+    priceIrt: null,
+    change24h: 0,
+    change7d: 0,
+    change30d: 0,
+    volume24h: 0,
+    marketCap: 0,
+    fullyDilutedValuation: null,
+    high24h: null,
+    low24h: null,
+    athUsd: null,
+    athChangePercentage: null,
+    athDate: null,
+    atlUsd: null,
+    circulatingSupply: null,
+    totalSupply: null,
+    maxSupply: null,
+    sparkline: [],
+    sources: { market, price: market, local: null },
+  };
+}
+
+async function loadBitpin(): Promise<{
+  assets: CryptoMarketAsset[];
+  global: CryptoGlobalMarket;
+} | null> {
+  try {
+    const tickers = await fetchJson<
+      Array<{
+        symbol: string;
+        price: string | number;
+        daily_change_price?: string | number;
+        low?: string | number;
+        high?: string | number;
+      }>
+    >(`${bitpinBaseUrl()}/mkt/tickers/`);
+
+    const usdtIrt = numberOrNull(
+      tickers.find((item) => item.symbol === 'USDT_IRT')?.price
+    );
+    const bySymbol = new Map<string, CryptoMarketAsset>();
+
+    for (const row of tickers) {
+      const [base, quote] = row.symbol.split('_');
+      if (!base || !quote) continue;
+      const symbol = base.toUpperCase();
+      if (symbol === 'USDT' && quote !== 'IRT') continue;
+
+      const existing =
+        bySymbol.get(symbol) ||
+        baseAssetShell(symbol, symbol, bySymbol.size + 1, 'bitpin');
+      const price = numberOrZero(row.price);
+      const change = numberOrZero(row.daily_change_price);
+
+      if (quote === 'USDT') {
+        existing.priceUsd = price;
+        existing.change24h = change;
+        existing.low24h = numberOrNull(row.low);
+        existing.high24h = numberOrNull(row.high);
+        existing.sources.price = 'bitpin';
+        existing.sources.market = 'bitpin';
+      } else if (quote === 'IRT') {
+        existing.priceIrt = price;
+        existing.priceIrr = price * 10;
+        existing.sources.local = 'bitpin';
+        if (!existing.priceUsd && usdtIrt) {
+          existing.priceUsd = price / usdtIrt;
+          existing.sources.price = 'bitpin';
+          existing.sources.market = 'bitpin';
+        }
+        if (!existing.change24h) existing.change24h = change;
+      }
+      bySymbol.set(symbol, existing);
+    }
+
+    // Prefer majors ordering when rank was sequential
+    const assets = Array.from(bySymbol.values())
+      .filter((asset) => asset.priceUsd > 0 || asset.priceIrt)
+      .map((asset, index) => ({
+        ...asset,
+        rank: CANONICAL_IDS[asset.symbol]
+          ? NOBITEX_FALLBACK_ASSETS.find((item) => item.symbol === asset.symbol)
+              ?.rank || index + 1
+          : index + 50,
+        name:
+          NOBITEX_FALLBACK_ASSETS.find((item) => item.symbol === asset.symbol)
+            ?.name || asset.name,
+      }))
+      .sort((a, b) => a.rank - b.rank)
+      .slice(0, CATALOGUE_SIZE);
+
+    if (!assets.length) return null;
+    const btc = assets.find((asset) => asset.symbol === 'BTC');
+    return {
+      assets,
+      global: {
+        marketCap: 0,
+        volume24h: 0,
+        btcDominance: 0,
+        marketCapChange24h: btc?.change24h ?? 0,
+        activeCryptocurrencies: assets.length,
+        source: 'bitpin',
+      },
+    };
+  } catch (error) {
+    console.warn('[crypto] Bitpin unavailable:', error instanceof Error ? error.message : error);
+    return null;
+  }
+}
+
+async function loadWallex(): Promise<{
+  assets: CryptoMarketAsset[];
+  global: CryptoGlobalMarket;
+} | null> {
+  try {
+    const payload = await fetchJson<{
+      success?: boolean;
+      result?: {
+        symbols?: Record<
+          string,
+          {
+            symbol?: string;
+            baseAsset?: string;
+            quoteAsset?: string;
+            enBaseAsset?: string;
+            faBaseAsset?: string;
+            stats?: JsonRecord;
+          }
+        >;
+      };
+    }>(`${wallexBaseUrl()}/markets`);
+
+    const symbols = payload.result?.symbols || {};
+    const usdtTmn = numberOrNull(
+      (symbols.USDTTMN?.stats || symbols.USDTIRT?.stats)?.lastPrice
+    );
+    const bySymbol = new Map<string, CryptoMarketAsset>();
+
+    for (const market of Object.values(symbols)) {
+      const base = (market.baseAsset || '').toUpperCase();
+      const quote = (market.quoteAsset || '').toUpperCase();
+      if (!base || !['USDT', 'TMN', 'IRT'].includes(quote)) continue;
+      if (base === 'USDT' && quote !== 'TMN' && quote !== 'IRT') continue;
+
+      const stats = market.stats || {};
+      const lastPrice = numberOrZero(stats.lastPrice);
+      const change24h = numberOrZero(stats['24h_ch']);
+      const change7d = numberOrZero(stats['7d_ch']);
+      const existing =
+        bySymbol.get(base) ||
+        baseAssetShell(
+          base,
+          market.enBaseAsset || market.faBaseAsset || base,
+          bySymbol.size + 1,
+          'wallex'
+        );
+
+      if (quote === 'USDT') {
+        existing.priceUsd = lastPrice;
+        existing.change24h = change24h;
+        existing.change7d = change7d;
+        existing.volume24h = numberOrZero(stats['24h_quoteVolume']);
+        existing.high24h = numberOrNull(stats['24h_highPrice']);
+        existing.low24h = numberOrNull(stats['24h_lowPrice']);
+        existing.imageUrl =
+          (market as { baseAsset_png_icon?: string }).baseAsset_png_icon ||
+          existing.imageUrl;
+        existing.sources.market = 'wallex';
+        existing.sources.price = 'wallex';
+      } else {
+        // TMN/IRT are toman on Wallex
+        existing.priceIrt = lastPrice;
+        existing.priceIrr = lastPrice * 10;
+        existing.sources.local = 'wallex';
+        if (!existing.priceUsd && usdtTmn) {
+          existing.priceUsd = lastPrice / usdtTmn;
+          existing.sources.price = 'wallex';
+          existing.sources.market = 'wallex';
+        }
+        if (!existing.change24h) existing.change24h = change24h;
+        if (!existing.change7d) existing.change7d = change7d;
+      }
+      bySymbol.set(base, existing);
+    }
+
+    const assets = Array.from(bySymbol.values())
+      .filter((asset) => asset.priceUsd > 0 || asset.priceIrt)
+      .map((asset, index) => ({
+        ...asset,
+        rank:
+          NOBITEX_FALLBACK_ASSETS.find((item) => item.symbol === asset.symbol)
+            ?.rank || index + 50,
+      }))
+      .sort((a, b) => a.rank - b.rank)
+      .slice(0, CATALOGUE_SIZE);
+
+    if (!assets.length) return null;
+    const btc = assets.find((asset) => asset.symbol === 'BTC');
+    return {
+      assets,
+      global: {
+        marketCap: 0,
+        volume24h: assets.reduce((sum, asset) => sum + asset.volume24h, 0),
+        btcDominance: 0,
+        marketCapChange24h: btc?.change24h ?? 0,
+        activeCryptocurrencies: assets.length,
+        source: 'wallex',
+      },
+    };
+  } catch (error) {
+    console.warn('[crypto] Wallex unavailable:', error instanceof Error ? error.message : error);
+    return null;
+  }
+}
+
+function applyLocalFromIrAssets(
+  asset: CryptoMarketAsset,
+  irBySymbol: Map<string, CryptoMarketAsset>
+): CryptoMarketAsset {
+  const local = irBySymbol.get(asset.symbol);
+  if (!local) return asset;
+  return {
+    ...asset,
+    priceIrt: asset.priceIrt ?? local.priceIrt,
+    priceIrr: asset.priceIrr ?? local.priceIrr,
+    priceUsd: asset.priceUsd || local.priceUsd,
+    change24h: asset.change24h || local.change24h,
+    change7d: asset.change7d || local.change7d,
+    imageUrl: asset.imageUrl || local.imageUrl,
+    sources: {
+      ...asset.sources,
+      local: asset.sources.local ?? local.sources.local,
+      price: asset.priceUsd ? asset.sources.price : local.sources.price,
+    },
+  };
 }
 
 function providerHeaders(apiKey?: string) {
@@ -213,6 +524,8 @@ function emptyProviders(): ProviderState {
     coinlore: 'unavailable',
     coincap: 'unavailable',
     nobitex: 'unavailable',
+    bitpin: 'unavailable',
+    wallex: 'unavailable',
   };
 }
 
@@ -846,19 +1159,24 @@ function pickGlobal(
 }
 
 async function buildCatalogueSnapshot(): Promise<MarketSnapshot> {
-  // Hit free providers in parallel — whichever answers on an IR host wins.
-  const [coinGecko, coinPaprika, coinLore, coinCap] = await Promise.all([
-    loadCoinGecko(),
-    loadCoinPaprika(),
-    loadCoinLore(),
-    loadCoinCap(),
-  ]);
+  // Global + Iranian sources in parallel — IR exchanges keep the page alive under sanctions.
+  const [coinGecko, coinPaprika, coinLore, coinCap, bitpin, wallex] =
+    await Promise.all([
+      loadCoinGecko(),
+      loadCoinPaprika(),
+      loadCoinLore(),
+      loadCoinCap(),
+      loadBitpin(),
+      loadWallex(),
+    ]);
 
   const merged = mergeBySymbol([
     coinGecko?.assets || [],
     coinCap?.assets || [],
     coinPaprika?.assets || [],
     coinLore?.assets || [],
+    bitpin?.assets || [],
+    wallex?.assets || [],
   ]);
 
   const providers = emptyProviders();
@@ -866,12 +1184,24 @@ async function buildCatalogueSnapshot(): Promise<MarketSnapshot> {
   providers.coinpaprika = coinPaprika ? 'live' : 'unavailable';
   providers.coinlore = coinLore ? 'live' : 'unavailable';
   providers.coincap = coinCap ? 'live' : 'unavailable';
+  providers.bitpin = bitpin ? 'live' : 'unavailable';
+  providers.wallex = wallex ? 'live' : 'unavailable';
+
+  const irBySymbol = new Map<string, CryptoMarketAsset>();
+  for (const asset of [...(bitpin?.assets || []), ...(wallex?.assets || [])]) {
+    if (!irBySymbol.has(asset.symbol)) irBySymbol.set(asset.symbol, asset);
+  }
 
   if (!merged.length) {
     const nobitexOnly = await loadNobitexMarket();
     if (nobitexOnly) {
-      console.warn('[crypto] Serving Nobitex-only snapshot; all USD market APIs failed');
+      console.warn('[crypto] Serving Nobitex-only snapshot; all market APIs failed');
       return nobitexOnly;
+    }
+    const disk = readDiskSnapshot();
+    if (disk) {
+      console.warn('[crypto] Serving disk snapshot; all live providers failed');
+      return disk;
     }
     console.warn('[crypto] All market providers unavailable');
     return emptyMarketSnapshot();
@@ -887,8 +1217,10 @@ async function buildCatalogueSnapshot(): Promise<MarketSnapshot> {
   providers.nobitex = nobitex ? 'live' : 'unavailable';
 
   const assets = merged.map((asset) => {
-    const withPrice = applyBinancePrices(asset, binancePrices);
-    return nobitex ? applyNobitexPrices(withPrice, nobitex) : withPrice;
+    let next = applyBinancePrices(asset, binancePrices);
+    if (nobitex) next = applyNobitexPrices(next, nobitex);
+    next = applyLocalFromIrAssets(next, irBySymbol);
+    return { ...next, sparkline: truncateSparkline(next.sparkline) };
   });
 
   const primarySource: MarketDataSource = coinGecko
@@ -899,12 +1231,16 @@ async function buildCatalogueSnapshot(): Promise<MarketSnapshot> {
         ? 'coinpaprika'
         : coinLore
           ? 'coinlore'
-          : 'nobitex';
+          : bitpin
+            ? 'bitpin'
+            : wallex
+              ? 'wallex'
+              : 'nobitex';
 
   return {
     assets,
     global: {
-      ...pickGlobal([coinGecko, coinCap, coinPaprika, coinLore]),
+      ...pickGlobal([coinGecko, coinCap, coinPaprika, coinLore, bitpin, wallex]),
       source: primarySource,
     },
     providers,
@@ -920,18 +1256,39 @@ async function refreshCatalogue(force = false): Promise<MarketSnapshot> {
   if (!catalogueInflight) {
     catalogueInflight = buildCatalogueSnapshot()
       .then((snapshot) => {
-        const stamped = Date.now();
-        catalogueCache = {
-          expiresAt: stamped + CACHE_TTL_MS,
-          staleUntil: stamped + STALE_CACHE_TTL_MS,
-          value: snapshot,
-        };
+        if (snapshot.assets.length) {
+          const stamped = Date.now();
+          catalogueCache = {
+            expiresAt: stamped + CACHE_TTL_MS,
+            staleUntil: stamped + STALE_CACHE_TTL_MS,
+            value: snapshot,
+          };
+          writeDiskSnapshot(snapshot);
+          return snapshot;
+        }
+
+        const disk = readDiskSnapshot();
+        if (disk) {
+          console.warn('[crypto] Live snapshot empty; using disk cache');
+          const stamped = Date.now();
+          catalogueCache = {
+            expiresAt: stamped + Math.min(CACHE_TTL_MS, 15_000),
+            staleUntil: stamped + STALE_CACHE_TTL_MS,
+            value: disk,
+          };
+          return disk;
+        }
         return snapshot;
       })
       .catch((error) => {
         if (catalogueCache && catalogueCache.staleUntil > Date.now()) {
           console.warn('[crypto] Serving stale catalogue after refresh failure');
           return catalogueCache.value;
+        }
+        const disk = readDiskSnapshot();
+        if (disk) {
+          console.warn('[crypto] Serving disk catalogue after refresh failure');
+          return disk;
         }
         throw error;
       })
@@ -947,7 +1304,7 @@ async function refreshCatalogue(force = false): Promise<MarketSnapshot> {
       '[crypto] Catalogue refresh failed:',
       error instanceof Error ? error.message : error
     );
-    return emptyMarketSnapshot();
+    return readDiskSnapshot() || emptyMarketSnapshot();
   }
 }
 

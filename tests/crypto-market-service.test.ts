@@ -6,6 +6,9 @@ import {
   parseCryptoMarketQuery,
 } from '@/lib/services/crypto-market-service';
 
+process.env.CRYPTO_DISK_CACHE = '0';
+process.env.NODE_ENV = 'test';
+
 const originalFetch = global.fetch;
 const originalEnv = {
   COINGECKO_API_URL: process.env.COINGECKO_API_URL,
@@ -14,6 +17,8 @@ const originalEnv = {
   COINCAP_API_URL: process.env.COINCAP_API_URL,
   BINANCE_API_URL: process.env.BINANCE_API_URL,
   NOBITEX_API_URL: process.env.NOBITEX_API_URL,
+  BITPIN_API_URL: process.env.BITPIN_API_URL,
+  WALLEX_API_URL: process.env.WALLEX_API_URL,
 };
 
 function json(data: unknown) {
@@ -64,6 +69,8 @@ test('paginated market responses expose hasMore metadata from a shared catalogue
   process.env.COINCAP_API_URL = 'https://cc-page.test';
   process.env.BINANCE_API_URL = 'https://binance-page.test';
   process.env.NOBITEX_API_URL = 'https://nobitex-page.test';
+  process.env.BITPIN_API_URL = 'https://bitpin-page.test';
+  process.env.WALLEX_API_URL = 'https://wallex-page.test';
 
   const catalogue = Array.from({ length: 5 }, (_, index) => ({
     id: `coin-${index + 1}`,
@@ -115,6 +122,8 @@ test('uses CoinGecko market data, Binance price, and Nobitex toman price', async
   process.env.COINCAP_API_URL = 'https://cc.test';
   process.env.BINANCE_API_URL = 'https://binance.test';
   process.env.NOBITEX_API_URL = 'https://nobitex.test';
+  process.env.BITPIN_API_URL = 'https://bitpin.test';
+  process.env.WALLEX_API_URL = 'https://wallex.test';
   global.fetch = async (input) => {
     const url = String(input);
     if (url.includes('cg.test/coins/markets')) {
@@ -173,6 +182,8 @@ test('an asset-detail request does not poison the market-list cache', async () =
   process.env.COINCAP_API_URL = 'https://cc2.test';
   process.env.BINANCE_API_URL = 'https://binance2.test';
   process.env.NOBITEX_API_URL = 'https://nobitex2.test';
+  process.env.BITPIN_API_URL = 'https://bitpin2.test';
+  process.env.WALLEX_API_URL = 'https://wallex2.test';
 
   const catalogue = [
     { id: 'bitcoin', symbol: 'btc', name: 'Bitcoin', market_cap_rank: 1, current_price: 100, market_cap: 300 },
@@ -216,6 +227,8 @@ test('deduplicates the same symbol from two providers into one row', async () =>
   process.env.COINCAP_API_URL = 'https://cc-dup.test';
   process.env.BINANCE_API_URL = 'https://binance-dup.test';
   process.env.NOBITEX_API_URL = 'https://nobitex-dup.test';
+  process.env.BITPIN_API_URL = 'https://bitpin-dup.test';
+  process.env.WALLEX_API_URL = 'https://wallex-dup.test';
 
   global.fetch = async (input) => {
     const url = String(input);
@@ -279,6 +292,8 @@ test('falls back to CoinPaprika when CoinGecko is unavailable', async () => {
   process.env.COINCAP_API_URL = 'https://cc-fail.test';
   process.env.BINANCE_API_URL = 'https://binance-fail.test';
   process.env.NOBITEX_API_URL = 'https://nobitex-fail.test';
+  process.env.BITPIN_API_URL = 'https://bitpin-fail.test';
+  process.env.WALLEX_API_URL = 'https://wallex-fail.test';
   global.fetch = async (input) => {
     const url = String(input);
     if (
@@ -333,6 +348,8 @@ test('falls back to Nobitex when all USD market APIs are unavailable', async () 
   process.env.COINCAP_API_URL = 'https://cc-down.test';
   process.env.BINANCE_API_URL = 'https://binance-down.test';
   process.env.NOBITEX_API_URL = 'https://nobitex-only.test';
+  process.env.BITPIN_API_URL = 'https://bitpin-down.test';
+  process.env.WALLEX_API_URL = 'https://wallex-down.test';
   global.fetch = async (input) => {
     const url = String(input);
     if (
@@ -374,6 +391,8 @@ test('returns an empty success payload when every provider is down', async () =>
   process.env.COINCAP_API_URL = 'https://cc-all-down.test';
   process.env.BINANCE_API_URL = 'https://binance-all-down.test';
   process.env.NOBITEX_API_URL = 'https://nobitex-all-down.test';
+  process.env.BITPIN_API_URL = 'https://bitpin-all-down.test';
+  process.env.WALLEX_API_URL = 'https://wallex-all-down.test';
   global.fetch = async () => fail();
 
   const result = await getCryptoMarketData({ forceRefresh: true });

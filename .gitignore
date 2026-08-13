@@ -69,3 +69,5 @@ npm-install.log
 .mysql-run/
 .mysql-log/
 .mysql-*/
+
+.cache

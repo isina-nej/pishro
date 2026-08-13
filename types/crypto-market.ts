@@ -3,9 +3,11 @@ export type MarketDataSource =
   | 'coinpaprika'
   | 'coinlore'
   | 'coincap'
-  | 'nobitex';
+  | 'nobitex'
+  | 'bitpin'
+  | 'wallex';
 export type PriceDataSource = 'binance' | MarketDataSource;
-export type LocalPriceSource = 'nobitex-direct' | 'nobitex-usdt' | null;
+export type LocalPriceSource = 'nobitex-direct' | 'nobitex-usdt' | 'bitpin' | 'wallex' | null;
 export type ProviderStatus = 'live' | 'fallback' | 'standby' | 'unavailable';
 
 export interface CryptoMarketAsset {
@@ -68,6 +70,8 @@ export interface CryptoMarketResponse {
     coinlore: ProviderStatus;
     coincap: ProviderStatus;
     nobitex: ProviderStatus;
+    bitpin: ProviderStatus;
+    wallex: ProviderStatus;
   };
 }
 
