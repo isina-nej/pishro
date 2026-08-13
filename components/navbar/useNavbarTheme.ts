@@ -2,11 +2,11 @@ import { useMemo } from "react";
 import { usePathname } from "next/navigation";
 
 /**
- * Pages with hero media where the desktop navbar uses a dark top shadow
- * and light text (same treatment as the home hero).
- * Excludes `/skyroom-classes` (همایش) by design.
+ * Pages whose first viewport is dark media (video/photo) so the floating
+ * navbar should use light text. Light content pages must NOT be listed here
+ * or the bar becomes invisible in light mode.
  */
-const DARK_NAV_PATHS = new Set([
+const DARK_HERO_NAV_PATHS = new Set([
   "/",
   "/business-consulting",
   "/investment-plans",
@@ -15,7 +15,6 @@ const DARK_NAV_PATHS = new Set([
   "/faq",
   "/courses",
   "/news",
-  "/crypto-prices",
 ]);
 
 /** همایش — keep its own overlays / navbar styling */
@@ -28,7 +27,7 @@ export const useIsDarkNavbar = () => {
 
   return useMemo(() => {
     if (isSkyroomPath(pathname)) return false;
-    return DARK_NAV_PATHS.has(pathname ?? "/");
+    return DARK_HERO_NAV_PATHS.has(pathname ?? "/");
   }, [pathname]);
 };
 
