@@ -1,10 +1,6 @@
 import type { Metadata } from 'next';
 import CryptoPricesPage from '@/components/crypto/CryptoPricesPage';
-import {
-  ensureCryptoMarketWarmer,
-  getCryptoMarketData,
-} from '@/lib/services/crypto-market-service';
-import type { CryptoMarketResponse } from '@/types/crypto-market';
+import { ensureCryptoMarketWarmer } from '@/lib/services/crypto-market-service';
 
 export const metadata: Metadata = {
   title: 'قیمت لحظه‌ای ارزهای دیجیتال | پیشرو',
@@ -14,17 +10,11 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export default async function PublicCryptoPricesPage() {
+/**
+ * شِل صفحه را فوری می‌فرستیم؛ داده بازار فقط سمت کلاینت و تدریجی لود می‌شود
+ * تا کاربر پشت لودینگ SSR گیر نکند.
+ */
+export default function PublicCryptoPricesPage() {
   ensureCryptoMarketWarmer();
-  let initialData: CryptoMarketResponse | null = null;
-  try {
-    initialData = await getCryptoMarketData({ limit: 20, page: 1 });
-  } catch (error) {
-    console.warn(
-      '[crypto] SSR market preload failed:',
-      error instanceof Error ? error.message : error
-    );
-  }
-
-  return <CryptoPricesPage initialData={initialData} />;
+  return <CryptoPricesPage />;
 }
