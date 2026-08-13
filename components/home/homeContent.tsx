@@ -1,7 +1,6 @@
 // @/components/home/homeContent.tsx
 
 import CoinsHeroSection from "./coinsHeroSection";
-import LandingOverlayServer from "./landingOverlay.server";
 import MobileScrollSectionServer from "./mobileScrollSection.server";
 import CalculatorSection from "./calculatorSection";
 import CoursesSec from "@/components/utils/CoursesSec.server";
@@ -15,10 +14,6 @@ export default async function HomePageContent() {
     <div className="home-shell w-full transition-colors">
       <div className="home-hero-stage">
         <CoinsHeroSection />
-      </div>
-
-      <div className="hidden lg:block">
-        <LandingOverlayServer />
       </div>
 
       <div className="home-ambient-stage">
