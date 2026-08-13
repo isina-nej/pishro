@@ -25,6 +25,7 @@ interface NewsFilterControlsProps {
   hasActiveFilters: boolean;
   onResetFilters: () => void;
   disabled?: boolean;
+  compact?: boolean;
 }
 
 const timeRangeOptions = [
@@ -49,152 +50,119 @@ export const NewsFilterControls = ({
   hasActiveFilters,
   onResetFilters,
   disabled = false,
+  compact = false,
 }: NewsFilterControlsProps) => {
   return (
-    <div className="flex flex-col gap-8">
-      {/* Header */}
-      <div className="space-y-2">
+    <div className={cn("flex flex-col", compact ? "gap-3" : "gap-4")}>
+      <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <Filter className="w-5 h-5 text-mySecondary" />
-          <h2 className="text-xl font-bold text-foreground">فیلترها</h2>
+          <span className="flex size-7 items-center justify-center rounded-lg bg-primary/15 text-primary">
+            <Filter className="size-3.5" />
+          </span>
+          <div>
+            <h2 className={cn("font-bold text-foreground", compact ? "text-sm" : "text-base")}>
+              فیلترها
+            </h2>
+            {!compact && (
+              <p className="text-[11px] text-muted-foreground">جستجو، دسته و زمان</p>
+            )}
+          </div>
         </div>
-        <p className="text-sm text-muted-foreground">
-          اخبار را بر اساس علاقه و زمان خود بسازید
-        </p>
-      </div>
-
-      {/* Search Input */}
-      <div className="space-y-2">
-        <label className="block text-sm font-semibold text-muted-foreground">
-          جستجو
-        </label>
-        <div
-          className={cn(
-            "flex items-center gap-3 rounded-2xl border border-border/60 bg-card/60 p-3 shadow-inner backdrop-blur-xl transition-all focus-within:border-primary/60/10/5",
-            disabled && "opacity-60"
-          )}
-        >
-          <Search className="h-4 w-4 text-muted-foreground" />
-          <input
-            value={query}
-            onChange={(event) => onQueryChange(event.target.value)}
-            className="w-full bg-transparent text-sm text-muted-foreground outline-none placeholder-slate-400"
-            placeholder="جستجو در اخبار..."
+        {hasActiveFilters && (
+          <button
+            type="button"
+            onClick={onResetFilters}
             disabled={disabled}
-            aria-disabled={disabled}
-          />
-          {query && (
-            <button
-              onClick={() => onQueryChange("")}
-              className="text-muted-foreground hover:text-muted-foreground dark:hover:text-muted-foreground transition-colors"
-              aria-label="Clear search"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Sort and Time Range */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <label className="block text-sm font-semibold text-muted-foreground">
-            مرتب‌سازی
-          </label>
-          <Select
-            value={selectedSort}
-            onValueChange={(v) => onSortChange(v as NewsSortOption)}
-            disabled={disabled}
+            className="rounded-full border border-border/50 bg-background/40 px-2.5 py-1 text-[11px] font-medium text-foreground transition-transform duration-300 hover:scale-105"
           >
-            <SelectTrigger
-              className={cn(
-                "w-full rounded-2xl border-border/60 bg-card/60 backdrop-blur-xl/10/5",
-                disabled && "opacity-60"
-              )}
-              aria-disabled={disabled}
-            >
-              <SelectValue placeholder="مرتب‌سازی" />
-            </SelectTrigger>
-            <SelectContent>
-              {sortOptions.map((option) => (
-                <SelectItem key={option} value={option}>
-                  {option}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="space-y-2">
-          <label className="block text-sm font-semibold text-muted-foreground">
-            بازه زمانی
-          </label>
-          <Select
-            value={timeRange}
-            onValueChange={onTimeRangeChange}
-            disabled={disabled}
-          >
-            <SelectTrigger
-              className={cn(
-                "w-full rounded-2xl border-border/60 bg-card/60 backdrop-blur-xl/10/5",
-                disabled && "opacity-60"
-              )}
-              aria-disabled={disabled}
-            >
-              <SelectValue placeholder="بازه زمانی" />
-            </SelectTrigger>
-            <SelectContent>
-              {timeRangeOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+            پاک کردن
+          </button>
+        )}
       </div>
 
-      {/* Categories */}
-      <div className="space-y-3">
-        <label className="block text-sm font-semibold text-muted-foreground">
-          دسته‌بندی
-        </label>
-        <div className="flex flex-col gap-2">
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => onCategoryChange(category)}
-              className={cn(
-                "px-4 py-3 rounded-xl text-sm font-medium text-start transition-all duration-200 border",
-                selectedCategory === category
-                  ? "border-[#112b3a] bg-[#112b3a] text-foreground shadow-lg"
-                  : "border-border/60 bg-card/55 text-[#405c6b] hover:border-primary/50 hover:bg-card/80/10/5 dark:hover:bg-card/10",
-                disabled && "pointer-events-none opacity-60"
-              )}
-              aria-pressed={selectedCategory === category}
-              aria-disabled={disabled}
-            >
-              <div className="flex items-center justify-between">
-                <span>{category}</span>
-                {selectedCategory === category && (
-                  <span className="w-2 h-2 rounded-full bg-mySecondary" />
-                )}
-              </div>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Reset Filters Button */}
-      {hasActiveFilters && (
-        <button
-          onClick={onResetFilters}
+      <div
+        className={cn(
+          "flex items-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-3 py-2 shadow-inner backdrop-blur-xl dark:bg-white/5",
+          disabled && "opacity-60"
+        )}
+      >
+        <Search className="size-3.5 shrink-0 text-muted-foreground" />
+        <input
+          value={query}
+          onChange={(event) => onQueryChange(event.target.value)}
+          className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
+          placeholder="جستجو در اخبار..."
           disabled={disabled}
-          className="w-full px-4 py-3 rounded-xl text-sm font-semibold bg-muted text-muted-foreground hover:bg-muted dark:hover:bg-accent transition-all duration-200 border border-border"
+        />
+        {query ? (
+          <button
+            type="button"
+            onClick={() => onQueryChange("")}
+            className="text-muted-foreground transition-transform hover:scale-110"
+            aria-label="پاک کردن جستجو"
+          >
+            <X className="size-3.5" />
+          </button>
+        ) : null}
+      </div>
+
+      <div className={cn("grid gap-2", compact ? "grid-cols-1" : "grid-cols-2")}>
+        <Select
+          value={selectedSort}
+          onValueChange={(v) => onSortChange(v as NewsSortOption)}
+          disabled={disabled}
         >
-          ✕ حذف تمام فیلترها
-        </button>
-      )}
+          <SelectTrigger className="h-9 rounded-xl border-white/15 bg-white/10 text-xs text-foreground backdrop-blur-xl dark:bg-white/5">
+            <SelectValue placeholder="مرتب‌سازی" />
+          </SelectTrigger>
+          <SelectContent>
+            {sortOptions.map((option) => (
+              <SelectItem key={option} value={option}>
+                {option}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Select value={timeRange} onValueChange={onTimeRangeChange} disabled={disabled}>
+          <SelectTrigger className="h-9 rounded-xl border-white/15 bg-white/10 text-xs text-foreground backdrop-blur-xl dark:bg-white/5">
+            <SelectValue placeholder="بازه زمانی" />
+          </SelectTrigger>
+          <SelectContent>
+            {timeRangeOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-1.5">
+        <p className="text-[11px] font-medium text-muted-foreground">دسته‌بندی</p>
+        <div className={cn("flex gap-1.5", compact ? "flex-col" : "flex-wrap")}>
+          {categories.map((category) => {
+            const active = selectedCategory === category;
+            return (
+              <button
+                key={category}
+                type="button"
+                onClick={() => onCategoryChange(category)}
+                disabled={disabled}
+                className={cn(
+                  "rounded-full border px-3 py-1.5 text-start text-xs font-medium transition-transform duration-300 hover:scale-105",
+                  active
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-white/15 bg-white/10 text-foreground dark:bg-white/5",
+                  disabled && "pointer-events-none opacity-60"
+                )}
+              >
+                {category}
+              </button>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 };
