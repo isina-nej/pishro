@@ -36,6 +36,8 @@ export default function ThemeToggle() {
   return (
     <button
       type="button"
+      data-sound="toggle"
+      data-sound-role="toggle"
       onClick={toggleTheme}
       className="relative inline-flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 text-slate-700 transition-all duration-300 hover:bg-gray-200 dark:bg-cardBg dark:text-textSecondary dark:hover:bg-darkBgHidden"
       aria-label={isDark ? 'روشن کردن حالت روز' : 'روشن کردن حالت شب'}

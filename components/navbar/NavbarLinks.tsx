@@ -119,6 +119,13 @@ const NavbarLinks = ({
                       <Link
                         href={item.link}
                         onClick={onClick}
+                        data-sound={
+                          item.link.includes("investment-plans")
+                            ? "premium"
+                            : item.link.includes("crypto-prices")
+                              ? "market"
+                              : "click"
+                        }
                         className={clsx(
                           "group flex items-center gap-3 rounded-2xl border px-3.5 py-3 transition-all duration-200",
                           active
@@ -163,6 +170,15 @@ const NavbarLinks = ({
             <Link
               href={item.link}
               onClick={onClick}
+              data-sound={
+                item.link.includes("investment-plans")
+                  ? "premium"
+                  : item.link.includes("crypto-prices")
+                    ? "market"
+                    : item.link.includes("checkout")
+                      ? "cart"
+                      : "click"
+              }
               className={clsx(
                 "relative block rounded-lg px-2.5 py-2 text-sm font-medium transition-colors",
                 active
