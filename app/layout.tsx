@@ -15,8 +15,21 @@ import {
   DEFAULT_FAVICON_URL,
   DEFAULT_LOGO_URL,
   DEFAULT_OG_IMAGE_URL,
+  DEFAULT_SITE_NAME,
+  resolveAssetUrl,
   toAbsoluteAssetUrl,
 } from "@/lib/site/branding";
+import BootSplashDismiss from "@/components/loading/BootSplashDismiss";
+import ServiceWorkerRegister from "@/components/pwa/ServiceWorkerRegister";
+
+function escapeHtml(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
 
 const charismaExtraBold = localFont({
   src: "../public/font/CharismaTF-ExtraBold.woff2",
@@ -97,13 +110,47 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const siteTheme = await getPublicSiteTheme();
+  const [siteTheme, chrome] = await Promise.all([
+    getPublicSiteTheme(),
+    getPublicSiteChrome(),
+  ]);
+  const splashLogo = resolveAssetUrl(chrome.logoUrl, DEFAULT_LOGO_URL);
+  const splashName = escapeHtml(chrome.siteName || DEFAULT_SITE_NAME);
 
   return (
     <html lang="fa" suppressHydrationWarning>
       <body
         className={`font-yekan ${charismaExtraBold.variable} ${charismaRegular.variable} ${montserrat.variable} rtl bg-background text-foreground transition-colors duration-300 ease-in-out`}
       >
+        <div
+          id="site-boot-splash"
+          role="status"
+          aria-live="polite"
+          aria-busy="true"
+          dangerouslySetInnerHTML={{
+            __html: `
+              <div class="boot-logo-wrap" aria-hidden="true">
+                <span class="boot-ring"></span>
+                <span class="boot-ring-slow"></span>
+                <div class="boot-logo-box">
+                  <img src="${escapeHtml(splashLogo)}" alt="" width="88" height="88" />
+                </div>
+              </div>
+              <div>
+                <p class="boot-title">${splashName}</p>
+                <p class="boot-label">در حال آماده‌سازی…</p>
+              </div>
+              <div class="boot-bar" aria-hidden="true"><span></span></div>
+            `,
+          }}
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `setTimeout(function(){var s=document.getElementById('site-boot-splash');if(s&&!s.classList.contains('is-done')){s.classList.add('is-done');setTimeout(function(){s.remove()},500)}},9000);`,
+          }}
+        />
+        <BootSplashDismiss />
+        <ServiceWorkerRegister />
         <ThemeProvider
           attribute="class"
           defaultTheme={siteTheme.themeMode}

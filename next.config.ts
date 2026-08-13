@@ -5,6 +5,11 @@ const nextConfig: NextConfig = {
     // Middleware/proxy buffers request bodies before route handlers.
     // Keep this above the 500MB video validation limit to avoid truncated multipart uploads.
     middlewareClientMaxBodySize: "550mb",
+    // Keep recently visited public pages warm in the client router cache.
+    staleTimes: {
+      dynamic: 30,
+      static: 180,
+    },
   },
   eslint: {
     ignoreDuringBuilds: true, // Skip ESLint during build - unused vars in some components
@@ -51,6 +56,42 @@ const nextConfig: NextConfig = {
       },
     ],
     unoptimized: true,
+  },
+  async headers() {
+    const immutable = "public, max-age=31536000, immutable";
+    const day = "public, max-age=86400, stale-while-revalidate=604800";
+    return [
+      {
+        source: "/_next/static/:path*",
+        headers: [{ key: "Cache-Control", value: immutable }],
+      },
+      {
+        source: "/font/:path*",
+        headers: [{ key: "Cache-Control", value: immutable }],
+      },
+      {
+        source: "/logo/:path*",
+        headers: [{ key: "Cache-Control", value: day }],
+      },
+      {
+        source: "/images/:path*",
+        headers: [{ key: "Cache-Control", value: day }],
+      },
+      {
+        source: "/icons/:path*",
+        headers: [{ key: "Cache-Control", value: day }],
+      },
+      {
+        source: "/videos/:path*",
+        headers: [{ key: "Cache-Control", value: day }],
+      },
+      {
+        source: "/sw.js",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=0, must-revalidate" },
+        ],
+      },
+    ];
   },
 };
 

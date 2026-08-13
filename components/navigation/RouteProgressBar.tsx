@@ -5,8 +5,8 @@ import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 
 /**
- * Lightweight top progress cue on client navigations. Intentionally does not
- * wait for data fetches — leaving a page mid-load must stay instant.
+ * نوار پیشرفت بالای صفحه هنگام جابه‌جایی کلاینتی —
+ * تا کاربر حس هنگ/کرش نکند.
  */
 export default function RouteProgressBar() {
   const pathname = usePathname();
@@ -16,7 +16,7 @@ export default function RouteProgressBar() {
   useEffect(() => {
     setActive(true);
     setCycle((value) => value + 1);
-    const finish = window.setTimeout(() => setActive(false), 420);
+    const finish = window.setTimeout(() => setActive(false), 520);
     return () => window.clearTimeout(finish);
   }, [pathname]);
 
@@ -25,13 +25,21 @@ export default function RouteProgressBar() {
       {active ? (
         <motion.div
           key={cycle}
-          className="pointer-events-none fixed inset-x-0 top-0 z-[9999] h-[3px] origin-right bg-gradient-to-l from-primary via-accent to-primary"
-          initial={{ scaleX: 0, opacity: 1 }}
-          animate={{ scaleX: 1, opacity: 1 }}
+          className="pointer-events-none fixed inset-x-0 top-0 z-[9999] h-[3px] origin-right overflow-hidden"
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.25 }}
           aria-hidden="true"
-        />
+        >
+          <motion.div
+            className="h-full w-full bg-gradient-to-l from-primary via-[hsl(var(--premium))] to-primary shadow-[0_0_12px_hsl(var(--primary)/0.45)]"
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
+            style={{ transformOrigin: 'right' }}
+          />
+        </motion.div>
       ) : null}
     </AnimatePresence>
   );
