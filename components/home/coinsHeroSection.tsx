@@ -8,7 +8,7 @@ type CoinsHeroSectionProps = {
 };
 
 /**
- * V32 coins hero — title + full coins reel.
+ * V32 coins hero — title + full coins reel fitted inside the viewport.
  */
 export default function CoinsHeroSection({
   title = "پیشرو در مسیر سرمایه گذاری هوشمند",
@@ -69,7 +69,7 @@ export default function CoinsHeroSection({
     <section
       dir="rtl"
       aria-label="هیرو پیشرو"
-      className="coins-hero relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen max-w-none overflow-hidden text-[#F4F6F8]"
+      className="coins-hero relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] flex h-[100svh] max-h-[100svh] w-screen max-w-none flex-col overflow-hidden text-[#F4F6F8]"
     >
       <div
         aria-hidden
@@ -84,21 +84,21 @@ export default function CoinsHeroSection({
         className="pointer-events-none absolute inset-x-0 top-0 h-[40%] bg-[linear-gradient(180deg,#000412_0%,rgba(0,4,18,0.8)_50%,transparent_100%)]"
       />
 
-      <div className="relative z-[1] mx-auto flex w-full max-w-[1180px] flex-col items-center px-4 pb-2 pt-12 text-center sm:px-6 sm:pb-3 sm:pt-16 md:pt-20 lg:pt-24">
-        <h1 className="m-0 max-w-[20ch] text-[clamp(1.75rem,5vw,3.75rem)] font-black leading-[1.3] tracking-tight text-white">
+      {/* Clearance for absolute/fixed navbar */}
+      <div className="relative z-[1] mx-auto flex w-full max-w-[1180px] shrink-0 flex-col items-center px-4 pb-1 pt-[5.25rem] text-center sm:px-6 sm:pb-2 md:pt-24 lg:pt-28">
+        <h1 className="m-0 max-w-[22ch] text-[clamp(1.35rem,3.4vw,2.75rem)] font-black leading-[1.25] tracking-tight text-white">
           {title}
         </h1>
       </div>
 
-      <div className="coins-hero-reel relative z-[1] w-screen max-w-none left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden">
-        {/* Soft top/bottom color bridges only — keep full coins visible */}
+      <div className="coins-hero-reel relative z-[1] flex min-h-0 w-full flex-1 items-end justify-center overflow-hidden">
         <div
           aria-hidden
-          className="coins-hero-fade-top pointer-events-none absolute inset-x-0 top-0 z-[2] h-[14%] sm:h-[12%]"
+          className="coins-hero-fade-top pointer-events-none absolute inset-x-0 top-0 z-[2] h-[10%]"
         />
         <div
           aria-hidden
-          className="coins-hero-fade-bottom pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[16%] sm:h-[14%]"
+          className="coins-hero-fade-bottom pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[10%]"
         />
         <video
           ref={videoRef}
@@ -109,7 +109,7 @@ export default function CoinsHeroSection({
           playsInline
           preload="auto"
           aria-hidden
-          className="pointer-events-none relative z-[1] block h-auto min-w-full w-full max-w-none select-none bg-transparent object-cover object-center"
+          className="pointer-events-none relative z-[1] block h-full w-full max-w-none select-none bg-transparent object-contain object-bottom"
         />
       </div>
     </section>
