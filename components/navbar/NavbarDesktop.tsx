@@ -43,16 +43,15 @@ const NavbarDesktop = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 320, damping: 28 }}
         className={cn(
-          "pointer-events-auto mx-auto flex h-14 max-w-[1480px] items-center gap-2 rounded-2xl border px-2.5 shadow-2xl backdrop-blur-2xl sm:h-[3.75rem] sm:gap-3 sm:px-3 lg:px-4",
-          "border-white/15 bg-white/10 text-white",
-          "dark:border-white/12 dark:bg-[rgba(12,18,15,0.55)]",
-          !isDark &&
-            "border-border/60 bg-[rgba(251,249,245,0.72)] text-foreground shadow-primary/10 dark:border-white/12 dark:bg-[rgba(12,18,15,0.55)] dark:text-white"
+          "pointer-events-auto relative mx-auto flex h-14 max-w-[1480px] items-center gap-2 rounded-2xl border px-2.5 shadow-2xl backdrop-blur-2xl sm:h-[3.75rem] sm:gap-3 sm:px-3 lg:px-4",
+          isDark
+            ? "border-white/15 bg-white/10 text-white dark:border-white/12 dark:bg-[rgba(12,18,15,0.55)]"
+            : "border-border/70 bg-[rgba(251,249,245,0.92)] text-foreground shadow-primary/10 dark:border-white/12 dark:bg-[rgba(12,18,15,0.72)] dark:text-white"
         )}
         style={{
           boxShadow: isDark
             ? "0 18px 50px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08)"
-            : "0 18px 50px rgba(11,61,46,0.10), inset 0 1px 0 rgba(255,255,255,0.55)",
+            : "0 14px 40px rgba(11,61,46,0.12), inset 0 1px 0 rgba(255,255,255,0.7)",
         }}
       >
         {/* ambient glow */}
