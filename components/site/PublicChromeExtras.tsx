@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import CustomCursor from '@/components/cursor/CustomCursor';
+import ChunkLoadRecovery from '@/components/pwa/ChunkLoadRecovery';
 
 const ChatWidget = dynamic(() => import('@/components/utils/ChatWidget'), {
   ssr: false,
@@ -31,6 +32,7 @@ export default function PublicChromeExtras({
 }: PublicChromeExtrasProps) {
   return (
     <>
+      <ChunkLoadRecovery />
       <CustomCursor />
       {showScrollTop ? <ScrollToTopButton /> : null}
       {showCart ? <FloatingCartButton /> : null}

@@ -1,5 +1,5 @@
-/* Pishro static asset cache — faster repeat visits */
-const STATIC_CACHE = 'pishro-static-v1';
+/* Pishro static asset cache — bump version after each public release */
+const STATIC_CACHE = 'pishro-static-v2';
 const STATIC_PREFIXES = [
   '/_next/static/',
   '/font/',
@@ -52,12 +52,29 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Stale-while-revalidate for fonts, logo, hashed Next chunks, etc.
+  // Network-first for hashed Next chunks so deploys never serve a stale mismatch.
+  // Other static assets stay stale-while-revalidate.
+  const isNextChunk = requestUrl.pathname.startsWith('/_next/static/');
+
   event.respondWith(
     (async () => {
       const cache = await caches.open(STATIC_CACHE);
-      const cached = await cache.match(event.request);
 
+      if (isNextChunk) {
+        try {
+          const response = await fetch(event.request);
+          if (response && response.ok) {
+            cache.put(event.request, response.clone());
+          }
+          return response;
+        } catch {
+          const cached = await cache.match(event.request);
+          if (cached) return cached;
+          throw new Error('Chunk unavailable');
+        }
+      }
+
+      const cached = await cache.match(event.request);
       const networkPromise = fetch(event.request)
         .then((response) => {
           if (response && response.ok) {
