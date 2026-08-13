@@ -1,7 +1,6 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import CustomCursor from '@/components/cursor/CustomCursor';
 import ChunkLoadRecovery from '@/components/pwa/ChunkLoadRecovery';
 
 const ChatWidget = dynamic(() => import('@/components/utils/ChatWidget'), {
@@ -24,6 +23,7 @@ type PublicChromeExtrasProps = {
 
 /**
  * ویجت‌های غیرحیاتی — code-split تا باندل اولیه سبک‌تر شود.
+ * موس و صدا در GlobalUiEffects (root) هستند.
  */
 export default function PublicChromeExtras({
   showChat,
@@ -33,7 +33,6 @@ export default function PublicChromeExtras({
   return (
     <>
       <ChunkLoadRecovery />
-      <CustomCursor />
       {showScrollTop ? <ScrollToTopButton /> : null}
       {showCart ? <FloatingCartButton /> : null}
       {showChat ? <ChatWidget /> : null}

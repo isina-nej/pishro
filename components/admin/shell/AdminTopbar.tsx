@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { Menu, Search } from 'lucide-react';
 import ThemeToggle from '@/components/ui/ThemeToggle';
+import SoundMuteToggle from '@/components/sound/SoundMuteToggle';
 
 interface AdminTopbarProps {
   onOpenMobileNav: () => void;
@@ -49,6 +50,7 @@ export default function AdminTopbar({ onOpenMobileNav, onOpenCommandPalette }: A
         >
           <Search size={20} />
         </button>
+        <SoundMuteToggle />
         <ThemeToggle />
       </div>
     </header>
