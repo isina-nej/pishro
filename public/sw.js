@@ -1,7 +1,8 @@
-/* Intentionally empty — PWA caching disabled permanently. */
+/* Service worker disabled — file kept so old registrations can fetch and die. */
 self.addEventListener('install', (event) => {
   event.waitUntil(self.skipWaiting());
 });
+
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     (async () => {

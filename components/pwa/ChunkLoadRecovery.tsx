@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-const RELOAD_KEY = 'pishro-chunk-reload';
+const RELOAD_KEY = 'pishro-nav-reload-at';
 
 async function clearClientCaches() {
   try {
@@ -19,28 +19,37 @@ async function clearClientCaches() {
   }
 }
 
-function isChunkFailure(message: string) {
+function shouldRecover(message: string, filename?: string) {
+  const msg = message || '';
+  const file = filename || '';
+  if (file.includes('/_next/')) return true;
   return (
-    message.includes('Loading chunk') ||
-    message.includes('ChunkLoadError') ||
-    message.includes('Failed to fetch dynamically imported module') ||
-    message.includes('Importing a module script failed') ||
-    message.includes('error loading dynamically imported module')
+    msg.includes('Loading chunk') ||
+    msg.includes('ChunkLoadError') ||
+    msg.includes('Failed to fetch dynamically imported module') ||
+    msg.includes('Importing a module script failed') ||
+    msg.includes('error loading dynamically imported module') ||
+    msg.includes('Unexpected token') ||
+    msg.includes('Application error') ||
+    // Next گاهی فقط "Uncaught" خالی می‌دهد
+    msg.trim() === 'Uncaught' ||
+    msg.trim() === 'Uncaught '
   );
 }
 
 /**
- * بعد از دیپلوی، اگر چانک قدیمی از کش لود شود Next خطای client می‌دهد.
- * کش/SW را پاک و یک‌بار رفرش اجباری می‌کند.
+ * هر خطای کلاینت مرتبط با باندل Next → پاکسازی کش + hard reload.
  */
 export default function ChunkLoadRecovery() {
   useEffect(() => {
     const reloadOnce = async () => {
       try {
-        if (sessionStorage.getItem(RELOAD_KEY) === '1') return;
-        sessionStorage.setItem(RELOAD_KEY, '1');
+        const last = Number(sessionStorage.getItem(RELOAD_KEY) || '0');
+        // جلوگیری از لوپ؛ هر ۱۵ ثانیه حداکثر یک‌بار
+        if (Date.now() - last < 15_000) return;
+        sessionStorage.setItem(RELOAD_KEY, String(Date.now()));
       } catch {
-        // sessionStorage ممکن است در حالت private محدود باشد
+        // ignore
       }
 
       await clearClientCaches();
@@ -50,8 +59,12 @@ export default function ChunkLoadRecovery() {
     };
 
     const onError = (event: ErrorEvent) => {
-      const message = String(event.message || '');
-      if (isChunkFailure(message)) {
+      const target = event.target;
+      if (target instanceof HTMLScriptElement && target.src.includes('/_next/')) {
+        void reloadOnce();
+        return;
+      }
+      if (shouldRecover(String(event.message || ''), event.filename || '')) {
         void reloadOnce();
       }
     };
@@ -61,16 +74,16 @@ export default function ChunkLoadRecovery() {
       const message =
         typeof reason === 'string'
           ? reason
-          : String(reason?.message || reason?.name || '');
-      if (isChunkFailure(message)) {
+          : String(reason?.message || reason?.name || reason || '');
+      if (shouldRecover(message)) {
         void reloadOnce();
       }
     };
 
-    window.addEventListener('error', onError);
+    window.addEventListener('error', onError, true);
     window.addEventListener('unhandledrejection', onRejection);
     return () => {
-      window.removeEventListener('error', onError);
+      window.removeEventListener('error', onError, true);
       window.removeEventListener('unhandledrejection', onRejection);
     };
   }, []);
