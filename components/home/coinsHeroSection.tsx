@@ -100,7 +100,7 @@ export default function CoinsHeroSection({
             muted
             loop
             playsInline
-            preload="auto"
+            preload="metadata"
             aria-hidden
             className="pointer-events-none relative z-[1] h-auto max-h-full w-full max-w-full select-none bg-transparent object-contain object-bottom"
           />

@@ -35,6 +35,7 @@ const FloatingCartButton = () => {
           key="floating-cart"
           data-sound="cart"
           data-sound-role="cart"
+          data-cursor="cart"
           initial={{ opacity: 0, scale: 0.7 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.7 }}

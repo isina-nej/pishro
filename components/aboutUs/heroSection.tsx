@@ -42,6 +42,7 @@ const HeroSection = ({
         loop
         muted
         playsInline
+        preload="metadata"
         className="absolute inset-0 w-full h-full object-cover"
       >
         <source src="/videos/aboutUsLanding.webm" type="video/webm" />

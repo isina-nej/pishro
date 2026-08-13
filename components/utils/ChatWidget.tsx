@@ -441,6 +441,7 @@ export default function ChatWidget() {
         data-chat-fab
         data-sound="chat"
         data-sound-role="chat"
+        data-cursor="chat"
         onClick={() => (isOpen ? setIsOpen(false) : openWidget())}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}

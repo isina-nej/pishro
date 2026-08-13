@@ -92,6 +92,9 @@ export default function InteractionSounds() {
   const firstPath = useRef(true);
 
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
     const onPointerDown = (event: PointerEvent) => {
       if (event.button !== 0) return;
       const sound = resolveClickSound(event.target);
@@ -111,6 +114,7 @@ export default function InteractionSounds() {
       firstPath.current = false;
       return;
     }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     // اگر همین الان صدای خاص (سبد/پرمیوم/…) پخش شده، navigate را دوبل نکن
     if (Date.now() - lastSpecialAt.current < 280) return;
     play('navigate');
