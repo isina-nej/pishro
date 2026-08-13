@@ -82,7 +82,7 @@ export const useLibraryFilters = (books: LibraryBook[]): LibraryFiltersHook => {
       )
       .filter((book) =>
         normalizedQuery
-          ? [book.title, book.author, ...book.tags]
+          ? [book.title, book.author, ...(book.tags ?? [])]
               .join("")
               .toLowerCase()
               .includes(normalizedQuery.toLowerCase())

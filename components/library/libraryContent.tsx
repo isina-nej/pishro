@@ -30,8 +30,11 @@ const LibraryPageContent = () => {
     limit: 100,
   }) as BooksQueryReturn;
 
-  // اگر API داده داشت از اون استفاده کن، در غیر این صورت به mock (libraryBooks) برگرد
-  const books = booksData?.items ?? libraryBooks;
+  // اگر API آیتم داشت از آن استفاده کن؛ آرایه خالی/undefined → mock
+  const books =
+    booksData?.items && booksData.items.length > 0
+      ? booksData.items
+      : libraryBooks;
 
   const {
     categories,

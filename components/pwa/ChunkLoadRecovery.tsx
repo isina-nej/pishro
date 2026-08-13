@@ -2,31 +2,57 @@
 
 import { useEffect } from 'react';
 
+const RELOAD_KEY = 'pishro-chunk-reload';
+
+async function clearClientCaches() {
+  try {
+    if ('serviceWorker' in navigator) {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map((reg) => reg.unregister()));
+    }
+    if ('caches' in window) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map((key) => caches.delete(key)));
+    }
+  } catch {
+    // ignore
+  }
+}
+
+function isChunkFailure(message: string) {
+  return (
+    message.includes('Loading chunk') ||
+    message.includes('ChunkLoadError') ||
+    message.includes('Failed to fetch dynamically imported module') ||
+    message.includes('Importing a module script failed') ||
+    message.includes('error loading dynamically imported module')
+  );
+}
+
 /**
  * بعد از دیپلوی، اگر چانک قدیمی از کش لود شود Next خطای client می‌دهد.
- * یک‌بار رفرش اجباری مشکل را برطرف می‌کند.
+ * کش/SW را پاک و یک‌بار رفرش اجباری می‌کند.
  */
 export default function ChunkLoadRecovery() {
   useEffect(() => {
-    const reloadOnce = () => {
+    const reloadOnce = async () => {
       try {
-        const key = 'pishro-chunk-reload';
-        if (sessionStorage.getItem(key) === '1') return;
-        sessionStorage.setItem(key, '1');
-        window.location.reload();
+        if (sessionStorage.getItem(RELOAD_KEY) === '1') return;
+        sessionStorage.setItem(RELOAD_KEY, '1');
       } catch {
-        window.location.reload();
+        // sessionStorage ممکن است در حالت private محدود باشد
       }
+
+      await clearClientCaches();
+      const url = new URL(window.location.href);
+      url.searchParams.set('_r', String(Date.now()));
+      window.location.replace(url.toString());
     };
 
     const onError = (event: ErrorEvent) => {
       const message = String(event.message || '');
-      if (
-        message.includes('Loading chunk') ||
-        message.includes('ChunkLoadError') ||
-        message.includes('Failed to fetch dynamically imported module')
-      ) {
-        reloadOnce();
+      if (isChunkFailure(message)) {
+        void reloadOnce();
       }
     };
 
@@ -36,12 +62,8 @@ export default function ChunkLoadRecovery() {
         typeof reason === 'string'
           ? reason
           : String(reason?.message || reason?.name || '');
-      if (
-        message.includes('Loading chunk') ||
-        message.includes('ChunkLoadError') ||
-        message.includes('Failed to fetch dynamically imported module')
-      ) {
-        reloadOnce();
+      if (isChunkFailure(message)) {
+        void reloadOnce();
       }
     };
 
