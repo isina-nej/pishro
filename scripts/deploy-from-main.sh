@@ -90,16 +90,21 @@ elif grep -qE '^prisma/schema\.prisma$' <<<"$changed"; then
   npx prisma generate
 fi
 
+# next build پوشهٔ .next را وسط کار عوض می‌کند. اگر pm2 همزمان از همان
+# پوشه سرو کند، HTML و چانک‌ها از دو بیلد قاطی می‌شوند و کل سایت
+# Application error می‌دهد. قبل از build باید اپ را متوقف کرد.
+log "stop $PM2_APP before build (avoid corrupt .next while serving)"
+pm2 stop "$PM2_APP" || true
+
 log "build"
-if ! npm run build; then
-  log "FAILED: build. pm2 دست نخورد، نسخه قبلی همچنان بالاست."
+if ! NODE_OPTIONS="${NODE_OPTIONS:---max-old-space-size=4096}" npm run build; then
+  log "FAILED: build. تلاش برای بالا آوردن مجدد اپ با .next فعلی."
+  pm2 start "$PM2_APP" --update-env || pm2 restart "$PM2_APP" --update-env || true
   exit 1
 fi
 
-# فقط وقتی به اینجا می‌رسیم که build سالم بوده — یعنی build خرابْ سرویس را
-# نمی‌خواباند. pishbini روی همین ماشین مال ما نیست؛ دست نمی‌زنیم.
-log "restart $PM2_APP"
-pm2 restart "$PM2_APP" --update-env
+log "start $PM2_APP"
+pm2 start "$PM2_APP" --update-env || pm2 restart "$PM2_APP" --update-env
 pm2 save
 
 log "=== دیپلوی ${remote_sha:0:7} تمام شد ==="
