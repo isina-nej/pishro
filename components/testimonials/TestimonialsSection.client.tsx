@@ -34,7 +34,7 @@ const TestimonialsSectionClient: React.FC<TestimonialsSectionClientProps> = ({
         className="pointer-events-none absolute inset-0 -z-10"
       >
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat supports-[background-attachment:fixed]:bg-fixed"
+          className="absolute inset-0 bg-center bg-no-repeat bg-[length:88%_auto] sm:bg-[length:75%_auto] md:bg-cover md:bg-center lg:supports-[background-attachment:fixed]:bg-fixed"
           style={{ backgroundImage: `url('${COMMENTS_BG}')` }}
         />
         {/* Readability wash over the photo */}
@@ -55,11 +55,11 @@ const TestimonialsSectionClient: React.FC<TestimonialsSectionClientProps> = ({
           </p>
         </div>
 
-        <div className="relative flex h-96 w-full items-center">
+        <div className="relative flex min-h-96 w-full items-stretch py-2">
           <div className="pointer-events-none absolute bottom-0 left-0 top-0 z-20 w-24 bg-gradient-to-r from-[var(--home-bg,#F7F5F0)]/90 via-[var(--home-bg,#F7F5F0)]/40 to-transparent dark:from-black/70 dark:via-black/30 lg:w-40" />
           <div className="pointer-events-none absolute bottom-0 right-0 top-0 z-20 w-24 bg-gradient-to-l from-[var(--home-bg,#F7F5F0)]/90 via-[var(--home-bg,#F7F5F0)]/40 to-transparent dark:from-black/70 dark:via-black/30 lg:w-40" />
 
-          <div className="w-full overflow-hidden">
+          <div className="w-full overflow-x-hidden overflow-y-visible">
             {items.length > 0 ? (
               <MarqueeTrack testimonials={items} speed={speed} />
             ) : (

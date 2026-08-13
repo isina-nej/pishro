@@ -138,19 +138,22 @@ const CalculatorSection = () => {
                   </p>
 
                   <div className="flex flex-wrap items-center justify-center gap-4">
-                    {(funds ?? []).map((fund) => (
-                      <button
-                        key={fund.key}
-                        onClick={() => handleSelectFund(fund)}
-                        className={`px-5 py-2 rounded-full border transition-all  ${
-                          selectedFund.key === fund.key
-                            ? "border-[var(--home-bg)] bg-[var(--home-bg)] text-[var(--home-deep)]"
-                            : "bg-white/10 home-on-dark border-white/20 hover:bg-white/15"
-                        }`}
-                      >
-                        {fund.name}
-                      </button>
-                    ))}
+                    {(funds ?? []).map((fund) => {
+                      const active = selectedFund.key === fund.key;
+                      return (
+                        <button
+                          key={fund.key}
+                          onClick={() => handleSelectFund(fund)}
+                          className={`rounded-full border px-5 py-2 font-medium transition-all ${
+                            active
+                              ? "border-[#E8F0EB] bg-[#F7F5F0] text-[#0B3D2E] shadow-md"
+                              : "border-white/25 bg-white/10 text-[#E8F0EB] hover:bg-white/20"
+                          }`}
+                        >
+                          {fund.name}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -277,7 +280,7 @@ const CalculatorSection = () => {
                 </p>
 
                 {/* Result box */}
-                <div className="relative flex flex-col items-center justify-center rounded-3xl border border-border/60 bg-[var(--home-bg)]/95 px-4 pb-4 pt-8 text-3xl font-medium text-primary shadow-2xl backdrop-blur-xl dark:bg-card/95 dark:text-foreground">
+                <div className="relative flex flex-col items-center justify-center rounded-3xl border border-[#0B3D2E]/15 bg-[#F7F5F0] px-4 pb-4 pt-8 text-3xl font-medium text-[#0B3D2E] shadow-2xl backdrop-blur-xl">
                   {/* قیمت و درصد سود */}
                   <div className="flex items-center justify-between w-full gap-4 mb-4">
                     {/* مبلغ کل - سمت راست */}
@@ -289,7 +292,7 @@ const CalculatorSection = () => {
                         separator=","
                         formattingFn={(n) => formatNumber(n)}
                       />
-                      <span className="mr-2 mt-1 text-lg font-bold text-muted-foreground">
+                      <span className="mr-2 mt-1 text-lg font-bold text-[#0B3D2E]/70">
                         تومان
                       </span>
                     </div>
@@ -306,10 +309,10 @@ const CalculatorSection = () => {
 
                   {/* 🛡 پیام تضمین سرمایه */}
                   {selectedFund.description && (
-                    <div className="mt-4 flex items-start gap-2 rounded-xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm font-medium text-primary shadow-sm dark:border-primary/40 dark:bg-primary/15 dark:text-[#A8E0C2]">
+                    <div className="mt-4 flex items-start gap-2 rounded-xl border border-[#0B3D2E]/25 bg-[#0B3D2E]/10 px-4 py-3 text-sm font-medium text-[#0B3D2E] shadow-sm">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="w-5 h-5 flex-shrink-0 mt-0.5"
+                        className="mt-0.5 h-5 w-5 flex-shrink-0"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -328,12 +331,7 @@ const CalculatorSection = () => {
 
                 <Link
                   href="/investment-plans"
-                  className="mt-10 px-16 w-full sm:w-fit border rounded-full py-4 font-bold text-center transition-colors"
-                  style={{
-                    backgroundColor: "var(--home-bg)",
-                    borderColor: "var(--home-bg)",
-                    color: "var(--home-deep)",
-                  }}
+                  className="mt-10 w-full rounded-full border border-[#E8F0EB] bg-[#F7F5F0] px-16 py-4 text-center font-bold text-[#0B3D2E] transition-colors hover:bg-white sm:w-fit"
                 >
                   سرمایه‌ گذاری
                 </Link>

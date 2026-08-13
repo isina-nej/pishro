@@ -48,7 +48,7 @@ const MarqueeTrack: React.FC<MarqueeTrackProps> = ({
     <>
       <style>{animationStyle}</style>
       <div
-        className="flex gap-6 marquee-track"
+        className="marquee-track flex items-stretch gap-6"
         style={{
           animationPlayState: isPaused ? "paused" : "running",
         }}

@@ -2,14 +2,24 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { ShoppingCart, Heart, ThumbsUp, ThumbsDown, Share2 } from "lucide-react";
+import { motion } from "framer-motion";
+import {
+  ShoppingCart,
+  Heart,
+  Share2,
+  BarChart3,
+  Target,
+  TrendingUp,
+  Lightbulb,
+  BookOpen,
+  Sparkles,
+} from "lucide-react";
 import {
   Dialog,
   DialogContent,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import RatingStars from "@/components/utils/RatingStars";
-import BookmarkButton from "@/components/bookmarks/bookmarkButton";
 import { useCartStore } from "@/stores/cart-store";
 import toast from "react-hot-toast";
 import type { Course } from "@/lib/types/db";
@@ -40,11 +50,18 @@ interface Props {
   trigger: React.ReactNode;
 }
 
+const OLIVE = "#6B7F3C";
+
+const CHIP_ICONS = [BarChart3, Target, TrendingUp, Lightbulb, BookOpen, Sparkles];
+
+function formatToman(price: number) {
+  return new Intl.NumberFormat("fa-IR").format(Math.round(price));
+}
+
 export default function CourseDetailModal({ course, trigger }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("about");
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [liked, setLiked] = useState<"LIKE" | "DISLIKE" | null>(null);
+  const [liked, setLiked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const addToCart = useCartStore((state) => state.addToCart);
   const items = useCartStore((state) => state.items);
@@ -54,14 +71,12 @@ export default function CourseDetailModal({ course, trigger }: Props) {
     ? Math.round(course.price * (1 - course.discountPercent / 100))
     : course.price;
   const freeCourse = isFreeCourse(course);
+  const isInCart = items.some((item) => item.id === course.id);
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("fa-IR", {
-      style: "currency",
-      currency: "IRR",
-      maximumFractionDigits: 0,
-    }).format(price);
-  };
+  const categoryChips = [
+    ...(course.category?.title ? [course.category.title] : []),
+    ...((course.learningGoals as string[] | undefined) ?? []).slice(0, 3),
+  ].slice(0, 4);
 
   const handleLike = async () => {
     setIsLoading(true);
@@ -72,27 +87,10 @@ export default function CourseDetailModal({ course, trigger }: Props) {
         body: JSON.stringify({ courseId: course.id, type: "LIKE" }),
       });
       if (response.ok) {
-        setLiked(liked === "LIKE" ? null : "LIKE");
+        setLiked((prev) => !prev);
       }
     } catch (error) {
       console.error("Error liking course:", error);
-    }
-    setIsLoading(false);
-  };
-
-  const handleDislike = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch("/api/courses/like", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ courseId: course.id, type: "DISLIKE" }),
-      });
-      if (response.ok) {
-        setLiked(liked === "DISLIKE" ? null : "DISLIKE");
-      }
-    } catch (error) {
-      console.error("Error disliking course:", error);
     }
     setIsLoading(false);
   };
@@ -106,22 +104,19 @@ export default function CourseDetailModal({ course, trigger }: Props) {
           url: window.location.href,
         });
       } catch {
-        // User cancelled share
+        // cancelled
       }
     } else {
-      // Fallback: Copy to clipboard
-      const shareUrl = `${window.location.origin}/courses/${course.slug || ''}`;
-      const shareText = `${course.subject}\n${course.description}\n${shareUrl}`;
       try {
-        await navigator.clipboard.writeText(shareText);
-        alert("لینک کپی شد!");
+        await navigator.clipboard.writeText(
+          `${course.subject}\n${window.location.origin}/courses/${course.slug || ""}`
+        );
+        toast.success("لینک کپی شد");
       } catch (err) {
         console.error("Error copying to clipboard:", err);
       }
     }
   };
-
-  const isInCart = items.some((item) => item.id === course.id);
 
   const handleAddToCart = async () => {
     if (freeCourse) {
@@ -129,12 +124,13 @@ export default function CourseDetailModal({ course, trigger }: Props) {
         redirectToLoginForFreeCourse(course.id);
         return;
       }
-
       try {
         await enrollFreeCourse(course.id);
         toast.success(`«${course.subject}» به فهرست دوره‌های شما اضافه شد`);
       } catch (error) {
-        toast.error(error instanceof Error ? error.message : "خطا در ثبت‌نام دوره رایگان");
+        toast.error(
+          error instanceof Error ? error.message : "خطا در ثبت‌نام دوره رایگان"
+        );
       }
       return;
     }
@@ -150,20 +146,19 @@ export default function CourseDetailModal({ course, trigger }: Props) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="max-w-4xl w-full sm:w-[95vw] max-h-screen sm:max-h-[90vh] overflow-y-auto p-0 bg-card text-foreground dark:text-textPrimary rounded-none sm:rounded-lg flex flex-col">
-        {/* Header with Video Player */}
-        <div className="relative w-full h-64 sm:h-80 bg-background flex items-center justify-center overflow-hidden flex-shrink-0 group">
-          {/* Video or Image */}
+      <DialogContent className="flex max-h-screen w-full max-w-3xl flex-col overflow-hidden rounded-none border-border/40 bg-[#0C0F0D] p-0 text-foreground sm:max-h-[88vh] sm:w-[92vw] sm:rounded-[1.75rem]">
+        {/* Hero */}
+        <div className="relative h-72 flex-shrink-0 overflow-hidden sm:h-80">
           {course.introVideoUrl ? (
             <video
               src={course.introVideoUrl}
               poster={course.img || undefined}
-              className="w-full h-full object-cover"
+              className="h-full w-full object-cover"
               controls={false}
-              autoPlay={true}
-              loop={true}
-              muted={true}
-              playsInline={true}
+              autoPlay
+              loop
+              muted
+              playsInline
             />
           ) : course.img ? (
             <Image
@@ -171,261 +166,229 @@ export default function CourseDetailModal({ course, trigger }: Props) {
               alt={course.subject}
               fill
               className="object-cover"
+              priority
             />
           ) : (
-            <div className="w-full h-full bg-gradient-to-br from-mySecondary to-myPrimary flex items-center justify-center">
+            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#1a2218] to-[#0C0F0D]">
               <span className="text-6xl">🎓</span>
             </div>
           )}
 
-          {/* Title Overlay - Bottom of Video */}
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background/70 to-transparent pt-8 pb-4 px-4 sm:px-6">
-            <div className="flex flex-col items-start gap-3">
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-foreground line-clamp-2">
-                  {course.subject}
-                </h1>
-                {course.category && (
-                  <span className="inline-block mt-2 rounded-full border border-border/20 bg-card/15 px-3 py-1 text-xs sm:text-lg font-bold text-primary-foreground backdrop-blur">
-                    {course.category.title}
-                  </span>
-                )}
-              </div>
-              <button
-                onClick={handleAddToCart}
-                disabled={isInCart}
-                className={`inline-flex items-center justify-center gap-5 px-2.5 py-15 rounded-lg font-sbold transition text-sm whitespace-nowrap ${
-                  isInCart
-                    ? "bg-accent text-primary-foreground cursor-not-allowed"
-                    : "bg-mySecondary text-foreground hover:opacity-90"
-                }`}
-              >
-                <ShoppingCart size={40} className="sm:w-55 sm:h-55" />
-                <span>{freeCourse ? "ثبت‌نام رایگان" : isInCart ? "به سبد اضافه شد" : "اضافه کردن به سبد"}</span>
-              </button>
-            </div>
+          {/* Soft vignette */}
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/35" />
+
+          {/* Top actions on image */}
+          <div className="absolute start-4 top-4 z-10 flex items-center gap-2 sm:start-5 sm:top-5">
+            {course.discountPercent ? (
+              <span className="rounded-full bg-[#6B7F3C] px-3 py-1 text-xs font-bold text-white">
+                {course.discountPercent}٪ تخفیف
+              </span>
+            ) : null}
           </div>
 
-          {/* Frosted Glass Action Buttons Overlay - Top Right */}
-          <div className="absolute top-4 right-4 sm:top-6 sm:right-6 flex flex-col gap-2">
-            {/* Like Button */}
-            <button
+          <div className="absolute end-4 top-4 z-10 flex items-center gap-2 sm:end-5 sm:top-5">
+            <motion.button
+              type="button"
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.96 }}
               onClick={handleLike}
               disabled={isLoading}
               title="پسندیدم"
-              className={`p-2 sm:p-2.5 rounded-lg font-medium transition flex items-center justify-center ${
-                liked === "LIKE"
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-background/20 text-primary-foreground hover:bg-card/20 dark:bg-cardBg/20"
+              className={`flex size-10 items-center justify-center rounded-full border border-white/20 backdrop-blur-xl transition-colors ${
+                liked
+                  ? "bg-[#6B7F3C]/90 text-white"
+                  : "bg-white/12 text-white"
               }`}
             >
-              <ThumbsUp size={18} />
-            </button>
-
-            {/* Dislike Button */}
-            <button
-              onClick={handleDislike}
-              disabled={isLoading}
-              title="نپسندیدم"
-              className={`p-2 sm:p-2.5 rounded-lg font-medium transition flex items-center justify-center ${
-                liked === "DISLIKE"
-                  ? "bg-destructive text-primary-foreground"
-                  : "bg-background/20 text-primary-foreground hover:bg-card/20 dark:bg-cardBg/20"
-              }`}
-            >
-              <ThumbsDown size={18} />
-            </button>
-
-            {/* Save Button */}
-            <BookmarkButton
-              type="course"
-              itemId={course.id}
-              className="size-9 rounded-lg border-0 bg-background/20 text-primary-foreground hover:bg-card/20 dark:bg-cardBg/20"
-            />
-
-            {/* Share Button */}
-            <button
+              <Heart
+                size={18}
+                fill={liked ? "currentColor" : "none"}
+                strokeWidth={1.75}
+              />
+            </motion.button>
+            <motion.button
+              type="button"
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.96 }}
               onClick={handleShare}
               title="اشتراک"
-              className="p-2 sm:p-2.5 rounded-lg font-medium bg-background/20 text-primary-foreground hover:bg-card/20 dark:bg-cardBg/20 transition flex items-center justify-center"
+              className="flex size-10 items-center justify-center rounded-full border border-white/20 bg-white/12 text-white backdrop-blur-xl"
             >
-              <Share2 size={18} />
-            </button>
+              <Share2 size={17} strokeWidth={1.75} />
+            </motion.button>
           </div>
 
-          {/* Discount Badge */}
-          {course.discountPercent && (
-            <div className="absolute top-4 left-4 bg-destructive text-primary-foreground px-3 py-1 rounded-full text-sm font-bold">
-              {course.discountPercent}% تخفیف
+          {/* Bottom hero content */}
+          <div className="absolute inset-x-0 bottom-0 z-10 px-4 pb-4 pt-16 sm:px-6 sm:pb-5">
+            <h1 className="max-w-[90%] text-xl font-semibold tracking-tight text-white sm:text-2xl">
+              {course.subject}
+            </h1>
+            {course.description ? (
+              <p className="mt-1.5 line-clamp-2 max-w-xl text-sm leading-relaxed text-white/70">
+                {course.description}
+              </p>
+            ) : null}
+
+            <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              {/* Categories — clearer, spaced, animated (جای قبلی سبد) */}
+              {categoryChips.length > 0 ? (
+                <div className="flex flex-wrap items-center justify-start gap-x-3 gap-y-2.5 sm:gap-x-4">
+                  {categoryChips.map((label, idx) => {
+                    const Icon = CHIP_ICONS[idx % CHIP_ICONS.length];
+                    return (
+                      <motion.div
+                        key={`${label}-${idx}`}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          delay: 0.08 * idx,
+                          duration: 0.45,
+                          ease: [0.22, 1, 0.36, 1],
+                        }}
+                        whileHover={{ y: -3, scale: 1.04 }}
+                        className="flex min-w-[4.5rem] flex-col items-center gap-1.5"
+                      >
+                        <span
+                          className="flex size-11 items-center justify-center rounded-2xl border border-white/20 bg-white/12 text-white shadow-lg backdrop-blur-xl"
+                          style={{ boxShadow: `0 0 0 1px ${OLIVE}33` }}
+                        >
+                          <Icon size={18} strokeWidth={1.6} color="#C5D49A" />
+                        </span>
+                        <span className="max-w-[5.5rem] text-center text-[10px] font-medium leading-snug text-white/85 sm:text-[11px]">
+                          {label}
+                        </span>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div />
+              )}
+
+              {/* Glass cart + price — سمت دیگر تصویر */}
+              <motion.button
+                type="button"
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleAddToCart}
+                disabled={!freeCourse && isInCart}
+                className="inline-flex w-full items-center justify-center gap-3 rounded-2xl border border-white/25 bg-white/15 px-5 py-3.5 text-sm font-semibold text-white shadow-[0_8px_32px_rgba(0,0,0,0.25)] backdrop-blur-2xl transition-transform sm:w-auto"
+              >
+                <ShoppingCart size={18} strokeWidth={1.75} />
+                <span className="flex flex-col items-start leading-tight">
+                  <span className="text-[11px] font-medium text-white/70">
+                    {freeCourse
+                      ? "ثبت‌نام رایگان"
+                      : isInCart
+                        ? "به سبد اضافه شد"
+                        : "افزودن به سبد"}
+                  </span>
+                  <span className="text-base font-bold tracking-tight">
+                    {freeCourse ? "رایگان" : `${formatToman(finalPrice)} تومان`}
+                  </span>
+                </span>
+                {course.discountPercent && !freeCourse ? (
+                  <span className="text-xs text-white/45 line-through">
+                    {formatToman(course.price)}
+                  </span>
+                ) : null}
+              </motion.button>
             </div>
-          )}
+          </div>
         </div>
 
-        {/* Main Content */}
-        <div className="p-4 sm:p-6 md:p-8 flex-1 overflow-y-auto">
-          {/* Description & Rating */}
-          <div className="mb-4 sm:mb-6">
-            {course.rating && (
-              <div className="flex items-center gap-2 mb-3">
-                <RatingStars rating={course.rating} />
-                <span className="text-xs sm:text-sm text-muted-foreground dark:text-textSecondary">
-                  ({course.rating.toFixed(1)})
-                </span>
-              </div>
-            )}
-
-            {course.description && (
-              <p className="text-muted-foreground dark:text-textSecondary text-sm sm:text-base">{course.description}</p>
-            )}
-          </div>
-
-          {/* Course Stats Grid */}
-          {/* <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 mb-6 sm:mb-8 pb-6 sm:pb-8 border-b border-border">
-            {course.time && (
-              <div className="flex items-center gap-2 sm:gap-3">
-                <Clock size={18} className="text-mySecondary flex-shrink-0" />
-                <div className="min-w-0">
-                  <p className="text-xs text-muted-foreground dark:text-textSecondary">مدت دوره</p>
-                  <p className="font-bold text-sm sm:text-base text-foreground truncate">{course.time}</p>
-                </div>
-              </div>
-            )}
-            {course.students && (
-              <div className="flex items-center gap-2 sm:gap-3">
-                <Users size={18} className="text-mySecondary flex-shrink-0" />
-                <div className="min-w-0">
-                  <p className="text-xs text-muted-foreground dark:text-textSecondary">دانشجویان</p>
-                  <p className="font-bold text-sm sm:text-base text-foreground truncate">
-                    {course.students.toLocaleString("fa-IR")}
-                  </p>
-                </div>
-              </div>
-            )}
-            {course.videosCount && (
-              <div className="flex items-center gap-2 sm:gap-3">
-                <Video size={18} className="text-mySecondary flex-shrink-0" />
-                <div className="min-w-0">
-                  <p className="text-xs text-muted-foreground dark:text-textSecondary">تعداد ویدیو</p>
-                  <p className="font-bold text-sm sm:text-base text-foreground">{course.videosCount}</p>
-                </div>
-              </div>
-            )}
-            {course.instructor && (
-              <div className="flex items-center gap-2 sm:gap-3">
-                <span className="text-lg sm:text-2xl flex-shrink-0">👨‍🏫</span>
-                <div className="min-w-0">
-                  <p className="text-xs text-muted-foreground dark:text-textSecondary">مدرس</p>
-                  <p className="font-bold text-xs sm:text-sm text-foreground truncate">{course.instructor}</p>
-                </div>
-              </div>
-            )}
-          </div> */}
+        {/* Body */}
+        <div className="flex-1 overflow-y-auto px-5 py-5 sm:px-7 sm:py-6">
+          {course.rating ? (
+            <div className="mb-4 flex items-center gap-2">
+              <RatingStars rating={course.rating} />
+              <span className="text-xs text-muted-foreground">
+                ({course.rating.toFixed(1)})
+              </span>
+            </div>
+          ) : null}
 
           {/* Tabs */}
-          <div className="mb-6 sm:mb-8">
-            <div className="flex gap-3 sm:gap-4 border-b border-border mb-4 sm:mb-6 overflow-x-auto">
-              {["about", "lessons", "reviews"].map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`pb-3 font-bold border-b-2 transition text-sm sm:text-base whitespace-nowrap ${
-                    activeTab === tab
-                      ? "border-mySecondary text-mySecondary"
-                      : "border-transparent text-muted-foreground dark:text-textSecondary hover:text-foreground dark:hover:text-muted-foreground"
-                  }`}
-                >
-                  {tab === "about" && "درباره"}
-                  {tab === "lessons" && "درس‌ها"}
-                  {tab === "reviews" && "نظرات"}
-                </button>
-              ))}
-            </div>
-
-            {/* Tab Content */}
-            <div className="min-h-[150px] sm:min-h-[200px]">
-              {activeTab === "about" && (
-                <div className="space-y-3 sm:space-y-4">
-                  {course.description && (
-                    <div>
-                      <h3 className="font-bold text-base sm:text-lg mb-2 text-foreground">توضیحات</h3>
-                      <p className="text-muted-foreground dark:text-textSecondary leading-relaxed text-sm sm:text-base">
-                        {course.description}
-                      </p>
-                    </div>
-                  )}
-
-                  {course.learningGoals && course.learningGoals.length > 0 && (
-                    <div>
-                      <h3 className="font-bold text-base sm:text-lg mb-2 text-foreground">اهداف یادگیری</h3>
-                      <ul className="space-y-2">
-                        {course.learningGoals.map((goal, idx) => (
-                          <li key={idx} className="flex items-start gap-2">
-                            <span className="text-mySecondary mt-1 flex-shrink-0">✓</span>
-                            <span className="text-muted-foreground dark:text-textSecondary text-sm sm:text-base">{goal}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {activeTab === "lessons" && (
-                <div className="space-y-2">
-                  <p className="text-muted-foreground dark:text-textSecondary text-sm sm:text-base">
-                    این دوره دارای {course.videosCount} درس است.
-                  </p>
-                  <p className="text-xs sm:text-sm text-muted-foreground dark:text-textSecondary">
-                    برای مشاهده درس‌ها صفحه کامل دوره را باز کنید.
-                  </p>
-                </div>
-              )}
-
-              {activeTab === "reviews" && (
-                <div className="space-y-4">
-                  {course.rating && (
-                    <div className="flex items-center gap-4">
-                      <div>
-                        <div className="text-3xl sm:text-4xl font-bold text-foreground">
-                          {course.rating.toFixed(1)}
-                        </div>
-                        <RatingStars rating={course.rating} />
-                      </div>
-                    </div>
-                  )}
-                  <p className="text-muted-foreground dark:text-textSecondary text-xs sm:text-sm">
-                    برای مشاهده تمام نظرات کاربران صفحه کامل دوره را باز کنید.
-                  </p>
-                </div>
-              )}
-            </div>
+          <div className="mb-5 flex gap-1 rounded-full bg-white/[0.04] p-1">
+            {(
+              [
+                ["about", "درباره"],
+                ["lessons", "درس‌ها"],
+                ["reviews", "نظرات"],
+              ] as const
+            ).map(([tab, label]) => (
+              <button
+                key={tab}
+                type="button"
+                onClick={() => setActiveTab(tab)}
+                className={`flex-1 rounded-full px-3 py-2 text-sm font-medium transition-transform duration-300 ${
+                  activeTab === tab
+                    ? "bg-[#6B7F3C] text-white shadow-sm"
+                    : "text-white/55 hover:scale-[1.02] hover:text-white/80"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
           </div>
 
-          {/* Price & Action Buttons */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 pt-6 sm:pt-8 border-t border-border">
-            <div className="flex-1">
-              <div className="flex items-baseline gap-2">
-                <span className="text-2xl sm:text-3xl font-bold text-mySecondary">
-                  {freeCourse ? "رایگان" : formatPrice(finalPrice)}
-                </span>
-                {course.discountPercent && (
-                  <span className="text-base sm:text-lg text-muted-foreground dark:text-textSecondary line-through">
-                    {formatPrice(course.price)}
-                  </span>
-                )}
-              </div>
-            </div>
+          <div className="min-h-[140px]">
+            {activeTab === "about" && (
+              <div className="space-y-4">
+                {course.description ? (
+                  <div>
+                    <h3 className="mb-2 text-sm font-semibold text-white/90">
+                      توضیحات
+                    </h3>
+                    <p className="text-sm leading-7 text-white/60">
+                      {course.description}
+                    </p>
+                  </div>
+                ) : null}
 
-            <button
-              onClick={() => setIsFavorite(!isFavorite)}
-              className={`p-3 rounded-lg transition flex-shrink-0 ${
-                isFavorite
-                  ? "bg-destructive text-primary-foreground"
-                  : "bg-muted text-muted-foreground hover:bg-muted hover:text-foreground dark:text-textSecondary dark:hover:bg-accent dark:hover:text-muted-foreground"
-              }`}
-            >
-              <Heart size={20} fill={isFavorite ? "currentColor" : "none"} />
-            </button>
+                {course.learningGoals && course.learningGoals.length > 0 ? (
+                  <div>
+                    <h3 className="mb-2 text-sm font-semibold text-white/90">
+                      اهداف یادگیری
+                    </h3>
+                    <ul className="space-y-2">
+                      {course.learningGoals.map((goal, idx) => (
+                        <li
+                          key={idx}
+                          className="flex items-start gap-2 text-sm text-white/60"
+                        >
+                          <span className="mt-1 text-[#6B7F3C]">✓</span>
+                          <span>{goal}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
+              </div>
+            )}
+
+            {activeTab === "lessons" && (
+              <p className="text-sm leading-7 text-white/60">
+                این دوره دارای {course.videosCount ?? "چند"} درس است. برای مشاهده
+                کامل درس‌ها صفحه دوره را باز کنید.
+              </p>
+            )}
+
+            {activeTab === "reviews" && (
+              <div className="space-y-3">
+                {course.rating ? (
+                  <div className="flex items-center gap-3">
+                    <span className="text-3xl font-semibold text-white">
+                      {course.rating.toFixed(1)}
+                    </span>
+                    <RatingStars rating={course.rating} />
+                  </div>
+                ) : null}
+                <p className="text-sm text-white/55">
+                  برای مشاهده تمام نظرات، صفحه کامل دوره را باز کنید.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </DialogContent>
