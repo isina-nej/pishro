@@ -19,33 +19,26 @@ async function clearClientCaches() {
   }
 }
 
-function shouldRecover(message: string, filename?: string) {
+function shouldRecover(message: string) {
   const msg = message || '';
-  const file = filename || '';
-  if (file.includes('/_next/')) return true;
   return (
     msg.includes('Loading chunk') ||
     msg.includes('ChunkLoadError') ||
     msg.includes('Failed to fetch dynamically imported module') ||
     msg.includes('Importing a module script failed') ||
-    msg.includes('error loading dynamically imported module') ||
-    msg.includes('Unexpected token') ||
-    msg.includes('Application error') ||
-    // Next گاهی فقط "Uncaught" خالی می‌دهد
-    msg.trim() === 'Uncaught' ||
-    msg.trim() === 'Uncaught '
+    msg.includes('error loading dynamically imported module')
   );
 }
 
 /**
- * هر خطای کلاینت مرتبط با باندل Next → پاکسازی کش + hard reload.
+ * فقط خطای لود چانک بعد از دیپلوی → hard reload.
+ * خطای معمولی رندر را به full reload تبدیل نمی‌کند.
  */
 export default function ChunkLoadRecovery() {
   useEffect(() => {
     const reloadOnce = async () => {
       try {
         const last = Number(sessionStorage.getItem(RELOAD_KEY) || '0');
-        // جلوگیری از لوپ؛ هر ۱۵ ثانیه حداکثر یک‌بار
         if (Date.now() - last < 15_000) return;
         sessionStorage.setItem(RELOAD_KEY, String(Date.now()));
       } catch {
@@ -53,18 +46,20 @@ export default function ChunkLoadRecovery() {
       }
 
       await clearClientCaches();
-      const url = new URL(window.location.href);
-      url.searchParams.set('_r', String(Date.now()));
-      window.location.replace(url.toString());
+      window.location.reload();
     };
 
     const onError = (event: ErrorEvent) => {
       const target = event.target;
-      if (target instanceof HTMLScriptElement && target.src.includes('/_next/')) {
+      if (
+        target instanceof HTMLScriptElement &&
+        typeof target.src === 'string' &&
+        target.src.includes('/_next/static/')
+      ) {
         void reloadOnce();
         return;
       }
-      if (shouldRecover(String(event.message || ''), event.filename || '')) {
+      if (shouldRecover(String(event.message || ''))) {
         void reloadOnce();
       }
     };
@@ -74,7 +69,7 @@ export default function ChunkLoadRecovery() {
       const message =
         typeof reason === 'string'
           ? reason
-          : String(reason?.message || reason?.name || reason || '');
+          : String(reason?.message || reason?.name || '');
       if (shouldRecover(message)) {
         void reloadOnce();
       }
