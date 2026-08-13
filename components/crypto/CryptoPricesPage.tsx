@@ -32,8 +32,28 @@ interface ApiResponse {
   message?: string;
 }
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 12;
 const MAX_ASSETS = 150;
+/** فاصله ظاهر شدن هر ردیف تا حس «قیمت‌گذاری دانه‌دانه» بدون فشار */
+const REVEAL_GAP_MS = 42;
+/** بعد از هر دسته، به‌صورت خودکار دسته بعدی را بدون اسکرول پر می‌کنیم */
+const AUTO_PREFETCH_UNTIL = 48;
+const AUTO_PREFETCH_GAP_MS = 280;
+
+function sleep(ms: number, signal?: AbortSignal) {
+  return new Promise<void>((resolve, reject) => {
+    if (signal?.aborted) {
+      reject(new DOMException('Aborted', 'AbortError'));
+      return;
+    }
+    const timer = window.setTimeout(() => resolve(), ms);
+    const onAbort = () => {
+      window.clearTimeout(timer);
+      reject(new DOMException('Aborted', 'AbortError'));
+    };
+    signal?.addEventListener('abort', onAbort, { once: true });
+  });
+}
 
 const filters = [
   { id: 'all', label: 'همه بازار' },
@@ -251,6 +271,7 @@ export default function CryptoPricesPage({
   const nextPageRef = useRef(1);
   const loadingMoreRef = useRef(false);
   const initialLoadingRef = useRef(true);
+  const pricingRef = useRef(false);
   const assetsRef = useRef<CryptoMarketAsset[]>(initialData?.assets ?? []);
 
   useEffect(() => {
@@ -273,26 +294,57 @@ export default function CryptoPricesPage({
     assetsRef.current = assets;
   }, [assets]);
 
-  const applyPagePayload = useCallback((payload: CryptoMarketResponse, mode: 'replace' | 'append' | 'soft') => {
+  const applyMeta = useCallback((payload: CryptoMarketResponse) => {
     startTransition(() => {
       setGlobal(payload.global);
       setGeneratedAt(payload.generatedAt);
       setError(null);
-
-      if (mode === 'replace') {
-        setAssets(payload.assets);
-      } else if (mode === 'append') {
-        setAssets((current) => mergeAssets(current, payload.assets));
-      } else {
-        setAssets((current) => (current.length ? mergeAssets(current, payload.assets) : payload.assets));
-      }
-
       const page = payload.pagination?.page ?? 1;
       const more = Boolean(payload.pagination?.hasMore) && page * PAGE_SIZE < MAX_ASSETS;
       setHasMore(more);
       setNextPage(page + 1);
     });
   }, []);
+
+  const revealAssets = useCallback(
+    async (
+      incoming: CryptoMarketAsset[],
+      mode: 'replace' | 'append' | 'soft',
+      signal?: AbortSignal
+    ) => {
+      if (mode === 'soft' && assetsRef.current.length > 0) {
+        startTransition(() => {
+          setAssets((current) => mergeAssets(current, incoming));
+        });
+        return;
+      }
+
+      pricingRef.current = true;
+      try {
+        if (mode === 'replace') {
+          setAssets([]);
+          assetsRef.current = [];
+        }
+
+        for (const asset of incoming) {
+          if (signal?.aborted) return;
+          setAssets((current) => {
+            const next = mergeAssets(current, [asset]);
+            assetsRef.current = next;
+            return next;
+          });
+          try {
+            await sleep(REVEAL_GAP_MS, signal);
+          } catch {
+            return;
+          }
+        }
+      } finally {
+        pricingRef.current = false;
+      }
+    },
+    []
+  );
 
   const fetchPage = useCallback(async (page: number, options?: { force?: boolean; signal?: AbortSignal }) => {
     const response = await fetch(marketUrl(page, options?.force), {
@@ -313,25 +365,36 @@ export default function CryptoPricesPage({
     abortRef.current = controller;
 
     if (force) setRefreshing(true);
-    else setInitialLoading(true);
+    else if (assetsRef.current.length === 0) setInitialLoading(true);
 
     try {
       const data = await fetchPage(1, { force, signal: controller.signal });
       if (controller.signal.aborted) return;
-      applyPagePayload(data, 'replace');
+      applyMeta(data);
+      // متا و شِل صفحه آماده‌اند؛ ارزها دانه‌دانه ظاهر می‌شوند
+      setInitialLoading(false);
+      await revealAssets(data.assets, force ? 'replace' : 'replace', controller.signal);
     } catch (requestError) {
       if (controller.signal.aborted || (requestError instanceof DOMException && requestError.name === 'AbortError')) return;
       setError(requestError instanceof Error ? requestError.message : 'خطا در دریافت اطلاعات بازار');
+      setInitialLoading(false);
     } finally {
       if (!controller.signal.aborted) {
-        setInitialLoading(false);
         setRefreshing(false);
+        setInitialLoading(false);
       }
     }
-  }, [applyPagePayload, fetchPage]);
+  }, [applyMeta, fetchPage, revealAssets]);
 
   const loadMore = useCallback(async () => {
-    if (initialLoadingRef.current || loadingMoreRef.current || !hasMoreRef.current) return;
+    if (
+      initialLoadingRef.current ||
+      loadingMoreRef.current ||
+      pricingRef.current ||
+      !hasMoreRef.current
+    ) {
+      return;
+    }
 
     loadMoreAbortRef.current?.abort();
     const controller = new AbortController();
@@ -342,41 +405,36 @@ export default function CryptoPricesPage({
     try {
       const data = await fetchPage(page, { signal: controller.signal });
       if (controller.signal.aborted) return;
-      applyPagePayload(data, 'append');
+      applyMeta(data);
+      await revealAssets(data.assets, 'append', controller.signal);
     } catch (requestError) {
       if (controller.signal.aborted || (requestError instanceof DOMException && requestError.name === 'AbortError')) return;
       setError(requestError instanceof Error ? requestError.message : 'خطا در دریافت اطلاعات بازار');
     } finally {
       if (!controller.signal.aborted) setLoadingMore(false);
     }
-  }, [applyPagePayload, fetchPage]);
+  }, [applyMeta, fetchPage, revealAssets]);
 
   const softRefresh = useCallback(async () => {
     if (initialLoadingRef.current) return;
     const controller = new AbortController();
-    // Do not cancel in-flight scroll pages; only tag this as a soft refresh.
     try {
       const data = await fetchPage(1, { signal: controller.signal });
       if (controller.signal.aborted) return;
-      applyPagePayload(data, 'soft');
+      applyMeta(data);
+      await revealAssets(data.assets, 'soft', controller.signal);
     } catch {
       // Keep showing the last good snapshot during background refresh failures.
     }
-  }, [applyPagePayload, fetchPage]);
+  }, [applyMeta, fetchPage, revealAssets]);
 
   useEffect(() => {
-    if (initialData?.assets?.length) {
-      applyPagePayload(initialData, 'replace');
-      setInitialLoading(false);
-    } else {
-      void loadInitial();
-    }
+    void loadInitial();
 
     const softInterval = window.setInterval(() => {
       void softRefresh();
     }, 60_000);
 
-    // If the first paint was empty (sanctions / cold cache), keep retrying briefly.
     const retryInterval = window.setInterval(() => {
       if (!initialLoadingRef.current && assetsRef.current.length === 0) {
         void loadInitial(true);
@@ -391,6 +449,18 @@ export default function CryptoPricesPage({
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // پر کردن تدریجی فهرست بدون اجبار کاربر به اسکرول
+  useEffect(() => {
+    if (initialLoading || refreshing || loadingMore || !hasMore) return;
+    if (assets.length === 0 || assets.length >= AUTO_PREFETCH_UNTIL) return;
+
+    const timer = window.setTimeout(() => {
+      void loadMore();
+    }, AUTO_PREFETCH_GAP_MS);
+
+    return () => window.clearTimeout(timer);
+  }, [assets.length, hasMore, initialLoading, loadingMore, loadMore, refreshing]);
 
   useEffect(() => {
     const node = sentinelRef.current;
@@ -436,7 +506,7 @@ export default function CryptoPricesPage({
         {show('crypto:header') && (
         <div className="mb-7 flex items-center justify-between gap-4 rounded-3xl border border-border/60 bg-card/80 px-4 py-3 shadow-lg shadow-primary/5 backdrop-blur-2xl sm:px-5">
           <div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary shadow-lg shadow-primary/25"><CandlestickChart className="h-5 w-5 text-primary-foreground" /></div><div><p className="text-sm font-black tracking-tight text-foreground">پیشرو / بازارها</p><p className="hidden text-[10px] text-muted-foreground sm:block">داده زنده بازار دارایی‌های دیجیتال</p></div></div>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground"><button type="button" onClick={() => void loadInitial(true)} disabled={refreshing || initialLoading} className="flex items-center gap-1.5 rounded-full border border-border/60 bg-background/60 px-3 py-1.5 transition hover:scale-105 hover:bg-background disabled:opacity-50"><RefreshCw className={`h-3.5 w-3.5 ${refreshing ? 'animate-spin' : ''}`} />به‌روزرسانی</button><span className="hidden items-center gap-1.5 rounded-full border border-primary/25 bg-primary/10 px-3 py-1.5 text-foreground sm:flex"><span className={`h-1.5 w-1.5 rounded-full bg-primary ${initialLoading || loadingMore ? 'animate-pulse' : ''}`} />{error && !hasMarket ? 'آخرین داده موجود' : initialLoading ? 'در حال بارگذاری' : 'بازار فعال'}</span></div>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground"><button type="button" onClick={() => void loadInitial(true)} disabled={refreshing || initialLoading} className="flex items-center gap-1.5 rounded-full border border-border/60 bg-background/60 px-3 py-1.5 transition hover:scale-105 hover:bg-background disabled:opacity-50"><RefreshCw className={`h-3.5 w-3.5 ${refreshing ? 'animate-spin' : ''}`} />به‌روزرسانی</button><span className="hidden items-center gap-1.5 rounded-full border border-primary/25 bg-primary/10 px-3 py-1.5 text-foreground sm:flex"><span className={`h-1.5 w-1.5 rounded-full bg-primary ${initialLoading || loadingMore ? 'animate-pulse' : ''}`} />{error && !hasMarket ? 'آخرین داده موجود' : initialLoading || loadingMore ? 'در حال قیمت‌گذاری' : 'بازار فعال'}</span></div>
         </div>
         )}
 
@@ -496,7 +566,7 @@ export default function CryptoPricesPage({
                     <div className="rounded-2xl bg-gradient-to-br from-primary to-success p-2.5 text-primary-foreground"><LayoutGrid className="h-5 w-5" /></div>
                     <div>
                       <h2 className="text-lg font-black text-foreground">۱۵۰ ارز برتر بازار</h2>
-                      <p className="mt-1 text-xs text-muted-foreground">با اسکرول، دسته‌های بعدی بارگذاری می‌شوند</p>
+                      <p className="mt-1 text-xs text-muted-foreground">صفحه فوری باز می‌شود؛ قیمت‌ها دانه‌دانه تکمیل می‌شوند</p>
                     </div>
                   </div>
                   <div className="relative w-full max-w-xs">
@@ -512,8 +582,8 @@ export default function CryptoPricesPage({
                   <span className="mr-auto whitespace-nowrap text-[11px] text-muted-foreground">{faNumber.format(visibleAssets.length)} نتیجه · مرتب‌سازی: {sortLabels[sort.key]}</span>
                 </div>
 
-                {initialLoading && assets.length === 0 ? (
-                  <TableSkeleton rows={10} />
+                {assets.length === 0 && initialLoading ? (
+                  <TableSkeleton rows={8} />
                 ) : (
                   <div className="overflow-x-auto">
                     <table className="w-full min-w-[1040px] border-separate border-spacing-y-2 text-right">
@@ -536,10 +606,10 @@ export default function CryptoPricesPage({
                           return (
                             <motion.tr
                               key={asset.id}
-                              layout
-                              initial={{ opacity: 0, y: 8 }}
+                              layout={false}
+                              initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
-                              transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
                               className="group bg-muted/40 text-sm transition hover:bg-muted/70"
                             >
                               <td className="rounded-r-2xl px-4 py-3">
@@ -568,6 +638,13 @@ export default function CryptoPricesPage({
                         })}
                       </tbody>
                     </table>
+                    {(initialLoading || loadingMore) && (
+                      <div className="mt-2 space-y-2" aria-busy="true">
+                        {Array.from({ length: 3 }).map((_, index) => (
+                          <div key={index} className="h-14 animate-pulse rounded-2xl bg-card/[0.06]" />
+                        ))}
+                      </div>
+                    )}
                     {visibleAssets.length === 0 && !initialLoading && (
                       <div className="rounded-2xl border border-dashed border-border/10 py-12 text-center text-sm text-muted-foreground">
                         ارزی با این نام یا نماد در داده‌های بارگذاری‌شده پیدا نشد.
@@ -577,10 +654,10 @@ export default function CryptoPricesPage({
                 )}
 
                 <div ref={sentinelRef} className="mt-4 flex min-h-10 items-center justify-center">
-                  {loadingMore ? (
+                  {loadingMore || (initialLoading && assets.length > 0) ? (
                     <p className="flex items-center gap-2 text-xs text-muted-foreground">
                       <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                      در حال دریافت دسته بعدی...
+                      در حال قیمت‌گذاری ارز بعدی...
                     </p>
                   ) : hasMore && assets.length > 0 ? (
                     <p className="text-[11px] text-muted-foreground">برای دیدن ارزهای بیشتر اسکرول کنید</p>
