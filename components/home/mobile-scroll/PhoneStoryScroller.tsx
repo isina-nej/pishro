@@ -19,18 +19,63 @@ type PhoneStoryScrollerProps = {
   steps?: MobileScrollerStep[];
 };
 
+function ScreenContent({
+  step,
+  priority,
+  interactive,
+}: {
+  step: MobileScrollerStep;
+  priority?: boolean;
+  interactive?: boolean;
+}) {
+  const isPage = step.contentType === "PAGE" && Boolean(step.pageUrl);
+
+  if (isPage && step.pageUrl) {
+    return (
+      <iframe
+        src={step.pageUrl}
+        title={step.title}
+        className={clsx(
+          "absolute inset-0 h-full w-full border-0 bg-[var(--home-bg,#F7F5F0)]",
+          interactive ? "pointer-events-auto" : "pointer-events-none"
+        )}
+        loading="lazy"
+        referrerPolicy="no-referrer-when-downgrade"
+        // Showcase only — keep site scroll owning the section scrub
+        tabIndex={interactive ? 0 : -1}
+      />
+    );
+  }
+
+  const src = step.img || "/images/home/mobile-scroll/in-mobile-1.svg";
+  return (
+    <Image
+      src={src}
+      alt=""
+      fill
+      className="object-contain"
+      sizes="(max-width: 1024px) 220px, 320px"
+      priority={priority}
+    />
+  );
+}
+
 function ScreenLayer({
   step,
   progress,
   stepIndex,
   stepCount,
   priority,
+  isNearActive,
+  isActive,
 }: {
   step: MobileScrollerStep;
   progress: MotionValue<number>;
   stepIndex: number;
   stepCount: number;
   priority?: boolean;
+  isNearActive: boolean;
+  isActive: boolean;
 }) {
   const start = stepIndex / stepCount;
   const mid = (stepIndex + 0.5) / stepCount;
@@ -48,16 +93,15 @@ function ScreenLayer({
         : [0, 1, 1, 0]
   );
 
+  const isPage = step.contentType === "PAGE" && Boolean(step.pageUrl);
+  // Mount iframes only near the active step to avoid loading every page at once
+  const shouldRender = !isPage || isNearActive;
+
   return (
-    <motion.div className="absolute inset-0" style={{ opacity }} aria-hidden>
-      <Image
-        src={step.img}
-        alt=""
-        fill
-        className="object-contain"
-        sizes="(max-width: 1024px) 220px, 320px"
-        priority={priority}
-      />
+    <motion.div className="absolute inset-0" style={{ opacity }} aria-hidden={!isActive}>
+      {shouldRender ? (
+        <ScreenContent step={step} priority={priority} interactive={false} />
+      ) : null}
     </motion.div>
   );
 }
@@ -96,13 +140,7 @@ function StaticFallback({ steps }: { steps: MobileScrollerStep[] }) {
                 sizes="144px"
               />
               <div className="absolute inset-[6%] overflow-hidden rounded-[1.1rem]">
-                <Image
-                  src={step.img}
-                  alt=""
-                  fill
-                  className="object-contain"
-                  sizes="144px"
-                />
+                <ScreenContent step={step} />
               </div>
             </div>
             <div className="flex-1 text-center sm:pt-6 sm:text-right">
@@ -200,7 +238,7 @@ export function PhoneStoryScroller({
   return (
     <section
       ref={sectionRef}
-      style={{ height: `${steps.length * 100}vh` }}
+      style={{ height: `${Math.max(1, steps.length) * 100}vh` }}
       className="relative mt-12 w-full lg:mt-20"
       aria-label="مزایای سامانه پیشرو"
     >
@@ -209,8 +247,8 @@ export function PhoneStoryScroller({
           className="pointer-events-none absolute inset-0 -z-10"
           aria-hidden
         >
-          <div className="absolute left-1/2 top-1/3 h-[50vmin] w-[50vmin] -translate-x-1/2 rounded-full bg-primary/[0.06] blur-3xl" />
-          <div className="absolute bottom-1/4 right-[10%] h-[35vmin] w-[35vmin] rounded-full bg-premium/[0.06] blur-3xl" />
+          <div className="absolute left-1/2 top-1/3 hidden h-[50vmin] w-[50vmin] -translate-x-1/2 rounded-full bg-primary/[0.06] blur-3xl dark:block" />
+          <div className="absolute bottom-1/4 right-[10%] hidden h-[35vmin] w-[35vmin] rounded-full bg-premium/[0.06] blur-3xl dark:block" />
         </div>
 
         <div className="container-xl flex min-h-0 flex-1 flex-col px-4 py-6 lg:px-8 lg:py-8">
@@ -228,7 +266,7 @@ export function PhoneStoryScroller({
 
           <div className="relative z-10 mt-4 flex min-h-0 flex-1 flex-col items-center gap-6 lg:mt-0 lg:flex-row lg:items-center lg:justify-center lg:gap-16 xl:gap-24">
             <div className="order-1 flex w-full max-w-md shrink-0 flex-col justify-center text-center lg:order-2 lg:max-w-sm lg:text-right xl:max-w-md">
-              <div className="mb-3 flex items-center justify-center gap-2 lg:justify-start">
+              <div className="mb-3 flex max-w-full flex-wrap items-center justify-center gap-2 lg:justify-start">
                 {steps.map((step, i) => (
                   <span
                     key={step.id}
@@ -286,7 +324,7 @@ export function PhoneStoryScroller({
                   sizes="(max-width: 1024px) 260px, 320px"
                   priority
                 />
-                <div className="absolute inset-[3.5%] overflow-hidden rounded-[1.55rem] lg:inset-[3%] lg:rounded-[1.85rem]">
+                <div className="absolute inset-[3.5%] overflow-hidden rounded-[1.55rem] bg-[var(--home-bg,#F7F5F0)] lg:inset-[3%] lg:rounded-[1.85rem]">
                   {steps.map((step, i) => (
                     <ScreenLayer
                       key={step.id}
@@ -295,6 +333,8 @@ export function PhoneStoryScroller({
                       stepIndex={i}
                       stepCount={steps.length}
                       priority={i === 0}
+                      isNearActive={Math.abs(i - index) <= 1}
+                      isActive={i === index}
                     />
                   ))}
                 </div>

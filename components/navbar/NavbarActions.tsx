@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import { HiMiniArrowLeftEndOnRectangle } from "react-icons/hi2";
 import { FiShoppingCart } from "react-icons/fi";
@@ -12,49 +11,56 @@ import { useSession } from "next-auth/react";
 import { useCartStore } from "@/stores/cart-store";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 
+export type NavSocialLinks = {
+  instagram?: string;
+  telegram?: string;
+  twitter?: string;
+};
+
 interface NavbarActionsProps {
   isDark?: boolean;
+  socials?: NavSocialLinks;
 }
 
-const NavbarActions: React.FC<NavbarActionsProps> = ({ isDark }) => {
+const NavbarActions = ({ isDark, socials }: NavbarActionsProps) => {
   const { data: session } = useSession();
-  const { items } = useCartStore(); // ✅ get cart items
-  const cartCount = items.length; // ✅ number of items in cart
-
-  // تعیین مقصد دکمه: اگر کاربر لاگین باشد، به پروفایل/داشبورد هدایت شود
+  const cartCount = useCartStore((state) => state.items.length);
   const authLink = session ? "/profile/acc" : "/login";
   const authLabel = session ? "داشبورد" : "ورود | ثبت‌نام";
+  const instagram = socials?.instagram || contactInfo.socials.instagram;
+  const telegram = socials?.telegram || contactInfo.socials.telegram;
+  const twitter = socials?.twitter || contactInfo.socials.linkedin;
 
   return (
-    <div className="w-full md:w-fit flex items-center justify-between sm:justify-center px-8 md:px-0 gap-6 sm:gap-10 mt-2 md:mt-0">
-      {/* login/signup or dashboard + cart */}
-      <div className="flex items-center gap-4">
+    <div className="mt-2 flex w-full items-center justify-between gap-5 px-8 sm:justify-center sm:gap-8 md:mt-0 md:w-fit md:px-0">
+      <div className="flex items-center gap-3">
         <Link
           href={authLink}
           className={clsx(
-            "border transition-colors pr-5 pl-4 py-1.5 rounded-lg",
+            "inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-semibold transition-all duration-200",
             isDark
-              ? "border-border hover:bg-background/20 text-foreground"
-              : "border-muted-foreground/50 text-muted-foreground hover:bg-muted/60"
+              ? "border border-white/30 bg-white/10 text-white hover:bg-white/18"
+              : "bg-primary text-primary-foreground hover:bg-primary/90"
           )}
         >
-          <span className="flex items-center gap-1 font-medium text-xs">
-            {authLabel}
-            <HiMiniArrowLeftEndOnRectangle className="size-5" />
-          </span>
+          {authLabel}
+          <HiMiniArrowLeftEndOnRectangle className="size-4" />
         </Link>
 
-        {/* ✅ Checkout + badge */}
-        <Link href={"/checkout"} className="relative group">
-          <FiShoppingCart
-            className={clsx(
-              "size-6 transition-colors",
-              isDark ? "text-foreground" : "text-muted-foreground"
-            )}
-          />
+        <Link
+          href="/checkout"
+          className={clsx(
+            "relative inline-flex size-10 items-center justify-center rounded-xl border transition-colors",
+            isDark
+              ? "border-white/25 text-white hover:bg-white/10"
+              : "border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"
+          )}
+          aria-label="سبد خرید"
+        >
+          <FiShoppingCart className="size-5" />
           {cartCount > 0 && (
             <span
-              className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center"
+              className="absolute -top-1.5 -right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-destructive-foreground"
               aria-label={`تعداد محصولات در سبد: ${cartCount}`}
             >
               {cartCount}
@@ -63,34 +69,39 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ isDark }) => {
         </Link>
       </div>
 
-      {/* social links */}
       <div
         className={clsx(
-          "flex items-center gap-2 text-xs sm:text-sm md:text-base",
-          isDark ? "text-foreground" : "text-muted-foreground"
+          "flex items-center gap-1",
+          isDark ? "text-white" : "text-muted-foreground"
         )}
       >
         <ThemeToggle />
         <Link
-          href={contactInfo.socials.linkedin}
+          href={twitter}
           target="_blank"
-          className="hover:opacity-80 transition-colors p-1"
+          rel="noopener noreferrer"
+          aria-label="ایکس"
+          className="rounded-lg p-1.5 transition-opacity hover:opacity-80"
         >
-          <FaXTwitter className="size-5" />
+          <FaXTwitter className="size-[18px]" />
         </Link>
         <Link
-          href={contactInfo.socials.instagram}
+          href={instagram}
           target="_blank"
-          className="hover:text-[#E1306C] transition-colors p-1"
+          rel="noopener noreferrer"
+          aria-label="اینستاگرام"
+          className="rounded-lg p-1.5 transition-colors hover:text-[#E1306C]"
         >
-          <FaInstagram className="size-6" />
+          <FaInstagram className="size-5" />
         </Link>
         <Link
-          href={contactInfo.socials.telegram}
+          href={telegram}
           target="_blank"
-          className="hover:text-[#229ED9] transition-colors p-1"
+          rel="noopener noreferrer"
+          aria-label="تلگرام"
+          className="rounded-lg p-1.5 transition-colors hover:text-[#229ED9]"
         >
-          <RiTelegram2Fill className="size-5" />
+          <RiTelegram2Fill className="size-[18px]" />
         </Link>
       </div>
     </div>

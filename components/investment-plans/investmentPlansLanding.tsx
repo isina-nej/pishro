@@ -24,15 +24,15 @@ const InvestmentPlansLanding = ({
         priority
       />
 
-      {/* Gradient overlay to make text readable */}
-      <div className="absolute inset-0 bg-gradient-to-l from-black/95 via-black/60 to-black/5 z-10 pointer-events-none" />
+      {/* Soft side vignette — keep photo clear */}
+      <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-l from-black/55 via-black/20 to-transparent" />
 
       {/* Text content over image */}
-      <div className="relative z-20 max-w-2xl text-foreground flex flex-col items-center rtl gap-y-8 px-8">
-        <h1 className="text-4xl lg:text-5xl font-bold leading-tight">
+      <div className="relative z-20 max-w-2xl text-white flex flex-col items-center rtl gap-y-8 px-8">
+        <h1 className="text-4xl lg:text-5xl font-bold leading-tight text-white">
           {investmentPlansData.title}
         </h1>
-        <p className="text-lg lg:text-xl text-foreground/90 lg:leading-8">
+        <p className="text-lg lg:text-xl text-white/85 lg:leading-8">
           {investmentPlansData.description}
         </p>
       </div>

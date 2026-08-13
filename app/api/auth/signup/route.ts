@@ -50,7 +50,6 @@ export async function POST(req: Request) {
     // Generate OTP
     const code = generateOtpDigits(4);
     const expiresAt = new Date(Date.now() + 2 * 60 * 1000); // 2 minutes
-    console.log("code:", code);
 
     // Check if OTP exists for this phone
     const otps = await query<Pick<Otp, "id">>(

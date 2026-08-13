@@ -10,7 +10,7 @@
  */
 
 import { writeFile, mkdir, unlink, rename } from "fs/promises";
-import { dirname, join, relative, resolve } from "path";
+import { dirname, isAbsolute, relative, resolve } from "path";
 import { existsSync } from "fs";
 import crypto from "crypto";
 import {
@@ -31,7 +31,8 @@ export interface StorageConfig {
 
 export type StorageDriver = "local" | "s3";
 
-const DEFAULT_UPLOAD_ROOT = "/opt/uploade";
+/** ریشهٔ پیش‌فرض خارج از فولدر کد — روی سرور پروداکشن */
+export const DEFAULT_UPLOAD_ROOT = "/opt/uploade";
 const DEFAULT_UPLOAD_BASE_URL = "/api/uploads";
 
 /** درایور فعال ذخیره‌سازی */
@@ -43,6 +44,51 @@ export function getStorageDriver(): StorageDriver {
 
 function normalizeRelativePath(relativePath: string): string {
   return relativePath.replace(/\\/g, "/").replace(/^\/+/, "");
+}
+
+/**
+ * آیا مسیر `candidate` داخل `parent` (یا خود آن) است؟
+ */
+export function isPathInsideDir(candidate: string, parent: string): boolean {
+  const resolvedParent = resolve(parent);
+  const resolvedCandidate = resolve(candidate);
+  const rel = relative(resolvedParent, resolvedCandidate);
+  return rel === "" || (!rel.startsWith("..") && !isAbsolute(rel));
+}
+
+/**
+ * ریشهٔ دیسک محلی برای آپلودها.
+ * همیشه خارج از فولدر پروژه resolve می‌شود تا deploy/git فایل‌های ادمین را نبرد.
+ */
+export function resolveUploadRoot(
+  configured?: string | null,
+  projectRoot: string = process.cwd()
+): string {
+  const raw =
+    (configured ??
+      process.env.UPLOAD_BASE_DIR ??
+      process.env.UPLOAD_STORAGE_PATH ??
+      DEFAULT_UPLOAD_ROOT)
+      .trim() || DEFAULT_UPLOAD_ROOT;
+
+  let storagePath: string;
+  if (isAbsolute(raw)) {
+    storagePath = resolve(raw);
+  } else {
+    console.warn(
+      `[storage] مسیر نسبی آپلود (${raw}) نادیده گرفته شد؛ از ${DEFAULT_UPLOAD_ROOT} استفاده می‌شود.`
+    );
+    storagePath = DEFAULT_UPLOAD_ROOT;
+  }
+
+  if (isPathInsideDir(storagePath, projectRoot)) {
+    console.warn(
+      `[storage] UPLOAD_BASE_DIR (${storagePath}) داخل فولدر کد است؛ به ${DEFAULT_UPLOAD_ROOT} منتقل شد.`
+    );
+    return DEFAULT_UPLOAD_ROOT;
+  }
+
+  return storagePath;
 }
 
 export function assertSafeStoragePath(
@@ -64,20 +110,11 @@ export function assertSafeStoragePath(
  * دریافت تنظیمات storage از environment variables
  */
 export function getStorageConfig(): StorageConfig {
-  let storagePath =
-    process.env.UPLOAD_BASE_DIR ||
-    process.env.UPLOAD_STORAGE_PATH ||
-    DEFAULT_UPLOAD_ROOT;
-
-  if (!storagePath.startsWith("/")) {
-    storagePath = join(process.cwd(), storagePath);
-  }
-
   const baseUrl =
     process.env.UPLOAD_BASE_URL || DEFAULT_UPLOAD_BASE_URL;
 
   return {
-    storagePath: resolve(storagePath),
+    storagePath: resolveUploadRoot(),
     baseUrl,
   };
 }

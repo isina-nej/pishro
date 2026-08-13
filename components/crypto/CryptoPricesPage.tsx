@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, startTransition } from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import {
   ArrowDown,
   ArrowDownLeft,
@@ -22,13 +23,17 @@ import {
   WalletCards,
   Zap,
 } from 'lucide-react';
-import type { CryptoMarketAsset, CryptoMarketResponse } from '@/types/crypto-market';
+import type { CryptoGlobalMarket, CryptoMarketAsset, CryptoMarketResponse } from '@/types/crypto-market';
+import { useVisibility } from '@/components/site/VisibilityProvider';
 
 interface ApiResponse {
   status: 'success' | 'error';
   data?: CryptoMarketResponse;
   message?: string;
 }
+
+const PAGE_SIZE = 20;
+const MAX_ASSETS = 150;
 
 const filters = [
   { id: 'all', label: 'همه بازار' },
@@ -133,45 +138,204 @@ function AssetIcon({ asset, large = false }: { asset: CryptoMarketAsset; large?:
   );
 }
 
-function LoadingState() {
-  return <div className="flex min-h-[420px] flex-col items-center justify-center gap-4 text-muted-foreground"><Loader2 className="h-8 w-8 animate-spin text-primary" /><p className="text-sm">در حال دریافت داده‌های بازار...</p></div>;
+function TableSkeleton({ rows = 8 }: { rows?: number }) {
+  return (
+    <div className="space-y-2" aria-busy="true" aria-label="در حال بارگذاری قیمت‌ها">
+      {Array.from({ length: rows }).map((_, index) => (
+        <div key={index} className="h-16 animate-pulse rounded-2xl bg-card/[0.06]" />
+      ))}
+    </div>
+  );
+}
+
+function StatsSkeleton() {
+  return (
+    <section className="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-busy="true">
+      {Array.from({ length: 4 }).map((_, index) => (
+        <div key={index} className="h-28 animate-pulse rounded-3xl border border-border/10 bg-card/[0.05]" />
+      ))}
+    </section>
+  );
+}
+
+function mergeAssets(current: CryptoMarketAsset[], incoming: CryptoMarketAsset[]) {
+  const byId = new Map(current.map((asset) => [asset.id, asset]));
+  for (const asset of incoming) byId.set(asset.id, asset);
+  return Array.from(byId.values()).sort((a, b) => a.rank - b.rank);
+}
+
+function marketUrl(page: number, force = false) {
+  const params = new URLSearchParams({
+    limit: String(PAGE_SIZE),
+    page: String(page),
+  });
+  if (force) params.set('refresh', '1');
+  return `/api/public/crypto-market?${params}`;
 }
 
 export default function CryptoPricesPage({ admin = false }: { admin?: boolean }) {
-  const [market, setMarket] = useState<CryptoMarketResponse | null>(null);
+  const { show } = useVisibility();
+  const [assets, setAssets] = useState<CryptoMarketAsset[]>([]);
+  const [global, setGlobal] = useState<CryptoGlobalMarket | null>(null);
+  const [generatedAt, setGeneratedAt] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [nextPage, setNextPage] = useState(1);
   const [activeFilter, setActiveFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [favorites, setFavorites] = useState<string[]>(['bitcoin', 'ethereum']);
   const [sort, setSort] = useState<{ key: SortKey; direction: SortDirection }>({ key: 'rank', direction: 'asc' });
 
-  const loadMarket = async (force = false) => {
-    if (force) setRefreshing(true);
-    else setLoading(true);
-    try {
-      const response = await fetch(`/api/public/crypto-market${force ? '?refresh=1' : ''}`, { cache: 'no-store' });
-      const payload = await response.json() as ApiResponse;
-      if (!response.ok || payload.status !== 'success' || !payload.data) throw new Error(payload.message || 'خطا در دریافت اطلاعات بازار');
-      setMarket(payload.data);
-      setError(null);
-    } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : 'خطا در دریافت اطلاعات بازار');
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  };
+  const abortRef = useRef<AbortController | null>(null);
+  const loadMoreAbortRef = useRef<AbortController | null>(null);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const hasMoreRef = useRef(true);
+  const nextPageRef = useRef(1);
+  const loadingMoreRef = useRef(false);
+  const initialLoadingRef = useRef(true);
 
   useEffect(() => {
-    loadMarket();
-    const interval = window.setInterval(() => loadMarket(), 60_000);
-    return () => window.clearInterval(interval);
+    hasMoreRef.current = hasMore;
+  }, [hasMore]);
+
+  useEffect(() => {
+    nextPageRef.current = nextPage;
+  }, [nextPage]);
+
+  useEffect(() => {
+    loadingMoreRef.current = loadingMore;
+  }, [loadingMore]);
+
+  useEffect(() => {
+    initialLoadingRef.current = initialLoading;
+  }, [initialLoading]);
+
+  const applyPagePayload = useCallback((payload: CryptoMarketResponse, mode: 'replace' | 'append' | 'soft') => {
+    startTransition(() => {
+      setGlobal(payload.global);
+      setGeneratedAt(payload.generatedAt);
+      setError(null);
+
+      if (mode === 'replace') {
+        setAssets(payload.assets);
+      } else if (mode === 'append') {
+        setAssets((current) => mergeAssets(current, payload.assets));
+      } else {
+        setAssets((current) => (current.length ? mergeAssets(current, payload.assets) : payload.assets));
+      }
+
+      const page = payload.pagination?.page ?? 1;
+      const more = Boolean(payload.pagination?.hasMore) && page * PAGE_SIZE < MAX_ASSETS;
+      setHasMore(more);
+      setNextPage(page + 1);
+    });
   }, []);
 
+  const fetchPage = useCallback(async (page: number, options?: { force?: boolean; signal?: AbortSignal }) => {
+    const response = await fetch(marketUrl(page, options?.force), {
+      cache: 'no-store',
+      signal: options?.signal,
+    });
+    const payload = await response.json() as ApiResponse;
+    if (!response.ok || payload.status !== 'success' || !payload.data) {
+      throw new Error(payload.message || 'خطا در دریافت اطلاعات بازار');
+    }
+    return payload.data;
+  }, []);
+
+  const loadInitial = useCallback(async (force = false) => {
+    abortRef.current?.abort();
+    loadMoreAbortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
+
+    if (force) setRefreshing(true);
+    else setInitialLoading(true);
+
+    try {
+      const data = await fetchPage(1, { force, signal: controller.signal });
+      if (controller.signal.aborted) return;
+      applyPagePayload(data, 'replace');
+    } catch (requestError) {
+      if (controller.signal.aborted || (requestError instanceof DOMException && requestError.name === 'AbortError')) return;
+      setError(requestError instanceof Error ? requestError.message : 'خطا در دریافت اطلاعات بازار');
+    } finally {
+      if (!controller.signal.aborted) {
+        setInitialLoading(false);
+        setRefreshing(false);
+      }
+    }
+  }, [applyPagePayload, fetchPage]);
+
+  const loadMore = useCallback(async () => {
+    if (initialLoadingRef.current || loadingMoreRef.current || !hasMoreRef.current) return;
+
+    loadMoreAbortRef.current?.abort();
+    const controller = new AbortController();
+    loadMoreAbortRef.current = controller;
+    const page = nextPageRef.current;
+
+    setLoadingMore(true);
+    try {
+      const data = await fetchPage(page, { signal: controller.signal });
+      if (controller.signal.aborted) return;
+      applyPagePayload(data, 'append');
+    } catch (requestError) {
+      if (controller.signal.aborted || (requestError instanceof DOMException && requestError.name === 'AbortError')) return;
+      setError(requestError instanceof Error ? requestError.message : 'خطا در دریافت اطلاعات بازار');
+    } finally {
+      if (!controller.signal.aborted) setLoadingMore(false);
+    }
+  }, [applyPagePayload, fetchPage]);
+
+  const softRefresh = useCallback(async () => {
+    if (initialLoadingRef.current) return;
+    const controller = new AbortController();
+    // Do not cancel in-flight scroll pages; only tag this as a soft refresh.
+    try {
+      const data = await fetchPage(1, { signal: controller.signal });
+      if (controller.signal.aborted) return;
+      applyPagePayload(data, 'soft');
+    } catch {
+      // Keep showing the last good snapshot during background refresh failures.
+    }
+  }, [applyPagePayload, fetchPage]);
+
+  useEffect(() => {
+    void loadInitial();
+    const interval = window.setInterval(() => {
+      void softRefresh();
+    }, 60_000);
+
+    return () => {
+      window.clearInterval(interval);
+      abortRef.current?.abort();
+      loadMoreAbortRef.current?.abort();
+    };
+    // Mount-only: loadInitial/softRefresh are stable enough; re-running would
+    // abort and restart the first page on every identity change.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const node = sentinelRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) void loadMore();
+      },
+      { rootMargin: '280px 0px' }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [loadMore, assets.length, initialLoading]);
+
   const visibleAssets = useMemo(() => {
-    const assets = market?.assets || [];
     const query = normalizeSearch(search);
     const filtered = assets.filter((asset) => {
       const matchesQuery = !query || getAssetSearchText(asset).includes(query);
@@ -179,13 +343,14 @@ export default function CryptoPricesPage({ admin = false }: { admin?: boolean })
       return matchesQuery && matchesFilter;
     });
     return filtered.sort((a, b) => compareAssets(a, b, sort.key) * (sort.direction === 'asc' ? 1 : -1));
-  }, [activeFilter, favorites, market, search, sort]);
+  }, [activeFilter, assets, favorites, search, sort]);
 
   const toggleFavorite = (id: string) => setFavorites((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id]);
   const toggleSort = (key: SortKey) => setSort((current) => current.key === key ? { key, direction: current.direction === 'asc' ? 'desc' : 'asc' } : { key, direction: key === 'rank' || key === 'name' ? 'asc' : 'desc' });
-  const assets = market?.assets || [];
   const bitcoin = assets.find((asset) => asset.symbol === 'BTC') || assets[0];
   const marketUp = assets.filter((asset) => asset.change24h > 0).length;
+  const hasMarket = Boolean(global) && assets.length > 0;
+  const showEmptyError = !initialLoading && !hasMarket && Boolean(error);
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#07111f] text-foreground" dir="rtl">
@@ -196,34 +361,173 @@ export default function CryptoPricesPage({ admin = false }: { admin?: boolean })
       </div>
 
       <div className={`relative mx-auto max-w-[1440px] px-4 pb-12 sm:px-6 lg:px-10 ${admin ? 'pt-5 lg:pt-8' : 'pt-20 md:pt-28'}`}>
+        {show('crypto:header') && (
         <div className="mb-7 flex items-center justify-between gap-4 rounded-3xl border border-border/10 bg-card/[0.055] px-4 py-3 shadow-2xl shadow-black/20 backdrop-blur-2xl sm:px-5">
           <div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary shadow-lg shadow-cyan-500/20"><CandlestickChart className="h-5 w-5 text-foreground" /></div><div><p className="text-sm font-black tracking-tight text-foreground">پیشرو / بازارها</p><p className="hidden text-[10px] text-muted-foreground sm:block">داده زنده بازار دارایی‌های دیجیتال</p></div></div>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground"><button type="button" onClick={() => loadMarket(true)} disabled={refreshing} className="flex items-center gap-1.5 rounded-full border border-border/10 bg-card/[0.06] px-3 py-1.5 transition hover:bg-card/10 disabled:opacity-50"><RefreshCw className={`h-3.5 w-3.5 ${refreshing ? 'animate-spin' : ''}`} />به‌روزرسانی</button><span className="hidden items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1.5 sm:flex"><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />{error ? 'آخرین داده موجود' : 'بازار فعال'}</span></div>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground"><button type="button" onClick={() => void loadInitial(true)} disabled={refreshing || initialLoading} className="flex items-center gap-1.5 rounded-full border border-border/10 bg-card/[0.06] px-3 py-1.5 transition hover:bg-card/10 disabled:opacity-50"><RefreshCw className={`h-3.5 w-3.5 ${refreshing ? 'animate-spin' : ''}`} />به‌روزرسانی</button><span className="hidden items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1.5 sm:flex"><span className={`h-1.5 w-1.5 rounded-full bg-primary ${initialLoading || loadingMore ? 'animate-pulse' : ''}`} />{error && !hasMarket ? 'آخرین داده موجود' : initialLoading ? 'در حال بارگذاری' : 'بازار فعال'}</span></div>
         </div>
+        )}
 
-        {loading && !market ? <LoadingState /> : !market ? <div className="rounded-3xl border border-destructive/20 bg-destructive/10 p-10 text-center"><p className="text-destructive">{error || 'اطلاعات بازار در دسترس نیست.'}</p><button type="button" onClick={() => loadMarket(true)} className="mt-5 rounded-xl bg-card px-4 py-2 text-sm font-bold text-foreground">تلاش دوباره</button></div> : <>
-          {error && <div className="mb-5 rounded-2xl border border-premium/20 bg-premium/10 px-4 py-3 text-xs text-premium">به‌روزرسانی جدید ناموفق بود؛ آخرین داده دریافت‌شده نمایش داده می‌شود.</div>}
-          <section className="mb-6 grid gap-5 xl:grid-cols-[1.35fr_.65fr]">
-            <div className="relative min-h-[290px] overflow-hidden rounded-[2rem] border border-border/10 bg-gradient-to-br from-[#12253b]/95 via-[#10223a]/80 to-[#10152d]/90 p-6 shadow-2xl shadow-cyan-950/25 sm:p-9">
-              <div className="relative z-10 max-w-xl"><div className="mb-5 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1.5 text-[11px] font-semibold text-primary"><Zap className="h-3.5 w-3.5 text-primary" />نبض زنده بازار</div><h1 className="max-w-lg text-3xl font-black leading-[1.35] tracking-tight text-primary-foreground sm:text-5xl">تصمیم‌های بهتر، با یک نگاه به <span className="bg-gradient-to-l from-primary via-primary to-success bg-clip-text text-transparent">بازار</span></h1><p className="mt-4 max-w-md text-sm leading-7 text-muted-foreground sm:text-base">قیمت جهانی، نمودار هفت‌روزه و ارزش ریالی رمزارزهای مهم را یکجا دنبال کنید.</p></div>
-              <div className="absolute bottom-0 left-0 right-0 h-32 opacity-70 sm:h-40" aria-hidden="true"><svg viewBox="0 0 900 160" preserveAspectRatio="none" className="h-full w-full"><defs><linearGradient id="market-line" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#38d8ff" stopOpacity="0" /><stop offset=".35" stopColor="#38d8ff" /><stop offset="1" stopColor="#8f8cff" /></linearGradient></defs><path d="M0 130 C 85 140, 110 75, 190 91 S 260 150, 337 89 S 439 116, 510 78 S 620 120, 702 55 S 802 83, 900 18" fill="none" stroke="url(#market-line)" strokeWidth="2.5" /></svg></div>
+        {showEmptyError ? (
+          <div className="rounded-3xl border border-destructive/20 bg-destructive/10 p-10 text-center">
+            <p className="text-destructive">{error || 'اطلاعات بازار در دسترس نیست.'}</p>
+            <button type="button" onClick={() => void loadInitial(true)} className="mt-5 rounded-xl bg-card px-4 py-2 text-sm font-bold text-foreground">تلاش دوباره</button>
+          </div>
+        ) : (
+          <>
+            {error && hasMarket && <div className="mb-5 rounded-2xl border border-premium/20 bg-premium/10 px-4 py-3 text-xs text-premium">به‌روزرسانی جدید ناموفق بود؛ آخرین داده دریافت‌شده نمایش داده می‌شود.</div>}
+
+            {show('crypto:hero') && (
+              <section className="mb-6 grid gap-5 xl:grid-cols-[1.35fr_.65fr]">
+                <div className="relative min-h-[290px] overflow-hidden rounded-[2rem] border border-border/10 bg-gradient-to-br from-[#12253b]/95 via-[#10223a]/80 to-[#10152d]/90 p-6 shadow-2xl shadow-cyan-950/25 sm:p-9">
+                  <div className="relative z-10 max-w-xl"><div className="mb-5 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1.5 text-[11px] font-semibold text-primary"><Zap className="h-3.5 w-3.5 text-primary" />نبض زنده بازار</div><h1 className="max-w-lg text-3xl font-black leading-[1.35] tracking-tight text-primary-foreground sm:text-5xl">تصمیم‌های بهتر، با یک نگاه به <span className="bg-gradient-to-l from-primary via-primary to-success bg-clip-text text-transparent">بازار</span></h1><p className="mt-4 max-w-md text-sm leading-7 text-muted-foreground sm:text-base">قیمت جهانی، نمودار هفت‌روزه و ارزش ریالی رمزارزهای مهم را یکجا دنبال کنید.</p></div>
+                  <div className="absolute bottom-0 left-0 right-0 h-32 opacity-70 sm:h-40" aria-hidden="true"><svg viewBox="0 0 900 160" preserveAspectRatio="none" className="h-full w-full"><defs><linearGradient id="market-line" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#38d8ff" stopOpacity="0" /><stop offset=".35" stopColor="#38d8ff" /><stop offset="1" stopColor="#8f8cff" /></linearGradient></defs><path d="M0 130 C 85 140, 110 75, 190 91 S 260 150, 337 89 S 439 116, 510 78 S 620 120, 702 55 S 802 83, 900 18" fill="none" stroke="url(#market-line)" strokeWidth="2.5" /></svg></div>
+                </div>
+
+                {bitcoin ? (
+                  <div className="relative overflow-hidden rounded-[2rem] border border-border/10 bg-card/[0.065] p-6 shadow-2xl shadow-black/20 backdrop-blur-2xl sm:p-7"><div className="mb-7 flex items-start justify-between gap-3"><div className="flex items-center gap-3"><AssetIcon asset={bitcoin} large /><div><p className="font-bold">بیت‌کوین</p><p className="text-xs text-muted-foreground">BTC / USDT</p></div></div><span className="rounded-full border border-primary/20 bg-primary/10 px-2.5 py-1 text-[10px] text-primary">{bitcoin.sources.price}</span></div><p className="mb-1 text-xs text-muted-foreground">قیمت لحظه‌ای</p><div className="flex items-end justify-between gap-3"><p dir="ltr" className="text-3xl font-black tracking-tight">{formatUsd(bitcoin.priceUsd)}</p><span dir="ltr" className={`mb-1 flex items-center gap-1 text-sm font-bold ${bitcoin.change24h >= 0 ? 'text-primary' : 'text-destructive'}`}>{bitcoin.change24h >= 0 ? <ArrowUpLeft className="h-4 w-4" /> : <ArrowDownLeft className="h-4 w-4" />}{bitcoin.change24h >= 0 ? '+' : ''}{faNumber.format(bitcoin.change24h)}%</span></div><p className="mt-3 text-xs text-muted-foreground">{bitcoin.priceIrt ? `${faMoney.format(bitcoin.priceIrt)} تومان` : 'قیمت تومانی در دسترس نیست'}</p><div className="mt-5 flex items-end justify-between border-t border-border/10 pt-4"><div className="text-xs text-muted-foreground"><p>ارزش بازار</p><strong className="mt-1 block text-sm text-muted-foreground">{formatCompactUsd(bitcoin.marketCap)}</strong></div><Sparkline values={bitcoin.sparkline} positive={bitcoin.change24h >= 0} /></div></div>
+                ) : (
+                  <div className="min-h-[290px] animate-pulse rounded-[2rem] border border-border/10 bg-card/[0.065]" aria-busy="true" />
+                )}
+              </section>
+            )}
+
+            {show('crypto:stats') && (
+              initialLoading && !global ? (
+                <StatsSkeleton />
+              ) : global ? (
+                <section className="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                  {[
+                    { label: 'ارزش کل بازار', value: formatCompactUsd(global.marketCap), note: `${global.marketCapChange24h >= 0 ? '+' : ''}${faNumber.format(global.marketCapChange24h)}٪ امروز`, icon: Globe2 },
+                    { label: 'حجم معاملات ۲۴ ساعت', value: formatCompactUsd(global.volume24h), note: `${faNumber.format(global.activeCryptocurrencies || 0)} ارز فعال`, icon: BarChart3 },
+                    { label: 'دامیننس بیت‌کوین', value: `${faNumber.format(global.btcDominance)}٪`, note: global.source, icon: Bitcoin },
+                    { label: 'ارزهای صعودی', value: `${faNumber.format(marketUp)} از ${faNumber.format(assets.length)}`, note: 'در فهرست بارگذاری‌شده', icon: TrendingUp },
+                  ].map((stat) => {
+                    const Icon = stat.icon;
+                    return (
+                      <div key={stat.label} className="rounded-3xl border border-border/10 bg-card/[0.05] p-4 backdrop-blur-xl transition hover:-translate-y-0.5 hover:bg-card/[0.08]">
+                        <div className="mb-4 flex items-center justify-between"><span className="rounded-xl bg-card/[0.08] p-2 text-primary"><Icon className="h-4 w-4" /></span><span className="text-[10px] text-muted-foreground">زنده</span></div>
+                        <p className="text-xs text-muted-foreground">{stat.label}</p>
+                        <p dir="ltr" className="mt-1 text-lg font-bold text-primary-foreground">{stat.value}</p>
+                        <p className="mt-2 text-[11px] font-semibold text-primary">{stat.note}</p>
+                      </div>
+                    );
+                  })}
+                </section>
+              ) : null
+            )}
+
+            {show('crypto:table') && (
+              <section className="rounded-[2rem] border border-border/10 bg-card/[0.055] p-4 shadow-2xl shadow-black/20 backdrop-blur-2xl sm:p-6">
+                <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="rounded-2xl bg-gradient-to-br from-accent to-primary p-2.5 text-foreground"><LayoutGrid className="h-5 w-5" /></div>
+                    <div>
+                      <h2 className="text-lg font-black">۱۵۰ ارز برتر بازار</h2>
+                      <p className="mt-1 text-xs text-muted-foreground">با اسکرول، دسته‌های بعدی بارگذاری می‌شوند</p>
+                    </div>
+                  </div>
+                  <div className="relative w-full max-w-xs">
+                    <Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="جستجوی هر ارز، نام یا نماد" className="h-10 w-full rounded-2xl border border-border/10 bg-background/15 pr-10 pl-3 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-primary/50" />
+                  </div>
+                </div>
+
+                <div className="mb-5 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
+                  {filters.map((filter) => (
+                    <button key={filter.id} type="button" onClick={() => setActiveFilter(filter.id)} className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold transition ${activeFilter === filter.id ? 'bg-card text-foreground' : 'border border-border/10 bg-card/[0.04] text-muted-foreground hover:text-primary-foreground'}`}>{filter.label}</button>
+                  ))}
+                  <span className="mr-auto whitespace-nowrap text-[11px] text-muted-foreground">{faNumber.format(visibleAssets.length)} نتیجه · مرتب‌سازی: {sortLabels[sort.key]}</span>
+                </div>
+
+                {initialLoading && assets.length === 0 ? (
+                  <TableSkeleton rows={10} />
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full min-w-[1040px] border-separate border-spacing-y-2 text-right">
+                      <thead>
+                        <tr className="text-[11px] text-muted-foreground">
+                          <th className="px-4 pb-2 font-medium"><SortButton label="دارایی" active={sort.key === 'name' || sort.key === 'rank'} direction={sort.direction} onClick={() => toggleSort(sort.key === 'name' ? 'rank' : 'name')} /></th>
+                          <th className="px-4 pb-2 font-medium"><SortButton label="قیمت جهانی" active={sort.key === 'priceUsd'} direction={sort.direction} onClick={() => toggleSort('priceUsd')} /></th>
+                          <th className="px-4 pb-2 font-medium"><SortButton label="قیمت تومان" active={sort.key === 'priceIrt'} direction={sort.direction} onClick={() => toggleSort('priceIrt')} /></th>
+                          <th className="px-4 pb-2 font-medium"><SortButton label="تغییر ۲۴ ساعت" active={sort.key === 'change24h'} direction={sort.direction} onClick={() => toggleSort('change24h')} /></th>
+                          <th className="px-4 pb-2 font-medium"><SortButton label="تغییر ۷ روز" active={sort.key === 'change7d'} direction={sort.direction} onClick={() => toggleSort('change7d')} /></th>
+                          <th className="px-4 pb-2 font-medium">نمودار ۷ روز</th>
+                          <th className="px-4 pb-2 font-medium"><SortButton label="حجم معاملات" active={sort.key === 'volume24h'} direction={sort.direction} onClick={() => toggleSort('volume24h')} /></th>
+                          <th className="px-4 pb-2 font-medium"><SortButton label="ارزش بازار" active={sort.key === 'marketCap'} direction={sort.direction} onClick={() => toggleSort('marketCap')} /></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {visibleAssets.map((asset) => {
+                          const positive = asset.change24h >= 0;
+                          const favorite = favorites.includes(asset.id);
+                          return (
+                            <motion.tr
+                              key={asset.id}
+                              layout
+                              initial={{ opacity: 0, y: 8 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                              className="group bg-card/[0.035] text-sm transition hover:bg-card/[0.09]"
+                            >
+                              <td className="rounded-r-2xl px-4 py-3">
+                                <div className="flex items-center gap-3">
+                                  <button type="button" onClick={(event) => { event.preventDefault(); toggleFavorite(asset.id); }} className="text-muted-foreground hover:text-premium" aria-label={favorite ? 'حذف از علاقه‌مندی‌ها' : 'افزودن به علاقه‌مندی‌ها'}>
+                                    <Star className={`h-4 w-4 ${favorite ? 'fill-amber-300 text-premium' : ''}`} />
+                                  </button>
+                                  <Link href={`/crypto-prices/${encodeURIComponent(asset.id)}`} className="flex min-w-0 items-center gap-3 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                                    <AssetIcon asset={asset} />
+                                    <div>
+                                      <p className="font-bold text-primary-foreground transition group-hover:text-primary">{assetDisplayName(asset)}</p>
+                                      <p dir="ltr" className="mt-0.5 text-[11px] text-muted-foreground">{asset.symbol} · #{asset.rank}</p>
+                                    </div>
+                                  </Link>
+                                </div>
+                              </td>
+                              <td dir="ltr" className="px-4 py-3 font-bold text-primary-foreground">{formatUsd(asset.priceUsd)}<span className="mt-1 block text-[9px] font-normal text-muted-foreground">{asset.sources.price}</span></td>
+                              <td className="px-4 py-3 font-bold text-muted-foreground">{asset.priceIrt ? faMoney.format(asset.priceIrt) : '—'}<span className="mt-1 block text-[9px] font-normal text-muted-foreground">{asset.priceIrt ? 'تومان' : 'نوبیتکس'}</span></td>
+                              <td dir="ltr" className={`px-4 py-3 font-semibold ${positive ? 'text-primary' : 'text-destructive'}`}>{positive ? '+' : ''}{faNumber.format(asset.change24h)}%</td>
+                              <td dir="ltr" className={`px-4 py-3 font-semibold ${asset.change7d >= 0 ? 'text-primary' : 'text-destructive'}`}>{asset.change7d >= 0 ? '+' : ''}{faNumber.format(asset.change7d)}%</td>
+                              <td className="px-4 py-3"><Sparkline values={asset.sparkline} positive={asset.change7d >= 0} /></td>
+                              <td className="px-4 py-3 text-xs text-muted-foreground">{formatCompactUsd(asset.volume24h)}</td>
+                              <td className="rounded-l-2xl px-4 py-3 text-xs text-muted-foreground"><Link href={`/crypto-prices/${encodeURIComponent(asset.id)}`} className="transition hover:text-primary">{formatCompactUsd(asset.marketCap)}</Link></td>
+                            </motion.tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                    {visibleAssets.length === 0 && !initialLoading && (
+                      <div className="rounded-2xl border border-dashed border-border/10 py-12 text-center text-sm text-muted-foreground">
+                        ارزی با این نام یا نماد در داده‌های بارگذاری‌شده پیدا نشد.
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <div ref={sentinelRef} className="mt-4 flex min-h-10 items-center justify-center">
+                  {loadingMore ? (
+                    <p className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                      در حال دریافت دسته بعدی...
+                    </p>
+                  ) : hasMore && assets.length > 0 ? (
+                    <p className="text-[11px] text-muted-foreground">برای دیدن ارزهای بیشتر اسکرول کنید</p>
+                  ) : assets.length > 0 ? (
+                    <p className="text-[11px] text-muted-foreground">همه داده‌های بارگذاری‌شده نمایش داده شد</p>
+                  ) : null}
+                </div>
+              </section>
+            )}
+
+            <div className="mt-5 flex flex-col items-center justify-between gap-3 text-[11px] text-muted-foreground sm:flex-row">
+              <p className="flex items-center gap-1.5">
+                <Clock3 className="h-3.5 w-3.5" />
+                آخرین به‌روزرسانی: {generatedAt ? new Date(generatedAt).toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' }) : '—'}
+              </p>
+              <p className="flex items-center gap-1.5"><WalletCards className="h-3.5 w-3.5" />این صفحه توصیه سرمایه‌گذاری نیست.</p>
             </div>
-
-            {bitcoin && <div className="relative overflow-hidden rounded-[2rem] border border-border/10 bg-card/[0.065] p-6 shadow-2xl shadow-black/20 backdrop-blur-2xl sm:p-7"><div className="mb-7 flex items-start justify-between gap-3"><div className="flex items-center gap-3"><AssetIcon asset={bitcoin} large /><div><p className="font-bold">بیت‌کوین</p><p className="text-xs text-muted-foreground">BTC / USDT</p></div></div><span className="rounded-full border border-primary/20 bg-primary/10 px-2.5 py-1 text-[10px] text-primary">{bitcoin.sources.price}</span></div><p className="mb-1 text-xs text-muted-foreground">قیمت لحظه‌ای</p><div className="flex items-end justify-between gap-3"><p dir="ltr" className="text-3xl font-black tracking-tight">{formatUsd(bitcoin.priceUsd)}</p><span dir="ltr" className={`mb-1 flex items-center gap-1 text-sm font-bold ${bitcoin.change24h >= 0 ? 'text-primary' : 'text-destructive'}`}>{bitcoin.change24h >= 0 ? <ArrowUpLeft className="h-4 w-4" /> : <ArrowDownLeft className="h-4 w-4" />}{bitcoin.change24h >= 0 ? '+' : ''}{faNumber.format(bitcoin.change24h)}%</span></div><p className="mt-3 text-xs text-muted-foreground">{bitcoin.priceIrt ? `${faMoney.format(bitcoin.priceIrt)} تومان` : 'قیمت تومانی در دسترس نیست'}</p><div className="mt-5 flex items-end justify-between border-t border-border/10 pt-4"><div className="text-xs text-muted-foreground"><p>ارزش بازار</p><strong className="mt-1 block text-sm text-muted-foreground">{formatCompactUsd(bitcoin.marketCap)}</strong></div><Sparkline values={bitcoin.sparkline} positive={bitcoin.change24h >= 0} /></div></div>}
-          </section>
-
-          <section className="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            {[{ label: 'ارزش کل بازار', value: formatCompactUsd(market.global.marketCap), note: `${market.global.marketCapChange24h >= 0 ? '+' : ''}${faNumber.format(market.global.marketCapChange24h)}٪ امروز`, icon: Globe2 }, { label: 'حجم معاملات ۲۴ ساعت', value: formatCompactUsd(market.global.volume24h), note: `${faNumber.format(market.global.activeCryptocurrencies || 0)} ارز فعال`, icon: BarChart3 }, { label: 'دامیننس بیت‌کوین', value: `${faNumber.format(market.global.btcDominance)}٪`, note: market.global.source, icon: Bitcoin }, { label: 'ارزهای صعودی', value: `${faNumber.format(marketUp)} از ${faNumber.format(assets.length)}`, note: 'در فهرست منتخب', icon: TrendingUp }].map((stat) => { const Icon = stat.icon; return <div key={stat.label} className="rounded-3xl border border-border/10 bg-card/[0.05] p-4 backdrop-blur-xl transition hover:-translate-y-0.5 hover:bg-card/[0.08]"><div className="mb-4 flex items-center justify-between"><span className="rounded-xl bg-card/[0.08] p-2 text-primary"><Icon className="h-4 w-4" /></span><span className="text-[10px] text-muted-foreground">زنده</span></div><p className="text-xs text-muted-foreground">{stat.label}</p><p dir="ltr" className="mt-1 text-lg font-bold text-primary-foreground">{stat.value}</p><p className="mt-2 text-[11px] font-semibold text-primary">{stat.note}</p></div>; })}
-          </section>
-
-          <section className="rounded-[2rem] border border-border/10 bg-card/[0.055] p-4 shadow-2xl shadow-black/20 backdrop-blur-2xl sm:p-6">
-            <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between"><div className="flex items-center gap-3"><div className="rounded-2xl bg-gradient-to-br from-accent to-primary p-2.5 text-foreground"><LayoutGrid className="h-5 w-5" /></div><div><h2 className="text-lg font-black">۱۵۰ ارز برتر بازار</h2><p className="mt-1 text-xs text-muted-foreground">جستجو در نام و نماد؛ برای تحلیل روی هر ارز بزنید</p></div></div><div className="relative w-full max-w-xs"><Search className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="جستجوی هر ارز، نام یا نماد" className="h-10 w-full rounded-2xl border border-border/10 bg-background/15 pr-10 pl-3 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-primary/50" /></div></div>
-            <div className="mb-5 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">{filters.map((filter) => <button key={filter.id} type="button" onClick={() => setActiveFilter(filter.id)} className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold transition ${activeFilter === filter.id ? 'bg-card text-foreground' : 'border border-border/10 bg-card/[0.04] text-muted-foreground hover:text-primary-foreground'}`}>{filter.label}</button>)}<span className="mr-auto whitespace-nowrap text-[11px] text-muted-foreground">{faNumber.format(visibleAssets.length)} نتیجه · مرتب‌سازی: {sortLabels[sort.key]}</span></div>
-            <div className="overflow-x-auto"><table className="w-full min-w-[1040px] border-separate border-spacing-y-2 text-right"><thead><tr className="text-[11px] text-muted-foreground"><th className="px-4 pb-2 font-medium"><SortButton label="دارایی" active={sort.key === 'name' || sort.key === 'rank'} direction={sort.direction} onClick={() => toggleSort(sort.key === 'name' ? 'rank' : 'name')} /></th><th className="px-4 pb-2 font-medium"><SortButton label="قیمت جهانی" active={sort.key === 'priceUsd'} direction={sort.direction} onClick={() => toggleSort('priceUsd')} /></th><th className="px-4 pb-2 font-medium"><SortButton label="قیمت تومان" active={sort.key === 'priceIrt'} direction={sort.direction} onClick={() => toggleSort('priceIrt')} /></th><th className="px-4 pb-2 font-medium"><SortButton label="تغییر ۲۴ ساعت" active={sort.key === 'change24h'} direction={sort.direction} onClick={() => toggleSort('change24h')} /></th><th className="px-4 pb-2 font-medium"><SortButton label="تغییر ۷ روز" active={sort.key === 'change7d'} direction={sort.direction} onClick={() => toggleSort('change7d')} /></th><th className="px-4 pb-2 font-medium">نمودار ۷ روز</th><th className="px-4 pb-2 font-medium"><SortButton label="حجم معاملات" active={sort.key === 'volume24h'} direction={sort.direction} onClick={() => toggleSort('volume24h')} /></th><th className="px-4 pb-2 font-medium"><SortButton label="ارزش بازار" active={sort.key === 'marketCap'} direction={sort.direction} onClick={() => toggleSort('marketCap')} /></th></tr></thead><tbody>{visibleAssets.map((asset) => { const positive = asset.change24h >= 0; const favorite = favorites.includes(asset.id); return <tr key={asset.id} className="group bg-card/[0.035] text-sm transition hover:bg-card/[0.09]"><td className="rounded-r-2xl px-4 py-3"><div className="flex items-center gap-3"><button type="button" onClick={(event) => { event.preventDefault(); toggleFavorite(asset.id); }} className="text-muted-foreground hover:text-premium" aria-label={favorite ? 'حذف از علاقه‌مندی‌ها' : 'افزودن به علاقه‌مندی‌ها'}><Star className={`h-4 w-4 ${favorite ? 'fill-amber-300 text-premium' : ''}`} /></button><Link href={`/crypto-prices/${encodeURIComponent(asset.id)}`} className="flex min-w-0 items-center gap-3 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"><AssetIcon asset={asset} /><div><p className="font-bold text-primary-foreground transition group-hover:text-primary">{assetDisplayName(asset)}</p><p dir="ltr" className="mt-0.5 text-[11px] text-muted-foreground">{asset.symbol} · #{asset.rank}</p></div></Link></div></td><td dir="ltr" className="px-4 py-3 font-bold text-primary-foreground">{formatUsd(asset.priceUsd)}<span className="mt-1 block text-[9px] font-normal text-muted-foreground">{asset.sources.price}</span></td><td className="px-4 py-3 font-bold text-muted-foreground">{asset.priceIrt ? faMoney.format(asset.priceIrt) : '—'}<span className="mt-1 block text-[9px] font-normal text-muted-foreground">{asset.priceIrt ? 'تومان' : 'نوبیتکس'}</span></td><td dir="ltr" className={`px-4 py-3 font-semibold ${positive ? 'text-primary' : 'text-destructive'}`}>{positive ? '+' : ''}{faNumber.format(asset.change24h)}%</td><td dir="ltr" className={`px-4 py-3 font-semibold ${asset.change7d >= 0 ? 'text-primary' : 'text-destructive'}`}>{asset.change7d >= 0 ? '+' : ''}{faNumber.format(asset.change7d)}%</td><td className="px-4 py-3"><Sparkline values={asset.sparkline} positive={asset.change7d >= 0} /></td><td className="px-4 py-3 text-xs text-muted-foreground">{formatCompactUsd(asset.volume24h)}</td><td className="rounded-l-2xl px-4 py-3 text-xs text-muted-foreground"><Link href={`/crypto-prices/${encodeURIComponent(asset.id)}`} className="transition hover:text-primary">{formatCompactUsd(asset.marketCap)}</Link></td></tr>; })}</tbody></table>{visibleAssets.length === 0 && <div className="rounded-2xl border border-dashed border-border/10 py-12 text-center text-sm text-muted-foreground">ارزی با این نام یا نماد در ۱۵۰ ارز برتر پیدا نشد.</div>}</div>
-          </section>
-
-          <div className="mt-5 flex flex-col items-center justify-between gap-3 text-[11px] text-muted-foreground sm:flex-row"><p className="flex items-center gap-1.5"><Clock3 className="h-3.5 w-3.5" />آخرین به‌روزرسانی: {new Date(market.generatedAt).toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' })}</p><p className="flex items-center gap-1.5"><WalletCards className="h-3.5 w-3.5" />این صفحه توصیه سرمایه‌گذاری نیست.</p></div>
-        </>}
+          </>
+        )}
       </div>
     </main>
   );

@@ -422,6 +422,8 @@ export interface SiteSettings {
   siteDescription?: string | null;
   supportEmail?: string | null;
   supportPhone?: string | null;
+  paletteId?: string;
+  themeMode?: string;
   createdAt?: Date | null;
   updatedAt?: Date | null;
 }

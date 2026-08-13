@@ -4,6 +4,8 @@ import React from "react";
 import MarqueeTrack from "./MarqueeTrack";
 import { TestimonialData } from "./TestimonialCard";
 
+const COMMENTS_BG = "/images/home/comments-bg.webp";
+
 // Sample testimonials data
 const sampleTestimonials: TestimonialData[] = [
   {
@@ -82,41 +84,36 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
   speed = 60,
 }) => {
   return (
-    <section className="relative w-full py-20 lg:py-32 bg-gradient-to-b from-card via-card to-card overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-premium/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+    <section
+      id="home-comments"
+      className="relative isolate w-full overflow-hidden py-20 lg:py-32"
+    >
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat supports-[background-attachment:fixed]:bg-fixed"
+          style={{ backgroundImage: `url('${COMMENTS_BG}')` }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[var(--home-bg,#F7F5F0)]/78 via-[var(--home-bg,#F7F5F0)]/62 to-[var(--home-bg,#F7F5F0)]/80 dark:from-black/70 dark:via-black/55 dark:to-black/75" />
       </div>
 
-      {/* Content */}
       <div className="relative z-10">
-        {/* Header */}
-        <div className="text-center mb-16 px-4">
-          <h2 className="text-4xl lg:text-5xl font-bold text-muted-foreground mb-4">
+        <div className="mb-16 px-4 text-center">
+          <h2 className="mb-4 text-4xl font-bold text-foreground lg:text-5xl">
             {title}
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
             {subtitle}
           </p>
         </div>
 
-        {/* Testimonials Container with Fade Effect */}
         <div className="relative w-full">
-          {/* Left Fade Mask */}
-          <div className="absolute left-0 top-0 bottom-0 w-32 lg:w-48 bg-gradient-to-r from-card via-card/80 to-transparent z-20 pointer-events-none" />
+          <div className="pointer-events-none absolute bottom-0 left-0 top-0 z-20 w-32 bg-gradient-to-r from-[var(--home-bg,#F7F5F0)]/90 to-transparent lg:w-48 dark:from-black/70" />
+          <div className="pointer-events-none absolute bottom-0 right-0 top-0 z-20 w-32 bg-gradient-to-l from-[var(--home-bg,#F7F5F0)]/90 to-transparent lg:w-48 dark:from-black/70" />
 
-          {/* Right Fade Mask */}
-          <div className="absolute right-0 top-0 bottom-0 w-32 lg:w-48 bg-gradient-to-l from-card via-card/80 to-transparent z-20 pointer-events-none" />
-
-          {/* Scrollable Track */}
           <div className="w-full overflow-hidden">
             <MarqueeTrack testimonials={testimonials} speed={speed} />
           </div>
         </div>
-
-        {/* Bottom Gradient */}
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-premium/20 to-transparent" />
       </div>
     </section>
   );

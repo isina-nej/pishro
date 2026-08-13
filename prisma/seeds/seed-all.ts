@@ -96,6 +96,7 @@ async function seedAll() {
     console.log("   3. Tags");
     console.log("   4. Landing Pages (home / about / consulting / plans)");
     console.log("   5. Investment Funds\n");
+    console.log("   (Home testimonials are managed manually in Admin → نظرات)\n");
     console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
 
     console.log("👑 [1/5] Admin Users");

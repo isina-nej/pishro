@@ -191,7 +191,7 @@ export default function AdminLoginForm({ onError, onSuccess }: AdminLoginFormPro
             شماره موبایل یا ایمیل
           </label>
           <div className="relative">
-            <IdentifierIcon className="pointer-events-none absolute left-3.5 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
+            <IdentifierIcon className="pointer-events-none absolute right-3.5 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
             <Input
               id="identifier"
               type="text"
@@ -203,7 +203,7 @@ export default function AdminLoginForm({ onError, onSuccess }: AdminLoginFormPro
               onChange={handleIdentifierChange}
               disabled={isLoading}
               className={cn(
-                'h-12 rounded-xl border-2 pl-11 pr-4 text-right text-sm md:text-base',
+                'h-12 rounded-xl border-2 pr-11 pl-4 text-right text-sm md:text-base',
                 fieldErrors.identifier && 'border-destructive focus-visible:ring-destructive'
               )}
             />
@@ -221,13 +221,14 @@ export default function AdminLoginForm({ onError, onSuccess }: AdminLoginFormPro
             کلمه عبور
           </label>
           <div className="relative">
-            <Lock className="pointer-events-none absolute left-3.5 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
+            <Lock className="pointer-events-none absolute right-3.5 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
             <button
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
               disabled={isLoading}
               tabIndex={-1}
+              aria-label={showPassword ? 'مخفی کردن رمز' : 'نمایش رمز'}
             >
               {showPassword ? <Eye className="size-5" /> : <EyeOff className="size-5" />}
             </button>
@@ -241,7 +242,7 @@ export default function AdminLoginForm({ onError, onSuccess }: AdminLoginFormPro
               onChange={handlePasswordChange}
               disabled={isLoading}
               className={cn(
-                'h-12 rounded-xl border-2 pl-11 pr-11 text-right text-sm md:text-base',
+                'h-12 rounded-xl border-2 pr-11 pl-11 text-right text-sm md:text-base',
                 fieldErrors.password && 'border-destructive focus-visible:ring-destructive'
               )}
             />

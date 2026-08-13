@@ -1,20 +1,14 @@
 const Header = () => {
   return (
     <div
-      className="relative h-[320px] bg-no-repeat bg-cover bg-center flex justify-center text-foreground"
+      className="relative flex h-[320px] justify-center bg-cover bg-center bg-no-repeat text-white"
       style={{ backgroundImage: `url('/images/faq/header.png')` }}
     >
-      {/* Overlay */}
-      <div
-        className="absolute inset-0 z-10" // اضافه کردن z-index
-        style={{
-          background: `linear-gradient(180deg, rgba(255, 255, 0.44) 12.33%, #FFFFFF 63.39%)`,
-        }}
-      ></div>
+      {/* Soft vignette — keep photo clear (no milky white wash) */}
+      <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/45 via-black/20 to-black/55" />
 
-      {/* Content */}
-      <div className="relative w-full mt-[130px] mx-[90px] z-20">
-        <h1 className="text-2xl text-foreground dark:text-textPrimary text-center md:text-[28px] font-bold">
+      <div className="relative z-20 mx-[90px] mt-[130px] w-full">
+        <h1 className="text-center text-2xl font-bold text-white drop-shadow-md md:text-[28px]">
           چه ابهامی دارید؟
         </h1>
       </div>

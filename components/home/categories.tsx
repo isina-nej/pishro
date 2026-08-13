@@ -6,27 +6,27 @@ export const categoriesData = [
   {
     src: "/images/home/c/crypto.jpg",
     label: "کریپتو",
-    link: "/cryptocurrency",
+    link: "/courses/cryptocurrency",
   },
   {
     src: "/images/home/c/stock.jpg",
     label: "بورس",
-    link: "/stock-market",
+    link: "/courses/stock-market",
   },
   {
     src: "/images/home/c/metaverse.webp",
     label: "متاورس",
-    link: "/metaverse",
+    link: "/courses/metaverse",
   },
   {
     src: "/images/home/c/nft.jpg",
     label: "NFT",
-    link: "/nft",
+    link: "/courses/nft",
   },
   {
     src: "/images/home/c/airdrop.jpg",
     label: "ایردراپ",
-    link: "/airdrop",
+    link: "/courses/airdrop",
   },
 ];
 

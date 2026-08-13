@@ -35,15 +35,15 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
         priority
       />
 
-      {/* 🔲 Dark Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-l from-black/90 via-black/50 to-black/5 z-10 pointer-events-none" />
+      {/* Soft side vignette — keep photo clear */}
+      <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-l from-black/55 via-black/20 to-transparent" />
 
       {/* 📝 Main Content */}
-      <div className="rtl relative z-20 flex max-w-2xl flex-col items-center gap-y-8 rounded-[2.25rem] border border-border/15 bg-[#091a28]/50 px-6 py-8 text-foreground shadow-2xl backdrop-blur-2xl sm:px-10 sm:py-10">
-        <h3 className="text-4xl lg:text-5xl font-bold leading-tight">
+      <div className="rtl relative z-20 flex max-w-2xl flex-col items-center gap-y-8 rounded-[2.25rem] border border-white/20 bg-black/40 px-6 py-8 text-white shadow-2xl shadow-black/30 sm:px-10 sm:py-10">
+        <h3 className="text-4xl lg:text-5xl font-bold leading-tight text-white">
           {businessConsultingData.title}
         </h3>
-        <p className="text-foreground/90 text-base lg:text-lg max-w-2xl mx-auto leading-loose text-justify lg:text-right">
+        <p className="text-white/85 text-base lg:text-lg max-w-2xl mx-auto leading-loose text-justify lg:text-right">
           {businessConsultingData.description}
         </p>
 

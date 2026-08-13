@@ -450,7 +450,8 @@ html.dark
   background: #0B3D2E !important;
 }
 
-/* Home landing visual system — Royal Emerald + Warm Gold */
+/* Home landing visual system — Royal Emerald + Warm Gold
+ * --home-bg / --home-bg-mid / --home-*-rgb enable live palette preview. */
 .home-shell,
 .public-page-shell {
   --home-ink: #1A1F1C;
@@ -462,10 +463,14 @@ html.dark
   --home-on-dark-muted: #B8C5BC;
   --home-glass: rgba(251, 249, 245, 0.88);
   --home-glass-border: rgba(217, 212, 200, 0.92);
+  --home-bg: #F7F5F0;
+  --home-bg-mid: #EDE9E1;
+  --home-glow-rgb: 26, 107, 69;
+  --home-gold-rgb: 184, 145, 58;
   position: relative;
   isolation: isolate;
   color: var(--home-ink);
-  background: #F7F5F0;
+  background: var(--home-bg);
 }
 
 .dark .home-shell,
@@ -479,7 +484,11 @@ html.dark
   --home-on-dark-muted: #B8C5BC;
   --home-glass: rgba(18, 26, 22, 0.88);
   --home-glass-border: rgba(36, 48, 40, 0.95);
-  background: #0A100E;
+  --home-bg: #0A100E;
+  --home-bg-mid: #0F2A1F;
+  --home-glow-rgb: 47, 158, 104;
+  --home-gold-rgb: 212, 176, 106;
+  background: var(--home-bg);
 }
 
 .public-page-shell {
@@ -487,17 +496,20 @@ html.dark
   isolation: isolate;
   min-height: 100vh;
   color: var(--home-ink);
-  background:
-    radial-gradient(circle at 92% 8%, rgba(26, 107, 69, 0.08), transparent 28rem),
-    radial-gradient(circle at 4% 58%, rgba(184, 145, 58, 0.07), transparent 25rem),
-    linear-gradient(180deg, #F7F5F0 0%, #EDE9E1 52%, #F7F5F0 100%);
+  /* Light: flat wash only — no soft radial “halos” */
+  background: linear-gradient(
+    180deg,
+    var(--home-bg) 0%,
+    var(--home-bg-mid) 52%,
+    var(--home-bg) 100%
+  );
 }
 
 .dark .public-page-shell {
   background:
-    radial-gradient(circle at 92% 8%, rgba(47, 158, 104, 0.07), transparent 28rem),
-    radial-gradient(circle at 4% 58%, rgba(212, 176, 106, 0.05), transparent 25rem),
-    linear-gradient(180deg, #0A100E 0%, #0F2A1F 52%, #0A100E 100%);
+    radial-gradient(circle at 92% 8%, rgba(var(--home-glow-rgb), 0.07), transparent 28rem),
+    radial-gradient(circle at 4% 58%, rgba(var(--home-gold-rgb), 0.05), transparent 25rem),
+    linear-gradient(180deg, var(--home-bg) 0%, var(--home-bg-mid) 52%, var(--home-bg) 100%);
 }
 
 .public-page-panel {
@@ -541,20 +553,28 @@ html.dark
   z-index: 1;
   overflow-x: clip;
   overflow-y: visible;
-  background:
-    radial-gradient(circle at 90% 8%, rgba(26, 107, 69, 0.09), transparent 28rem),
-    radial-gradient(circle at 4% 47%, rgba(184, 145, 58, 0.07), transparent 25rem),
-    linear-gradient(180deg, #F7F5F0 0%, #EDE9E1 47%, #F7F5F0 100%);
+  /* Light: no radial glow blobs (they read as a white halo) */
+  background: linear-gradient(
+    180deg,
+    var(--home-bg) 0%,
+    var(--home-bg-mid) 47%,
+    var(--home-bg) 100%
+  );
 }
 
 .dark .home-ambient-stage {
   background:
-    radial-gradient(circle at 90% 8%, rgba(47, 158, 104, 0.07), transparent 28rem),
-    radial-gradient(circle at 4% 47%, rgba(212, 176, 106, 0.05), transparent 25rem),
-    linear-gradient(180deg, #0A100E 0%, #0F2A1F 47%, #0A100E 100%);
+    radial-gradient(circle at 90% 8%, rgba(var(--home-glow-rgb), 0.07), transparent 28rem),
+    radial-gradient(circle at 4% 47%, rgba(var(--home-gold-rgb), 0.05), transparent 25rem),
+    linear-gradient(180deg, var(--home-bg) 0%, var(--home-bg-mid) 47%, var(--home-bg) 100%);
 }
 
+/* Decorative orb outline — dark only; in light it looks like a pale halo */
 .home-ambient-stage::before {
+  content: none;
+}
+
+.dark .home-ambient-stage::before {
   content: "";
   position: absolute;
   z-index: -1;
@@ -562,8 +582,8 @@ html.dark
   right: -8rem;
   width: min(80vw, 68rem);
   height: 86%;
-  border: 1px solid rgba(11, 61, 46, 0.14);
-  border-left-color: rgba(184, 145, 58, 0.35);
+  border: 1px solid color-mix(in srgb, var(--home-deep) 14%, transparent);
+  border-left-color: color-mix(in srgb, var(--home-gold) 35%, transparent);
   border-bottom-color: transparent;
   border-radius: 52% 48% 38% 62%;
   transform: rotate(-8deg);
@@ -627,11 +647,11 @@ html.dark
 .home-shell .swiper-pagination-bullet-active {
   width: 28px !important;
   height: 8px !important;
-  background: linear-gradient(90deg, #0B3D2E, #B8913A) !important;
+  background: linear-gradient(90deg, var(--home-deep), var(--home-gold)) !important;
 }
 
 .dark .home-shell .swiper-pagination-bullet-active {
-  background: linear-gradient(90deg, #2F9E68, #D4B06A) !important;
+  background: linear-gradient(90deg, var(--home-glow), var(--home-gold)) !important;
 }
 
 @media (max-width: 768px) {

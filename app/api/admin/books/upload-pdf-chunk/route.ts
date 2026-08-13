@@ -13,9 +13,11 @@ import {
   validationError,
   errorResponse
 } from "@/lib/api-response";
+import { getStorageConfig } from "@/lib/services/storage-adapter";
 
-const UPLOAD_DIR = process.env.UPLOAD_BASE_DIR || path.join(process.cwd(), "uploads");
-const CHUNKS_DIR = path.join(UPLOAD_DIR, "chunks");
+function getChunksDir(): string {
+  return path.join(getStorageConfig().storagePath, "chunks");
+}
 
 // CORS headers
 function corsHeaders(req: NextRequest) {
@@ -53,9 +55,11 @@ export async function POST(req: NextRequest) {
     }
     console.log("📦 PDF chunk upload request received");
 
+    const chunksDir = getChunksDir();
+
     // Ensure chunks directory exists
-    if (!existsSync(CHUNKS_DIR)) {
-      await mkdir(CHUNKS_DIR, { recursive: true });
+    if (!existsSync(chunksDir)) {
+      await mkdir(chunksDir, { recursive: true });
     }
 
     const formData = await req.formData();
@@ -72,7 +76,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Create a directory for this file's chunks
-    const fileChunksDir = path.join(CHUNKS_DIR, fileId);
+    const fileChunksDir = path.join(chunksDir, fileId);
     if (!existsSync(fileChunksDir)) {
       await mkdir(fileChunksDir, { recursive: true });
     }

@@ -1,11 +1,19 @@
 import Header from "./header";
-import Questions from "./questions";
+import Questions, { type FaqItem } from "./questions";
+import { getHiddenPages } from "@/lib/services/settings-service";
+import { createVisibility } from "@/lib/site/hidable-pages";
 
-const FaqPageContent = () => {
+interface FaqPageContentProps {
+  items: FaqItem[];
+}
+
+const FaqPageContent = async ({ items }: FaqPageContentProps) => {
+  const { show } = createVisibility(await getHiddenPages());
+
   return (
     <div>
-      <Header />
-      <Questions />
+      {show("faq:header") && <Header />}
+      {show("faq:list") && <Questions items={items} />}
     </div>
   );
 };

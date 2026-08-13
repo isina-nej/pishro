@@ -16,12 +16,16 @@ prisma/engines/
 .env.local
 .env.*.local
 
-# IDE
+# IDE / agent local config
 .vscode/
 .idea/
 *.code-workspace
 *.swp
 *.swo
+.claude/
+.codex/
+.uploads/
+workspace/.uploads/
 
 # OS
 .DS_Store
@@ -60,3 +64,8 @@ graphify-out/
 rclone.conf
 rclone_test_file.txt
 npm-install.log
+
+.mysql-data/
+.mysql-run/
+.mysql-log/
+.mysql-*/

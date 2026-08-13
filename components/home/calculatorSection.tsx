@@ -98,7 +98,14 @@ const CalculatorSection = () => {
 
   return (
     <section className="relative mt-8 min-h-[600px] w-full overflow-hidden py-8 home-on-dark md:mt-20 md:min-h-screen">
-      <div className="absolute inset-x-4 inset-y-8 rounded-[2.5rem] bg-gradient-to-br from-[#0F2A1F]/95 via-[#0B3D2E]/95 to-[#0A100E]/95 shadow-2xl shadow-[#0B3D2E]/25 md:inset-x-8" />
+      <div
+        className="absolute inset-x-4 inset-y-8 rounded-[2.5rem] shadow-2xl md:inset-x-8"
+        style={{
+          background:
+            "linear-gradient(145deg, color-mix(in srgb, var(--home-deep) 95%, transparent) 0%, color-mix(in srgb, var(--home-glow) 88%, var(--home-deep)) 48%, color-mix(in srgb, var(--home-bg) 70%, #000) 100%)",
+          boxShadow: "0 25px 60px color-mix(in srgb, var(--home-deep) 28%, transparent)",
+        }}
+      />
       <div className="absolute inset-x-4 inset-y-8 rounded-[2.5rem] border border-white/10 bg-[url('/images/utiles/pattern1.svg')] opacity-[0.08] md:inset-x-8" />
 
       <div className="container-xl relative z-10 flex flex-col justify-center py-10 md:py-16">
@@ -137,7 +144,7 @@ const CalculatorSection = () => {
                         onClick={() => handleSelectFund(fund)}
                         className={`px-5 py-2 rounded-full border transition-all  ${
                           selectedFund.key === fund.key
-                            ? "bg-[#FBF9F5] text-[#0B3D2E] border-[#FBF9F5]"
+                            ? "border-[var(--home-bg)] bg-[var(--home-bg)] text-[var(--home-deep)]"
                             : "bg-white/10 home-on-dark border-white/20 hover:bg-white/15"
                         }`}
                       >
@@ -173,13 +180,13 @@ const CalculatorSection = () => {
                         }
                         trackStyle={{
                           background:
-                            "linear-gradient(90deg, #B8913A 0%, #1A6B45 100%)",
+                            "linear-gradient(90deg, var(--home-gold) 0%, var(--home-glow) 100%)",
                           height: 6,
                         }}
                         railStyle={{ backgroundColor: "rgba(232,240,235,0.25)", height: 6 }}
                         handleStyle={{
-                          borderColor: "#B8913A",
-                          backgroundColor: "#FBF9F5",
+                          borderColor: "var(--home-gold)",
+                          backgroundColor: "var(--home-bg)",
                           width: 24,
                           height: 24,
                           marginTop: -9,
@@ -232,13 +239,13 @@ const CalculatorSection = () => {
                         }
                         trackStyle={{
                           background:
-                            "linear-gradient(90deg, #B8913A 0%, #1A6B45 100%)",
+                            "linear-gradient(90deg, var(--home-gold) 0%, var(--home-glow) 100%)",
                           height: 6,
                         }}
                         railStyle={{ backgroundColor: "rgba(232,240,235,0.25)", height: 6 }}
                         handleStyle={{
-                          borderColor: "#B8913A",
-                          backgroundColor: "#FBF9F5",
+                          borderColor: "var(--home-gold)",
+                          backgroundColor: "var(--home-bg)",
                           width: 24,
                           height: 24,
                           marginTop: -9,
@@ -270,7 +277,7 @@ const CalculatorSection = () => {
                 </p>
 
                 {/* Result box */}
-                <div className="relative flex flex-col items-center justify-center rounded-3xl border border-border/60 bg-[#FBF9F5]/95 px-4 pb-4 pt-8 text-3xl font-medium text-primary shadow-2xl backdrop-blur-xl dark:bg-card/95 dark:text-foreground">
+                <div className="relative flex flex-col items-center justify-center rounded-3xl border border-border/60 bg-[var(--home-bg)]/95 px-4 pb-4 pt-8 text-3xl font-medium text-primary shadow-2xl backdrop-blur-xl dark:bg-card/95 dark:text-foreground">
                   {/* قیمت و درصد سود */}
                   <div className="flex items-center justify-between w-full gap-4 mb-4">
                     {/* مبلغ کل - سمت راست */}
@@ -321,7 +328,12 @@ const CalculatorSection = () => {
 
                 <Link
                   href="/investment-plans"
-                  className="mt-10 px-16 w-full sm:w-fit bg-[#FBF9F5] border border-[#FBF9F5] text-[#0B3D2E] rounded-full py-4 font-bold text-center hover:bg-[#EDE9E1] transition-colors"
+                  className="mt-10 px-16 w-full sm:w-fit border rounded-full py-4 font-bold text-center transition-colors"
+                  style={{
+                    backgroundColor: "var(--home-bg)",
+                    borderColor: "var(--home-bg)",
+                    color: "var(--home-deep)",
+                  }}
                 >
                   سرمایه‌ گذاری
                 </Link>
@@ -358,7 +370,7 @@ const CalculatorSection = () => {
                 </p>
                 <a
                   href={`tel:${contactInfo.mobileTel}`}
-                  className="inline-block px-6 py-2 bg-primary hover:bg-[#1A6B45] text-primary-foreground rounded-md font-medium transition"
+                  className="inline-block px-6 py-2 bg-primary hover:bg-[var(--home-glow)] text-primary-foreground rounded-md font-medium transition"
                 >
                   تماس بگیرید
                 </a>
@@ -398,7 +410,7 @@ const CalculatorSection = () => {
                 <Link
                   href="https://t.me/amirhossein_v2"
                   target="_blank"
-                  className="inline-block px-6 py-2 bg-primary hover:bg-[#1A6B45] text-primary-foreground rounded-md font-medium transition"
+                  className="inline-block px-6 py-2 bg-primary hover:bg-[var(--home-glow)] text-primary-foreground rounded-md font-medium transition"
                 >
                   پیام در تلگرام
                 </Link>

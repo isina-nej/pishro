@@ -64,7 +64,6 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log("code:", code);
 
     // Send OTP via IPPanel Pattern asynchronously (don't block on it)
     sendOtpViaPattern(phone, code).catch((err) => {

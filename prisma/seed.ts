@@ -508,6 +508,7 @@ async function main(): Promise<void> {
       title: "شروع سرمایه‌ گذاری هوشمند",
       description:
         "با مشاوره‌های تخصصی و آموزش‌های کاربردی، اولین قدم مطمئن در بازار سرمایه را بردارید.",
+      contentType: "IMAGE",
       imageUrl: "/images/home/mobile-scroll/in-mobile-1.svg",
       coverImageUrl: "/images/home/mobile-scroll/mobile.webp",
       gradient: "from-blue-400/30 via-indigo-400/20 to-transparent",
@@ -519,6 +520,7 @@ async function main(): Promise<void> {
       title: "فرصت‌های نوین",
       description:
         "دسترسی به تحلیل‌های روزانه و فرصت‌های طلایی در بورس و بازارهای نوین.",
+      contentType: "IMAGE",
       imageUrl: "/images/home/mobile-scroll/in-mobile-1.svg",
       coverImageUrl: "/images/home/mobile-scroll/mobile.webp",
       gradient: "from-blue-400/30 via-mySecondary-400/20 to-transparent",
@@ -530,7 +532,8 @@ async function main(): Promise<void> {
       title: "مدیریت سبد سرمایه",
       description:
         "با استراتژی‌های پیشرفته و ابزارهای مدرن، سبد سرمایه خود را حرفه‌ای مدیریت کنید.",
-      imageUrl: "/images/home/mobile-scroll/in-mobile-1.svg",
+      contentType: "PAGE",
+      pageUrl: "/courses",
       coverImageUrl: "/images/home/mobile-scroll/mobile.webp",
       gradient: "from-amber-400/30 via-orange-400/20 to-transparent",
       order: 3,

@@ -8,26 +8,38 @@ import {
   normalizeHomeAlbumImageUrl,
 } from '@/lib/data/home-album';
 
-export default async function LandingOverlayServer() {
+type LandingOverlayServerProps = {
+  showAlbum?: boolean;
+  showHero?: boolean;
+};
+
+export default async function LandingOverlayServer({
+  showAlbum = true,
+  showHero = true,
+}: LandingOverlayServerProps) {
   const [homeLanding, slides, miniSlider1, miniSlider2] = await Promise.all([
     getHomeLandingData(),
-    getHomeSlides(),
-    getHomeMiniSliders(1),
-    getHomeMiniSliders(2),
+    showAlbum ? getHomeSlides() : Promise.resolve([]),
+    showAlbum ? getHomeMiniSliders(1) : Promise.resolve([]),
+    showAlbum ? getHomeMiniSliders(2) : Promise.resolve([]),
   ]);
 
   const slideRows = slides.length > 0 ? slides : homeAlbumSlides;
-  const slidesData = slideRows.map((slide) => ({
-    src: normalizeHomeAlbumImageUrl(slide.imageUrl),
-    title: slide.title,
-    text: slide.description || '',
-  }));
-  const miniSlider1Data =
-    miniSlider1.length > 0
+  const slidesData = showAlbum
+    ? slideRows.map((slide) => ({
+        src: normalizeHomeAlbumImageUrl(slide.imageUrl),
+        title: slide.title,
+        text: slide.description || '',
+      }))
+    : [];
+  const miniSlider1Data = !showAlbum
+    ? []
+    : miniSlider1.length > 0
       ? miniSlider1.map((slide) => normalizeHomeAlbumImageUrl(slide.imageUrl))
       : [...homeMiniSliderRows[1]];
-  const miniSlider2Data =
-    miniSlider2.length > 0
+  const miniSlider2Data = !showAlbum
+    ? []
+    : miniSlider2.length > 0
       ? miniSlider2.map((slide) => normalizeHomeAlbumImageUrl(slide.imageUrl))
       : [...homeMiniSliderRows[2]];
 
@@ -37,6 +49,8 @@ export default async function LandingOverlayServer() {
       slides={slidesData}
       miniSlider1Data={miniSlider1Data}
       miniSlider2Data={miniSlider2Data}
+      showAlbum={showAlbum}
+      showHero={showHero}
     />
   );
 }

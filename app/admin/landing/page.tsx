@@ -6,6 +6,7 @@ import {
   Home,
   Info,
   LayoutTemplate,
+  MessageSquareQuote,
   PieChart,
   TrendingUp,
 } from 'lucide-react';
@@ -43,6 +44,12 @@ const sections = [
     title: 'صندوق‌های سرمایه‌گذاری',
     description: 'نرخ‌ها و تنظیمات ماشین‌حساب صندوق‌ها',
     icon: TrendingUp,
+  },
+  {
+    href: '/admin/comments',
+    title: 'نظرات کاربران',
+    description: 'افزودن دستی نظرات صفحه اصلی با عکس پروفایل',
+    icon: MessageSquareQuote,
   },
 ];
 

@@ -25,22 +25,18 @@ export const CoursesHero = ({ stats }: CoursesHeroProps) => {
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-card/90 via-card/70 to-card/90" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/15 to-black/55" />
       </div>
 
-      {/* Floating Elements for depth */}
-      <div className="absolute -left-10 top-24 h-64 w-64 rounded-full bg-primary/20 blur-3xl" />
-      <div className="absolute -right-16 bottom-10 h-72 w-72 rounded-full bg-primary/20 blur-3xl" />
-
       <div className="container-xl relative z-10 flex flex-col gap-10">
-        <div className="max-w-3xl space-y-6 rounded-[2rem] border border-border/15 bg-[#091a28]/45 p-7 shadow-2xl backdrop-blur-2xl sm:p-9">
-          <span className="inline-flex items-center rounded-full border border-border/25 bg-card/10 px-4 py-1 text-sm font-medium text-primary-foreground shadow-sm backdrop-blur">
+        <div className="max-w-3xl space-y-6 rounded-[2rem] border border-white/20 bg-black/40 p-7 shadow-2xl shadow-black/30 sm:p-9">
+          <span className="inline-flex items-center rounded-full border border-white/25 bg-white/10 px-4 py-1 text-sm font-medium text-white">
             دوره‌های آموزشی پیشرو
           </span>
-          <h1 className="text-4xl font-extrabold !leading-tight md:text-5xl">
+          <h1 className="text-4xl font-extrabold !leading-tight text-white md:text-5xl">
             مجموعه کامل دوره‌های تخصصی سرمایه‌ گذاری و بازارهای مالی
           </h1>
-          <p className="text-base text-muted-foreground md:text-lg">
+          <p className="text-base text-white/80 md:text-lg">
             از صفر تا صد آموزش‌های کاربردی و حرفه‌ای در زمینه سرمایه‌ گذاری،
             تحلیل بازار و مدیریت مالی که توسط اساتید مجرب پیشرو تهیه شده‌اند.
           </p>
@@ -75,14 +71,14 @@ export const CoursesHero = ({ stats }: CoursesHeroProps) => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
               viewport={{ once: true }}
-              className="flex items-center gap-3 rounded-3xl border border-border/15 bg-[#091a28]/45 px-5 py-4 text-primary-foreground shadow-xl backdrop-blur-2xl transition hover:-translate-y-1 hover:bg-card/15"
+              className="flex items-center gap-3 rounded-3xl border border-white/20 bg-black/40 px-5 py-4 text-white shadow-xl shadow-black/25 transition hover:-translate-y-1 hover:bg-black/50"
             >
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-card/15 text-primary-foreground">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white">
                 {item.icon}
               </span>
               <div className="flex flex-col">
                 <span className="text-lg font-semibold">{item.value}</span>
-                <span className="text-sm text-muted-foreground">{item.label}</span>
+                <span className="text-sm text-white/75">{item.label}</span>
               </div>
             </motion.div>
           ))}

@@ -215,7 +215,7 @@ const CATEGORIES: CategorySeed[] = [
       "بورس یکی از بهترین بازارهای سرمایه‌ گذاری در ایران است. با یادگیری اصولی و استفاده از ابزارهای حرفه‌ای، می‌توانید درآمد پایدار کسب کنید و آینده مالی خود را تضمین نمایید.",
     aboutImage: "/images/about/stock-about.jpg",
     aboutCta1Text: "راهنمای شروع",
-    aboutCta1Link: "/guides/stock-market-start",
+    aboutCta1Link: "/courses/stock-market",
     aboutCta2Text: "ابزارهای تحلیل",
     aboutCta2Link: "/tools",
     statsBoxes: [

@@ -5,6 +5,18 @@ import { Toaster } from "react-hot-toast";
 import "@/app/styles/globals.css";
 import ReactQueryProvider from "@/lib/providers/ReactQueryProvider";
 import ThemeProvider from "@/lib/providers/ThemeProvider";
+import SitePaletteApplier from "@/components/theme/SitePaletteApplier";
+import {
+  getPublicSiteChrome,
+  getPublicSiteTheme,
+} from "@/lib/services/settings-service";
+import { getBaseUrl } from "@/lib/get-base-url";
+import {
+  DEFAULT_FAVICON_URL,
+  DEFAULT_LOGO_URL,
+  DEFAULT_OG_IMAGE_URL,
+  toAbsoluteAssetUrl,
+} from "@/lib/site/branding";
 
 const charismaExtraBold = localFont({
   src: "../public/font/CharismaTF-ExtraBold.woff2",
@@ -22,7 +34,7 @@ const charismaRegular = localFont({
 
 const montserrat = localFont({
   src: "../public/font/Montserrat-VariableFont.woff2",
-  weight: "100 900", // محدوده وزن فونت متغیر
+  weight: "100 900",
   style: "normal",
   variable: "--font-montserrat",
 });
@@ -35,30 +47,74 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export const metadata: Metadata = {
-  title: "پیشرو سرمایه",
-  description: "پیشرو - آموزش و سرمایه‌گذاری",
-  icons: {
-    icon: "/favicon.ico",
-  },
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "black-translucent",
-    title: "پیشرو سرمایه",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const chrome = await getPublicSiteChrome();
+  const base = getBaseUrl();
+  const favicon = toAbsoluteAssetUrl(base, chrome.faviconUrl, DEFAULT_FAVICON_URL);
+  const logo = toAbsoluteAssetUrl(base, chrome.logoUrl, DEFAULT_LOGO_URL);
+  const og = toAbsoluteAssetUrl(base, chrome.ogImageUrl, DEFAULT_OG_IMAGE_URL);
 
-export default function RootLayout({
+  return {
+    metadataBase: new URL(base),
+    title: {
+      default: chrome.siteName,
+      template: `%s | ${chrome.siteName}`,
+    },
+    description: chrome.siteDescription,
+    applicationName: chrome.siteName,
+    icons: {
+      icon: [
+        { url: favicon },
+        { url: logo, type: "image/png" },
+      ],
+      shortcut: favicon,
+      apple: favicon,
+    },
+    openGraph: {
+      type: "website",
+      locale: "fa_IR",
+      siteName: chrome.siteName,
+      title: chrome.siteName,
+      description: chrome.siteDescription,
+      images: [{ url: og, alt: chrome.siteName }],
+    },
+    twitter: {
+      card: "summary",
+      title: chrome.siteName,
+      description: chrome.siteDescription,
+      images: [og],
+    },
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: "black-translucent",
+      title: chrome.siteName,
+    },
+  };
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const siteTheme = await getPublicSiteTheme();
+
   return (
     <html lang="fa" suppressHydrationWarning>
       <body
         className={`font-yekan ${charismaExtraBold.variable} ${charismaRegular.variable} ${montserrat.variable} rtl bg-background text-foreground transition-colors duration-300 ease-in-out`}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange={false}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme={siteTheme.themeMode}
+          enableSystem={siteTheme.themeMode === "system"}
+          disableTransitionOnChange={false}
+        >
+          <SitePaletteApplier
+            paletteId={siteTheme.paletteId}
+            light={siteTheme.light}
+            dark={siteTheme.dark}
+          />
           <ReactQueryProvider>
             {children}
             <Toaster

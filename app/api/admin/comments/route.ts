@@ -171,22 +171,36 @@ if (!adminAuth) {
     } = body;
 
     // Validation
-    if (!text) {
+    if (!text || !String(text).trim()) {
       return validationError({
-        text: "Comment text is required"
+        text: "متن نظر الزامی است",
       });
+    }
+    if (!userName || !String(userName).trim()) {
+      return validationError({
+        userName: "نام نمایشی الزامی است",
+      });
+    }
+
+    let normalizedRating: number | undefined;
+    if (rating !== undefined && rating !== null && rating !== "") {
+      const n = Number(rating);
+      if (!Number.isFinite(n) || n < 1 || n > 5) {
+        return validationError({ rating: "امتیاز باید بین ۱ تا ۵ باشد" });
+      }
+      normalizedRating = Math.round(n);
     }
 
     // Create comment
     const comment = await prisma.comment.create({
       data: {
-        text,
-        rating,
+        text: String(text).trim(),
+        rating: normalizedRating,
         userId,
-        userName,
-        userAvatar,
+        userName: String(userName).trim(),
+        userAvatar: userAvatar || null,
         userRole,
-        userCompany,
+        userCompany: userCompany || null,
         courseId,
         categoryId,
         published,

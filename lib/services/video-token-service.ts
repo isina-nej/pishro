@@ -1,12 +1,11 @@
 // @/lib/services/video-token-service.ts
 import crypto from "crypto";
 import type { StreamToken } from "@/types/video";
+import { getVideoTokenSecret } from "@/lib/env";
 
-/**
- * کلید مخفی برای امضای توکن‌ها
- * در production باید از environment variable استفاده شود
- */
-const TOKEN_SECRET = process.env.VIDEO_TOKEN_SECRET || "your-secret-key-here";
+function getTokenSecret() {
+  return getVideoTokenSecret();
+}
 
 /**
  * مدت اعتبار پیش‌فرض توکن (به ثانیه)
@@ -39,7 +38,7 @@ export function generateStreamToken(
 
   // ساخت signature با HMAC SHA256
   const signature = crypto
-    .createHmac("sha256", TOKEN_SECRET)
+    .createHmac("sha256", getTokenSecret())
     .update(payloadBase64)
     .digest("base64url");
 
@@ -77,7 +76,7 @@ export function verifyStreamToken(
 
     // بررسی signature
     const expectedSignature = crypto
-      .createHmac("sha256", TOKEN_SECRET)
+      .createHmac("sha256", getTokenSecret())
       .update(payloadBase64)
       .digest("base64url");
 
@@ -134,7 +133,7 @@ export function generateSegmentToken(
   );
 
   const signature = crypto
-    .createHmac("sha256", TOKEN_SECRET)
+    .createHmac("sha256", getTokenSecret())
     .update(payloadBase64)
     .digest("base64url");
 
@@ -162,7 +161,7 @@ export function verifySegmentToken(
 
     // بررسی signature
     const expectedSignature = crypto
-      .createHmac("sha256", TOKEN_SECRET)
+      .createHmac("sha256", getTokenSecret())
       .update(payloadBase64)
       .digest("base64url");
 
@@ -218,7 +217,7 @@ export function generateDownloadToken(
   );
 
   const signature = crypto
-    .createHmac("sha256", TOKEN_SECRET)
+    .createHmac("sha256", getTokenSecret())
     .update(payloadBase64)
     .digest("base64url");
 
@@ -251,7 +250,7 @@ export function verifyAndConsumeDownloadToken(
     const [payloadBase64, signature] = parts;
 
     const expectedSignature = crypto
-      .createHmac("sha256", TOKEN_SECRET)
+      .createHmac("sha256", getTokenSecret())
       .update(payloadBase64)
       .digest("base64url");
 

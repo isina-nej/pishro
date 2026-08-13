@@ -12,9 +12,30 @@ interface TestimonialsSectionServerProps {
   limit?: number;
 }
 
+function starsFromRating(rating?: number | null) {
+  const value = rating ?? 5;
+  // Legacy seeds used 1–10; admin UI stores 1–5
+  const normalized = value > 5 ? Math.floor(value / 2) : value;
+  return Math.min(5, Math.max(1, normalized));
+}
+
+function mapComments(
+  comments: Awaited<ReturnType<typeof getComments>>
+): TestimonialData[] {
+  return comments.map((comment) => ({
+    id: comment.id,
+    name: comment.userName || "کاربر ناشناس",
+    role: comment.userRole || comment.userCompany || "کاربر",
+    avatar: comment.userAvatar || "/images/home/comments-prf/1.jpg",
+    content: comment.text || "",
+    rating: starsFromRating(comment.rating),
+    company: comment.userCompany || undefined,
+  }));
+}
+
 /**
- * Server Component that fetches testimonials from database
- * and passes them to client component for rendering
+ * Fetches featured (then published) comments for the home marquee.
+ * No fake/seed fallbacks — empty list shows an empty-state UI.
  */
 const TestimonialsSectionServer = async ({
   title = "نظرات و تجربیات کاربران",
@@ -22,47 +43,36 @@ const TestimonialsSectionServer = async ({
   speed = 50,
   limit = 15,
 }: TestimonialsSectionServerProps) => {
+  let testimonials: TestimonialData[] = [];
+
   try {
-    // Fetch featured comments from database
-    const comments = await getComments({
+    const featured = await getComments({
       published: true,
       verified: true,
       featured: true,
       limit,
     });
+    testimonials = mapComments(featured);
 
-    // Transform comments to TestimonialData format
-    const testimonials: TestimonialData[] = comments.map((comment) => ({
-      id: comment.id,
-      name: comment.userName || "کاربر ناشناس",
-      role: comment.userRole || "کاربر",
-      avatar: comment.userAvatar || "/images/default-avatar.png",
-      content: comment.text || "",
-      rating: Math.min(5, Math.max(1, Math.floor((comment.rating || 5) / 2))), // Convert to 1-5 scale
-      company: comment.userCompany || undefined,
-    }));
-
-    // Return client component with data
-    return (
-      <TestimonialsSectionClient
-        testimonials={testimonials}
-        title={title}
-        subtitle={subtitle}
-        speed={speed}
-      />
-    );
+    if (testimonials.length === 0) {
+      const published = await getComments({
+        published: true,
+        limit,
+      });
+      testimonials = mapComments(published);
+    }
   } catch (error) {
     console.error("Error fetching testimonials:", error);
-    // Fallback to empty state
-    return (
-      <TestimonialsSectionClient
-        testimonials={[]}
-        title={title}
-        subtitle={subtitle}
-        speed={speed}
-      />
-    );
   }
+
+  return (
+    <TestimonialsSectionClient
+      testimonials={testimonials}
+      title={title}
+      subtitle={subtitle}
+      speed={speed}
+    />
+  );
 };
 
 export default TestimonialsSectionServer;

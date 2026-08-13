@@ -80,14 +80,19 @@ export interface WhyUsItem {
 
 // ==================== MOBILE SCROLLER STEPS ====================
 
+export type MobileScrollerContentType = "IMAGE" | "PAGE";
+
 export interface MobileScrollerStep {
   id: string;
   stepNumber: number;
   title: string;
   description: string;
+  contentType: MobileScrollerContentType;
   imageUrl: string | null;
+  pageUrl: string | null;
   coverImageUrl: string | null;
   gradient: string | null;
+  link: string | null;
   order: number;
   published: boolean;
   createdAt: string;

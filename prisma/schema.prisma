@@ -168,7 +168,7 @@ model Comment {
   userCompany String?
 
   // Content
-  text   String
+  text   String @db.Text
   rating Int?
 
   // Relations
@@ -874,8 +874,11 @@ model MobileScrollerStep {
   stepNumber    Int
   title         String
   description   String
-  imageUrl      String? // تصویر داخل موبایل (مثل in-mobile-1.svg)
-  coverImageUrl String? // تصویر پس‌زمینه موبایل
+  /// IMAGE = تصویر داخل قاب | PAGE = لود صفحه سایت (iframe)
+  contentType   String  @default("IMAGE")
+  imageUrl      String? // تصویر داخل موبایل (وقتی contentType=IMAGE)
+  pageUrl       String? // مسیر/آدرس صفحه (وقتی contentType=PAGE) مثلاً /courses
+  coverImageUrl String? // تصویر قاب موبایل (bezel)
   gradient      String? // کلاس CSS برای gradient
   link          String? // لینک دکمه اطلاعات بیشتر
 
@@ -1320,8 +1323,47 @@ model SiteSettings {
   supportEmail    String?
   supportPhone    String?
 
+  // ظاهر عمومی سایت — پالت builtin یا custom:<id>
+  /// شناسه پالت (مثلاً emerald-trust یا custom:clxyz...)
+  paletteId String @default("emerald-trust")
+  /// حالت پیش‌فرض تم: light | dark | system
+  themeMode String @default("system")
+
+  /// لوگو / فاویکون / تصویر اشتراک‌گذاری (OG) — مسیر آپلود یا URL
+  logoUrl    String?
+  faviconUrl String?
+  ogImageUrl String?
+
+  /// مسیر صفحاتی که از منو و دسترسی عمومی مخفی شده‌اند — JSON string[] مثل ["/courses"]
+  hiddenPages Json @default("[]")
+
+  /// پالت رنگی پنل کاربر (/profile) — همان شناسه‌های پالت سایت یا panel-royal-green
+  userPanelPaletteId String @default("panel-royal-green")
+
+  /// آیتم‌های منوی اصلی — JSON: { label, link }[]
+  navbarItems Json?
+
+  /// محتوای کامل فوتر — JSON: FooterContent (تماس، لینک‌ها، درباره، سوشال)
+  footerContent Json?
+
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
+}
+
+/// پالت رنگی سفارشی ساخته‌شده توسط ادمین
+model CustomSitePalette {
+  id          String  @id @default(cuid())
+  name        String
+  nameFa      String
+  description String  @default("")
+  /// JSON: EditablePaletteColors for light mode
+  lightColors Json
+  /// JSON: EditablePaletteColors for dark mode
+  darkColors  Json
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
+
+  @@index([createdAt])
 }
 
 // مدل برای صفحه مدل‌های سرمایه‌گذاری (InvestmentModelsSection)

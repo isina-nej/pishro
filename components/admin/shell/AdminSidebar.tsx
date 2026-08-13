@@ -6,6 +6,7 @@ import {
   BarChart3,
   Bitcoin,
   BookOpen,
+  CircleHelp,
   Contact,
   FileText,
   GraduationCap,
@@ -15,13 +16,14 @@ import {
   Menu,
   PieChart,
   ScrollText,
-  Settings,
   Ticket,
   TrendingUp,
   LayoutTemplate,
+  MessageSquareQuote,
   Users,
   UsersRound,
   X,
+  Palette,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -48,6 +50,7 @@ export const navSections: NavSection[] = [
   {
     items: [
       { href: '/admin/dashboard', label: 'داشبورد', icon: Home, key: 'dashboard', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
+      { href: '/admin/guide', label: 'آموزش پنل', icon: CircleHelp, key: 'guide', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
     ],
   },
   {
@@ -69,16 +72,17 @@ export const navSections: NavSection[] = [
       { href: '/admin/courses', label: 'دوره‌ها', icon: GraduationCap, key: 'courses', roles: ['ADMIN', 'MODERATOR'] },
       { href: '/admin/investment-funds', label: 'صندوق‌های سرمایه‌گذاری', icon: TrendingUp, key: 'investment-funds', roles: ['ADMIN', 'MODERATOR'] },
       { href: '/admin/landing', label: 'لندینگ / CMS', icon: LayoutTemplate, key: 'landing', roles: ['ADMIN', 'MODERATOR'] },
+      { href: '/admin/comments', label: 'نظرات کاربران', icon: MessageSquareQuote, key: 'comments', roles: ['ADMIN', 'MODERATOR'] },
     ],
   },
   {
     items: [
-      { href: '/admin/users', label: 'کاربران', icon: Users, key: 'users', roles: ['ADMIN', 'MODERATOR'] },
+      { href: '/admin/crm/customers', label: 'کاربران سایت', icon: Users, key: 'users', roles: ['ADMIN', 'MODERATOR'] },
       { href: '/admin/reports', label: 'گزارش‌ها', icon: BarChart3, key: 'reports', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
       // فقط ADMIN: گزارش نشان می‌دهد چه کسی چه کرده، و روت /api/admin/logs هم
       // همین محدودیت را دارد — منو نباید چیزی را نشان دهد که API رد می‌کند.
       { href: '/admin/logs', label: 'گزارش فعالیت‌ها', icon: ScrollText, key: 'logs', roles: ['ADMIN'] },
-      { href: '/admin/settings', label: 'تنظیمات', icon: Settings, key: 'settings', roles: ['ADMIN'], disabled: true },
+      { href: '/admin/settings', label: 'ظاهر سایت', icon: Palette, key: 'settings', roles: ['ADMIN'] },
     ],
   },
 ];
