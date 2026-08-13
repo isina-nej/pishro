@@ -5,9 +5,6 @@ import { motion } from "framer-motion";
 
 import ImageZoomSliderSection from "./imageZoomSliderSection";
 
-// =================================================
-//                   Types
-// =================================================
 type SlideData = {
   src: string;
   title: string;
@@ -21,9 +18,6 @@ type LandingOverlayProps = {
   miniSlider2Data?: string[];
 };
 
-// =================================================
-//                   کامپوننت اصلی
-// =================================================
 const LandingOverlay = ({
   overlayTexts,
   slides,
@@ -38,11 +32,8 @@ const LandingOverlay = ({
         ref={ref}
         className="relative hidden w-full bg-[#000412] lg:block"
       >
-        {/* Opening video replaced by CoinsHeroSection in homeContent */}
         <div className="relative z-10 hidden flex-col items-center justify-start sm:flex">
-          <div className="flex w-full justify-center">
-            <OverlayText texts={overlayTexts} />
-          </div>
+          <OverlayText texts={overlayTexts} />
         </div>
       </section>
 
@@ -60,9 +51,6 @@ const LandingOverlay = ({
 
 export default LandingOverlay;
 
-// =================================================
-//                   متن اسکرولی
-// =================================================
 const OverlayText = ({ texts }: { texts?: string[] }) => {
   const defaultTexts = [
     "پیشرو در مسیر سرمایه‌ گذاری هوشمند",
@@ -74,16 +62,16 @@ const OverlayText = ({ texts }: { texts?: string[] }) => {
   const displayTexts = texts && texts.length > 0 ? texts : defaultTexts;
 
   return (
-    <div className="flex w-full justify-center py-16 sm:py-24 md:py-32">
-      <div className="container-xl z-10 flex w-full flex-col items-center space-y-5 px-4 text-right sm:space-y-6 sm:px-6">
+    <div className="flex w-full justify-center px-4 py-10 sm:px-6 sm:py-14 md:py-16">
+      <div className="z-10 mx-auto flex w-full max-w-5xl flex-col items-stretch gap-4 text-right sm:gap-5">
         {displayTexts.map((text, i) => (
           <motion.h4
             key={i}
-            initial={{ opacity: 0, y: 60 }}
+            initial={{ opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: i * 0.1, ease: "easeOut" }}
-            viewport={{ once: false, amount: 0.1 }}
-            className="home-on-dark w-full max-w-5xl rounded-[2rem] border border-white/10 bg-[#0F2A1F]/55 p-6 text-xl font-bold !leading-[1.65] shadow-2xl shadow-black/15 backdrop-blur-xl sm:p-8 sm:text-2xl md:text-3xl lg:text-4xl"
+            transition={{ duration: 0.45, delay: i * 0.06, ease: "easeOut" }}
+            viewport={{ once: true, amount: 0.25 }}
+            className="home-on-dark w-full rounded-2xl border border-white/10 bg-[#0F2A1F]/55 px-5 py-4 text-base font-bold !leading-[1.7] shadow-xl shadow-black/15 backdrop-blur-xl sm:rounded-3xl sm:px-7 sm:py-5 sm:text-lg md:text-xl lg:text-2xl"
           >
             {text.includes("پیشرو") ? (
               <>
