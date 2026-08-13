@@ -294,8 +294,6 @@ async function main(): Promise<void> {
   await prisma.investmentTag.deleteMany();
   await prisma.investmentPlan.deleteMany();
   await prisma.investmentPlans.deleteMany();
-  await prisma.homeSlide.deleteMany();
-  await prisma.homeMiniSlider.deleteMany();
 
   // ==============================================
   // 🏷️ Insert Tags
@@ -423,22 +421,6 @@ async function main(): Promise<void> {
   console.log("🏠 Creating Home Landing data...");
   await prisma.homeLanding.create({
     data: {
-      mainHeroTitle: "پیشرو بزرگترین مؤسسه سرمایه‌ گذاری در ایران",
-      mainHeroSubtitle: null,
-      mainHeroCta1Text: "شروع مسیر موفقیت",
-      mainHeroCta1Link: "/business-consulting",
-      heroTitle: "پیشرو در مسیر سرمایه‌ گذاری هوشمند",
-      heroSubtitle: "آموزش، مشاوره و همراهی در مسیر موفقیت مالی",
-      heroDescription: null,
-      heroVideoUrl: "/videos/aboutUs.webm",
-      heroCta1Text: null,
-      heroCta1Link: null,
-      overlayTexts: [
-        "پیشرو در مسیر سرمایه‌ گذاری هوشمند",
-        "ما در پیشرو با ارائه آموزش‌های تخصصی بورس، بازارهای مالی و سرمایه‌ گذاری، شما را در مسیر رشد مالی همراهی می‌کنیم.",
-        "از آموزش اصولی و گام‌به‌گام تا مشاوره‌های حرفه‌ای و همراهی در مسیر رشد سرمایه شما، همه و همه در پیشرو فراهم است.",
-        "پیشرو انتخابی مطمئن برای کسانی است که به دنبال امنیت مالی، رشد پایدار و آینده‌ای روشن هستند.",
-      ],
       statsData: JSON.parse(
         JSON.stringify([
           { label: "دانشجو", value: 300, suffix: "+" },
@@ -814,148 +796,6 @@ async function main(): Promise<void> {
   }
 
   console.log("✅ Investment Plans created with plans and tags");
-
-  // ==============================================
-  // 🖼️ Insert Home Slides (ImageZoomSliderSection)
-  // ==============================================
-  console.log("🖼️ Creating Home Slides...");
-  const homeSlides = [
-    {
-      title: "تحلیل تکنیکال حرفه‌ای",
-      description:
-        "یادگیری اصول و تکنیک‌های پیشرفته تحلیل تکنیکال برای معامله‌گری موفق در بازارهای مالی",
-      imageUrl: "/images/home/landing-slider/p01.webp",
-      order: 1,
-      published: true,
-    },
-    {
-      title: "مدیریت ریسک و سرمایه",
-      description:
-        "آموزش اصولی مدیریت سرمایه و کنترل ریسک برای حفظ و رشد پایدار پورتفولیو سرمایه‌ گذاری",
-      imageUrl: "/images/home/landing-slider/p02.webp",
-      order: 2,
-      published: true,
-    },
-    {
-      title: "استراتژی‌های معاملاتی",
-      description:
-        "آشنایی با استراتژی‌های معاملاتی موفق و کاربردی برای بازارهای ارز دیجیتال و بورس",
-      imageUrl: "/images/home/landing-slider/p03.webp",
-      order: 3,
-      published: true,
-    },
-    {
-      title: "روانشناسی معامله‌گری",
-      description:
-        "تسلط بر احساسات و تصمیم‌گیری‌های هوشمندانه در بازارهای پرنوسان مالی",
-      imageUrl: "/images/home/landing-slider/p04.webp",
-      order: 4,
-      published: true,
-    },
-    {
-      title: "تحلیل بنیادی بازارها",
-      description:
-        "شناخت عوامل بنیادی تأثیرگذار بر بازارهای مالی و تصمیم‌گیری آگاهانه در سرمایه‌ گذاری",
-      imageUrl: "/images/home/landing-slider/p05.webp",
-      order: 5,
-      published: true,
-    },
-    {
-      title: "معامله‌گری الگوریتمی",
-      description:
-        "آموزش اصول معامله‌گری خودکار و استفاده از ابزارهای هوشمند برای بهینه‌سازی معاملات",
-      imageUrl: "/images/home/landing-slider/p06.webp",
-      order: 6,
-      published: true,
-    },
-    {
-      title: "تحلیل تکنیکال پیشرفته",
-      description:
-        "یادگیری اندیکاتورها و الگوهای پیشرفته برای شناسایی فرصت‌های معاملاتی سودآور",
-      imageUrl: "/images/home/landing-slider/p07.webp",
-      order: 7,
-      published: true,
-    },
-    {
-      title: "استراتژی نوسان‌گیری",
-      description:
-        "تکنیک‌های حرفه‌ای نوسان‌گیری در بازارهای کوتاه‌مدت و میان‌مدت برای کسب سود مستمر",
-      imageUrl: "/images/home/landing-slider/p08.webp",
-      order: 8,
-      published: true,
-    },
-    {
-      title: "سرمایه‌ گذاری بلندمدت",
-      description:
-        "اصول و استراتژی‌های سرمایه‌ گذاری بلندمدت برای رشد پایدار و ایجاد ثروت",
-      imageUrl: "/images/home/landing-slider/p09.webp",
-      order: 9,
-      published: true,
-    },
-    {
-      title: "تحلیل حجم معاملات",
-      description:
-        "آموزش تحلیل حجم و شناسایی حرکات اصلی بازار برای ورود و خروج به‌موقع",
-      imageUrl: "/images/home/landing-slider/p10.webp",
-      order: 10,
-      published: true,
-    },
-    {
-      title: "استراتژی پرایس اکشن",
-      description:
-        "تسلط بر تحلیل حرکت قیمت و معامله‌گری بدون نیاز به اندیکاتورهای پیچیده",
-      imageUrl: "/images/home/landing-slider/p11.webp",
-      order: 11,
-      published: true,
-    },
-    {
-      title: "مدیریت پورتفولیو",
-      description:
-        "آموزش تخصیص دارایی و متنوع‌سازی سبد سرمایه‌ گذاری برای کاهش ریسک و افزایش بازدهی",
-      imageUrl: "/images/home/landing-slider/p12.webp",
-      order: 12,
-      published: true,
-    },
-  ];
-
-  for (const slide of homeSlides) {
-    await prisma.homeSlide.create({ data: slide });
-  }
-  console.log(`✅ Inserted ${homeSlides.length} home slides`);
-
-  // ==============================================
-  // 🎞️ Insert Home Mini Sliders
-  // ==============================================
-  console.log("🎞️ Creating Home Mini Sliders...");
-  const miniSliderImages = [
-    // Row 1
-    "/images/home/landing-slider/p01.webp",
-    "/images/home/landing-slider/p02.webp",
-    "/images/home/landing-slider/p03.webp",
-    "/images/home/landing-slider/p04.webp",
-    "/images/home/landing-slider/p05.webp",
-    "/images/home/landing-slider/p06.webp",
-    // Row 2
-    "/images/home/landing-slider/p07.webp",
-    "/images/home/landing-slider/p08.webp",
-    "/images/home/landing-slider/p09.webp",
-    "/images/home/landing-slider/p10.webp",
-    "/images/home/landing-slider/p11.webp",
-    "/images/home/landing-slider/p12.webp",
-  ];
-
-  let miniOrder = 1;
-  for (let i = 0; i < miniSliderImages.length; i++) {
-    await prisma.homeMiniSlider.create({
-      data: {
-        imageUrl: miniSliderImages[i],
-        row: i < 6 ? 1 : 2,
-        order: miniOrder++,
-        published: true,
-      },
-    });
-  }
-  console.log(`✅ Inserted ${miniSliderImages.length} mini slider images`);
 
   console.log("✅ Database seeded successfully!");
 }

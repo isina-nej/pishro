@@ -5,17 +5,6 @@ const optionalNumber = z.number().optional().nullable();
 const jsonValue = z.unknown().optional();
 
 export const HomeLandingUpsertSchema = z.object({
-  mainHeroTitle: optionalString,
-  mainHeroSubtitle: optionalString,
-  mainHeroCta1Text: optionalString,
-  mainHeroCta1Link: optionalString,
-  heroTitle: z.string().min(1, "عنوان هیرو الزامی است"),
-  heroSubtitle: optionalString,
-  heroDescription: optionalString,
-  heroVideoUrl: optionalString,
-  heroCta1Text: optionalString,
-  heroCta1Link: optionalString,
-  overlayTexts: jsonValue,
   statsData: jsonValue,
   whyUsTitle: optionalString,
   whyUsDescription: optionalString,
@@ -42,26 +31,7 @@ export const HomeLandingUpsertSchema = z.object({
   order: z.number().int().optional(),
 });
 
-export const HomeLandingUpdateSchema = HomeLandingUpsertSchema.partial().extend({
-  heroTitle: z.string().min(1, "عنوان هیرو الزامی است").optional(),
-});
-
-export const HomeSlideUpsertSchema = z.object({
-  title: z.string().min(1, "عنوان اسلاید الزامی است"),
-  description: optionalString,
-  imageUrl: z.string().min(1, "آدرس تصویر الزامی است"),
-  order: z.number().int().optional(),
-  published: z.boolean().optional(),
-});
-export const HomeSlideUpdateSchema = HomeSlideUpsertSchema.partial();
-
-export const HomeMiniSliderUpsertSchema = z.object({
-  imageUrl: z.string().min(1, "آدرس تصویر الزامی است"),
-  row: z.number().int().min(1).max(2).optional(),
-  order: z.number().int().optional(),
-  published: z.boolean().optional(),
-});
-export const HomeMiniSliderUpdateSchema = HomeMiniSliderUpsertSchema.partial();
+export const HomeLandingUpdateSchema = HomeLandingUpsertSchema.partial();
 
 const mobilePageUrlSchema = z
   .string()

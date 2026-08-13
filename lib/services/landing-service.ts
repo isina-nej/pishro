@@ -5,8 +5,6 @@ import { prisma } from "@/lib/prisma";
 import type {
   HomeLanding,
   MobileScrollerStep,
-  HomeSlide,
-  HomeMiniSlider,
   AboutPage,
   Certificate,
   BusinessConsulting,
@@ -27,9 +25,8 @@ import type {
  * `JsonValue`, so the ones the pages actually consume are narrowed here to
  * their real runtime shape; the rest keep Prisma's type.
  */
-type HomeLandingRow = Omit<HomeLanding, "metaKeywords" | "overlayTexts"> & {
+type HomeLandingRow = Omit<HomeLanding, "metaKeywords"> & {
   metaKeywords: string[] | null;
-  overlayTexts: string[] | null;
 };
 
 type AboutPageRow = Omit<AboutPage, "metaKeywords"> & {
@@ -75,38 +72,6 @@ export async function getMobileScrollerSteps() {
     return steps || [];
   } catch (error) {
     logLandingError("getMobileScrollerSteps", error);
-    return [];
-  }
-}
-
-export async function getHomeSlides() {
-  try {
-    const slides = await db.query<HomeSlide>(
-      `SELECT * FROM HomeSlide WHERE published = true ORDER BY \`order\` ASC`
-    );
-    return slides || [];
-  } catch (error) {
-    logLandingError("getHomeSlides", error);
-    return [];
-  }
-}
-
-export async function getHomeMiniSliders(row?: number) {
-  try {
-    let query = `SELECT * FROM HomeMiniSlider WHERE published = true`;
-    const params: db.QueryValues = [];
-
-    if (row !== undefined) {
-      query += ` AND \`row\` = ?`;
-      params.push(row);
-    }
-
-    query += ` ORDER BY \`order\` ASC`;
-
-    const sliders = await db.query<HomeMiniSlider>(query, params);
-    return sliders || [];
-  } catch (error) {
-    logLandingError("getHomeMiniSliders", error);
     return [];
   }
 }

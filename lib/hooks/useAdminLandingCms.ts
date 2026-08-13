@@ -21,8 +21,6 @@ function mutationError(error: unknown, fallback: string) {
 export const landingCmsKeys = {
   all: ["admin-landing-cms"] as const,
   homeLanding: () => [...landingCmsKeys.all, "home-landing"] as const,
-  homeSlides: () => [...landingCmsKeys.all, "home-slides"] as const,
-  homeMiniSliders: () => [...landingCmsKeys.all, "home-mini-sliders"] as const,
   mobileSteps: () => [...landingCmsKeys.all, "mobile-steps"] as const,
   about: () => [...landingCmsKeys.all, "about"] as const,
   business: () => [...landingCmsKeys.all, "business"] as const,
@@ -49,108 +47,6 @@ export function useUpdateHomeLanding(id: string) {
       toast.success("لندینگ خانه ذخیره شد");
     },
     onError: (e) => toast.error(mutationError(e, "خطا در ذخیره لندینگ")),
-  });
-}
-
-export function useAdminHomeSlides() {
-  return useQuery({
-    queryKey: landingCmsKeys.homeSlides(),
-    queryFn: () => listItems<Record<string, unknown>>("/api/admin/home-slides?limit=100"),
-  });
-}
-
-export function useCreateHomeSlide() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: async (payload: Record<string, unknown>) => {
-      const { data } = await api.post("/api/admin/home-slides", payload);
-      return data.data;
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: landingCmsKeys.homeSlides() });
-      toast.success("اسلاید اضافه شد");
-    },
-    onError: (e) => toast.error(mutationError(e, "خطا در ایجاد اسلاید")),
-  });
-}
-
-export function useUpdateHomeSlide() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: async ({ id, ...payload }: Record<string, unknown> & { id: string }) => {
-      const { data } = await api.patch(`/api/admin/home-slides/${id}`, payload);
-      return data.data;
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: landingCmsKeys.homeSlides() });
-      toast.success("اسلاید به‌روزرسانی شد");
-    },
-    onError: (e) => toast.error(mutationError(e, "خطا در به‌روزرسانی اسلاید")),
-  });
-}
-
-export function useDeleteHomeSlide() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: async (id: string) => {
-      await api.delete(`/api/admin/home-slides/${id}`);
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: landingCmsKeys.homeSlides() });
-      toast.success("اسلاید حذف شد");
-    },
-    onError: () => toast.error("خطا در حذف اسلاید"),
-  });
-}
-
-export function useAdminHomeMiniSliders() {
-  return useQuery({
-    queryKey: landingCmsKeys.homeMiniSliders(),
-    queryFn: () => listItems<Record<string, unknown>>("/api/admin/home-mini-sliders?limit=100"),
-  });
-}
-
-export function useCreateHomeMiniSlider() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: async (payload: Record<string, unknown>) => {
-      const { data } = await api.post("/api/admin/home-mini-sliders", payload);
-      return data.data;
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: landingCmsKeys.homeMiniSliders() });
-      toast.success("مینی‌اسلایدر اضافه شد");
-    },
-    onError: (e) => toast.error(mutationError(e, "خطا در ایجاد مینی‌اسلایدر")),
-  });
-}
-
-export function useUpdateHomeMiniSlider() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: async ({ id, ...payload }: Record<string, unknown> & { id: string }) => {
-      const { data } = await api.patch(`/api/admin/home-mini-sliders/${id}`, payload);
-      return data.data;
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: landingCmsKeys.homeMiniSliders() });
-      toast.success("مینی‌اسلایدر به‌روزرسانی شد");
-    },
-    onError: (e) => toast.error(mutationError(e, "خطا در به‌روزرسانی")),
-  });
-}
-
-export function useDeleteHomeMiniSlider() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: async (id: string) => {
-      await api.delete(`/api/admin/home-mini-sliders/${id}`);
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: landingCmsKeys.homeMiniSliders() });
-      toast.success("مینی‌اسلایدر حذف شد");
-    },
-    onError: () => toast.error("خطا در حذف"),
   });
 }
 

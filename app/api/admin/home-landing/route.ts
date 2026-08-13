@@ -13,7 +13,6 @@ import {
   paginatedResponse,
   createdResponse,
   ErrorCodes,
-  validationError,
   HttpStatus,
 } from "@/lib/api-response";
 
@@ -99,17 +98,6 @@ if (!adminAuth) {
 
     const body = await req.json();
     const {
-      mainHeroTitle,
-      mainHeroSubtitle,
-      mainHeroCta1Text,
-      mainHeroCta1Link,
-      heroTitle,
-      heroSubtitle,
-      heroDescription,
-      heroVideoUrl,
-      heroCta1Text,
-      heroCta1Link,
-      overlayTexts = [],
       statsData = [],
       whyUsTitle,
       whyUsDescription,
@@ -136,27 +124,9 @@ if (!adminAuth) {
       order = 0
     } = body;
 
-    // Validation
-    if (!heroTitle) {
-      return validationError({
-        heroTitle: "عنوان Hero الزامی است"
-      });
-    }
-
     // Create home landing page
     const item = await prisma.homeLanding.create({
       data: {
-        mainHeroTitle,
-        mainHeroSubtitle,
-        mainHeroCta1Text,
-        mainHeroCta1Link,
-        heroTitle,
-        heroSubtitle,
-        heroDescription,
-        heroVideoUrl,
-        heroCta1Text,
-        heroCta1Link,
-        overlayTexts,
         statsData,
         whyUsTitle,
         whyUsDescription,

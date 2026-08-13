@@ -1,8 +1,6 @@
 // @/prisma/seeds/landing-seed.ts
 
 import { PrismaClient } from '@prisma/client';
-import { homeAlbumSlides, homeMiniSliderRows } from '../../lib/data/home-album';
-
 const prisma = new PrismaClient();
 
 export async function seedLandingPages() {
@@ -18,27 +16,9 @@ export async function seedLandingPages() {
   await prisma.investmentPlans.deleteMany({});
   await prisma.homeLanding.deleteMany({});
   await prisma.mobileScrollerStep.deleteMany({});
-  await prisma.homeSlide.deleteMany({});
-  await prisma.homeMiniSlider.deleteMany({});
 
   const homeLanding = await prisma.homeLanding.create({
     data: {
-      mainHeroTitle: 'پیشرو در مسیر سرمایه‌ گذاری هوشمند',
-      mainHeroSubtitle: 'آموزش تخصصی بورس و بازارهای مالی',
-      mainHeroCta1Text: 'شروع مسیر موفقیت',
-      mainHeroCta1Link: '/business-consulting',
-      heroTitle: 'پیشرو سرمایه',
-      heroSubtitle: 'بزرگترین مؤسسه سرمایه‌ گذاری در ایران',
-      heroDescription: 'از آموزش اصولی تا مشاوره حرفه‌ای در بازارهای مالی',
-      heroVideoUrl: '/videos/aboutUs.webm',
-      heroCta1Text: 'مشاهده دوره‌ها',
-      heroCta1Link: '/courses',
-      overlayTexts: [
-        'پیشرو در مسیر سرمایه‌ گذاری هوشمند',
-        'ما در پیشرو با ارائه آموزش‌های تخصصی بورس، بازارهای مالی و سرمایه‌ گذاری، شما را در مسیر رشد مالی همراهی می‌کنیم.',
-        'از آموزش اصولی و گام‌به‌گام تا مشاوره‌های حرفه‌ای و همراهی در مسیر رشد سرمایه شما، همه و همه در پیشرو فراهم است.',
-        'پیشرو انتخابی مطمئن برای کسانی است که به دنبال امنیت مالی، رشد پایدار و آینده‌ای روشن هستند.',
-      ],
       statsData: [
         { label: 'دانشجوی موفق', value: 3000, suffix: '+' },
         { label: 'دوره تخصصی', value: 100, suffix: '+' },
@@ -78,13 +58,6 @@ export async function seedLandingPages() {
     ],
   });
 
-  await prisma.homeSlide.createMany({ data: homeAlbumSlides });
-  await prisma.homeMiniSlider.createMany({
-    data: [
-      ...homeMiniSliderRows[1].map((imageUrl, index) => ({ imageUrl, row: 1, order: index + 1, published: true })),
-      ...homeMiniSliderRows[2].map((imageUrl, index) => ({ imageUrl, row: 2, order: index + 1, published: true })),
-    ],
-  });
 
   const aboutPage = await prisma.aboutPage.create({
     data: {
@@ -186,9 +159,8 @@ export async function seedLandingPages() {
     data: ['تحلیل تکنیکال', 'تحلیل بنیادی', 'بورس تهران', 'ارز دیجیتال', 'فارکس', 'سهام بلندمدت', 'صندوق‌های سرمایه‌ گذاری', 'اوراق قرضه', 'مدیریت ریسک', 'تنوع سبد سرمایه‌ گذاری'].map((title, index) => ({ investmentPlansId: investmentPlans.id, title, order: index + 1, published: true })),
   });
 
-  const created = 1 + 3 + homeAlbumSlides.length + 12 + 1 + 4 + 2 + 1 + 1 + 3 + 10;
+  const created = 1 + 3 + 1 + 4 + 2 + 1 + 1 + 3 + 10
   console.log(`✅ Home landing created: ${homeLanding.id}`);
-  console.log(`✅ Inserted ${homeAlbumSlides.length} home slides and 12 mini slider images`);
   console.log('✅ About, business consulting, and investment plans pages created');
   return { created, updated: 0, total: created };
 }

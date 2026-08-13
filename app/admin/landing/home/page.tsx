@@ -16,18 +16,10 @@ import {
 import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
 import {
   useAdminHomeLanding,
-  useAdminHomeMiniSliders,
-  useAdminHomeSlides,
   useAdminMobileSteps,
-  useCreateHomeMiniSlider,
-  useCreateHomeSlide,
   useCreateMobileStep,
-  useDeleteHomeMiniSlider,
-  useDeleteHomeSlide,
   useDeleteMobileStep,
   useUpdateHomeLanding,
-  useUpdateHomeMiniSlider,
-  useUpdateHomeSlide,
   useUpdateMobileStep,
 } from '@/lib/hooks/useAdminLandingCms';
 
@@ -77,7 +69,7 @@ export default function LandingHomeCmsPage() {
   return (
     <AdminPageShell
       title="لندینگ خانه"
-      description="متن‌ها، تصویر/ویدیو و بخش‌های وابسته صفحه اصلی"
+      description="محتوای صفحه اصلی (به‌جز هیرو سکه‌ها که ثابت است)"
       actions={
         <Button variant="outline" asChild>
           <Link href="/admin/landing">
@@ -91,24 +83,14 @@ export default function LandingHomeCmsPage() {
         <TabsList className="flex h-auto flex-wrap gap-1">
           <TabsTrigger value="content">محتوای اصلی</TabsTrigger>
           <TabsTrigger value="calculator">ماشین‌حساب</TabsTrigger>
-          <TabsTrigger value="slides">اسلایدها</TabsTrigger>
-          <TabsTrigger value="mini">مینی‌اسلایدر</TabsTrigger>
           <TabsTrigger value="mobile">قدم‌های موبایل</TabsTrigger>
         </TabsList>
 
         <TabsContent value="content" className="space-y-4">
           <Card className="space-y-4 p-4">
-            <TextField label="عنوان اصلی هیرو" value={str(form.mainHeroTitle)} onChange={(v) => set('mainHeroTitle', v)} />
-            <TextField label="زیرعنوان اصلی" value={str(form.mainHeroSubtitle)} onChange={(v) => set('mainHeroSubtitle', v)} />
-            <TextField label="متن دکمه اصلی" value={str(form.mainHeroCta1Text)} onChange={(v) => set('mainHeroCta1Text', v)} />
-            <TextField label="لینک دکمه اصلی" value={str(form.mainHeroCta1Link)} onChange={(v) => set('mainHeroCta1Link', v)} dir="ltr" />
-            <TextField label="عنوان هیرو" value={str(form.heroTitle)} onChange={(v) => set('heroTitle', v)} />
-            <TextField label="زیرعنوان هیرو" value={str(form.heroSubtitle)} onChange={(v) => set('heroSubtitle', v)} />
-            <TextField label="توضیح هیرو" value={str(form.heroDescription)} onChange={(v) => set('heroDescription', v)} multiline />
-            <TextField label="آدرس ویدیو هیرو" value={str(form.heroVideoUrl)} onChange={(v) => set('heroVideoUrl', v)} dir="ltr" />
-            <TextField label="متن CTA هیرو" value={str(form.heroCta1Text)} onChange={(v) => set('heroCta1Text', v)} />
-            <TextField label="لینک CTA هیرو" value={str(form.heroCta1Link)} onChange={(v) => set('heroCta1Link', v)} dir="ltr" />
-            <JsonField label="متن‌های Overlay (JSON)" value={form.overlayTexts} onChange={(v) => set('overlayTexts', v)} hint='آرایه رشته، مثل ["متن ۱","متن ۲"]' />
+            <p className="text-sm text-muted-foreground">
+              هیرو اول صفحه (سکه‌ها) ثابت است و از اینجا ویرایش نمی‌شود.
+            </p>
             <JsonField label="آمار (JSON)" value={form.statsData} onChange={(v) => set('statsData', v)} hint='[{"label":"...","value":3000,"suffix":"+"}]' />
             <TextField label="عنوان چرا پیشرو" value={str(form.whyUsTitle)} onChange={(v) => set('whyUsTitle', v)} />
             <TextField label="توضیح چرا پیشرو" value={str(form.whyUsDescription)} onChange={(v) => set('whyUsDescription', v)} multiline />
@@ -123,7 +105,7 @@ export default function LandingHomeCmsPage() {
             saving={updateLanding.isPending}
             onSave={() => {
               const { id: _id, createdAt: _c, updatedAt: _u, ...payload } = form;
-              if (typeof payload.overlayTexts === 'string' || typeof payload.statsData === 'string') {
+              if (typeof payload.statsData === 'string') {
                 return;
               }
               updateLanding.mutateAsync(payload);
@@ -156,164 +138,11 @@ export default function LandingHomeCmsPage() {
           />
         </TabsContent>
 
-        <TabsContent value="slides">
-          <SlidesEditor />
-        </TabsContent>
-        <TabsContent value="mini">
-          <MiniSlidersEditor />
-        </TabsContent>
         <TabsContent value="mobile">
           <MobileStepsEditor />
         </TabsContent>
       </Tabs>
     </AdminPageShell>
-  );
-}
-
-function SlidesEditor() {
-  const { data: slides = [], isLoading } = useAdminHomeSlides();
-  const create = useCreateHomeSlide();
-  const update = useUpdateHomeSlide();
-  const remove = useDeleteHomeSlide();
-  const [editing, setEditing] = useState<Dict | null>(null);
-
-  if (isLoading) return <AdminLoadingState />;
-
-  return (
-    <div className="space-y-4">
-      <div className="flex justify-end">
-        <Button
-          onClick={() =>
-            setEditing({ title: '', description: '', imageUrl: '', order: slides.length + 1, published: true })
-          }
-        >
-          <Plus className="size-4" />
-          اسلاید جدید
-        </Button>
-      </div>
-      {editing && (
-        <Card className="space-y-3 p-4">
-          <TextField label="عنوان" value={str(editing.title)} onChange={(v) => setEditing({ ...editing, title: v })} />
-          <TextField label="توضیح" value={str(editing.description)} onChange={(v) => setEditing({ ...editing, description: v })} multiline />
-          <TextField label="آدرس تصویر" value={str(editing.imageUrl)} onChange={(v) => setEditing({ ...editing, imageUrl: v })} dir="ltr" />
-          <TextField label="ترتیب" value={str(editing.order)} onChange={(v) => setEditing({ ...editing, order: Number(v) || 0 })} dir="ltr" />
-          <PublishedSwitch checked={Boolean(editing.published)} onChange={(v) => setEditing({ ...editing, published: v })} />
-          <div className="flex gap-2">
-            <Button
-              onClick={async () => {
-                if (editing.id) {
-                  const { id, ...rest } = editing;
-                  await update.mutateAsync({ id: str(id), ...rest });
-                } else {
-                  await create.mutateAsync(editing);
-                }
-                setEditing(null);
-              }}
-            >
-              ذخیره
-            </Button>
-            <Button variant="outline" onClick={() => setEditing(null)}>
-              انصراف
-            </Button>
-          </div>
-        </Card>
-      )}
-      <div className="grid gap-3">
-        {(slides as Dict[]).map((slide) => (
-          <Card key={str(slide.id)} className="flex items-start justify-between gap-3 p-4">
-            <div>
-              <p className="font-medium">{str(slide.title)}</p>
-              <p className="text-xs text-muted-foreground dir-ltr">{str(slide.imageUrl)}</p>
-            </div>
-            <div className="flex gap-1">
-              <Button size="icon" variant="ghost" onClick={() => setEditing(slide)}>
-                <Pencil className="size-4" />
-              </Button>
-              <Button
-                size="icon"
-                variant="ghost"
-                onClick={() => {
-                  if (window.confirm('حذف این اسلاید؟')) remove.mutate(str(slide.id));
-                }}
-              >
-                <Trash2 className="size-4" />
-              </Button>
-            </div>
-          </Card>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function MiniSlidersEditor() {
-  const { data: items = [], isLoading } = useAdminHomeMiniSliders();
-  const create = useCreateHomeMiniSlider();
-  const update = useUpdateHomeMiniSlider();
-  const remove = useDeleteHomeMiniSlider();
-  const [editing, setEditing] = useState<Dict | null>(null);
-
-  if (isLoading) return <AdminLoadingState />;
-
-  return (
-    <div className="space-y-4">
-      <div className="flex justify-end">
-        <Button onClick={() => setEditing({ imageUrl: '', row: 1, order: items.length + 1, published: true })}>
-          <Plus className="size-4" />
-          آیتم جدید
-        </Button>
-      </div>
-      {editing && (
-        <Card className="space-y-3 p-4">
-          <TextField label="آدرس تصویر" value={str(editing.imageUrl)} onChange={(v) => setEditing({ ...editing, imageUrl: v })} dir="ltr" />
-          <TextField label="ردیف (1 یا 2)" value={str(editing.row)} onChange={(v) => setEditing({ ...editing, row: Number(v) || 1 })} dir="ltr" />
-          <TextField label="ترتیب" value={str(editing.order)} onChange={(v) => setEditing({ ...editing, order: Number(v) || 0 })} dir="ltr" />
-          <PublishedSwitch checked={Boolean(editing.published)} onChange={(v) => setEditing({ ...editing, published: v })} />
-          <div className="flex gap-2">
-            <Button
-              onClick={async () => {
-                if (editing.id) {
-                  const { id, ...rest } = editing;
-                  await update.mutateAsync({ id: str(id), ...rest });
-                } else {
-                  await create.mutateAsync(editing);
-                }
-                setEditing(null);
-              }}
-            >
-              ذخیره
-            </Button>
-            <Button variant="outline" onClick={() => setEditing(null)}>
-              انصراف
-            </Button>
-          </div>
-        </Card>
-      )}
-      <div className="grid gap-3 sm:grid-cols-2">
-        {(items as Dict[]).map((item) => (
-          <Card key={str(item.id)} className="flex items-center justify-between gap-3 p-3">
-            <div>
-              <p className="text-sm">ردیف {num(item.row)} — ترتیب {num(item.order)}</p>
-              <p className="text-xs text-muted-foreground">{str(item.imageUrl)}</p>
-            </div>
-            <div className="flex gap-1">
-              <Button size="icon" variant="ghost" onClick={() => setEditing(item)}>
-                <Pencil className="size-4" />
-              </Button>
-              <Button
-                size="icon"
-                variant="ghost"
-                onClick={() => {
-                  if (window.confirm('حذف؟')) remove.mutate(str(item.id));
-                }}
-              >
-                <Trash2 className="size-4" />
-              </Button>
-            </div>
-          </Card>
-        ))}
-      </div>
-    </div>
   );
 }
 

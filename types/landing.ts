@@ -8,22 +8,6 @@
 
 export interface HomeLandingData {
   id: string;
-  // Main Hero
-  mainHeroTitle: string | null;
-  mainHeroSubtitle: string | null;
-  mainHeroCta1Text: string | null;
-  mainHeroCta1Link: string | null;
-
-  // Hero Section
-  heroTitle: string;
-  heroSubtitle: string | null;
-  heroDescription: string | null;
-  heroVideoUrl: string | null;
-  heroCta1Text: string | null;
-  heroCta1Link: string | null;
-
-  // Overlay Texts
-  overlayTexts: string[];
 
   // Stats
   statsData: StatItem[];

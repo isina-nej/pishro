@@ -1,6 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { seedMiniSlider1 } from "./seeds/mini-slider-1-seed.js";
-import { seedMiniSlider2 } from "./seeds/mini-slider-2-seed.js";
 
 const prisma = new PrismaClient();
 
@@ -22,7 +20,6 @@ async function main() {
   await prisma.investmentTag.deleteMany();
   await prisma.investmentPlan.deleteMany();
   await prisma.investmentPlans.deleteMany();
-  await prisma.homeMiniSlider.deleteMany();
 
   console.log("✔️ Cleanup complete!");
 
@@ -34,22 +31,6 @@ async function main() {
   console.log("🏠 Creating Home Landing data...");
   await prisma.homeLanding.create({
     data: {
-      mainHeroTitle: "پیشرو بزرگترین مؤسسه سرمایه‌ گذاری در ایران",
-      mainHeroSubtitle: null,
-      mainHeroCta1Text: "شروع مسیر موفقیت",
-      mainHeroCta1Link: "/business-consulting",
-      heroTitle: "پیشرو در مسیر سرمایه‌ گذاری هوشمند",
-      heroSubtitle: "آموزش، مشاوره و همراهی در مسیر موفقیت مالی",
-      heroDescription: null,
-      heroVideoUrl: "/videos/aboutUs.webm",
-      heroCta1Text: null,
-      heroCta1Link: null,
-      overlayTexts: [
-        "پیشرو در مسیر سرمایه‌ گذاری هوشمند",
-        "ما در پیشرو با ارائه آموزش‌های تخصصی بورس، بازارهای مالی و سرمایه‌ گذاری، شما را در مسیر رشد مالی همراهی می‌کنیم.",
-        "از آموزش اصولی و گام‌به‌گام تا مشاوره‌های حرفه‌ای و همراهی در مسیر رشد سرمایه شما، همه و همه در پیشرو فراهم است.",
-        "پیشرو انتخابی مطمئن برای کسانی است که به دنبال امنیت مالی، رشد پایدار و آینده‌ای روشن هستند.",
-      ],
       statsData: JSON.parse(
         JSON.stringify([
           { label: "دانشجو", value: 300, suffix: "+" },
@@ -530,14 +511,6 @@ async function main() {
   }
 
   console.log("✅ Investment Plans created with plans and tags");
-
-  /**
-   * -------------------------------------------------------
-   * 🖼️ Seed Mini Sliders
-   * -------------------------------------------------------
-   */
-  await seedMiniSlider1();
-  await seedMiniSlider2();
 
   console.log("✅ Database seeded successfully!");
 }
