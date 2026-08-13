@@ -1,7 +1,6 @@
 // @/components/home/homeContent.tsx
 
-import LandingOverlayServer from "./landingOverlay.server";
-import MobileLandingServer from "./mobileLanding.server";
+import CoinsHeroSection from "./coinsHeroSection";
 import MobileScrollSectionServer from "./mobileScrollSection.server";
 import CalculatorSection from "./calculatorSection";
 import CoursesSec from "@/components/utils/CoursesSec.server";
@@ -17,18 +16,9 @@ export default async function HomePageContent() {
 
   return (
     <div className="home-shell w-full transition-colors">
-      {(show("home:hero") || show("home:album")) && (
+      {show("home:hero") && (
         <div className="home-hero-stage">
-          <LandingOverlayServer
-            showHero={show("home:hero")}
-            showAlbum={show("home:album")}
-          />
-        </div>
-      )}
-
-      {show("home:mobile-landing") && (
-        <div className="lg:hidden">
-          <MobileLandingServer />
+          <CoinsHeroSection />
         </div>
       )}
 

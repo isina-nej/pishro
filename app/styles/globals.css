@@ -671,3 +671,26 @@ html.dark
     animation-iteration-count: 1 !important;
   }
 }
+
+/* V32 coins hero — soft top/bottom bridges only (full coins visible) */
+.coins-hero-reel {
+  isolation: isolate;
+}
+
+.coins-hero-fade-top {
+  background: linear-gradient(
+    180deg,
+    #000412 0%,
+    rgba(0, 4, 18, 0.55) 45%,
+    transparent 100%
+  );
+}
+
+.coins-hero-fade-bottom {
+  background: linear-gradient(
+    0deg,
+    #000412 0%,
+    rgba(0, 4, 18, 0.5) 40%,
+    transparent 100%
+  );
+}

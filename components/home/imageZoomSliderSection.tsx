@@ -51,10 +51,10 @@ const useImageZoomScroll = (
     offset: ["start end", "end start"],
   });
 
-  // Stage 1: parent text fade out → zoom in
-  const firstStageScale = useTransform(parentScroll, [0, 1], [1.8, 1.7]);
-  // Stage 2: section scroll → zoom back to normal
-  const secondStageScale = useTransform(sectionScroll, [0.645, 0.68], [1.7, 1]);
+  // Stage 1: mild zoom while previous section ends
+  const firstStageScale = useTransform(parentScroll, [0, 1], [1.12, 1.06]);
+  // Stage 2: settle to normal
+  const secondStageScale = useTransform(sectionScroll, [0.2, 0.55], [1.06, 1]);
 
   // Combine two transitions dynamically
   const bgScale = useTransform([parentScroll, sectionScroll], ([p]) =>
@@ -62,29 +62,21 @@ const useImageZoomScroll = (
   );
 
   // Derivative transforms
-  const otherSlidesOpacity = useTransform(bgScale, [1.7, 1.2, 1], [0, 0, 0.6]);
-  const otherSlidesScale = useTransform(bgScale, [1.2, 1], [1 / 1.2, 1]);
-  const sectionOpacity = useTransform(parentScroll, [0, 0.01], [0, 1]);
-  const btnOpacity = useTransform(bgScale, [1.2, 1.1], [0, 1]);
-  const revealSlides = useTransform(parentScroll, [0, 0.05, 0.1], [0, 0, 1]);
+  const otherSlidesOpacity = useTransform(bgScale, [1.08, 1.03, 1], [0, 0.25, 0.55]);
+  const otherSlidesScale = useTransform(bgScale, [1.08, 1], [0.92, 1]);
+  const sectionOpacity = useTransform(parentScroll, [0, 0.2], [1, 1]);
+  const btnOpacity = useTransform(bgScale, [1.05, 1.02], [0.35, 1]);
+  const revealSlides = useTransform(parentScroll, [0, 0.05], [1, 1]);
 
   // 🔹 Text appearance opacity (when scale → 1)
-  const textOpacity = useTransform(bgScale, [1.05, 1], [0, 1]);
+  const textOpacity = useTransform(bgScale, [1.04, 1], [0, 1]);
   const overlayTextOpacity = useTransform(
     bgScale,
-    [1.78, 1.75, 1.72, 1.01, 1],
-    [0, 0.1, 1, 1, 0]
+    [1.12, 1.08, 1.04, 1.01, 1],
+    [0, 0.15, 1, 1, 0]
   );
-  const overlayTextRight = useTransform(
-    bgScale,
-    [1.8, 1.7, 1.05],
-    [48, 42, 16]
-  );
-  const overlayTextTop = useTransform(
-    bgScale,
-    [1.8, 1.7, 1.05],
-    ["20%", "25%", "25%"]
-  );
+  const overlayTextRight = useTransform(bgScale, [1.12, 1.06, 1.02], [40, 28, 16]);
+  const overlayTextTop = useTransform(bgScale, [1.12, 1.06, 1.02], ["18%", "22%", "24%"]);
 
   return {
     parentScroll,
@@ -163,7 +155,7 @@ const ImageZoomSliderSection = ({
     revealSlides,
   } = useImageZoomScroll(parentRef, sectionRef);
 
-  const [showMiniSlider, setShowMiniSlider] = useState(false);
+  const [showMiniSlider, setShowMiniSlider] = useState(true);
 
   // Mount images only when the album is near the viewport (avoids decode spike)
   useEffect(() => {
@@ -186,7 +178,7 @@ const ImageZoomSliderSection = ({
 
   // ✅ Listen to bgScale value changes
   useMotionValueEvent(bgScale, "change", (latest) => {
-    if (latest <= 1.01) setShowMiniSlider(true);
+    if (latest <= 1.05) setShowMiniSlider(true);
     else setShowMiniSlider(false);
   });
 
@@ -201,10 +193,8 @@ const ImageZoomSliderSection = ({
     const swiper = swiperRef.current;
     if (!swiper?.autoplay) return;
 
-    const textsGone = parentScroll.get() > 0.98;
-    const inView = latestSection > 0 && latestSection < 1;
-
-    if (textsGone && inView) swiper.autoplay.start();
+    const inView = latestSection > 0.05 && latestSection < 0.95;
+    if (inView) swiper.autoplay.start();
     else swiper.autoplay.stop();
   });
 
@@ -228,26 +218,26 @@ const ImageZoomSliderSection = ({
       <motion.section
         ref={sectionRef}
         style={{ opacity: sectionOpacity }}
-        className="relative h-screen sm:h-[215vh] md:h-[225vh] -mt-0 sm:-mt-[100vh]"
+        className="relative min-h-[100svh] bg-[#000412] md:min-h-[130vh]"
       >
-        <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden bg-[#0A100E]">
-          <motion.div className="relative w-full flex items-center justify-center">
+        <div className="sticky top-0 flex h-[100svh] items-center justify-center overflow-hidden bg-[#000412]">
+          <motion.div className="relative flex w-full max-w-[1600px] items-center justify-center px-3 sm:px-6">
             <motion.div
               style={{ opacity: revealSlides }}
-              className="w-full relative"
+              className="relative w-full"
             >
               <Swiper
                 modules={[Autoplay]}
                 onSwiper={(swiper) => {
                   swiperRef.current = swiper;
-                  swiper.autoplay?.stop();
+                  swiper.autoplay?.start();
                 }}
                 slidesPerView={1}
                 centeredSlides
                 loop={slides.length >= 4}
                 watchSlidesProgress
-                allowTouchMove={false}
-                spaceBetween={15}
+                allowTouchMove
+                spaceBetween={12}
                 autoplay={{
                   delay: 10000,
                   disableOnInteraction: false,
@@ -256,15 +246,15 @@ const ImageZoomSliderSection = ({
                 onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
                 breakpoints={{
                   640: {
-                    slidesPerView: 1.2,
-                    spaceBetween: 20,
+                    slidesPerView: 1.15,
+                    spaceBetween: 16,
                   },
                   1024: {
-                    slidesPerView: 1.5,
-                    spaceBetween: 30,
+                    slidesPerView: 1.35,
+                    spaceBetween: 24,
                   },
                 }}
-                className="w-full flex items-center justify-center !overflow-visible"
+                className="flex !w-full items-center justify-center !overflow-visible"
               >
                 {slides.map((slide, index) => {
                   const isActive = activeIndex === index;
@@ -280,7 +270,7 @@ const ImageZoomSliderSection = ({
                           scale: isActive ? bgScale : otherSlidesScale,
                         }}
                         transition={{ duration: 0.4 }}
-                        className="relative w-full aspect-[16/10] overflow-hidden rounded-2xl border border-border/10 bg-[#121a17] shadow-2xl shadow-black/40 sm:aspect-[16/9] sm:rounded-[2rem]"
+                        className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-white/10 bg-[#121a17] shadow-2xl shadow-black/40 sm:aspect-[16/9] sm:rounded-[1.75rem]"
                       >
                         {renderImage ? (
                           <Image
@@ -314,7 +304,7 @@ const ImageZoomSliderSection = ({
         </div>
       </motion.section>
       {(miniSlider1Data || miniSlider2Data) && (
-        <motion.div className="relative mt-0 w-full bg-[#0A100E] py-2 sm:-mt-16 sm:py-3 md:-mt-20 md:py-4">
+        <motion.div className="relative mt-0 w-full bg-[#000412] py-4 sm:py-5 md:py-6">
           {miniSlider1Data && miniSlider1Data.length > 0 && (
             <MiniMovingSlider
               isVisible={showMiniSlider}
@@ -322,7 +312,7 @@ const ImageZoomSliderSection = ({
               baseSpeed={10000}
             />
           )}
-          <div className="h-3 sm:h-4 md:h-5"></div>
+          <div className="h-3 sm:h-4 md:h-5" />
           {miniSlider2Data && miniSlider2Data.length > 0 && (
             <MiniMovingSlider
               isVisible={showMiniSlider}

@@ -1,19 +1,14 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectCards, Pagination } from "swiper/modules";
-import { ArrowLeft, Sparkles } from "lucide-react";
 
 import "swiper/css";
 import "swiper/css/effect-cards";
 import "swiper/css/pagination";
 
-// =================================================
-//                   Types
-// =================================================
 type SlideData = {
   src: string;
   title: string;
@@ -21,61 +16,23 @@ type SlideData = {
 };
 
 type MobileLandingProps = {
-  mainHeroTitle?: string;
-  mainHeroSubtitle?: string;
-  mainHeroCta1Link?: string;
-  heroVideoUrl?: string;
-  overlayTexts?: string[];
   slides?: SlideData[];
 };
 
-// =================================================
-//             کامپوننت اصلی MobileLanding
-// =================================================
-const MobileLanding = ({
-  mainHeroTitle,
-  mainHeroSubtitle,
-  mainHeroCta1Link,
-  heroVideoUrl,
-  overlayTexts,
-  slides,
-}: MobileLandingProps) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [videoLoaded, setVideoLoaded] = useState(false);
-
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"],
-  });
-
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
+const MobileLanding = ({ slides }: MobileLandingProps) => {
+  if (!slides || slides.length === 0) return null;
 
   return (
-    <div ref={containerRef} className="relative w-full bg-[#0A100E]">
-      {/* Hero Section */}
-      <HeroSection
-        title={mainHeroTitle}
-        subtitle={mainHeroSubtitle}
-        ctaLink={mainHeroCta1Link}
-        videoUrl={heroVideoUrl}
-        videoLoaded={videoLoaded}
-        setVideoLoaded={setVideoLoaded}
-        opacity={opacity}
-        scale={scale}
-      />
-
-      {/* Feature Cards Section */}
-      <FeatureCardsSection overlayTexts={overlayTexts} />
-
-      {/* Slides Swiper Section */}
-      {slides && slides.length > 0 && <SlidesSwiperSection slides={slides} />}
+    <div className="relative w-full bg-[#0A100E]">
+      <SlidesSwiperSection slides={slides} />
     </div>
   );
 };
 
 export default MobileLanding;
 
+<<<<<<< HEAD
+=======
 // =================================================
 //                 Hero Section
 // =================================================
@@ -254,27 +211,26 @@ const FeatureCardsSection = ({ overlayTexts }: { overlayTexts?: string[] }) => {
 // =================================================
 //           Slides Swiper Section
 // =================================================
+>>>>>>> origin/main
 const SlidesSwiperSection = ({ slides }: { slides: SlideData[] }) => {
   return (
-    <section className="relative w-full bg-gradient-to-b from-background via-card to-background py-20 px-6 overflow-x-hidden">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
+    <section className="relative w-full overflow-x-hidden bg-gradient-to-b from-background via-card to-background px-6 py-20">
+      <div className="mx-auto max-w-4xl">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="mb-12 text-center"
         >
-          <h2 className="text-foreground text-3xl sm:text-4xl font-extrabold mb-3">
+          <h2 className="mb-3 text-3xl font-extrabold text-foreground sm:text-4xl">
             خدمات ویژه پیشرو
           </h2>
-          <p className="text-muted-foreground text-base sm:text-lg">
+          <p className="text-base text-muted-foreground sm:text-lg">
             راهکارهای حرفه‌ای برای موفقیت شما
           </p>
         </motion.div>
 
-        {/* Swiper */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -304,9 +260,8 @@ const SlidesSwiperSection = ({ slides }: { slides: SlideData[] }) => {
           >
             {slides.map((slide, index) => (
               <SwiperSlide key={index}>
-                <div className="relative w-full h-[420px] bg-gradient-to-br from-card to-background rounded-3xl overflow-hidden shadow-2xl border border-border/10">
-                  {/* Image */}
-                  <div className="relative w-full h-56 bg-[#121a17]">
+                <div className="relative h-[420px] w-full overflow-hidden rounded-3xl border border-border/10 bg-gradient-to-br from-card to-background shadow-2xl">
+                  <div className="relative h-56 w-full bg-[#121a17]">
                     <Image
                       src={slide.src}
                       alt={slide.title}
@@ -319,12 +274,11 @@ const SlidesSwiperSection = ({ slides }: { slides: SlideData[] }) => {
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background/60" />
                   </div>
 
-                  {/* Content */}
-                  <div className="absolute bottom-0 left-0 right-0 p-6 space-y-3">
-                    <h3 className="text-foreground text-2xl font-bold leading-tight">
+                  <div className="absolute bottom-0 left-0 right-0 space-y-3 p-6">
+                    <h3 className="text-2xl font-bold leading-tight text-foreground">
                       {slide.title}
                     </h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed line-clamp-3">
+                    <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">
                       {slide.text}
                     </p>
                   </div>
