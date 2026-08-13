@@ -28,8 +28,8 @@ export const InvestmentPlansHero = ({
 
   // Calculate stats from data
   const stats = {
-    totalPlans: investmentPlansData.plans.length || 3,
-    totalTags: investmentPlansData.tags.length || 8,
+    totalPlans: investmentPlansData.plans?.length || 3,
+    totalTags: investmentPlansData.tags?.length || 8,
     minInvestment: investmentPlansData.minAmount || 10,
     maxReturn: 11, // درصد بازدهی حداکثر
   };
