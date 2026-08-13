@@ -34,7 +34,7 @@ const TestimonialsSectionClient: React.FC<TestimonialsSectionClientProps> = ({
         className="pointer-events-none absolute inset-0 -z-10"
       >
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat supports-[background-attachment:fixed]:bg-fixed"
+          className="absolute inset-0 bg-center bg-no-repeat bg-[length:88%_auto] sm:bg-[length:75%_auto] md:bg-cover md:bg-center lg:supports-[background-attachment:fixed]:bg-fixed"
           style={{ backgroundImage: `url('${COMMENTS_BG}')` }}
         />
         {/* Readability wash over the photo */}
