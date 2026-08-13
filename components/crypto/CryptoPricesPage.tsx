@@ -251,6 +251,7 @@ export default function CryptoPricesPage({
   const nextPageRef = useRef(1);
   const loadingMoreRef = useRef(false);
   const initialLoadingRef = useRef(true);
+  const assetsRef = useRef<CryptoMarketAsset[]>(initialData?.assets ?? []);
 
   useEffect(() => {
     hasMoreRef.current = hasMore;
@@ -267,6 +268,10 @@ export default function CryptoPricesPage({
   useEffect(() => {
     initialLoadingRef.current = initialLoading;
   }, [initialLoading]);
+
+  useEffect(() => {
+    assetsRef.current = assets;
+  }, [assets]);
 
   const applyPagePayload = useCallback((payload: CryptoMarketResponse, mode: 'replace' | 'append' | 'soft') => {
     startTransition(() => {
@@ -366,16 +371,24 @@ export default function CryptoPricesPage({
     } else {
       void loadInitial();
     }
-    const interval = window.setInterval(() => {
+
+    const softInterval = window.setInterval(() => {
       void softRefresh();
     }, 60_000);
 
+    // If the first paint was empty (sanctions / cold cache), keep retrying briefly.
+    const retryInterval = window.setInterval(() => {
+      if (!initialLoadingRef.current && assetsRef.current.length === 0) {
+        void loadInitial(true);
+      }
+    }, 15_000);
+
     return () => {
-      window.clearInterval(interval);
+      window.clearInterval(softInterval);
+      window.clearInterval(retryInterval);
       abortRef.current?.abort();
       loadMoreAbortRef.current?.abort();
     };
-    // Mount-only bootstrap from SSR cache; soft refresh keeps data warm from our API.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
