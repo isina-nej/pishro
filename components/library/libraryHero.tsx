@@ -62,7 +62,7 @@ export const LibraryHero = ({ stats }: LibraryHeroProps) => {
             },
             {
               label: "میانگین امتیاز",
-              value: stats.avgRating.toFixed(1),
+              value: Number(stats.avgRating || 0).toFixed(1),
               icon: <Star className="h-5 w-5" />,
             },
           ].map((item) => (

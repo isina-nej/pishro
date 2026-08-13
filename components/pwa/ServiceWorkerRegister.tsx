@@ -3,24 +3,36 @@
 import { useEffect } from 'react';
 
 /**
- * ثبت Service Worker برای کش دارایی‌های استاتیک و بارگذاری سریع‌تر.
- * فقط در production تا کشِ توسعه مزاحم نباشد.
+ * Service Worker قبلاً چانک‌های قدیمی را نگه می‌داشت و بعد از دیپلوی
+ * خطای client-side (Application error) می‌داد.
+ * این کامپوننت SW را خاموش و کش‌ها را پاک می‌کند.
  */
 export default function ServiceWorkerRegister() {
   useEffect(() => {
-    if (process.env.NODE_ENV !== 'production') return;
+    if (typeof window === 'undefined') return;
     if (!('serviceWorker' in navigator)) return;
 
-    const register = () => {
-      navigator.serviceWorker.register('/sw.js').catch(() => {
-        // نادیده — عدم پشتیبانی/خطای شبکه نباید UI را بشکند
-      });
+    const cleanup = async () => {
+      try {
+        // یک‌بار kill-switch را فعال کن تا SWهای قدیمی آپدیت شوند
+        await navigator.serviceWorker.register('/sw.js').catch(() => null);
+
+        const regs = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(regs.map((reg) => reg.unregister()));
+
+        if ('caches' in window) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map((key) => caches.delete(key)));
+        }
+      } catch {
+        // پاکسازی نباید UI را بشکند
+      }
     };
 
     if (document.readyState === 'complete') {
-      register();
+      void cleanup();
     } else {
-      window.addEventListener('load', register, { once: true });
+      window.addEventListener('load', () => void cleanup(), { once: true });
     }
   }, []);
 
