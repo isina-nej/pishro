@@ -5,9 +5,7 @@ import { cn } from '@/lib/utils';
 import { DEFAULT_LOGO_URL, DEFAULT_SITE_NAME } from '@/lib/site/branding';
 
 type SiteLoadingScreenProps = {
-  /** متن زیرین لوگو */
-  label?: string;
-  /** اگر true باشد تمام‌صفحه و fixed می‌شود (اسپلش/لودینگ روت) */
+  /** اگر true باشد تمام‌صفحه و fixed می‌شود */
   fullscreen?: boolean;
   className?: string;
   logoUrl?: string;
@@ -15,10 +13,9 @@ type SiteLoadingScreenProps = {
 };
 
 /**
- * لودینگ برنددار پیشرو — برای loading.tsx و حالت‌های انتظار.
+ * فقط لودینگ بصری — بدون متن «در حال بارگذاری».
  */
 export default function SiteLoadingScreen({
-  label = 'در حال آماده‌سازی…',
   fullscreen = false,
   className,
   logoUrl = DEFAULT_LOGO_URL,
@@ -29,6 +26,7 @@ export default function SiteLoadingScreen({
       role="status"
       aria-live="polite"
       aria-busy="true"
+      aria-label="بارگذاری"
       className={cn(
         'site-loading-screen flex flex-col items-center justify-center gap-6 px-6',
         fullscreen
@@ -62,20 +60,6 @@ export default function SiteLoadingScreen({
             unoptimized={logoUrl.startsWith('/api/') || logoUrl.startsWith('http')}
           />
         </div>
-      </div>
-
-      <div className="relative z-10 text-center">
-        <p className="text-lg font-black tracking-tight text-foreground sm:text-xl">
-          {siteName}
-        </p>
-        <p className="mt-2 text-sm text-muted-foreground">{label}</p>
-      </div>
-
-      <div
-        className="relative z-10 h-1 w-40 overflow-hidden rounded-full bg-muted sm:w-52"
-        aria-hidden
-      >
-        <span className="site-loading-bar absolute inset-y-0 start-0 w-1/2 rounded-full bg-gradient-to-l from-primary via-[hsl(var(--premium))] to-primary" />
       </div>
     </div>
   );

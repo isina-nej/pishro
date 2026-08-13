@@ -117,7 +117,6 @@ export default async function RootLayout({
     getPublicSiteChrome(),
   ]);
   const splashLogo = resolveAssetUrl(chrome.logoUrl, DEFAULT_LOGO_URL);
-  const splashName = escapeHtml(chrome.siteName || DEFAULT_SITE_NAME);
 
   return (
     <html lang="fa" suppressHydrationWarning>
@@ -129,6 +128,7 @@ export default async function RootLayout({
           role="status"
           aria-live="polite"
           aria-busy="true"
+          aria-label="بارگذاری"
           dangerouslySetInnerHTML={{
             __html: `
               <div class="boot-logo-wrap" aria-hidden="true">
@@ -138,11 +138,6 @@ export default async function RootLayout({
                   <img src="${escapeHtml(splashLogo)}" alt="" width="88" height="88" />
                 </div>
               </div>
-              <div>
-                <p class="boot-title">${splashName}</p>
-                <p class="boot-label">در حال آماده‌سازی…</p>
-              </div>
-              <div class="boot-bar" aria-hidden="true"><span></span></div>
             `,
           }}
         />
