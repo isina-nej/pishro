@@ -1673,3 +1673,53 @@ model AuditLog {
   @@index([action])
   @@index([createdAt])
 }
+
+// ============================================================
+// Live guest support chat (widget ↔ admin inbox)
+// ============================================================
+
+enum GuestChatStatus {
+  OPEN
+  ACTIVE
+  CLOSED
+}
+
+enum GuestChatSender {
+  VISITOR
+  ADMIN
+}
+
+model GuestChatConversation {
+  id           String          @id @default(cuid())
+  firstName    String
+  lastName     String
+  phone        String
+  topic        String?
+  status       GuestChatStatus @default(OPEN)
+  visitorToken String          @unique
+  lastMessageAt DateTime?
+  closedAt     DateTime?
+
+  messages GuestChatMessage[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, lastMessageAt])
+  @@index([phone])
+  @@index([createdAt])
+}
+
+model GuestChatMessage {
+  id             String                 @id @default(cuid())
+  conversation   GuestChatConversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversationId String
+  sender         GuestChatSender
+  body           String                 @db.Text
+  adminId        String?
+  adminName      String?
+
+  createdAt DateTime @default(now())
+
+  @@index([conversationId, createdAt])
+}
