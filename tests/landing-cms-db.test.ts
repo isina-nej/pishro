@@ -19,44 +19,40 @@ describe("landing CMS database round-trip", () => {
       return;
     }
     landingId = landing.id;
-    originalTitle = landing.heroTitle;
+    originalTitle = landing.newsClubTitle;
   });
 
   after(async () => {
     if (landingId && originalTitle != null) {
       await prisma.homeLanding.update({
         where: { id: landingId },
-        data: { heroTitle: originalTitle },
+        data: { newsClubTitle: originalTitle },
       });
     }
     await prisma.$disconnect();
   });
 
-  it("updates and restores HomeLanding.heroTitle", async () => {
+  it("updates and restores HomeLanding.newsClubTitle", async () => {
     if (!landingId) {
       console.log("SKIP: no HomeLanding row — run npm run seed first");
       return;
     }
 
     const nextTitle = `${originalTitle} · CMS-TEST`;
-    const parsed = HomeLandingUpdateSchema.safeParse({ heroTitle: nextTitle });
+    const parsed = HomeLandingUpdateSchema.safeParse({ newsClubTitle: nextTitle });
     assert.equal(parsed.success, true);
 
     const updated = await prisma.homeLanding.update({
       where: { id: landingId },
-      data: { heroTitle: nextTitle },
+      data: { newsClubTitle: nextTitle },
     });
-    assert.equal(updated.heroTitle, nextTitle);
+    assert.equal(updated.newsClubTitle, nextTitle);
 
-    const slides = await prisma.homeSlide.count();
-    const mini = await prisma.homeMiniSlider.count();
     const steps = await prisma.mobileScrollerStep.count();
     const about = await prisma.aboutPage.count();
     const consulting = await prisma.businessConsulting.count();
     const plans = await prisma.investmentPlans.count();
 
-    assert.ok(slides >= 0);
-    assert.ok(mini >= 0);
     assert.ok(steps >= 0);
     assert.ok(about >= 1);
     assert.ok(consulting >= 1);

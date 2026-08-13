@@ -101,9 +101,7 @@ export const HIDABLE_PAGES: HidableItem[] = [
 ];
 
 export const HIDABLE_HOME_SECTIONS: HidableItem[] = [
-  section("home", "home:hero", "هیرو دسکتاپ", "ویدیو و متن اصلی هیرو"),
-  section("home", "home:mobile-landing", "هیرو موبایل", "لندینگ موبایل بالای صفحه"),
-  section("home", "home:album", "آلبوم صفحه اصلی", "اسلایدر زوم و مینی‌اسلایدر"),
+  section("home", "home:hero", "هیرو صفحه اصلی", "هیرو سکه‌ها در بالای صفحه"),
   section("home", "home:mobile-view", "موبایل ویو", "قدم‌های اسکرول داخل قاب موبایل"),
   section("home", "home:comments", "نظرات کاربران", "اسلایدر نظرات"),
   section("home", "home:calculator", "ماشین‌حساب سبد", "محاسبه بازده روی خانه"),

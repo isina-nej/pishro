@@ -16,7 +16,7 @@ describe("hidable pages", () => {
     assert.deepEqual(
       parseHiddenPages([
         "/news",
-        "home:album",
+        "home:hero",
         "profile:orders",
         "chrome:chat",
         "/evil",
@@ -24,7 +24,7 @@ describe("hidable pages", () => {
         12,
         null,
       ]),
-      ["/news", "home:album", "profile:orders", "chrome:chat"]
+      ["/news", "home:hero", "profile:orders", "chrome:chat"]
     );
   });
 
@@ -33,7 +33,10 @@ describe("hidable pages", () => {
     assert.ok(HIDABLE_ITEM_IDS.has("about:team"));
     assert.ok(HIDABLE_ITEM_IDS.has("investment:selection"));
     assert.ok(HIDABLE_ITEM_IDS.has("chrome:footer"));
-    assert.ok(HIDABLE_ITEM_IDS.size >= 40);
+    assert.ok(HIDABLE_ITEM_IDS.has("home:hero"));
+    assert.ok(!HIDABLE_ITEM_IDS.has("home:album"));
+    assert.ok(!HIDABLE_ITEM_IDS.has("home:mobile-landing"));
+    assert.ok(HIDABLE_ITEM_IDS.size >= 38);
   });
 
   it("hides nested routes under a page", () => {
@@ -43,7 +46,7 @@ describe("hidable pages", () => {
   });
 
   it("ignores section keys when checking paths", () => {
-    assert.equal(isPathHidden("/news", ["home:album"]), false);
+    assert.equal(isPathHidden("/news", ["home:hero"]), false);
     assert.equal(isPathHidden("/", ["home:mobile-view"]), false);
   });
 
@@ -56,7 +59,7 @@ describe("hidable pages", () => {
     assert.deepEqual(
       filterNavByHiddenPages(items, [
         "/news",
-        "home:album",
+        "home:hero",
         "/investment-plans",
       ]),
       [{ label: "دوره", link: "/courses" }]
@@ -68,7 +71,7 @@ describe("hidable pages", () => {
       isSectionHidden("home:mobile-view", ["home:mobile-view"]),
       true
     );
-    assert.equal(isSectionHidden("home:album", ["home:mobile-view"]), false);
+    assert.equal(isSectionHidden("home:hero", ["home:mobile-view"]), false);
   });
 
   it("maps and filters profile nav", () => {

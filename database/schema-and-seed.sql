@@ -255,43 +255,32 @@ CREATE TABLE IF NOT EXISTS `BusinessConsulting` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- جدول بخش‌های صفحه اصلی
+-- جدول بخش‌های صفحه اصلی (هیرو سکه‌ها ثابت است؛ بدون اسلاید/اورلی)
 CREATE TABLE IF NOT EXISTS `HomeLanding` (
   `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `content` longtext COLLATE utf8mb4_unicode_ci,
-  `published` tinyint(1) DEFAULT 0,
-  `order` int DEFAULT 0,
-  `mainHeroTitle` varchar(255) COLLATE utf8mb4_unicode_ci,
-  `mainHeroSubtitle` varchar(255) COLLATE utf8mb4_unicode_ci,
-  `mainHeroCta1Link` varchar(255) COLLATE utf8mb4_unicode_ci,
-  `heroVideoUrl` varchar(255) COLLATE utf8mb4_unicode_ci,
-  `overlayTexts` json,
-  `createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- جدول اسلاید‌های صفحه اصلی
-CREATE TABLE IF NOT EXISTS `HomeSlide` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `title` varchar(191) COLLATE utf8mb4_unicode_ci,
-  `description` longtext COLLATE utf8mb4_unicode_ci,
-  `imageUrl` varchar(191) COLLATE utf8mb4_unicode_ci,
-  `published` tinyint(1) DEFAULT 0,
-  `order` int DEFAULT 0,
-  `createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- جدول اسلاید‌های کوچک صفحه اصلی
-CREATE TABLE IF NOT EXISTS `HomeMiniSlider` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `title` varchar(191) COLLATE utf8mb4_unicode_ci,
-  `description` longtext COLLATE utf8mb4_unicode_ci,
-  `imageUrl` varchar(191) COLLATE utf8mb4_unicode_ci,
-  `row` int,
-  `published` tinyint(1) DEFAULT 0,
+  `statsData` json,
+  `whyUsTitle` varchar(255) COLLATE utf8mb4_unicode_ci,
+  `whyUsDescription` longtext COLLATE utf8mb4_unicode_ci,
+  `whyUsItems` json,
+  `newsClubTitle` varchar(255) COLLATE utf8mb4_unicode_ci,
+  `newsClubDescription` longtext COLLATE utf8mb4_unicode_ci,
+  `calculatorTitle` varchar(255) COLLATE utf8mb4_unicode_ci,
+  `calculatorDescription` longtext COLLATE utf8mb4_unicode_ci,
+  `calculatorRateLow` double DEFAULT 0.07,
+  `calculatorRateMedium` double DEFAULT 0.08,
+  `calculatorRateHigh` double DEFAULT 0.11,
+  `calculatorPortfolioLowDesc` varchar(255) COLLATE utf8mb4_unicode_ci,
+  `calculatorPortfolioMediumDesc` varchar(255) COLLATE utf8mb4_unicode_ci,
+  `calculatorPortfolioHighDesc` varchar(255) COLLATE utf8mb4_unicode_ci,
+  `calculatorAmountSteps` json,
+  `calculatorDurationSteps` json,
+  `calculatorInPersonPhone` varchar(255) COLLATE utf8mb4_unicode_ci,
+  `calculatorOnlineTelegram` varchar(255) COLLATE utf8mb4_unicode_ci,
+  `calculatorOnlineTelegramLink` varchar(255) COLLATE utf8mb4_unicode_ci,
+  `metaTitle` varchar(255) COLLATE utf8mb4_unicode_ci,
+  `metaDescription` varchar(500) COLLATE utf8mb4_unicode_ci,
+  `metaKeywords` json,
+  `published` tinyint(1) DEFAULT 1,
   `order` int DEFAULT 0,
   `createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

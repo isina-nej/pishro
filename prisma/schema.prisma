@@ -809,23 +809,6 @@ enum DigitalBookStatus {
 model HomeLanding {
   id String @id @default(cuid())
 
-  // Main Hero (متن اصلی روی ویدیو)
-  mainHeroTitle    String?
-  mainHeroSubtitle String?
-  mainHeroCta1Text String?
-  mainHeroCta1Link String?
-
-  // Hero Section
-  heroTitle       String
-  heroSubtitle    String?
-  heroDescription String?
-  heroVideoUrl    String? // لینک ویدیو پس‌زمینه
-  heroCta1Text    String?
-  heroCta1Link    String?
-
-  // Overlay Text Sections (متن‌های اسکرولی روی ویدیو)
-  overlayTexts Json @default("[]")
-
   // Stats (آمار و ارقام)
   // مثال: [{"label": "دانشجوی موفق", "value": 3000, "suffix": "+"}, ...]
   statsData Json @default("[]")
@@ -1117,39 +1100,6 @@ model InvestmentTag {
   updatedAt DateTime? @updatedAt
 
   @@index([investmentPlansId, order])
-}
-
-// مدل برای اسلایدر اصلی تصاویری صفحه اصلی (ImageZoomSliderSection)
-model HomeSlide {
-  id String @id @default(cuid())
-
-  title       String
-  description String?
-  imageUrl    String
-
-  order     Int     @default(0)
-  published Boolean @default(true)
-
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
-
-  @@index([published, order])
-}
-
-// مدل برای اسلایدرهای کوچک (Mini Moving Sliders)
-model HomeMiniSlider {
-  id String @id @default(cuid())
-
-  imageUrl String
-  row      Int    @default(1) // 1 یا 2 برای تعیین ردیف اول یا دوم
-
-  order     Int     @default(0)
-  published Boolean @default(true)
-
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
-
-  @@index([published, row, order])
 }
 
 // مدل برای کلاس‌های اسکای‌روم
