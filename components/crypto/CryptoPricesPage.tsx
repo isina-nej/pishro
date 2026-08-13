@@ -107,24 +107,37 @@ function formatCompactUsd(value: number) {
 }
 
 function sparklinePath(values: number[]) {
-  const source = values.length > 1 ? values : [0, 1];
-  const sampled = source.filter((_, index) => index % Math.max(1, Math.floor(source.length / 28)) === 0).slice(-30);
+  if (values.length < 2) return '';
+  const sampled = values
+    .filter((_, index) => index % Math.max(1, Math.floor(values.length / 28)) === 0)
+    .slice(-30);
+  if (sampled.length < 2) return '';
   const min = Math.min(...sampled);
   const max = Math.max(...sampled);
   const range = max - min || 1;
-  return sampled.map((value, index) => {
-    const x = (index / Math.max(1, sampled.length - 1)) * 116 + 2;
-    const y = 40 - ((value - min) / range) * 34;
-    return `${index ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`;
-  }).join(' ');
+  return sampled
+    .map((value, index) => {
+      const x = (index / Math.max(1, sampled.length - 1)) * 116 + 2;
+      const y = 40 - ((value - min) / range) * 34;
+      return `${index ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`;
+    })
+    .join(' ');
 }
 
 function Sparkline({ values, positive }: { values: number[]; positive: boolean }) {
+  const path = sparklinePath(values);
+  if (!path) {
+    return (
+      <span className="inline-flex h-11 w-28 items-center justify-center text-[11px] text-muted-foreground">
+        —
+      </span>
+    );
+  }
   const color = positive ? 'hsl(var(--success))' : 'hsl(var(--destructive))';
   return (
     <svg viewBox="0 0 120 44" className="h-11 w-28 overflow-visible" role="img" aria-label="نمودار تغییرات قیمت">
       <path d="M2 40 H118" stroke="hsl(var(--border))" strokeOpacity="0.7" strokeWidth="1" />
-      <path d={sparklinePath(values)} fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d={path} fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -159,9 +172,35 @@ function StatsSkeleton() {
 }
 
 function mergeAssets(current: CryptoMarketAsset[], incoming: CryptoMarketAsset[]) {
-  const byId = new Map(current.map((asset) => [asset.id, asset]));
-  for (const asset of incoming) byId.set(asset.id, asset);
-  return Array.from(byId.values()).sort((a, b) => a.rank - b.rank);
+  // Deduplicate by symbol so different provider ids never create double rows.
+  const bySymbol = new Map<string, CryptoMarketAsset>();
+  for (const asset of current) {
+    bySymbol.set(asset.symbol.toUpperCase(), asset);
+  }
+  for (const asset of incoming) {
+    const key = asset.symbol.toUpperCase();
+    const existing = bySymbol.get(key);
+    if (!existing) {
+      bySymbol.set(key, asset);
+      continue;
+    }
+    const sparkline =
+      asset.sparkline.length >= existing.sparkline.length
+        ? asset.sparkline
+        : existing.sparkline;
+    bySymbol.set(key, {
+      ...existing,
+      ...asset,
+      id: existing.id || asset.id,
+      sparkline,
+      imageUrl: asset.imageUrl || existing.imageUrl,
+      priceIrt: asset.priceIrt ?? existing.priceIrt,
+      priceIrr: asset.priceIrr ?? existing.priceIrr,
+    });
+  }
+  return Array.from(bySymbol.values()).sort(
+    (a, b) => a.rank - b.rank || b.marketCap - a.marketCap
+  );
 }
 
 function marketUrl(page: number, force = false) {
@@ -173,17 +212,33 @@ function marketUrl(page: number, force = false) {
   return `/api/public/crypto-market?${params}`;
 }
 
-export default function CryptoPricesPage({ admin = false }: { admin?: boolean }) {
+export default function CryptoPricesPage({
+  admin = false,
+  initialData = null,
+}: {
+  admin?: boolean;
+  initialData?: CryptoMarketResponse | null;
+}) {
   const { show } = useVisibility();
-  const [assets, setAssets] = useState<CryptoMarketAsset[]>([]);
-  const [global, setGlobal] = useState<CryptoGlobalMarket | null>(null);
-  const [generatedAt, setGeneratedAt] = useState<string | null>(null);
+  const [assets, setAssets] = useState<CryptoMarketAsset[]>(
+    () => initialData?.assets ?? []
+  );
+  const [global, setGlobal] = useState<CryptoGlobalMarket | null>(
+    () => initialData?.global ?? null
+  );
+  const [generatedAt, setGeneratedAt] = useState<string | null>(
+    () => initialData?.generatedAt ?? null
+  );
   const [error, setError] = useState<string | null>(null);
-  const [initialLoading, setInitialLoading] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(!initialData?.assets?.length);
   const [loadingMore, setLoadingMore] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const [nextPage, setNextPage] = useState(1);
+  const [hasMore, setHasMore] = useState(
+    () => Boolean(initialData?.pagination?.hasMore)
+  );
+  const [nextPage, setNextPage] = useState(
+    () => (initialData?.pagination?.page ?? 0) + 1 || 1
+  );
   const [activeFilter, setActiveFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [favorites, setFavorites] = useState<string[]>(['bitcoin', 'ethereum']);
@@ -305,7 +360,12 @@ export default function CryptoPricesPage({ admin = false }: { admin?: boolean })
   }, [applyPagePayload, fetchPage]);
 
   useEffect(() => {
-    void loadInitial();
+    if (initialData?.assets?.length) {
+      applyPagePayload(initialData, 'replace');
+      setInitialLoading(false);
+    } else {
+      void loadInitial();
+    }
     const interval = window.setInterval(() => {
       void softRefresh();
     }, 60_000);
@@ -315,8 +375,7 @@ export default function CryptoPricesPage({ admin = false }: { admin?: boolean })
       abortRef.current?.abort();
       loadMoreAbortRef.current?.abort();
     };
-    // Mount-only: loadInitial/softRefresh are stable enough; re-running would
-    // abort and restart the first page on every identity change.
+    // Mount-only bootstrap from SSR cache; soft refresh keeps data warm from our API.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
