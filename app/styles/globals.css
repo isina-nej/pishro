@@ -640,9 +640,32 @@ html.dark
   }
 }
 
-/* V32 coins hero — soft top/bottom bridges only (full coins visible) */
+/* V32 coins hero — full-bleed; scales with viewport width */
 .coins-hero-reel {
   isolation: isolate;
+  width: 100%;
+}
+
+.coins-hero-video {
+  display: block;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  /* Source file is 1280×448 — keep that ratio as width changes */
+  aspect-ratio: 1280 / 448;
+  object-fit: cover;
+  object-position: center bottom;
+}
+
+/*
+ * On short viewports, keep full width and let height grow from width;
+ * overflow is clipped by .coins-hero so coins stay edge-to-edge.
+ */
+@media (max-height: 700px) {
+  .coins-hero-video {
+    width: 100%;
+    min-height: min(52svh, calc(100vw * 448 / 1280));
+  }
 }
 
 /*
