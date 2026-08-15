@@ -23,7 +23,6 @@ const CoursesPageContent = ({
   const { show } = useVisibility();
   const {
     sortOptions,
-    categories,
     query,
     selectedSort,
     levelFilter,
@@ -76,9 +75,6 @@ const CoursesPageContent = ({
                   onSortChange={setSort}
                   levelFilter={levelFilter}
                   onLevelFilterChange={setLevelFilter}
-                  categories={categories}
-                  categoryFilter={categoryFilter}
-                  onCategoryFilterChange={setCategoryFilter}
                   hasActiveFilters={hasActiveFilters}
                   onResetFilters={handleResetFilters}
                   disabled={false}

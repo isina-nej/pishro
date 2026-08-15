@@ -13,9 +13,6 @@ interface CoursesFilterControlsProps {
   onSortChange: (value: CourseSortOption) => void;
   levelFilter: string;
   onLevelFilterChange: (value: string) => void;
-  categories: { id: string; title: string }[];
-  categoryFilter: string;
-  onCategoryFilterChange: (value: string) => void;
   hasActiveFilters: boolean;
   onResetFilters: () => void;
   disabled?: boolean;
@@ -92,18 +89,10 @@ export const CoursesFilterControls = ({
   onSortChange,
   levelFilter,
   onLevelFilterChange,
-  categories,
-  categoryFilter,
-  onCategoryFilterChange,
   hasActiveFilters,
   onResetFilters,
   disabled = false,
 }: CoursesFilterControlsProps) => {
-  const categoryOptions = [
-    { label: "همه", value: "همه" },
-    ...categories.map((cat) => ({ label: cat.title, value: cat.id })),
-  ];
-
   return (
     <div className="flex flex-col gap-6 border-b border-border/40 pb-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -114,7 +103,7 @@ export const CoursesFilterControls = ({
           <div>
             <h2 className="text-xl font-bold text-foreground">دوره‌های آموزشی</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              دسته، سطح و مرتب‌سازی را انتخاب کنید
+              سطح و مرتب‌سازی را انتخاب کنید
             </p>
           </div>
         </div>
@@ -162,15 +151,6 @@ export const CoursesFilterControls = ({
           </button>
         ) : null}
       </div>
-
-      <ChipGroup
-        label="دسته‌بندی"
-        options={categoryOptions}
-        value={categoryFilter}
-        onChange={onCategoryFilterChange}
-        layoutId="courses-category-pill"
-        disabled={disabled}
-      />
 
       <div className="grid gap-5 lg:grid-cols-2">
         <ChipGroup
