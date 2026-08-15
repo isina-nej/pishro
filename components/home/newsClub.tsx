@@ -12,8 +12,8 @@ import {
 import { subscribeToNewsletter } from "@/lib/services/newsletter";
 import toast from "react-hot-toast";
 
-/** همان سبز زیتونی پنل کاربر / دکمه primary پنل */
-const ACCENT = "#868C68";
+/** سبز زیتونی هدف طراحی */
+const ACCENT = "#6B7460";
 /** مشکی نزدیک به سبز برای سطح کارت */
 const CARD_BG = "#0C1410";
 const CARD_BG_MID = "#101810";

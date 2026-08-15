@@ -100,7 +100,7 @@ export default function CourseActionIcons({
           className={cn(
             "size-9 shadow-sm transition-shadow hover:shadow-md",
             tone === "on-media"
-              ? "border-white/25 bg-white/12 text-white backdrop-blur-xl hover:text-white data-[active]:bg-[#6B7F3C]/90 [[aria-pressed=true]]:border-[#6B7F3C]/50 [[aria-pressed=true]]:bg-[#6B7F3C]/90 [[aria-pressed=true]]:text-white"
+              ? "border-white/25 bg-white/12 text-white backdrop-blur-xl hover:text-white data-[active]:bg-[#6B7460]/90 [[aria-pressed=true]]:border-[#6B7460]/50 [[aria-pressed=true]]:bg-[#6B7460]/90 [[aria-pressed=true]]:text-white"
               : "bg-background/70 backdrop-blur-md dark:bg-white/8"
           )}
         />
