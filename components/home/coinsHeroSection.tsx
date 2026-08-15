@@ -8,8 +8,8 @@ type CoinsHeroSectionProps = {
 };
 
 /**
- * V32 coins hero — full-bleed reel; width/height track the viewport.
- * Source aspect: 1280×448.
+ * V32 coins hero — full-bleed reel; video stretches to the remaining viewport
+ * (e.g. square container → taller stretched video, not cropped).
  */
 export default function CoinsHeroSection({
   title = "پیشرو در مسیر سرمایه گذاری هوشمند",
@@ -91,9 +91,9 @@ export default function CoinsHeroSection({
         </h1>
       </div>
 
-      {/* Full-bleed: width = 100vw, height follows aspect ratio with the page */}
+      {/* فضای باقی‌مانده: ویدیو کشیده می‌شود تا ظرف را پر کند، نه کات */}
       <div className="relative z-[1] min-h-0 w-full flex-1 overflow-hidden bg-transparent">
-        <div className="coins-hero-reel absolute inset-x-0 bottom-0 w-full">
+        <div className="coins-hero-reel absolute inset-0 w-full h-full">
           <video
             ref={videoRef}
             src={videoSrc}
@@ -103,7 +103,7 @@ export default function CoinsHeroSection({
             playsInline
             preload="metadata"
             aria-hidden
-            className="coins-hero-video pointer-events-none relative z-[1] select-none bg-transparent"
+            className="coins-hero-video pointer-events-none relative z-[1] h-full w-full select-none bg-transparent"
           />
         </div>
       </div>
