@@ -104,7 +104,7 @@ export default function CoursesGridClient({ courses }: Props) {
         <div className="relative flex items-center justify-center lg:justify-end gap-2 sm:gap-3 mt-3 lg:mt-2 w-full lg:w-[340px] px-4 lg:px-0">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-1 rounded-full border border-border bg-card/80 px-4 py-2 text-xs font-bold text-primary shadow-sm backdrop-blur-xl transition hover:bg-card sm:text-sm">
+              <button className="flex items-center gap-1 rounded-full bg-[#6B7460] px-4 py-2 text-xs font-bold text-white shadow-lg transition-transform duration-300 ease-out hover:scale-105 hover:bg-[#6B7460] sm:text-sm">
                 <ChevronDown size={16} />
                 <span>{selectedCategory.label}</span>
               </button>
@@ -132,7 +132,7 @@ export default function CoursesGridClient({ courses }: Props) {
 
           <Link
             href={selectedCategory.href}
-            className="flex items-center gap-1 whitespace-nowrap rounded-full bg-[#6B7F3C] px-4 py-2 text-xs font-bold text-white shadow-lg transition-transform duration-300 ease-out hover:scale-105 hover:bg-[#6B7F3C] active:scale-[1.02] sm:text-sm"
+            className="flex items-center gap-1 whitespace-nowrap rounded-full bg-[#6B7460] px-4 py-2 text-xs font-bold text-white shadow-lg transition-transform duration-300 ease-out hover:scale-105 hover:bg-[#6B7460] active:scale-[1.02] sm:text-sm"
           >
             <Folder size={16} />
             <span>صفحه {selectedCategory.label}</span>

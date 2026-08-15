@@ -49,7 +49,7 @@ interface Props {
   trigger: React.ReactNode;
 }
 
-const OLIVE = "#6B7F3C";
+const OLIVE = "#6B7460";
 
 const CHIP_ICONS = [BarChart3, Target, TrendingUp, Lightbulb, BookOpen, Sparkles];
 
@@ -142,7 +142,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
 
           <div className="absolute start-4 top-4 z-10 flex items-center gap-2 sm:start-5 sm:top-5">
             {course.discountPercent ? (
-              <span className="rounded-full bg-[#6B7F3C] px-3 py-1 text-xs font-bold text-white">
+              <span className="rounded-full bg-[#6B7460] px-3 py-1 text-xs font-bold text-white">
                 {course.discountPercent}٪ تخفیف
               </span>
             ) : null}
@@ -266,7 +266,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                 onClick={() => setActiveTab(tab)}
                 className={`flex-1 rounded-full px-3 py-2 text-sm font-medium transition-transform duration-300 ${
                   activeTab === tab
-                    ? "bg-[#6B7F3C] text-white shadow-sm"
+                    ? "bg-[#6B7460] text-white shadow-sm"
                     : "text-white/55 hover:scale-[1.02] hover:text-white/80"
                 }`}
               >
@@ -300,7 +300,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                           key={idx}
                           className="flex items-start gap-2 text-sm text-white/60"
                         >
-                          <span className="mt-1 text-[#6B7F3C]">✓</span>
+                          <span className="mt-1 text-[#6B7460]">✓</span>
                           <span>{goal}</span>
                         </li>
                       ))}
