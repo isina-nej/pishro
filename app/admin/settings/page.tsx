@@ -35,6 +35,7 @@ import HiddenPagesSection from "@/components/admin/settings/HiddenPagesSection";
 import UserPanelPaletteSection from "@/components/admin/settings/UserPanelPaletteSection";
 import NavbarItemsSection from "@/components/admin/settings/NavbarItemsSection";
 import FooterContentSection from "@/components/admin/settings/FooterContentSection";
+import HomeLayoutSection from "@/components/admin/settings/HomeLayoutSection";
 import { useAdminAuth } from "@/lib/hooks/useAdminAuth";
 import {
   LANDING_PALETTES,
@@ -61,6 +62,11 @@ import {
   type NavbarItem,
 } from "@/lib/site/chrome-content";
 import { cn } from "@/lib/utils";
+import {
+  DEFAULT_HOME_LAYOUT,
+  parseHomeLayout,
+  type HomeLayout,
+} from "@/lib/site/home-layout";
 
 type SettingsTab = "site" | "panel" | "branding" | "pages" | "nav" | "footer";
 
@@ -76,6 +82,7 @@ type SettingsPayload = {
   userPanelPaletteId?: string;
   navbarItems?: unknown;
   footerContent?: unknown;
+  homeLayout?: string;
 };
 
 type CustomPaletteItem = {
@@ -174,6 +181,9 @@ export default function AdminSettingsPage() {
   const [footerContent, setFooterContent] = useState<FooterContent>(
     structuredClone(DEFAULT_FOOTER_CONTENT)
   );
+  const [homeLayout, setHomeLayout] = useState<HomeLayout>(DEFAULT_HOME_LAYOUT);
+  const [savedHomeLayout, setSavedHomeLayout] =
+    useState<HomeLayout>(DEFAULT_HOME_LAYOUT);
 
   const reload = async () => {
     const [settings, customList] = await Promise.all([
@@ -202,6 +212,8 @@ export default function AdminSettingsPage() {
     setHiddenPages(parseHiddenPages(settings.hiddenPages));
     setNavbarItems(parseNavbarItems(settings.navbarItems));
     setFooterContent(parseFooterContent(settings.footerContent));
+    setHomeLayout(parseHomeLayout(settings.homeLayout));
+    setSavedHomeLayout(parseHomeLayout(settings.homeLayout));
     setCustoms(customList);
   };
 
@@ -268,6 +280,19 @@ export default function AdminSettingsPage() {
     try {
       await saveSettings({ userPanelPaletteId });
       toast.success("پالت پنل کاربر ذخیره شد");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "خطا در ذخیره");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const onSaveHomeLayout = async () => {
+    setSaving(true);
+    try {
+      const data = await saveSettings({ homeLayout });
+      setSavedHomeLayout(parseHomeLayout(data.homeLayout));
+      toast.success("طرح صفحه اصلی ذخیره شد");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "خطا در ذخیره");
     } finally {
@@ -548,6 +573,14 @@ export default function AdminSettingsPage() {
       {tab === "site" && (
       <div className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
         <div className="space-y-4">
+          <HomeLayoutSection
+            homeLayout={homeLayout}
+            savedHomeLayout={savedHomeLayout}
+            onChange={setHomeLayout}
+            onSave={onSaveHomeLayout}
+            saving={saving}
+          />
+
           <Card className="space-y-4 p-4 sm:p-5">
             <div className="flex items-center gap-2">
               <Palette className="h-4 w-4 text-primary" />

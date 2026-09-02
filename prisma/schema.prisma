@@ -1279,6 +1279,9 @@ model SiteSettings {
   /// حالت پیش‌فرض تم: light | dark | system
   themeMode String @default("system")
 
+  /// طرح صفحه اصلی: classic | v32
+  homeLayout String @default("classic")
+
   /// لوگو / فاویکون / تصویر اشتراک‌گذاری (OG) — مسیر آپلود یا URL
   logoUrl    String?
   faviconUrl String?

@@ -1422,7 +1422,7 @@ export function applyPaletteTokens(
     root,
     ...Array.from(
       root.ownerDocument.querySelectorAll<HTMLElement>(
-        ".home-shell, .public-page-shell"
+        ".home-shell, .public-page-shell, .v32-landing"
       )
     ),
   ];
@@ -1495,7 +1495,7 @@ export function clearPaletteTokens(root: HTMLElement): void {
     root,
     ...Array.from(
       root.ownerDocument.querySelectorAll<HTMLElement>(
-        ".home-shell, .public-page-shell"
+        ".home-shell, .public-page-shell, .v32-landing"
       )
     ),
   ];
