@@ -29,6 +29,7 @@ import {
   validateFooterContentInput,
   validateNavbarItemsInput,
 } from "@/lib/site/chrome-content";
+import { isValidHomeLayout } from "@/lib/site/home-layout";
 
 /**
  * GET /api/admin/settings
@@ -123,6 +124,15 @@ export async function PATCH(req: NextRequest) {
         return validationError(
           { themeMode: "حالت تم باید light، dark یا system باشد" },
           "حالت تم معتبر نیست"
+        );
+      }
+    }
+
+    if (body.homeLayout !== undefined) {
+      if (!isValidHomeLayout(body.homeLayout)) {
+        return validationError(
+          { homeLayout: "طرح صفحه اصلی باید classic یا v32 باشد" },
+          "طرح صفحه اصلی معتبر نیست"
         );
       }
     }

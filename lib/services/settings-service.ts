@@ -34,6 +34,11 @@ import {
   type NavbarItem,
 } from "@/lib/site/chrome-content";
 import type { Prisma } from "@prisma/client";
+import {
+  DEFAULT_HOME_LAYOUT,
+  parseHomeLayout,
+  type HomeLayout,
+} from "@/lib/site/home-layout";
 
 /**
  * Type for updateable settings fields
@@ -53,6 +58,7 @@ export interface UpdateSettingsInput {
   userPanelPaletteId?: string;
   navbarItems?: NavbarItem[];
   footerContent?: FooterContent;
+  homeLayout?: HomeLayout;
 }
 
 export type PublicSiteTheme = {
@@ -193,6 +199,19 @@ export async function getPublicSiteChrome(): Promise<PublicSiteChrome> {
 export async function getHiddenPages(): Promise<string[]> {
   const chrome = await getPublicSiteChrome();
   return chrome.hiddenPages;
+}
+
+/** Active homepage layout variant. Never throws. */
+export async function getHomeLayout(): Promise<HomeLayout> {
+  try {
+    const settings = await prisma.siteSettings.findFirst({
+      select: { homeLayout: true },
+    });
+    return parseHomeLayout(settings?.homeLayout);
+  } catch (error) {
+    console.error("Error fetching home layout:", error);
+    return DEFAULT_HOME_LAYOUT;
+  }
 }
 
 /**
