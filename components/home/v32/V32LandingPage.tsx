@@ -404,9 +404,10 @@ export default function V32LandingPage({
 
       <section className="v32-coins-sec" id="assets">
         <div className="v32-wrap">
-          <h2>۴۱۰+ دارایی دیجیتال</h2>
+          <h2>سکه‌های بازار، یک‌جا</h2>
           <p>
-            خرید، فروش و تبدیل بیت‌کوین، آلت‌کوین‌های محبوب و فهرست‌های جدید.
+            خرید و فروش سکه امامی و بهار آزادی — شفاف، بدون پیچیدگی و با
+            پشتیبانی محلی.
           </p>
           <Link href="/investment-plans" className="v32-btn-white">
             شروع کنید

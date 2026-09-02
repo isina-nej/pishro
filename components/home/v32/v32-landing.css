@@ -3,9 +3,8 @@
 .v32-landing {
   --v32-bg: var(--home-bg);
   --v32-bg-mid: var(--home-bg-mid);
-  --v32-ink: var(--home-ink);
-  --v32-text: var(--home-on-dark);
-  --v32-muted: var(--home-on-dark-muted);
+  --v32-text: var(--home-ink);
+  --v32-muted: var(--home-muted);
   --v32-accent: var(--btn-primary-bg);
   --v32-accent-hover: var(--btn-primary-hover);
   --v32-line: var(--home-glass-border);
@@ -79,7 +78,7 @@
   border-radius: 999px;
   border: 0;
   background: #fff;
-  color: var(--v32-ink);
+  color: #11161f;
   font-size: 15px;
   font-weight: 800;
   cursor: pointer;
@@ -127,6 +126,7 @@
   border-radius: 36px;
   background: #11161f;
   border: 8px solid #1c2330;
+  color: #f4f6f8;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
   padding: 18px 14px;
   position: relative;
@@ -191,6 +191,7 @@
 .v32-glass {
   position: absolute;
   background: rgba(18, 22, 30, 0.62);
+  color: #f4f6f8;
   border: 1px solid rgba(255, 255, 255, 0.16);
   backdrop-filter: blur(14px);
   border-radius: 16px;
@@ -264,6 +265,7 @@
   position: absolute;
   inset: 40px 28px auto;
   background: rgba(10, 14, 22, 0.82);
+  color: #f4f6f8;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 18px;
   padding: 18px;
