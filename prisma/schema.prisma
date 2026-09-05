@@ -195,12 +195,14 @@ model Comment {
   @@index([courseId, published])
   @@index([categoryId, published])
   @@index([featured])
+  @@index([userId])
 }
 
 model Order {
   id           String        @id @default(cuid())
   user         User?         @relation(fields: [userId], references: [id], name: "UserOrders", onDelete: SetNull)
   userId       String?
+  /// @deprecated use orderItems relation instead — kept for backward compat; will be removed after migration
   items        Json
   total        Int
   status       OrderStatus   @default(PENDING)
@@ -208,7 +210,11 @@ model Order {
   createdAt    DateTime?     @default(now())
   orderItems   OrderItem[]   @relation("OrderOrderItems")
   transactions Transaction[] @relation("OrderTransactions")
+  portfolios   UserInvestmentPortfolio[] @relation("PortfolioOrder")
   deal         Deal?         @relation("OrderDeal")
+
+  @@index([userId])
+  @@index([status])
 }
 
 model NewsletterSubscriber {
@@ -244,6 +250,11 @@ model Transaction {
   refNumber   String?
   description String?
   createdAt   DateTime?         @default(now())
+
+  @@index([userId])
+  @@index([orderId])
+  @@index([status])
+  @@index([createdAt])
 }
 
 model OrderItem {
@@ -262,6 +273,9 @@ model OrderItem {
 
   price           Int
   discountPercent Int?
+
+  @@index([orderId])
+  @@index([courseId])
 }
 
 model Lesson {
@@ -277,7 +291,7 @@ model Lesson {
   video   Video?  @relation("VideoLessons", fields: [videoId], references: [id], onDelete: SetNull)
   videoId String?
 
-  // Legacy fields (for backward compatibility)
+  // Legacy fields — @deprecated use Video relation instead; remove after data migration
   videoUrl        String? // برای سازگاری با ویدیوهای قبلی
   thumbnail       String?
   duration        String? // legacy display duration
@@ -321,7 +335,9 @@ model NewsArticle {
 
   coverImage  String?
   author      String?
+  /// @deprecated use relatedCategory FK instead — kept for backward compat
   category    String
+  /// @deprecated use relatedTags (NewsArticleTags) instead — kept for backward compat
   tags        Json      @default("[]")
   published   Boolean   @default(false)
   publishedAt DateTime?
@@ -364,6 +380,9 @@ model NewsComment {
   likes     Json        @default("[]")
   createdAt DateTime?   @default(now())
   updatedAt DateTime?   @updatedAt
+
+  @@index([articleId])
+  @@index([userId])
 }
 
 // ===================== END COMMENTS =====================
@@ -384,7 +403,10 @@ model DigitalBook {
   votes       Int               @default(0)
   views       Int               @default(0)
   downloads   Int               @default(0)
+  /// @deprecated use relatedCategory FK instead — kept for backward compat
   category    String
+  relatedCategory Category? @relation("CategoryBooks", fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId      String?
   formats     Json              @default("[]")
   bookStatus  DigitalBookStatus @default(DRAFT)
   tags        Json              @default("[]")
@@ -490,6 +512,7 @@ model Category {
   courses  Course[]      @relation("CategoryCourses")
   content  PageContent[] @relation("CategoryContent")
   news     NewsArticle[] @relation("CategoryNews")
+  books    DigitalBook[] @relation("CategoryBooks")
   faqs     FAQ[]         @relation("CategoryFAQs")
   comments Comment[]     @relation("CategoryComments")
   quizzes  Quiz[]        @relation("CategoryQuizzes")
@@ -1132,6 +1155,7 @@ model UserInvestmentPortfolio {
 
   // Purchase details
   purchasePrice Int // قیمت پرداختی
+  order         Order?          @relation("PortfolioOrder", fields: [orderId], references: [id], onDelete: SetNull)
   orderId       String? // ارجاع به سفارش
   status        PortfolioStatus @default(ACTIVE)
 
@@ -1539,6 +1563,7 @@ model UserTagAssignment {
   tagId String
 
   @@unique([userId, tagId])
+  @@index([tagId])
 }
 
 model CustomerSegment {

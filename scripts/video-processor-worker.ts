@@ -46,7 +46,7 @@ async function main() {
     console.log(`Found ${videos.length} videos ready for processing`);
 
     // پردازش ویدیوها به صورت batch
-    const batches: any[] = [];
+    const batches: (typeof videos)[] = [];
     for (let i = 0; i < videos.length; i += BATCH_SIZE) {
       batches.push(videos.slice(i, i + BATCH_SIZE));
     }

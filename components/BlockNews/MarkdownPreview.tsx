@@ -9,7 +9,9 @@
 import React from 'react';
 import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
+// @ts-expect-error -- no @types/react-syntax-highlighter; declare-module shim in types/
 import SyntaxHighlighter from 'react-syntax-highlighter';
+// @ts-expect-error -- same package, no types
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import type { ReactNode } from 'react';
 import type { Components } from 'react-markdown';
