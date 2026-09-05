@@ -63,7 +63,7 @@ const NewsClub = () => {
       />
 
       <div className="container-xl relative z-10 flex h-full flex-col items-center gap-3 md:flex-row md:items-center md:gap-8">
-        <div className="order-2 mt-10 flex w-full items-end justify-center md:order-1 md:mt-0 md:h-full md:flex-1 md:justify-start">
+        <div className="order-2 mt-6 flex w-full items-center justify-center md:order-1 md:mt-0 md:h-full md:flex-1 md:justify-start md:-translate-y-8">
           <div className="relative aspect-[1.3] w-full max-w-[400px] md:aspect-[661/504] md:max-w-full">
             <Image
               src={"/images/home/news-club/news-club.svg"}
@@ -147,7 +147,7 @@ const NewsClub = () => {
             }}
           />
         </div>
-        <div className="pointer-events-none absolute -left-10 bottom-0 z-[1] hidden h-[60vh] w-[140px] md:block lg:-left-24 lg:h-[90vh] lg:w-[240px]">
+        <div className="pointer-events-none absolute -left-10 bottom-8 z-[1] hidden h-[60vh] w-[140px] md:block lg:-left-24 lg:bottom-12 lg:h-[90vh] lg:w-[240px]">
           <Image
             src={"/images/home/news-club/left-vector.png"}
             fill

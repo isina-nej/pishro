@@ -40,11 +40,11 @@ const FloatingCartButton = () => {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.7 }}
           transition={{ duration: 0.3 }}
-          className="fixed bottom-24 left-4 z-50 bg-[#173046] text-foreground rounded-full p-3 shadow-lg hover:bg-[#173046]/90 transition-colors"
+          className="fixed bottom-[5.5rem] right-4 z-50 rounded-full bg-primary text-primary-foreground p-3 shadow-lg shadow-primary/25 hover:bg-primary/90 transition-colors sm:bottom-[6.5rem] sm:right-6"
           aria-label="رفتن به سبد خرید"
         >
           <div className="relative">
-            <ShoppingCart className="size-10" />
+            <ShoppingCart className="size-6" />
             {items.length > 0 && (
               <span className="absolute -top-2 -right-2 bg-destructive text-primary-foreground text-xs font-bold rounded-full size-6 flex items-center justify-center">
                 {items.length}
