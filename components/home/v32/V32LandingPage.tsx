@@ -1,17 +1,60 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { contactInfo } from "@/lib/constants/contact";
 import "./v32-landing.css";
+
+/* ── animated typing counter ── */
+function useAnimatedNumber(target: number, durationMs = 1800) {
+  const [value, setValue] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    let running = false;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting || running) return;
+        running = true;
+        const start = performance.now();
+        const tick = (now: number) => {
+          const t = Math.min((now - start) / durationMs, 1);
+          // ease-out quad
+          const eased = 1 - (1 - t) * (1 - t);
+          setValue(Math.round(eased * target));
+          if (t < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      },
+      { threshold: 0.3 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [target, durationMs]);
+
+  return { value, ref };
+}
+
+function formatFa(n: number) {
+  return new Intl.NumberFormat("fa-IR").format(n);
+}
 
 type V32LandingPageProps = {
   showHero?: boolean;
   showAudience?: boolean;
+  phoneTel?: string;
 };
 
 export default function V32LandingPage({
   showHero = true,
   showAudience = true,
+  phoneTel = contactInfo.phoneTel,
 }: V32LandingPageProps) {
+  const phoneAmount = useAnimatedNumber(200_000_000);
+
   return (
     <div className="home-shell v32-landing w-full transition-colors">
       {showHero && (
@@ -19,28 +62,25 @@ export default function V32LandingPage({
           <div className="v32-wrap v32-hero-grid">
             <div>
               <h1>
-                سرمایه
-                <br />
-                ساده شد.
+                پیشرو سرمایه
               </h1>
               <p>
-                به جمع کسانی بپیوندید که آموزش، سبد تضمینی و مشاوره را از یک مسیر
-                شفاف می‌گیرند.
+                پیشرو در آموزش و سرمایه‌گذاری
               </p>
-              <Link href="/investment-plans" className="v32-btn-white">
+              <a href={`tel:${phoneTel}`} className="v32-btn-white">
                 شروع کنید
-              </Link>
+              </a>
               <div className="v32-chips">
-                <span>آموزش بورس</span>
-                <span>سبد تضمینی</span>
+                <span>آموزش ترید</span>
+                <span>سبدهای تضمینی</span>
                 <span>مشاوره</span>
-                <span>باشگاه</span>
+                <span>پشتیبانی ۲۴ ساعته</span>
               </div>
             </div>
             <div className="v32-phone-wrap">
               <div className="v32-glass v32-g1">
-                <div style={{ fontSize: 12, opacity: 0.7 }}>خرید سریع</div>
-                <div style={{ fontWeight: 800, marginTop: 4 }}>امامی</div>
+                <div style={{ fontSize: 12, opacity: 0.7 }}>سرمایه‌گذاری</div>
+                <div style={{ fontWeight: 800, marginTop: 4 }}>تضمینی</div>
               </div>
               <div className="v32-glass v32-g2">
                 <div style={{ fontSize: 12, opacity: 0.7 }}>
@@ -67,10 +107,12 @@ export default function V32LandingPage({
                 <div className="v32-phone-bar">
                   <span />
                 </div>
-                <h3>خرید / فروش</h3>
-                <div className="v32-amt">۱۲٬۵۰۰٬۰۰۰</div>
+                <h3>سرمایه‌گذاری</h3>
+                <div ref={phoneAmount.ref} className="v32-amt">
+                  {formatFa(phoneAmount.value)}
+                </div>
                 <div style={{ fontSize: 12, color: "#9aa3ae", marginTop: 4 }}>
-                  تومان · سکه امامی
+                  تومان
                 </div>
                 <div className="v32-pad">
                   {["۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹", ".", "۰", "⌫"].map(
@@ -79,26 +121,26 @@ export default function V32LandingPage({
                     )
                   )}
                 </div>
-                <div className="v32-buy">تأیید خرید</div>
+                <div className="v32-buy">تأیید سرمایه‌گذاری</div>
               </div>
             </div>
           </div>
           <div className="v32-wrap v32-trust">
             <article>
-              <b>شفاف</b>
-              <span>گزارش ماهانه سبد</span>
+              <b>دوره‌های پیشرفته</b>
+              <span>آموزش حرفه‌ای ترید</span>
             </article>
             <article>
-              <b>ایرانی</b>
-              <span>مالکیت و پشتیبانی محلی</span>
+              <b>پشتیبانی</b>
+              <span>دسترسی به مشاوران مجموعه</span>
             </article>
             <article>
-              <b>۳ مسیر</b>
-              <span>ثابت · ترکیبی · هولد</span>
+              <b>متناسب با نیاز شما</b>
+              <span>از آموزش تا سرمایه‌گذاری زیر نظر متخصصان</span>
             </article>
             <article>
-              <b>۴٫۷/۵</b>
-              <span>رضایت باشگاه</span>
+              <b>+۶ سال</b>
+              <span>سابقه درخشان فعالیت حرفه‌ای</span>
             </article>
           </div>
         </section>
@@ -128,7 +170,7 @@ export default function V32LandingPage({
                 color: "#c8d0d8",
               }}
             >
-              <span>امامی</span>
+              <span>سبد ثابت</span>
               <span>+۲٫۱٪</span>
             </div>
             <div
@@ -140,24 +182,22 @@ export default function V32LandingPage({
                 color: "#c8d0d8",
               }}
             >
-              <span>بهار آزادی</span>
+              <span>سبد ترکیبی</span>
               <span>+۱٫۴٪</span>
             </div>
           </div>
         </div>
         <div>
           <h2>
-            قدرت نهادی
-            <br />
-            در دسترس همه
+            متناسب با نیاز شما
           </h2>
           <p>
-            همان انضباطی که برای سبدهای بزرگ لازم است — گزارش شفاف، پشتیبانی و
-            مسیر مشخص — برای سرمایه‌گذار شخصی هم در دسترس است.
+            از آموزش تا سرمایه‌گذاری، همه زیر نظر متخصصان مجموعه و متناسب
+            با نیاز شما طراحی شده است.
           </p>
-          <Link href="/investment-plans" className="v32-btn-accent">
+          <a href={`tel:${phoneTel}`} className="v32-btn-accent">
             شروع کنید
-          </Link>
+          </a>
         </div>
       </section>
 
@@ -165,9 +205,9 @@ export default function V32LandingPage({
         <section className="v32-wrap v32-aud" id="personal">
           <div className="v32-aud-head">
             <div>
-              <h2>اقتصاد دیجیتال را باز کنید</h2>
+              <h2>مسیر مناسب خود را پیدا کنید</h2>
               <p style={{ margin: 0, color: "var(--v32-muted)" }}>
-                هدف هر نفر متفاوت است. مسیر مناسب خود را پیدا کنید.
+                هدف هر نفر متفاوت است. ما برای هر مسیر راهکاری داریم.
               </p>
             </div>
           </div>
@@ -215,8 +255,6 @@ export default function V32LandingPage({
           </div>
         </section>
       )}
-
-      {/* ponytail: coins-sec, surface-sec, steps, help, faq removed — restore when crypto/tools sections needed */}
     </div>
   );
 }

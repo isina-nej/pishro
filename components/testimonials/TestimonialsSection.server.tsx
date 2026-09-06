@@ -19,13 +19,19 @@ function starsFromRating(rating?: number | null) {
   return Math.min(5, Math.max(1, normalized));
 }
 
+const ROLE_LABELS: Record<string, string> = {
+  STUDENT: "دانشجو",
+  PROFESSIONAL_TRADER: "معامله‌گر حرفه‌ای",
+  INVESTOR: "سرمایه‌گذار",
+};
+
 function mapComments(
   comments: Awaited<ReturnType<typeof getComments>>
 ): TestimonialData[] {
   return comments.map((comment) => ({
     id: comment.id,
     name: comment.userName || "کاربر ناشناس",
-    role: comment.userRole || comment.userCompany || "کاربر",
+    role: ROLE_LABELS[comment.userRole ?? ""] || comment.userCompany || "کاربر",
     avatar: comment.userAvatar || "/images/home/comments-prf/1.jpg",
     content: comment.text || "",
     rating: starsFromRating(comment.rating),

@@ -9,11 +9,12 @@ import NewsClub from "../newsClub";
 import TestimonialsSection from "@/components/testimonials/TestimonialsSection.server";
 
 import FloatingNotificationManager from "@/components/utils/floatingNotificationManager";
-import { getHiddenPages } from "@/lib/services/settings-service";
+import { getPublicSiteChrome } from "@/lib/services/settings-service";
 import { createVisibility } from "@/lib/site/hidable-pages";
 
 export default async function HomeContentClassic() {
-  const { show } = createVisibility(await getHiddenPages());
+  const chrome = await getPublicSiteChrome();
+  const { show } = createVisibility(chrome.hiddenPages);
 
   return (
     <div className="home-shell w-full transition-colors">
@@ -43,7 +44,10 @@ export default async function HomeContentClassic() {
 
         {show("home:calculator") && (
           <div className="home-section-stage">
-            <CalculatorSection />
+            <CalculatorSection
+              phone={chrome.footerContent.phone}
+              phoneTel={chrome.footerContent.phoneTel}
+            />
           </div>
         )}
 

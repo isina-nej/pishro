@@ -68,7 +68,7 @@ export const NewsHero = ({ stats }: NewsHeroProps) => {
           </span>
 
           <h1 className="text-3xl font-black leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
-            به‌روزترین اخبار
+            به‌روزترین مقالات
             <br />
             دنیای سرمایه‌گذاری
           </h1>

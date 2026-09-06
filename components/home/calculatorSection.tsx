@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import CountUp from "react-countup";
-import { Wallet, Clock, BarChart3, PhoneCall, Send, XIcon } from "lucide-react";
+import { Wallet, Clock, BarChart3, PhoneCall, XIcon } from "lucide-react";
 import {
   Drawer,
   DrawerClose,
@@ -54,7 +53,15 @@ const getPrev = (current: number, arr: number[]) =>
 
 const formatNumber = (num: number) => new Intl.NumberFormat("fa-IR").format(Math.round(num));
 
-const CalculatorSection = () => {
+type CalculatorSectionProps = {
+  phone?: string;
+  phoneTel?: string;
+};
+
+const CalculatorSection = ({
+  phone = contactInfo.phone,
+  phoneTel = contactInfo.phoneTel,
+}: CalculatorSectionProps) => {
   const { data: funds, isLoading: fundsLoading } = useInvestmentFunds();
 
   const [selectedFundKey, setSelectedFundKey] = useState<string | null>(null);
@@ -218,10 +225,13 @@ const CalculatorSection = () => {
 
                 {/* مدت سرمایه‌ گذاری */}
                 <div className="rounded-3xl border border-white/10 bg-black/20 px-4 py-4 shadow-xl backdrop-blur-xl sm:px-6">
-                  <p className="text-center text-lg font-bold mb-8 flex items-center justify-center gap-2">
+                  <div className="mb-8 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-center">
                     <Clock size={24} className="home-on-dark" />
-                    مدت سرمایه‌ گذاری
-                  </p>
+                    <p className="text-lg font-bold">مدت سرمایه‌ گذاری</p>
+                    <span className="text-sm home-on-dark-muted">
+                      (سودها به صورت مرکب حساب می‌شود)
+                    </span>
+                  </div>
 
                   <div className="flex items-center justify-between gap-4">
                     <button
@@ -277,6 +287,9 @@ const CalculatorSection = () => {
               <div className="flex h-[-webkit-fill-available] w-full flex-col items-center justify-center rounded-3xl border border-white/10 bg-black/20 p-4 shadow-2xl backdrop-blur-xl md:mb-0 md:mt-0 md:p-10 lg:w-5/12">
                 <p className="text-center text-2xl font-bold mb-8">
                   نتیجه سرمایه‌ گذاریت
+                  <span className="mr-2 text-base font-medium home-on-dark-muted">
+                    (اصل سرمایه + سود)
+                  </span>
                 </p>
 
                 {/* Result box */}
@@ -296,19 +309,27 @@ const CalculatorSection = () => {
                         تومان
                       </span>
                     </div>
-                    {/* درصد سود ماهیانه - سمت چپ */}
-                    <div className="flex flex-col items-center rounded-xl border border-premium/40 bg-premium/15 px-4 py-3 shadow-sm">
-                      <p className="text-xs text-premium font-medium mb-1">
-                        سود ماهیانه
-                      </p>
-                      <p className="text-2xl font-bold text-premium">
-                        {(selectedFund.monthlyRate * 100).toFixed(0)}٪
-                      </p>
+                    {/* نرخ صندوق - سمت چپ */}
+                    <div className="flex max-w-40 flex-col items-center rounded-xl border border-premium/40 bg-premium/15 px-4 py-3 text-center shadow-sm">
+                      {selectedFund.key === "hold" ? (
+                        <p className="text-sm font-bold leading-6 text-premium">
+                          حداقل سود تضمین‌شده دوره سه‌ماهه
+                        </p>
+                      ) : (
+                        <>
+                          <p className="mb-1 text-xs font-medium text-premium">
+                            سود ماهیانه
+                          </p>
+                          <p className="text-2xl font-bold text-premium">
+                            {(selectedFund.monthlyRate * 100).toFixed(0)}٪
+                          </p>
+                        </>
+                      )}
                     </div>
                   </div>
 
                   {/* 🛡 پیام تضمین سرمایه */}
-                  {selectedFund.description && (
+                  {selectedFund.description && selectedFund.key !== "hold" && (
                     <div className="mt-4 flex items-start gap-2 rounded-xl border border-[#0B3D2E]/25 bg-[#0B3D2E]/10 px-4 py-3 text-sm font-medium text-[#0B3D2E] shadow-sm">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -329,20 +350,19 @@ const CalculatorSection = () => {
                   )}
                 </div>
 
-                <Link
-                  href="/investment-plans"
+                <a
+                  href={`tel:${phoneTel}`}
                   className="mt-10 w-full rounded-full border border-[#E8F0EB] bg-[#F7F5F0] px-16 py-4 text-center font-bold text-[#0B3D2E] transition-colors hover:bg-white sm:w-fit"
                 >
                   سرمایه‌ گذاری
-                </Link>
+                </a>
               </div>
             </div>
           </>
         )}
 
-        {/* دکمه‌های تماس با مشاورین - در پایین سکشن */}
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-10 w-full mt-16 mb-2 px-4">
-          {/* 📍 مشاوره حضوری */}
+        {/* تماس برای رزرو مشاوره حضوری */}
+        <div className="flex w-full items-center justify-center px-4 mb-2 mt-16">
           <Drawer>
             <DrawerTrigger asChild>
               <button className="group relative flex w-full items-center justify-center gap-2 rounded-xl border border-primary bg-card px-10 py-4 font-medium text-foreground shadow-lg shadow-green-950/5 transition-all hover:border-primary hover:bg-primary hover:text-primary-foreground sm:w-auto">
@@ -364,54 +384,14 @@ const CalculatorSection = () => {
               </DrawerHeader>
               <div className="text-center mt-4 space-y-3">
                 <p className="text-xl font-semibold text-primary tracking-tight">
-                  {contactInfo.mobile}
+                  {phone}
                 </p>
                 <a
-                  href={`tel:${contactInfo.mobileTel}`}
+                  href={`tel:${phoneTel}`}
                   className="inline-block px-6 py-2 bg-primary hover:bg-[var(--home-glow)] text-primary-foreground rounded-md font-medium transition"
                 >
                   تماس بگیرید
                 </a>
-              </div>
-              <DrawerFooter>
-                <DrawerClose className="block mt-6 text-sm text-muted-foreground hover:text-foreground underline text-center">
-                  <XIcon className="inline-block" />
-                </DrawerClose>
-              </DrawerFooter>
-            </DrawerContent>
-          </Drawer>
-
-          {/* 💻 مشاوره آنلاین */}
-          <Drawer>
-            <DrawerTrigger asChild>
-              <button className="group relative flex w-full items-center justify-center gap-2 rounded-xl border border-primary bg-card px-10 py-4 font-medium text-foreground shadow-lg shadow-primary/10 transition-all hover:border-primary hover:bg-primary hover:text-primary-foreground sm:w-auto">
-                <Send className="h-5 w-5 text-primary transition-transform group-hover:scale-110 group-hover:text-primary-foreground" />
-                رزرو مشاوره آنلاین
-              </button>
-            </DrawerTrigger>
-            <DrawerContent className="p-6 rounded-t-2xl border-t bg-card dark:bg-cardBg shadow-2xl">
-              <DrawerHeader className="text-center">
-                <div className="flex justify-center">
-                  <Send className="text-primary h-10 w-10" />
-                </div>
-                <DrawerTitle className="text-2xl font-bold text-foreground mt-2">
-                  مشاوره آنلاین
-                </DrawerTitle>
-                <DrawerDescription className="text-center text-muted-foreground mt-1">
-                  برای دریافت مشاوره آنلاین از طریق تلگرام پیام دهید:
-                </DrawerDescription>
-              </DrawerHeader>
-              <div className="text-center mt-4 space-y-3">
-                <p className="text-xl font-semibold text-primary tracking-tight">
-                  @InvestmentSupport
-                </p>
-                <Link
-                  href="https://t.me/amirhossein_v2"
-                  target="_blank"
-                  className="inline-block px-6 py-2 bg-primary hover:bg-[var(--home-glow)] text-primary-foreground rounded-md font-medium transition"
-                >
-                  پیام در تلگرام
-                </Link>
               </div>
               <DrawerFooter>
                 <DrawerClose className="block mt-6 text-sm text-muted-foreground hover:text-foreground underline text-center">

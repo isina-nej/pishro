@@ -6,17 +6,19 @@ import TestimonialsSection from "@/components/testimonials/TestimonialsSection.s
 import CalculatorSection from "../calculatorSection";
 import NewsClub from "../newsClub";
 import FloatingNotificationManager from "@/components/utils/floatingNotificationManager";
-import { getHiddenPages } from "@/lib/services/settings-service";
+import { getPublicSiteChrome } from "@/lib/services/settings-service";
 import { createVisibility } from "@/lib/site/hidable-pages";
 
 export default async function HomeContentV32() {
-  const { show } = createVisibility(await getHiddenPages());
+  const chrome = await getPublicSiteChrome();
+  const { show } = createVisibility(chrome.hiddenPages);
 
   return (
     <>
       <V32LandingPage
         showHero={show("home:hero")}
         showAudience={show("home:mobile-view")}
+        phoneTel={chrome.footerContent.phoneTel}
       />
 
       {show("home:courses") && (
@@ -38,7 +40,10 @@ export default async function HomeContentV32() {
 
       {show("home:calculator") && (
         <div className="home-section-stage">
-          <CalculatorSection />
+          <CalculatorSection
+            phone={chrome.footerContent.phone}
+            phoneTel={chrome.footerContent.phoneTel}
+          />
         </div>
       )}
 
