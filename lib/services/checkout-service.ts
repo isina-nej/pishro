@@ -7,7 +7,7 @@ export interface CheckoutItem {
 }
 
 export interface CheckoutRequest {
-  userId: string;
+  userId?: string;
   items: CheckoutItem[];
 }
 

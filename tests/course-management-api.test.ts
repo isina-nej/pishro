@@ -17,8 +17,8 @@ describe('admin course API auth', { skip: await skipUnlessServerUp() }, () => {
     assert.equal(res.status, 401);
   });
 
-  it('GET /api/admin/lessons/:id/stream returns 401 without auth', async () => {
-    const res = await fetch(`${BASE}/api/admin/lessons/test-id/stream`);
+  it('GET /api/admin/lessons returns 401 without auth', async () => {
+    const res = await fetch(`${BASE}/api/admin/lessons`);
     assert.equal(res.status, 401);
   });
 });

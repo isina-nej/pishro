@@ -6,15 +6,22 @@ import TestimonialsSection from "@/components/testimonials/TestimonialsSection.s
 import CalculatorSection from "../calculatorSection";
 import NewsClub from "../newsClub";
 import FloatingNotificationManager from "@/components/utils/floatingNotificationManager";
-import { getPublicSiteChrome } from "@/lib/services/settings-service";
+import { PublicContentProvider } from "@/components/site/PublicContentProvider";
+import {
+  getPublicContent,
+  getPublicSiteChrome,
+} from "@/lib/services/settings-service";
 import { createVisibility } from "@/lib/site/hidable-pages";
 
 export default async function HomeContentV32() {
-  const chrome = await getPublicSiteChrome();
+  const [chrome, publicContent] = await Promise.all([
+    getPublicSiteChrome(),
+    getPublicContent(),
+  ]);
   const { show } = createVisibility(chrome.hiddenPages);
 
   return (
-    <>
+    <PublicContentProvider content={publicContent}>
       <V32LandingPage
         showHero={show("home:hero")}
         showAudience={show("home:mobile-view")}
@@ -54,6 +61,6 @@ export default async function HomeContentV32() {
       )}
 
       {show("home:notifications") && <FloatingNotificationManager />}
-    </>
+    </PublicContentProvider>
   );
 }

@@ -7,6 +7,6 @@ import { getHomeLayout } from "@/lib/services/settings-service";
 export default async function HomePageContent() {
   const layout = await getHomeLayout();
 
-  // ponytail: forced v32 for active editing — revert to `layout === "v32"` when switch is tested via admin
-  return <HomeContentV32 />;
+  if (layout === "v32") return <HomeContentV32 />;
+  return <HomeContentClassic />;
 }

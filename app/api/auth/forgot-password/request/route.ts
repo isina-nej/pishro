@@ -1,6 +1,11 @@
 // app/api/auth/forgot-password/request/route.ts
 import type { User, Otp } from "@prisma/client";
 import { query, execute } from "@/lib/db";
+import {
+  checkOtpResendCooldown,
+  generateOtpCode,
+  recordOtpSend,
+} from "@/lib/otp";
 import { randomUUID } from "crypto";
 import { sendOtpViaPattern } from "@/lib/sms";
 import {
@@ -9,12 +14,6 @@ import {
   errorResponse,
   ErrorCodes,
 } from "@/lib/api-response";
-
-function generateOtpDigits(length = 4) {
-  const min = 10 ** (length - 1);
-  const max = 10 ** length - 1;
-  return (Math.floor(Math.random() * (max - min + 1)) + min).toString();
-}
 
 export async function POST(req: Request) {
   try {
@@ -40,7 +39,17 @@ export async function POST(req: Request) {
       );
     }
 
-    const code = generateOtpDigits(4);
+    const cooldown = checkOtpResendCooldown(`reset:${phone}`);
+    if (!cooldown.allowed) {
+      return errorResponse(
+        "لطفاً کمی صبر کنید و دوباره تلاش کنید",
+        ErrorCodes.OTP_SEND_FAILED,
+        { retryAfterMs: cooldown.retryAfterMs },
+        429
+      );
+    }
+
+    const code = generateOtpCode(6);
     const expiresAt = new Date(Date.now() + 2 * 60 * 1000); // 2 minutes
 
     // Check if OTP exists for this phone
@@ -52,17 +61,19 @@ export async function POST(req: Request) {
     if (otps && otps.length > 0) {
       // Update existing OTP
       await execute(
-        `UPDATE Otp SET code = ?, expiresAt createdAt NOW() WHERE phone ?`,
+        `UPDATE Otp SET code = ?, expiresAt = ?, createdAt = NOW() WHERE phone = ?`,
         [code, expiresAt, phone]
       );
     } else {
       // Create new OTP with ID
       const otpId = randomUUID();
       await execute(
-        `INSERT INTO Otp (id, phone, code, expiresAt, createdAt) VALUES (?, ?, NOW())`,
+        `INSERT INTO Otp (id, phone, code, expiresAt, createdAt) VALUES (?, ?, ?, ?, NOW())`,
         [otpId, phone, code, expiresAt]
       );
     }
+
+    recordOtpSend(`reset:${phone}`);
 
 
     // Send OTP via IPPanel Pattern asynchronously (don't block on it)

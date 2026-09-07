@@ -7,7 +7,7 @@
  */
 
 import { NextRequest } from "next/server";
-import { verifyAdminAccessToken } from "@/lib/admin-auth";
+import { getAdminAuthFromHeaders } from "@/lib/admin-auth";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import {
@@ -27,15 +27,9 @@ import {
   safeDeleteStoragePath,
 } from "@/lib/course-media";
 
-// Helper to get admin auth from request
+// Helper to get admin auth from request (Bearer header or admin cookie)
 function getAdminUserFromRequest(req: NextRequest) {
-  const authHeader = req.headers.get('Authorization');
-  if (!authHeader?.startsWith('Bearer ')) {
-    return null;
-  }
-  
-  const token = authHeader.slice(7);
-  return verifyAdminAccessToken(token);
+  return getAdminAuthFromHeaders(req.headers);
 }
 
 function slugifyCourseTitle(input: string) {

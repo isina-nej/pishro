@@ -1,26 +1,31 @@
 // app/api/checkout/route.ts
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/auth";
 import {
   successResponse,
   validationError,
+  unauthorizedResponse,
   errorResponse,
   ErrorCodes,
 } from "@/lib/api-response";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { getZarinpalMerchantId } from "@/lib/services/settings-service";
 // Zarinpal SDK removed — enable via official REST API when going live.
 
 export async function POST(req: Request) {
   try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return unauthorizedResponse("لطفاً وارد شوید");
+    }
+    const userId = session.user.id;
+
     const body = await req.json();
-    const { userId, items, _callbackUrl } = body;
+    const { items } = body;
 
     // ✅ Validate input
-    if (!userId || !items || items.length === 0) {
+    if (!items || items.length === 0) {
       return validationError(
         {
-          userId: !userId ? "شناسه کاربر الزامی است" : [],
-          items: !items || items.length === 0 ? "آیتم‌های سفارش الزامی است" : [],
+          items: "آیتم‌های سفارش الزامی است",
         },
         "اطلاعات ارسالی ناقص است"
       );
@@ -74,45 +79,16 @@ export async function POST(req: Request) {
 
     console.log(`[Checkout] Order ${order.id} created. Total: ${total}`);
 
-    // 💳 حالت واقعی (فعلاً کامنت شده)
-    /*
-    // Get merchant ID from database settings (with fallback to env)
-    const merchantId = await getZarinpalMerchantId();
-    if (!merchantId) {
+    // Fake gateway disabled: real Zarinpal PaymentRequest wiring goes here.
+    // Order stays PENDING until /api/payment/verify confirms with the gateway.
+    if (process.env.NODE_ENV === "production") {
       return errorResponse(
-        "تنظیمات درگاه پرداخت ناقص است",
-        ErrorCodes.DATABASE_ERROR
+        "درگاه پرداخت فعال نیست",
+        ErrorCodes.INTERNAL_ERROR
       );
     }
 
-    const zarinpal = Zarinpal.create(merchantId, true);
-    const callbackUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/payment/verify?orderId=${order.id}`;
-
-    const paymentRes = await zarinpal.PaymentRequest({
-      Amount: total,
-      CallbackURL: callbackUrl,
-      Description: `پرداخت سفارش ${order.id}`,
-    });
-
-    if (paymentRes.status === 100) {
-      const payUrl = `https://www.zarinpal.com/pg/StartPay/${paymentRes.authority}`;
-      return successResponse(
-        {
-          orderId: order.id,
-          payUrl,
-          total,
-        },
-        "سفارش با موفقیت ایجاد شد"
-      );
-    } else {
-      return errorResponse(
-        "خطا در ایجاد درخواست پرداخت",
-        ErrorCodes.PAYMENT_ERROR
-      );
-    }
-    */
-
-    // ⚠️ حالت تستی (Fake payment URL)
+    // ⚠️ حالت تستی فقط در non-production (Fake payment URL)
     const fakePayUrl = `https://sandbox.zarinpal.com/pg/StartPay/fake-${order.id}`;
 
     return successResponse(

@@ -1,6 +1,11 @@
 // app/api/auth/signup/route.ts
 import type { User, Otp, TempUser } from "@prisma/client";
 import { query, execute } from "@/lib/db";
+import {
+  checkOtpResendCooldown,
+  generateOtpCode,
+  recordOtpSend,
+} from "@/lib/otp";
 import bcrypt from "bcryptjs";
 import { randomUUID } from "crypto";
 import { sendOtpViaPattern } from "@/lib/sms";
@@ -11,12 +16,6 @@ import {
   errorResponse,
   ErrorCodes,
 } from "@/lib/api-response";
-
-function generateOtpDigits(length = 4) {
-  const min = 10 ** (length - 1);
-  const max = 10 ** length - 1;
-  return (Math.floor(Math.random() * (max - min + 1)) + min).toString();
-}
 
 export async function POST(req: Request) {
   try {
@@ -44,11 +43,21 @@ export async function POST(req: Request) {
       return conflictResponse("User", "این شماره قبلاً ثبت شده است");
     }
 
+    const cooldown = checkOtpResendCooldown(phone);
+    if (!cooldown.allowed) {
+      return errorResponse(
+        "لطفاً کمی صبر کنید و دوباره تلاش کنید",
+        ErrorCodes.OTP_SEND_FAILED,
+        { retryAfterMs: cooldown.retryAfterMs },
+        429
+      );
+    }
+
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Generate OTP
-    const code = generateOtpDigits(4);
+    const code = generateOtpCode(6);
     const expiresAt = new Date(Date.now() + 2 * 60 * 1000); // 2 minutes
 
     // Check if OTP exists for this phone
@@ -92,6 +101,8 @@ export async function POST(req: Request) {
         [tempUserId, phone, hashedPassword]
       );
     }
+
+    recordOtpSend(phone);
 
     // Send OTP via IPPanel Pattern API asynchronously (don't block on it)
     // Pattern templates are instant and don't need approval

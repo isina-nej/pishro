@@ -1,5 +1,5 @@
 /**
- * Ten site color palettes — each with light + dark token sets.
+ * Eleven site color palettes — each with light + dark token sets.
  * Selected palette is stored in SiteSettings.paletteId (admin panel)
  * and applied site-wide via SitePaletteApplier.
  */

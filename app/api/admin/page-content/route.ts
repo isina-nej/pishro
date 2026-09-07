@@ -20,17 +20,9 @@ import {
 export async function GET(req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(req);
-if (!adminAuth) {
-      return errorResponse(
-        "Please login to continue",
-        ErrorCodes.UNAUTHORIZED,
-        undefined,
-        HttpStatus.UNAUTHORIZED
-      );
-    }
     if (!adminAuth) {
       return errorResponse(
-        "Access denied. Admin only.",
+        "Please login to continue",
         ErrorCodes.UNAUTHORIZED,
         undefined,
         HttpStatus.UNAUTHORIZED
@@ -99,17 +91,9 @@ if (!adminAuth) {
 export async function POST(req: NextRequest) {
   try {
     const adminAuth = await getAdminAuth(req);
-if (!adminAuth) {
-      return errorResponse(
-        "Please login to continue",
-        ErrorCodes.UNAUTHORIZED,
-        undefined,
-        HttpStatus.UNAUTHORIZED
-      );
-    }
     if (!adminAuth) {
       return errorResponse(
-        "Access denied. Admin only.",
+        "Please login to continue",
         ErrorCodes.UNAUTHORIZED,
         undefined,
         HttpStatus.UNAUTHORIZED

@@ -3,6 +3,10 @@ import { readFile, access } from 'fs/promises';
 import { join } from 'path';
 import { constants } from 'fs';
 import { BOOKS_UPLOAD_PATHS } from '@/lib/upload-config';
+import {
+  assertSafeStoragePath,
+  getStorageConfig,
+} from '@/lib/services/storage-adapter';
 
 export async function GET(
   _request: NextRequest,
@@ -19,9 +23,22 @@ export async function GET(
       );
     }
 
-    // Get upload path based on type
+    if (filename.includes("/") || filename.includes("\\") || filename.includes("\0")) {
+      return NextResponse.json({ error: 'نام فایل نامعتبر' }, { status: 400 });
+    }
+
+    // Get upload path based on type — assertSafeStoragePath blocks ../ escape.
     const uploadPath = BOOKS_UPLOAD_PATHS[type as keyof typeof BOOKS_UPLOAD_PATHS];
-    const filePath = join(uploadPath.dir, filename);
+    let filePath: string;
+    try {
+      filePath = assertSafeStoragePath(
+        getStorageConfig().storagePath,
+        `books/${type}/${filename}`
+      );
+    } catch {
+      return NextResponse.json({ error: 'نام فایل نامعتبر' }, { status: 400 });
+    }
+    void uploadPath;
 
     let resolvedPath = filePath;
     let usedFallback = false;

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   MessageCircle,
   Phone,
@@ -72,11 +72,12 @@ export default function AdminLiveChatPage() {
   const items = data?.items ?? [];
   const pagination = data?.pagination;
 
+  const firstItemId = items[0]?.id;
   useEffect(() => {
-    if (!selectedId && items[0]?.id) {
-      setSelectedId(items[0].id);
+    if (!selectedId && firstItemId) {
+      setSelectedId(firstItemId);
     }
-  }, [items, selectedId]);
+  }, [firstItemId, selectedId]);
 
   const { data: detail, isLoading: detailLoading } = useLiveChatDetail(selectedId);
   const replyMutation = useReplyLiveChat(selectedId || '');
@@ -86,11 +87,6 @@ export default function AdminLiveChatPage() {
     if (!threadRef.current) return;
     threadRef.current.scrollTop = threadRef.current.scrollHeight;
   }, [detail?.messages?.length, selectedId]);
-
-  const selectedPreview = useMemo(
-    () => items.find((item) => item.id === selectedId) || detail || null,
-    [items, selectedId, detail]
-  );
 
   if (isLoading) {
     return (
@@ -346,7 +342,6 @@ export default function AdminLiveChatPage() {
               گفتگو یافت نشد
             </div>
           )}
-          {selectedPreview && !detail && null}
         </section>
       </div>
     </AdminPageShell>

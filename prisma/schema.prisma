@@ -1323,6 +1323,9 @@ model SiteSettings {
   /// محتوای کامل فوتر — JSON: FooterContent (تماس، لینک‌ها، درباره، سوشال)
   footerContent Json?
 
+  /// متن‌های قابل‌ویرایش صفحات عمومی — JSON pageId -> fieldKey -> string
+  publicContent Json?
+
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
 }

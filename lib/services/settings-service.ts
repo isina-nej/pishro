@@ -33,6 +33,11 @@ import {
   type FooterContent,
   type NavbarItem,
 } from "@/lib/site/chrome-content";
+import {
+  parsePublicContent,
+  resolvePublicContent,
+  type PublicContentOverrides,
+} from "@/lib/site/public-content";
 import type { Prisma } from "@prisma/client";
 import {
   DEFAULT_HOME_LAYOUT,
@@ -59,6 +64,7 @@ export interface UpdateSettingsInput {
   navbarItems?: NavbarItem[];
   footerContent?: FooterContent;
   homeLayout?: HomeLayout;
+  publicContent?: PublicContentOverrides;
 }
 
 export type PublicSiteTheme = {
@@ -201,6 +207,19 @@ export async function getHiddenPages(): Promise<string[]> {
   return chrome.hiddenPages;
 }
 
+/** Editable public-page copy (defaults merged with admin overrides). Never throws. */
+export async function getPublicContent(): Promise<PublicContentOverrides> {
+  try {
+    const settings = await prisma.siteSettings.findFirst({
+      select: { publicContent: true },
+    });
+    return resolvePublicContent(settings?.publicContent);
+  } catch (error) {
+    console.error("Error fetching public content:", error);
+    return resolvePublicContent(null);
+  }
+}
+
 /** Active homepage layout variant. Never throws. */
 export async function getHomeLayout(): Promise<HomeLayout> {
   try {
@@ -259,6 +278,7 @@ export async function updateSettings(
       navbarItems,
       footerContent,
       hiddenPages,
+      publicContent,
       ...rest
     } = data;
 
@@ -275,6 +295,9 @@ export async function updateSettings(
     }
     if (footerContent !== undefined) {
       prismaData.footerContent = footerContent as Prisma.InputJsonValue;
+    }
+    if (publicContent !== undefined) {
+      prismaData.publicContent = parsePublicContent(publicContent) as Prisma.InputJsonValue;
     }
 
     const updated = await prisma.siteSettings.update({

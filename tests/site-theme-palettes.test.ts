@@ -10,8 +10,8 @@ import {
 } from "@/lib/theme/landing-palettes";
 
 describe("landing palettes / site theme", () => {
-  it("exposes exactly 10 palettes with light and dark tokens", () => {
-    assert.equal(LANDING_PALETTES.length, 10);
+  it("exposes exactly 11 palettes with light and dark tokens", () => {
+    assert.equal(LANDING_PALETTES.length, 11);
     for (const palette of LANDING_PALETTES) {
       assert.ok(palette.light.homeDeep);
       assert.ok(palette.dark.homeDeep);

@@ -15,7 +15,6 @@ import {
   DEFAULT_FAVICON_URL,
   DEFAULT_LOGO_URL,
   DEFAULT_OG_IMAGE_URL,
-  DEFAULT_SITE_NAME,
   resolveAssetUrl,
   toAbsoluteAssetUrl,
 } from "@/lib/site/branding";

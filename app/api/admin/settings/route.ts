@@ -29,6 +29,10 @@ import {
   validateFooterContentInput,
   validateNavbarItemsInput,
 } from "@/lib/site/chrome-content";
+import {
+  parsePublicContent,
+  validatePublicContentPage,
+} from "@/lib/site/public-content";
 import { isValidHomeLayout } from "@/lib/site/home-layout";
 
 /**
@@ -189,6 +193,28 @@ export async function PATCH(req: NextRequest) {
         );
       }
       body.footerContent = parsed;
+    }
+
+    if (body.publicContent !== undefined) {
+      if (
+        !body.publicContent ||
+        typeof body.publicContent !== "object" ||
+        Array.isArray(body.publicContent)
+      ) {
+        return validationError(
+          { publicContent: "ساختار محتوای صفحات معتبر نیست" },
+          "فرمت محتوای صفحات معتبر نیست"
+        );
+      }
+      for (const [pageId, values] of Object.entries(body.publicContent)) {
+        if (!validatePublicContentPage(pageId, values)) {
+          return validationError(
+            { publicContent: `محتوای صفحه «${pageId}» معتبر نیست` },
+            "فرمت محتوای صفحات معتبر نیست"
+          );
+        }
+      }
+      body.publicContent = parsePublicContent(body.publicContent);
     }
 
     for (const key of ["logoUrl", "faviconUrl", "ogImageUrl"] as const) {

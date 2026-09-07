@@ -72,7 +72,7 @@ export async function middleware(request: NextRequest) {
       }
 
       return NextResponse.json(
-        { error: 'Unauthorized', code: 'unauthorized' },
+        { status: 'error', message: 'Unauthorized', code: 'UNAUTHORIZED' },
         { status: 401 }
       );
     }

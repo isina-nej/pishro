@@ -98,13 +98,16 @@ export function verifyAdminRefreshToken(token: string): string | null {
 
 export function getAdminAuthFromHeaders(headers: Headers): AdminUser | null {
   const authHeader = headers.get('Authorization');
-  
-  if (!authHeader?.startsWith('Bearer ')) {
-    return null;
+
+  if (authHeader?.startsWith('Bearer ')) {
+    const user = verifyAdminAccessToken(authHeader.slice(7));
+    if (user) return user;
   }
 
-  const token = authHeader.slice(7);
-  return verifyAdminAccessToken(token);
+  // ponytail: header-only callers (29 admin routes) also accept the cookie session — full unify to getAdminAuth later
+  const cookieToken = getCookieValue(headers, 'admin_access_token');
+  if (!cookieToken) return null;
+  return verifyAdminAccessToken(cookieToken);
 }
 
 function getCookieValue(headers: Headers, name: string): string | null {
