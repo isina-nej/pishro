@@ -39,7 +39,9 @@ else
 fi
 
 echo "==> db migrate (additive only)"
-npx prisma migrate status
+# NOTE: `migrate status` exits 1 when migrations are pending — must not
+# abort the script (set -e), it is informational only here.
+npx prisma migrate status || true
 npx prisma migrate deploy
 npx prisma generate
 
