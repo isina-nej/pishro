@@ -38,7 +38,7 @@ import {
   resolvePublicContent,
   type PublicContentOverrides,
 } from "@/lib/site/public-content";
-import type { Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import {
   DEFAULT_HOME_LAYOUT,
   parseHomeLayout,
@@ -218,6 +218,78 @@ export async function getPublicContent(): Promise<PublicContentOverrides> {
     console.error("Error fetching public content:", error);
     return resolvePublicContent(null);
   }
+}
+
+/** Raw overrides stored in DB without defaults merged. Never throws. */
+export async function getRawPublicContent(): Promise<PublicContentOverrides> {
+  try {
+    const settings = await prisma.siteSettings.findFirst({
+      select: { publicContent: true },
+    });
+    return parsePublicContent(settings?.publicContent);
+  } catch (error) {
+    console.error("Error fetching raw public content:", error);
+    return {};
+  }
+}
+
+/** Update the entire public content dictionary. Returns resolved content. */
+export async function updatePublicContent(
+  content: PublicContentOverrides
+): Promise<PublicContentOverrides> {
+  const parsed = parsePublicContent(content);
+  const existingSettings = await getSettings();
+
+  await prisma.siteSettings.update({
+    where: { id: existingSettings.id },
+    data: {
+      publicContent: parsed as Prisma.InputJsonValue,
+      updatedAt: new Date(),
+    },
+  });
+
+  return resolvePublicContent(parsed);
+}
+
+/** Update overrides for a single page. Returns resolved content. */
+export async function updatePublicContentPage(
+  pageId: string,
+  pageValues: Record<string, string>
+): Promise<PublicContentOverrides> {
+  const currentOverrides = await getRawPublicContent();
+  currentOverrides[pageId] = { ...(currentOverrides[pageId] || {}), ...pageValues };
+  return updatePublicContent(currentOverrides);
+}
+
+/** Reset one page or all pages back to factory defaults. */
+export async function resetPublicContent(
+  pageId?: string
+): Promise<PublicContentOverrides> {
+  const existingSettings = await getSettings();
+
+  if (pageId && pageId !== "all") {
+    const currentOverrides = await getRawPublicContent();
+    delete currentOverrides[pageId];
+    await prisma.siteSettings.update({
+      where: { id: existingSettings.id },
+      data: {
+        publicContent: currentOverrides as Prisma.InputJsonValue,
+        updatedAt: new Date(),
+      },
+    });
+    return resolvePublicContent(currentOverrides);
+  }
+
+  // Reset all
+  await prisma.siteSettings.update({
+    where: { id: existingSettings.id },
+    data: {
+      publicContent: Prisma.JsonNull,
+      updatedAt: new Date(),
+    },
+  });
+
+  return resolvePublicContent(null);
 }
 
 /** Active homepage layout variant. Never throws. */

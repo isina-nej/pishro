@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Pencil, Plus, Trash2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Pencil, Plus, Sparkles, Trash2 } from 'lucide-react';
 import { AdminLoadingState, AdminPageShell } from '@/components/admin/AdminPageShell';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -62,17 +62,45 @@ export default function LandingInvestmentPlansCmsPage() {
 
   return (
     <AdminPageShell
-      title="سبدهای سرمایه‌گذاری"
-      description="محتوای صفحه، انواع سبد و تگ‌ها"
+      title="سبدهای سرمایه‌گذاری — انواع پلن و تگ‌ها"
+      description="مدیریت پلن‌های سرمایه‌گذاری، تگ‌های مرتبط و مقادیر مالی"
       actions={
-        <Button variant="outline" asChild>
-          <Link href="/admin/landing">
-            <ArrowRight className="size-4" />
-            بازگشت
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button size="sm" asChild className="gap-1.5 text-xs font-semibold">
+            <Link href="/admin/landing">
+              <Sparkles className="size-3.5" />
+              استودیو CMS صفحات
+            </Link>
+          </Button>
+          <Button variant="outline" size="sm" asChild>
+            <Link href="/admin/landing">
+              <ArrowRight className="size-4" />
+              بازگشت
+            </Link>
+          </Button>
+        </div>
       }
     >
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-primary/20 bg-primary/5 p-4 text-xs">
+        <div className="flex items-center gap-2.5">
+          <Sparkles className="size-4 text-primary shrink-0" />
+          <div>
+            <span className="font-bold text-foreground">
+              ویرایش زنده متون، تصاویر و آیکن‌های سبدهای سرمایه‌گذاری:
+            </span>
+            <p className="mt-0.5 text-muted-foreground">
+              برای ویرایش عناوین، کارت‌ها و آیکن‌های صفحه سبدها از استودیو جامع CMS استفاده کنید.
+            </p>
+          </div>
+        </div>
+        <Button size="sm" variant="outline" asChild className="shrink-0 gap-1 text-xs">
+          <Link href="/admin/landing">
+            استودیو CMS
+            <ArrowLeft className="size-3.5" />
+          </Link>
+        </Button>
+      </div>
+
       <Tabs defaultValue="page" className="space-y-4">
         <TabsList>
           <TabsTrigger value="page">صفحه</TabsTrigger>

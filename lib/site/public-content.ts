@@ -1,4 +1,4 @@
-export type PublicContentFieldType = "text" | "textarea" | "link" | "image";
+export type PublicContentFieldType = "text" | "textarea" | "link" | "image" | "icon";
 
 export type PublicContentField = {
   key: string;
@@ -48,6 +48,13 @@ const imageField = (
   hint?: string
 ): PublicContentField => field(key, label, defaultValue, "image", hint);
 
+const iconField = (
+  key: string,
+  label: string,
+  defaultValue: string,
+  hint?: string
+): PublicContentField => field(key, label, defaultValue, "icon", hint);
+
 export const PUBLIC_CONTENT_PAGES: PublicContentPage[] = [
   {
     id: "home-v32",
@@ -94,12 +101,16 @@ export const PUBLIC_CONTENT_PAGES: PublicContentPage[] = [
         fields: [
           field("trust.1Title", "کارت ۱ — عنوان", "دوره‌های پیشرفته"),
           field("trust.1Text", "کارت ۱ — توضیح", "آموزش حرفه‌ای ترید"),
+          iconField("trust.1Icon", "کارت ۱ — آیکن", "GraduationCap"),
           field("trust.2Title", "کارت ۲ — عنوان", "پشتیبانی"),
           field("trust.2Text", "کارت ۲ — توضیح", "دسترسی به مشاوران مجموعه"),
+          iconField("trust.2Icon", "کارت ۲ — آیکن", "Headphones"),
           field("trust.3Title", "کارت ۳ — عنوان", "متناسب با نیاز شما"),
           field("trust.3Text", "کارت ۳ — توضیح", "از آموزش تا سرمایه‌گذاری زیر نظر متخصصان"),
+          iconField("trust.3Icon", "کارت ۳ — آیکن", "Sparkles"),
           field("trust.4Title", "کارت ۴ — عنوان", "+۶ سال"),
           field("trust.4Text", "کارت ۴ — توضیح", "سابقه درخشان فعالیت حرفه‌ای"),
+          iconField("trust.4Icon", "کارت ۴ — آیکن", "Award"),
         ],
       },
       {
@@ -130,12 +141,16 @@ export const PUBLIC_CONTENT_PAGES: PublicContentPage[] = [
           field("audience.title", "عنوان", "مسیر مناسب خود را پیدا کنید"),
           field("audience.subtitle", "توضیح", "هدف هر نفر متفاوت است. ما برای هر مسیر راهکاری داریم.", "textarea"),
           field("audience.card1", "کارت ۱", "مبتدی"),
+          iconField("audience.card1Icon", "کارت ۱ — آیکن", "GraduationCap"),
           linkField("audience.card1Link", "کارت ۱ — لینک", "/courses"),
           field("audience.card2", "کارت ۲", "معامله‌گر"),
+          iconField("audience.card2Icon", "کارت ۲ — آیکن", "TrendingUp"),
           linkField("audience.card2Link", "کارت ۲ — لینک", "/investment-plans"),
           field("audience.card3", "کارت ۳", "سبد و نهاد"),
+          iconField("audience.card3Icon", "کارت ۳ — آیکن", "PieChart"),
           linkField("audience.card3Link", "کارت ۳ — لینک", "/investment-plans"),
           field("audience.card4", "کارت ۴", "مشاوره"),
+          iconField("audience.card4Icon", "کارت ۴ — آیکن", "Briefcase"),
           linkField("audience.card4Link", "کارت ۴ — لینک", "/business-consulting"),
         ],
       },
@@ -1040,6 +1055,13 @@ function isValidImageValue(value: string): boolean {
   return src.startsWith("/") || src.startsWith("https://") || src.startsWith("http://");
 }
 
+function isValidIconValue(value: string): boolean {
+  const icon = value.trim();
+  if (!icon) return true;
+  if (icon.length > 200) return false;
+  return /^[a-zA-Z0-9_-]+$/.test(icon) || icon.startsWith("<svg");
+}
+
 export function validatePublicContentPage(
   pageId: string,
   value: unknown
@@ -1057,7 +1079,9 @@ export function validatePublicContentPage(
     const type = item.type ?? "text";
     if (type === "link" && !isValidLinkValue(rawValue)) return null;
     if (type === "image" && !isValidImageValue(rawValue)) return null;
-    const valueLimit = type === "textarea" ? 5000 : type === "link" ? 300 : 500;
+    if (type === "icon" && !isValidIconValue(rawValue)) return null;
+    const valueLimit =
+      type === "textarea" ? 5000 : type === "link" ? 300 : type === "icon" ? 200 : 500;
     result[item.key] = rawValue.slice(0, valueLimit);
   }
 

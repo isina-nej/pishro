@@ -1,6 +1,11 @@
 import type { User, Otp, TempUser } from "@prisma/client";
 import { query, execute } from "@/lib/db";
 import {
+  checkOtpVerifyAllowed,
+  clearOtpFailures,
+  recordOtpFailure,
+} from "@/lib/otp";
+import {
   successResponse,
   validationError,
   errorResponse,
@@ -22,13 +27,24 @@ export async function POST(req: Request) {
       );
     }
 
-    // Get OTP from database
+    const gate = checkOtpVerifyAllowed(phone);
+    if (!gate.allowed) {
+      return errorResponse(
+        "تلاش‌های ناموفق زیاد بود. لطفاً بعداً تلاش کنید",
+        ErrorCodes.OTP_INVALID,
+        { retryAfterMs: gate.retryAfterMs },
+        429
+      );
+    }
+
+    // Get signup OTP from database (reset codes never validate here)
     const otps = await query<Otp>(
-      `SELECT * FROM Otp WHERE phone = ? LIMIT 1`,
+      `SELECT * FROM Otp WHERE phone = ? AND purpose = 'signup' LIMIT 1`,
       [phone]
     );
 
     if (!otps || otps.length === 0 || otps[0].code !== code) {
+      recordOtpFailure(phone);
       return validationError(
         { code: "کد تایید نامعتبر است" },
         "کد تایید اشتباه است"
@@ -37,8 +53,10 @@ export async function POST(req: Request) {
 
     const otp = otps[0];
     if (new Date(otp.expiresAt) < new Date()) {
+      recordOtpFailure(phone);
       return errorResponse("کد تایید منقضی شده است", ErrorCodes.OTP_EXPIRED);
     }
+    clearOtpFailures(phone);
 
     // Get temp user
     const tempUsers = await query<TempUser>(
@@ -78,7 +96,9 @@ export async function POST(req: Request) {
     }
 
     // Delete OTP and TempUser records
-    await execute(`DELETE FROM Otp WHERE phone = ?`, [phone]);
+    await execute(`DELETE FROM Otp WHERE phone = ? AND purpose = 'signup'`, [
+      phone,
+    ]);
     await execute(`DELETE FROM TempUser WHERE phone = ?`, [phone]);
 
     return successResponse({ verified: true }, "شماره تلفن با موفقیت تایید شد");

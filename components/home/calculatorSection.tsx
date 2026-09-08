@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/drawer";
 import { contactInfo } from "@/lib/constants/contact";
 import { useInvestmentFunds, type InvestmentFund } from "@/lib/hooks/useInvestmentFunds";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 
 // 📊 مقادیر پیشنهادی اسلایدر مبلغ — عددهای گرد برای تجربه‌ی بهتر، فارغ از نرخ گام دقیق صندوق
 const CURATED_AMOUNT_STEPS = [
@@ -62,6 +63,7 @@ const CalculatorSection = ({
   phone = contactInfo.phone,
   phoneTel = contactInfo.phoneTel,
 }: CalculatorSectionProps) => {
+  const copy = usePublicCopy("home-sections");
   const { data: funds, isLoading: fundsLoading } = useInvestmentFunds();
 
   const [selectedFundKey, setSelectedFundKey] = useState<string | null>(null);
@@ -119,11 +121,13 @@ const CalculatorSection = ({
         {/* Header */}
         <div className="text-center mb-6 md:mb-10 px-2">
           <h4 className="font-bold text-3xl sm:text-4xl md:text-5xl mb-2 md:mb-4 mt-10 md:mt-0">
-            ماشین حساب
+            {copy("calculator.title", "ماشین حساب")}
           </h4>
           <p className="text-base md:text-lg lg:text-xl leading-relaxed home-on-dark-muted max-w-2xl mx-auto">
-            با انتخاب نوع صندوق سرمایه‌ گذاری، مبلغ و مدت، میزان بازده خود را
-            مشاهده کنید.
+            {copy(
+              "calculator.description",
+              "با انتخاب نوع صندوق سرمایه‌ گذاری، مبلغ و مدت، میزان بازده خود را مشاهده کنید."
+            )}
           </p>
         </div>
 

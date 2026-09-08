@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateAdminUser, createAdminAccessToken, createAdminRefreshToken } from '@/lib/admin-auth';
+import { setAdminAccessCookie } from '@/lib/admin-cookie';
 
 // Rate limiting state (in-memory, would use Redis in production)
 const loginAttempts = new Map<string, { count: number; resetTime: number }>();
@@ -127,14 +128,9 @@ export async function POST(req: NextRequest) {
       path: '/',
     });
 
-    // Set access token in cookie (readable by client)
-    response.cookies.set('admin_access_token', accessToken, {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: expiresIn,
-      path: '/',
-    });
+    // Access token cookie is httpOnly (XSS-steal resistant); JS calls use
+    // the localStorage Bearer copy set by AdminLoginForm instead.
+    setAdminAccessCookie(response, accessToken, expiresIn);
 
     return response;
   } catch (error) {

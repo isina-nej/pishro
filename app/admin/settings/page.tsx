@@ -36,7 +36,6 @@ import UserPanelPaletteSection from "@/components/admin/settings/UserPanelPalett
 import NavbarItemsSection from "@/components/admin/settings/NavbarItemsSection";
 import FooterContentSection from "@/components/admin/settings/FooterContentSection";
 import HomeLayoutSection from "@/components/admin/settings/HomeLayoutSection";
-import PublicContentSection from "@/components/admin/settings/PublicContentSection";
 import { useAdminAuth } from "@/lib/hooks/useAdminAuth";
 import {
   LANDING_PALETTES,
@@ -62,11 +61,6 @@ import {
   type FooterContent,
   type NavbarItem,
 } from "@/lib/site/chrome-content";
-import {
-  getPublicContentDefaults,
-  resolvePublicContent,
-  type PublicContentOverrides,
-} from "@/lib/site/public-content";
 import { cn } from "@/lib/utils";
 import {
   DEFAULT_HOME_LAYOUT,
@@ -74,7 +68,7 @@ import {
   type HomeLayout,
 } from "@/lib/site/home-layout";
 
-type SettingsTab = "site" | "panel" | "branding" | "pages" | "nav" | "footer" | "content";
+type SettingsTab = "site" | "panel" | "branding" | "pages" | "nav" | "footer";
 
 type SettingsPayload = {
   paletteId?: string;
@@ -191,9 +185,6 @@ export default function AdminSettingsPage() {
   const [homeLayout, setHomeLayout] = useState<HomeLayout>(DEFAULT_HOME_LAYOUT);
   const [savedHomeLayout, setSavedHomeLayout] =
     useState<HomeLayout>(DEFAULT_HOME_LAYOUT);
-  const [publicContent, setPublicContent] = useState<PublicContentOverrides>(
-    () => getPublicContentDefaults()
-  );
 
   const reload = async () => {
     const [settings, customList] = await Promise.all([
@@ -224,7 +215,6 @@ export default function AdminSettingsPage() {
     setFooterContent(parseFooterContent(settings.footerContent));
     setHomeLayout(parseHomeLayout(settings.homeLayout));
     setSavedHomeLayout(parseHomeLayout(settings.homeLayout));
-    setPublicContent(resolvePublicContent(settings.publicContent));
     setCustoms(customList);
   };
 
@@ -366,19 +356,6 @@ export default function AdminSettingsPage() {
     }
   };
 
-  const onSavePublicContent = async () => {
-    setSaving(true);
-    try {
-      const data = await saveSettings({ publicContent });
-      setPublicContent(resolvePublicContent(data.publicContent));
-      toast.success("متن‌های صفحات ذخیره شد");
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "خطا در ذخیره");
-    } finally {
-      setSaving(false);
-    }
-  };
-
   const openCreate = () => {
     setEditor(emptyEditor());
     setEditorTab("light");
@@ -491,7 +468,6 @@ export default function AdminSettingsPage() {
     { id: "nav", label: "منوی صفحات", icon: Menu },
     { id: "footer", label: "فوتر", icon: PanelBottom },
     { id: "pages", label: "مدیریت نمایش", icon: EyeOff },
-    { id: "content", label: "متن صفحات", icon: Menu },
   ];
 
   return (
@@ -590,15 +566,6 @@ export default function AdminSettingsPage() {
           content={footerContent}
           onChange={setFooterContent}
           onSave={onSaveFooterContent}
-          saving={saving}
-        />
-      )}
-
-      {tab === "content" && (
-        <PublicContentSection
-          content={publicContent}
-          onChange={setPublicContent}
-          onSave={onSavePublicContent}
           saving={saving}
         />
       )}

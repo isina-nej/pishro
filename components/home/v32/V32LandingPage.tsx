@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { contactInfo } from "@/lib/constants/contact";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
+import { DynamicIcon } from "@/components/site/DynamicIcon";
 import "./v32-landing.css";
 
 /* ── animated typing counter ── */
@@ -53,7 +55,11 @@ export default function V32LandingPage({
   showAudience = true,
   phoneTel = contactInfo.phoneTel,
 }: V32LandingPageProps) {
+  const copy = usePublicCopy("home-v32");
   const phoneAmount = useAnimatedNumber(200_000_000);
+
+  const heroCtaHref = copy("hero.ctaLink", "") || `tel:${phoneTel}`;
+  const splitCtaHref = copy("split.ctaLink", "") || `tel:${phoneTel}`;
 
   return (
     <div className="home-shell v32-landing w-full transition-colors">
@@ -62,36 +68,44 @@ export default function V32LandingPage({
           <div className="v32-wrap v32-hero-grid">
             <div>
               <h1>
-                پیشرو سرمایه
+                {copy("hero.title", "پیشرو سرمایه")}
               </h1>
               <p>
-                پیشرو در آموزش و سرمایه‌گذاری
+                {copy("hero.subtitle", "پیشرو در آموزش و سرمایه‌گذاری")}
               </p>
-              <a href={`tel:${phoneTel}`} className="v32-btn-white">
-                شروع کنید
+              <a href={heroCtaHref} className="v32-btn-white">
+                {copy("hero.cta", "شروع کنید")}
               </a>
               <div className="v32-chips">
-                <span>آموزش ترید</span>
-                <span>سبدهای تضمینی</span>
-                <span>مشاوره</span>
-                <span>پشتیبانی ۲۴ ساعته</span>
+                <span>{copy("hero.chip1", "آموزش ترید")}</span>
+                <span>{copy("hero.chip2", "سبدهای تضمینی")}</span>
+                <span>{copy("hero.chip3", "مشاوره")}</span>
+                <span>{copy("hero.chip4", "پشتیبانی ۲۴ ساعته")}</span>
               </div>
             </div>
             <div className="v32-phone-wrap">
               <div className="v32-glass v32-g1">
-                <div style={{ fontSize: 12, opacity: 0.7 }}>سرمایه‌گذاری</div>
-                <div style={{ fontWeight: 800, marginTop: 4 }}>تضمینی</div>
+                <div style={{ fontSize: 12, opacity: 0.7 }}>
+                  {copy("phone.card1Label", "سرمایه‌گذاری")}
+                </div>
+                <div style={{ fontWeight: 800, marginTop: 4 }}>
+                  {copy("phone.card1Value", "تضمینی")}
+                </div>
               </div>
               <div className="v32-glass v32-g2">
                 <div style={{ fontSize: 12, opacity: 0.7 }}>
-                  سرمایه‌گذاری خودکار
+                  {copy("phone.card2Label", "سرمایه‌گذاری خودکار")}
                 </div>
-                <div style={{ fontWeight: 800, marginTop: 4 }}>ماهانه</div>
+                <div style={{ fontWeight: 800, marginTop: 4 }}>
+                  {copy("phone.card2Value", "ماهانه")}
+                </div>
               </div>
               <div className="v32-glass v32-g3">
-                <div style={{ fontSize: 12, opacity: 0.7 }}>ارزش سبد</div>
+                <div style={{ fontSize: 12, opacity: 0.7 }}>
+                  {copy("phone.portfolioLabel", "ارزش سبد")}
+                </div>
                 <div style={{ fontWeight: 800, marginTop: 4, fontSize: 20 }}>
-                  ۲۲۳٬۱۵۸٬۷۰۰
+                  {copy("phone.portfolioValue", "۲۲۳٬۱۵۸٬۷۰۰")}
                 </div>
                 <div
                   style={{
@@ -100,19 +114,19 @@ export default function V32LandingPage({
                     marginTop: 4,
                   }}
                 >
-                  +۴٫۲٪
+                  {copy("phone.portfolioChange", "+۴٫۲٪")}
                 </div>
               </div>
               <div className="v32-phone">
                 <div className="v32-phone-bar">
                   <span />
                 </div>
-                <h3>سرمایه‌گذاری</h3>
+                <h3>{copy("phone.title", "سرمایه‌گذاری")}</h3>
                 <div ref={phoneAmount.ref} className="v32-amt">
                   {formatFa(phoneAmount.value)}
                 </div>
                 <div style={{ fontSize: 12, color: "#9aa3ae", marginTop: 4 }}>
-                  تومان
+                  {copy("phone.currency", "تومان")}
                 </div>
                 <div className="v32-pad">
                   {["۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹", ".", "۰", "⌫"].map(
@@ -121,26 +135,46 @@ export default function V32LandingPage({
                     )
                   )}
                 </div>
-                <div className="v32-buy">تأیید سرمایه‌گذاری</div>
+                <div className="v32-buy">{copy("phone.confirm", "تأیید سرمایه‌گذاری")}</div>
               </div>
             </div>
           </div>
           <div className="v32-wrap v32-trust">
-            <article>
-              <b>دوره‌های پیشرفته</b>
-              <span>آموزش حرفه‌ای ترید</span>
+            <article className="flex items-start gap-3">
+              <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-emerald-400">
+                <DynamicIcon name={copy("trust.1Icon", "GraduationCap")} className="size-4" />
+              </div>
+              <div>
+                <b>{copy("trust.1Title", "دوره‌های پیشرفته")}</b>
+                <span>{copy("trust.1Text", "آموزش حرفه‌ای ترید")}</span>
+              </div>
             </article>
-            <article>
-              <b>پشتیبانی</b>
-              <span>دسترسی به مشاوران مجموعه</span>
+            <article className="flex items-start gap-3">
+              <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-emerald-400">
+                <DynamicIcon name={copy("trust.2Icon", "Headphones")} className="size-4" />
+              </div>
+              <div>
+                <b>{copy("trust.2Title", "پشتیبانی")}</b>
+                <span>{copy("trust.2Text", "دسترسی به مشاوران مجموعه")}</span>
+              </div>
             </article>
-            <article>
-              <b>متناسب با نیاز شما</b>
-              <span>از آموزش تا سرمایه‌گذاری زیر نظر متخصصان</span>
+            <article className="flex items-start gap-3">
+              <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-emerald-400">
+                <DynamicIcon name={copy("trust.3Icon", "Sparkles")} className="size-4" />
+              </div>
+              <div>
+                <b>{copy("trust.3Title", "متناسب با نیاز شما")}</b>
+                <span>{copy("trust.3Text", "از آموزش تا سرمایه‌گذاری زیر نظر متخصصان")}</span>
+              </div>
             </article>
-            <article>
-              <b>+۶ سال</b>
-              <span>سابقه درخشان فعالیت حرفه‌ای</span>
+            <article className="flex items-start gap-3">
+              <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-emerald-400">
+                <DynamicIcon name={copy("trust.4Icon", "Award")} className="size-4" />
+              </div>
+              <div>
+                <b>{copy("trust.4Title", "+۶ سال")}</b>
+                <span>{copy("trust.4Text", "سابقه درخشان فعالیت حرفه‌ای")}</span>
+              </div>
             </article>
           </div>
         </section>
@@ -149,9 +183,11 @@ export default function V32LandingPage({
       <section className="v32-wrap v32-split" id="org">
         <div className="v32-shot">
           <div className="v32-shot-ui">
-            <div style={{ fontSize: 12, color: "#9aa3ae" }}>موجودی سبد</div>
+            <div style={{ fontSize: 12, color: "#9aa3ae" }}>
+              {copy("split.balanceLabel", "موجودی سبد")}
+            </div>
             <div style={{ fontSize: 28, fontWeight: 800, margin: "6px 0 12px" }}>
-              ۵۲۶٬۸۲۵٬۰۰۰
+              {copy("split.balanceValue", "۵۲۶٬۸۲۵٬۰۰۰")}
             </div>
             <svg viewBox="0 0 280 80" width="100%" height="80" aria-hidden>
               <path
@@ -170,8 +206,8 @@ export default function V32LandingPage({
                 color: "#c8d0d8",
               }}
             >
-              <span>سبد ثابت</span>
-              <span>+۲٫۱٪</span>
+              <span>{copy("split.row1Label", "سبد ثابت")}</span>
+              <span>{copy("split.row1Value", "+۲٫۱٪")}</span>
             </div>
             <div
               style={{
@@ -182,21 +218,23 @@ export default function V32LandingPage({
                 color: "#c8d0d8",
               }}
             >
-              <span>سبد ترکیبی</span>
-              <span>+۱٫۴٪</span>
+              <span>{copy("split.row2Label", "سبد ترکیبی")}</span>
+              <span>{copy("split.row2Value", "+۱٫۴٪")}</span>
             </div>
           </div>
         </div>
         <div>
           <h2>
-            متناسب با نیاز شما
+            {copy("split.title", "متناسب با نیاز شما")}
           </h2>
           <p>
-            از آموزش تا سرمایه‌گذاری، همه زیر نظر متخصصان مجموعه و متناسب
-            با نیاز شما طراحی شده است.
+            {copy(
+              "split.description",
+              "از آموزش تا سرمایه‌گذاری، همه زیر نظر متخصصان مجموعه و متناسب با نیاز شما طراحی شده است."
+            )}
           </p>
-          <a href={`tel:${phoneTel}`} className="v32-btn-accent">
-            شروع کنید
+          <a href={splitCtaHref} className="v32-btn-accent">
+            {copy("split.cta", "شروع کنید")}
           </a>
         </div>
       </section>
@@ -205,52 +243,67 @@ export default function V32LandingPage({
         <section className="v32-wrap v32-aud" id="personal">
           <div className="v32-aud-head">
             <div>
-              <h2>مسیر مناسب خود را پیدا کنید</h2>
+              <h2>{copy("audience.title", "مسیر مناسب خود را پیدا کنید")}</h2>
               <p style={{ margin: 0, color: "var(--v32-muted)" }}>
-                هدف هر نفر متفاوت است. ما برای هر مسیر راهکاری داریم.
+                {copy(
+                  "audience.subtitle",
+                  "هدف هر نفر متفاوت است. ما برای هر مسیر راهکاری داریم."
+                )}
               </p>
             </div>
           </div>
           <div className="v32-aud-row">
             <Link
-              href="/courses"
-              className="v32-aud-card"
+              href={copy("audience.card1Link", "/courses")}
+              className="v32-aud-card flex items-center justify-between"
               style={{
                 background:
                   "linear-gradient(180deg,#3a5a8a,#152033)",
               }}
             >
-              <span>مبتدی</span>
+              <span className="flex items-center gap-2">
+                <DynamicIcon name={copy("audience.card1Icon", "GraduationCap")} className="size-4 opacity-80" />
+                {copy("audience.card1", "مبتدی")}
+              </span>
             </Link>
             <Link
-              href="/investment-plans"
-              className="v32-aud-card"
+              href={copy("audience.card2Link", "/investment-plans")}
+              className="v32-aud-card flex items-center justify-between"
               style={{
                 background:
                   "linear-gradient(180deg,#1e3a32,#0d1814)",
               }}
             >
-              <span>معامله‌گر</span>
+              <span className="flex items-center gap-2">
+                <DynamicIcon name={copy("audience.card2Icon", "TrendingUp")} className="size-4 opacity-80" />
+                {copy("audience.card2", "معامله‌گر")}
+              </span>
             </Link>
             <Link
-              href="/investment-plans"
-              className="v32-aud-card"
+              href={copy("audience.card3Link", "/investment-plans")}
+              className="v32-aud-card flex items-center justify-between"
               style={{
                 background:
                   "linear-gradient(180deg,#4a3a28,#1a140e)",
               }}
             >
-              <span>سبد و نهاد</span>
+              <span className="flex items-center gap-2">
+                <DynamicIcon name={copy("audience.card3Icon", "PieChart")} className="size-4 opacity-80" />
+                {copy("audience.card3", "سبد و نهاد")}
+              </span>
             </Link>
             <Link
-              href="/business-consulting"
-              className="v32-aud-card"
+              href={copy("audience.card4Link", "/business-consulting")}
+              className="v32-aud-card flex items-center justify-between"
               style={{
                 background:
                   "linear-gradient(180deg,#2a3550,#10141c)",
               }}
             >
-              <span>مشاوره</span>
+              <span className="flex items-center gap-2">
+                <DynamicIcon name={copy("audience.card4Icon", "Briefcase")} className="size-4 opacity-80" />
+                {copy("audience.card4", "مشاوره")}
+              </span>
             </Link>
           </div>
         </section>

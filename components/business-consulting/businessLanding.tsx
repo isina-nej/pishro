@@ -15,19 +15,22 @@ import {
 } from "@/components/ui/drawer";
 import { BusinessConsulting } from "@prisma/client";
 import { contactInfo } from "@/lib/constants/contact";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 
 interface BusinessLandingProps {
   businessConsultingData: BusinessConsulting;
 }
 
 const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
+  const copy = usePublicCopy("business");
+
   return (
     <div className="relative w-full h-screen overflow-hidden isolate flex items-center justify-start text-center px-4 pt-20 md:pt-0 -mb-32">
       {/* 📷 Background Image */}
       <Image
         src={
           businessConsultingData.image ||
-          "/images/investment-consulting/landing.jpg"
+          copy("hero.image", "/images/investment-consulting/landing.jpg")
         }
         alt="مشاوره کسب و کار"
         fill
@@ -41,10 +44,10 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
       {/* 📝 Main Content */}
       <div className="rtl relative z-20 flex max-w-2xl flex-col items-center gap-y-8 rounded-[2.25rem] border border-white/20 bg-black/40 px-6 py-8 text-white shadow-2xl shadow-black/30 sm:px-10 sm:py-10">
         <h3 className="text-4xl lg:text-5xl font-bold leading-tight text-white">
-          {businessConsultingData.title}
+          {businessConsultingData.title || copy("hero.title", "مشاوره کسب‌وکار")}
         </h3>
         <p className="text-white/85 text-base lg:text-lg max-w-2xl mx-auto leading-loose text-justify lg:text-right">
-          {businessConsultingData.description}
+          {businessConsultingData.description || copy("hero.description", "")}
         </p>
 
         {/* 🎯 Call-to-Actions */}
@@ -54,7 +57,7 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
             <DrawerTrigger asChild>
               <button className="group relative flex w-full items-center justify-center gap-2 rounded-full border border-border/60 bg-card/90 px-6 py-3 font-bold !text-[#112b3a] shadow-xl transition-all hover:-translate-y-0.5 hover:bg-primary sm:w-auto">
                 <PhoneCall className="h-5 w-5 text-primary transition-transform group-hover:scale-110" />
-                رزرو مشاوره حضوری
+                {copy("inPerson.button", "رزرو مشاوره حضوری")}
               </button>
             </DrawerTrigger>
             <DrawerContent className="p-6 rounded-t-2xl border-t bg-card dark:bg-cardBg shadow-2xl">

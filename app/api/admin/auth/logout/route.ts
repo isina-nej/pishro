@@ -6,6 +6,7 @@
  */
 
 import { NextResponse } from 'next/server';
+import { clearAdminAccessCookie } from '@/lib/admin-cookie';
 
 export async function POST() {
   try {
@@ -16,14 +17,8 @@ export async function POST() {
       { status: 200 }
     );
 
-    // Clear authentication cookies
-    response.cookies.set('admin_access_token', '', {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 0,
-      path: '/',
-    });
+    // Clear authentication cookies (flags must match the set-cookie)
+    clearAdminAccessCookie(response);
 
     response.cookies.set('admin_refresh_token', '', {
       httpOnly: true,

@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import { GraduationCap, Users, BookOpen, TrendingUp } from "lucide-react";
 import Image from "next/image";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
+import { DynamicIcon } from "@/components/site/DynamicIcon";
 
 interface CoursesHeroProps {
   stats: {
@@ -14,12 +16,14 @@ interface CoursesHeroProps {
 }
 
 export const CoursesHero = ({ stats }: CoursesHeroProps) => {
+  const copy = usePublicCopy("courses");
+
   return (
     <section className="relative overflow-hidden pb-32 pt-36 text-foreground">
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image
-          src="/images/courses/landing.jpg"
+          src={copy("hero.image", "/images/courses/landing.jpg")}
           alt="courses-background"
           fill
           className="object-cover"
@@ -31,38 +35,64 @@ export const CoursesHero = ({ stats }: CoursesHeroProps) => {
       <div className="container-xl relative z-10 flex flex-col gap-10">
         <div className="max-w-3xl space-y-6 rounded-[2rem] border border-white/20 bg-black/40 p-7 shadow-2xl shadow-black/30 sm:p-9">
           <span className="inline-flex items-center rounded-full border border-white/25 bg-white/10 px-4 py-1 text-sm font-medium text-white">
-            دوره‌های آموزشی پیشرو
+            {copy("hero.badge", "دوره‌های آموزشی پیشرو")}
           </span>
           <h1 className="text-4xl font-extrabold !leading-tight text-white md:text-5xl">
-            مجموعه کامل دوره‌های تخصصی سرمایه‌ گذاری و بازارهای مالی
+            {copy("hero.title", "مجموعه کامل دوره‌های تخصصی سرمایه‌ گذاری و بازارهای مالی")}
           </h1>
-          <p className="text-base text-white/80 md:text-lg">
-            از صفر تا صد آموزش‌های کاربردی و حرفه‌ای در زمینه سرمایه‌ گذاری،
-            تحلیل بازار و مدیریت مالی که توسط اساتید مجرب پیشرو تهیه شده‌اند.
+          <p className="text-base text-white/80 md:text-lg leading-relaxed">
+            {copy(
+              "hero.description",
+              "از صفر تا صد آموزش‌های کاربردی و حرفه‌ای در زمینه سرمایه‌ گذاری، تحلیل بازار و مدیریت مالی که توسط اساتید مجرب پیشرو تهیه شده‌اند."
+            )}
           </p>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
             {
-              label: "دوره آموزشی",
+              label: copy("hero.stat1", "دوره آموزشی"),
               value: stats.totalCourses,
-              icon: <GraduationCap className="h-5 w-5" />,
+              icon: (
+                <DynamicIcon
+                  name={copy("hero.stat1Icon", "GraduationCap")}
+                  fallback={GraduationCap}
+                  className="h-5 w-5"
+                />
+              ),
             },
             {
-              label: "دانشجوی فعال",
+              label: copy("hero.stat2", "دانشجوی فعال"),
               value: stats.totalStudents,
-              icon: <Users className="h-5 w-5" />,
+              icon: (
+                <DynamicIcon
+                  name={copy("hero.stat2Icon", "Users")}
+                  fallback={Users}
+                  className="h-5 w-5"
+                />
+              ),
             },
             {
-              label: "دسته‌بندی",
+              label: copy("hero.stat3", "دسته‌بندی"),
               value: stats.totalCategories,
-              icon: <BookOpen className="h-5 w-5" />,
+              icon: (
+                <DynamicIcon
+                  name={copy("hero.stat3Icon", "BookOpen")}
+                  fallback={BookOpen}
+                  className="h-5 w-5"
+                />
+              ),
             },
             {
-              label: "میانگین رضایت",
+              label: copy("hero.stat4", "میانگین رضایت"),
               value: stats.avgRating.toFixed(1),
-              icon: <TrendingUp className="h-5 w-5" />,
+              icon: (
+                <DynamicIcon
+                  name={copy("hero.stat4Icon", "TrendingUp")}
+                  fallback={TrendingUp}
+                  className="h-5 w-5"
+                />
+              ),
             },
           ].map((item) => (
             <motion.div

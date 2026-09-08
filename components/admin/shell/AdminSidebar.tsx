@@ -21,7 +21,6 @@ import {
   LayoutTemplate,
   MessageSquareQuote,
   MessageCircle,
-  Users,
   UsersRound,
   X,
   Palette,
@@ -49,13 +48,14 @@ export interface NavSection {
 
 export const navSections: NavSection[] = [
   {
+    label: 'میز کار',
     items: [
       { href: '/admin/dashboard', label: 'داشبورد', icon: Home, key: 'dashboard', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
-      { href: '/admin/guide', label: 'آموزش پنل', icon: CircleHelp, key: 'guide', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
+      { href: '/admin/landing', label: 'استودیو CMS و صفحات', icon: LayoutTemplate, key: 'landing', roles: ['ADMIN', 'MODERATOR'] },
     ],
   },
   {
-    label: 'CRM',
+    label: 'مدیریت ارتباط با مشتری (CRM)',
     items: [
       { href: '/admin/crm/customers', label: 'مشتریان', icon: UsersRound, key: 'crm-customers', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
       { href: '/admin/crm/leads', label: 'سرنخ‌ها', icon: Contact, key: 'crm-leads', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
@@ -66,25 +66,23 @@ export const navSections: NavSection[] = [
     ],
   },
   {
-    label: 'محتوا',
+    label: 'آموزش، سرمایه‌گذاری و محتوا',
     items: [
-      { href: '/admin/crypto-prices', label: 'قیمت رمزارزها', icon: Bitcoin, key: 'crypto-prices', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
-      { href: '/admin/block-news', label: 'اخبار', icon: FileText, key: 'block-news', roles: ['ADMIN', 'MODERATOR'] },
-      { href: '/admin/library', label: 'کتابخانه', icon: BookOpen, key: 'library', roles: ['ADMIN', 'MODERATOR'] },
       { href: '/admin/courses', label: 'دوره‌ها', icon: GraduationCap, key: 'courses', roles: ['ADMIN', 'MODERATOR'] },
       { href: '/admin/investment-funds', label: 'صندوق‌های سرمایه‌گذاری', icon: TrendingUp, key: 'investment-funds', roles: ['ADMIN', 'MODERATOR'] },
-      { href: '/admin/landing', label: 'لندینگ / CMS', icon: LayoutTemplate, key: 'landing', roles: ['ADMIN', 'MODERATOR'] },
       { href: '/admin/comments', label: 'نظرات کاربران', icon: MessageSquareQuote, key: 'comments', roles: ['ADMIN', 'MODERATOR'] },
+      { href: '/admin/library', label: 'کتابخانه دیجیتال', icon: BookOpen, key: 'library', roles: ['ADMIN', 'MODERATOR'] },
+      { href: '/admin/block-news', label: 'اخبار و مقالات', icon: FileText, key: 'block-news', roles: ['ADMIN', 'MODERATOR'] },
+      { href: '/admin/crypto-prices', label: 'قیمت رمزارزها', icon: Bitcoin, key: 'crypto-prices', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
     ],
   },
   {
+    label: 'سیستم و تنظیمات',
     items: [
-      { href: '/admin/crm/customers', label: 'کاربران سایت', icon: Users, key: 'users', roles: ['ADMIN', 'MODERATOR'] },
-      { href: '/admin/reports', label: 'گزارش‌ها', icon: BarChart3, key: 'reports', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
-      // فقط ADMIN: گزارش نشان می‌دهد چه کسی چه کرده، و روت /api/admin/logs هم
-      // همین محدودیت را دارد — منو نباید چیزی را نشان دهد که API رد می‌کند.
-      { href: '/admin/logs', label: 'گزارش فعالیت‌ها', icon: ScrollText, key: 'logs', roles: ['ADMIN'] },
-      { href: '/admin/settings', label: 'ظاهر سایت', icon: Palette, key: 'settings', roles: ['ADMIN'] },
+      { href: '/admin/reports', label: 'گزارش‌ها و آمار', icon: BarChart3, key: 'reports', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
+      { href: '/admin/logs', label: 'گزارش فعالیت‌ها (لاگ)', icon: ScrollText, key: 'logs', roles: ['ADMIN'] },
+      { href: '/admin/settings', label: 'ظاهر و قالب سایت', icon: Palette, key: 'settings', roles: ['ADMIN'] },
+      { href: '/admin/guide', label: 'راهنمای پنل', icon: CircleHelp, key: 'guide', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
     ],
   },
 ];

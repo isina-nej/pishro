@@ -78,6 +78,12 @@ export async function POST(req: NextRequest) {
       return addCorsHeaders(response, origin);
     }
 
+    // Null-hash guard: bcrypt.compare throws on null and leaks via 500.
+    if (!user.passwordHash) {
+      const response = unauthorizedResponse("شماره تلفن یا رمز عبور اشتباه است");
+      return addCorsHeaders(response, origin);
+    }
+
     // Verify password
     const isValidPassword = await bcrypt.compare(password, user.passwordHash);
     if (!isValidPassword) {

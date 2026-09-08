@@ -50,8 +50,9 @@ export function useAdminAuth(): UseAdminAuthResult {
         return data.user as AdminUser;
       } catch (error) {
         console.error('Error fetching admin user:', error);
-        // Clears the cookie too, so /admin/login is actually reachable.
-        clearAdminSession();
+        // Clears the session (server clears the httpOnly cookie), so
+        // /admin/login is actually reachable.
+        void clearAdminSession();
         router.push('/admin/login');
         return null;
       }
@@ -71,7 +72,7 @@ export function useAdminAuth(): UseAdminAuthResult {
       await api.post('/api/admin/auth/logout');
     },
     onSettled: () => {
-      clearAdminSession();
+      void clearAdminSession();
       queryClient.setQueryData(adminAuthKeys.me(), null);
       router.push('/admin/login');
     },

@@ -38,10 +38,12 @@ export function addCorsHeaders(
   response: NextResponse,
   origin?: string | null
 ): NextResponse {
-  const isAllowedOrigin = origin && ALLOWED_ORIGINS.includes(origin);
-  const allowedOrigin = isAllowedOrigin ? origin : ALLOWED_ORIGINS[0];
+  // Unknown origin: no ACAO, no credentials — same fail-closed rule as lib/cors.ts.
+  if (!origin || !ALLOWED_ORIGINS.includes(origin)) {
+    return response;
+  }
 
-  response.headers.set("Access-Control-Allow-Origin", allowedOrigin);
+  response.headers.set("Access-Control-Allow-Origin", origin);
   response.headers.set("Access-Control-Allow-Credentials", "true");
   response.headers.set(
     "Access-Control-Allow-Methods",

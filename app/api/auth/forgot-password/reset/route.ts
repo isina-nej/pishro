@@ -2,6 +2,11 @@
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import {
+  checkOtpVerifyAllowed,
+  clearOtpFailures,
+  recordOtpFailure,
+} from "@/lib/otp";
+import {
   successResponse,
   validationError,
   errorResponse,
@@ -40,10 +45,21 @@ export async function POST(req: Request) {
       );
     }
 
-    // بررسی OTP
-    const otp = await prisma.otp.findFirst({ where: { phone } });
+    const gate = checkOtpVerifyAllowed(`reset:${phone}`);
+    if (!gate.allowed) {
+      return errorResponse(
+        "تلاش‌های ناموفق زیاد بود. لطفاً بعداً تلاش کنید",
+        ErrorCodes.OTP_INVALID,
+        { retryAfterMs: gate.retryAfterMs },
+        429
+      );
+    }
+
+    // بررسی OTP — only reset-purpose codes (signup codes never validate here)
+    const otp = await prisma.otp.findFirst({ where: { phone, purpose: "reset" } });
 
     if (!otp || otp.code !== code) {
+      recordOtpFailure(`reset:${phone}`);
       return validationError(
         { code: "کد تایید نامعتبر است" },
         "کد تایید اشتباه است"
@@ -51,8 +67,10 @@ export async function POST(req: Request) {
     }
 
     if (otp.expiresAt < new Date()) {
+      recordOtpFailure(`reset:${phone}`);
       return errorResponse("کد تایید منقضی شده است", ErrorCodes.OTP_EXPIRED);
     }
+    clearOtpFailures(`reset:${phone}`);
 
     // بررسی وجود کاربر
     const user = await prisma.user.findUnique({ where: { phone } });

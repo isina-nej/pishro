@@ -13,23 +13,10 @@ export const api = axios.create({
 // Add request interceptor to include auth token if available
 api.interceptors.request.use(
   (config) => {
-    // Get token from localStorage or cookie (browser environment only)
+    // Bearer comes from localStorage (set at login). The cookie twin is
+    // httpOnly and unreadable from JS — the browser sends it automatically.
     if (typeof window !== 'undefined') {
-      let token: string | undefined;
-      
-      // Try localStorage first (more reliable in browser)
-      const storageToken = localStorage.getItem('admin_access_token');
-      if (storageToken) {
-        token = storageToken;
-      } else {
-        // Fallback to cookie
-        const cookieToken = document.cookie
-          .split('; ')
-          .find(row => row.startsWith('admin_access_token='))
-          ?.split('=')[1];
-        token = cookieToken;
-      }
-      
+      const token = localStorage.getItem('admin_access_token');
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -47,14 +34,22 @@ api.interceptors.request.use(
  * cookie merely *exists* (it does not verify it), so leaving a stale cookie
  * behind while the client considers itself logged out deadlocks the panel
  * between the two routes with no way to reach the logout button.
- * The cookie is deliberately not httpOnly, so the browser can clear it here;
+ * The cookie is httpOnly, so only the server clears it (via /logout); here we
+ * clear localStorage and fire-and-forget the server logout.
  * `admin_refresh_token` is httpOnly and is cleared server-side by /logout.
  */
-export function clearAdminSession() {
+export async function clearAdminSession() {
   if (typeof window === 'undefined') return;
   localStorage.removeItem('admin_access_token');
   localStorage.removeItem('admin_user');
-  document.cookie = 'admin_access_token=; Path=/; Max-Age=0; SameSite=Lax';
+  try {
+    await fetch('/api/admin/auth/logout', {
+      method: 'POST',
+      credentials: 'include',
+    });
+  } catch {
+    // Logout endpoint unreachable — localStorage is already cleared.
+  }
 }
 
 // Add response interceptor for error handling

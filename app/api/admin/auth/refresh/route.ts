@@ -13,6 +13,7 @@ import {
   createAdminAccessToken,
   createAdminRefreshToken,
 } from '@/lib/admin-auth';
+import { setAdminAccessCookie } from '@/lib/admin-cookie';
 
 export async function POST(req: NextRequest) {
   try {
@@ -74,14 +75,8 @@ export async function POST(req: NextRequest) {
       { status: 200 }
     );
 
-    // Update cookies
-    response.cookies.set('admin_access_token', newAccessToken, {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 24 * 60 * 60,
-      path: '/',
-    });
+    // Update cookies (access cookie stays httpOnly — see lib/admin-cookie.ts)
+    setAdminAccessCookie(response, newAccessToken, 24 * 60 * 60);
 
     response.cookies.set('admin_refresh_token', newRefreshToken, {
       httpOnly: true,

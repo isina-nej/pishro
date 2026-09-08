@@ -60,23 +60,23 @@ export async function POST(req: Request) {
     const code = generateOtpCode(6);
     const expiresAt = new Date(Date.now() + 2 * 60 * 1000); // 2 minutes
 
-    // Check if OTP exists for this phone
+    // Check if signup OTP exists for this phone
     const otps = await query<Pick<Otp, "id">>(
-      `SELECT id FROM Otp WHERE phone = ? LIMIT 1`,
+      `SELECT id FROM Otp WHERE phone = ? AND purpose = 'signup' LIMIT 1`,
       [phone]
     );
 
     if (otps && otps.length > 0) {
       // Update existing OTP
       await execute(
-        `UPDATE Otp SET code = ?, expiresAt = ?, createdAt = NOW() WHERE phone = ?`,
+        `UPDATE Otp SET code = ?, expiresAt = ?, createdAt = NOW() WHERE phone = ? AND purpose = 'signup'`,
         [code, expiresAt, phone]
       );
     } else {
       // Create new OTP with ID
       const otpId = randomUUID();
       await execute(
-        `INSERT INTO Otp (id, phone, code, expiresAt, createdAt) VALUES (?, ?, ?, ?, NOW())`,
+        `INSERT INTO Otp (id, phone, purpose, code, expiresAt, createdAt) VALUES (?, ?, 'signup', ?, ?, NOW())`,
         [otpId, phone, code, expiresAt]
       );
     }

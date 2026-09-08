@@ -33,12 +33,18 @@ export function getCorsHeaders(origin?: string | null): HeadersInit {
     "https://teh-1.s3.poshtiban.com",
   ].filter(Boolean) as string[];
 
-  // Check if origin is allowed
-  const isAllowedOrigin = origin && allowedOrigins.includes(origin);
-  const allowOrigin = isAllowedOrigin ? origin : allowedOrigins[0] || "*";
+  // Unknown origin: no ACAO, no credentials — never fall back to a
+  // whitelisted origin, or any site can read credentialed responses.
+  if (!origin || !allowedOrigins.includes(origin)) {
+    return {
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Max-Age": "86400", // 24 hours
+    };
+  }
 
   return {
-    "Access-Control-Allow-Origin": allowOrigin,
+    "Access-Control-Allow-Origin": origin,
     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
     "Access-Control-Allow-Credentials": "true",

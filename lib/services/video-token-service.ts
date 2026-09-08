@@ -3,6 +3,14 @@ import crypto from "crypto";
 import type { StreamToken } from "@/types/video";
 import { getVideoTokenSecret } from "@/lib/env";
 
+/** Constant-time HMAC compare — plain !== leaks prefix timing info. */
+function signaturesEqual(a: string, b: string): boolean {
+  const aBuf = Buffer.from(a);
+  const bBuf = Buffer.from(b);
+  if (aBuf.length !== bBuf.length) return false;
+  return crypto.timingSafeEqual(aBuf, bBuf);
+}
+
 function getTokenSecret() {
   return getVideoTokenSecret();
 }
@@ -80,7 +88,7 @@ export function verifyStreamToken(
       .update(payloadBase64)
       .digest("base64url");
 
-    if (signature !== expectedSignature) {
+    if (!signaturesEqual(signature, expectedSignature)) {
       return { valid: false, error: "امضای توکن نامعتبر است" };
     }
 
@@ -165,7 +173,7 @@ export function verifySegmentToken(
       .update(payloadBase64)
       .digest("base64url");
 
-    if (signature !== expectedSignature) {
+    if (!signaturesEqual(signature, expectedSignature)) {
       return { valid: false, error: "امضای توکن نامعتبر است" };
     }
 
@@ -194,6 +202,9 @@ export function verifySegmentToken(
 /**
  * تولید توکن یکبار مصرف برای دانلود
  * این توکن فقط یک بار قابل استفاده است
+ *
+ * ponytail: replay tracked in-process (Set) — multi-instance bypass possible.
+ * Nonce in payload keeps window to 60s; upgrade to Redis SETNX when scaled out.
  */
 const usedTokens = new Set<string>();
 
@@ -254,7 +265,7 @@ export function verifyAndConsumeDownloadToken(
       .update(payloadBase64)
       .digest("base64url");
 
-    if (signature !== expectedSignature) {
+    if (!signaturesEqual(signature, expectedSignature)) {
       return { valid: false, error: "امضای توکن نامعتبر است" };
     }
 

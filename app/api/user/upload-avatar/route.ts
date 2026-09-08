@@ -1,6 +1,8 @@
 import { NextRequest } from "next/server";
+import { randomBytes } from "crypto";
 import { auth } from "@/auth";
 import { saveFileToStorage } from "@/lib/services/storage-adapter";
+import { detectImageType } from "@/lib/upload-validation";
 import {
   successResponse,
   unauthorizedResponse,
@@ -51,17 +53,25 @@ export async function POST(req: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // ایجاد نام منحصر به فرد برای فایل
+    // Magic-byte check: blocks svg/type-spoof — content-type alone is spoofable.
+    const detected = detectImageType(buffer);
+    if (!detected) {
+      return validationError(
+        { avatar: "فقط فرمت‌های JPG، PNG و WebP مجاز هستند" },
+        "فایل تصویر معتبر نیست"
+      );
+    }
+
+    // ایجاد نام منحصر به فرد برای فایل — extension از magic bytes، نه نام فایل.
     const timestamp = Date.now();
-    const randomString = Math.random().toString(36).substring(2, 15);
-    const extension = file.name.split(".").pop() || "jpg";
-    const filename = `${session.user.id}_${timestamp}_${randomString}.${extension}`;
+    const randomString = randomBytes(8).toString("hex");
+    const filename = `${session.user.id}_${timestamp}_${randomString}.${detected.ext}`;
 
     // ذخیره در storage (ابری یا محلی، بسته به STORAGE_DRIVER)
     const avatarUrl = await saveFileToStorage(
       buffer,
       `avatars/${filename}`,
-      file.type
+      detected.mime
     );
 
     // بروزرسانی آواتار کاربر در دیتابیس

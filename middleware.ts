@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { jwtVerify } from 'jose';
 import { getCorsHeaders } from '@/lib/cors';
 
 const publicRoutes = ['/admin/login'];
@@ -13,6 +14,28 @@ function getAdminTokenFromRequest(request: NextRequest): string | null {
   }
 
   return null;
+}
+
+/**
+ * Edge-light signature check (jose, no Node crypto import).
+ * Returns true only for a non-expired access-type token. Any error —
+ * missing secret, malformed token, wrong type — fails closed to false.
+ */
+async function hasValidAdminToken(token: string): Promise<boolean> {
+  try {
+    const secret = process.env.ADMIN_JWT_SECRET || process.env.NEXTAUTH_SECRET;
+    if (!secret) return false;
+    const { payload } = await jwtVerify(
+      token,
+      new TextEncoder().encode(secret)
+    );
+    return (
+      (payload as { type?: string }).type === 'access' &&
+      typeof (payload as { id?: unknown }).id === 'string'
+    );
+  } catch {
+    return false;
+  }
 }
 
 function withPathname(request: NextRequest): NextResponse {
@@ -42,14 +65,24 @@ export async function middleware(request: NextRequest) {
 
   if (pathname === '/admin') {
     const token = getAdminTokenFromRequest(request);
-    const target = token ? '/admin/dashboard' : '/admin/login';
+    const target =
+      token && (await hasValidAdminToken(token))
+        ? '/admin/dashboard'
+        : '/admin/login';
     return NextResponse.redirect(new URL(target, request.url));
   }
 
   if (publicRoutes.some(route => pathname === route)) {
     const token = getAdminTokenFromRequest(request);
-    if (token) {
+    if (token && (await hasValidAdminToken(token))) {
       return NextResponse.redirect(new URL('/admin/dashboard', request.url));
+    }
+    // Stale/forged cookie must not bounce the login page — clear it so the
+    // form is reachable instead of deadlocking between the two routes.
+    if (token) {
+      const res = withPathname(request);
+      res.cookies.set('admin_access_token', '', { maxAge: 0, path: '/' });
+      return res;
     }
     return withPathname(request);
   }
@@ -62,13 +95,18 @@ export async function middleware(request: NextRequest) {
 
   if (isProtectedRoute) {
     const token = getAdminTokenFromRequest(request);
+    const valid = token ? await hasValidAdminToken(token) : false;
 
-    if (!token) {
+    if (!valid) {
       // Admin UI pages: hard redirect so unauthenticated visitors never render the shell.
       if (pathname.startsWith('/admin/') && !pathname.startsWith('/api')) {
         const loginUrl = new URL('/admin/login', request.url);
         loginUrl.searchParams.set('next', pathname);
-        return NextResponse.redirect(loginUrl);
+        const res = NextResponse.redirect(loginUrl);
+        if (token) {
+          res.cookies.set('admin_access_token', '', { maxAge: 0, path: '/' });
+        }
+        return res;
       }
 
       return NextResponse.json(

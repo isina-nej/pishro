@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
 import { AdminLoadingState, AdminPageShell } from '@/components/admin/AdminPageShell';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -50,17 +50,45 @@ export default function LandingBusinessCmsPage() {
 
   return (
     <AdminPageShell
-      title="مشاوره کسب‌وکار"
-      description="متن‌ها، تصویر و راه‌های تماس"
+      title="مشاوره کسب‌وکار — ساختار و راه‌های تماس"
+      description="تنظیمات اطلاعات تماس، آیدی تلگرام و متن‌های تخصصی مشاوره"
       actions={
-        <Button variant="outline" asChild>
-          <Link href="/admin/landing">
-            <ArrowRight className="size-4" />
-            بازگشت
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button size="sm" asChild className="gap-1.5 text-xs font-semibold">
+            <Link href="/admin/landing">
+              <Sparkles className="size-3.5" />
+              استودیو CMS صفحات
+            </Link>
+          </Button>
+          <Button variant="outline" size="sm" asChild>
+            <Link href="/admin/landing">
+              <ArrowRight className="size-4" />
+              بازگشت
+            </Link>
+          </Button>
+        </div>
       }
     >
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-primary/20 bg-primary/5 p-4 text-xs">
+        <div className="flex items-center gap-2.5">
+          <Sparkles className="size-4 text-primary shrink-0" />
+          <div>
+            <span className="font-bold text-foreground">
+              ویرایش زنده متون و تصویر صفحه مشاوره:
+            </span>
+            <p className="mt-0.5 text-muted-foreground">
+              در استودیو CMS می‌توانید تصویر هیرو و کلیه متون مشاوره را با پیش‌نمایش زنده ویرایش کنید.
+            </p>
+          </div>
+        </div>
+        <Button size="sm" variant="outline" asChild className="shrink-0 gap-1 text-xs">
+          <Link href="/admin/landing">
+            استودیو CMS
+            <ArrowLeft className="size-3.5" />
+          </Link>
+        </Button>
+      </div>
+
       <Card className="space-y-4 p-4">
         <TextField label="عنوان" value={str(form.title)} onChange={(v) => set('title', v)} />
         <TextField label="توضیحات" value={str(form.description)} onChange={(v) => set('description', v)} multiline />

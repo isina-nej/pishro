@@ -7,6 +7,7 @@ import ReactQueryProvider from "@/lib/providers/ReactQueryProvider";
 import ThemeProvider from "@/lib/providers/ThemeProvider";
 import SitePaletteApplier from "@/components/theme/SitePaletteApplier";
 import {
+  getPublicContent,
   getPublicSiteChrome,
   getPublicSiteTheme,
 } from "@/lib/services/settings-service";
@@ -22,6 +23,7 @@ import BootSplashDismiss from "@/components/loading/BootSplashDismiss";
 import ServiceWorkerRegister from "@/components/pwa/ServiceWorkerRegister";
 import { SoundProvider } from "@/components/sound/SoundProvider";
 import GlobalUiEffects from "@/components/site/GlobalUiEffects";
+import { PublicContentProvider } from "@/components/site/PublicContentProvider";
 
 function escapeHtml(value: string) {
   return value
@@ -111,9 +113,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [siteTheme, chrome] = await Promise.all([
+  const [siteTheme, chrome, publicContent] = await Promise.all([
     getPublicSiteTheme(),
     getPublicSiteChrome(),
+    getPublicContent(),
   ]);
   const splashLogo = resolveAssetUrl(chrome.logoUrl, DEFAULT_LOGO_URL);
 
@@ -159,20 +162,22 @@ export default async function RootLayout({
             dark={siteTheme.dark}
           />
           <ReactQueryProvider>
-            <SoundProvider>
-              {children}
-              <GlobalUiEffects />
-              <Toaster
-                position="top-center"
-                toastOptions={{
-                  duration: 3000,
-                  style: {
-                    fontSize: "14px",
-                    direction: "rtl",
-                  },
-                }}
-              />
-            </SoundProvider>
+            <PublicContentProvider content={publicContent}>
+              <SoundProvider>
+                {children}
+                <GlobalUiEffects />
+                <Toaster
+                  position="top-center"
+                  toastOptions={{
+                    duration: 3000,
+                    style: {
+                      fontSize: "14px",
+                      direction: "rtl",
+                    },
+                  }}
+                />
+              </SoundProvider>
+            </PublicContentProvider>
           </ReactQueryProvider>
         </ThemeProvider>
       </body>

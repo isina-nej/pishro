@@ -11,6 +11,7 @@ import {
 } from "@/lib/validations/newsletter";
 import { subscribeToNewsletter } from "@/lib/services/newsletter";
 import toast from "react-hot-toast";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 
 /** سبز زیتونی هدف طراحی */
 const ACCENT = "#6B7460";
@@ -19,6 +20,7 @@ const CARD_BG = "#0C1410";
 const CARD_BG_MID = "#101810";
 
 const NewsClub = () => {
+  const copy = usePublicCopy("home-sections");
   const {
     register,
     handleSubmit,
@@ -30,18 +32,18 @@ const NewsClub = () => {
   });
 
   const onSubmit = async (data: NewsletterInput) => {
-    const toastId = toast.loading("در حال ارسال اطلاعات...");
+    const toastId = toast.loading(copy("club.sending", "در حال ارسال اطلاعات..."));
     try {
       const res = await subscribeToNewsletter(data);
       if (res.success) {
-        toast.success("عضویت شما با موفقیت ثبت شد ✅", { id: toastId });
+        toast.success(copy("club.success", "عضویت شما با موفقیت ثبت شد ✅"), { id: toastId });
         reset();
       } else {
-        toast.error("خطا در ثبت عضویت ❌", { id: toastId });
+        toast.error(copy("club.error", "خطا در ثبت عضویت ❌"), { id: toastId });
       }
     } catch (err) {
       console.error(err);
-      toast.error("خطا در برقراری ارتباط با سرور ❌", { id: toastId });
+      toast.error(copy("club.serverError", "خطا در برقراری ارتباط با سرور ❌"), { id: toastId });
     }
   };
 
@@ -66,7 +68,7 @@ const NewsClub = () => {
         <div className="order-2 mt-6 flex w-full items-center justify-center md:order-1 md:mt-0 md:h-full md:flex-1 md:justify-start md:-translate-y-8">
           <div className="relative aspect-[1.3] w-full max-w-[400px] md:aspect-[661/504] md:max-w-full">
             <Image
-              src={"/images/home/news-club/news-club.svg"}
+              src={copy("club.image", "/images/home/news-club/news-club.svg")}
               fill
               alt="دکور"
               className="object-cover"
@@ -85,22 +87,22 @@ const NewsClub = () => {
                   color: ACCENT,
                 }}
               >
-                همیشه یک گام جلوتر
+                {copy("club.eyebrow", "همیشه یک گام جلوتر")}
               </span>
               <h4 className="flex justify-center gap-2 text-5xl font-black leading-none tracking-tight text-white sm:text-6xl md:justify-start md:gap-3 md:text-start lg:text-7xl">
-                <span className="inline-block">باشگاه</span>
+                <span className="inline-block">{copy("club.title", "باشگاه")}</span>
                 <span
                   className="-translate-y-1 inline-block"
                   style={{ color: ACCENT }}
                 >
-                  پیشرو
+                  {copy("club.titleAccent", "پیشرو")}
                 </span>
               </h4>
               <p className="mt-4 pr-1 text-center text-sm leading-relaxed text-white/75 sm:text-base md:mt-6 md:pl-[60px] md:text-right md:text-lg xl:pl-[128px]">
-                با عضویت در باشگاه خبری پیشرو، از تازه‌ترین مقالات آموزشی، نکات
-                تخصصی و تحلیل‌های روز دنیای دیجیتال باخبر شوید و همیشه یک گام
-                جلوتر از رقبا بمانید. جدیدترین مطالب مستقیماً در تلفن همراه شما
-                ارسال خواهد شد.
+                {copy(
+                  "club.description",
+                  "با عضویت در باشگاه خبری پیشرو، از تازه‌ترین مقالات آموزشی، نکات تخصصی و تحلیل‌های روز دنیای دیجیتال باخبر شوید و همیشه یک گام جلوتر از رقبا بمانید. جدیدترین مطالب مستقیماً در تلفن همراه شما ارسال خواهد شد."
+                )}
               </p>
             </div>
             <form
@@ -111,7 +113,7 @@ const NewsClub = () => {
                 <Input
                   {...register("phone")}
                   className="ltr ml-0 h-10 max-w-[100%] rounded-full border-white/15 bg-black/25 !text-base !text-white shadow-inner backdrop-blur-xl placeholder:text-base placeholder:text-white/45 sm:ml-2 sm:h-12 sm:max-w-[290px] sm:!text-lg sm:placeholder:text-lg"
-                  placeholder="09115829721"
+                  placeholder={copy("club.phonePlaceholder", "09115829721")}
                 />
                 <Button
                   type="submit"
@@ -121,7 +123,7 @@ const NewsClub = () => {
                     color: "#12140F",
                   }}
                 >
-                  عضویت
+                  {copy("club.submit", "عضویت")}
                 </Button>
               </div>
               {errors.phone && (

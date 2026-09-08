@@ -19,7 +19,7 @@ const MIME_TYPES: Record<string, string> = {
   '.png': 'image/png',
   '.gif': 'image/gif',
   '.webp': 'image/webp',
-  '.svg': 'image/svg+xml',
+  // '.svg' removed: stored SVG served as image/svg+xml executes inline scripts.
   '.avif': 'image/avif',
   '.mp4': 'video/mp4',
   '.webm': 'video/webm',
@@ -156,6 +156,9 @@ export async function GET(req: NextRequest) {
         'Cache-Control': cacheControl,
         ETag: etag,
         'Accept-Ranges': 'bytes',
+        // Served bytes are user uploads — never let the browser sniff/execute them.
+        'X-Content-Type-Options': 'nosniff',
+        'Content-Disposition': 'inline',
       },
     });
   } catch {

@@ -88,10 +88,13 @@ model TempUser {
 
 model Otp {
   id        String    @id @default(cuid())
-  phone     String    @unique
+  phone     String
+  purpose   String    @default("signup")
   code      String
   expiresAt DateTime
   createdAt DateTime? @default(now())
+
+  @@unique([phone, purpose])
 }
 
 model Course {

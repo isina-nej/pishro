@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import { Newspaper, Star, Eye, TrendingUp } from "lucide-react";
 import Image from "next/image";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
+import { DynamicIcon } from "@/components/site/DynamicIcon";
 
 interface NewsHeroProps {
   stats: {
@@ -13,30 +15,36 @@ interface NewsHeroProps {
   };
 }
 
-const statsData = [
-  {
-    label: "خبر منتشر شده",
-    value: "totalNews",
-    icon: <Newspaper className="h-4 w-4" />,
-  },
-  {
-    label: "اخبار ویژه",
-    value: "featured",
-    icon: <Star className="h-4 w-4" />,
-  },
-  {
-    label: "انتشار این ماه",
-    value: "thisMonth",
-    icon: <TrendingUp className="h-4 w-4" />,
-  },
-  {
-    label: "میانگین بازدید",
-    value: "avgViews",
-    icon: <Eye className="h-4 w-4" />,
-  },
-];
-
 export const NewsHero = ({ stats }: NewsHeroProps) => {
+  const copy = usePublicCopy("news");
+
+  const statsData = [
+    {
+      label: copy("hero.stat1", "خبر منتشر شده"),
+      value: "totalNews",
+      iconName: copy("hero.stat1Icon", "FileText"),
+      fallback: Newspaper,
+    },
+    {
+      label: copy("hero.stat2", "اخبار ویژه"),
+      value: "featured",
+      iconName: copy("hero.stat2Icon", "Star"),
+      fallback: Star,
+    },
+    {
+      label: copy("hero.stat3", "انتشار این ماه"),
+      value: "thisMonth",
+      iconName: copy("hero.stat3Icon", "TrendingUp"),
+      fallback: TrendingUp,
+    },
+    {
+      label: copy("hero.stat4", "میانگین بازدید"),
+      value: "avgViews",
+      iconName: copy("hero.stat4Icon", "Eye"),
+      fallback: Eye,
+    },
+  ];
+
   const getStatValue = (key: string) => {
     const value = stats[key as keyof typeof stats];
     return Number.isFinite(value) ? value : 0;
@@ -46,7 +54,7 @@ export const NewsHero = ({ stats }: NewsHeroProps) => {
     <section className="relative overflow-hidden pb-20 pt-24 text-foreground sm:pb-24 sm:pt-28">
       <div className="absolute inset-0">
         <Image
-          src="/images/news/header.jpg"
+          src={copy("hero.image", "/images/news/header.jpg")}
           alt="news-background"
           fill
           className="object-cover"
@@ -64,17 +72,20 @@ export const NewsHero = ({ stats }: NewsHeroProps) => {
         >
           <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-medium text-white">
             <span className="h-1.5 w-1.5 rounded-full bg-white" />
-            اخبار و رویدادهای پیشرو
+            {copy("hero.badge", "اخبار و رویدادهای پیشرو")}
           </span>
 
           <h1 className="text-3xl font-black leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
-            به‌روزترین مقالات
+            {copy("hero.title", "به‌روزترین مقالات")}
             <br />
-            دنیای سرمایه‌گذاری
+            {copy("hero.titleSecond", "دنیای سرمایه‌گذاری")}
           </h1>
 
           <p className="max-w-xl text-sm leading-relaxed text-white/75 sm:text-base">
-            تازه‌ترین اخبار و تحلیل‌های بازار سرمایه — اسکرول کنید و ادامه مطالب را ببینید.
+            {copy(
+              "hero.description",
+              "تازه‌ترین اخبار و تحلیل‌های بازار سرمایه — اسکرول کنید و ادامه مطالب را ببینید."
+            )}
           </p>
         </motion.div>
 
@@ -94,7 +105,7 @@ export const NewsHero = ({ stats }: NewsHeroProps) => {
                   {getStatValue(item.value).toLocaleString("fa-IR")}
                 </span>
                 <span className="rounded-lg bg-white/10 p-1.5 text-white/90">
-                  {item.icon}
+                  <DynamicIcon name={item.iconName} fallback={item.fallback} className="h-4 w-4" />
                 </span>
               </div>
               <span className="text-[11px] font-medium text-white/70">

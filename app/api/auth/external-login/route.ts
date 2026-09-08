@@ -95,6 +95,11 @@ export async function POST(req: Request) {
       return errorLoginResponse("شماره تلفن یا رمز عبور اشتباه است", 401);
     }
 
+    // Null-hash guard: bcrypt.compare throws on null and leaks via 500.
+    if (!user.passwordHash) {
+      return errorLoginResponse("شماره تلفن یا رمز عبور اشتباه است", 401);
+    }
+
     // Verify password
     const isValidPassword = await bcrypt.compare(password, user.passwordHash);
     if (!isValidPassword) {
