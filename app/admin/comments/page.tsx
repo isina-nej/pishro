@@ -10,6 +10,13 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
 import {
   uploadCommentAvatar,
@@ -202,17 +209,21 @@ export default function AdminCommentsPage() {
                 </div>
                 <div className="space-y-2">
                   <Label>نقش / عنوان</Label>
-                  <select
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                  <Select
                     value={editing.userRole}
-                    onChange={(e) =>
-                      setEditing({ ...editing, userRole: e.target.value })
+                    onValueChange={(value) =>
+                      setEditing({ ...editing, userRole: value })
                     }
                   >
-                    <option value="STUDENT">دانشجو / کاربر</option>
-                    <option value="PROFESSIONAL_TRADER">معامله‌گر حرفه‌ای</option>
-                    <option value="INVESTOR">سرمایه‌گذار</option>
-                  </select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="انتخاب نقش" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="STUDENT">دانشجو / کاربر</SelectItem>
+                      <SelectItem value="PROFESSIONAL_TRADER">معامله‌گر حرفه‌ای</SelectItem>
+                      <SelectItem value="INVESTOR">سرمایه‌گذار</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 

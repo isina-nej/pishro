@@ -73,7 +73,7 @@ const PayInfoForm = forwardRef((props, ref) => {
     <div className="bg-muted/40 w-full rounded mt-8">
       {/* هدر */}
       <div className="w-full p-5 border-b border-border">
-        <h6 className="font-irsans text-xs text-muted-foreground mb-5 flex items-center">
+        <h6 className="font-yekan text-xs text-muted-foreground mb-5 flex items-center">
           <ProfileIcon className="size-4 stroke-foreground" />
           <span className="mr-3">اطلاعات بانکی</span>
         </h6>

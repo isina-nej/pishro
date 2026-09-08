@@ -142,7 +142,7 @@ export async function verify2FA(token: string, otp: string) {
   }
 }
 
-// Forgot password - request OTP (Internal phone-based system)
+// Forgot password - request OTP (dedicated reset endpoint, separate purpose)
 export interface ForgotPasswordResponse {
   status: "success" | "error";
   message: string;
@@ -153,15 +153,13 @@ export interface ForgotPasswordResponse {
 
 export async function requestPasswordReset(phone: string) {
   try {
-    // Use internal system - phone-based password reset
-    // For now, we'll use the signup endpoint to generate OTP
-    const res = await fetch("/api/auth/signup", {
+    const res = await fetch("/api/auth/forgot-password/request", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ phone, password: "temp" }),
+      body: JSON.stringify({ phone }),
     });
     const data = await res.json();
-    
+
     if (data.status === "success") {
       return {
         status: "success" as const,
@@ -183,112 +181,7 @@ export async function requestPasswordReset(phone: string) {
   }
 }
 
-// Change password with token
-export interface ChangePasswordResponse {
-  data?: null;
-  meta: {
-    status: boolean;
-    message: string;
-    message_code: string;
-  };
-  errors?: Record<string, string[]>;
-}
-
-export async function changePasswordByToken(
-  token: string,
-  otp: string,
-  password: string
-) {
-  try {
-    const res = await fetch("/api/auth/change-password", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token, otp, password }),
-    });
-    const data: ChangePasswordResponse = await res.json();
-    return data;
-  } catch (error) {
-    console.error("Change password error:", error);
-    return {
-      meta: {
-        status: false,
-        message: "خطا در تغییر رمز عبور",
-        message_code: "500-1",
-      },
-    } as ChangePasswordResponse;
-  }
-}
-
-// Logout
-export interface LogoutResponse {
-  data?: null;
-  meta: {
-    status: boolean;
-    message: string;
-    message_code: string;
-  };
-}
-
-export async function logout(token: string) {
-  try {
-    const res = await fetch("/api/auth/logout", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    });
-    const data: LogoutResponse = await res.json();
-    return data;
-  } catch (error) {
-    console.error("Logout error:", error);
-    return {
-      meta: {
-        status: false,
-        message: "خطا در خروج",
-        message_code: "500-1",
-      },
-    } as LogoutResponse;
-  }
-}
-
-// Check token validity
-export interface CheckTokenResponse {
-  data?: {
-    user_name: string;
-    user_id: number;
-    document_block: boolean;
-    is_reseller: boolean;
-    send_block: boolean;
-    name: string;
-  };
-  meta: {
-    status: boolean;
-    message: string;
-    message_code: string;
-  };
-  errors?: Record<string, string[]>;
-}
-
-export async function checkToken(token: string) {
-  try {
-    const res = await fetch("/api/auth/check-token-ippanel", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    });
-    const data: CheckTokenResponse = await res.json();
-    return data;
-  } catch (error) {
-    console.error("Check token error:", error);
-    return {
-      meta: {
-        status: false,
-        message: "خطا در بررسی توکن",
-        message_code: "500-1",
-      },
-    } as CheckTokenResponse;
-  }
-}
+// NOTE: changePasswordByToken / logout(token) / checkToken were dead code
+// (no callers; they targeted the legacy IPPanel token flow, not NextAuth).
+// User logout goes through POST /api/auth/logout + NextAuth signOut
+// (see components/profile/profileAside.tsx). Kept out deliberately.

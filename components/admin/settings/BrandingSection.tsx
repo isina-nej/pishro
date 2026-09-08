@@ -32,19 +32,15 @@ type BrandingSectionProps = {
 };
 
 async function uploadBranding(file: File, kind: "logo" | "favicon" | "og") {
+  const { api } = await import("@/lib/api-client");
   const form = new FormData();
   form.append("file", file);
   form.append("kind", kind);
-  const res = await fetch("/api/admin/settings/upload-branding", {
-    method: "POST",
-    credentials: "include",
-    body: form,
+  // api client attaches the admin Bearer token from localStorage automatically
+  const { data } = await api.post("/api/admin/settings/upload-branding", form, {
+    headers: { "Content-Type": "multipart/form-data" },
   });
-  const json = await res.json();
-  if (!res.ok || json.status !== "success") {
-    throw new Error(json.message || "خطا در آپلود");
-  }
-  return json.data.url as string;
+  return data.data.url as string;
 }
 
 function AssetRow({

@@ -27,6 +27,13 @@ export async function POST(req: Request) {
       );
     }
 
+    if (!/^\d{6}$/.test(String(code).trim())) {
+      return validationError(
+        { code: "کد تایید باید ۶ رقم باشد" },
+        "کد تایید نامعتبر است"
+      );
+    }
+
     const gate = checkOtpVerifyAllowed(phone);
     if (!gate.allowed) {
       return errorResponse(

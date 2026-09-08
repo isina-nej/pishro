@@ -12,10 +12,8 @@ const PasswordForm = forwardRef((props, ref) => {
   const user = userResponse?.data;
 
   useImperativeHandle(ref, () => ({
-    submit: () => {
-      // این فرم دیگر نیازی به submit ندارد چون مودال خودش مدیریت می‌کند
-      console.log("PasswordForm - no action needed");
-    },
+    // No-op: password changes are handled entirely inside the modal.
+    submit: () => {},
   }));
 
   return (
@@ -23,7 +21,7 @@ const PasswordForm = forwardRef((props, ref) => {
       <div className="bg-muted/40 w-full rounded mt-8">
         {/* هدر */}
         <div className="w-full p-5 border-b border-border">
-          <h6 className="font-irsans text-xs text-muted-foreground mb-5 flex items-center">
+          <h6 className="font-yekan text-xs text-muted-foreground mb-5 flex items-center">
             <ProfileIcon className="size-4 stroke-foreground" />
             <span className="mr-3">اطلاعات امنیتی</span>
           </h6>

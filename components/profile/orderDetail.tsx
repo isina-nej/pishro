@@ -28,16 +28,17 @@ const OrderDetail = ({ order }: OrderDetailProps) => {
   });
 
   const getStatusInfo = (status: string) => {
-    switch (status) {
+    const normalized = status?.toLowerCase?.() ?? status;
+    switch (normalized) {
       case "paid":
         return {
-          icon: <FaCheckCircle className="text-foreground w-3.5" />,
+          icon: <FaCheckCircle className="w-3.5 text-success-foreground" />,
           text: "پرداخت شده",
           bgColor: "bg-success",
         };
       case "failed":
         return {
-          icon: <FaTimesCircle className="text-foreground w-3.5" />,
+          icon: <FaTimesCircle className="w-3.5 text-destructive-foreground" />,
           text: "ناموفق",
           bgColor: "bg-destructive",
         };
@@ -45,7 +46,7 @@ const OrderDetail = ({ order }: OrderDetailProps) => {
         return {
           icon: <FaRegClock className="w-3.5 text-premium" />,
           text: "در انتظار پرداخت",
-          bgColor: "bg-premium",
+          bgColor: "bg-premium/15 ring-1 ring-premium/40",
         };
     }
   };

@@ -55,15 +55,15 @@ function StatCard({
   return (
     <Card className="min-w-0 p-4">
       <div className="flex h-full items-start justify-between gap-3">
-        <div className="rounded-xl bg-blue-50 p-2.5 text-blue-600 dark:bg-blue-950/40 dark:text-blue-300">
+        <div className="rounded-xl bg-primary/10 p-2.5 text-primary">
           <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
         </div>
         <div className="min-w-0 space-y-2 text-right">
-          <p className="text-xs text-slate-500 dark:text-slate-400 sm:text-sm">{title}</p>
-          <p className="truncate text-lg font-bold text-slate-950 dark:text-white sm:text-xl xl:text-2xl">{value}</p>
+          <p className="text-xs text-muted-foreground sm:text-sm">{title}</p>
+          <p className="truncate text-lg font-bold text-foreground sm:text-xl xl:text-2xl">{value}</p>
           <Badge
             variant="outline"
-            className={`text-[11px] ${positive ? 'border-green-200 text-green-700 dark:border-green-900 dark:text-green-300' : 'border-red-200 text-red-700 dark:border-red-900 dark:text-red-300'}`}
+            className={`text-[11px] ${positive ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'border-destructive/30 bg-destructive/10 text-destructive'}`}
           >
             {formatGrowth(stat.growthRate)}
           </Badge>
@@ -130,7 +130,7 @@ export default function AdminDashboardPage() {
       actions={<Badge variant="secondary">{user.role}</Badge>}
     >
       {statsError && (
-        <Card className="border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/30 dark:text-red-300">
+        <Card className="border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
           {statsError}
         </Card>
       )}
@@ -152,12 +152,12 @@ export default function AdminDashboardPage() {
           return (
             <Card key={item.href} className="flex min-h-36 flex-col justify-between p-4">
               <div className="mb-4 flex items-start justify-between gap-3">
-                <div className="rounded-xl bg-slate-100 p-2.5 text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                <div className="rounded-xl bg-muted p-2.5 text-foreground">
                   <Icon className="h-5 w-5" />
                 </div>
                 <div className="space-y-1 text-right">
-                  <h2 className="text-lg font-semibold text-slate-950 dark:text-white">{item.title}</h2>
-                  <p className="text-xs leading-6 text-slate-500 dark:text-slate-400 sm:text-sm">{item.description}</p>
+                  <h2 className="text-lg font-semibold text-foreground">{item.title}</h2>
+                  <p className="text-xs leading-6 text-muted-foreground sm:text-sm">{item.description}</p>
                 </div>
               </div>
               <Button asChild variant="outline" size="sm" className="w-full justify-between">
@@ -174,25 +174,25 @@ export default function AdminDashboardPage() {
       <div className="grid gap-3 xl:grid-cols-[minmax(0,1.4fr)_minmax(320px,0.8fr)]">
         <Card className="p-4">
           <div className="mb-4 flex items-center justify-between gap-3">
-            <Badge variant="outline" className="border-blue-200 text-blue-700 dark:border-blue-900 dark:text-blue-300">
+            <Badge variant="outline" className="border-primary/30 bg-primary/10 text-primary">
               امروز
             </Badge>
             <div className="flex items-center gap-2 text-right">
               <div>
-                <h2 className="font-semibold text-slate-950 dark:text-white">کارهای پیشنهادی</h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400">برای اینکه پنل همیشه به‌روز بماند</p>
+                <h2 className="font-semibold text-foreground">کارهای پیشنهادی</h2>
+                <p className="text-xs text-muted-foreground">برای اینکه پنل همیشه به‌روز بماند</p>
               </div>
-              <ListChecks className="h-5 w-5 text-blue-600" />
+              <ListChecks className="h-5 w-5 text-primary" />
             </div>
           </div>
           <div className="grid gap-2 sm:grid-cols-2">
             {adminTasks.map((task) => (
               <div
                 key={task}
-                className="flex items-start justify-end gap-2 rounded-xl border border-slate-200 bg-slate-50 p-3 text-right text-sm text-slate-700 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-200"
+                className="flex items-start justify-end gap-2 rounded-xl border border-border bg-muted p-3 text-right text-sm text-foreground"
               >
                 <span className="leading-6">{task}</span>
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-green-600" />
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
               </div>
             ))}
           </div>
@@ -202,17 +202,17 @@ export default function AdminDashboardPage() {
           <div className="mb-4 flex items-center justify-between gap-3">
             <Sparkles className="h-5 w-5 text-amber-500" />
             <div className="text-right">
-              <h2 className="font-semibold text-slate-950 dark:text-white">وضعیت پنل</h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400">خلاصه‌ی سلامت بخش‌های مدیریتی</p>
+              <h2 className="font-semibold text-foreground">وضعیت پنل</h2>
+              <p className="text-xs text-muted-foreground">خلاصه‌ی سلامت بخش‌های مدیریتی</p>
             </div>
           </div>
           <div className="space-y-2">
             {managementLinks.map((item) => (
-              <div key={item.href} className="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-900/70">
+              <div key={item.href} className="flex items-center justify-between rounded-xl bg-muted px-3 py-2">
                 <Badge variant="secondary" className="text-[11px]">فعال</Badge>
-                <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
+                <div className="flex items-center gap-2 text-sm text-foreground">
                   <span>{item.title}</span>
-                  <Clock3 className="h-4 w-4 text-slate-400" />
+                  <Clock3 className="h-4 w-4 text-muted-foreground" />
                 </div>
               </div>
             ))}

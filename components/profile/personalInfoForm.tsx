@@ -84,7 +84,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
     <div className="bg-muted/40 w-full rounded mt-6 md:mt-8">
       {/* header */}
       <div className="w-full p-4 md:p-5 border-b border-border">
-        <h6 className="font-irsans text-xs text-muted-foreground mb-3 md:mb-5 flex items-start md:items-center flex-col md:flex-row gap-2 md:gap-0">
+        <h6 className="font-yekan text-xs text-muted-foreground mb-3 md:mb-5 flex items-start md:items-center flex-col md:flex-row gap-2 md:gap-0">
           <ProfileIcon className="size-4 stroke-foreground" />
           <span className="md:mr-3">
             مشخصات فردی (شخصیت حقوقی هستید؟{""}

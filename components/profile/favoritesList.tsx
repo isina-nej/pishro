@@ -79,7 +79,7 @@ const BookmarkCard = ({ item }: { item: BookmarkItem }) => {
         )}
 
         <div className="mt-auto flex items-center justify-between gap-2 pt-4 text-xs text-muted-foreground">
-          <span className="font-irsans">{formatDate(item.createdAt)}</span>
+          <span className="font-yekan">{formatDate(item.createdAt)}</span>
           <button
             type="button"
             onClick={() =>

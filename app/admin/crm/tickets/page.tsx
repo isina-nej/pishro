@@ -9,6 +9,13 @@ import { DataTable } from '@/components/admin/data-table/DataTable';
 import DataTableToolbar from '@/components/admin/data-table/DataTableToolbar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
 import { useCrmTicketsList, crmTicketKeys, type CrmTicket } from '@/lib/hooks/useCrmTickets';
 import { BulkActionBar } from '@/components/admin/data-table/BulkActionBar';
@@ -163,36 +170,44 @@ export default function CrmTicketsPage() {
           searchPlaceholder="جستجو در موضوع تیکت..."
           filters={
             <>
-              <select
-                value={status}
-                onChange={(e) => {
+              <Select
+                value={status || 'all'}
+                onValueChange={(value) => {
                   setPage(1);
-                  setStatus(e.target.value);
+                  setStatus(value === 'all' ? '' : value);
                 }}
-                className="h-9 rounded-md border border-input bg-transparent px-3 text-sm text-foreground"
               >
-                <option value="">همه وضعیت‌ها</option>
-                {STATUS_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-              <select
-                value={priority}
-                onChange={(e) => {
+                <SelectTrigger className="h-9 w-36">
+                  <SelectValue placeholder="همه وضعیت‌ها" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">همه وضعیت‌ها</SelectItem>
+                  {STATUS_OPTIONS.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select
+                value={priority || 'all'}
+                onValueChange={(value) => {
                   setPage(1);
-                  setPriority(e.target.value);
+                  setPriority(value === 'all' ? '' : value);
                 }}
-                className="h-9 rounded-md border border-input bg-transparent px-3 text-sm text-foreground"
               >
-                <option value="">همه اولویت‌ها</option>
-                {PRIORITY_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger className="h-9 w-32">
+                  <SelectValue placeholder="همه اولویت‌ها" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">همه اولویت‌ها</SelectItem>
+                  {PRIORITY_OPTIONS.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <Button
                 type="button"
                 size="sm"

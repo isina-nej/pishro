@@ -1,9 +1,11 @@
 /**
- * Login API for CMS Admin Panel
+ * Login API for external CMS Admin Panel (legacy pishro-admin frontend)
  * POST /api/auth/login
  *
- * This endpoint allows the pishro-admin CMS to authenticate
- * and receive session credentials for subsequent API calls.
+ * NOTE: The in-repo Next.js login (/login) uses /api/auth/external-login.
+ * This endpoint is kept only for the external CMS client that talks to this
+ * backend cross-origin (hence the CORS headers below). Do not point new
+ * in-repo callers here — no in-repo fetch references this path.
  */
 
 import type { User } from "@prisma/client";
@@ -107,22 +109,6 @@ export async function POST(req: NextRequest) {
       );
       return addCorsHeaders(response, origin);
     }
-
-    // Authenticate using Auth.js
-    // try {
-    //   await signIn("credentials", {
-    //     phone,
-    //     password,
-    //     redirect: false,
-    //   });
-    // } catch (authError) {
-    //   console.error("Auth.js sign-in error:", authError);
-    //   const response = errorResponse(
-    //     "خطا در احراز هویت",
-    //     ErrorCodes.INTERNAL_ERROR
-    //   );
-    //   return addCorsHeaders(response, origin);
-    // }
 
     // Return user data with JWT token (excluding sensitive info)
     const userData = {

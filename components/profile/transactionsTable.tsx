@@ -16,12 +16,13 @@ const TransactionsTable = () => {
   const total = response?.data?.pagination?.total || 0;
 
   const getStatusBadge = (status: string) => {
-    switch (status) {
+    const normalized = status?.toLowerCase?.() ?? status;
+    switch (normalized) {
       case "success":
         return <Badge variant="success">موفق</Badge>;
       case "pending":
         return (
-          <span className="inline-flex px-2 py-1 text-xs rounded-full bg-premium text-premium/40">
+          <span className="inline-flex rounded-full bg-premium/15 px-2 py-1 text-xs font-bold text-premium ring-1 ring-premium/40">
             در انتظار
           </span>
         );
@@ -135,10 +136,10 @@ const TransactionsTable = () => {
                 <td className="px-5 py-4 whitespace-nowrap text-xs">
                   {getStatusBadge(transaction.status)}
                 </td>
-                <td className="px-5 py-4 whitespace-nowrap text-xs font-irsans text-muted-foreground">
+                <td className="px-5 py-4 whitespace-nowrap text-xs font-yekan text-muted-foreground">
                   {transaction.refNumber || "-"}
                 </td>
-                <td className="px-5 py-4 whitespace-nowrap text-xs font-irsans text-muted-foreground">
+                <td className="px-5 py-4 whitespace-nowrap text-xs font-yekan text-muted-foreground">
                   {formatDate(transaction.createdAt)}
                 </td>
                 <td className="px-5 py-4 text-xs text-muted-foreground">

@@ -134,9 +134,12 @@ export function useAuthForm() {
           password: passwordTemp,
           redirect: false,
         });
-        if (loginRes?.error) toast.error("خطا در ورود خودکار");
-        else await redirectAfterAuth();
-      } else toast.error("کد اشتباه است!");
+        if (loginRes?.error) {
+          toast.error("تایید شد، ولی ورود خودکار ناموفق بود — لطفاً دستی وارد شوید");
+          setOtpStep(false);
+          setVariant("login");
+        } else await redirectAfterAuth();
+      } else toast.error(res.message || "کد اشتباه است!");
     } catch (error) {
       console.error("OTP verification error:", error);
       toast.error("خطا در تایید کد");
@@ -199,8 +202,17 @@ export function useAuthForm() {
   };
 
   const handleResendOtp = async () => {
-    await resendOtp(otpPhone, passwordTemp);
-    toast.success("کد جدید ارسال شد!");
+    try {
+      const res = await resendOtp(otpPhone, passwordTemp);
+      if (res.status === "success") {
+        toast.success("کد جدید ارسال شد!");
+      } else {
+        toast.error(res.message || "خطا در ارسال مجدد کد");
+      }
+    } catch (error) {
+      console.error("Resend OTP error:", error);
+      toast.error("خطا در ارسال مجدد کد");
+    }
   };
 
   return {

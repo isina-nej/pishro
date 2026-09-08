@@ -75,7 +75,7 @@ export function OtpForm({
   }, []);
 
   const handleVerify = async () => {
-    if (isLoading || code.length !== 4) return;
+    if (isLoading || code.length !== 6) return;
     setIsLoading(true);
     setIsComplete(true);
 
@@ -104,9 +104,9 @@ export function OtpForm({
     }
   };
 
-  // خودکار ارسال وقتی 4 رقم کامل شد
+  // خودکار ارسال وقتی 6 رقم کامل شد
   useEffect(() => {
-    if (code.length === 4 && !isComplete) {
+    if (code.length === 6 && !isComplete) {
       handleVerify();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -136,7 +136,7 @@ export function OtpForm({
         <div className="text-center space-y-2">
           <h2 className="text-xl font-bold text-foreground dark:text-textPrimary">تأیید شماره تلفن</h2>
           <p className="text-sm text-muted-foreground dark:text-textSecondary leading-relaxed max-w-sm">
-            کد ۴ رقمی ارسال‌شده به شماره{""}
+            کد ۶ رقمی ارسال‌شده به شماره{""}
             <span className="font-bold text-foreground dark:text-textPrimary dir-ltr inline-block">
               {phone}
             </span>{""}
@@ -149,7 +149,7 @@ export function OtpForm({
       <div className="flex flex-col items-center gap-6">
         <div ref={otpRootRef} className="w-full flex justify-center">
           <InputOTP
-            maxLength={4}
+            maxLength={6}
             value={code}
             onChange={(value) => {
               setCode(value.replace(/\D/g, ""));
@@ -157,13 +157,13 @@ export function OtpForm({
             }}
             disabled={isLoading}
           >
-            <InputOTPGroup className="ltr gap-3">
-              {[0, 1, 2, 3].map((index) => (
+            <InputOTPGroup className="ltr gap-2">
+              {[0, 1, 2, 3, 4, 5].map((index) => (
                 <InputOTPSlot
                   key={index}
                   index={index}
                   className={cn(
-                    "w-14 h-14 text-2xl font-bold border-2 rounded-lg transition-all duration-200",
+                    "h-12 w-11 text-xl font-bold border-2 rounded-lg transition-all duration-200 sm:h-14 sm:w-14 sm:text-2xl",
                     code.length > index && "border-[#3dc37b] bg-[#3dc37b]/5",
                     isComplete && "border-primary bg-primary"
                   )}
@@ -213,11 +213,11 @@ export function OtpForm({
       {/* Verify Button */}
       <Button
         onClick={handleVerify}
-        disabled={code.length !== 4 || isLoading}
+        disabled={code.length !== 6 || isLoading}
         className={cn(
           "w-full h-12 bg-[#d52a16] hover:bg-[#b82414] text-foreground font-bold text-lg transition-all duration-200",
           "disabled:opacity-50 disabled:cursor-not-allowed",
-          code.length === 4 && !isLoading && "shadow-lg shadow-[#d52a16]/30"
+          code.length === 6 && !isLoading && "shadow-lg shadow-[#d52a16]/30"
         )}
       >
         {isLoading ? (

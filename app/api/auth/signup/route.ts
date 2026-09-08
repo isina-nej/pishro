@@ -33,6 +33,20 @@ export async function POST(req: Request) {
       );
     }
 
+    if (!/^09\d{9}$/.test(phone)) {
+      return validationError(
+        { phone: ["فرمت شماره تلفن نامعتبر است. باید 09XXXXXXXXX باشد"] },
+        "فرمت شماره تلفن نامعتبر است"
+      );
+    }
+
+    if (password.length < 8) {
+      return validationError(
+        { password: ["رمز عبور باید حداقل 8 کاراکتر باشد"] },
+        "رمز عبور ضعیف است"
+      );
+    }
+
     // Check if user already verified
     const users = await query<Pick<User, "phoneVerified">>(
       `SELECT phoneVerified FROM User WHERE phone = ? LIMIT 1`,

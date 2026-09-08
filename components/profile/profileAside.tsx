@@ -104,8 +104,17 @@ const ProfileAside = ({ hiddenPages = [] }: ProfileAsideProps) => {
   const showLogout = !isItemHidden("profile:logout", hiddenPages);
 
   const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch {
+      // Server logout best-effort — NextAuth signOut below clears the rest.
+    }
     await signOut({ redirect: false });
     router.push("/login");
+    router.refresh();
   };
 
   return (

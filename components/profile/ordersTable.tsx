@@ -27,12 +27,13 @@ const OrdersTable = () => {
   const total = response?.data?.pagination?.total || 0;
 
   const getStatusBadge = (status: string) => {
-    switch (status) {
+    const normalized = status?.toLowerCase?.() ?? status;
+    switch (normalized) {
       case "paid":
         return <Badge variant="success">پرداخت شده</Badge>;
       case "pending":
         return (
-          <span className="px-3 py-1 text-xs font-medium rounded-full bg-premium text-premium/40">
+          <span className="inline-flex rounded-full bg-premium/15 px-3 py-1 text-xs font-bold text-premium ring-1 ring-premium/40">
             در انتظار پرداخت
           </span>
         );
@@ -122,7 +123,7 @@ const OrdersTable = () => {
                 <td className="px-3 md:px-5 py-3 md:py-4 whitespace-nowrap text-xs text-foreground">
                   {order.itemCount} دوره
                 </td>
-                <td className="px-3 md:px-5 py-3 md:py-4 whitespace-nowrap text-xs font-irsans text-muted-foreground">
+                <td className="px-3 md:px-5 py-3 md:py-4 whitespace-nowrap text-xs font-yekan text-muted-foreground">
                   {formatDate(order.createdAt)}
                 </td>
                 <td className="px-3 md:px-5 py-3 md:py-4 whitespace-nowrap text-xs text-foreground">

@@ -3,79 +3,34 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, Loader2, Upload, X } from 'lucide-react';
+import { ArrowRight, Loader2 } from 'lucide-react';
+import { AdminLoadingState, AdminPageShell } from '@/components/admin/AdminPageShell';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card } from '@/components/ui/card';
+import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
+import {
+  BOOK_FORMATS,
+  BOOK_STATUSES,
+  BookBasicInfo,
+  BookChecklist,
+  BookDescription,
+  BookMediaUpload,
+  emptyBookForm,
+  generateSlug,
+} from '@/components/admin/books/BookFormFields';
 
-interface BookFormData {
-  title: string;
-  slug: string;
-  author: string;
-  description: string;
-  cover: string;
-  publisher: string;
-  year: string;
-  pages: string;
-  isbn: string;
-  language: string;
-  category: string;
-  formats: string[];
-  status: string[];
-  tags: string;
-  readingTime: string;
-  isFeatured: boolean;
-  price: string;
-  fileUrl: string;
-  audioUrl: string;
-}
-
-const categories = [
-  'بورس و سهام',
-  'ارز دیجیتال',
-  'سرمایه‌ گذاری',
-  'کسب و کار',
-  'اقتصاد',
-  'تحلیل تکنیکال',
-  'مدیریت مالی',
-];
-
-const formats = ['جلد سخت', 'جلد نرم', 'الکترونیکی', 'صوتی'];
-const statuses = ['جدید', 'پرفروش', 'ویژه'];
+export const dynamic = 'force-dynamic';
 
 export default function CreateBookPage() {
   const router = useRouter();
+  const { user, isLoading: isLoadingUser } = useAdminAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadingFile, setUploadingFile] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const [formData, setFormData] = useState<BookFormData>({
-    title: '',
-    slug: '',
-    author: '',
-    description: '',
-    cover: '',
-    publisher: '',
-    year: new Date().getFullYear().toString(),
-    pages: '',
-    isbn: '',
-    language: 'فارسی',
-    category: categories[0],
-    formats: [],
-    status: [],
-    tags: '',
-    readingTime: '',
-    isFeatured: false,
-    price: '',
-    fileUrl: '',
-    audioUrl: '',
-  });
-
-  const generateSlug = (title: string) => {
-    return title
-      .toLowerCase()
-      .replace(/[^\w\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .substring(0, 50);
-  };
+  const [formData, setFormData] = useState(emptyBookForm);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -127,19 +82,19 @@ export default function CreateBookPage() {
       setUploadingFile(fileType);
       setError(null);
 
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('fileType', fileType);
+      const uploadForm = new FormData();
+      uploadForm.append('file', file);
+      uploadForm.append('fileType', fileType);
 
       const response = await fetch('/api/library/upload', {
         method: 'POST',
-        body: formData,
+        credentials: 'include',
+        body: uploadForm,
       });
 
       const data = await response.json();
 
       if (data.success) {
-        // Update form data with uploaded file URL
         const fieldMap = { cover: 'cover', pdf: 'fileUrl', audio: 'audioUrl' };
         setFormData((prev) => ({
           ...prev,
@@ -153,7 +108,6 @@ export default function CreateBookPage() {
     } finally {
       setIsUploading(false);
       setUploadingFile(null);
-      // Clear input
       e.target.value = '';
     }
   };
@@ -162,7 +116,6 @@ export default function CreateBookPage() {
     e.preventDefault();
     setError(null);
 
-    // Validation
     if (!formData.title || !formData.author || !formData.category) {
       setError('لطفاً فیلدهای الزامی را پر کنید');
       return;
@@ -181,6 +134,7 @@ export default function CreateBookPage() {
 
       const response = await fetch('/api/library', {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -190,7 +144,6 @@ export default function CreateBookPage() {
       const data = await response.json();
 
       if (response.ok) {
-        alert('کتاب با موفقیت ایجاد شد');
         router.push('/admin/library');
       } else {
         setError(data.message || 'خطا در ایجاد کتاب');
@@ -203,486 +156,140 @@ export default function CreateBookPage() {
     }
   };
 
+  if (isLoadingUser) {
+    return (
+      <AdminPageShell title="کتاب جدید" description="افزودن کتاب به کتابخانه دیجیتال">
+        <AdminLoadingState />
+      </AdminPageShell>
+    );
+  }
+
+  if (!user) return null;
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 p-4 md:p-8">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <Link
-            href="/admin/library"
-            className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 mb-4 font-medium"
-          >
-            <ArrowRight className="w-5 h-5" />
-            بازگشت
+    <AdminPageShell
+      title="ایجاد کتاب جدید"
+      description="یک کتاب جدید به کتابخانه دیجیتالی اضافه کنید"
+      actions={
+        <Button variant="outline" size="sm" asChild>
+          <Link href="/admin/library">
+            <ArrowRight className="size-4" />
+            بازگشت به کتابخانه
           </Link>
-          <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">
-            ایجاد کتاب جدید
-          </h1>
-          <p className="text-slate-600 dark:text-slate-400 mt-2">
-            یک کتاب جدید به کتابخانه دیجیتالی اضافه کنید
-          </p>
-        </div>
+        </Button>
+      }
+    >
+      {error && (
+        <Card className="border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
+          {error}
+        </Card>
+      )}
 
-        {/* Error Message */}
-        {error && (
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6 text-red-700 dark:text-red-300">
-            {error}
-          </div>
-        )}
+      <Card className="border-primary/20 bg-primary/5 p-4 text-sm leading-6">
+        <p className="font-semibold text-foreground">📝 توجه:</p>
+        <p className="text-muted-foreground">
+          کتاب‌ها به طور پیش‌فرض با وضعیت <strong className="text-foreground">پیشنویس</strong> ایجاد می‌شوند.
+          بعد از تکمیل اطلاعات، می‌توانید کتاب را منتشر کنید.
+        </p>
+      </Card>
 
-        {/* Information Box */}
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6 text-blue-700 dark:text-blue-300">
-          <p className="font-medium mb-1">📝 توجه:</p>
-          <p>کتاب‌ها به طور پیش‌فرض با وضعیت <strong>پیشنویس</strong> ایجاد می‌شوند. بعد از تکمیل اطلاعات، می‌توانید کتاب را منتشر کنید.</p>
-        </div>
+      <form onSubmit={handleSubmit}>
+        <Card className="space-y-8 p-6">
+          <BookBasicInfo formData={formData} disabled={isLoading} onChange={handleChange} />
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 md:p-8 space-y-8">
-          {/* Basic Information */}
-          <section>
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
-              اطلاعات پایه‌ای
-            </h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Title */}
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                  عنوان کتاب <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="title"
-                  value={formData.title}
-                  onChange={handleChange}
-                  placeholder="عنوان کتاب را وارد کنید"
-                  className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white outline-none focus:border-blue-500 placeholder-slate-500 dark:placeholder-slate-400"
-                  required
-                />
-              </div>
+          <BookDescription value={formData.description} disabled={isLoading} onChange={handleChange} />
 
-              {/* Slug */}
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                  Slug (خودکار)
-                </label>
-                <input
-                  type="text"
-                  value={formData.slug}
-                  readOnly
-                  className="w-full px-4 py-2 bg-slate-100 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-600 dark:text-slate-400 outline-none cursor-not-allowed"
-                />
-              </div>
-
-              {/* Author */}
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                  نویسنده <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="author"
-                  value={formData.author}
-                  onChange={handleChange}
-                  placeholder="نام نویسنده"
-                  className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white outline-none focus:border-blue-500 placeholder-slate-500 dark:placeholder-slate-400"
-                  required
-                />
-              </div>
-
-              {/* Publisher */}
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                  ناشر
-                </label>
-                <input
-                  type="text"
-                  name="publisher"
-                  value={formData.publisher}
-                  onChange={handleChange}
-                  placeholder="نام ناشر"
-                  className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white outline-none focus:border-blue-500 placeholder-slate-500 dark:placeholder-slate-400"
-                />
-              </div>
-
-              {/* Category */}
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                  دسته‌بندی <span className="text-red-500">*</span>
-                </label>
-                <select
-                  name="category"
-                  value={formData.category}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white outline-none focus:border-blue-500"
-                  required
-                >
-                  {categories.map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Year */}
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                  سال انتشار
-                </label>
-                <input
-                  type="number"
-                  name="year"
-                  value={formData.year}
-                  onChange={handleChange}
-                  placeholder="سال انتشار"
-                  className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white outline-none focus:border-blue-500 placeholder-slate-500 dark:placeholder-slate-400"
-                />
-              </div>
-
-              {/* Pages */}
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                  تعداد صفحات
-                </label>
-                <input
-                  type="number"
-                  name="pages"
-                  value={formData.pages}
-                  onChange={handleChange}
-                  placeholder="تعداد صفحات"
-                  className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white outline-none focus:border-blue-500 placeholder-slate-500 dark:placeholder-slate-400"
-                />
-              </div>
-
-              {/* ISBN */}
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                  ISBN
-                </label>
-                <input
-                  type="text"
-                  name="isbn"
-                  value={formData.isbn}
-                  onChange={handleChange}
-                  placeholder="ISBN"
-                  className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white outline-none focus:border-blue-500 placeholder-slate-500 dark:placeholder-slate-400"
-                />
-              </div>
-
-              {/* Language */}
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                  زبان
-                </label>
-                <select
-                  name="language"
-                  value={formData.language}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white outline-none focus:border-blue-500"
-                >
-                  <option value="فارسی">فارسی</option>
-                  <option value="انگلیسی">انگلیسی</option>
-                  <option value="چند‌زبانه">چند‌زبانه</option>
-                </select>
-              </div>
-
-              {/* Price */}
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                  قیمت
-                </label>
-                <input
-                  type="number"
-                  name="price"
-                  value={formData.price}
-                  onChange={handleChange}
-                  placeholder="قیمت"
-                  className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white outline-none focus:border-blue-500 placeholder-slate-500 dark:placeholder-slate-400"
-                />
-              </div>
-
-              {/* Reading Time */}
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                  زمان مطالعه
-                </label>
-                <input
-                  type="text"
-                  name="readingTime"
-                  value={formData.readingTime}
-                  onChange={handleChange}
-                  placeholder="مثال: 10 ساعت"
-                  className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white outline-none focus:border-blue-500 placeholder-slate-500 dark:placeholder-slate-400"
-                />
-              </div>
+          <section className="space-y-4">
+            <h2 className="text-xl font-bold text-foreground">رسانه</h2>
+            <div className="grid gap-4">
+              <BookMediaUpload
+                label="جلد کتاب"
+                accept="image/jpeg,image/png,image/webp"
+                hint="تصویر جلد را انتخاب کنید (حداکثر 5MB)"
+                currentUrl={formData.cover}
+                uploading={uploadingFile === 'cover'}
+                disabled={isUploading}
+                onPick={(e) => handleFileUpload(e, 'cover')}
+                onClear={() => setFormData((prev) => ({ ...prev, cover: '' }))}
+              />
+              <BookMediaUpload
+                label="فایل PDF"
+                accept="application/pdf"
+                hint="فایل PDF کتاب (حداکثر 100MB)"
+                currentUrl={formData.fileUrl}
+                uploading={uploadingFile === 'pdf'}
+                disabled={isUploading}
+                onPick={(e) => handleFileUpload(e, 'pdf')}
+                onClear={() => setFormData((prev) => ({ ...prev, fileUrl: '' }))}
+              />
+              <BookMediaUpload
+                label="فایل صوتی"
+                accept="audio/*"
+                hint="فایل صوتی کتاب (حداکثر 200MB)"
+                currentUrl={formData.audioUrl}
+                uploading={uploadingFile === 'audio'}
+                disabled={isUploading}
+                onPick={(e) => handleFileUpload(e, 'audio')}
+                onClear={() => setFormData((prev) => ({ ...prev, audioUrl: '' }))}
+              />
             </div>
           </section>
 
-          {/* Description */}
+          <BookChecklist
+            title="فرمت‌های موجود"
+            options={BOOK_FORMATS}
+            selected={formData.formats}
+            onToggle={handleFormatChange}
+          />
+
+          <BookChecklist
+            title="وضعیت"
+            options={BOOK_STATUSES}
+            selected={formData.status}
+            onToggle={handleStatusChange}
+          />
+
           <section>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-              توضیحات
-            </label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              placeholder="توضیحات کتاب را وارد کنید"
-              rows={5}
-              className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white outline-none focus:border-blue-500 placeholder-slate-500 dark:placeholder-slate-400 resize-vertical"
-            />
-          </section>
-
-          {/* Media */}
-          <section>
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
-              رسانه
-            </h2>
-            <div className="grid md:grid-cols-1 gap-6">
-              {/* Cover Upload */}
-              <div className="border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-6 hover:border-blue-500 dark:hover:border-blue-400 transition">
-                <label className="block mb-3">
-                  <div className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
-                    <Upload className="w-4 h-4" />
-                    جلد کتاب
-                  </div>
-                  <input
-                    type="file"
-                    accept="image/jpeg,image/png,image/webp"
-                    onChange={(e) => handleFileUpload(e, 'cover')}
-                    disabled={isUploading}
-                    className="hidden"
-                  />
-                  <div className="cursor-pointer">
-                    {formData.cover ? (
-                      <div className="flex items-center gap-3 bg-green-50 dark:bg-green-900/20 p-3 rounded border border-green-200 dark:border-green-800">
-                        <div className="text-green-600 dark:text-green-400">✓</div>
-                        <span className="text-sm text-green-700 dark:text-green-300 flex-1 break-all">{formData.cover.split('/').pop()}</span>
-                        <button
-                          type="button"
-                          onClick={() => setFormData((prev) => ({ ...prev, cover: '' }))}
-                          className="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-                    ) : (
-                      <div className={`text-center py-4 ${uploadingFile === 'cover' ? 'opacity-50' : ''}`}>
-                        {uploadingFile === 'cover' ? (
-                          <div className="flex items-center justify-center gap-2">
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                            درحال بارگذاری...
-                          </div>
-                        ) : (
-                          <>
-                            <Upload className="w-8 h-8 mx-auto mb-2 text-slate-400" />
-                            <p className="text-sm text-slate-600 dark:text-slate-400">تصویر جلد را انتخاب کنید</p>
-                            <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">JPG, PNG یا WebP (حداکثر 5MB)</p>
-                          </>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </label>
-              </div>
-
-              {/* PDF Upload */}
-              <div className="border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-6 hover:border-blue-500 dark:hover:border-blue-400 transition">
-                <label className="block mb-3">
-                  <div className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
-                    <Upload className="w-4 h-4" />
-                    فایل PDF
-                  </div>
-                  <input
-                    type="file"
-                    accept="application/pdf"
-                    onChange={(e) => handleFileUpload(e, 'pdf')}
-                    disabled={isUploading}
-                    className="hidden"
-                  />
-                  <div className="cursor-pointer">
-                    {formData.fileUrl ? (
-                      <div className="flex items-center gap-3 bg-green-50 dark:bg-green-900/20 p-3 rounded border border-green-200 dark:border-green-800">
-                        <div className="text-green-600 dark:text-green-400">✓</div>
-                        <span className="text-sm text-green-700 dark:text-green-300 flex-1 break-all">{formData.fileUrl.split('/').pop()}</span>
-                        <button
-                          type="button"
-                          onClick={() => setFormData((prev) => ({ ...prev, fileUrl: '' }))}
-                          className="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-                    ) : (
-                      <div className={`text-center py-4 ${uploadingFile === 'pdf' ? 'opacity-50' : ''}`}>
-                        {uploadingFile === 'pdf' ? (
-                          <div className="flex items-center justify-center gap-2">
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                            درحال بارگذاری...
-                          </div>
-                        ) : (
-                          <>
-                            <Upload className="w-8 h-8 mx-auto mb-2 text-slate-400" />
-                            <p className="text-sm text-slate-600 dark:text-slate-400">فایل PDF را انتخاب کنید</p>
-                            <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">PDF (حداکثر 100MB)</p>
-                          </>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </label>
-              </div>
-
-              {/* Audio Upload */}
-              <div className="border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-6 hover:border-blue-500 dark:hover:border-blue-400 transition">
-                <label className="block mb-3">
-                  <div className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
-                    <Upload className="w-4 h-4" />
-                    فایل صوتی
-                  </div>
-                  <input
-                    type="file"
-                    accept="audio/mpeg,audio/wav,audio/m4a,audio/ogg"
-                    onChange={(e) => handleFileUpload(e, 'audio')}
-                    disabled={isUploading}
-                    className="hidden"
-                  />
-                  <div className="cursor-pointer">
-                    {formData.audioUrl ? (
-                      <div className="flex items-center gap-3 bg-green-50 dark:bg-green-900/20 p-3 rounded border border-green-200 dark:border-green-800">
-                        <div className="text-green-600 dark:text-green-400">✓</div>
-                        <span className="text-sm text-green-700 dark:text-green-300 flex-1 break-all">{formData.audioUrl.split('/').pop()}</span>
-                        <button
-                          type="button"
-                          onClick={() => setFormData((prev) => ({ ...prev, audioUrl: '' }))}
-                          className="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-                    ) : (
-                      <div className={`text-center py-4 ${uploadingFile === 'audio' ? 'opacity-50' : ''}`}>
-                        {uploadingFile === 'audio' ? (
-                          <div className="flex items-center justify-center gap-2">
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                            درحال بارگذاری...
-                          </div>
-                        ) : (
-                          <>
-                            <Upload className="w-8 h-8 mx-auto mb-2 text-slate-400" />
-                            <p className="text-sm text-slate-600 dark:text-slate-400">فایل صوتی را انتخاب کنید</p>
-                            <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">MP3, WAV, M4A یا OGG (حداکثر 200MB)</p>
-                          </>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </label>
-              </div>
-            </div>
-          </section>
-
-          {/* Formats */}
-          <section>
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
-              فرمت‌های موجود
-            </h2>
-            <div className="flex flex-wrap gap-3">
-              {formats.map((format) => (
-                <label key={format} className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.formats.includes(format)}
-                    onChange={() => handleFormatChange(format)}
-                    className="w-4 h-4 rounded border-slate-300 text-blue-600 cursor-pointer"
-                  />
-                  <span className="text-slate-700 dark:text-slate-300">{format}</span>
-                </label>
-              ))}
-            </div>
-          </section>
-
-          {/* Status */}
-          <section>
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
-              وضعیت
-            </h2>
-            <div className="flex flex-wrap gap-3">
-              {statuses.map((status) => (
-                <label key={status} className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.status.includes(status)}
-                    onChange={() => handleStatusChange(status)}
-                    className="w-4 h-4 rounded border-slate-300 text-blue-600 cursor-pointer"
-                  />
-                  <span className="text-slate-700 dark:text-slate-300">{status}</span>
-                </label>
-              ))}
-            </div>
-          </section>
-
-          {/* Tags & Featured */}
-          <section>
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Tags */}
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                  برچسب‌ها (جدا شده با کاما)
-                </label>
-                <input
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">برچسب‌ها (جدا شده با کاما)</label>
+                <Input
                   type="text"
                   name="tags"
                   value={formData.tags}
                   onChange={handleChange}
                   placeholder="تکنولوژی، بورس، سرمایه‌گذاری"
-                  className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white outline-none focus:border-blue-500 placeholder-slate-500 dark:placeholder-slate-400"
+                  disabled={isLoading}
                 />
               </div>
 
-              {/* Featured */}
               <div className="flex items-end">
-                <label className="flex items-center gap-2 cursor-pointer">
+                <label className="flex cursor-pointer items-center gap-2">
                   <input
                     type="checkbox"
                     name="isFeatured"
                     checked={formData.isFeatured}
                     onChange={handleChange}
-                    className="w-4 h-4 rounded border-slate-300 text-blue-600 cursor-pointer"
+                    disabled={isLoading}
+                    className="size-4 cursor-pointer rounded border-input accent-primary"
                   />
-                  <span className="text-slate-700 dark:text-slate-300 font-medium">
-                    منتخب (Highlighted)
-                  </span>
+                  <span className="font-medium text-foreground">منتخب (Highlighted)</span>
                 </label>
               </div>
             </div>
           </section>
 
-          {/* Submit */}
-          <div className="flex gap-3 pt-4 border-t border-slate-200 dark:border-slate-700">
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  در حال ذخیره...
-                </>
-              ) : (
-                'ایجاد کتاب'
-              )}
-            </button>
-            <Link
-              href="/admin/library"
-              className="inline-flex items-center justify-center px-6 py-3 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-900 dark:text-white rounded-lg font-medium transition"
-            >
-              انصراف
-            </Link>
+          <div className="flex gap-3 border-t border-border pt-4">
+            <Button type="submit" disabled={isLoading} className="flex-1 gap-2">
+              {isLoading && <Loader2 className="size-5 animate-spin" />}
+              {isLoading ? 'در حال ذخیره...' : 'ایجاد کتاب'}
+            </Button>
+            <Button type="button" variant="outline" asChild>
+              <Link href="/admin/library">انصراف</Link>
+            </Button>
           </div>
-        </form>
-      </div>
-    </div>
+        </Card>
+      </form>
+    </AdminPageShell>
   );
 }

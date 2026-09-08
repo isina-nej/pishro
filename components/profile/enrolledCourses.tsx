@@ -111,7 +111,7 @@ const EnrolledCourses = () => {
               {/* Info */}
               <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
                 <span>تاریخ ثبت‌نام:</span>
-                <span className="font-irsans">
+                <span className="font-yekan">
                   {formatDate(enrollment.enrolledAt)}
                 </span>
               </div>

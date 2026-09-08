@@ -37,20 +37,21 @@ const formatMoney = (value: number) =>
   `${value.toLocaleString("fa-IR")} تومان`;
 
 const getStatusBadge = (status: string) => {
+  const normalized = status?.toLowerCase?.() ?? status;
   const map: Record<string, { label: string; variant: "success" | "destructive" }> = {
     paid: { label: "پرداخت شده", variant: "success" },
     failed: { label: "ناموفق", variant: "destructive" },
   };
 
-  if (status === "pending") {
+  if (normalized === "pending") {
     return (
-      <span className="inline-flex rounded-full bg-premium px-2.5 py-1 text-xs font-bold text-premium ring-1 ring-premium/40">
+      <span className="inline-flex rounded-full bg-premium/15 px-2.5 py-1 text-xs font-bold text-premium ring-1 ring-premium/40">
         در انتظار پرداخت
       </span>
     );
   }
 
-  const item = map[status] || { label: status, variant: "success" as const };
+  const item = map[normalized] || { label: status, variant: "success" as const };
 
   return <Badge variant={item.variant}>{item.label}</Badge>;
 };
@@ -283,25 +284,25 @@ const ProfileMainContent = () => {
             label: "دوره‌های فعال",
             value: stats?.totalEnrollments || 0,
             icon: GraduationCap,
-            tone: "text-primary bg-primary/40",
+            tone: "bg-primary/10 text-primary",
           },
           {
             label: "میانگین پیشرفت",
             value: `${averageProgress}%`,
             icon: TrendingUp,
-            tone: "text-primary bg-primary/40",
+            tone: "bg-primary/10 text-primary",
           },
           {
             label: "سفارش‌ها",
             value: stats?.totalOrders || 0,
             icon: ShoppingBag,
-            tone: "text-premium bg-premium/40",
+            tone: "bg-premium/15 text-premium ring-1 ring-premium/40",
           },
           {
             label: "پرداخت موفق اخیر",
             value: paidOrders,
             icon: CreditCard,
-            tone: "text-accent-foreground bg-accent/40",
+            tone: "bg-primary/10 text-primary",
           },
         ].map((item) => {
           const Icon = item.icon;
@@ -407,7 +408,7 @@ const ProfileMainContent = () => {
 
           <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
             <div className="flex items-center gap-3">
-              <span className="flex size-11 items-center justify-center rounded-xl bg-premium text-premium/40">
+              <span className="flex size-11 items-center justify-center rounded-xl bg-premium/15 text-premium ring-1 ring-premium/40">
                 <Clock3 className="size-5" />
               </span>
               <div>

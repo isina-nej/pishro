@@ -1,6 +1,6 @@
 /**
  * Admin News Preview Page
- * 
+ *
  * Page: /admin/block-news/[id]/preview
  * Preview news article exactly as users will see it
  * Shows the article in full public view regardless of published status
@@ -12,7 +12,10 @@ import React, { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
+import { AdminLoadingState, AdminPageShell } from '@/components/admin/AdminPageShell';
 import NewsArticleDetail from '@/components/news/NewsArticleDetail';
+import { api } from '@/lib/api-client';
+import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
 import type { NewsArticle } from '@prisma/client';
 
 export const dynamic = 'force-dynamic';
@@ -21,107 +24,86 @@ export default function NewsPreviewPage() {
   const router = useRouter();
   const params = useParams();
   const articleId = params.id as string;
+  const { user, isLoading: isAuthLoading } = useAdminAuth();
 
   const [article, setArticle] = useState<NewsArticle | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>('');
 
-  // Get article data
+  // Get article data — api client attaches the admin Bearer token automatically
   useEffect(() => {
     const fetchArticle = async () => {
+      if (!user) return;
       try {
-        const token = localStorage.getItem('admin_access_token');
-        if (!token) {
-          router.push('/admin/login');
-          return;
-        }
-
-        const response = await fetch(`/api/admin/block-news/${articleId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (!response.ok) {
-          setError('خبر یافت نشد');
-          return;
-        }
-
-        const data = await response.json();
-        const newsArticle = data.data || data;
-        setArticle(newsArticle);
-      } catch (error) {
-        console.error('Error fetching article:', error);
-        setError('خطا در بارگذاری خبر');
+        const { data } = await api.get(`/api/admin/block-news/${articleId}`);
+        setArticle((data.data || data) as NewsArticle);
+      } catch (err) {
+        console.error('Error fetching article:', err);
+        setError('خبر یافت نشد');
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchArticle();
-  }, [articleId, router]);
+    if (user) {
+      fetchArticle();
+    }
+  }, [articleId, user]);
 
-  if (isLoading) {
+  if (isAuthLoading || isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-white dark:bg-slate-950">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          <p className="mt-4 text-slate-600 dark:text-slate-400">درحال بارگذاری...</p>
-        </div>
-      </div>
+      <AdminPageShell title="پیش‌نمایش خبر" description="نمایش خبر دقیقاً همان‌طور که کاربران می‌بینند">
+        <AdminLoadingState label="درحال بارگذاری خبر..." />
+      </AdminPageShell>
     );
   }
 
+  if (!user) return null;
+
   if (error || !article) {
     return (
-      <div className="min-h-screen bg-white dark:bg-slate-950 flex items-center justify-center px-4">
-        <div className="text-center max-w-md">
-          <h1 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">خطا</h1>
-          <p className="text-slate-600 dark:text-slate-400 mb-6">{error || 'خبر یافت نشد'}</p>
-          <Button 
-            onClick={() => router.back()}
-            className="bg-blue-600 hover:bg-blue-700"
-          >
+      <AdminPageShell title="پیش‌نمایش خبر" description="نمایش خبر دقیقاً همان‌طور که کاربران می‌بینند">
+        <div className="flex min-h-64 flex-col items-center justify-center gap-4 px-4 text-center">
+          <h1 className="text-2xl font-bold text-destructive">خطا</h1>
+          <p className="text-muted-foreground">{error || 'خبر یافت نشد'}</p>
+          <Button onClick={() => router.back()} variant="outline">
+            <ArrowRight className="ml-2 size-4" />
             بازگشت
           </Button>
         </div>
-      </div>
+      </AdminPageShell>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950 flex flex-col">
-      {/* Admin Control Bar */}
-      <div className="sticky top-0 z-50 bg-blue-600 dark:bg-blue-900 text-white shadow-lg">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-sm font-semibold">پیش‌نمایش خبر</span>
-            <span className={`text-xs font-bold px-2 py-1 rounded ${
+    <AdminPageShell
+      title="پیش‌نمایش خبر"
+      description="نمایش خبر دقیقاً همان‌طور که کاربران می‌بینند"
+      actions={
+        <div className="flex items-center gap-2">
+          <span
+            className={`rounded px-2 py-1 text-xs font-bold ${
               article.draft
-                ? 'bg-yellow-500/30 text-yellow-100'
+                ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400'
                 : article.published
-                ? 'bg-green-500/30 text-green-100'
-                : 'bg-orange-500/30 text-orange-100'
-            }`}>
-              {article.draft ? '📝 پیش‌نویس' : article.published ? '✓ منتشرشده' : '📦 بایگانی شده'}
-            </span>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => router.back()}
-            className="text-white hover:bg-blue-700 dark:hover:bg-blue-800"
+                  ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400'
+                  : 'bg-orange-500/15 text-orange-600 dark:text-orange-400'
+            }`}
           >
-            <ArrowRight className="h-4 w-4 ml-2" />
+            {article.draft ? '📝 پیش‌نویس' : article.published ? '✓ منتشرشده' : '📦 بایگانی شده'}
+          </span>
+          <Button variant="outline" size="sm" onClick={() => router.back()}>
+            <ArrowRight className="ml-2 size-4" />
             بازگشت
           </Button>
         </div>
-      </div>
-
-      {/* Public Article View - Centered */}
-      <div className="flex-1 flex justify-center px-4 sm:px-6 lg:px-8">
+      }
+    >
+      <div className="flex justify-center">
         <div className="w-full max-w-6xl">
           <NewsArticleDetail article={article} />
         </div>
       </div>
-    </div>
+    </AdminPageShell>
   );
 }

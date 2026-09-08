@@ -22,24 +22,28 @@ const ProfileSettings = () => {
               height={12}
             />
           </span>
-          <h5 className="font-irsans text-foreground text-xs md:text-sm font-medium">
+          <h5 className="font-yekan text-foreground text-xs md:text-sm font-medium">
             اطلاعات پروفایل
           </h5>
         </div>
-        <div className="text-xs font-medium flex items-center justify-between gap-4 md:gap-8">
+        <div className="flex items-center gap-1 rounded-xl bg-muted p-1 text-xs font-bold">
           <button
+            type="button"
             className={
               formType === "personal"
-                ? "text-primary"
-                : "text-muted-foreground"
+                ? "rounded-lg bg-card px-3 py-1.5 text-primary shadow-sm"
+                : "rounded-lg px-3 py-1.5 text-muted-foreground transition hover:text-foreground"
             }
             onClick={() => setFormType("personal")}
           >
             اطلاعات شخصی
           </button>
           <button
+            type="button"
             className={
-              formType === "pay" ? "text-primary" : "text-muted-foreground"
+              formType === "pay"
+                ? "rounded-lg bg-card px-3 py-1.5 text-primary shadow-sm"
+                : "rounded-lg px-3 py-1.5 text-muted-foreground transition hover:text-foreground"
             }
             onClick={() => setFormType("pay")}
           >

@@ -99,37 +99,23 @@ type CustomPaletteItem = {
 };
 
 async function fetchSettings(): Promise<SettingsPayload> {
-  const res = await fetch("/api/admin/settings", { credentials: "include" });
-  const json = await res.json();
-  if (!res.ok || json.status !== "success") {
-    throw new Error(json.message || "خطا در دریافت تنظیمات");
-  }
-  return json.data as SettingsPayload;
+  const { api } = await import("@/lib/api-client");
+  const { data } = await api.get("/api/admin/settings");
+  return data.data as SettingsPayload;
 }
 
 async function saveSettings(
   body: Record<string, unknown>
 ): Promise<SettingsPayload> {
-  const res = await fetch("/api/admin/settings", {
-    method: "PATCH",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  const json = await res.json();
-  if (!res.ok || json.status !== "success") {
-    throw new Error(json.message || "خطا در ذخیره تنظیمات");
-  }
-  return json.data as SettingsPayload;
+  const { api } = await import("@/lib/api-client");
+  const { data } = await api.patch("/api/admin/settings", body);
+  return data.data as SettingsPayload;
 }
 
 async function fetchCustomPalettes(): Promise<CustomPaletteItem[]> {
-  const res = await fetch("/api/admin/palettes", { credentials: "include" });
-  const json = await res.json();
-  if (!res.ok || json.status !== "success") {
-    throw new Error(json.message || "خطا در دریافت پالت‌های سفارشی");
-  }
-  return json.data as CustomPaletteItem[];
+  const { api } = await import("@/lib/api-client");
+  const { data } = await api.get("/api/admin/palettes");
+  return data.data as CustomPaletteItem[];
 }
 
 type EditorState = {
@@ -279,7 +265,7 @@ export default function AdminSettingsPage() {
     setSaving(true);
     try {
       await saveSettings({ userPanelPaletteId });
-      toast.success("پالت پنل کاربر ذخیره شد");
+      toast.success("پالت پنل کاربر ذخیره شد — تغییرات در /profile اعمال می‌شود");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "خطا در ذخیره");
     } finally {
@@ -385,21 +371,11 @@ export default function AdminSettingsPage() {
         lightColors: editor.lightColors,
         darkColors: editor.darkColors,
       };
-      const url = editor.id
-        ? `/api/admin/palettes/${editor.id}`
-        : "/api/admin/palettes";
-      const method = editor.id ? "PATCH" : "POST";
-      const res = await fetch(url, {
-        method,
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const json = await res.json();
-      if (!res.ok || json.status !== "success") {
-        throw new Error(json.message || "خطا در ذخیره پالت سفارشی");
-      }
-      const saved = json.data as CustomPaletteItem;
+      const { api } = await import("@/lib/api-client");
+      const { data } = editor.id
+        ? await api.patch(`/api/admin/palettes/${editor.id}`, payload)
+        : await api.post("/api/admin/palettes", payload);
+      const saved = data.data as CustomPaletteItem;
       toast.success(editor.id ? "پالت ویرایش شد" : "پالت سفارشی ساخته شد");
       setEditorOpen(false);
       await reload();
@@ -414,14 +390,8 @@ export default function AdminSettingsPage() {
   const removeCustom = async (item: CustomPaletteItem) => {
     if (!window.confirm(`پالت «${item.nameFa}» حذف شود؟`)) return;
     try {
-      const res = await fetch(`/api/admin/palettes/${item.id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-      const json = await res.json();
-      if (!res.ok || json.status !== "success") {
-        throw new Error(json.message || "خطا در حذف");
-      }
+      const { api } = await import("@/lib/api-client");
+      await api.delete(`/api/admin/palettes/${item.id}`);
       toast.success("پالت حذف شد");
       await reload();
     } catch (error) {
@@ -472,8 +442,8 @@ export default function AdminSettingsPage() {
 
   return (
     <AdminPageShell
-      title="ظاهر سایت"
-      description="پالت، لوگو، نام گزینه‌های منو، اطلاعات فوتر و نمایش صفحات را از اینجا مدیریت کنید."
+      title="ظاهر و قالب سایت"
+      description="پالت رنگی، لوگو، منوی صفحات، اطلاعات فوتر و نمایش بخش‌ها — برای ویرایش متن‌ها و تصاویر صفحات به استودیو CMS مراجعه کنید."
       actions={
         tab === "site" ? (
           <div className="flex flex-wrap gap-2">
@@ -493,23 +463,31 @@ export default function AdminSettingsPage() {
         ) : undefined
       }
     >
-      <div className="mb-4 flex flex-wrap gap-2 rounded-2xl border border-border bg-card p-1.5">
-        {tabs.map(({ id, label, icon: Icon }) => (
-          <button
-            key={id}
-            type="button"
-            onClick={() => setTab(id)}
-            className={cn(
-              "inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold transition",
-              tab === id
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground"
-            )}
-          >
-            <Icon className="h-3.5 w-3.5" />
-            {label}
-          </button>
-        ))}
+      <div className="mb-4 flex flex-col gap-2 rounded-2xl border border-border bg-card p-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap gap-2">
+          {tabs.map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => setTab(id)}
+              className={cn(
+                "inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold transition",
+                tab === id
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              )}
+            >
+              <Icon className="h-3.5 w-3.5" />
+              {label}
+            </button>
+          ))}
+        </div>
+        <a
+          href="/admin/landing"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-xl border border-primary/30 bg-primary/5 px-3 py-2 text-xs font-bold text-primary transition hover:bg-primary/10"
+        >
+          ویرایش متن‌ها و تصاویر ← استودیو CMS
+        </a>
       </div>
 
       {tab === "panel" && (

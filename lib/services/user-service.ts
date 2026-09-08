@@ -1,4 +1,4 @@
-import axios from "axios";
+import { api } from "@/lib/api-client";
 import { ApiSuccessResponse, PaginatedData } from "@/lib/api-response";
 
 // ===========================
@@ -87,16 +87,16 @@ export interface UserOrder {
 
 // ✅ Get current user info
 export async function getCurrentUser() {
-  const res = await axios.get<ApiSuccessResponse<UserData>>("/api/user/me");
-  return res.data;
+  const { data } = await api.get<ApiSuccessResponse<UserData>>("/api/user/me");
+  return data;
 }
 
 // ✅ Get enrolled courses
 export async function getEnrolledCourses(page: number = 1, limit: number = 10) {
-  const res = await axios.get<ApiSuccessResponse<PaginatedData<EnrolledCourse>>>(
+  const { data } = await api.get<ApiSuccessResponse<PaginatedData<EnrolledCourse>>>(
     `/api/user/enrolled-courses?page=${page}&limit=${limit}`
   );
-  return res.data;
+  return data;
 }
 
 // ✅ Get user transactions
@@ -110,8 +110,8 @@ export async function getUserTransactions(
   if (type) url += `&type=${type}`;
   if (status) url += `&status=${status}`;
 
-  const res = await axios.get<ApiSuccessResponse<PaginatedData<Transaction>>>(url);
-  return res.data;
+  const { data } = await api.get<ApiSuccessResponse<PaginatedData<Transaction>>>(url);
+  return data;
 }
 
 // ✅ Get user orders
@@ -123,8 +123,8 @@ export async function getUserOrders(
   let url = `/api/user/orders?page=${page}&limit=${limit}`;
   if (status) url += `&status=${status}`;
 
-  const res = await axios.get<ApiSuccessResponse<PaginatedData<UserOrder>>>(url);
-  return res.data;
+  const { data } = await api.get<ApiSuccessResponse<PaginatedData<UserOrder>>>(url);
+  return data;
 }
 
 // ✅ Update enrollment progress
@@ -133,11 +133,11 @@ export async function updateEnrollmentProgress(
   progress: number,
   completed?: boolean
 ) {
-  const res = await axios.patch<ApiSuccessResponse<EnrolledCourse>>(
+  const { data } = await api.patch<ApiSuccessResponse<EnrolledCourse>>(
     "/api/user/enrollment",
     { enrollmentId, progress, completed }
   );
-  return res.data;
+  return data;
 }
 
 // ✅ Update personal info
@@ -150,14 +150,14 @@ export async function updatePersonalInfo(data: {
   birthDate?: Date | null;
   avatarUrl?: string;
 }) {
-  const res = await axios.put<ApiSuccessResponse<UserData>>("/api/user/personal", data);
-  return res.data;
+  const { data: res } = await api.put<ApiSuccessResponse<UserData>>("/api/user/personal", data);
+  return res;
 }
 
 // ✅ Update avatar
 export async function updateAvatar(avatarUrl: string) {
-  const res = await axios.put("/api/user/avatar", { avatarUrl });
-  return res.data;
+  const { data } = await api.put("/api/user/avatar", { avatarUrl });
+  return data;
 }
 
 // ✅ Update payment info
@@ -166,8 +166,8 @@ export async function updatePayInfo(data: {
   shebaNumber: string;
   accountOwner: string;
 }) {
-  const res = await axios.put<ApiSuccessResponse<UserData>>("/api/user/pay", data);
-  return res.data;
+  const { data: res } = await api.put<ApiSuccessResponse<UserData>>("/api/user/pay", data);
+  return res;
 }
 
 // ✅ Upload avatar image
@@ -175,7 +175,7 @@ export async function uploadAvatarImage(file: File) {
   const formData = new FormData();
   formData.append("avatar", file);
 
-  const res = await axios.post<ApiSuccessResponse<{ avatarUrl: string }>>(
+  const { data } = await api.post<ApiSuccessResponse<{ avatarUrl: string }>>(
     "/api/user/upload-avatar",
     formData,
     {
@@ -184,5 +184,5 @@ export async function uploadAvatarImage(file: File) {
       },
     }
   );
-  return res.data;
+  return data;
 }

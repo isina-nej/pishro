@@ -70,7 +70,7 @@ const TICKET_STATUS_LABELS: Record<string, string> = {
 const leadStatusChartConfig: ChartConfig = LEAD_STATUS_ORDER.reduce((config, status, index) => {
   config[status] = {
     label: LEAD_STATUS_LABELS[status],
-    color: `hsl(var(--chart-${index + 1}))`,
+    color: `hsl(var(--chart-${(index % 5) + 1}))`,
   };
   return config;
 }, {} as ChartConfig);
@@ -78,7 +78,7 @@ const leadStatusChartConfig: ChartConfig = LEAD_STATUS_ORDER.reduce((config, sta
 const ticketStatusChartConfig: ChartConfig = TICKET_STATUS_ORDER.reduce((config, status, index) => {
   config[status] = {
     label: TICKET_STATUS_LABELS[status],
-    color: `hsl(var(--chart-${index + 1}))`,
+    color: `hsl(var(--chart-${(index % 5) + 1}))`,
   };
   return config;
 }, {} as ChartConfig);
@@ -263,7 +263,7 @@ export default function AdminReportsPage() {
               <div key={status} className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <span
                   className="h-2.5 w-2.5 rounded-[2px]"
-                  style={{ backgroundColor: `hsl(var(--chart-${index + 1}))` }}
+                  style={{ backgroundColor: `hsl(var(--chart-${(index % 5) + 1}))` }}
                 />
                 {LEAD_STATUS_LABELS[status]}
               </div>
