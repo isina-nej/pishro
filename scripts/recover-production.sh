@@ -28,7 +28,18 @@ if [ ! -d node_modules ] || [ ! -f node_modules/.package-lock.json ]; then
   npm ci
 fi
 
-echo "==> db migrate + regenerate client"
+echo "==> db backup (before any migration)"
+BACKUP_FILE="/opt/pishro-backup-$(date +%Y%m%d-%H%M%S).sql"
+if mysqldump --single-transaction --routines --triggers pishro > "$BACKUP_FILE" 2>/tmp/mysqldump.err; then
+  echo "backup saved: $BACKUP_FILE"
+else
+  cat /tmp/mysqldump.err
+  echo "FAILED: database backup failed — aborting before migrate"
+  exit 1
+fi
+
+echo "==> db migrate (additive only)"
+npx prisma migrate status
 npx prisma migrate deploy
 npx prisma generate
 
