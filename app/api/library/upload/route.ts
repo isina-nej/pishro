@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAdminAuth } from '@/lib/auth-simple';
 import { errorResponse, ErrorCodes, HttpStatus } from '@/lib/api-response';
 import { saveFileToStorage } from '@/lib/services/storage-adapter';
+import { randomSlug, sniffUpload } from '@/lib/upload-validation';
 
 export async function POST(request: NextRequest) {
   try {
@@ -44,22 +45,21 @@ export async function POST(request: NextRequest) {
 
     if (file.size > MAX_SIZES[fileType as keyof typeof MAX_SIZES]) {
       return NextResponse.json(
-        { 
-          success: false, 
-          message: `حجم فایل بیش از حد مجاز است (حداکثر ${MAX_SIZES[fileType as keyof typeof MAX_SIZES] / (1024 * 1024)}MB)` 
+        {
+          success: false,
+          message: `حجم فایل بیش از حد مجاز است (حداکثر ${MAX_SIZES[fileType as keyof typeof MAX_SIZES] / (1024 * 1024)}MB)`
         },
         { status: 400 }
       );
     }
 
-    // Validate file types
-    const validTypes = {
-      cover: ['image/jpeg', 'image/png', 'image/webp'],
-      pdf: ['application/pdf'],
-      audio: ['audio/mpeg', 'audio/wav', 'audio/m4a', 'audio/ogg'],
-    };
+    // Convert file to buffer and sniff magic bytes
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
 
-    if (!validTypes[fileType as keyof typeof validTypes].includes(file.type)) {
+    const sniffKind = fileType === 'cover' ? 'image' : fileType === 'pdf' ? 'pdf' : 'audio';
+    const detected = sniffUpload(buffer, [sniffKind]);
+    if (!detected) {
       return NextResponse.json(
         { success: false, message: `فرمت فایل غیرمعتبر است برای ${fileType}` },
         { status: 400 }
@@ -75,18 +75,15 @@ export async function POST(request: NextRequest) {
 
     const prefix = STORAGE_PREFIXES[fileType as keyof typeof STORAGE_PREFIXES];
 
-    // Generate unique filename
+    // Generate unique filename — ext/mime from magic bytes, never client.
     const timestamp = Date.now();
-    const fileExtension = file.name.split('.').pop();
-    const filename = `${fileType}_${timestamp}_${Math.random().toString(36).substring(7)}.${fileExtension}`;
+    const fileExtension = detected.ext;
+    const filename = `${fileType}_${timestamp}_${await randomSlug(4)}.${fileExtension}`;
 
-    // Convert file to buffer and save (ابری یا محلی، بسته به STORAGE_DRIVER)
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
     const fileUrl = await saveFileToStorage(
       buffer,
       `${prefix}/${filename}`,
-      file.type
+      detected.mime
     );
 
     return NextResponse.json({
@@ -98,9 +95,9 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Upload error:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        message: error instanceof Error ? error.message : 'خطا در بارگذاری فایل' 
+      {
+        success: false,
+        message: error instanceof Error ? error.message : 'خطا در بارگذاری فایل'
       },
       { status: 500 }
     );

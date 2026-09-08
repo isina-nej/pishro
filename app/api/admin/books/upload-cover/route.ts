@@ -8,37 +8,14 @@ import {
   HttpStatus,
 } from "@/lib/api-response";
 import { saveFileToStorage } from "@/lib/services/storage-adapter";
+import { randomSlug, sniffUpload } from "@/lib/upload-validation";
 
 // تنظیمات برای آپلود کاور کتاب
-const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
-const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-
-// CORS headers
-function corsHeaders(req: NextRequest) {
-  const origin = req.headers.get("origin") || "";
-  const allowedOrigins = [
-    "http://localhost:3000",
-    "http://localhost:3001",
-    "http://localhost:3002",
-    "http://localhost:3003",
-    "https://admin.pishrosarmaye.com",
-    "https://www.pishrosarmaye.com",
-    "https://pishrosarmaye.com",
-  ];
-  
-  const isOriginAllowed = allowedOrigins.includes(origin);
-  
-  return {
-    "Access-Control-Allow-Origin": isOriginAllowed ? origin : "*",
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-    "Access-Control-Allow-Credentials": isOriginAllowed ? "true" : "false"
-  };
-}
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB — message below says 5MB
 
 // Handle CORS preflight
-export async function OPTIONS(req: NextRequest) {
-  return new NextResponse(null, { headers: corsHeaders(req) });
+export async function OPTIONS(_req: NextRequest) {
+  return new NextResponse(null, { status: 204 });
 }
 
 export async function POST(req: NextRequest) {
@@ -62,14 +39,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // بررسی نوع فایل
-    if (!ALLOWED_TYPES.includes(file.type)) {
-      return validationError(
-        { cover: "فقط فایل‌های تصویری مجاز هستند" },
-        "فقط فرمت‌های JPG، PNG و WebP مجاز هستند"
-      );
-    }
-
     // بررسی حجم فایل
     if (file.size > MAX_FILE_SIZE) {
       return validationError(
@@ -82,46 +51,42 @@ export async function POST(req: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // ایجاد نام منحصر به فرد برای فایل
+    // Magic-byte sniff — file.type / extension are client-controlled.
+    const detected = sniffUpload(buffer, ["image"]);
+    if (!detected || detected.kind !== "image") {
+      return validationError(
+        { cover: "فقط فایل‌های تصویری مجاز هستند" },
+        "فقط فرمت‌های JPG، PNG و WebP مجاز هستند"
+      );
+    }
+
+    // ایجاد نام منحصر به فرد برای فایل — ext/mime from magic bytes.
     const timestamp = Date.now();
-    const randomString = Math.random().toString(36).substring(2, 15);
-    const extension = file.name.split(".").pop() || "jpg";
-    const filename = `cover_${timestamp}_${randomString}.${extension}`;
+    const randomString = await randomSlug();
+    const filename = `cover_${timestamp}_${randomString}.${detected.ext}`;
 
     // ذخیره در storage (ابری یا محلی، بسته به STORAGE_DRIVER)
     const coverUrl = await saveFileToStorage(
       buffer,
       `books/covers/${filename}`,
-      file.type
+      detected.mime
     );
 
-    const response = successResponse(
+    return successResponse(
       {
         fileName: filename,
         fileUrl: coverUrl,
         fileSize: file.size,
-        mimeType: file.type,
+        mimeType: detected.mime,
         uploadedAt: new Date().toISOString()
       },
       "تصویر کاور با موفقیت آپلود شد"
     );
-    
-    // Add CORS headers to response
-    for (const [key, value] of Object.entries(corsHeaders(req))) {
-      response.headers.set(key, value);
-    }
-    return response;
   } catch (error) {
     console.error("Cover upload error:", error);
-    const response = errorResponse(
+    return errorResponse(
       "خطایی در آپلود تصویر کاور رخ داد",
       ErrorCodes.INTERNAL_ERROR
     );
-    
-    // Add CORS headers to error response
-    for (const [key, value] of Object.entries(corsHeaders(req))) {
-      response.headers.set(key, value);
-    }
-    return response;
   }
 }

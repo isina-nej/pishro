@@ -64,7 +64,6 @@ const CheckoutPageContent = () => {
     // استفاده از mutation برای ایجاد checkout
     createCheckoutMutation.mutate(
       {
-        userId,
         items: formattedItems,
       },
       {

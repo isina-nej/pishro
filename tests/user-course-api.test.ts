@@ -9,7 +9,7 @@ describe("user purchased course API", { skip: await skipUnlessServerUp() }, () =
     const res = await fetch(`${BASE}/api/user/courses/test-course-id`);
     assert.equal(res.status, 401);
     const body = await res.json();
-    assert.equal(body.status, "error");
+    assert.equal(body.status, "fail");
   });
 
   it("GET /api/user/courses/:id returns 403 without enrollment", async () => {

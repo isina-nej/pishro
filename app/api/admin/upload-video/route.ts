@@ -8,17 +8,10 @@ import {
   HttpStatus,
 } from "@/lib/api-response";
 import { saveFileToStorage } from "@/lib/services/storage-adapter";
+import { detectVideo, randomSlug } from "@/lib/upload-validation";
 
 // تنظیمات مجاز برای آپلود ویدیو
 const MAX_FILE_SIZE = 256 * 1024 * 1024; // 256MB
-const ALLOWED_TYPES = [
-  "video/mp4",
-  "video/quicktime", // MOV
-  "video/x-msvideo", // AVI
-  "video/x-matroska", // MKV
-  "video/webm",
-];
-const ALLOWED_EXTENSIONS = ["mp4", "mov", "avi", "mkv", "webm"];
 
 export async function POST(req: NextRequest) {
   try {
@@ -28,15 +21,6 @@ export async function POST(req: NextRequest) {
     if (!adminAuth) {
       return errorResponse(
         "لطفاً وارد حساب کاربری خود شوید",
-        ErrorCodes.UNAUTHORIZED,
-        undefined,
-        HttpStatus.UNAUTHORIZED
-      );
-    }
-
-    if (!adminAuth) {
-      return errorResponse(
-        "دسترسی غیرمجاز - فقط ادمین",
         ErrorCodes.UNAUTHORIZED,
         undefined,
         HttpStatus.UNAUTHORIZED
@@ -53,14 +37,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // بررسی نوع فایل
-    if (!ALLOWED_TYPES.includes(file.type)) {
-      return validationError(
-        { video: "فقط فایل‌های ویدیویی مجاز هستند" },
-        "فقط فرمت‌های MP4، MOV، AVI، MKV و WebM مجاز هستند"
-      );
-    }
-
     // بررسی حجم فایل
     if (file.size > MAX_FILE_SIZE) {
       return validationError(
@@ -73,26 +49,25 @@ export async function POST(req: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // ایجاد نام منحصر به فرد برای فایل
-    const timestamp = Date.now();
-    const randomString = Math.random().toString(36).substring(2, 15);
-    const extension = file.name.split(".").pop()?.toLowerCase() || "mp4";
-
-    // بررسی اعتبار پسوند
-    if (!ALLOWED_EXTENSIONS.includes(extension)) {
+    // Magic-byte sniff — ftyp/EBML, not client type/extension.
+    const detected = detectVideo(buffer);
+    if (!detected) {
       return validationError(
-        { video: "پسوند فایل معتبر نیست" },
-        "پسوند فایل معتبر نیست"
+        { video: "فقط فایل‌های ویدیویی مجاز هستند" },
+        "فقط فرمت‌های MP4، MOV، MKV و WebM مجاز هستند"
       );
     }
 
-    const filename = `video_${timestamp}_${randomString}.${extension}`;
+    // ایجاد نام منحصر به فرد برای فایل — ext/mime from magic bytes.
+    const timestamp = Date.now();
+    const randomString = await randomSlug();
+    const filename = `video_${timestamp}_${randomString}.${detected.ext}`;
 
     // ذخیره در storage (ابری یا محلی، بسته به STORAGE_DRIVER)
     const videoUrl = await saveFileToStorage(
       buffer,
       `videos/${filename}`,
-      file.type
+      detected.mime
     );
 
     return successResponse(
@@ -100,7 +75,7 @@ export async function POST(req: NextRequest) {
         videoUrl,
         filename,
         fileSize: file.size,
-        fileType: file.type
+        fileType: detected.mime
       },
       "ویدیو با موفقیت آپلود شد"
     );

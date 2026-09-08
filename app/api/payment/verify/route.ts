@@ -52,50 +52,6 @@ export async function GET(req: Request) {
       );
     }
 
-    // 💳 حالت واقعی (فعلاً کامنت شده)
-    /*
-    // Get merchant ID from database settings (with fallback to env)
-    const merchantId = await getZarinpalMerchantId();
-    if (!merchantId) {
-      console.error("Zarinpal Merchant ID not configured");
-      return NextResponse.json(
-        { error: "تنظیمات درگاه پرداخت ناقص است" },
-        { status: 500 }
-      );
-    }
-
-    const zarinpal = Zarinpal.create(merchantId, true);
-    const verifyRes = await zarinpal.PaymentVerification({
-      Amount: order.total,
-      Authority: authority,
-    });
-
-    if (verifyRes.Status === 100) {
-      // ✅ موفق
-      await prisma.order.update({
-        where: { id: orderId },
-        data: {
-          status: "PAID",
-          paymentRef: verifyRes.RefID?.toString(),
-        },
-      });
-
-      return NextResponse.redirect(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/result?result=success&orderId=${orderId}`
-      );
-    } else {
-      // ❌ ناموفق
-      await prisma.order.update({
-        where: { id: orderId },
-        data: { status: "FAILED" },
-      });
-
-      return NextResponse.redirect(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/result?result=failed&orderId=${orderId}`
-      );
-    }
-    */
-
     // Fake gateway disabled in production — wire real Zarinpal verify + amount match here.
     if (process.env.NODE_ENV === "production") {
       await prisma.order.update({

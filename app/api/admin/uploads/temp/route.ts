@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { verifyAdminAccessToken } from "@/lib/admin-auth";
+import { getAdminAuthFromHeaders } from "@/lib/admin-auth";
 import {
   errorResponse,
   successResponse,
@@ -23,23 +23,10 @@ const MAX_MULTIPART_BODY_BYTES = 550 * 1024 * 1024;
 export async function POST(req: NextRequest) {
   let errorDetails = "";
   try {
-    // Verify admin access token
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      console.error("[POST /api/admin/uploads/temp] Missing Authorization header");
-      return errorResponse(
-        "Please login to continue",
-        ErrorCodes.UNAUTHORIZED,
-        undefined,
-        HttpStatus.UNAUTHORIZED
-      );
-    }
+    // Accept Bearer header or httpOnly admin cookie (same as other admin routes).
+    const adminUser = getAdminAuthFromHeaders(req.headers);
 
-    const token = authHeader.slice(7);
-    const adminUser = verifyAdminAccessToken(token);
-    
     if (!adminUser) {
-      console.error("[POST /api/admin/uploads/temp] Invalid or expired token");
       return errorResponse(
         "Please login to continue",
         ErrorCodes.UNAUTHORIZED,
@@ -47,8 +34,6 @@ export async function POST(req: NextRequest) {
         HttpStatus.UNAUTHORIZED
       );
     }
-
-    console.log("[POST /api/admin/uploads/temp] Auth successful for admin:", adminUser.id);
 
     const contentLength = Number(req.headers.get("content-length") || 0);
     if (contentLength > MAX_MULTIPART_BODY_BYTES) {
@@ -63,9 +48,7 @@ export async function POST(req: NextRequest) {
     let formData;
     try {
       errorDetails = "FormData parsing";
-      console.log("[POST /api/admin/uploads/temp] Attempting to parse FormData");
       formData = await req.formData();
-      console.log("[POST /api/admin/uploads/temp] FormData parsed successfully");
     } catch (fde) {
       console.error("[POST /api/admin/uploads/temp] FormData parsing error:", fde);
       return errorResponse(
@@ -79,10 +62,7 @@ export async function POST(req: NextRequest) {
     const file = formData.get("file");
     const kind = formData.get("kind"); // thumbnail | video
 
-    console.log("[POST /api/admin/uploads/temp] File:", file instanceof File ? file.name : "Not a file", "Kind:", kind);
-
     if (!(file instanceof File)) {
-      console.error("[POST /api/admin/uploads/temp] File validation failed - not a File");
       return errorResponse(
         "فایل الزامی است",
         ErrorCodes.VALIDATION_ERROR,
@@ -97,7 +77,6 @@ export async function POST(req: NextRequest) {
         : validateThumbnailFile({ type: file.type, size: file.size });
 
     if (validationError) {
-      console.error("[POST /api/admin/uploads/temp] Validation error:", validationError);
       return errorResponse(
         validationError,
         ErrorCodes.VALIDATION_ERROR,
@@ -108,14 +87,10 @@ export async function POST(req: NextRequest) {
 
     try {
       errorDetails = "Buffer conversion";
-      console.log("[POST /api/admin/uploads/temp] Converting file to buffer");
       const buffer = Buffer.from(await file.arrayBuffer());
-      
+
       errorDetails = "File storage";
-      console.log("[POST /api/admin/uploads/temp] Saving temp file");
       const tempPath = await saveTempFileToStorage(buffer, file.name);
-      
-      console.log("[POST /api/admin/uploads/temp] File saved successfully:", tempPath);
 
       return successResponse(
         { tempPath, fileName: file.name, mimeType: file.type },
@@ -126,12 +101,8 @@ export async function POST(req: NextRequest) {
       throw processError;
     }
   } catch (error) {
-    console.error("[POST /api/admin/uploads/temp] Caught error:", error);
+    console.error("[POST /api/admin/uploads/temp] error:", error);
     if (error instanceof Error) {
-      console.error("[POST /api/admin/uploads/temp] Error message:", error.message);
-      console.error("[POST /api/admin/uploads/temp] Error name:", error.name);
-      console.error("[POST /api/admin/uploads/temp] Error stack:", error.stack);
-
       if (error.message.includes("EACCES") || error.message.includes("permission denied")) {
         return errorResponse(
           "مسیر ذخیره‌سازی آپلود قابل نوشتن نیست. لطفا دسترسی UPLOAD_BASE_DIR را تنظیم کنید",

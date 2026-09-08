@@ -14,19 +14,22 @@ import {
 } from "@/lib/api-response";
 import { requireAdminUser } from "@/lib/admin/landing-cms-api";
 import { saveFileToStorage } from "@/lib/services/storage-adapter";
+import { randomSlug, sniffUpload } from "@/lib/upload-validation";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
-const ALLOWED_TYPES = [
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/webp",
-  "image/x-icon",
-  "image/vnd.microsoft.icon",
-  "image/svg+xml",
-];
 
 const KINDS = new Set(["logo", "favicon", "og"]);
+
+// favicon .ico magic: 00 00 01 00
+function isIco(buffer: Buffer): boolean {
+  return (
+    buffer.length >= 4 &&
+    buffer[0] === 0x00 &&
+    buffer[1] === 0x00 &&
+    buffer[2] === 0x01 &&
+    buffer[3] === 0x00
+  );
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -56,12 +59,6 @@ export async function POST(req: NextRequest) {
         "kind باید logo، favicon یا og باشد"
       );
     }
-    if (!ALLOWED_TYPES.includes(file.type) && !file.name.endsWith(".ico")) {
-      return validationError(
-        { file: "فرمت نامعتبر" },
-        "فقط JPG، PNG، WebP، SVG یا ICO مجاز است"
-      );
-    }
     if (file.size > MAX_FILE_SIZE) {
       return validationError(
         { file: "حجم زیاد" },
@@ -70,15 +67,36 @@ export async function POST(req: NextRequest) {
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
+
+    // Magic-byte sniff — file.type / extension are client-controlled.
+    // SVG allowed here (logos) but stored only for ADMIN role above.
+    let ext: string;
+    let mime: string;
+    if (isIco(buffer)) {
+      ext = "ico";
+      mime = "image/x-icon";
+    } else if (
+      buffer.length >= 5 &&
+      buffer.toString("utf8", 0, 5).trimStart().startsWith("<svg")
+    ) {
+      ext = "svg";
+      mime = "image/svg+xml";
+    } else {
+      const detected = sniffUpload(buffer, ["image"]);
+      if (!detected || detected.kind !== "image") {
+        return validationError(
+          { file: "فرمت نامعتبر" },
+          "فقط JPG، PNG، WebP، SVG یا ICO مجاز است"
+        );
+      }
+      ext = detected.ext;
+      mime = detected.mime;
+    }
+
     const timestamp = Date.now();
-    const random = Math.random().toString(36).slice(2, 10);
-    const extension = file.name.split(".").pop()?.toLowerCase() || "png";
-    const filename = `${kindRaw}_${timestamp}_${random}.${extension}`;
-    const url = await saveFileToStorage(
-      buffer,
-      `branding/${filename}`,
-      file.type || "image/png"
-    );
+    const random = await randomSlug(5);
+    const filename = `${kindRaw}_${timestamp}_${random}.${ext}`;
+    const url = await saveFileToStorage(buffer, `branding/${filename}`, mime);
 
     return createdResponse(
       { url, fileName: filename, kind: kindRaw },

@@ -13,9 +13,9 @@ import {
 } from "@/lib/api-response";
 import { requireAdminUser } from "@/lib/admin/landing-cms-api";
 import { saveFileToStorage } from "@/lib/services/storage-adapter";
+import { randomSlug, sniffUpload } from "@/lib/upload-validation";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
-const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
 export async function POST(req: NextRequest) {
   try {
@@ -28,12 +28,6 @@ export async function POST(req: NextRequest) {
     if (!file) {
       return validationError({ avatar: "فایل تصویر پروفایل الزامی است" });
     }
-    if (!ALLOWED_TYPES.includes(file.type)) {
-      return validationError(
-        { avatar: "فرمت نامعتبر" },
-        "فقط JPG، PNG و WebP مجاز است"
-      );
-    }
     if (file.size > MAX_FILE_SIZE) {
       return validationError(
         { avatar: "حجم زیاد" },
@@ -42,14 +36,23 @@ export async function POST(req: NextRequest) {
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
+
+    // Magic-byte sniff — file.type / extension are client-controlled.
+    const detected = sniffUpload(buffer, ["image"]);
+    if (!detected || detected.kind !== "image") {
+      return validationError(
+        { avatar: "فرمت نامعتبر" },
+        "فقط JPG، PNG و WebP مجاز است"
+      );
+    }
+
     const timestamp = Date.now();
-    const random = Math.random().toString(36).slice(2, 10);
-    const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
-    const filename = `avatar_${timestamp}_${random}.${extension}`;
+    const random = await randomSlug(5);
+    const filename = `avatar_${timestamp}_${random}.${detected.ext}`;
     const url = await saveFileToStorage(
       buffer,
       `comments/avatars/${filename}`,
-      file.type
+      detected.mime
     );
 
     return createdResponse({ url, fileName: filename }, "عکس پروفایل آپلود شد");

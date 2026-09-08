@@ -79,8 +79,7 @@ export async function POST(req: Request) {
 
     console.log(`[Checkout] Order ${order.id} created. Total: ${total}`);
 
-    // Fake gateway disabled: real Zarinpal PaymentRequest wiring goes here.
-    // Order stays PENDING until /api/payment/verify confirms with the gateway.
+    // Fake gateway disabled in production — real Zarinpal PaymentRequest wiring goes here.
     if (process.env.NODE_ENV === "production") {
       return errorResponse(
         "درگاه پرداخت فعال نیست",

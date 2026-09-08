@@ -13,38 +13,14 @@ import {
   HttpStatus,
 } from "@/lib/api-response";
 import { saveFileToStorage } from "@/lib/services/storage-adapter";
+import { detectPdf, randomSlug } from "@/lib/upload-validation";
 
 // تنظیمات مجاز برای آپلود PDF کتاب
-const MAX_FILE_SIZE = 1024 * 1024 * 1024; // 1GB
-const ALLOWED_TYPES = ["application/pdf"];
-const ALLOWED_EXTENSIONS = ["pdf"];
-
-// CORS headers
-function corsHeaders(req: NextRequest) {
-  const origin = req.headers.get("origin") || "";
-  const allowedOrigins = [
-    "http://localhost:3000",
-    "http://localhost:3001",
-    "http://localhost:3002",
-    "http://localhost:3003",
-    "https://admin.pishrosarmaye.com",
-    "https://www.pishrosarmaye.com",
-    "https://pishrosarmaye.com",
-  ];
-  
-  const isOriginAllowed = allowedOrigins.includes(origin);
-  
-  return {
-    "Access-Control-Allow-Origin": isOriginAllowed ? origin : "*",
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-    "Access-Control-Allow-Credentials": isOriginAllowed ? "true" : "false"
-  };
-}
+const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB — matches the error message
 
 // Handle CORS preflight
-export async function OPTIONS(req: NextRequest) {
-  return new NextResponse(null, { headers: corsHeaders(req) });
+export async function OPTIONS(_req: NextRequest) {
+  return new NextResponse(null, { status: 204 });
 }
 
 export async function POST(req: NextRequest) {
@@ -62,8 +38,6 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     const file = formData.get("pdf") as File | null;
 
-    console.log("PDF upload request received:", { fileName: file?.name, fileSize: file?.size });
-
     if (!file) {
       return validationError(
         { pdf: "فایل PDF الزامی است" },
@@ -71,31 +45,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // بررسی نوع فایل
-    if (!ALLOWED_TYPES.includes(file.type)) {
-      console.error("Invalid file type:", file.type);
-      return validationError(
-        { pdf: "فقط فایل‌های PDF مجاز هستند" },
-        "فقط فرمت PDF مجاز است"
-      );
-    }
-
     // بررسی حجم فایل
     if (file.size > MAX_FILE_SIZE) {
-      console.error("File too large:", file.size);
       return validationError(
         { pdf: "حجم فایل نباید بیشتر از 100 مگابایت باشد" },
         "حجم فایل نباید بیشتر از 100 مگابایت باشد"
-      );
-    }
-
-    // بررسی پسوند فایل
-    const extension = file.name.split(".").pop()?.toLowerCase();
-    if (!extension || !ALLOWED_EXTENSIONS.includes(extension)) {
-      console.error("Invalid file extension:", extension);
-      return validationError(
-        { pdf: "پسوند فایل معتبر نیست" },
-        "پسوند فایل باید .pdf باشد"
       );
     }
 
@@ -103,53 +57,42 @@ export async function POST(req: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
+    // Magic-byte sniff — %PDF- header, not client type/extension.
+    const detected = detectPdf(buffer);
+    if (!detected) {
+      return validationError(
+        { pdf: "فقط فایل‌های PDF مجاز هستند" },
+        "فقط فرمت PDF مجاز است"
+      );
+    }
+
     // ایجاد نام منحصر به فرد برای فایل
     const timestamp = Date.now();
-    const randomString = Math.random().toString(36).substring(2, 15);
+    const randomString = await randomSlug();
     const filename = `book_${timestamp}_${randomString}.pdf`;
 
     // ذخیره در storage (ابری یا محلی، بسته به STORAGE_DRIVER)
-    let pdfUrl: string;
-    try {
-      pdfUrl = await saveFileToStorage(
-        buffer,
-        `books/pdfs/${filename}`,
-        "application/pdf"
-      );
-      console.log("File written successfully");
-    } catch (err) {
-      console.error("Error writing file:", err);
-      throw err;
-    }
+    const pdfUrl = await saveFileToStorage(
+      buffer,
+      `books/pdfs/${filename}`,
+      detected.mime
+    );
 
-    console.log("Upload successful:", { pdfUrl, fileName: file.name });
-    const response = successResponse(
+    return successResponse(
       {
         fileName: file.name,
         fileUrl: pdfUrl,
         fileSize: file.size,
-        mimeType: file.type,
+        mimeType: detected.mime,
         uploadedAt: new Date().toISOString()
       },
       "فایل PDF با موفقیت آپلود شد"
     );
-    
-    // Add CORS headers to response
-    for (const [key, value] of Object.entries(corsHeaders(req))) {
-      response.headers.set(key, value);
-    }
-    return response;
   } catch (error) {
     console.error("Error uploading PDF:", error);
-    const response = errorResponse(
+    return errorResponse(
       "خطا در آپلود فایل PDF:" + (error instanceof Error ? error.message : String(error)),
       ErrorCodes.INTERNAL_ERROR
     );
-    
-    // Add CORS headers to error response
-    for (const [key, value] of Object.entries(corsHeaders(req))) {
-      response.headers.set(key, value);
-    }
-    return response;
   }
 }
