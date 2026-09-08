@@ -28,6 +28,10 @@ if [ ! -d node_modules ] || [ ! -f node_modules/.package-lock.json ]; then
   npm ci
 fi
 
+echo "==> db migrate + regenerate client"
+npx prisma migrate deploy
+npx prisma generate
+
 echo "==> clean build"
 export NODE_OPTIONS="${NODE_OPTIONS:---max-old-space-size=4096}"
 npm run build
