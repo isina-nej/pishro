@@ -42,19 +42,7 @@ const NewsCard = ({ data }: NewsCardProps) => {
     }).format(d);
   };
 
-  const getCategoryColor = (category: string) => {
-    const colors: Record<string, { bg: string; text: string; icon: string }> = {
-      اخبار: { bg: "from-primary/20 to-primary/20", text: "from-primary to-primary", icon: "bg-primary/20 text-primary" },
-      آموزش: { bg: "from-accent/20 to-destructive/20", text: "from-accent to-destructive", icon: "bg-accent/20 text-accent-foreground" },
-      فناوری: { bg: "from-primary/20 to-primary/20", text: "from-primary to-primary", icon: "bg-primary/20 text-primary" },
-      رویداد: { bg: "from-premium/20 to-destructive/20", text: "from-premium to-destructive", icon: "bg-premium/20 text-premium" },
-      پروژه: { bg: "from-primary/20 to-accent/20", text: "from-primary to-accent", icon: "bg-primary/20 text-primary" },
-    };
-    return colors[category] || { bg: "from-primary/20 to-primary/20", text: "from-primary to-primary", icon: "bg-primary/20 text-primary" };
-  };
-
   const readingTime = getReadingTime(data.content || data.excerpt);
-  const categoryColor = getCategoryColor(data.category);
 
   return (
     <motion.article
@@ -69,23 +57,28 @@ const NewsCard = ({ data }: NewsCardProps) => {
         className="flex h-full flex-col"
         href={`/news/${data.slug}`}
       >
-        {/* Image Container — fixed 16/10 frame, full image always visible */}
-        <div className="relative w-full shrink-0 overflow-hidden bg-gradient-to-br from-muted to-card">
+        {/* Image Container — uniform 16/10 frame, cover fills without distortion.
+            object-cover keeps every card identical; object-position top shows
+            headlines instead of cropping them. Dark scrim behind image adds
+            contrast in light mode; in dark mode the frame blends into the card. */}
+        <div className="relative w-full shrink-0 overflow-hidden bg-slate-900 dark:bg-black/60">
           <div className="relative aspect-[16/10] w-full">
             <Image
               src={data.coverImage ?? "/images/default-news.jpg"}
               alt={data.title}
               fill
-              className="object-contain transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+              className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.03]"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 500px, 600px"
               priority={false}
             />
+            {/* readability scrim — softens bright covers in light mode */}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent dark:from-black/45" />
           </div>
 
-          {/* Category Badge */}
+          {/* Category Badge — solid chip, readable on any cover in both themes */}
           <div className="absolute right-4 top-4 z-10">
-            <div className={`rounded-full border border-border/20 bg-background/70 px-3 py-2 backdrop-blur-xl`}>
-              <span className={`bg-gradient-to-r text-xs font-bold sm:text-sm ${categoryColor.text} bg-clip-text text-transparent`}>
+            <div className="rounded-full border border-white/25 bg-black/55 px-3 py-1.5 shadow-lg backdrop-blur-xl">
+              <span className="text-xs font-bold text-white sm:text-sm">
                 {data.category}
               </span>
             </div>
@@ -96,7 +89,7 @@ const NewsCard = ({ data }: NewsCardProps) => {
             <BookmarkButton
               type="news"
               itemId={data.id}
-              className="border-border/20 backdrop-blur-xl"
+              className="border-white/25 bg-black/55 text-white backdrop-blur-xl hover:bg-black/70"
             />
           </div>
         </div>

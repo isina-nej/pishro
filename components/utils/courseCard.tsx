@@ -77,12 +77,12 @@ const CourseCard = ({ data, link: _link }: CourseCardProps) => {
           onError={() => setImageError(true)}
         />
 
-        {/* Purchase Button - Bottom Right */}
+        {/* Purchase Button - Bottom Right — solid chip, readable on any cover */}
         <motion.button
           onClick={handleAddToCart}
           initial={{ opacity: 0, scale: 0.8 }}
           whileHover={{ scale: 1.05 }}
-          className="absolute bottom-2 right-2 bg-mySecondary text-foreground px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1 hover:shadow-lg transition"
+          className="absolute bottom-2 right-2 flex items-center gap-1 rounded-full border border-white/25 bg-black/60 px-2 py-1 text-xs font-bold text-white shadow-lg backdrop-blur-xl transition hover:bg-black/75"
         >
           <ShoppingCart size={14} />
           {freeCourse ? "رایگان" : "خرید"}

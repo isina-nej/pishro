@@ -115,7 +115,7 @@ const NewsPageContent = () => {
           {/* Idle filter: sticky sidebar at top */}
           {filtersVisible && !hasActiveFilters && (
             <aside className="self-start">
-              <div className="sticky top-24 rounded-3xl border border-white/15 bg-white/10 p-4 shadow-xl backdrop-blur-2xl dark:bg-black/30 sm:p-5">
+              <div className="sticky top-24 rounded-3xl border border-border/70 bg-card p-4 shadow-xl dark:border-white/15 dark:bg-black/30 sm:p-5">
                 <NewsFilterControls {...filterProps} compact={false} />
               </div>
             </aside>

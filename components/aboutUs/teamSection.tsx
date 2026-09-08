@@ -107,7 +107,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
                     {member.specialties.map((specialty, idx) => (
                       <span
                         key={idx}
-                        className="bg-mySecondary/10 text-mySecondary px-4 py-2 rounded-full text-sm font-medium"
+                        className="rounded-full border border-primary/25 bg-primary/10 px-4 py-2 text-sm font-medium text-foreground"
                       >
                         {specialty}
                       </span>
@@ -124,7 +124,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
                       href={member.linkedinUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 min-w-[120px] bg-myPrimary/10 hover:bg-myPrimary text-myPrimary hover:text-foreground py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
+                      className="flex min-w-[120px] flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-card py-3 font-medium text-foreground transition-all duration-300 hover:border-primary/40 hover:text-primary"
                     >
                       <LuLinkedin />
                       <span>لینکدین</span>
@@ -133,7 +133,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
                   {member.emailUrl && (
                     <a
                       href={member.emailUrl}
-                      className="flex-1 min-w-[120px] bg-mySecondary/10 hover:bg-mySecondary text-mySecondary hover:text-foreground py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
+                      className="flex min-w-[120px] flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-card py-3 font-medium text-foreground transition-all duration-300 hover:border-primary/40 hover:text-primary"
                     >
                       <LuMail />
                       <span>ایمیل</span>
@@ -144,7 +144,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
                       href={member.twitterUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 min-w-[120px] bg-primary hover:bg-primary text-primary hover:text-primary-foreground py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
+                      className="flex min-w-[120px] flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-card py-3 font-medium text-foreground transition-all duration-300 hover:border-primary/40 hover:text-primary"
                     >
                       <LuTwitter />
                       <span>توییتر</span>
@@ -155,7 +155,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
                       href={member.whatsappUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 min-w-[120px] bg-primary hover:bg-primary text-primary hover:text-primary-foreground py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
+                      className="flex min-w-[120px] flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-card py-3 font-medium text-foreground transition-all duration-300 hover:border-primary/40 hover:text-primary"
                     >
                       <FaWhatsapp />
                       <span>واتساپ</span>
@@ -166,7 +166,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
                       href={member.telegramUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 min-w-[120px] bg-primary hover:bg-primary text-primary hover:text-primary-foreground py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-medium"
+                      className="flex min-w-[120px] flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-card py-3 font-medium text-foreground transition-all duration-300 hover:border-primary/40 hover:text-primary"
                     >
                       <FaTelegramPlane />
                       <span>تلگرام</span>

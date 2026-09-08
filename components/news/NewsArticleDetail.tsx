@@ -230,9 +230,9 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
       </div>
 
       <div className="w-full bg-card">
-        {/* Hero Section with Image */}
+        {/* Hero Section with Image — dark scrim keeps image vivid in light mode */}
         {article.coverImage && (
-          <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] overflow-hidden">
+          <div className="relative w-full h-[300px] overflow-hidden bg-slate-900 sm:h-[400px] md:h-[500px] dark:bg-black/60">
             <Image
               src={article.coverImage}
               alt={article.title}
@@ -241,30 +241,33 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
               priority
             />
             {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
             
-            {/* Header Content Overlay */}
+            {/* Header Content Overlay — always white on the dark scrim */}
             <div className="absolute inset-0 flex flex-col justify-end">
               <div className="max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12">
                 {/* Category and Date */}
                 <div className="flex flex-wrap items-center gap-3 mb-6">
-                  <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary/20 to-primary/20 border border-primary/40 backdrop-blur-sm">
-                    <span className="inline-block w-2 h-2 rounded-full bg-primary animate-pulse" />
-                    <span className="text-sm font-semibold text-primary">{article.category}</span>
+                  <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/55 px-4 py-2 backdrop-blur-xl">
+                    <span className="inline-block size-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="text-sm font-semibold text-white">{article.category}</span>
                   </span>
                   {formattedDate && (
-                    <span className="text-sm text-muted-foreground">{formattedDate}</span>
+                    <span className="text-sm text-white/75">{formattedDate}</span>
                   )}
                 </div>
 
                 {/* Title */}
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-foreground leading-tight mb-4">
+                <h1
+                  className="mb-4 text-3xl font-black leading-tight text-white sm:text-4xl md:text-5xl lg:text-6xl"
+                  style={{ textShadow: "0 2px 18px rgba(0,0,0,0.6)" }}
+                >
                   {article.title}
                 </h1>
 
                 {/* Excerpt */}
                 {article.excerpt && (
-                  <p className="max-w-2xl text-base sm:text-lg text-foreground leading-relaxed">
+                  <p className="max-w-2xl text-base leading-relaxed text-white/85 sm:text-lg">
                     {article.excerpt}
                   </p>
                 )}

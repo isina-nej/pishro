@@ -50,15 +50,15 @@ const CheckoutSidebar = ({
       >
         {/* Main Card */}
         <div className="bg-gradient-to-br from-card via-card to-muted rounded-2xl shadow-lg border border-border dark:border-borderColor overflow-hidden">
-          {/* Header with Icon */}
-          <div className="bg-gradient-to-l from-mySecondary to-myBlue p-5 text-foreground">
+          {/* Header with Icon — deep emerald band, always white text */}
+          <div className="bg-gradient-to-l from-[#0B3D2E] to-[#1A6B45] p-5 text-white">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-card dark:bg-cardBg backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <ShoppingBag className="w-6 h-6" />
+              <div className="flex size-12 items-center justify-center rounded-xl bg-white/15 text-white backdrop-blur-sm">
+                <ShoppingBag className="size-6" />
               </div>
               <div>
-                <p className="font-bold text-lg">خلاصه سفارش</p>
-                <p className="text-xs text-foreground/80">دوره‌های منتخب شما</p>
+                <p className="font-bold text-lg text-white">خلاصه سفارش</p>
+                <p className="text-xs text-white/75">دوره‌های منتخب شما</p>
               </div>
             </div>
           </div>
