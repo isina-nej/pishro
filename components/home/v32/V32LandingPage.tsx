@@ -58,7 +58,30 @@ export default function V32LandingPage({
   const copy = usePublicCopy("home-v32");
   const phoneAmount = useAnimatedNumber(200_000_000);
 
-  const heroCtaHref = copy("hero.ctaLink", "") || `tel:${phoneTel}`;
+  const faDigits = "۰۱۲۳۴۵۶۷۸۹";
+  const arDigits = "٠١٢٣٤٥٦٧٨٩";
+  const toLatinDigits = (s: string) =>
+    s
+      .replace(/[۰-۹]/g, (d) => String(faDigits.indexOf(d)))
+      .replace(/[٠-٩]/g, (d) => String(arDigits.indexOf(d)));
+  const toLatinRate = (s: string) => {
+    let out = "";
+    for (const ch of toLatinDigits(s)) {
+      if (/[0-9]/.test(ch)) out += ch;
+      else if (ch === "." || ch === "\u066b" || ch === "/") {
+        if (!out.includes(".")) out += ".";
+      }
+    }
+    return Number(out) || 0;
+  };
+  const splitBalanceTarget =
+    Number(toLatinDigits(String(copy("split.balanceValue", "۵۲۶٬۸۲۵٬۰۰۰"))).replace(/[^\d]/g, "")) || 526825000;
+  const splitBalance = useAnimatedNumber(splitBalanceTarget);
+  const row1Tenths = Math.round(toLatinRate(String(copy("split.row1Value", "+۲٫۱٪"))) * 10);
+  const row2Tenths = Math.round(toLatinRate(String(copy("split.row2Value", "+۱٫۴٪"))) * 10);
+  const row1 = useAnimatedNumber(row1Tenths);
+  const row2 = useAnimatedNumber(row2Tenths);
+
   const splitCtaHref = copy("split.ctaLink", "") || `tel:${phoneTel}`;
 
   return (
@@ -73,9 +96,22 @@ export default function V32LandingPage({
               <p>
                 {copy("hero.subtitle", "پیشرو در آموزش و سرمایه‌گذاری")}
               </p>
-              <a href={heroCtaHref} className="v32-btn-white">
-                {copy("hero.cta", "شروع کنید")}
-              </a>
+              <div className="v32-cta-row flex flex-col sm:flex-row gap-3 mt-1">
+                <a href={`tel:${phoneTel}`} className="v32-btn-green flex items-center gap-2">
+                  <span className="text-2xl">📞</span>
+                  {copy("hero.phoneCta", "تماس با پشتیبانی")}
+                </a>
+                <button
+                  onClick={() => {
+                    const el = document.getElementById('calculator');
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }}
+                  className="v32-btn-accent flex items-center gap-2"
+                >
+                  <span className="text-2xl">💰</span>
+                  {copy("hero.calculatorCta", "محاسبه سود")}
+                </button>
+              </div>
               <div className="v32-chips">
                 <span>{copy("hero.chip1", "آموزش ترید")}</span>
                 <span>{copy("hero.chip2", "سبدهای تضمینی")}</span>
@@ -186,8 +222,8 @@ export default function V32LandingPage({
             <div style={{ fontSize: 12, color: "#9aa3ae" }}>
               {copy("split.balanceLabel", "موجودی سبد")}
             </div>
-            <div style={{ fontSize: 28, fontWeight: 800, margin: "6px 0 12px" }}>
-              {copy("split.balanceValue", "۵۲۶٬۸۲۵٬۰۰۰")}
+            <div ref={splitBalance.ref} style={{ fontSize: 28, fontWeight: 800, margin: "6px 0 12px" }}>
+              {formatFa(splitBalance.value)}
             </div>
             <svg viewBox="0 0 280 80" width="100%" height="80" aria-hidden>
               <path
@@ -207,7 +243,7 @@ export default function V32LandingPage({
               }}
             >
               <span>{copy("split.row1Label", "سبد ثابت")}</span>
-              <span>{copy("split.row1Value", "+۲٫۱٪")}</span>
+              <span ref={row1.ref}>+{formatFa(Math.floor(row1.value / 10))}٫{formatFa(row1.value % 10)}٪</span>
             </div>
             <div
               style={{
@@ -219,7 +255,7 @@ export default function V32LandingPage({
               }}
             >
               <span>{copy("split.row2Label", "سبد ترکیبی")}</span>
-              <span>{copy("split.row2Value", "+۱٫۴٪")}</span>
+              <span ref={row2.ref}>+{formatFa(Math.floor(row2.value / 10))}٫{formatFa(row2.value % 10)}٪</span>
             </div>
           </div>
         </div>

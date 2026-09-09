@@ -106,7 +106,7 @@ const CalculatorSection = ({
   }, [amount, duration, selectedFund]);
 
   return (
-    <section className="relative mt-8 min-h-[600px] w-full overflow-hidden py-8 home-on-dark md:mt-20 md:min-h-screen">
+    <section id="calculator" className="relative mt-8 min-h-[600px] w-full scroll-mt-24 overflow-hidden py-8 home-on-dark md:mt-20 md:min-h-screen">
       <div
         className="absolute inset-x-4 inset-y-8 rounded-[2.5rem] shadow-2xl md:inset-x-8"
         style={{

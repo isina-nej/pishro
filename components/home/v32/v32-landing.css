@@ -111,6 +111,38 @@
   background: var(--v32-accent-hover);
 }
 
+/* Hero CTA row — support-call + profit calculator */
+.v32-cta-row {
+  margin-top: 4px;
+}
+
+.v32-btn-green {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 24px;
+  border-radius: 999px;
+  border: 0;
+  background: var(--v32-success);
+  color: #fff;
+  font-size: 14.5px;
+  font-weight: 800;
+  cursor: pointer;
+  text-decoration: none;
+  transition: filter 0.2s, transform 0.15s;
+}
+
+.v32-btn-green:hover {
+  filter: brightness(1.08);
+}
+
+.v32-btn-green:active,
+.v32-btn-accent:active {
+  transform: scale(0.98);
+}
+
 /* Phone mockup */
 .v32-phone-wrap {
   position: relative;

@@ -72,6 +72,8 @@ export const PUBLIC_CONTENT_PAGES: PublicContentPage[] = [
           field("hero.subtitle", "زیرعنوان", "پیشرو در آموزش و سرمایه‌گذاری", "textarea"),
           field("hero.cta", "متن دکمه تماس", "شروع کنید"),
           linkField("hero.ctaLink", "لینک دکمه تماس", "", "خالی = تماس تلفنی با شماره فوتر"),
+          field("hero.phoneCta", "متن دکمه تماس با پشتیبانی", "تماس با پشتیبانی"),
+          field("hero.calculatorCta", "متن دکمه محاسبه سود", "محاسبه سود"),
           field("hero.chip1", "برچسب ۱", "آموزش ترید"),
           field("hero.chip2", "برچسب ۲", "سبدهای تضمینی"),
           field("hero.chip3", "برچسب ۳", "مشاوره"),

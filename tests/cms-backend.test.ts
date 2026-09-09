@@ -29,6 +29,8 @@ describe("CMS public content schemas & validation", () => {
       "hero.subtitle": "زیرعنوان تستی",
       "hero.cta": "ثبت‌نام",
       "hero.ctaLink": "/courses",
+      "hero.phoneCta": "تماس با پشتیبانی",
+      "hero.calculatorCta": "محاسبه سود",
       "hero.chip1": "آموزش",
       "hero.chip2": "تضمینی",
       "hero.chip3": "مشاوره",
