@@ -245,7 +245,7 @@ export default async function CategoryPage({
 
     return (
       <main className="w-full">
-        <Suspense fallback={<div className="h-96 animate-pulse bg-gray-100" />}>
+        <Suspense fallback={<div className="h-96 animate-pulse bg-muted" />}>
           <CategoryHeroSection {...heroData} />
         </Suspense>
 
@@ -254,7 +254,7 @@ export default async function CategoryPage({
           aria-label={`درباره ${category.title}`}
         >
           <Suspense
-            fallback={<div className="h-64 animate-pulse bg-gray-50" />}
+            fallback={<div className="h-64 animate-pulse bg-muted" />}
           >
             <CategoryAboutSection {...aboutData} />
           </Suspense>
@@ -266,7 +266,7 @@ export default async function CategoryPage({
             aria-label="انتخاب سطح کاربری"
           >
             <Suspense
-              fallback={<div className="h-96 animate-pulse bg-gray-50" />}
+              fallback={<div className="h-96 animate-pulse bg-muted" />}
             >
               <UserLevelSection categorySlug={categorySlug} />
             </Suspense>
@@ -277,7 +277,7 @@ export default async function CategoryPage({
           className="w-full mt-8 sm:mt-12 md:mt-16 lg:mt-20"
           aria-label="دوره‌های آموزشی"
         >
-          <Suspense fallback={<div className="h-96 animate-pulse bg-white" />}>
+          <Suspense fallback={<div className="h-96 animate-pulse bg-card" />}>
             <CoursesSectionCategory
               categorySlug={categorySlug}
               categoryTitle={category.title}
@@ -291,7 +291,7 @@ export default async function CategoryPage({
             aria-label={`کلید واژه‌های ${category.title}`}
           >
             <Suspense
-              fallback={<div className="h-32 animate-pulse bg-gray-50" />}
+              fallback={<div className="h-32 animate-pulse bg-muted" />}
             >
               <TagsListDynamic
                 tags={tagList}
@@ -302,7 +302,7 @@ export default async function CategoryPage({
         )}
 
         {category.faqs.length > 0 && (
-          <section className="w-full py-8 sm:py-10 md:py-12 bg-gray-50">
+          <section className="w-full py-8 sm:py-10 md:py-12 bg-muted">
             <div className="container mx-auto px-4 max-w-4xl">
               <h2 className="text-3xl font-bold text-center mb-8">
                 سوالات متداول
@@ -311,13 +311,13 @@ export default async function CategoryPage({
                 {category.faqs.map((faq) => (
                   <details
                     key={faq.id}
-                    className="bg-white p-6 rounded-lg shadow-sm"
+                    className="bg-card p-6 rounded-lg shadow-sm"
                   >
                     <summary className="font-semibold text-lg cursor-pointer hover:text-primary">
                       {faq.question}
                     </summary>
                     <div
-                      className="mt-4 text-gray-600 prose prose-sm max-w-none"
+                      className="mt-4 text-muted-foreground prose prose-sm max-w-none"
                       dangerouslySetInnerHTML={{ __html: faq.answer }}
                     />
                   </details>

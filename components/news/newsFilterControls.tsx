@@ -82,7 +82,7 @@ export const NewsFilterControls = ({
 
       <div
         className={cn(
-          "flex items-center gap-2 rounded-2xl border border-border/70 bg-card px-3 py-2 shadow-inner dark:border-white/15 dark:bg-white/5",
+          "flex items-center gap-2 rounded-2xl border border-border/70 bg-card px-3 py-2 shadow-inner",
           disabled && "opacity-60"
         )}
       >
@@ -112,7 +112,7 @@ export const NewsFilterControls = ({
           onValueChange={(v) => onSortChange(v as NewsSortOption)}
           disabled={disabled}
         >
-          <SelectTrigger className="h-9 rounded-xl border-border/70 bg-card text-xs text-foreground dark:border-white/15 dark:bg-white/5">
+          <SelectTrigger className="h-9 rounded-xl border-border/70 bg-card text-xs text-foreground">
             <SelectValue placeholder="مرتب‌سازی" />
           </SelectTrigger>
           <SelectContent>
@@ -125,7 +125,7 @@ export const NewsFilterControls = ({
         </Select>
 
         <Select value={timeRange} onValueChange={onTimeRangeChange} disabled={disabled}>
-          <SelectTrigger className="h-9 rounded-xl border-border/70 bg-card text-xs text-foreground dark:border-white/15 dark:bg-white/5">
+          <SelectTrigger className="h-9 rounded-xl border-border/70 bg-card text-xs text-foreground">
             <SelectValue placeholder="بازه زمانی" />
           </SelectTrigger>
           <SelectContent>
@@ -153,7 +153,7 @@ export const NewsFilterControls = ({
                   "rounded-full border px-3 py-1.5 text-start text-xs font-medium transition-transform duration-300 hover:scale-105",
                   active
                     ? "border-primary bg-primary text-primary-foreground"
-                    : "border-border/70 bg-card text-foreground hover:border-primary/40 dark:border-white/15 dark:bg-white/5",
+                    : "border-border/70 bg-card text-foreground hover:border-primary/40",
                   disabled && "pointer-events-none opacity-60"
                 )}
               >

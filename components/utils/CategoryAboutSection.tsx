@@ -58,19 +58,19 @@ const CategoryAboutSection = ({
           />
         </div>
       </div>
-      <div className="absolute bottom-0 left-0 size-full pointer-events-none !-z-20 bg-[#F4F0EA]" />
+      <div className="absolute bottom-0 left-0 size-full pointer-events-none !-z-20 bg-[var(--home-bg-mid)]" />
 
       {/* متن اصلی */}
       <div className="container-xl flex pt-16 sm:pt-24 md:pt-32 lg:pt-40 justify-end h-full z-[999] px-4 sm:px-6 md:px-8">
         <div className="max-w-full sm:max-w-[550px] md:max-w-[650px] lg:max-w-[750px] text-right space-y-4 sm:space-y-5 md:space-y-6">
           {/* عنوان */}
           <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[120px] leading-[1.1] font-extrabold">
-            <span className="text-[#214254]">{title1}</span>{""}
-            <span className="text-[#FFA135] ml-1 sm:ml-2">{title2}</span>
+            <span className="text-[var(--home-deep)]">{title1}</span>{""}
+            <span className="text-[var(--home-gold)] ml-1 sm:ml-2">{title2}</span>
           </h2>
 
           {/* توضیحات */}
-          <p className="text-[#8E8E8E] leading-6 sm:leading-7 md:leading-8 text-sm sm:text-base md:text-lg font-medium max-w-full sm:max-w-[500px] md:max-w-[650px]">
+          <p className="text-muted-foreground leading-6 sm:leading-7 md:leading-8 text-sm sm:text-base md:text-lg font-medium max-w-full sm:max-w-[500px] md:max-w-[650px]">
             {description}
           </p>
 
@@ -78,7 +78,7 @@ const CategoryAboutSection = ({
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4">
             <Link
               href={cta1Link}
-              className="px-6 sm:px-8 py-2.5 sm:py-3 w-full sm:w-1/2 flex justify-center items-center rounded-full text-sm sm:text-base md:text-lg font-bold bg-[#214254] text-foreground hover:bg-[#214254]/5 hover:text-[#214254] hover:border-[#214254] border transition-all"
+              className="px-6 sm:px-8 py-2.5 sm:py-3 w-full sm:w-1/2 flex justify-center items-center rounded-full text-sm sm:text-base md:text-lg font-bold bg-[var(--btn-primary-bg)] text-[var(--home-on-dark)] hover:bg-transparent hover:text-[var(--btn-primary-bg)] hover:border-[var(--btn-primary-bg)] border transition-all"
               aria-label={cta1Text}
             >
               {cta1Text}
@@ -88,7 +88,7 @@ const CategoryAboutSection = ({
             {cta2Link ? (
               <Link
                 href={cta2Link}
-                className="px-6 sm:px-8 py-2.5 sm:py-3 w-full sm:w-1/2 flex justify-center items-center rounded-full text-sm sm:text-base md:text-lg font-bold border-2 border-[#FFA135] bg-[#FFA135] text-foreground hover:text-[#FFA135] hover:bg-transparent transition-all"
+                className="px-6 sm:px-8 py-2.5 sm:py-3 w-full sm:w-1/2 flex justify-center items-center rounded-full text-sm sm:text-base md:text-lg font-bold border-2 border-[var(--home-gold)] bg-[var(--home-gold)] text-[var(--home-deep)] hover:text-[var(--home-gold)] hover:bg-transparent transition-all"
                 aria-label={cta2Text}
               >
                 {cta2Text}
@@ -97,7 +97,7 @@ const CategoryAboutSection = ({
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
                   <button
-                    className="px-6 sm:px-8 py-2.5 sm:py-3 w-full sm:w-1/2 flex justify-center items-center rounded-full text-sm sm:text-base md:text-lg font-bold border-2 border-[#FFA135] bg-[#FFA135] text-foreground hover:text-[#FFA135] hover:bg-transparent transition-all"
+                    className="px-6 sm:px-8 py-2.5 sm:py-3 w-full sm:w-1/2 flex justify-center items-center rounded-full text-sm sm:text-base md:text-lg font-bold border-2 border-[var(--home-gold)] bg-[var(--home-gold)] text-[var(--home-deep)] hover:text-[var(--home-gold)] hover:bg-transparent transition-all"
                     aria-label={cta2Text}
                   >
                     {cta2Text}

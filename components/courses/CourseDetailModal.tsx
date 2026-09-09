@@ -49,8 +49,6 @@ interface Props {
   trigger: React.ReactNode;
 }
 
-const OLIVE = "#6B7460";
-
 const CHIP_ICONS = [BarChart3, Target, TrendingUp, Lightbulb, BookOpen, Sparkles];
 
 function formatToman(price: number) {
@@ -110,7 +108,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="flex max-h-screen w-full max-w-3xl flex-col overflow-hidden rounded-none border-border/40 bg-[#0C1410] p-0 text-foreground sm:max-h-[88vh] sm:w-[92vw] sm:rounded-[1.75rem] dark:bg-[#080E0A]">
+      <DialogContent className="flex max-h-screen w-full max-w-3xl flex-col overflow-hidden rounded-none border-border/40 bg-card p-0 text-foreground sm:max-h-[88vh] sm:w-[92vw] sm:rounded-[1.75rem]">
         {/* Hero — فقط تصویر، بدون تیتر/توضیح/آیکن روی عکس */}
         <div className="relative h-72 flex-shrink-0 overflow-hidden sm:h-80">
           {course.introVideoUrl ? (
@@ -133,7 +131,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
               priority
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#1a2218] to-[#0C0F0D]">
+            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[var(--home-bg-mid)] to-[var(--home-bg)]">
               <span className="text-6xl">🎓</span>
             </div>
           )}
@@ -142,7 +140,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
 
           <div className="absolute start-4 top-4 z-10 flex items-center gap-2 sm:start-5 sm:top-5">
             {course.discountPercent ? (
-              <span className="rounded-full bg-[#6B7460] px-3 py-1 text-xs font-bold text-white">
+              <span className="rounded-full bg-[var(--btn-primary-bg)] px-3 py-1 text-xs font-bold text-white">
                 {course.discountPercent}٪ تخفیف
               </span>
             ) : null}
@@ -170,9 +168,9 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                       >
                         <span
                           className="flex size-11 items-center justify-center rounded-2xl border border-white/35 bg-white/15 text-white shadow-lg backdrop-blur-xl"
-                          style={{ boxShadow: `0 0 0 1px ${OLIVE}33` }}
+                          style={{ boxShadow: "0 0 0 1px color-mix(in srgb, var(--home-glow) 20%, transparent)" }}
                         >
-                          <Icon size={18} strokeWidth={1.6} color="#C5D49A" />
+                          <Icon size={18} strokeWidth={1.6} color="currentColor" className="text-premium" />
                         </span>
                         <span className="max-w-[5.5rem] text-center text-[10px] font-medium leading-snug text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.8)] sm:text-[11px]">
                           {label}
@@ -227,21 +225,21 @@ export default function CourseDetailModal({ course, trigger }: Props) {
         </div>
 
         {/* آیکن اشتراک و بوکمارک — زیر تصویر */}
-        <div className="flex items-center justify-between gap-3 border-b border-white/8 bg-[#0C1410]/95 px-5 py-3 sm:px-7 dark:bg-[#080E0A]">
+        <div className="flex items-center justify-between gap-3 border-b border-border/60 bg-card/95 px-5 py-3 sm:px-7">
           <CourseActionIcons
             courseId={course.id}
             subject={course.subject}
             description={course.description}
             slug={course.slug}
-            tone="on-media"
+            tone="surface"
           />
-          <h2 className="max-w-[70%] truncate text-end text-sm font-semibold text-white/90 sm:text-base">
+          <h2 className="max-w-[70%] truncate text-end text-sm font-semibold text-foreground sm:text-base">
             {course.subject}
           </h2>
         </div>
 
         {/* Body */}
-        <div className="flex-1 overflow-y-auto bg-[#0C1410] px-5 py-5 sm:px-7 sm:py-6 dark:bg-[#080E0A]">
+        <div className="flex-1 overflow-y-auto bg-card px-5 py-5 sm:px-7 sm:py-6">
           {course.rating ? (
             <div className="mb-4 flex items-center gap-2">
               <RatingStars rating={course.rating} />
@@ -252,7 +250,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
           ) : null}
 
           {/* Tabs */}
-          <div className="mb-5 flex gap-1 rounded-full bg-white/[0.04] p-1">
+          <div className="mb-5 flex gap-1 rounded-full bg-muted p-1">
             {(
               [
                 ["about", "درباره"],
@@ -266,8 +264,8 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                 onClick={() => setActiveTab(tab)}
                 className={`flex-1 rounded-full px-3 py-2 text-sm font-medium transition-transform duration-300 ${
                   activeTab === tab
-                    ? "bg-[#6B7460] text-white shadow-sm"
-                    : "text-white/55 hover:scale-[1.02] hover:text-white/80"
+                    ? "bg-[var(--btn-primary-bg)] text-white shadow-sm"
+                    : "text-muted-foreground hover:scale-[1.02] hover:text-foreground"
                 }`}
               >
                 {label}
@@ -280,10 +278,10 @@ export default function CourseDetailModal({ course, trigger }: Props) {
               <div className="space-y-4">
                 {course.description ? (
                   <div>
-                    <h3 className="mb-2 text-sm font-semibold text-white/90">
+                    <h3 className="mb-2 text-sm font-semibold text-foreground">
                       توضیحات
                     </h3>
-                    <p className="text-sm leading-7 text-white/60">
+                    <p className="text-sm leading-7 text-muted-foreground">
                       {course.description}
                     </p>
                   </div>
@@ -291,16 +289,16 @@ export default function CourseDetailModal({ course, trigger }: Props) {
 
                 {course.learningGoals && course.learningGoals.length > 0 ? (
                   <div>
-                    <h3 className="mb-2 text-sm font-semibold text-white/90">
+                    <h3 className="mb-2 text-sm font-semibold text-foreground">
                       اهداف یادگیری
                     </h3>
                     <ul className="space-y-2">
                       {course.learningGoals.map((goal, idx) => (
                         <li
                           key={idx}
-                          className="flex items-start gap-2 text-sm text-white/60"
+                          className="flex items-start gap-2 text-sm text-muted-foreground"
                         >
-                          <span className="mt-1 text-[#6B7460]">✓</span>
+                          <span className="mt-1 text-success">✓</span>
                           <span>{goal}</span>
                         </li>
                       ))}
@@ -311,7 +309,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
             )}
 
             {activeTab === "lessons" && (
-              <p className="text-sm leading-7 text-white/60">
+              <p className="text-sm leading-7 text-muted-foreground">
                 این دوره دارای {course.videosCount ?? "چند"} درس است. برای مشاهده
                 کامل درس‌ها صفحه دوره را باز کنید.
               </p>
@@ -321,13 +319,13 @@ export default function CourseDetailModal({ course, trigger }: Props) {
               <div className="space-y-3">
                 {course.rating ? (
                   <div className="flex items-center gap-3">
-                    <span className="text-3xl font-semibold text-white">
+                    <span className="text-3xl font-semibold text-foreground">
                       {course.rating.toFixed(1)}
                     </span>
                     <RatingStars rating={course.rating} />
                   </div>
                 ) : null}
-                <p className="text-sm text-white/55">
+                <p className="text-sm text-muted-foreground">
                   برای مشاهده تمام نظرات، صفحه کامل دوره را باز کنید.
                 </p>
               </div>

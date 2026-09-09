@@ -176,7 +176,7 @@ export default function V32LandingPage({
                 <div ref={phoneAmount.ref} className="v32-amt">
                   {formatFa(phoneAmount.value)}
                 </div>
-                <div style={{ fontSize: 12, color: "#9aa3ae", marginTop: 4 }}>
+                <div className="v32-phone-sub" style={{ fontSize: 12, marginTop: 4 }}>
                   {copy("phone.currency", "تومان")}
                 </div>
                 <div className="v32-pad">
@@ -192,7 +192,7 @@ export default function V32LandingPage({
           </div>
           <div className="v32-wrap v32-trust">
             <article className="flex items-start gap-3">
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-emerald-400">
+              <div className="v32-trust-icon flex size-9 shrink-0 items-center justify-center rounded-xl">
                 <DynamicIcon name={copy("trust.1Icon", "GraduationCap")} className="size-4" />
               </div>
               <div>
@@ -201,7 +201,7 @@ export default function V32LandingPage({
               </div>
             </article>
             <article className="flex items-start gap-3">
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-emerald-400">
+              <div className="v32-trust-icon flex size-9 shrink-0 items-center justify-center rounded-xl">
                 <DynamicIcon name={copy("trust.2Icon", "Headphones")} className="size-4" />
               </div>
               <div>
@@ -210,7 +210,7 @@ export default function V32LandingPage({
               </div>
             </article>
             <article className="flex items-start gap-3">
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-emerald-400">
+              <div className="v32-trust-icon flex size-9 shrink-0 items-center justify-center rounded-xl">
                 <DynamicIcon name={copy("trust.3Icon", "Sparkles")} className="size-4" />
               </div>
               <div>
@@ -219,7 +219,7 @@ export default function V32LandingPage({
               </div>
             </article>
             <article className="flex items-start gap-3">
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-emerald-400">
+              <div className="v32-trust-icon flex size-9 shrink-0 items-center justify-center rounded-xl">
                 <DynamicIcon name={copy("trust.4Icon", "Award")} className="size-4" />
               </div>
               <div>
@@ -234,7 +234,7 @@ export default function V32LandingPage({
       <section className="v32-wrap v32-split" id="org">
         <div className="v32-shot">
           <div className="v32-shot-ui">
-            <div style={{ fontSize: 12, color: "#9aa3ae" }}>
+            <div className="v32-shot-label" style={{ fontSize: 12 }}>
               {copy("split.balanceLabel", "موجودی سبد")}
             </div>
             <div ref={splitBalance.ref} style={{ fontSize: 28, fontWeight: 800, margin: "6px 0 12px" }}>
@@ -249,24 +249,24 @@ export default function V32LandingPage({
               />
             </svg>
             <div
+              className="v32-shot-row"
               style={{
                 display: "flex",
                 justifyContent: "space-between",
                 fontSize: 13,
                 marginTop: 10,
-                color: "#c8d0d8",
               }}
             >
               <span>{copy("split.row1Label", "سبد ثابت")}</span>
               <span ref={row1.ref}>+{formatFa(Math.floor(row1.value / 10))}٫{formatFa(row1.value % 10)}٪</span>
             </div>
             <div
+              className="v32-shot-row"
               style={{
                 display: "flex",
                 justifyContent: "space-between",
                 fontSize: 13,
                 marginTop: 8,
-                color: "#c8d0d8",
               }}
             >
               <span>{copy("split.row2Label", "سبد ترکیبی")}</span>
@@ -306,11 +306,7 @@ export default function V32LandingPage({
           <div className="v32-aud-row">
             <Link
               href={copy("audience.card1Link", "/courses")}
-              className="v32-aud-card flex items-center justify-between"
-              style={{
-                background:
-                  "linear-gradient(180deg,#3a5a8a,#152033)",
-              }}
+              className="v32-aud-card v32-aud-1 flex items-center justify-between"
             >
               <span className="flex items-center gap-2">
                 <DynamicIcon name={copy("audience.card1Icon", "GraduationCap")} className="size-4 opacity-80" />
@@ -319,11 +315,7 @@ export default function V32LandingPage({
             </Link>
             <Link
               href={copy("audience.card2Link", "/investment-plans")}
-              className="v32-aud-card flex items-center justify-between"
-              style={{
-                background:
-                  "linear-gradient(180deg,#1e3a32,#0d1814)",
-              }}
+              className="v32-aud-card v32-aud-2 flex items-center justify-between"
             >
               <span className="flex items-center gap-2">
                 <DynamicIcon name={copy("audience.card2Icon", "TrendingUp")} className="size-4 opacity-80" />
@@ -332,11 +324,7 @@ export default function V32LandingPage({
             </Link>
             <Link
               href={copy("audience.card3Link", "/investment-plans")}
-              className="v32-aud-card flex items-center justify-between"
-              style={{
-                background:
-                  "linear-gradient(180deg,#4a3a28,#1a140e)",
-              }}
+              className="v32-aud-card v32-aud-3 flex items-center justify-between"
             >
               <span className="flex items-center gap-2">
                 <DynamicIcon name={copy("audience.card3Icon", "PieChart")} className="size-4 opacity-80" />
@@ -345,11 +333,7 @@ export default function V32LandingPage({
             </Link>
             <Link
               href={copy("audience.card4Link", "/business-consulting")}
-              className="v32-aud-card flex items-center justify-between"
-              style={{
-                background:
-                  "linear-gradient(180deg,#2a3550,#10141c)",
-              }}
+              className="v32-aud-card v32-aud-4 flex items-center justify-between"
             >
               <span className="flex items-center gap-2">
                 <DynamicIcon name={copy("audience.card4Icon", "Briefcase")} className="size-4 opacity-80" />

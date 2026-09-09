@@ -30,65 +30,58 @@ interface CodeProps {
 export default function MarkdownPreview({ content, className = '' }: MarkdownPreviewProps) {
   // Custom components for markdown rendering with magazine-style typography
   const markdownComponents: Components = {
-    // Headings with professional spacing and typography
     h1: ({ children }) => (
-      <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-foreground mb-10 mt-14 text-right leading-tight">
+      <h2 className="mb-4 mt-12 border-t border-border pt-8 text-right text-2xl font-bold text-foreground">
         {children}
-      </h1>
+      </h2>
     ),
     h2: ({ children }) => (
-      <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground mb-8 mt-12 text-right leading-snug">
+      <h2 className="mb-4 mt-12 border-t border-border pt-8 text-right text-2xl font-bold text-foreground">
         {children}
       </h2>
     ),
     h3: ({ children }) => (
-      <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground mb-7 mt-10 text-right leading-snug">
+      <h3 className="mb-3 mt-10 text-right text-xl font-bold text-foreground">
         {children}
       </h3>
     ),
     h4: ({ children }) => (
-      <h4 className="text-xl md:text-2xl font-semibold tracking-tight text-foreground mb-6 mt-8 text-right">
+      <h4 className="mb-3 mt-8 text-right text-lg font-bold text-foreground">
         {children}
       </h4>
     ),
     h5: ({ children }) => (
-      <h5 className="text-lg md:text-xl font-semibold tracking-tight text-foreground mb-5 mt-7 text-right">
+      <h5 className="mb-3 mt-8 text-right text-base font-bold text-foreground">
         {children}
       </h5>
     ),
     h6: ({ children }) => (
-      <h6 className="text-base md:text-lg font-semibold tracking-tight text-foreground mb-4 mt-6 text-right">
+      <h6 className="mb-3 mt-8 text-right text-base font-bold text-foreground">
         {children}
       </h6>
     ),
-    
-    // Paragraphs with optimal reading experience
     p: ({ children }) => (
-      <p className="text-base md:text-lg leading-[1.95] letter-spacing-[0.3px] mb-8 text-right text-muted-foreground/95/95 font-normal">
+      <p className="mb-6 text-right text-[1.05rem] leading-9 text-foreground/90">
         {children}
       </p>
     ),
-    
-    // Blockquotes with professional styling
     blockquote: ({ children }) => (
-      <blockquote className="my-12 border-r-4 rtl:border-r-0 rtl:border-l-4 border-primary/60 bg-gradient-to-l from-primary/60 to-transparent/30 dark:to-transparent px-8 py-6 rounded-2xl text-right italic text-muted-foreground/95/95 shadow-sm">
+      <blockquote className="my-8 border-s-2 border-primary ps-5 text-right italic leading-8 text-muted-foreground">
         {children}
       </blockquote>
     ),
-    
-    // Lists with proper spacing
     ul: ({ children }) => (
-      <ul className="my-10 text-right text-muted-foreground/95/95 space-y-4 list-disc list-inside mr-4 md:mr-6">
+      <ul className="my-6 list-disc space-y-2.5 ps-5 text-right text-foreground/90">
         {children}
       </ul>
     ),
     ol: ({ children }) => (
-      <ol className="my-10 text-right text-muted-foreground/95/95 space-y-4 list-decimal list-inside mr-4 md:mr-6">
+      <ol className="my-6 list-decimal space-y-2.5 ps-5 text-right text-foreground/90">
         {children}
       </ol>
     ),
     li: ({ children }) => (
-      <li className="leading-[1.85] text-base md:text-lg">
+      <li className="leading-8">
         {children}
       </li>
     ),
@@ -100,7 +93,7 @@ export default function MarkdownPreview({ content, className = '' }: MarkdownPre
 
       if (inline) {
         return (
-          <code className="bg-muted/80/80 px-2.5 py-1.5 rounded-md font-mono text-sm text-foreground whitespace-nowrap">
+          <code className="bg-muted/80 px-2.5 py-1.5 rounded-md font-mono text-sm text-foreground whitespace-nowrap">
             {children}
           </code>
         );
@@ -124,30 +117,27 @@ export default function MarkdownPreview({ content, className = '' }: MarkdownPre
       );
     },
     
-    // Images with professional styling and hover effects
     img: ({ src, alt, title }) =>
       typeof src !== 'string' ? null : (
-      <figure className="my-14 flex justify-center px-2 md:px-0">
-        <div className="w-full max-w-5xl">
-          <div className="group overflow-hidden rounded-[1.75rem] shadow-[0_20px_60px_rgba(15,23,42,0.15)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.4)] transition-all duration-500 ease-out hover:shadow-[0_30px_80px_rgba(15,23,42,0.25)] dark:hover:shadow-[0_30px_80px_rgba(0,0,0,0.6)]">
-            <Image
-              src={src}
-              alt={alt || 'تصویر مقاله'}
-              width={1200}
-              height={675}
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 95vw, 1100px"
-              className="w-full h-auto object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
-              loading="lazy"
-              unoptimized
-              priority={false}
-            />
-          </div>
-          {(title || alt) && (
-            <figcaption className="mt-5 text-center text-sm md:text-base text-muted-foreground font-normal leading-relaxed">
-              {title || alt}
-            </figcaption>
-          )}
+      <figure className="my-10">
+        <div className="overflow-hidden rounded-xl border border-border bg-muted/40">
+          <Image
+            src={src}
+            alt={alt || 'تصویر مقاله'}
+            width={1200}
+            height={675}
+            sizes="(max-width: 768px) 100vw, 768px"
+            className="h-auto w-full"
+            loading="lazy"
+            unoptimized
+            priority={false}
+          />
         </div>
+        {(title || alt) && (
+          <figcaption className="mt-3 text-center text-sm text-muted-foreground">
+            {title || alt}
+          </figcaption>
+        )}
       </figure>
       ),
 
@@ -177,7 +167,7 @@ export default function MarkdownPreview({ content, className = '' }: MarkdownPre
       </div>
     ),
     thead: ({ children }) => (
-      <thead className="bg-muted/80/50">
+      <thead className="bg-muted/50">
         {children}
       </thead>
     ),

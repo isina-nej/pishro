@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, ArrowRight, CheckCircle2, Loader2, Plus, Settings2, Sparkles } from 'lucide-react';
@@ -98,7 +98,15 @@ export default function CreateCoursePage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [thumbnailTempPath, setThumbnailTempPath] = useState<string | null>(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const [thumbUploading, setThumbUploading] = useState(false);
+  const thumbnailInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    return () => {
+      if (thumbnailPreview) URL.revokeObjectURL(thumbnailPreview);
+    };
+  }, [thumbnailPreview]);
 
   const createCourseMutation = useCreateAdminCourse();
   const isSubmitting = createCourseMutation.isPending;
@@ -178,6 +186,9 @@ export default function CreateCoursePage() {
       setErrors((prev) => ({ ...prev, thumbnail: 'حداکثر 5MB' }));
       return;
     }
+    if (thumbnailPreview) URL.revokeObjectURL(thumbnailPreview);
+    setThumbnailPreview(URL.createObjectURL(file));
+    setThumbnailTempPath(null);
     setThumbUploading(true);
     try {
       const path = await uploadTempFile(file, 'thumbnail');
@@ -192,9 +203,16 @@ export default function CreateCoursePage() {
     }
   };
 
+  const clearThumbnail = () => {
+    if (thumbnailPreview) URL.revokeObjectURL(thumbnailPreview);
+    setThumbnailPreview(null);
+    setThumbnailTempPath(null);
+    if (thumbnailInputRef.current) thumbnailInputRef.current.value = '';
+  };
+
   const handleSubmit = async () => {
     setSubmitError(null);
-    if (thumbUploading) {
+    if (thumbUploading || (thumbnailPreview && !thumbnailTempPath && !errors.thumbnail)) {
       setSubmitError('صبر کنید تا آپلود تصویر تمام شود، بعد ثبت کنید.');
       return;
     }
@@ -334,7 +352,28 @@ export default function CreateCoursePage() {
 
                   <div className="space-y-2">
                     <label className="text-sm font-medium">تصویر شاخص (JPEG/PNG/WebP, max 5MB)</label>
+                    {thumbnailPreview && (
+                      <div className="relative overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={thumbnailPreview} alt="پیش‌نمایش تصویر دوره" className="h-40 w-full object-cover" />
+                        {thumbUploading && (
+                          <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/50 text-sm font-medium text-white">
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            در حال آپلود تصویر...
+                          </div>
+                        )}
+                        <button
+                          type="button"
+                          onClick={clearThumbnail}
+                          disabled={isSubmitting || thumbUploading}
+                          className="absolute left-2 top-2 rounded-full bg-black/60 px-2.5 py-1 text-xs font-medium text-white transition hover:bg-black/80 disabled:opacity-50"
+                        >
+                          حذف تصویر
+                        </button>
+                      </div>
+                    )}
                     <Input
+                      ref={thumbnailInputRef}
                       type="file"
                       accept="image/jpeg,image/png,image/webp"
                       disabled={isSubmitting || thumbUploading}

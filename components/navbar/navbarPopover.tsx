@@ -48,9 +48,7 @@ const NavbarPopover = ({ item }: NavbarPopoverProps) => {
           {
             backdropFilter: "blur(10px) saturate(180%)",
             WebkitBackdropFilter: "blur(10px) saturate(180%)",
-            backgroundColor: isDark
-              ? "rgba(18, 26, 22, 0.92)"
-              : "rgba(251, 249, 245, 0.94)",
+            backgroundColor: "var(--home-glass)",
           } as React.CSSProperties & {
             backdropFilter: string;
             WebkitBackdropFilter: string;

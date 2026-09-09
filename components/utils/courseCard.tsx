@@ -119,14 +119,14 @@ const CourseCard = ({ data, link: _link }: CourseCardProps) => {
 
         <motion.div
           initial={{ opacity: 1 }}
-          className="mt-1 flex justify-between border-t border-dashed border-border pt-1.5 text-xs font-bold text-muted-foreground dark:border-borderColor dark:text-textSecondary sm:text-sm"
+          className="mt-1 flex justify-between border-t border-dashed border-border pt-1.5 text-xs font-bold text-muted-foreground sm:text-sm"
         >
           <span className="flex items-center gap-1">
-            <Users size={16} className="text-foreground dark:text-textPrimary" />
+            <Users size={16} className="text-foreground" />
             {data.students ?? 1} دوره آموز
           </span>
           <span className="flex items-center gap-1">
-            <Video size={16} className="text-foreground dark:text-textPrimary" />
+            <Video size={16} className="text-foreground" />
             {data.videosCount ?? 1} ویدئو تخصصی
           </span>
           <FormatTime time={data.time || "0:00"} />
@@ -137,7 +137,7 @@ const CourseCard = ({ data, link: _link }: CourseCardProps) => {
       <div className="absolute -bottom-5 w-full flex justify-center pl-6">
         <button
           onClick={handleAddToCart}
-          className="w-48 rounded-full bg-[#6B7460] py-2 text-sm font-bold text-white shadow-lg transition-transform duration-300 ease-out hover:scale-105 hover:bg-[#6B7460] active:scale-[1.02] sm:text-base"
+          className="w-48 rounded-full bg-[var(--btn-primary-bg)] py-2 text-sm font-bold text-white shadow-lg transition-all duration-300 ease-out hover:scale-105 hover:bg-[var(--btn-primary-hover)] active:scale-[1.02] sm:text-base"
         >
           {freeCourse ? "ثبت‌نام رایگان" : "افزودن به سبد خرید"}
         </button>

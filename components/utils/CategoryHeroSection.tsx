@@ -101,7 +101,7 @@ const CategoryHeroSection = ({
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-mySecondary leading-tight mt-2 md:mt-0">
             {_subtitle ? (
               <>
-                <span className="block text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-muted-foreground dark:text-textSecondary mb-2">
+                <span className="block text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-muted-foreground mb-2">
                   {_subtitle}
                 </span>
                 <span className="text-myPrimary">{title}</span>
@@ -118,7 +118,7 @@ const CategoryHeroSection = ({
           </h1>
 
           {/* توضیحات */}
-          <p className="text-muted-foreground dark:text-textSecondary text-sm sm:text-base md:text-lg leading-relaxed max-w-4xl">
+          <p className="text-muted-foreground text-sm sm:text-base md:text-lg leading-relaxed max-w-4xl">
             {description}
           </p>
 
@@ -145,12 +145,12 @@ const CategoryHeroSection = ({
               {features.map((item, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-2.5 sm:gap-3 bg-muted dark:bg-darkBgHidden sm:bg-transparent rounded-lg sm:rounded-none px-3 py-2.5 sm:px-0 sm:py-0"
+                  className="flex items-center gap-2.5 sm:gap-3 bg-muted sm:bg-transparent rounded-lg sm:rounded-none px-3 py-2.5 sm:px-0 sm:py-0"
                 >
                   <div className="text-xl sm:text-2xl lg:text-3xl flex-shrink-0">
                     {item.icon || getIcon(item.iconName)}
                   </div>
-                  <p className="text-muted-foreground dark:text-textPrimary font-medium text-sm sm:text-base">
+                  <p className="text-muted-foreground font-medium text-sm sm:text-base">
                     {item.text}
                   </p>
                 </div>
@@ -180,7 +180,7 @@ const CategoryHeroSection = ({
                 )}
                 {item.suffix}
               </span>
-              <p className="text-muted-foreground dark:text-textSecondary mt-1 sm:mt-2 font-medium text-xs sm:text-sm md:text-base lg:text-lg text-center">
+              <p className="text-muted-foreground mt-1 sm:mt-2 font-medium text-xs sm:text-sm md:text-base lg:text-lg text-center">
                 {item.label}
               </p>
             </motion.div>

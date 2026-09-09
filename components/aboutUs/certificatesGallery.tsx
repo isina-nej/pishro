@@ -32,7 +32,7 @@ const CertificatesGallery = ({ certificates }: CertificatesGalleryProps) => {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <div className="inline-flex items-center gap-2 bg-premium text-premium px-6 py-2 rounded-full mb-4">
+            <div className="inline-flex items-center gap-2 bg-premium/10 text-premium px-6 py-2 rounded-full mb-4">
               <LuAward className="text-xl" />
               <span className="font-medium">افتخارات و دستاوردها</span>
             </div>
@@ -66,13 +66,13 @@ const CertificatesGallery = ({ certificates }: CertificatesGalleryProps) => {
 
                   {/* Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="absolute bottom-0 left-0 right-0 p-6 text-foreground">
+                    <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                       <div className="flex items-center gap-2 mb-2">
                         <LuAward className="text-premium" />
                         <h3 className="font-bold text-lg">{cert.title}</h3>
                       </div>
                       {cert.description && (
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-white/80">
                           {cert.description}
                         </p>
                       )}
@@ -80,7 +80,7 @@ const CertificatesGallery = ({ certificates }: CertificatesGalleryProps) => {
                   </div>
 
                   {/* Badge */}
-                  <div className="absolute top-4 right-4 bg-premium text-premium px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                  <div className="absolute top-4 right-4 bg-premium text-premium-foreground px-3 py-1 rounded-full text-xs font-bold shadow-lg">
                     {index + 1}
                   </div>
                 </div>

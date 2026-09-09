@@ -111,7 +111,7 @@ const CalculatorSection = ({
         className="absolute inset-x-4 inset-y-8 rounded-[2.5rem] shadow-2xl md:inset-x-8"
         style={{
           background:
-            "linear-gradient(145deg, color-mix(in srgb, var(--home-deep) 95%, transparent) 0%, color-mix(in srgb, var(--home-glow) 88%, var(--home-deep)) 48%, color-mix(in srgb, var(--home-bg) 70%, #000) 100%)",
+            "linear-gradient(145deg, color-mix(in srgb, var(--home-deep) 95%, transparent) 0%, color-mix(in srgb, var(--home-glow) 88%, var(--home-deep)) 48%, color-mix(in srgb, var(--home-bg) 70%, var(--home-deep)) 100%)",
           boxShadow: "0 25px 60px color-mix(in srgb, var(--home-deep) 28%, transparent)",
         }}
       />
@@ -157,8 +157,8 @@ const CalculatorSection = ({
                           onClick={() => handleSelectFund(fund)}
                           className={`rounded-full border px-5 py-2 font-medium transition-all ${
                             active
-                              ? "border-[#E8F0EB] bg-[#F7F5F0] text-[#0B3D2E] shadow-md"
-                              : "border-white/25 bg-white/10 text-[#E8F0EB] hover:bg-white/20"
+                              ? "border-[var(--home-on-dark)] bg-[var(--home-on-dark)] text-[var(--home-deep)] shadow-md"
+                              : "border-white/25 bg-white/10 text-[var(--home-on-dark)] hover:bg-white/20"
                           }`}
                         >
                           {fund.name}
@@ -197,7 +197,7 @@ const CalculatorSection = ({
                             "linear-gradient(90deg, var(--home-gold) 0%, var(--home-glow) 100%)",
                           height: 6,
                         }}
-                        railStyle={{ backgroundColor: "rgba(232,240,235,0.25)", height: 6 }}
+                        railStyle={{ backgroundColor: "color-mix(in srgb, var(--home-on-dark) 25%, transparent)", height: 6 }}
                         handleStyle={{
                           borderColor: "var(--home-gold)",
                           backgroundColor: "var(--home-bg)",
@@ -259,7 +259,7 @@ const CalculatorSection = ({
                             "linear-gradient(90deg, var(--home-gold) 0%, var(--home-glow) 100%)",
                           height: 6,
                         }}
-                        railStyle={{ backgroundColor: "rgba(232,240,235,0.25)", height: 6 }}
+                        railStyle={{ backgroundColor: "color-mix(in srgb, var(--home-on-dark) 25%, transparent)", height: 6 }}
                         handleStyle={{
                           borderColor: "var(--home-gold)",
                           backgroundColor: "var(--home-bg)",
@@ -297,7 +297,7 @@ const CalculatorSection = ({
                 </p>
 
                 {/* Result box */}
-                <div className="relative flex flex-col items-center justify-center rounded-3xl border border-[#0B3D2E]/15 bg-[#F7F5F0] px-4 pb-4 pt-8 text-3xl font-medium text-[#0B3D2E] shadow-2xl backdrop-blur-xl">
+                <div className="relative flex flex-col items-center justify-center rounded-3xl border border-[var(--home-deep)]/15 bg-[var(--home-on-dark)] px-4 pb-4 pt-8 text-3xl font-medium text-[var(--home-deep)] shadow-2xl backdrop-blur-xl">
                   {/* قیمت و درصد سود */}
                   <div className="flex items-center justify-between w-full gap-4 mb-4">
                     {/* مبلغ کل - سمت راست */}
@@ -309,7 +309,7 @@ const CalculatorSection = ({
                         separator=","
                         formattingFn={(n) => formatNumber(n)}
                       />
-                      <span className="mr-2 mt-1 text-lg font-bold text-[#0B3D2E]/70">
+                      <span className="mr-2 mt-1 text-lg font-bold text-[var(--home-deep)]/70">
                         تومان
                       </span>
                     </div>
@@ -334,7 +334,7 @@ const CalculatorSection = ({
 
                   {/* 🛡 پیام تضمین سرمایه */}
                   {selectedFund.description && selectedFund.key !== "hold" && (
-                    <div className="mt-4 flex items-start gap-2 rounded-xl border border-[#0B3D2E]/25 bg-[#0B3D2E]/10 px-4 py-3 text-sm font-medium text-[#0B3D2E] shadow-sm">
+                    <div className="mt-4 flex items-start gap-2 rounded-xl border border-[var(--home-deep)]/25 bg-[var(--home-deep)]/10 px-4 py-3 text-sm font-medium text-[var(--home-deep)] shadow-sm">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="mt-0.5 h-5 w-5 flex-shrink-0"
@@ -356,7 +356,7 @@ const CalculatorSection = ({
 
                 <a
                   href={`tel:${phoneTel}`}
-                  className="mt-10 w-full rounded-full border border-[#E8F0EB] bg-[#F7F5F0] px-16 py-4 text-center font-bold text-[#0B3D2E] transition-colors hover:bg-white sm:w-fit"
+                  className="mt-10 w-full rounded-full border border-[var(--home-on-dark)] bg-[var(--home-on-dark)] px-16 py-4 text-center font-bold text-[var(--home-deep)] transition-all hover:bg-[var(--btn-primary-bg)] hover:text-primary-foreground sm:w-fit"
                 >
                   سرمایه‌ گذاری
                 </a>
@@ -369,12 +369,12 @@ const CalculatorSection = ({
         <div className="flex w-full items-center justify-center px-4 mb-2 mt-16">
           <Drawer>
             <DrawerTrigger asChild>
-              <button className="group relative flex w-full items-center justify-center gap-2 rounded-xl border border-primary bg-card px-10 py-4 font-medium text-foreground shadow-lg shadow-green-950/5 transition-all hover:border-primary hover:bg-primary hover:text-primary-foreground sm:w-auto">
+              <button className="group relative flex w-full items-center justify-center gap-2 rounded-xl border border-primary bg-card px-10 py-4 font-medium text-foreground shadow-lg transition-all hover:border-primary hover:bg-primary hover:text-primary-foreground sm:w-auto">
                 <PhoneCall className="h-5 w-5 text-primary transition-transform group-hover:scale-110 group-hover:text-primary-foreground" />
                 رزرو مشاوره حضوری
               </button>
             </DrawerTrigger>
-            <DrawerContent className="p-6 rounded-t-2xl border-t bg-card dark:bg-cardBg shadow-2xl">
+            <DrawerContent className="p-6 rounded-t-2xl border-t bg-card shadow-2xl">
               <DrawerHeader className="text-center">
                 <div className="flex justify-center">
                   <PhoneCall className="text-primary h-10 w-10" />

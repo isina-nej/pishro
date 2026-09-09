@@ -61,7 +61,7 @@ const NewsCard = ({ data }: NewsCardProps) => {
             object-cover keeps every card identical; object-position top shows
             headlines instead of cropping them. Dark scrim behind image adds
             contrast in light mode; in dark mode the frame blends into the card. */}
-        <div className="relative w-full shrink-0 overflow-hidden bg-slate-900 dark:bg-black/60">
+        <div className="relative w-full shrink-0 overflow-hidden bg-[var(--home-deep)] dark:bg-black/60">
           <div className="relative aspect-[16/10] w-full">
             <Image
               src={data.coverImage ?? "/images/default-news.jpg"}

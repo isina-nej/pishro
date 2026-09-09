@@ -29,7 +29,7 @@ const FloatingNotification = ({
           role="status"
           aria-live="polite"
         >
-          <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card/95 p-3.5 shadow-2xl shadow-primary/15 backdrop-blur-2xl dark:border-white/10 dark:bg-[#121A16]/95">
+          <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card/95 p-3.5 shadow-2xl shadow-primary/15 backdrop-blur-2xl">
             <div
               aria-hidden
               className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(var(--home-glow-rgb,42,138,92),0.16),transparent_55%)]"
@@ -61,7 +61,7 @@ const FloatingNotification = ({
           {/* دم حباب به‌سمت دکمهٔ چت */}
           <div
             aria-hidden
-            className="absolute -bottom-1.5 right-6 size-3 rotate-45 border-b border-e border-border/60 bg-card/95 dark:border-white/10 dark:bg-[#121A16]/95 sm:right-7"
+            className="absolute -bottom-1.5 right-6 size-3 rotate-45 border-b border-e border-border/60 bg-card/95 sm:right-7"
           />
         </motion.div>
       )}

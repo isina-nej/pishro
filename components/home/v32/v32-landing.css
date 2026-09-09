@@ -14,6 +14,14 @@
   --v32-surface-muted: var(--text-muted);
   --v32-success: var(--home-glow);
   --v32-gold: var(--home-gold);
+  --v32-on-accent: var(--primary-foreground, #fff);
+  --v32-on-success: var(--success-foreground, #fff);
+  /* ponytail: dark device mock + chart sheet fixed dark hardware metaphor, same in light/dark; lift to palette when bezel theming requested */
+  --v32-shot-bg: #11161f;
+  --v32-shot-border: #1c2330;
+  --v32-shot-ink: #f4f6f8;
+  --v32-shot-muted: #9aa3ae;
+  --v32-shot-key: #1a212c;
 
   background: var(--v32-bg);
   color: var(--v32-text);
@@ -77,17 +85,17 @@
   padding: 0 26px;
   border-radius: 999px;
   border: 0;
-  background: #fff;
-  color: #11161f;
+  background: var(--home-on-dark, #fff);
+  color: var(--home-deep, #11161f);
   font-size: 15px;
   font-weight: 800;
   cursor: pointer;
   text-decoration: none;
-  transition: background 0.2s;
+  transition: filter 0.2s;
 }
 
 .v32-btn-white:hover {
-  background: #f0f2f5;
+  filter: brightness(0.94);
 }
 
 .v32-btn-accent {
@@ -99,7 +107,7 @@
   border-radius: 999px;
   border: 0;
   background: var(--v32-accent);
-  color: #fff;
+  color: var(--v32-on-accent);
   font-size: 14.5px;
   font-weight: 800;
   cursor: pointer;
@@ -126,7 +134,7 @@
   border-radius: 999px;
   border: 0;
   background: var(--v32-success);
-  color: #fff;
+  color: var(--v32-on-success);
   font-size: 14.5px;
   font-weight: 800;
   cursor: pointer;
@@ -155,12 +163,13 @@
 }
 
 .v32-phone {
+  /* ponytail: mockup bezel intentionally fixed dark (like iPhone frame); lift to palette when bezel theming requested */
   width: 260px;
   height: 520px;
   border-radius: 36px;
-  background: #11161f;
-  border: 8px solid #1c2330;
-  color: #f4f6f8;
+  background: var(--v32-shot-bg);
+  border: 8px solid var(--v32-shot-border);
+  color: var(--v32-shot-ink);
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
   padding: 18px 14px;
   position: relative;
@@ -177,13 +186,13 @@
   width: 72px;
   height: 8px;
   border-radius: 999px;
-  background: #2a3342;
+  background: color-mix(in srgb, var(--v32-shot-muted) 45%, transparent);
 }
 
 .v32-phone h3 {
   margin: 18px 0 8px;
   font-size: 13px;
-  color: #9aa3ae;
+  color: var(--v32-shot-muted);
   font-weight: 600;
 }
 
@@ -191,6 +200,10 @@
   font-size: 34px;
   font-weight: 800;
   letter-spacing: -1px;
+}
+
+.v32-phone-sub {
+  color: var(--v32-shot-muted);
 }
 
 .v32-pad {
@@ -203,7 +216,7 @@
 .v32-pad b {
   height: 46px;
   border-radius: 12px;
-  background: #1a212c;
+  background: var(--v32-shot-key);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -215,7 +228,7 @@
   height: 44px;
   border-radius: 999px;
   background: var(--v32-accent);
-  color: #fff;
+  color: var(--v32-on-accent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -223,6 +236,7 @@
 }
 
 .v32-glass {
+  /* ponytail: dark glass chips float over the fixed-dark phone mock; keep fixed dark so they read in light+dark, lift to palette when chip theming requested */
   --v32-card-rest-x: 0px;
   --v32-card-rest-y: 0px;
   --v32-card-rest-r: 0deg;
@@ -231,7 +245,7 @@
   --v32-card-hover-x: 0px;
   --v32-card-hover-y: -7px;
   --v32-card-hover-r: 0deg;
-  --v32-card-glow: rgba(54, 112, 255, 0.2);
+  --v32-card-glow: color-mix(in srgb, var(--v32-accent) 22%, transparent);
 
   position: absolute;
   background:
@@ -323,7 +337,7 @@
   --v32-card-hover-x: 5px;
   --v32-card-hover-y: -7px;
   --v32-card-hover-r: 1deg;
-  --v32-card-glow: rgba(69, 173, 142, 0.18);
+  --v32-card-glow: color-mix(in srgb, var(--v32-success) 45%, transparent);
   top: 38%;
   left: 0;
   width: 118px;
@@ -338,7 +352,7 @@
   --v32-card-hover-x: -4px;
   --v32-card-hover-y: -9px;
   --v32-card-hover-r: -0.7deg;
-  --v32-card-glow: rgba(69, 173, 142, 0.2);
+  --v32-card-glow: color-mix(in srgb, var(--v32-success) 48%, transparent);
   bottom: 16%;
   right: 8%;
   width: 168px;
@@ -382,6 +396,36 @@
   margin-bottom: 6px;
 }
 
+/* Trust icons — palette-reactive (follows admin SitePaletteApplier vars) */
+.v32-trust-icon {
+  background: color-mix(in srgb, var(--v32-success) 14%, transparent);
+  color: var(--v32-success);
+  border: 1px solid color-mix(in srgb, var(--v32-success) 30%, transparent);
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.v32-trust article:hover .v32-trust-icon {
+  background: var(--v32-success);
+  border-color: var(--v32-success);
+  color: var(--v32-on-success);
+  box-shadow: 0 8px 24px -8px var(--v32-success);
+  transform: translateY(-1px);
+}
+
+/* ponytail: even cards use --v32-gold for variety; add more stops when palette gains extra accents */
+.v32-trust article:nth-child(even) .v32-trust-icon {
+  background: color-mix(in srgb, var(--v32-gold) 14%, transparent);
+  color: var(--v32-gold);
+  border-color: color-mix(in srgb, var(--v32-gold) 30%, transparent);
+}
+
+.v32-trust article:nth-child(even):hover .v32-trust-icon {
+  background: var(--v32-gold);
+  border-color: var(--v32-gold);
+  color: var(--v32-on-success);
+  box-shadow: 0 8px 24px -8px var(--v32-gold);
+}
+
 .v32-trust span {
   font-size: 13px;
   color: var(--v32-muted);
@@ -407,13 +451,19 @@
 }
 
 .v32-shot-ui {
+  /* ponytail: chart sheet fixed dark like phone hardware; lift to palette when sheet theming requested */
   position: absolute;
   inset: 40px 28px auto;
-  background: rgba(10, 14, 22, 0.82);
-  color: #f4f6f8;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: color-mix(in srgb, var(--v32-shot-bg) 82%, transparent);
+  color: var(--v32-shot-ink);
+  border: 1px solid color-mix(in srgb, var(--v32-shot-ink) 12%, transparent);
   border-radius: 18px;
   padding: 18px;
+}
+
+.v32-shot-label,
+.v32-shot-row {
+  color: var(--v32-shot-muted);
 }
 
 .v32-split h2 {
@@ -460,7 +510,7 @@
   padding: 18px;
   display: flex;
   align-items: end;
-  color: #fff;
+  color: var(--v32-on-success);
   background-size: cover;
   background-position: center;
   position: relative;
@@ -468,10 +518,17 @@
   text-decoration: none;
 }
 
+/* ponytail: 4 fixed dark tints differ per card; replace with 4 palette stops when card recolor requested */
+.v32-aud-1 { background: linear-gradient(180deg, color-mix(in srgb, var(--v32-text) 38%, var(--v32-bg)), var(--v32-bg-mid)); }
+.v32-aud-2 { background: linear-gradient(180deg, color-mix(in srgb, var(--v32-success) 45%, var(--v32-bg)), var(--v32-shot-bg)); }
+.v32-aud-3 { background: linear-gradient(180deg, color-mix(in srgb, var(--v32-gold) 48%, var(--v32-bg)), var(--v32-shot-bg)); }
+.v32-aud-4 { background: linear-gradient(180deg, color-mix(in srgb, var(--v32-accent) 55%, var(--v32-bg)), var(--v32-bg-mid)); }
+
 .v32-aud-card::after {
   content: "";
   position: absolute;
   inset: 0;
+  /* ponytail: photo-legibility scrim on device-style cards; keep fixed dark so --v32-on-success ink stays readable in light+dark */
   background: linear-gradient(180deg, transparent 35%, rgba(0, 0, 0, 0.72));
 }
 
@@ -656,7 +713,7 @@
 .v32-fund-tab.on {
   border-color: var(--v32-accent);
   background: var(--v32-accent);
-  color: #fff;
+  color: var(--v32-on-accent);
 }
 
 .v32-profit-label {
@@ -770,6 +827,20 @@
 
   .v32-coin-reel {
     margin-top: 4px;
+  }
+}
+
+@media (min-width: 961px) {
+  /* فقط بلوک متن هیرو به لبه راست نزدیک شود — گوشی و موبایل دست‌نخورده */
+  .v32-hero > .v32-wrap.v32-hero-grid {
+    padding-right: 8px;
+  }
+  .v32-hero-grid > div:first-child {
+    text-align: right;
+    transform: translateX(max(0px, calc((100vw - 1180px) / 2 - 12px)));
+  }
+  .v32-hero p {
+    margin-left: auto;
   }
 }
 

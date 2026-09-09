@@ -66,11 +66,12 @@ export default function CoinsHeroSection({
     };
   }, []);
 
+  // ponytail: video stage fixed dark (letterbox #000412 matches reel art); ink via --home-on-dark so palette admins keep contrast
   return (
     <section
       dir="rtl"
       aria-label="هیرو پیشرو"
-      className="coins-hero relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] flex h-[100svh] max-h-[100svh] w-screen max-w-none flex-col overflow-hidden text-[#F4F6F8]"
+      className="coins-hero relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] flex h-[100svh] max-h-[100svh] w-screen max-w-none flex-col overflow-hidden text-[var(--home-on-dark)]"
     >
       <div
         aria-hidden
@@ -86,7 +87,7 @@ export default function CoinsHeroSection({
       />
 
       <div className="relative z-[3] flex shrink-0 items-end justify-center bg-transparent px-4 pb-1 pt-[4.5rem] text-center sm:px-6 sm:pb-2 md:pt-24 md:pb-3">
-        <h1 className="m-0 max-w-[22ch] bg-transparent text-[clamp(1.15rem,2.4vw+0.55rem,2.45rem)] font-black leading-[1.3] tracking-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]">
+        <h1 className="m-0 max-w-[22ch] bg-transparent text-[clamp(1.15rem,2.4vw+0.55rem,2.45rem)] font-black leading-[1.3] tracking-tight text-[var(--home-on-dark)] drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]">
           {title}
         </h1>
       </div>

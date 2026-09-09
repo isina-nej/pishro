@@ -81,7 +81,7 @@ const BookDetail = ({ bookId }: BookDetailProps) => {
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground dark:text-textSecondary">امتیاز:</span>
                   <div className="flex items-center gap-1">
-                    <Star className="w-4 h-4 fill-yellow-400 text-premium" />
+                    <Star className="w-4 h-4 fill-premium text-premium" />
                     <span className="font-bold">
                       {book.rating.toFixed(1)}
                     </span>

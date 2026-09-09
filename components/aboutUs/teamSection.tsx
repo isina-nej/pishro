@@ -59,9 +59,9 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
 
                 {/* Name on Image */}
-                <div className="absolute bottom-6 right-6 text-foreground">
+                <div className="absolute bottom-6 right-6 text-white">
                   <h3 className="text-2xl font-bold mb-1">{member.name}</h3>
-                  <p className="text-foreground/90 font-medium">{member.role}</p>
+                  <p className="font-medium text-white/90">{member.role}</p>
                 </div>
               </div>
             )}

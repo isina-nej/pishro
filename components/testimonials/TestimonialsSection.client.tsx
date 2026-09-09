@@ -37,7 +37,7 @@ const TestimonialsSectionClient: React.FC<TestimonialsSectionClientProps> = ({
           className="absolute inset-0 bg-center bg-no-repeat bg-[length:88%_auto] sm:bg-[length:75%_auto] md:bg-cover md:bg-center lg:supports-[background-attachment:fixed]:bg-fixed"
           style={{ backgroundImage: `url('${COMMENTS_BG}')` }}
         />
-        {/* Readability wash over the photo */}
+        {/* ponytail: readability wash over the fixed photo; dark black overlay keeps card ink legible in both modes */}
         <div className="absolute inset-0 bg-gradient-to-b from-[var(--home-bg,#F7F5F0)]/78 via-[var(--home-bg,#F7F5F0)]/62 to-[var(--home-bg,#F7F5F0)]/80 dark:from-black/70 dark:via-black/55 dark:to-black/75" />
         <div className="absolute inset-0 bg-[var(--home-deep,#0B3D2E)]/10 dark:bg-transparent" />
       </div>

@@ -55,20 +55,20 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
           {/* 📍 مشاوره حضوری */}
           <Drawer>
             <DrawerTrigger asChild>
-              <button className="group relative flex w-full items-center justify-center gap-2 rounded-full border border-border/60 bg-card/90 px-6 py-3 font-bold !text-[#112b3a] shadow-xl transition-all hover:-translate-y-0.5 hover:bg-primary sm:w-auto">
-                <PhoneCall className="h-5 w-5 text-primary transition-transform group-hover:scale-110" />
+              <button className="group relative flex w-full items-center justify-center gap-2 rounded-full border border-border/60 bg-card/90 px-6 py-3 font-bold text-foreground shadow-xl transition-all hover:-translate-y-0.5 hover:bg-primary hover:text-primary-foreground sm:w-auto">
+                <PhoneCall className="h-5 w-5 text-primary transition-transform group-hover:scale-110 group-hover:text-primary-foreground" />
                 {copy("inPerson.button", "رزرو مشاوره حضوری")}
               </button>
             </DrawerTrigger>
-            <DrawerContent className="p-6 rounded-t-2xl border-t bg-card dark:bg-cardBg shadow-2xl">
+            <DrawerContent className="p-6 rounded-t-2xl border-t bg-card shadow-2xl">
               <DrawerHeader className="text-center">
                 <div className="flex justify-center">
                   <PhoneCall className="text-primary h-10 w-10" />
                 </div>
-                <DrawerTitle className="text-2xl font-bold text-foreground dark:text-textPrimary mt-2">
+                <DrawerTitle className="text-2xl font-bold text-foreground mt-2">
                   {businessConsultingData.inPersonTitle || "مشاوره حضوری"}
                 </DrawerTitle>
-                <DrawerDescription className="text-center text-muted-foreground dark:text-textSecondary mt-1">
+                <DrawerDescription className="text-center text-muted-foreground mt-1">
                   {businessConsultingData.inPersonDescription ||
                     "برای رزرو مشاوره حضوری با ما تماس بگیرید:"}
                 </DrawerDescription>
@@ -79,13 +79,13 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
                 </p>
                 <a
                   href={`tel:${contactInfo.mobileTel}`}
-                  className="inline-block px-6 py-2 bg-primary hover:bg-primary text-primary-foreground rounded-md font-medium transition"
+                  className="inline-block px-6 py-2 bg-primary hover:brightness-110 text-primary-foreground rounded-md font-medium transition"
                 >
                   تماس بگیرید
                 </a>
               </div>
               <DrawerFooter>
-                <DrawerClose className="block mt-6 text-sm text-muted-foreground dark:text-textSecondary hover:text-muted-foreground dark:hover:text-textSecondary underline text-center">
+                <DrawerClose className="block mt-6 text-sm text-muted-foreground hover:text-foreground underline text-center">
                   <XIcon className="inline-block" />
                 </DrawerClose>
               </DrawerFooter>
@@ -95,20 +95,20 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
           {/* 💻 مشاوره آنلاین */}
           <Drawer>
             <DrawerTrigger asChild>
-              <button className="group relative flex w-full items-center justify-center gap-2 rounded-full border border-border/60 bg-card/90 px-6 py-3 font-bold !text-[#112b3a] shadow-xl transition-all hover:-translate-y-0.5 hover:bg-primary sm:w-auto">
-                <Send className="h-5 w-5 text-primary transition-transform group-hover:scale-110" />
+              <button className="group relative flex w-full items-center justify-center gap-2 rounded-full border border-border/60 bg-card/90 px-6 py-3 font-bold text-foreground shadow-xl transition-all hover:-translate-y-0.5 hover:bg-primary hover:text-primary-foreground sm:w-auto">
+                <Send className="h-5 w-5 text-primary transition-transform group-hover:scale-110 group-hover:text-primary-foreground" />
                 رزرو مشاوره آنلاین
               </button>
             </DrawerTrigger>
-            <DrawerContent className="p-6 rounded-t-2xl border-t bg-card dark:bg-cardBg shadow-2xl">
+            <DrawerContent className="p-6 rounded-t-2xl border-t bg-card shadow-2xl">
               <DrawerHeader className="text-center">
                 <div className="flex justify-center">
                   <Send className="text-primary h-10 w-10" />
                 </div>
-                <DrawerTitle className="text-2xl font-bold text-foreground dark:text-textPrimary mt-2">
+                <DrawerTitle className="text-2xl font-bold text-foreground mt-2">
                   {businessConsultingData.onlineTitle || "مشاوره آنلاین"}
                 </DrawerTitle>
-                <DrawerDescription className="text-center text-muted-foreground dark:text-textSecondary mt-1">
+                <DrawerDescription className="text-center text-muted-foreground mt-1">
                   {businessConsultingData.onlineDescription ||
                     "برای دریافت مشاوره آنلاین از طریق تلگرام پیام دهید:"}
                 </DrawerDescription>
@@ -123,13 +123,13 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
                     "https://t.me/BusinessSupport"
                   }
                   target="_blank"
-                  className="inline-block px-6 py-2 bg-primary hover:bg-primary text-primary-foreground rounded-md font-medium transition"
+                  className="inline-block px-6 py-2 bg-primary hover:brightness-110 text-primary-foreground rounded-md font-medium transition"
                 >
                   پیام در تلگرام
                 </Link>
               </div>
               <DrawerFooter>
-                <DrawerClose className="block mt-6 text-sm text-muted-foreground dark:text-textSecondary hover:text-muted-foreground dark:hover:text-textSecondary underline text-center">
+                <DrawerClose className="block mt-6 text-sm text-muted-foreground hover:text-foreground underline text-center">
                   <XIcon className="inline-block" />
                 </DrawerClose>
               </DrawerFooter>
@@ -139,20 +139,20 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
           {/* 🎓 دوره‌ها */}
           <Drawer>
             <DrawerTrigger asChild>
-              <button className="group relative flex w-full items-center justify-center gap-2 rounded-full border border-border/60 bg-card/90 px-6 py-3 font-bold !text-[#112b3a] shadow-xl transition-all hover:-translate-y-0.5 hover:bg-premium sm:w-auto">
-                <GraduationCap className="h-5 w-5 text-premium transition-transform group-hover:scale-110" />
+              <button className="group relative flex w-full items-center justify-center gap-2 rounded-full border border-border/60 bg-card/90 px-6 py-3 font-bold text-foreground shadow-xl transition-all hover:-translate-y-0.5 hover:bg-premium hover:text-premium-foreground sm:w-auto">
+                <GraduationCap className="h-5 w-5 text-premium transition-transform group-hover:scale-110 group-hover:text-premium-foreground" />
                 دوره‌ها
               </button>
             </DrawerTrigger>
-            <DrawerContent className="p-6 rounded-t-2xl border-t bg-card dark:bg-cardBg shadow-2xl">
+            <DrawerContent className="p-6 rounded-t-2xl border-t bg-card shadow-2xl">
               <DrawerHeader className="text-center">
                 <div className="flex justify-center">
                   <GraduationCap className="text-premium h-10 w-10" />
                 </div>
-                <DrawerTitle className="text-2xl font-bold text-foreground dark:text-textPrimary mt-2">
+                <DrawerTitle className="text-2xl font-bold text-foreground mt-2">
                   {businessConsultingData.coursesTitle || "دوره‌های آموزشی"}
                 </DrawerTitle>
-                <DrawerDescription className="text-center text-muted-foreground dark:text-textSecondary mt-1">
+                <DrawerDescription className="text-center text-muted-foreground mt-1">
                   {businessConsultingData.coursesDescription ||
                     "برای مشاهده دوره‌های ما کلیک کنید:"}
                 </DrawerDescription>
@@ -160,13 +160,13 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
               <div className="text-center mt-4 space-y-3">
                 <Link
                   href={businessConsultingData.coursesLink || "/courses"}
-                  className="inline-block px-6 py-2 bg-premium hover:bg-premium text-primary-foreground rounded-md font-medium transition"
+                  className="inline-block px-6 py-2 bg-premium hover:brightness-110 text-premium-foreground rounded-md font-medium transition"
                 >
                   مشاهده دوره‌ها
                 </Link>
               </div>
               <DrawerFooter>
-                <DrawerClose className="block mt-6 text-sm text-muted-foreground dark:text-textSecondary hover:text-muted-foreground dark:hover:text-textSecondary underline text-center">
+                <DrawerClose className="block mt-6 text-sm text-muted-foreground hover:text-foreground underline text-center">
                   <XIcon className="inline-block" />
                 </DrawerClose>
               </DrawerFooter>

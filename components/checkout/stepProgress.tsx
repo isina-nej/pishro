@@ -17,10 +17,10 @@ const StepProgress = ({ currentStep }: StepProgressProps) => {
   const currentIndex = steps.findIndex((step) => step.id === currentStep);
 
   return (
-    <div className="w-full bg-card dark:bg-cardBg rounded-xl shadow-md p-6 mb-8">
+    <div className="w-full bg-card rounded-xl shadow-md p-6 mb-8">
       <div className="flex items-center justify-between relative">
         {/* Progress Line */}
-        <div className="absolute top-6 right-0 left-0 h-1 bg-muted dark:bg-darkBgHidden -z-10">
+        <div className="absolute top-6 right-0 left-0 h-1 bg-muted -z-10">
           <motion.div
             className="h-full bg-gradient-to-l from-primary to-premium"
             initial={{ width: "0%" }}
@@ -48,7 +48,7 @@ const StepProgress = ({ currentStep }: StepProgressProps) => {
                     ? "bg-gradient-to-br from-primary to-premium shadow-lg"
                     : isCompleted
                     ? "bg-primary"
-                    : "bg-muted dark:bg-darkBgHidden"
+                    : "bg-muted"
                 }`}
                 initial={{ scale: 0.8 }}
                 animate={{ scale: isActive ? 1.1 : 1 }}
@@ -56,7 +56,7 @@ const StepProgress = ({ currentStep }: StepProgressProps) => {
               >
                 <Icon
                   className={`w-6 h-6 ${
-                    isActive || isCompleted ? "text-white" : "text-muted-foreground dark:text-textSecondary"
+                    isActive || isCompleted ? "text-primary-foreground" : "text-muted-foreground"
                   }`}
                 />
               </motion.div>
@@ -68,7 +68,7 @@ const StepProgress = ({ currentStep }: StepProgressProps) => {
                     ? "text-primary font-bold"
                     : isCompleted
                     ? "text-foreground"
-                    : "text-muted-foreground dark:text-textSecondary"
+                    : "text-muted-foreground"
                 }`}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}

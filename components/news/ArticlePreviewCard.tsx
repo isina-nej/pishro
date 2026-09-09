@@ -32,7 +32,7 @@ export default function ArticlePreviewCard({ article }: ArticlePreviewCardProps)
     : '';
 
   return (
-    <div className="mb-12 bg-gradient-to-br from-primary via-primary to-primary/50/30/50 rounded-2xl border border-primary p-8 shadow-lg shadow-blue-100/20 dark:shadow-none">
+    <div className="mb-12 rounded-2xl border border-border bg-gradient-to-br from-card via-muted to-card p-8 shadow-lg">
       {/* Header Section */}
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-primary pb-6">
         <div>
@@ -122,7 +122,7 @@ export default function ArticlePreviewCard({ article }: ArticlePreviewCardProps)
 
       {/* Table of Contents - if there are headings */}
       {headings.length > 1 && (
-        <div className="bg-card/70/70 rounded-xl p-4 backdrop-blur-sm">
+        <div className="bg-card/70 rounded-xl p-4 backdrop-blur-sm">
           <h3 className="text-sm font-bold text-foreground mb-4 flex items-center gap-2">
             <span className="inline-block w-1.5 h-1.5 bg-primary rounded-full"></span>
             فهرست مطالب

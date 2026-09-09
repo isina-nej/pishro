@@ -68,13 +68,13 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
   const getRiskColor = (type: string) => {
     switch (type) {
       case "low":
-        return "text-primary bg-primary";
+        return "bg-primary/15 text-primary border-primary/30";
       case "medium":
-        return "text-premium bg-premium";
+        return "bg-premium/15 text-premium border-premium/30";
       case "high":
-        return "text-destructive bg-destructive";
+        return "bg-destructive/15 text-destructive border-destructive/30";
       default:
-        return "text-muted-foreground dark:text-textSecondary bg-muted dark:bg-darkBgHidden";
+        return "bg-muted text-muted-foreground border-border";
     }
   };
 
@@ -93,7 +93,7 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
           delay: index * 0.1,
           ease: "easeOut",
         }}
-        className="w-full h-fit max-w-[410px] bg-card dark:bg-cardBg shadow-lg hover:shadow-xl rounded-2xl overflow-hidden border border-border dark:border-borderColor transition-all duration-300 group"
+        className="w-full h-fit max-w-[410px] bg-card shadow-lg hover:shadow-xl rounded-2xl overflow-hidden border border-border transition-all duration-300 group"
       >
         {/* Image with overlay */}
         <div className="relative w-full aspect-[16/9] overflow-hidden">
@@ -130,7 +130,7 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
           <div className="relative size-full bg-gradient-to-br from-muted to-muted">
             {imageError ? (
               <div className="size-full flex flex-col items-center justify-center gap-3">
-                <div className="w-16 h-16 rounded-full bg-accent dark:bg-darkBgHidden flex items-center justify-center">
+                <div className="w-16 h-16 rounded-full bg-accent flex items-center justify-center">
                   <Image
                     src="/images/logo.png"
                     alt="placeholder"
@@ -139,7 +139,7 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
                     className="opacity-50"
                   />
                 </div>
-                <span className="text-muted-foreground dark:text-textSecondary text-sm">
+                <span className="text-muted-foreground text-sm">
                   تصویر در دسترس نیست
                 </span>
               </div>
@@ -162,17 +162,17 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
         {/* Content */}
         <div className="p-5 space-y-4">
           {/* Title */}
-          <h6 className="font-bold text-lg text-foreground dark:text-textPrimary line-clamp-2 min-h-[3.5rem] leading-relaxed">
+          <h6 className="font-bold text-lg text-foreground line-clamp-2 min-h-[3.5rem] leading-relaxed">
             {data.subject}
           </h6>
 
           {/* Description */}
-          <p className="text-sm text-muted-foreground dark:text-textSecondary line-clamp-2 min-h-[2.5rem] leading-relaxed">
+          <p className="text-sm text-muted-foreground line-clamp-2 min-h-[2.5rem] leading-relaxed">
             {data.description || "توضیحات دوره در دسترس نیست"}
           </p>
 
           {/* Divider */}
-          <div className="border-t border-border dark:border-borderColor" />
+          <div className="border-t border-border" />
 
           {/* Price Section */}
           <div className="space-y-3">
@@ -195,10 +195,10 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
             {/* Prices */}
             <div className="flex items-end justify-between">
               <div className="space-y-1">
-                <p className="text-xs text-muted-foreground dark:text-textSecondary font-medium">قیمت نهایی</p>
+                <p className="text-xs text-muted-foreground font-medium">قیمت نهایی</p>
                 <div className="flex items-center gap-2">
                   {hasDiscount && originalPrice && (
-                    <span className="text-sm text-muted-foreground dark:text-textSecondary line-through">
+                    <span className="text-sm text-muted-foreground line-through">
                       {originalPrice.toLocaleString("fa-IR")}
                     </span>
                   )}
@@ -210,12 +210,12 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.5 + index * 0.1 }}
                   className={`text-2xl font-black ${
-                    hasDiscount ? "text-primary" : "text-foreground dark:text-textPrimary"
+                    hasDiscount ? "text-primary" : "text-foreground"
                   }`}
                 >
                   {data.price.toLocaleString("fa-IR")}
                 </motion.p>
-                <span className="text-xs text-muted-foreground dark:text-textSecondary font-medium">تومان</span>
+                <span className="text-xs text-muted-foreground font-medium">تومان</span>
               </div>
             </div>
           </div>
@@ -239,7 +239,7 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
           delay: index * 0.1,
           ease: "easeOut",
         }}
-        className="w-full h-fit max-w-[410px] bg-card dark:bg-cardBg shadow-lg hover:shadow-xl rounded-2xl overflow-hidden border border-border dark:border-borderColor transition-all duration-300 group"
+        className="w-full h-fit max-w-[410px] bg-card shadow-lg hover:shadow-xl rounded-2xl overflow-hidden border border-border transition-all duration-300 group"
       >
         {/* Header with delete button */}
         <div className="relative w-full bg-primary text-primary-foreground p-6">
@@ -276,8 +276,8 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
             <div className="flex items-start gap-2 p-3 bg-success/10 border border-success/25 rounded-lg">
               <Wallet className="w-5 h-5 text-success mt-0.5" />
               <div>
-                <p className="text-xs text-muted-foreground dark:text-textSecondary mb-1">مبلغ سرمایه</p>
-                <p className="text-sm font-bold text-foreground dark:text-textPrimary">
+                <p className="text-xs text-muted-foreground mb-1">مبلغ سرمایه</p>
+                <p className="text-sm font-bold text-foreground">
                   {data.portfolioAmount.toLocaleString("fa-IR")} تومان
                 </p>
               </div>
@@ -287,8 +287,8 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
             <div className="flex items-start gap-2 p-3 bg-accent rounded-lg">
               <Clock className="w-5 h-5 text-accent-foreground mt-0.5" />
               <div>
-                <p className="text-xs text-muted-foreground dark:text-textSecondary mb-1">مدت زمان</p>
-                <p className="text-sm font-bold text-foreground dark:text-textPrimary">
+                <p className="text-xs text-muted-foreground mb-1">مدت زمان</p>
+                <p className="text-sm font-bold text-foreground">
                   {data.portfolioDuration} ماه
                 </p>
               </div>
@@ -308,24 +308,24 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
 
           {/* Expected Return */}
           <div className="bg-success/10 border border-success/25 p-3 rounded-lg">
-            <p className="text-xs text-muted-foreground dark:text-textSecondary mb-1 text-center">
+            <p className="text-xs text-muted-foreground mb-1 text-center">
               بازده تخمینی
             </p>
             <p className="text-lg font-bold text-success text-center">
               {data.expectedReturn.toLocaleString("fa-IR")} تومان
             </p>
-            <p className="text-xs text-muted-foreground dark:text-textSecondary text-center mt-1">
+            <p className="text-xs text-muted-foreground text-center mt-1">
               نرخ ماهیانه: {(data.monthlyRate * 100).toFixed(0)}٪
             </p>
           </div>
 
           {/* Divider */}
-          <div className="border-t border-border dark:border-borderColor" />
+          <div className="border-t border-border" />
 
           {/* Price Section */}
           <div className="flex items-end justify-between">
             <div className="space-y-1">
-              <p className="text-xs text-muted-foreground dark:text-textSecondary font-medium">هزینه سبد</p>
+              <p className="text-xs text-muted-foreground font-medium">هزینه سبد</p>
             </div>
             <div className="flex flex-col items-end">
               <motion.p
@@ -336,7 +336,7 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
               >
                 {data.price.toLocaleString("fa-IR")}
               </motion.p>
-              <span className="text-xs text-muted-foreground dark:text-textSecondary font-medium">تومان</span>
+              <span className="text-xs text-muted-foreground font-medium">تومان</span>
             </div>
           </div>
         </div>

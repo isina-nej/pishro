@@ -30,7 +30,7 @@ const EmptyCart = () => {
 
           {/* Main Icon Container */}
           <div className="relative w-full h-full bg-gradient-to-br from-muted to-muted rounded-full flex items-center justify-center border-4 border-border shadow-lg">
-            <ShoppingCart className="w-16 h-16 text-muted-foreground dark:text-textSecondary" strokeWidth={1.5} />
+            <ShoppingCart className="w-16 h-16 text-muted-foreground" strokeWidth={1.5} />
 
             {/* Sparkle Decoration */}
             <motion.div
@@ -54,7 +54,7 @@ const EmptyCart = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-2xl font-black text-foreground dark:text-textPrimary"
+            className="text-2xl font-black text-foreground"
           >
             سبد خرید شما خالی است
           </motion.h3>
@@ -63,7 +63,7 @@ const EmptyCart = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="text-muted-foreground dark:text-textSecondary leading-relaxed"
+            className="text-muted-foreground leading-relaxed"
           >
             هنوز دوره‌ای به سبد خرید خود اضافه نکرده‌اید.
             <br />
@@ -92,7 +92,7 @@ const EmptyCart = () => {
             <Button
               size="lg"
               variant="outline"
-              className="w-full sm:w-auto border-2 hover:bg-muted dark:hover:bg-darkBgHidden dark:bg-darkBgHidden"
+              className="w-full sm:w-auto border-2 hover:bg-muted"
             >
               <span className="font-bold">بازگشت به صفحه اصلی</span>
             </Button>
@@ -104,9 +104,9 @@ const EmptyCart = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="pt-8 border-t border-border dark:border-borderColor"
+          className="pt-8 border-t border-border"
         >
-          <p className="text-sm text-muted-foreground dark:text-textSecondary">
+          <p className="text-sm text-muted-foreground">
             💡 نکته: با افزودن دوره‌ها به سبد خرید، می‌توانید همه را یکجا خریداری کنید
           </p>
         </motion.div>

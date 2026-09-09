@@ -315,7 +315,7 @@ export function PhoneStoryScroller({
             </div>
 
             <div className="order-2 flex shrink-0 items-center justify-center lg:order-1">
-              <div className="relative h-[min(58vh,420px)] w-[min(52vw,220px)] drop-shadow-[0_28px_50px_rgba(11,61,46,0.22)] sm:h-[min(62vh,520px)] sm:w-[min(42vw,260px)] lg:h-[min(72vh,640px)] lg:w-[300px] xl:w-[320px]">
+              <div className="relative h-[min(58vh,420px)] w-[min(52vw,220px)] drop-shadow-[0_28px_50px_color-mix(in_srgb,var(--home-deep)_22%,transparent)] sm:h-[min(62vh,520px)] sm:w-[min(42vw,260px)] lg:h-[min(72vh,640px)] lg:w-[300px] xl:w-[320px]">
                 <Image
                   src={frameSrc}
                   alt="نمای سامانه پیشرو روی موبایل"

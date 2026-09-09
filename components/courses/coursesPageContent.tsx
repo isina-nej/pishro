@@ -85,17 +85,17 @@ const CoursesPageContent = ({
                 <>
                   {hasActiveFilters && (
                     <div className="mb-6 mt-8">
-                      <p className="text-sm text-muted-foreground dark:text-textSecondary">
+                      <p className="text-sm text-muted-foreground">
                         {filteredCourses.length > 0 ? (
                           <>
-                            <span className="font-semibold text-foreground dark:text-textPrimary">
+                            <span className="font-semibold text-foreground">
                               {filteredCourses.length}
                             </span>
                             دوره
                             {query && (
                               <>
                                 برای جستجوی
-                                <span className="font-semibold text-foreground dark:text-textPrimary">
+                                <span className="font-semibold text-foreground">
                                   &quot;{query}&quot;
                                 </span>
                               </>
@@ -103,7 +103,7 @@ const CoursesPageContent = ({
                             یافت شد
                           </>
                         ) : (
-                          <span className="text-muted-foreground dark:text-textSecondary">
+                          <span className="text-muted-foreground">
                             هیچ دوره‌ای با این فیلترها یافت نشد
                           </span>
                         )}
@@ -136,13 +136,13 @@ const CoursesPageContent = ({
                   ) : (
                     <div className="flex min-h-[300px] items-center justify-center">
                       <div className="text-center">
-                        <p className="text-lg text-muted-foreground dark:text-textSecondary">
+                        <p className="text-lg text-muted-foreground">
                           هیچ دوره‌ای برای نمایش وجود ندارد
                         </p>
                         {hasActiveFilters && (
                           <button
                             onClick={handleResetFilters}
-                            className="mt-4 rounded-full border border-border bg-card px-6 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted dark:border-borderColor dark:bg-cardBg dark:text-textSecondary dark:hover:bg-darkBgHidden"
+                            className="mt-4 rounded-full border border-border bg-card px-6 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted"
                           >
                             پاک کردن فیلترها
                           </button>

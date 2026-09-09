@@ -18,20 +18,20 @@ const getBorderColor = (color: string) => {
     case "red":
       return "border-destructive hover:border-destructive";
     default:
-      return "border-border dark:border-borderColor";
+      return "border-border";
   }
 };
 
 const getTextColor = (color: string) => {
   switch (color) {
     case "green":
-      return "text-primary";
+      return "text-success";
     case "yellow":
       return "text-premium";
     case "red":
       return "text-destructive";
     default:
-      return "text-muted-foreground dark:text-textSecondary";
+      return "text-muted-foreground";
   }
 };
 
@@ -43,16 +43,16 @@ const PortfoliosDisplay = () => {
       <div className="container-xl">
         {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground dark:text-textPrimary mb-4">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
             انتخاب صندوق سرمایه‌ گذاری
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground dark:text-textSecondary max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
             بر اساس هدف سرمایه‌ گذاری خود، یکی از صندوق‌های زیر را انتخاب کنید
           </p>
         </div>
 
         {isLoading ? (
-          <div className="text-center py-12 text-muted-foreground dark:text-textSecondary">
+          <div className="text-center py-12 text-muted-foreground">
             در حال بارگذاری صندوق‌ها...
           </div>
         ) : (
@@ -72,20 +72,20 @@ const PortfoliosDisplay = () => {
                   <div
                     className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${theme.gradient} flex items-center justify-center mb-6 shadow-lg`}
                   >
-                    <Icon className="text-foreground" size={32} />
+                    <Icon className="text-primary-foreground" size={32} />
                   </div>
 
                   {/* Title & Description */}
-                  <h3 className="text-2xl font-bold text-foreground dark:text-textPrimary mb-2 tracking-widest">
+                  <h3 className="text-2xl font-bold text-foreground mb-2 tracking-widest">
                     {fund.name}
                   </h3>
                   {fund.description && (
-                    <p className="text-muted-foreground dark:text-textSecondary mb-6">{fund.description}</p>
+                    <p className="text-muted-foreground mb-6">{fund.description}</p>
                   )}
 
                   {/* Monthly Return */}
-                  <div className="mb-6 p-4 bg-muted dark:bg-darkBgHidden rounded-xl">
-                    <p className="text-sm text-muted-foreground dark:text-textSecondary mb-1">بازدهی ماهیانه</p>
+                  <div className="mb-6 p-4 bg-muted rounded-xl">
+                    <p className="text-sm text-muted-foreground mb-1">بازدهی ماهیانه</p>
                     <p className={`text-3xl font-bold ${getTextColor(theme.color)}`}>
                       {(fund.monthlyRate * 100).toFixed(0)}٪
                     </p>
@@ -98,7 +98,7 @@ const PortfoliosDisplay = () => {
                         className={`flex-shrink-0 mt-0.5 ${getTextColor(theme.color)}`}
                         size={20}
                       />
-                      <span className="text-muted-foreground dark:text-textPrimary text-sm">
+                      <span className="text-muted-foreground text-sm">
                         حداقل مدت سرمایه‌ گذاری {fund.minDuration} ماه
                       </span>
                     </li>
@@ -107,7 +107,7 @@ const PortfoliosDisplay = () => {
                         className={`flex-shrink-0 mt-0.5 ${getTextColor(theme.color)}`}
                         size={20}
                       />
-                      <span className="text-muted-foreground dark:text-textPrimary text-sm">
+                      <span className="text-muted-foreground text-sm">
                         سود {(fund.monthlyRate * 100).toFixed(0)}٪ ماهیانه
                       </span>
                     </li>
@@ -119,9 +119,9 @@ const PortfoliosDisplay = () => {
         )}
 
         {/* Info Box */}
-        <div className="mt-12 rounded-2xl border border-primary bg-primary p-6 md:p-8/60/30">
+        <div className="mt-12 rounded-2xl border border-primary/25 bg-[color-mix(in_srgb,var(--primary)_10%,transparent)] p-6 md:p-8">
           <div className="flex items-start gap-4">
-            <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary flex items-center justify-center/50">
+            <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[color-mix(in_srgb,var(--primary)_15%,transparent)] flex items-center justify-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="w-6 h-6 text-primary"
@@ -138,8 +138,8 @@ const PortfoliosDisplay = () => {
               </svg>
             </div>
             <div>
-              <h4 className="text-lg font-bold text-primary mb-2">نکته مهم</h4>
-              <p className="text-primary leading-relaxed">
+              <h4 className="text-lg font-bold text-foreground mb-2">نکته مهم</h4>
+              <p className="text-muted-foreground leading-relaxed">
                 تمامی صندوق‌های سرمایه‌ گذاری پیشرو با تضمین اصل سرمایه ارائه
                 می‌شوند. سود هر صندوق متناسب با مبلغ سرمایه‌ گذاری و مدت زمان
                 انتخابی شما محاسبه خواهد شد.

@@ -285,7 +285,7 @@ html:not(.dark)
   :where(button, a, [role="button"])[class~="bg-white"][class~="text-slate-200"],
 html:not(.dark)
   :where(button, a, [role="button"])[class~="bg-white"][class~="text-slate-300"] {
-  color: #0B3D2E;
+  color: hsl(var(--primary));
 }
 
 html.dark
@@ -298,7 +298,7 @@ html.dark
   :where(button, a, [role="button"])[class~="dark:bg-cardBg"][class~="text-slate-900"],
 html.dark
   :where(button, a, [role="button"])[class~="dark:bg-cardBg"][class~="text-gray-900"] {
-  color: #eaeaea;
+  color: hsl(var(--foreground));
 }
 
 /* my classes */
@@ -499,7 +499,7 @@ html.dark
 .public-page-panel {
   border: 1px solid var(--home-glass-border);
   background: var(--home-glass);
-  box-shadow: 0 28px 80px rgba(11, 61, 46, 0.08);
+  box-shadow: 0 28px 80px hsl(var(--primary) / 0.08);
   backdrop-filter: blur(22px) saturate(120%);
   -webkit-backdrop-filter: blur(22px) saturate(120%);
 }
@@ -509,16 +509,16 @@ html.dark
 }
 
 .public-page-card {
-  border: 1px solid rgba(217, 212, 200, 0.75);
-  background: rgba(251, 249, 245, 0.9);
-  box-shadow: 0 16px 50px rgba(11, 61, 46, 0.06);
+  border: 1px solid var(--home-glass-border);
+  background: var(--home-glass);
+  box-shadow: 0 16px 50px hsl(var(--primary) / 0.06);
   backdrop-filter: blur(16px) saturate(120%);
   -webkit-backdrop-filter: blur(16px) saturate(120%);
 }
 
 .dark .public-page-card {
-  border-color: rgba(36, 48, 40, 0.95);
-  background: rgba(18, 26, 22, 0.9);
+  border-color: var(--home-glass-border);
+  background: var(--home-glass);
   box-shadow: 0 16px 50px rgba(0, 0, 0, 0.22);
 }
 
@@ -581,7 +581,7 @@ html.dark
 .home-glass-panel {
   border: 1px solid var(--home-glass-border);
   background: var(--home-glass);
-  box-shadow: 0 30px 80px rgba(11, 61, 46, 0.08);
+  box-shadow: 0 30px 80px hsl(var(--primary) / 0.08);
   backdrop-filter: blur(24px) saturate(120%);
   -webkit-backdrop-filter: blur(24px) saturate(120%);
 }
@@ -591,16 +591,16 @@ html.dark
 }
 
 .home-glass-card {
-  border: 1px solid rgba(217, 212, 200, 0.75);
-  background: rgba(251, 249, 245, 0.9);
-  box-shadow: 0 16px 50px rgba(11, 61, 46, 0.06);
+  border: 1px solid var(--home-glass-border);
+  background: var(--home-glass);
+  box-shadow: 0 16px 50px hsl(var(--primary) / 0.06);
   backdrop-filter: blur(16px) saturate(120%);
   -webkit-backdrop-filter: blur(16px) saturate(120%);
 }
 
 .dark .home-glass-card {
-  border-color: rgba(36, 48, 40, 0.95);
-  background: rgba(18, 26, 22, 0.9);
+  border-color: var(--home-glass-border);
+  background: var(--home-glass);
   box-shadow: 0 16px 50px rgba(0, 0, 0, 0.22);
 }
 
@@ -661,34 +661,35 @@ html.dark
  * Bridge the teal→blue lighting seam in the coins reel.
  * Wide overlapping radials + a soft horizontal wash so green feels continuous into blue.
  */
+/* ponytail: glow follows palette via --home-glow-rgb/--home-gold-rgb; hardcode video-native teal/blue only if reel art changes */
 .coins-hero-glow {
   background:
     radial-gradient(
       ellipse 58% 70% at 18% 58%,
-      rgba(56, 190, 170, 0.28) 0%,
-      rgba(45, 160, 190, 0.14) 32%,
-      rgba(40, 120, 200, 0.06) 55%,
+      rgba(var(--home-glow-rgb), 0.28) 0%,
+      rgba(var(--home-glow-rgb), 0.14) 32%,
+      rgba(var(--home-glow-rgb), 0.06) 55%,
       transparent 78%
     ),
     radial-gradient(
       ellipse 70% 75% at 62% 55%,
-      rgba(68, 144, 216, 0.3) 0%,
-      rgba(30, 80, 210, 0.14) 38%,
+      rgba(var(--home-glow-rgb), 0.3) 0%,
+      rgba(var(--home-glow-rgb), 0.14) 38%,
       transparent 74%
     ),
     radial-gradient(
       ellipse 90% 55% at 42% 70%,
-      rgba(48, 170, 185, 0.12) 0%,
-      rgba(40, 110, 210, 0.1) 45%,
+      rgba(var(--home-gold-rgb), 0.12) 0%,
+      rgba(var(--home-glow-rgb), 0.1) 45%,
       transparent 78%
     ),
     linear-gradient(
       90deg,
-      rgba(56, 190, 170, 0.1) 0%,
-      rgba(50, 165, 185, 0.08) 22%,
-      rgba(55, 130, 205, 0.1) 48%,
-      rgba(30, 70, 210, 0.12) 72%,
-      rgba(19, 51, 212, 0.08) 100%
+      rgba(var(--home-glow-rgb), 0.1) 0%,
+      rgba(var(--home-glow-rgb), 0.08) 22%,
+      rgba(var(--home-gold-rgb), 0.1) 48%,
+      rgba(var(--home-glow-rgb), 0.12) 72%,
+      rgba(var(--home-gold-rgb), 0.08) 100%
     );
 }
 

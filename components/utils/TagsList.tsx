@@ -29,7 +29,7 @@ const TagsList: React.FC<TagsListProps> = ({
           <button
             key={index}
             className="flex items-center gap-1 px-2.5 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-2xl sm:rounded-3xl border text-xs sm:text-sm md:text-base font-medium transition-transform duration-200 hover:scale-105 active:scale-95"
-            style={{ borderColor: "#214554", color: "#214554" }}
+            style={{ borderColor: "var(--home-glow)", color: "var(--home-glow)" }}
             aria-label={`برچسب ${tag}`}
           >
             <Hash className="w-3 h-3 sm:w-4 sm:h-4" />

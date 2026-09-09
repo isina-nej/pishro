@@ -41,9 +41,10 @@ const TagsListDynamic: React.FC<TagsListDynamicProps> = ({
     const baseClasses =
       "flex items-center gap-1 px-2.5 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-2xl sm:rounded-3xl border text-xs sm:text-sm md:text-base font-medium transition-transform duration-200 hover:scale-105 active:scale-95";
 
+    // ponytail: DB tag color wins when set; palette fallback otherwise (add per-tag CMS color when needed)
     const style = {
-      borderColor: tag.color || "#214554",
-      color: tag.color || "#214554",
+      borderColor: tag.color || "var(--home-glow)",
+      color: tag.color || "var(--home-glow)",
     };
 
     if (linkable) {

@@ -92,6 +92,7 @@ export const InvestmentPlansHero = ({
           </video>
         </motion.div>
         {/* Soft vignette — keep video clear */}
+        {/* ponytail: black scrim = video-overlay metaphor (footage is dark in both modes), not page chrome */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/10 to-black/50" />
       </div>
 
@@ -152,9 +153,10 @@ export const InvestmentPlansHero = ({
           className="flex flex-col gap-12"
         >
           {/* Header Section */}
+          {/* ponytail: glass panel over video stays dark-on-footage in both modes (black/white = video overlay, not page chrome) */}
           <div className="mx-auto max-w-4xl space-y-8 rounded-[2.25rem] border border-white/20 bg-black/40 p-7 text-center shadow-2xl shadow-black/30 sm:p-10">
             <motion.div variants={itemVariants} className="flex justify-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/40 bg-emerald-500/15 px-6 py-2.5 text-sm font-medium text-emerald-200 shadow-lg shadow-emerald-500/10 backdrop-blur-sm">
+              <span className="inline-flex items-center gap-2 rounded-full border border-success/40 bg-[color-mix(in_srgb,var(--success)_15%,transparent)] px-6 py-2.5 text-sm font-medium text-[var(--home-on-dark)] shadow-lg shadow-success/10 backdrop-blur-sm">
                 <Sparkles className="h-4 w-4" />
                 سبدهای سرمایه‌ گذاری پیشرو
               </span>
@@ -162,14 +164,14 @@ export const InvestmentPlansHero = ({
 
             <motion.h1
               variants={itemVariants}
-              className="text-5xl font-black !leading-tight md:text-7xl bg-gradient-to-b from-white via-white to-white/70 bg-clip-text text-transparent"
+              className="text-5xl font-black !leading-tight md:text-7xl bg-gradient-to-b from-[var(--home-on-dark)] via-[var(--home-on-dark)] to-[color-mix(in_srgb,var(--home-on-dark)_70%,transparent)] bg-clip-text text-transparent"
             >
               {investmentPlansData.title}
             </motion.h1>
 
             <motion.p
               variants={itemVariants}
-              className="text-lg text-white/80 md:text-xl max-w-2xl mx-auto leading-relaxed"
+              className="text-lg text-[color-mix(in_srgb,var(--home-on-dark)_80%,transparent)] md:text-xl max-w-2xl mx-auto leading-relaxed"
             >
               {investmentPlansData.description}
             </motion.p>
@@ -178,7 +180,7 @@ export const InvestmentPlansHero = ({
               <Button
                 onClick={scrollToModels}
                 size="lg"
-                className="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white shadow-xl shadow-emerald-500/25 hover:shadow-2xl hover:shadow-emerald-500/40 transition-all duration-300 px-8 py-6 text-lg font-semibold rounded-2xl"
+                className="bg-[var(--btn-primary-bg)] hover:bg-[var(--btn-primary-hover)] text-primary-foreground shadow-xl shadow-success/25 hover:shadow-2xl hover:shadow-success/40 transition-all duration-300 px-8 py-6 text-lg font-semibold rounded-2xl"
               >
                 شروع سرمایه‌گذاری
               </Button>
@@ -236,18 +238,18 @@ export const InvestmentPlansHero = ({
                       }
                     : undefined
                 }
-                className="group relative overflow-hidden rounded-3xl border border-white/20 bg-black/40 p-6 text-white shadow-xl shadow-black/25 transition-all duration-300 hover:bg-black/50"
+                className="group relative overflow-hidden rounded-3xl border border-white/20 bg-black/40 p-6 text-[var(--home-on-dark)] shadow-xl shadow-black/25 transition-all duration-300 hover:bg-black/50"
               >
                 <div className="relative flex flex-col items-center text-center gap-4">
-                  <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-emerald-200 shadow-lg backdrop-blur-sm">
+                  <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-[color-mix(in_srgb,var(--success)_60%,white)] shadow-lg backdrop-blur-sm">
                     {item.icon}
                   </span>
 
                   <div className="flex flex-col gap-1">
-                    <span className="text-3xl font-bold text-white">
+                    <span className="text-3xl font-bold text-[var(--home-on-dark)]">
                       {item.value}
                     </span>
-                    <span className="text-sm text-white/70 font-medium">
+                    <span className="text-sm text-[var(--home-on-dark-muted)] font-medium">
                       {item.label}
                     </span>
                   </div>

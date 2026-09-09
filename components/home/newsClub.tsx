@@ -13,11 +13,9 @@ import { subscribeToNewsletter } from "@/lib/services/newsletter";
 import toast from "react-hot-toast";
 import { usePublicCopy } from "@/components/site/PublicContentProvider";
 
-/** سبز زیتونی هدف طراحی */
-const ACCENT = "#6B7460";
-/** مشکی نزدیک به سبز برای سطح کارت */
-const CARD_BG = "#0C1410";
-const CARD_BG_MID = "#101810";
+/* ponytail: palette-driven via --home-* vars; hardcode olive only if NewsClub needs own brand */
+const CARD_BG = "var(--home-bg-mid)";
+const CARD_BG_MID = "var(--home-bg)";
 
 const NewsClub = () => {
   const copy = usePublicCopy("home-sections");
@@ -51,16 +49,16 @@ const NewsClub = () => {
     <section
       className="relative mx-auto mt-10 w-[calc(100%-2rem)] overflow-hidden rounded-[2.5rem] border px-5 py-10 shadow-2xl sm:px-8 md:mt-0 md:w-[calc(100%-4rem)] md:px-12 md:py-14"
       style={{
-        background: `linear-gradient(160deg, ${CARD_BG_MID} 0%, ${CARD_BG} 48%, #080E0A 100%)`,
-        borderColor: `${ACCENT}33`,
-        boxShadow: `0 28px 90px rgba(0,0,0,0.45), inset 0 1px 0 ${ACCENT}22`,
+        background: `linear-gradient(160deg, ${CARD_BG_MID} 0%, ${CARD_BG} 48%, var(--home-bg) 100%)`,
+        borderColor: "color-mix(in srgb, var(--home-glow) 25%, transparent)",
       }}
     >
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-0"
         style={{
-          background: `radial-gradient(ellipse 70% 55% at 80% 20%, ${ACCENT}2E, transparent 60%), radial-gradient(ellipse 50% 40% at 10% 90%, ${ACCENT}14, transparent 55%)`,
+          background:
+            "radial-gradient(ellipse 70% 55% at 80% 20%, color-mix(in srgb, var(--home-glow) 18%, transparent), transparent 60%), radial-gradient(ellipse 50% 40% at 10% 90%, color-mix(in srgb, var(--home-glow) 8%, transparent), transparent 55%)",
         }}
       />
 
@@ -78,25 +76,17 @@ const NewsClub = () => {
 
         <div className="flex w-full flex-col items-center gap-5 text-center md:items-start md:text-start">
           <span
-            className="inline-flex rounded-full border px-4 py-2 text-[11px] font-bold"
-            style={{
-              borderColor: `${ACCENT}55`,
-              backgroundColor: `${ACCENT}22`,
-              color: ACCENT,
-            }}
+            className="inline-flex rounded-full border border-[color-mix(in_srgb,var(--home-glow)_35%,transparent)] bg-[color-mix(in_srgb,var(--home-glow)_13%,transparent)] px-4 py-2 text-[11px] font-bold text-[var(--home-glow)]"
           >
             {copy("club.eyebrow", "همیشه یک گام جلوتر")}
           </span>
-          <h4 className="flex items-baseline justify-center gap-2 text-4xl font-black leading-tight tracking-tight text-white sm:text-5xl md:justify-start lg:text-6xl">
+          <h4 className="flex items-baseline justify-center gap-2 text-4xl font-black leading-tight tracking-tight text-[var(--home-ink)] sm:text-5xl md:justify-start lg:text-6xl">
             <span className="inline-block">{copy("club.title", "باشگاه")}</span>
-            <span
-              className="inline-block"
-              style={{ color: ACCENT }}
-            >
+            <span className="inline-block text-[var(--home-glow)]">
               {copy("club.titleAccent", "پیشرو")}
             </span>
           </h4>
-          <p className="max-w-xl text-sm leading-loose text-white/75 sm:text-base md:text-lg">
+          <p className="max-w-xl text-sm leading-loose text-[var(--home-muted)] sm:text-base md:text-lg">
             {copy(
               "club.description",
               "با عضویت در باشگاه خبری پیشرو، از تازه‌ترین مقالات آموزشی، نکات تخصصی و تحلیل‌های روز دنیای دیجیتال باخبر شوید و همیشه یک گام جلوتر از رقبا بمانید. جدیدترین مطالب مستقیماً در تلفن همراه شما ارسال خواهد شد."
@@ -109,16 +99,12 @@ const NewsClub = () => {
             <div className="flex w-full flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
               <Input
                 {...register("phone")}
-                className="ltr h-11 w-full flex-1 rounded-full border-white/15 bg-black/25 !text-base !text-white shadow-inner backdrop-blur-xl placeholder:text-base placeholder:text-white/45 sm:h-12 sm:!text-lg sm:placeholder:text-lg"
+                className="ltr h-11 w-full flex-1 rounded-full border-border bg-card !text-base !text-foreground shadow-inner backdrop-blur-xl placeholder:text-base placeholder:text-muted-foreground sm:h-12 sm:!text-lg sm:placeholder:text-lg"
                 placeholder={copy("club.phonePlaceholder", "09115829721")}
               />
               <Button
                 type="submit"
-                className="h-11 shrink-0 rounded-full px-8 text-base font-bold shadow-lg transition-transform duration-300 ease-out hover:scale-105 active:scale-[1.02] sm:h-12 sm:text-lg"
-                style={{
-                  backgroundColor: ACCENT,
-                  color: "#12140F",
-                }}
+                className="h-11 shrink-0 rounded-full bg-[var(--btn-primary-bg)] px-8 text-base font-bold text-primary-foreground shadow-lg transition-all duration-300 ease-out hover:scale-105 hover:bg-[var(--btn-primary-hover)] active:scale-[1.02] sm:h-12 sm:text-lg"
               >
                 {copy("club.submit", "عضویت")}
               </Button>
@@ -138,11 +124,7 @@ const NewsClub = () => {
             src={"/images/home/news-club/right-vector.png"}
             fill
             alt=""
-            className="object-contain opacity-80"
-            style={{
-              filter:
-                "brightness(0) saturate(100%) invert(58%) sepia(12%) saturate(700%) hue-rotate(32deg) brightness(95%) contrast(88%)",
-            }}
+            className="object-contain opacity-40 dark:opacity-80"
           />
         </div>
         <div className="pointer-events-none absolute -left-10 bottom-8 z-[1] hidden h-[60vh] w-[140px] md:block lg:-left-24 lg:bottom-12 lg:h-[90vh] lg:w-[240px]">
@@ -150,11 +132,7 @@ const NewsClub = () => {
             src={"/images/home/news-club/left-vector.png"}
             fill
             alt=""
-            className="object-contain opacity-80"
-            style={{
-              filter:
-                "brightness(0) saturate(100%) invert(58%) sepia(12%) saturate(700%) hue-rotate(32deg) brightness(95%) contrast(88%)",
-            }}
+            className="object-contain opacity-40 dark:opacity-80"
           />
         </div>
       </>

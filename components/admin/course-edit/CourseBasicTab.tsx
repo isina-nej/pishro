@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
@@ -43,11 +43,19 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
   const router = useRouter();
   const [formData, setFormData] = useState(course);
   const [thumbnailTempPath, setThumbnailTempPath] = useState<string | null>(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const [trailerTempPath, setTrailerTempPath] = useState<string | null>(null);
   const [thumbUploading, setThumbUploading] = useState(false);
   const [trailerUploading, setTrailerUploading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const thumbnailInputRef = useRef<HTMLInputElement>(null);
   const updateMutation = useUpdateAdminCourse();
+
+  useEffect(() => {
+    return () => {
+      if (thumbnailPreview) URL.revokeObjectURL(thumbnailPreview);
+    };
+  }, [thumbnailPreview]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -93,6 +101,9 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
       setErrors((e) => ({ ...e, thumbnail: 'حداکثر 5MB' }));
       return;
     }
+    if (thumbnailPreview) URL.revokeObjectURL(thumbnailPreview);
+    setThumbnailPreview(URL.createObjectURL(file));
+    setThumbnailTempPath(null);
     setThumbUploading(true);
     try {
       const path = await uploadTempFile(file, 'thumbnail');
@@ -105,6 +116,13 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
     } finally {
       setThumbUploading(false);
     }
+  };
+
+  const clearThumbnail = () => {
+    if (thumbnailPreview) URL.revokeObjectURL(thumbnailPreview);
+    setThumbnailPreview(null);
+    setThumbnailTempPath(null);
+    if (thumbnailInputRef.current) thumbnailInputRef.current.value = '';
   };
 
   const handleTrailer = async (file: File) => {
@@ -130,8 +148,14 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
     }
   };
 
+  const thumbnailPending = thumbUploading || (!!thumbnailPreview && !thumbnailTempPath && !errors.thumbnail);
+
   const handleSave = async () => {
     if (!validate()) return;
+    if (thumbnailPending) {
+      setErrors((e) => ({ ...e, thumbnail: 'صبر کنید تا آپلود تصویر تمام شود، بعد ذخیره کنید.' }));
+      return;
+    }
     try {
       const updated = await updateMutation.mutateAsync({
         id: course.id,
@@ -155,8 +179,11 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
         },
       });
       onUpdate(updated);
+      if (thumbnailPreview) URL.revokeObjectURL(thumbnailPreview);
+      setThumbnailPreview(null);
       setThumbnailTempPath(null);
       setTrailerTempPath(null);
+      if (thumbnailInputRef.current) thumbnailInputRef.current.value = '';
       toast.success('دوره با موفقیت ذخیره شد');
       // برگشت به لیست دوره‌ها بعد از 1 ثانیه
       setTimeout(() => {
@@ -255,15 +282,36 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
 
         <div>
           <label className="block text-sm font-medium mb-2">تصویر شاخص (JPEG/PNG/WebP, max 5MB)</label>
-          {course.img && !thumbnailTempPath && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={course.img} alt="تصویر فعلی دوره" className="mb-2 h-24 w-full rounded-lg object-cover" />
+          {thumbnailPreview ? (
+            <div className="relative mb-2 overflow-hidden rounded-lg border">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={thumbnailPreview} alt="پیش‌نمایش تصویر جدید" className="h-40 w-full object-cover" />
+              {thumbUploading && (
+                <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/50 text-sm font-medium text-white">
+                  در حال آپلود تصویر...
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={clearThumbnail}
+                disabled={thumbUploading || updateMutation.isPending}
+                className="absolute left-2 top-2 rounded-full bg-black/60 px-2.5 py-1 text-xs font-medium text-white transition hover:bg-black/80 disabled:opacity-50"
+              >
+                حذف تصویر
+              </button>
+            </div>
+          ) : (
+            course.img && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={course.img} alt="تصویر فعلی دوره" className="mb-2 h-24 w-full rounded-lg object-cover" />
+            )
           )}
           <input
+            ref={thumbnailInputRef}
             type="file"
             accept="image/jpeg,image/png,image/webp"
             aria-label="آپلود تصویر شاخص"
-            disabled={thumbUploading}
+            disabled={thumbUploading || updateMutation.isPending}
             onChange={(e) => {
               const f = e.target.files?.[0];
               if (f) handleThumbnail(f);
@@ -304,10 +352,10 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
 
         <Button
           onClick={handleSave}
-          disabled={updateMutation.isPending || thumbUploading || trailerUploading}
+          disabled={updateMutation.isPending || thumbUploading || thumbnailPending || trailerUploading}
           aria-label="ذخیره دوره"
         >
-          {updateMutation.isPending ? 'در حال ذخیره...' : thumbUploading || trailerUploading ? 'صبر کنید، آپلود در جریان است...' : 'ذخیره'}
+          {updateMutation.isPending ? 'در حال ذخیره...' : thumbUploading || thumbnailPending || trailerUploading ? 'صبر کنید، آپلود در جریان است...' : 'ذخیره'}
         </Button>
       </div>
     </div>

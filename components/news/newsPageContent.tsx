@@ -115,7 +115,7 @@ const NewsPageContent = () => {
           {/* Idle filter: sticky sidebar at top */}
           {filtersVisible && !hasActiveFilters && (
             <aside className="self-start">
-              <div className="sticky top-24 rounded-3xl border border-border/70 bg-card p-4 shadow-xl dark:border-white/15 dark:bg-black/30 sm:p-5">
+              <div className="sticky top-24 rounded-3xl border border-border/70 bg-card p-4 shadow-xl sm:p-5">
                 <NewsFilterControls {...filterProps} compact={false} />
               </div>
             </aside>
@@ -208,7 +208,7 @@ const NewsPageContent = () => {
             transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
             className="pointer-events-none fixed inset-y-0 start-0 z-40 hidden items-center pl-3 lg:flex"
           >
-            <div className="pointer-events-auto w-[220px] rounded-3xl border border-white/20 bg-background/75 p-3 shadow-2xl shadow-black/20 backdrop-blur-2xl">
+            <div className="pointer-events-auto w-[220px] rounded-3xl border border-border bg-background/75 p-3 shadow-2xl shadow-black/20 backdrop-blur-2xl">
               <NewsFilterControls {...filterProps} compact />
             </div>
           </motion.aside>
@@ -224,7 +224,7 @@ const NewsPageContent = () => {
             exit={{ opacity: 0, y: 16 }}
             className="fixed inset-x-3 bottom-3 z-40 lg:hidden"
           >
-            <div className="max-h-[42vh] overflow-y-auto rounded-3xl border border-white/20 bg-background/85 p-3 shadow-2xl backdrop-blur-2xl">
+            <div className="max-h-[42vh] overflow-y-auto rounded-3xl border border-border bg-background/85 p-3 shadow-2xl backdrop-blur-2xl">
               <NewsFilterControls {...filterProps} compact />
             </div>
           </motion.div>

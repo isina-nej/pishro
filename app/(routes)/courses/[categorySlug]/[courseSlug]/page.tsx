@@ -141,9 +141,9 @@ export default async function CourseDetailPage({
 
     return (
       <main className="w-full mt-20">
-        <section className="bg-gray-50 py-4">
+        <section className="bg-muted py-4">
           <div className="container-xl">
-            <nav className="flex items-center gap-2 text-sm text-gray-600">
+            <nav className="flex items-center gap-2 text-sm text-muted-foreground">
               <Link href="/" className="hover:text-myPrimary transition">
                 خانه
               </Link>
@@ -159,7 +159,7 @@ export default async function CourseDetailPage({
                 {course.category?.title || "دسته‌بندی"}
               </Link>
               <span>/</span>
-              <span className="text-gray-900 font-bold">{course.subject}</span>
+              <span className="text-foreground font-bold">{course.subject}</span>
             </nav>
           </div>
         </section>
@@ -173,8 +173,11 @@ export default async function CourseDetailPage({
                     <span
                       className="px-4 py-1.5 rounded-full text-sm font-bold"
                       style={{
-                        backgroundColor: course.category.color || "#F3F4F6",
-                        color: course.category.color ? "#FFFFFF" : "#1F2937",
+                        backgroundColor:
+                          course.category.color || "var(--btn-secondary-bg)",
+                        color: course.category.color
+                          ? "#FFFFFF"
+                          : "var(--text-primary)",
                       }}
                     >
                       {course.category.title}
@@ -182,12 +185,12 @@ export default async function CourseDetailPage({
                   </div>
                 )}
 
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground">
                   {course.subject}
                 </h1>
 
                 {course.description && (
-                  <p className="text-base sm:text-lg text-gray-700 leading-relaxed">
+                  <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
                     {course.description}
                   </p>
                 )}
@@ -195,11 +198,11 @@ export default async function CourseDetailPage({
                 <div className="flex flex-wrap items-center gap-4 sm:gap-6">
                   <div className="flex items-center gap-2">
                     <RatingStars rating={course.rating || 4.5} />
-                    <span className="text-sm text-gray-600">
+                    <span className="text-sm text-muted-foreground">
                       ({course._count?.comments || 0} نظر)
                     </span>
                   </div>
-                  <div className="flex items-center gap-2 text-gray-600">
+                  <div className="flex items-center gap-2 text-muted-foreground">
                     <LuUsers className="text-myPrimary" size={20} />
                     <span className="text-sm font-bold">
                       {course._count?.enrollments || course.students || 0}{" "}
@@ -210,14 +213,14 @@ export default async function CourseDetailPage({
 
                 {course.instructor && (
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
-                      <span className="text-lg font-bold text-gray-600">
+                    <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
+                      <span className="text-lg font-bold text-muted-foreground">
                         {course.instructor.charAt(0)}
                       </span>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">مدرس دوره</p>
-                      <p className="font-bold text-gray-900">
+                      <p className="text-sm text-muted-foreground">مدرس دوره</p>
+                      <p className="font-bold text-foreground">
                         {course.instructor}
                       </p>
                     </div>
@@ -231,10 +234,10 @@ export default async function CourseDetailPage({
                         <span className="text-3xl font-bold text-mySecondary">
                           {finalPrice.toLocaleString("fa-IR")} تومان
                         </span>
-                        <span className="text-lg line-through text-gray-400">
+                        <span className="text-lg line-through text-muted-foreground">
                           {course.price.toLocaleString("fa-IR")}
                         </span>
-                        <span className="bg-red-500 text-white px-2 py-1 rounded text-sm font-bold">
+                        <span className="bg-destructive text-destructive-foreground px-2 py-1 rounded text-sm font-bold">
                           {course.discountPercent}٪
                         </span>
                       </>
@@ -247,7 +250,7 @@ export default async function CourseDetailPage({
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                     <Suspense
                       fallback={
-                        <div className="w-40 h-12 animate-pulse bg-gray-200 rounded-full" />
+                        <div className="w-40 h-12 animate-pulse bg-muted rounded-full" />
                       }
                     >
                       <AddToCartButton course={course} />
@@ -275,8 +278,8 @@ export default async function CourseDetailPage({
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="lg:col-span-2 space-y-8 ">
                 {learningGoals.length > 0 && (
-                  <div className="bg-white rounded-2xl shadow-md p-6 sm:p-8">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                  <div className="bg-card rounded-2xl shadow-md p-6 sm:p-8">
+                    <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-2">
                       <LuBookOpen className="text-myPrimary" size={28} />
                       چه چیزهایی یاد می‌گیرید؟
                     </h2>
@@ -284,10 +287,10 @@ export default async function CourseDetailPage({
                       {learningGoals.map((goal, idx) => (
                         <li key={idx} className="flex items-start gap-3">
                           <BsCheckCircleFill
-                            className="text-green-500 flex-shrink-0 mt-1"
+                            className="text-success flex-shrink-0 mt-1"
                             size={22}
                           />
-                          <span className="text-gray-700">{goal}</span>
+                          <span className="text-muted-foreground">{goal}</span>
                         </li>
                       ))}
                     </ul>
@@ -295,8 +298,8 @@ export default async function CourseDetailPage({
                 )}
 
                 {prerequisites.length > 0 && (
-                  <div className="bg-white rounded-2xl shadow-md p-6 sm:p-8">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                  <div className="bg-card rounded-2xl shadow-md p-6 sm:p-8">
+                    <h2 className="text-2xl font-bold text-foreground mb-6">
                       پیش‌نیازهای دوره
                     </h2>
                     <ul className="space-y-3">
@@ -306,7 +309,7 @@ export default async function CourseDetailPage({
                             className="text-myPrimary flex-shrink-0 mt-1"
                             size={22}
                           />
-                          <span className="text-gray-700">{prereq}</span>
+                          <span className="text-muted-foreground">{prereq}</span>
                         </li>
                       ))}
                     </ul>
@@ -315,19 +318,19 @@ export default async function CourseDetailPage({
               </div>
 
               <div className="lg:col-span-1">
-                <div className="bg-white rounded-2xl shadow-md p-6 sm:p-8 sticky top-24 space-y-6">
-                  <h3 className="text-xl font-bold text-gray-900 border-b pb-4">
+                <div className="bg-card rounded-2xl shadow-md p-6 sm:p-8 sticky top-24 space-y-6">
+                  <h3 className="text-xl font-bold text-foreground border-b border-border pb-4">
                     مشخصات دوره
                   </h3>
 
                   <div className="space-y-4">
                     {course.time && (
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-gray-600">
+                        <div className="flex items-center gap-2 text-muted-foreground">
                           <LuClock size={20} />
                           <span className="text-sm">مدت زمان</span>
                         </div>
-                        <span className="font-bold text-gray-900">
+                        <span className="font-bold text-foreground">
                           {course.time}
                         </span>
                       </div>
@@ -335,42 +338,42 @@ export default async function CourseDetailPage({
 
                     {course.videosCount && (
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-gray-600">
+                        <div className="flex items-center gap-2 text-muted-foreground">
                           <LuVideo size={20} />
                           <span className="text-sm">تعداد ویدئو</span>
                         </div>
-                        <span className="font-bold text-gray-900">
+                        <span className="font-bold text-foreground">
                           {course.videosCount} ویدئو
                         </span>
                       </div>
                     )}
 
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-gray-600">
+                      <div className="flex items-center gap-2 text-muted-foreground">
                         <LuBan size={20} />
                         <span className="text-sm">سطح دوره</span>
                       </div>
-                      <span className="font-bold text-gray-900">
+                      <span className="font-bold text-foreground">
                         {getLevelLabel(course.level)}
                       </span>
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-gray-600">
+                      <div className="flex items-center gap-2 text-muted-foreground">
                         <LuGlobe size={20} />
                         <span className="text-sm">زبان</span>
                       </div>
-                      <span className="font-bold text-gray-900">
+                      <span className="font-bold text-foreground">
                         {getLanguageLabel(course.language)}
                       </span>
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-gray-600">
+                      <div className="flex items-center gap-2 text-muted-foreground">
                         <LuUsers size={20} />
                         <span className="text-sm">دانشجویان</span>
                       </div>
-                      <span className="font-bold text-gray-900">
+                      <span className="font-bold text-foreground">
                         {course._count?.enrollments || course.students || 0} نفر
                       </span>
                     </div>

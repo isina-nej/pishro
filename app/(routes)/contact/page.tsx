@@ -60,7 +60,7 @@ export default async function ContactPage() {
   return (
     <main className="min-h-[70vh] bg-background text-foreground" dir="rtl">
       <section className="relative overflow-hidden border-b border-border">
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-l from-primary/10 via-transparent to-emerald-500/5" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-l from-primary/10 via-transparent to-success/5" />
         <div className="container-md relative py-16 sm:py-20">
           <p className="mb-3 text-sm font-semibold text-primary">
             {copy("badge", "ارتباط با پیشرو")}

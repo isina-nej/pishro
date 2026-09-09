@@ -20,7 +20,7 @@ const InvestmentPlansPageContent = ({
   const { show } = useVisibility();
 
   return (
-    <div className="public-page-shell text-foreground dark:text-textPrimary">
+    <div className="public-page-shell text-foreground">
       {show("investment:hero") && (
         <InvestmentPlansHero investmentPlansData={investmentPlansData} />
       )}

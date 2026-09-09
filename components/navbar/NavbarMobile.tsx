@@ -147,7 +147,7 @@ const NavbarMobile = ({
             <button
               type="button"
               aria-label="بستن منو"
-              className="absolute inset-0 bg-[#0A100E]/45 backdrop-blur-[2px]"
+              className="absolute inset-0 bg-black/45 backdrop-blur-[2px]"
               onClick={closeMenu}
             />
 

@@ -49,7 +49,7 @@ const CheckoutSidebar = ({
         className="w-full lg:w-[380px] sticky top-24"
       >
         {/* Main Card */}
-        <div className="bg-gradient-to-br from-card via-card to-muted rounded-2xl shadow-lg border border-border dark:border-borderColor overflow-hidden">
+        <div className="bg-gradient-to-br from-card via-card to-muted rounded-2xl shadow-lg border border-border overflow-hidden">
           {/* Header with Icon — palette primary band */}
           <div className="bg-primary p-5 text-primary-foreground">
             <div className="flex items-center gap-3">
@@ -67,11 +67,11 @@ const CheckoutSidebar = ({
           <div className="p-6 space-y-4">
             {/* Original Price */}
             <div className="flex justify-between items-center text-sm">
-              <span className="text-muted-foreground dark:text-textSecondary flex items-center gap-2">
+              <span className="text-muted-foreground flex items-center gap-2">
                 <Wallet className="w-4 h-4" />
                 قیمت کل دوره‌ها
               </span>
-              <span className="font-medium text-muted-foreground dark:text-textSecondary line-through">
+              <span className="font-medium text-muted-foreground line-through">
                 {price} تومان
               </span>
             </div>
@@ -90,7 +90,7 @@ const CheckoutSidebar = ({
                       <TrendingDown className="w-4 h-4 text-success-foreground" />
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground dark:text-textSecondary">سود شما از خرید</p>
+                      <p className="text-xs text-muted-foreground">سود شما از خرید</p>
                       <p className="text-sm font-bold text-success">
                         {discountPercentage}٪ تخفیف
                       </p>
@@ -104,7 +104,7 @@ const CheckoutSidebar = ({
             )}
 
             {/* Divider */}
-            <div className="border-t border-dashed border-border dark:border-borderColor" />
+            <div className="border-t border-dashed border-border" />
 
             {/* Final Price */}
             <motion.div
@@ -115,12 +115,12 @@ const CheckoutSidebar = ({
             >
               <div className="flex justify-between items-center">
                 <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground dark:text-textSecondary font-medium">
+                  <p className="text-sm text-muted-foreground font-medium">
                     مبلغ قابل پرداخت
                   </p>
                   <div className="flex items-center gap-1">
                     <CheckCircle2 className="w-4 h-4 text-primary" />
-                    <span className="text-xs text-muted-foreground dark:text-textSecondary">
+                    <span className="text-xs text-muted-foreground">
                       قیمت نهایی با تخفیف
                     </span>
                   </div>
@@ -129,7 +129,7 @@ const CheckoutSidebar = ({
                   <p className="text-3xl font-black text-primary">
                     {lastPrice}
                   </p>
-                  <p className="text-xs text-muted-foreground dark:text-textSecondary font-medium">تومان</p>
+                  <p className="text-xs text-muted-foreground font-medium">تومان</p>
                 </div>
               </div>
             </motion.div>
@@ -174,16 +174,16 @@ const CheckoutSidebar = ({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="mt-4 bg-card dark:bg-cardBg rounded-xl shadow-sm border border-border dark:border-borderColor p-4"
+          className="mt-4 bg-card rounded-xl shadow-sm border border-border p-4"
         >
           <div className="space-y-3">
-            <div className="flex items-center gap-3 text-sm text-muted-foreground dark:text-textSecondary">
+            <div className="flex items-center gap-3 text-sm text-muted-foreground">
               <div className="w-8 h-8 bg-success/15 rounded-lg flex items-center justify-center">
                 <Shield className="w-4 h-4 text-success" />
               </div>
               <span>پرداخت امن و محافظت شده</span>
             </div>
-            <div className="flex items-center gap-3 text-sm text-muted-foreground dark:text-textSecondary">
+            <div className="flex items-center gap-3 text-sm text-muted-foreground">
               <div className="w-8 h-8 bg-premium/15 rounded-lg flex items-center justify-center">
                 <Clock className="w-4 h-4 text-premium" />
               </div>

@@ -172,7 +172,7 @@ export default function BookDetailPage() {
                           key={i}
                           className={`h-5 w-5 ${
                             i < Math.round(book.rating)
-                              ? 'fill-amber-400 text-premium'
+                              ? 'fill-premium text-premium'
                               : 'text-muted-foreground'
                           }`}
                         />

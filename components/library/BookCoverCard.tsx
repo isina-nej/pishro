@@ -94,7 +94,7 @@ export const BookCoverCard = ({
 
               {/* Rating Badge */}
               <div className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-premium/95 to-premium/95 px-3 py-1.5 text-xs font-semibold text-foreground shadow-lg backdrop-blur-sm border border-premium/30">
-                <Star className="h-3.5 w-3.5 fill-white" />
+                <Star className="h-3.5 w-3.5 fill-premium-foreground" />
                 {book.rating.toFixed(1)}
               </div>
             </div>

@@ -15,17 +15,17 @@ export default function CourseNotFound() {
             <div className="w-32 h-32 rounded-full bg-myPrimary/10 flex items-center justify-center">
               <LuSearch className="text-myPrimary" size={64} />
             </div>
-            <div className="absolute -top-2 -right-2 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
-              <span className="text-white text-xl font-bold">!</span>
+            <div className="absolute -top-2 -right-2 w-8 h-8 bg-destructive rounded-full flex items-center justify-center">
+              <span className="text-destructive-foreground text-xl font-bold">!</span>
             </div>
           </div>
         </div>
 
         <div className="space-y-4">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-foreground">
             دوره یافت نشد
           </h1>
-          <p className="text-lg sm:text-xl text-gray-600 leading-relaxed">
+          <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed">
             متأسفانه دوره‌ای با این مشخصات وجود ندارد یا منتشر نشده است.
             <br />
             ممکن است این دوره حذف شده یا آدرس آن تغییر کرده باشد.
@@ -35,21 +35,21 @@ export default function CourseNotFound() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8">
           <Link
             href="/courses"
-            className="flex items-center gap-2 bg-mySecondary text-white px-8 py-3 rounded-full font-bold text-base shadow-lg hover:opacity-90 transition"
+            className="flex items-center gap-2 bg-[var(--btn-primary-bg)] text-white px-8 py-3 rounded-full font-bold text-base shadow-lg hover:bg-[var(--btn-primary-hover)] transition"
           >
             <LuArrowRight size={20} />
             مشاهده همه دوره‌ها
           </Link>
           <Link
             href="/"
-            className="flex items-center gap-2 bg-white text-gray-900 px-8 py-3 rounded-full font-bold text-base shadow-md hover:shadow-lg transition border border-gray-200"
+            className="flex items-center gap-2 bg-card text-foreground px-8 py-3 rounded-full font-bold text-base shadow-md hover:shadow-lg transition border border-border"
           >
             <LuHouse size={20} />
             بازگشت به خانه
           </Link>
         </div>
 
-        <p className="text-sm text-gray-500 pt-8">
+        <p className="text-sm text-muted-foreground pt-8">
           اگر فکر می‌کنید این یک اشتباه است، لطفاً با{" "}
           <Link
             href="/about-us"

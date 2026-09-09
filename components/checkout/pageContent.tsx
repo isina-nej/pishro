@@ -89,12 +89,12 @@ const CheckoutPageContent = () => {
           transition={{ duration: 0.5 }}
           className="mb-8"
         >
-          <h1 className="text-4xl font-black text-foreground dark:text-textPrimary mb-2">
+          <h1 className="text-4xl font-black text-foreground mb-2">
             {step === "shoppingCart" && "سبد خرید شما"}
             {step === "pay" && "تکمیل خرید"}
             {step === "result" && "نتیجه پرداخت"}
           </h1>
-          <p className="text-muted-foreground dark:text-textSecondary">
+          <p className="text-muted-foreground">
             {step === "shoppingCart" &&
               "دوره‌های انتخابی خود را بررسی و خرید کنید"}
             {step === "pay" && "روش پرداخت را انتخاب کنید"}

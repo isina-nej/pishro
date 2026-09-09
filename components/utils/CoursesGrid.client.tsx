@@ -104,7 +104,7 @@ export default function CoursesGridClient({ courses }: Props) {
         <div className="relative flex items-center justify-center lg:justify-end gap-2 sm:gap-3 mt-3 lg:mt-2 w-full lg:w-[340px] px-4 lg:px-0">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-1 rounded-full bg-[#6B7460] px-4 py-2 text-xs font-bold text-white shadow-lg transition-transform duration-300 ease-out hover:scale-105 hover:bg-[#6B7460] sm:text-sm">
+              <button className="flex items-center gap-1 rounded-full bg-[var(--btn-primary-bg)] px-4 py-2 text-xs font-bold text-white shadow-lg transition-all duration-300 ease-out hover:scale-105 hover:bg-[var(--btn-primary-hover)] sm:text-sm">
                 <ChevronDown size={16} />
                 <span>{selectedCategory.label}</span>
               </button>
@@ -112,13 +112,13 @@ export default function CoursesGridClient({ courses }: Props) {
 
             <DropdownMenuContent
               align="end"
-              className="w-40 bg-card dark:bg-cardBg border border-border dark:border-borderColor rounded-lg shadow-lg"
+              className="w-40 bg-card border border-border rounded-lg shadow-lg"
             >
               {categories.map((cat) => (
                 <DropdownMenuItem
                   key={cat.href}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`cursor-pointer rtl text-right text-xs px-2 py-2 hover:bg-muted dark:hover:bg-cardBg dark:bg-cardBg dark:hover:bg-cardBg dark:bg-cardBg dark:hover:bg-cardBg dark:bg-cardBg dark:bg-cardBg ${
+                  className={`cursor-pointer rtl text-right text-xs px-2 py-2 hover:bg-muted ${
                     cat.label === selectedCategory.label
                       ? "font-bold text-mySecondary"
                       : ""
@@ -132,7 +132,7 @@ export default function CoursesGridClient({ courses }: Props) {
 
           <Link
             href={selectedCategory.href}
-            className="flex items-center gap-1 whitespace-nowrap rounded-full bg-[#6B7460] px-4 py-2 text-xs font-bold text-white shadow-lg transition-transform duration-300 ease-out hover:scale-105 hover:bg-[#6B7460] active:scale-[1.02] sm:text-sm"
+            className="flex items-center gap-1 whitespace-nowrap rounded-full bg-[var(--btn-primary-bg)] px-4 py-2 text-xs font-bold text-white shadow-lg transition-all duration-300 ease-out hover:scale-105 hover:bg-[var(--btn-primary-hover)] active:scale-[1.02] sm:text-sm"
           >
             <Folder size={16} />
             <span>صفحه {selectedCategory.label}</span>
@@ -145,10 +145,10 @@ export default function CoursesGridClient({ courses }: Props) {
         <div className="mt-6 sm:mt-8 md:mt-12 lg:mt-16 w-full flex flex-col items-center justify-center py-16 sm:py-20 md:py-24">
           <div className="text-center">
             <div className="text-6xl sm:text-7xl mb-4">📚</div>
-            <h3 className="text-xl sm:text-2xl font-bold text-foreground dark:text-textPrimary mb-2">
+            <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
               دوره‌ای در این دسته‌بندی یافت نشد
             </h3>
-            <p className="text-muted-foreground dark:text-textSecondary text-sm sm:text-base">
+            <p className="text-muted-foreground text-sm sm:text-base">
               لطفاً دسته‌بندی دیگری را انتخاب کنید
             </p>
           </div>
@@ -160,10 +160,10 @@ export default function CoursesGridClient({ courses }: Props) {
         <div className="mt-6 sm:mt-8 md:mt-12 lg:mt-16 w-full flex flex-col items-center justify-center py-16 sm:py-20 md:py-24">
           <div className="text-center">
             <div className="text-6xl sm:text-7xl mb-4">🎓</div>
-            <h3 className="text-xl sm:text-2xl font-bold text-foreground dark:text-textPrimary mb-2">
+            <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
               به زودی دوره‌های جدید اضافه می‌شود
             </h3>
-            <p className="text-muted-foreground dark:text-textSecondary text-sm sm:text-base">
+            <p className="text-muted-foreground text-sm sm:text-base">
               در حال حاضر دوره‌ای برای نمایش وجود ندارد
             </p>
           </div>

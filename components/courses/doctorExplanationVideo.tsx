@@ -36,10 +36,10 @@ export default function DoctorExplanationVideo({
       </DialogTrigger>
       <DialogContent className="max-w-4xl">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-foreground dark:text-textPrimary rtl">
+          <DialogTitle className="text-xl font-bold text-foreground rtl">
             توضیحات خانم دکتر
           </DialogTitle>
-          <DialogDescription className="text-muted-foreground dark:text-textSecondary rtl">
+          <DialogDescription className="text-muted-foreground rtl">
             ویدیو توضیحات تکمیلی دوره
           </DialogDescription>
         </DialogHeader>

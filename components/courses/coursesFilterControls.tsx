@@ -70,7 +70,7 @@ function ChipGroup({
                   transition={{ type: "spring", stiffness: 380, damping: 28 }}
                 />
               ) : (
-                <span className="absolute inset-0 rounded-full border border-border/70 bg-card/70 dark:bg-white/5" />
+                <span className="absolute inset-0 rounded-full border border-border/70 bg-card/70" />
               )}
               <span className="relative z-10">{option.label}</span>
             </button>
@@ -117,7 +117,7 @@ export const CoursesFilterControls = ({
             whileTap={{ scale: 0.97 }}
             onClick={onResetFilters}
             disabled={disabled}
-            className="inline-flex items-center gap-1.5 self-start rounded-full border border-border/60 bg-card/80 px-3.5 py-1.5 text-xs font-semibold text-foreground shadow-sm dark:bg-white/5"
+            className="inline-flex items-center gap-1.5 self-start rounded-full border border-border/60 bg-card/80 px-3.5 py-1.5 text-xs font-semibold text-foreground shadow-sm"
           >
             <X className="size-3.5" />
             پاک کردن فیلترها
@@ -127,7 +127,7 @@ export const CoursesFilterControls = ({
 
       <div
         className={cn(
-          "flex items-center gap-3 rounded-2xl border border-border/60 bg-card/70 px-4 py-3 shadow-inner backdrop-blur-xl dark:bg-white/5",
+          "flex items-center gap-3 rounded-2xl border border-border/60 bg-card/70 px-4 py-3 shadow-inner backdrop-blur-xl",
           disabled && "opacity-60"
         )}
       >

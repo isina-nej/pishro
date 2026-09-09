@@ -57,7 +57,7 @@ export default function CourseActionIcons({
   const iconBtn =
     tone === "on-media"
       ? "border-white/25 bg-white/12 text-white backdrop-blur-xl hover:bg-white/20"
-      : "border-border/60 bg-background/70 text-muted-foreground backdrop-blur-md hover:text-foreground dark:border-white/15 dark:bg-white/8 dark:text-white/80 dark:hover:text-white";
+      : "border-border/60 bg-background/70 text-muted-foreground backdrop-blur-md hover:text-foreground";
 
   return (
     <div
@@ -100,8 +100,8 @@ export default function CourseActionIcons({
           className={cn(
             "size-9 shadow-sm transition-shadow hover:shadow-md",
             tone === "on-media"
-              ? "border-white/25 bg-white/12 text-white backdrop-blur-xl hover:text-white data-[active]:bg-[#6B7460]/90 [[aria-pressed=true]]:border-[#6B7460]/50 [[aria-pressed=true]]:bg-[#6B7460]/90 [[aria-pressed=true]]:text-white"
-              : "bg-background/70 backdrop-blur-md dark:bg-white/8"
+              ? "border-white/25 bg-white/12 text-white backdrop-blur-xl hover:text-white data-[active]:bg-[var(--btn-primary-bg)]/90 [[aria-pressed=true]]:border-[var(--btn-primary-bg)]/50 [[aria-pressed=true]]:bg-[var(--btn-primary-bg)]/90 [[aria-pressed=true]]:text-white"
+              : "bg-background/70 backdrop-blur-md"
           )}
         />
       </motion.div>
