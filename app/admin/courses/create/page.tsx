@@ -41,6 +41,7 @@ interface CourseFormData {
   published: boolean;
   featured: boolean;
   hasChapters: boolean;
+  rating: string;
 }
 
 const steps = [
@@ -84,6 +85,7 @@ export default function CreateCoursePage() {
     published: true,
     featured: false,
     hasChapters: false,
+    rating: '',
   });
   const [activeStep, setActiveStep] = useState(0);
   const [categories, setCategories] = useState<CategoryOption[]>([]);
@@ -149,6 +151,13 @@ export default function CreateCoursePage() {
       nextErrors.slug = 'آدرس دوره بیش از حد طولانی است';
     }
 
+    if (formData.rating.trim() !== '') {
+      const ratingValue = Number(formData.rating);
+      if (Number.isNaN(ratingValue) || ratingValue < 0 || ratingValue > 5) {
+        nextErrors.rating = 'امتیاز باید بین ۰ تا ۵ باشد';
+      }
+    }
+
     setErrors(nextErrors);
     return Object.keys(nextErrors).length === 0;
   };
@@ -173,6 +182,7 @@ export default function CreateCoursePage() {
         published: formData.published,
         featured: formData.featured,
         hasChapters: formData.hasChapters,
+        ...(formData.rating.trim() !== '' ? { rating: Number(formData.rating) } : {}),
       });
 
       router.push(`/admin/courses/${result.id}/edit`);
@@ -317,6 +327,23 @@ export default function CreateCoursePage() {
                       disabled={isSubmitting}
                       className="text-right"
                     />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">امتیاز (۰ تا ۵، اختیاری)</label>
+                    <Input
+                      type="number"
+                      name="rating"
+                      min={0}
+                      max={5}
+                      step={0.1}
+                      value={formData.rating}
+                      onChange={handleInputChange}
+                      placeholder="مثلاً ۴.۵"
+                      disabled={isSubmitting}
+                      className="text-right"
+                    />
+                    {errors.rating && <p className="text-xs text-red-600">{errors.rating}</p>}
                   </div>
 
                   <div className="space-y-2">

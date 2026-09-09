@@ -31,6 +31,7 @@ export function useAdminCoursesList(
           id: string;
           subject: string;
           price: number;
+          rating: number | null;
           likes: number;
           dislikes: number;
           hasChapters: boolean;

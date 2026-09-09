@@ -27,6 +27,7 @@ export interface CourseBasicTabData {
   published: boolean;
   featured: boolean;
   status: string;
+  rating?: number | null;
   likes?: number;
   dislikes?: number;
   img?: string;
@@ -56,7 +57,9 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
         type === 'checkbox'
           ? (e.target as HTMLInputElement).checked
           : type === 'number'
-            ? Number(value)
+            ? value === ''
+              ? undefined
+              : Number(value)
             : value,
     }));
   };
@@ -68,6 +71,13 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
       next.subject = 'عنوان نباید بیشتر از 200 کاراکتر باشد';
     }
     if (formData.price < 0) next.price = 'قیمت باید عدد نامنفی باشد';
+    if (
+      formData.rating !== undefined &&
+      formData.rating !== null &&
+      (Number.isNaN(formData.rating) || formData.rating < 0 || formData.rating > 5)
+    ) {
+      next.rating = 'امتیاز باید بین ۰ تا ۵ باشد';
+    }
     setErrors(next);
     return Object.keys(next).length === 0;
   };
@@ -126,6 +136,10 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
           hasChapters: formData.hasChapters,
           published: formData.published,
           featured: formData.featured,
+          rating:
+            formData.rating === undefined || formData.rating === null || Number.isNaN(formData.rating)
+              ? null
+              : Math.min(5, Math.max(0, formData.rating)),
           likes: formData.likes ?? 0,
           dislikes: formData.dislikes ?? 0,
           ...(thumbnailTempPath ? { thumbnailTempPath } : {}),
@@ -176,6 +190,22 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
               aria-label="قیمت دوره"
               className="w-full px-4 py-2 border rounded-lg"
             />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">امتیاز (۰ تا ۵)</label>
+            <input
+              type="number"
+              name="rating"
+              min={0}
+              max={5}
+              step={0.1}
+              value={formData.rating ?? ''}
+              onChange={handleChange}
+              aria-label="امتیاز دوره"
+              placeholder="مثلاً ۴.۵"
+              className="w-full px-4 py-2 border rounded-lg"
+            />
+            {errors.rating && <p className="text-destructive text-sm">{errors.rating}</p>}
           </div>
           <div>
             <label className="block text-sm font-medium mb-2">لایک</label>

@@ -14,6 +14,7 @@ export const CourseCreateSchema = z.object({
     .int("قیمت باید عدد صحیح باشد")
     .min(0, "هزینه باید عدد نامنفی باشد")
     .max(2147483647, "قیمت نمی‌تواند بیشتر از 2,147,483,647 باشد"),
+  rating: z.number().min(0, "امتیاز نباید منفی باشد").max(5, "امتیاز حداکثر ۵ است").optional().nullable(),
   likes: z.number().int().min(0).optional(),
   dislikes: z.number().int().min(0).optional(),
   categoryId: z.string().optional().nullable(),

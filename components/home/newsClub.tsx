@@ -49,7 +49,7 @@ const NewsClub = () => {
 
   return (
     <section
-      className="relative mx-auto mt-10 min-h-[480px] w-[calc(100%-2rem)] overflow-hidden rounded-[2.5rem] border pb-8 pt-4 shadow-2xl md:mt-0 md:h-screen md:w-[calc(100%-4rem)] md:pb-0 md:pt-8"
+      className="relative mx-auto mt-10 w-[calc(100%-2rem)] overflow-hidden rounded-[2.5rem] border px-5 py-10 shadow-2xl sm:px-8 md:mt-0 md:w-[calc(100%-4rem)] md:px-12 md:py-14"
       style={{
         background: `linear-gradient(160deg, ${CARD_BG_MID} 0%, ${CARD_BG} 48%, #080E0A 100%)`,
         borderColor: `${ACCENT}33`,
@@ -64,75 +64,71 @@ const NewsClub = () => {
         }}
       />
 
-      <div className="container-xl relative z-10 flex h-full flex-col items-center gap-3 md:flex-row md:items-center md:gap-8">
-        <div className="order-2 mt-6 flex w-full items-center justify-center md:order-1 md:mt-0 md:h-full md:flex-1 md:justify-start md:-translate-y-8">
-          <div className="relative aspect-[1.3] w-full max-w-[400px] md:aspect-[661/504] md:max-w-full">
+      <div className="container-xl relative z-10 mx-auto grid max-w-6xl items-center gap-8 md:grid-cols-2 md:gap-10">
+        <div className="flex w-full items-center justify-center">
+          <div className="relative aspect-[4/3] w-full max-w-[440px]">
             <Image
               src={copy("club.image", "/images/home/news-club/news-club.svg")}
               fill
-              alt="دکور"
-              className="object-cover"
+              alt="باشگاه خبری پیشرو"
+              className="object-contain"
             />
           </div>
         </div>
 
-        <div className="order-1 flex w-full flex-1 flex-col items-center justify-end gap-6 md:order-2 md:h-full md:gap-10">
-          <div className="flex aspect-[1.1] w-full flex-col justify-between md:aspect-[661/504]">
-            <div className="">
-              <span
-                className="mb-4 mt-2 inline-flex rounded-full border px-4 py-2 text-[11px] font-bold md:mt-16"
+        <div className="flex w-full flex-col items-center gap-5 text-center md:items-start md:text-start">
+          <span
+            className="inline-flex rounded-full border px-4 py-2 text-[11px] font-bold"
+            style={{
+              borderColor: `${ACCENT}55`,
+              backgroundColor: `${ACCENT}22`,
+              color: ACCENT,
+            }}
+          >
+            {copy("club.eyebrow", "همیشه یک گام جلوتر")}
+          </span>
+          <h4 className="flex items-baseline justify-center gap-2 text-4xl font-black leading-tight tracking-tight text-white sm:text-5xl md:justify-start lg:text-6xl">
+            <span className="inline-block">{copy("club.title", "باشگاه")}</span>
+            <span
+              className="inline-block"
+              style={{ color: ACCENT }}
+            >
+              {copy("club.titleAccent", "پیشرو")}
+            </span>
+          </h4>
+          <p className="max-w-xl text-sm leading-loose text-white/75 sm:text-base md:text-lg">
+            {copy(
+              "club.description",
+              "با عضویت در باشگاه خبری پیشرو، از تازه‌ترین مقالات آموزشی، نکات تخصصی و تحلیل‌های روز دنیای دیجیتال باخبر شوید و همیشه یک گام جلوتر از رقبا بمانید. جدیدترین مطالب مستقیماً در تلفن همراه شما ارسال خواهد شد."
+            )}
+          </p>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="w-full max-w-md"
+          >
+            <div className="flex w-full flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
+              <Input
+                {...register("phone")}
+                className="ltr h-11 w-full flex-1 rounded-full border-white/15 bg-black/25 !text-base !text-white shadow-inner backdrop-blur-xl placeholder:text-base placeholder:text-white/45 sm:h-12 sm:!text-lg sm:placeholder:text-lg"
+                placeholder={copy("club.phonePlaceholder", "09115829721")}
+              />
+              <Button
+                type="submit"
+                className="h-11 shrink-0 rounded-full px-8 text-base font-bold shadow-lg transition-transform duration-300 ease-out hover:scale-105 active:scale-[1.02] sm:h-12 sm:text-lg"
                 style={{
-                  borderColor: `${ACCENT}55`,
-                  backgroundColor: `${ACCENT}22`,
-                  color: ACCENT,
+                  backgroundColor: ACCENT,
+                  color: "#12140F",
                 }}
               >
-                {copy("club.eyebrow", "همیشه یک گام جلوتر")}
-              </span>
-              <h4 className="flex justify-center gap-2 text-5xl font-black leading-none tracking-tight text-white sm:text-6xl md:justify-start md:gap-3 md:text-start lg:text-7xl">
-                <span className="inline-block">{copy("club.title", "باشگاه")}</span>
-                <span
-                  className="-translate-y-1 inline-block"
-                  style={{ color: ACCENT }}
-                >
-                  {copy("club.titleAccent", "پیشرو")}
-                </span>
-              </h4>
-              <p className="mt-4 pr-1 text-center text-sm leading-relaxed text-white/75 sm:text-base md:mt-6 md:pl-[60px] md:text-right md:text-lg xl:pl-[128px]">
-                {copy(
-                  "club.description",
-                  "با عضویت در باشگاه خبری پیشرو، از تازه‌ترین مقالات آموزشی، نکات تخصصی و تحلیل‌های روز دنیای دیجیتال باخبر شوید و همیشه یک گام جلوتر از رقبا بمانید. جدیدترین مطالب مستقیماً در تلفن همراه شما ارسال خواهد شد."
-                )}
-              </p>
+                {copy("club.submit", "عضویت")}
+              </Button>
             </div>
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="w-full pb-4 pl-0 md:pb-16 md:pl-32"
-            >
-              <div className="flex w-full flex-col items-center justify-center gap-3 sm:flex-row">
-                <Input
-                  {...register("phone")}
-                  className="ltr ml-0 h-10 max-w-[100%] rounded-full border-white/15 bg-black/25 !text-base !text-white shadow-inner backdrop-blur-xl placeholder:text-base placeholder:text-white/45 sm:ml-2 sm:h-12 sm:max-w-[290px] sm:!text-lg sm:placeholder:text-lg"
-                  placeholder={copy("club.phonePlaceholder", "09115829721")}
-                />
-                <Button
-                  type="submit"
-                  className="h-10 w-full rounded-full px-8 text-base font-bold shadow-lg transition-transform duration-300 ease-out hover:scale-105 active:scale-[1.02] sm:h-12 sm:px-16 sm:text-lg md:w-fit"
-                  style={{
-                    backgroundColor: ACCENT,
-                    color: "#12140F",
-                  }}
-                >
-                  {copy("club.submit", "عضویت")}
-                </Button>
-              </div>
-              {errors.phone && (
-                <p className="mt-2 text-center text-sm text-destructive">
-                  {errors.phone.message}
-                </p>
-              )}
-            </form>
-          </div>
+            {errors.phone && (
+              <p className="mt-2 text-center text-sm text-destructive md:text-start">
+                {errors.phone.message}
+              </p>
+            )}
+          </form>
         </div>
       </div>
 

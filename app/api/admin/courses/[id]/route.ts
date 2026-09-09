@@ -118,6 +118,7 @@ export async function PATCH(
       status,
       published,
       featured,
+      rating,
       likes,
       dislikes,
       hasChapters,
@@ -139,6 +140,7 @@ export async function PATCH(
     if (status !== undefined) data.status = status;
     if (published !== undefined) data.published = published;
     if (featured !== undefined) data.featured = featured;
+    if (rating !== undefined) data.rating = rating;
     if (likes !== undefined) data.likes = likes;
     if (dislikes !== undefined) data.dislikes = dislikes;
     if (hasChapters !== undefined) data.hasChapters = hasChapters;

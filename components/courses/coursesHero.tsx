@@ -32,15 +32,15 @@ export const CoursesHero = ({ stats }: CoursesHeroProps) => {
         <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/15 to-black/55" />
       </div>
 
-      <div className="container-xl relative z-10 flex flex-col gap-10">
-        <div className="max-w-3xl space-y-6 rounded-[2rem] border border-white/20 bg-black/40 p-7 shadow-2xl shadow-black/30 sm:p-9">
+      <div className="container-xl relative z-10 flex flex-col items-center gap-10 text-center">
+        <div className="mx-auto max-w-3xl space-y-6 rounded-[2rem] border border-white/20 bg-black/40 p-7 shadow-2xl shadow-black/30 sm:p-9">
           <span className="inline-flex items-center rounded-full border border-white/25 bg-white/10 px-4 py-1 text-sm font-medium text-white">
             {copy("hero.badge", "دوره‌های آموزشی پیشرو")}
           </span>
-          <h1 className="text-4xl font-extrabold !leading-tight text-white md:text-5xl">
+          <h1 className="text-center text-4xl font-extrabold !leading-tight text-white md:text-5xl">
             {copy("hero.title", "مجموعه کامل دوره‌های تخصصی سرمایه‌ گذاری و بازارهای مالی")}
           </h1>
-          <p className="text-base text-white/80 md:text-lg leading-relaxed">
+          <p className="mx-auto max-w-2xl text-center text-base text-white/80 md:text-lg leading-relaxed">
             {copy(
               "hero.description",
               "از صفر تا صد آموزش‌های کاربردی و حرفه‌ای در زمینه سرمایه‌ گذاری، تحلیل بازار و مدیریت مالی که توسط اساتید مجرب پیشرو تهیه شده‌اند."

@@ -21,6 +21,7 @@ interface CourseRow {
   id: string;
   subject: string;
   price: number;
+  rating: number | null;
   likes: number;
   dislikes: number;
   hasChapters: boolean;
@@ -37,6 +38,15 @@ const columns: ColumnDef<CourseRow>[] = [
     accessorKey: 'price',
     header: 'قیمت',
     cell: ({ row }) => `${row.original.price?.toLocaleString('fa-IR')} تومان`,
+  },
+  {
+    accessorKey: 'rating',
+    header: 'امتیاز',
+    cell: ({ row }) => (
+      <span className="font-medium text-foreground">
+        {row.original.rating != null ? Number(row.original.rating).toFixed(1) : '—'}
+      </span>
+    ),
   },
   {
     accessorKey: 'likes',

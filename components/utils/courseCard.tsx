@@ -89,6 +89,13 @@ const CourseCard = ({ data, link: _link }: CourseCardProps) => {
         </motion.button>
       </motion.div>
 
+      {/* Course title + rating — فقط اسم دوره */}
+      <div className="mt-3 px-0.5">
+        <h3 className="truncate text-center text-base font-bold text-foreground">
+          {data.subject}
+        </h3>
+      </div>
+
       {/* Share + Bookmark زیر تصویر */}
       <div className="mt-2.5 flex items-center justify-between gap-2 px-0.5">
         <CourseActionIcons
@@ -98,7 +105,7 @@ const CourseCard = ({ data, link: _link }: CourseCardProps) => {
           slug={data.slug}
           tone="surface"
         />
-        <RatingStars rating={data.rating || 2.5} />
+        <RatingStars rating={data.rating ?? 0} />
       </div>
 
       {/* Content — بدون تیتر و توضیح */}
