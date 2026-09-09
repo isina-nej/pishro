@@ -11,8 +11,15 @@ export type ChromeLink = {
 };
 
 export type FooterColumnContent = {
+  id: string;
   title: string;
   links: ChromeLink[];
+};
+
+export type EnamadSettings = {
+  enabled: boolean;
+  linkUrl: string;
+  imageUrl: string;
 };
 
 export type FooterContent = {
@@ -28,12 +35,8 @@ export type FooterContent = {
   instagram: string;
   telegram: string;
   twitter: string;
-  columns: {
-    discover: FooterColumnContent;
-    learn: FooterColumnContent;
-    invest: FooterColumnContent;
-    support: FooterColumnContent;
-  };
+  columns: FooterColumnContent[];
+  enamad: EnamadSettings;
   legalLinks: ChromeLink[];
   copyrightSuffix: string;
 };
@@ -41,10 +44,18 @@ export type FooterContent = {
 export type NavbarItem = ChromeLink;
 
 const MAX_NAV_ITEMS = 24;
+const MAX_FOOTER_COLUMNS = 8;
 const MAX_COLUMN_LINKS = 20;
 const MAX_LABEL = 80;
-const MAX_LINK = 300;
+const MAX_LINK = 600;
 const MAX_ABOUT = 1200;
+
+export const DEFAULT_ENAMAD: EnamadSettings = {
+  enabled: true,
+  linkUrl:
+    "https://trustseal.enamad.ir/?id=4965732&Code=Ey50OxJxpgFGnTsrvUy8QMpXTuLCb930",
+  imageUrl: "/images/e-namad.png",
+};
 
 export const DEFAULT_NAVBAR_ITEMS: NavbarItem[] = [
   { label: "صفحه اصلی", link: "/" },
@@ -72,8 +83,9 @@ export const DEFAULT_FOOTER_CONTENT: FooterContent = {
   instagram: contactInfo.socials.instagram,
   telegram: contactInfo.socials.telegram,
   twitter: contactInfo.socials.linkedin,
-  columns: {
-    discover: {
+  columns: [
+    {
+      id: "discover",
       title: "کاوش",
       links: [
         { label: "صفحه اصلی", link: "/" },
@@ -82,7 +94,8 @@ export const DEFAULT_FOOTER_CONTENT: FooterContent = {
         { label: "همایش‌ها", link: "/skyroom-classes" },
       ],
     },
-    learn: {
+    {
+      id: "learn",
       title: "آموزش",
       links: [
         { label: "دوره‌های آموزشی", link: "/courses" },
@@ -91,7 +104,8 @@ export const DEFAULT_FOOTER_CONTENT: FooterContent = {
         { label: "بورس", link: "/courses/stock-market" },
       ],
     },
-    invest: {
+    {
+      id: "invest",
       title: "سرمایه‌گذاری",
       links: [
         { label: "قیمت ارزها", link: "/crypto-prices" },
@@ -99,7 +113,8 @@ export const DEFAULT_FOOTER_CONTENT: FooterContent = {
         { label: "مشاوره کسب‌وکار", link: "/business-consulting" },
       ],
     },
-    support: {
+    {
+      id: "support",
       title: "پشتیبانی",
       links: [
         { label: "سوالات متداول", link: "/faq" },
@@ -107,7 +122,8 @@ export const DEFAULT_FOOTER_CONTENT: FooterContent = {
         { label: "شیوه‌های پرداخت", link: "/faq#payment" },
       ],
     },
-  },
+  ],
+  enamad: { ...DEFAULT_ENAMAD },
   legalLinks: [
     { label: "قوانین و مقررات", link: "/about-us" },
     { label: "سوالات متداول", link: "/faq" },
@@ -166,17 +182,80 @@ function parseLinkList(value: unknown, max = MAX_COLUMN_LINKS): ChromeLink[] {
   return links;
 }
 
+function makeColumnId(title: string, index: number): string {
+  const slug = title
+    .trim()
+    .replace(/\s+/g, "-")
+    .slice(0, 40);
+  return slug || `column-${index + 1}`;
+}
+
 function parseColumn(
   value: unknown,
-  fallback: FooterColumnContent
+  fallback: FooterColumnContent,
+  index: number
 ): FooterColumnContent {
-  if (!value || typeof value !== "object") return fallback;
+  if (!value || typeof value !== "object") return { ...fallback };
   const row = value as Record<string, unknown>;
   const title = asTrimmedString(row.title, fallback.title).slice(0, MAX_LABEL);
   const links = parseLinkList(row.links);
+  const rawId = asTrimmedString(row.id, "").slice(0, MAX_LABEL);
+  const resolvedTitle = title || fallback.title;
   return {
-    title: title || fallback.title,
+    id: rawId || fallback.id || makeColumnId(resolvedTitle, index),
+    title: resolvedTitle,
     links: links.length ? links : fallback.links,
+  };
+}
+
+function parseColumns(
+  value: unknown,
+  fallback: FooterColumnContent[]
+): FooterColumnContent[] {
+  // Legacy shape: { discover: {...}, learn: {...}, ... } -> array
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    const legacy = value as Record<string, unknown>;
+    const out: FooterColumnContent[] = [];
+    for (const base of fallback) {
+      const raw = legacy[base.id];
+      if (raw === undefined) {
+        out.push({ ...base, links: [...base.links] });
+      } else {
+        out.push(parseColumn(raw, base, out.length));
+      }
+    }
+    return out;
+  }
+  if (!Array.isArray(value)) return fallback.map((c) => ({ ...c, links: [...c.links] }));
+  const out: FooterColumnContent[] = [];
+  for (const item of value.slice(0, MAX_FOOTER_COLUMNS)) {
+    if (!item || typeof item !== "object") continue;
+    const row = item as Record<string, unknown>;
+    const title = asTrimmedString(row.title, "").slice(0, MAX_LABEL);
+    const links = parseLinkList(row.links);
+    // Drop fully empty columns (admin deleted content) instead of refilling defaults
+    if (!title && !links.length) continue;
+    out.push({
+      id:
+        asTrimmedString(row.id, "").slice(0, MAX_LABEL) ||
+        makeColumnId(title || "column", out.length),
+      title: title || `ستون ${out.length + 1}`,
+      links,
+    });
+  }
+  return out;
+}
+
+function parseEnamad(value: unknown, base: EnamadSettings): EnamadSettings {
+  if (value == null || typeof value !== "object") return { ...base };
+  const row = value as Record<string, unknown>;
+  const linkUrl = asTrimmedString(row.linkUrl, base.linkUrl).slice(0, MAX_LINK);
+  const imageUrl = asTrimmedString(row.imageUrl, base.imageUrl).slice(0, MAX_LINK);
+  const enabled = typeof row.enabled === "boolean" ? row.enabled : base.enabled;
+  return {
+    enabled,
+    linkUrl: linkUrl || base.linkUrl,
+    imageUrl: imageUrl || base.imageUrl,
   };
 }
 
@@ -213,10 +292,6 @@ export function parseFooterContent(value: unknown): FooterContent {
   if (value == null || typeof value !== "object") return base;
 
   const row = value as Record<string, unknown>;
-  const columnsRaw =
-    row.columns && typeof row.columns === "object"
-      ? (row.columns as Record<string, unknown>)
-      : {};
 
   return {
     aboutText: asTrimmedString(row.aboutText, base.aboutText).slice(0, MAX_ABOUT) || base.aboutText,
@@ -235,12 +310,8 @@ export function parseFooterContent(value: unknown): FooterContent {
     instagram: asTrimmedString(row.instagram, base.instagram).slice(0, MAX_LINK) || base.instagram,
     telegram: asTrimmedString(row.telegram, base.telegram).slice(0, MAX_LINK) || base.telegram,
     twitter: asTrimmedString(row.twitter, base.twitter).slice(0, MAX_LINK) || base.twitter,
-    columns: {
-      discover: parseColumn(columnsRaw.discover, base.columns.discover),
-      learn: parseColumn(columnsRaw.learn, base.columns.learn),
-      invest: parseColumn(columnsRaw.invest, base.columns.invest),
-      support: parseColumn(columnsRaw.support, base.columns.support),
-    },
+    columns: parseColumns(row.columns, base.columns),
+    enamad: parseEnamad(row.enamad, base.enamad),
     legalLinks: (() => {
       const links = parseLinkList(row.legalLinks);
       return links.length ? links : base.legalLinks;

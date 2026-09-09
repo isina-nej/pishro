@@ -61,14 +61,14 @@ const PayMain = () => {
         className="bg-card dark:bg-cardBg rounded-2xl shadow-lg border border-border dark:border-borderColor overflow-hidden"
       >
         {/* Header */}
-        <div className="bg-gradient-to-l from-myGolden to-premium p-5 text-foreground">
+        <div className="bg-premium p-5 text-premium-foreground">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-card dark:bg-cardBg backdrop-blur-sm rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-premium-foreground/15 backdrop-blur-sm rounded-xl flex items-center justify-center">
               <Receipt className="w-6 h-6" />
             </div>
             <div>
               <p className="font-bold text-lg">بررسی نهایی سفارش</p>
-              <p className="text-xs text-foreground/90">
+              <p className="text-xs opacity-90">
                 جزئیات دوره‌های خریداری شده
               </p>
             </div>
@@ -127,7 +127,7 @@ const PayMain = () => {
                       {/* Final Price */}
                       <div className="text-center min-w-[120px]">
                         <p className="text-xs text-muted-foreground dark:text-textSecondary mb-1">قیمت نهایی</p>
-                        <p className="text-lg font-black text-myPrimary">
+                        <p className="text-lg font-black text-primary">
                           {item.lastPrice.toLocaleString("fa-IR")}
                         </p>
                       </div>
@@ -141,12 +141,12 @@ const PayMain = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 + cartSummary.length * 0.1 }}
-                className="bg-gradient-to-l from-myPrimary/10 to-destructive border-2 border-myPrimary/30 rounded-xl p-6 mt-6"
+                className="bg-primary/10 border-2 border-primary/30 rounded-xl p-6 mt-6"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-myPrimary rounded-xl flex items-center justify-center">
-                      <Receipt className="w-6 h-6 text-foreground" />
+                    <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center">
+                      <Receipt className="w-6 h-6 text-primary-foreground" />
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground dark:text-textSecondary font-medium">
@@ -158,7 +158,7 @@ const PayMain = () => {
                     </div>
                   </div>
                   <div className="text-left">
-                    <p className="text-3xl font-black text-myPrimary">
+                    <p className="text-3xl font-black text-primary">
                       {totalPrice.toLocaleString("fa-IR")}
                     </p>
                     <p className="text-sm text-muted-foreground dark:text-textSecondary font-medium">تومان</p>

@@ -23,7 +23,7 @@ export const TextInput = ({
         id={id}
         placeholder={placeholder}
         className={cn(
-          "mt-1 pr-10 block w-full rounded-none border-0 border-b border-black focus-visible:ring-0 focus-visible:bg-muted dark:bg-cardBg",
+          "mt-1 pr-10 block w-full rounded-none border-0 border-b border-input bg-transparent focus:border-primary focus-visible:ring-0 focus-visible:bg-muted",
           error && "border-destructive"
         )}
         {...props}

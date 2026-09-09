@@ -45,14 +45,10 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-gradient-to-br from-blue-50 via-slate-50 to-white dark:from-slate-950 dark:via-slate-900 dark:to-slate-800 flex items-center justify-center px-4 py-8 relative">
-      {/* Decorative background elements - Light Mode */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-myBlue/15 to-myPrimary/10 rounded-full blur-3xl -z-10 dark:hidden" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-myPrimary/15 to-myBlue/10 rounded-full blur-3xl -z-10 dark:hidden" />
-
-      {/* Decorative background elements - Dark Mode */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-myBlue/20 to-myPrimary/15 rounded-full blur-3xl -z-10 hidden dark:block" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-myPrimary/20 to-myBlue/15 rounded-full blur-3xl -z-10 hidden dark:block" />
+    <div className="min-h-screen w-full overflow-x-hidden bg-background flex items-center justify-center px-4 py-8 relative">
+      {/* Decorative background — palette-driven */}
+      <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-primary/15 to-premium/10 rounded-full blur-3xl -z-10" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-premium/15 to-primary/10 rounded-full blur-3xl -z-10" />
 
       {/* Main container */}
       <div className="w-full max-w-md animate-in fade-in zoom-in duration-500 ease-out">
@@ -61,7 +57,7 @@ const LoginPage = () => {
           <Link href="/">
             <Button
               variant="costume"
-              className="text-sm font-semibold text-mySecondary hover:text-myBlue dark:text-myBlue dark:hover:text-myPrimary group flex items-center gap-2 pb-0 h-auto px-0 hover:translate-x-1 transition-all duration-300"
+              className="text-sm font-semibold text-muted-foreground hover:text-primary group flex items-center gap-2 pb-0 h-auto px-0 hover:translate-x-1 transition-all duration-300"
             >
               <LuSquareChevronRight className="text-base group-hover:translate-x-[-4px] transition-transform duration-300" />
               بازگشت
@@ -70,18 +66,18 @@ const LoginPage = () => {
         </div>
 
         {/* Main card */}
-        <div className="bg-white dark:bg-cardBg rounded-2xl shadow-xl dark:shadow-2xl backdrop-blur-sm border border-gray-200/60 dark:border-gray-700/50 overflow-hidden hover:shadow-2xl transition-shadow duration-300">
+        <div className="bg-card rounded-2xl shadow-xl backdrop-blur-sm border border-border overflow-hidden hover:shadow-2xl transition-shadow duration-300">
           {/* Header section with gradient */}
-          <div className="relative overflow-hidden bg-gradient-to-r from-mySecondary/8 via-myBlue/5 to-mySecondary/8 dark:from-mySecondary/15 dark:via-myBlue/10 dark:to-mySecondary/15 px-8 pt-8 pb-6 border-b border-gray-200/60 dark:border-gray-700/50">
+          <div className="relative overflow-hidden bg-gradient-to-r from-primary/10 via-premium/10 to-primary/10 px-8 pt-8 pb-6 border-b border-border">
             <div className="relative z-10">
-              <h1 className="text-3xl font-bold text-mySecondary dark:text-white mb-2">
+              <h1 className="text-3xl font-bold text-foreground mb-2">
                 {showForgotPassword
                   ? "بازیابی رمز عبور"
                   : twoFactorStep
                   ? `تأیید ${twoFactorMethod === "sms" ? "پیامک" : "رمزساز"}`
                   : "خوش آمدید"}
               </h1>
-              <p className="text-sm text-gray-700 dark:text-gray-400">
+              <p className="text-sm text-muted-foreground">
                 {showForgotPassword
                   ? "رمز عبور خود را بازیابی کنید"
                   : twoFactorStep
@@ -93,7 +89,7 @@ const LoginPage = () => {
             </div>
 
             {/* Decorative element */}
-            <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-myBlue/20 to-myPrimary/10 rounded-full -mr-12 -mt-12" />
+            <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-primary/20 to-premium/10 rounded-full -mr-12 -mt-12" />
           </div>
 
           {/* Content section */}
@@ -124,8 +120,8 @@ const LoginPage = () => {
                         className={cn(
                           "flex-1 font-bold text-base py-3 px-4 rounded-xl transition-all duration-300 ease-out",
                           variant === type
-                            ? "bg-gradient-to-r from-mySecondary to-myBlue text-white shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
-                            : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700"
+                            ? "bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 hover:shadow-xl hover:scale-105 active:scale-95"
+                            : "bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground border border-border"
                         )}
                       >
                         {type === "login" ? "ورود" : "ثبت نام"}
@@ -154,12 +150,12 @@ const LoginPage = () => {
           </div>
 
           {/* Footer section */}
-          <div className="px-8 py-6 bg-gradient-to-r from-gray-50/80 to-blue-50/80 dark:from-gray-800/50 dark:to-slate-800/50 border-t border-gray-200/60 dark:border-gray-700/50">
-            <p className="text-xs text-center text-gray-700 dark:text-gray-400">
+          <div className="px-8 py-6 bg-muted/50 border-t border-border">
+            <p className="text-xs text-center text-muted-foreground">
               با ورود، شما{" "}
               <Link
                 href="/terms"
-                className="font-semibold text-myBlue hover:text-myPrimary dark:hover:text-myBlue transition-colors"
+                className="font-semibold text-primary hover:text-primary/80 transition-colors"
               >
                 شرایط استفاده
               </Link>{" "}
@@ -169,12 +165,12 @@ const LoginPage = () => {
         </div>
 
         {/* Additional info */}
-        <div className="mt-8 text-center text-sm text-gray-700 dark:text-gray-400">
+        <div className="mt-8 text-center text-sm text-muted-foreground">
           <p>
             سوال دارید؟{" "}
             <Link
               href="/contact"
-              className="font-semibold text-myBlue hover:text-myPrimary dark:hover:text-myBlue transition-colors"
+              className="font-semibold text-primary hover:text-primary/80 transition-colors"
             >
               با ما تماس بگیرید
             </Link>

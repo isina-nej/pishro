@@ -120,7 +120,7 @@ export function OtpForm({
           variant="ghost"
           onClick={onBack}
           disabled={isLoading}
-          className="self-start -mt-4 text-muted-foreground dark:text-textSecondary hover:text-foreground hover:bg-muted dark:hover:bg-cardBg dark:bg-cardBg transition-colors"
+          className="self-start -mt-4 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
         >
           <ArrowRight className="ml-2 h-4 w-4" />
           بازگشت
@@ -129,15 +129,15 @@ export function OtpForm({
 
       {/* Header Section */}
       <div className="flex flex-col items-center gap-4">
-        <div className="w-16 h-16 bg-[#3dc37b]/10 rounded-full flex items-center justify-center">
-          <Phone className="w-8 h-8 text-[#3dc37b]" />
+        <div className="w-16 h-16 bg-success/10 rounded-full flex items-center justify-center">
+          <Phone className="w-8 h-8 text-success" />
         </div>
 
         <div className="text-center space-y-2">
-          <h2 className="text-xl font-bold text-foreground dark:text-textPrimary">تأیید شماره تلفن</h2>
-          <p className="text-sm text-muted-foreground dark:text-textSecondary leading-relaxed max-w-sm">
+          <h2 className="text-xl font-bold text-foreground">تأیید شماره تلفن</h2>
+          <p className="text-sm text-muted-foreground leading-relaxed max-w-sm">
             کد ۶ رقمی ارسال‌شده به شماره{""}
-            <span className="font-bold text-foreground dark:text-textPrimary dir-ltr inline-block">
+            <span className="font-bold text-foreground dir-ltr inline-block">
               {phone}
             </span>{""}
             را وارد کنید
@@ -164,8 +164,8 @@ export function OtpForm({
                   index={index}
                   className={cn(
                     "h-12 w-11 text-xl font-bold border-2 rounded-lg transition-all duration-200 sm:h-14 sm:w-14 sm:text-2xl",
-                    code.length > index && "border-[#3dc37b] bg-[#3dc37b]/5",
-                    isComplete && "border-primary bg-primary"
+                    code.length > index && "border-success bg-success/5",
+                    isComplete && "border-primary bg-primary/10"
                   )}
                 />
               ))}
@@ -186,14 +186,14 @@ export function OtpForm({
       <div className="flex flex-col items-center gap-3">
         {countdown > 0 ? (
           <div className="text-center space-y-1">
-            <p className="text-sm text-muted-foreground dark:text-textSecondary">زمان باقی‌مانده برای ارسال مجدد</p>
-            <p className="text-2xl font-bold text-foreground dark:text-textPrimary tabular-nums dir-ltr">
+            <p className="text-sm text-muted-foreground">زمان باقی‌مانده برای ارسال مجدد</p>
+            <p className="text-2xl font-bold text-foreground tabular-nums dir-ltr">
               {minutes}:{seconds.toString().padStart(2, "0")}
             </p>
           </div>
         ) : (
           <Button
-            className="w-48 h-11 hover:bg-muted dark:hover:bg-darkBgHidden dark:bg-darkBgHidden border-2 border-border dark:border-borderColor hover:border-[#3dc37b] transition-colors"
+            className="w-48 h-11 hover:bg-muted border-2 border-border hover:border-success transition-colors"
             variant="outline"
             onClick={handleResendClick}
             disabled={isLoading}
@@ -215,14 +215,14 @@ export function OtpForm({
         onClick={handleVerify}
         disabled={code.length !== 6 || isLoading}
         className={cn(
-          "w-full h-12 bg-[#d52a16] hover:bg-[#b82414] text-foreground font-bold text-lg transition-all duration-200",
+          "w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg transition-all duration-200",
           "disabled:opacity-50 disabled:cursor-not-allowed",
-          code.length === 6 && !isLoading && "shadow-lg shadow-[#d52a16]/30"
+          code.length === 6 && !isLoading && "shadow-lg shadow-primary/30"
         )}
       >
         {isLoading ? (
           <div className="flex items-center justify-center gap-2">
-            <span className="h-5 w-5 animate-spin rounded-full border-2 border-border border-t-transparent" />
+            <span className="h-5 w-5 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-transparent" />
             در حال تأیید...
           </div>
         ) : (
@@ -231,7 +231,7 @@ export function OtpForm({
       </Button>
 
       {/* Helper Text */}
-      <p className="text-xs text-center text-muted-foreground dark:text-textSecondary -mt-4">
+      <p className="text-xs text-center text-muted-foreground -mt-4">
         در صورت دریافت نکردن کد، پس از اتمام زمان می‌توانید مجدداً درخواست دهید
       </p>
     </div>

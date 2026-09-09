@@ -63,7 +63,7 @@ const CoursesPageContent = ({
       {show("courses:hero") && <CoursesHero stats={stats} />}
 
       {(show("courses:filters") || show("courses:catalog")) && (
-        <section className="relative -mt-16 z-10">
+        <section id="courses-catalog" className="relative -mt-20 z-10 scroll-mt-24">
           <div className="container-xl space-y-12">
             <div className="public-page-panel rounded-[2.25rem] px-5 py-8 sm:px-7 lg:px-9">
               {show("courses:filters") && (

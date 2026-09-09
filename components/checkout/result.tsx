@@ -147,10 +147,10 @@ const Result = () => {
                 className={clsx(
                   "px-3 py-1 rounded-full text-sm font-medium",
                   order.status.toUpperCase() === "PAID"
-                    ? "bg-primary text-primary"
+                    ? "bg-primary/15 text-primary"
                     : order.status.toUpperCase() === "FAILED"
-                    ? "bg-destructive text-destructive"
-                    : "bg-premium text-premium"
+                    ? "bg-destructive/15 text-destructive"
+                    : "bg-premium/15 text-premium"
                 )}
               >
                 {order.status.toUpperCase() === "PAID"

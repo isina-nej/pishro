@@ -75,11 +75,12 @@ const Footer = ({
   const footer = content || DEFAULT_FOOTER_CONTENT;
   const brandName = siteName?.trim() || "پیشرو";
 
-  const discover = visibleLinks(footer.columns.discover.links, hiddenPages);
-  const learn = visibleLinks(footer.columns.learn.links, hiddenPages);
-  const invest = visibleLinks(footer.columns.invest.links, hiddenPages);
-  const support = visibleLinks(footer.columns.support.links, hiddenPages);
+  const columns = (footer.columns ?? []).map((column) => ({
+    ...column,
+    links: visibleLinks(column.links, hiddenPages),
+  }));
   const legalLinks = visibleLinks(footer.legalLinks, hiddenPages);
+  const enamad = footer.enamad ?? DEFAULT_FOOTER_CONTENT.enamad;
 
   const socials = [
     {
@@ -206,32 +207,37 @@ const Footer = ({
           </div>
 
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 lg:col-span-8 lg:gap-6">
-            <FooterColumn title={footer.columns.discover.title} links={discover} />
-            <FooterColumn title={footer.columns.learn.title} links={learn} />
-            <FooterColumn title={footer.columns.invest.title} links={invest} />
-            <FooterColumn title={footer.columns.support.title} links={support} />
+            {columns.map((column) => (
+              <FooterColumn
+                key={column.id || column.title}
+                title={column.title}
+                links={column.links}
+              />
+            ))}
           </div>
         </div>
 
         <div className="border-t border-border/80 px-4 py-6 sm:px-6 lg:px-10">
           <div className="flex flex-col items-center justify-between gap-5 md:flex-row">
             <div className="flex flex-wrap items-center justify-center gap-3 md:justify-start">
-              <a
-                referrerPolicy="origin"
-                target="_blank"
-                rel="noopener noreferrer"
-                href="https://trustseal.enamad.ir/?id=4965732&Code=Ey50OxJxpgFGnTsrvUy8QMpXTuLCb930"
-                className="inline-flex items-center justify-center rounded-xl border border-border/80 bg-card/60 px-3 py-2 transition-colors hover:border-primary/40"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+              {enamad.enabled && enamad.linkUrl && enamad.imageUrl && (
+                <a
                   referrerPolicy="origin"
-                  src="/images/e-namad.png"
-                  alt="نماد اعتماد الکترونیک"
-                  width={52}
-                  height={52}
-                />
-              </a>
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={enamad.linkUrl}
+                  className="inline-flex items-center justify-center rounded-xl border border-border/80 bg-card/60 px-3 py-2 transition-colors hover:border-primary/40"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    referrerPolicy="origin"
+                    src={enamad.imageUrl}
+                    alt="نماد اعتماد الکترونیک"
+                    width={52}
+                    height={52}
+                  />
+                </a>
+              )}
               <div className="hidden items-center gap-2 text-[11px] text-muted-foreground sm:flex">
                 <Building2 className="size-3.5 text-primary" />
                 ساعات پاسخ‌گویی: {footer.weekdaysHours}

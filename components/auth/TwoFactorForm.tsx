@@ -55,7 +55,7 @@ export function TwoFactorForm({
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Title */}
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-mySecondary mb-2">
+        <h2 className="text-2xl font-bold text-foreground mb-2">
           تایید {methodLabel}
         </h2>
         <p className="text-sm text-muted-foreground">
@@ -76,14 +76,14 @@ export function TwoFactorForm({
           onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
           placeholder={method === "sms" ? "000000" : "000000"}
           maxLength={6}
-          className="w-full px-4 py-3 text-center text-2xl letter-spacing-2 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-myBlue"
+          className="w-full px-4 py-3 text-center text-2xl letter-spacing-2 border border-border bg-background rounded-xl focus:outline-none focus:ring-2 focus:ring-ring"
           disabled={isLoading || isRequestingOTP}
         />
       </div>
 
       {/* GA Method - Option to request SMS */}
       {isGAMethod && onRequestSMS && (
-        <div className="bg-primary/20 border border-primary rounded-xl p-4">
+        <div className="bg-primary/10 border border-primary/30 rounded-xl p-4">
           <p className="text-sm text-primary mb-3">
             به رمزساز گوگل دسترسی ندارید؟
           </p>
@@ -91,7 +91,7 @@ export function TwoFactorForm({
             type="button"
             onClick={handleRequestSMS}
             disabled={isLoading || isRequestingOTP}
-            className="w-full bg-primary hover:bg-primary text-primary-foreground py-2 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-300"
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-2 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-300"
           >
             {isRequestingOTP ? (
               <>
@@ -113,7 +113,7 @@ export function TwoFactorForm({
         <Button
           type="submit"
           disabled={isLoading || isRequestingOTP || code.length !== 6}
-          className="w-full bg-gradient-to-r from-mySecondary to-myBlue text-foreground py-3 rounded-xl font-bold hover:shadow-lg transition-all duration-300 disabled:opacity-50"
+          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-3 rounded-xl font-bold hover:shadow-lg transition-all duration-300 disabled:opacity-50"
         >
           {isLoading ? (
             <>
@@ -129,7 +129,7 @@ export function TwoFactorForm({
           type="button"
           onClick={onBack}
           disabled={isLoading || isRequestingOTP}
-          className="w-full bg-muted text-muted-foreground py-3 rounded-xl font-bold hover:bg-muted dark:hover:bg-accent transition-all duration-300 flex items-center justify-center gap-2"
+          className="w-full bg-muted text-muted-foreground py-3 rounded-xl font-bold hover:bg-accent hover:text-accent-foreground transition-all duration-300 flex items-center justify-center gap-2"
         >
           <LuArrowRight className="text-lg" />
           بازگشت

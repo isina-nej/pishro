@@ -50,15 +50,15 @@ const CheckoutSidebar = ({
       >
         {/* Main Card */}
         <div className="bg-gradient-to-br from-card via-card to-muted rounded-2xl shadow-lg border border-border dark:border-borderColor overflow-hidden">
-          {/* Header with Icon — deep emerald band, always white text */}
-          <div className="bg-gradient-to-l from-[#0B3D2E] to-[#1A6B45] p-5 text-white">
+          {/* Header with Icon — palette primary band */}
+          <div className="bg-primary p-5 text-primary-foreground">
             <div className="flex items-center gap-3">
-              <div className="flex size-12 items-center justify-center rounded-xl bg-white/15 text-white backdrop-blur-sm">
+              <div className="flex size-12 items-center justify-center rounded-xl bg-primary-foreground/15 text-primary-foreground backdrop-blur-sm">
                 <ShoppingBag className="size-6" />
               </div>
               <div>
-                <p className="font-bold text-lg text-white">خلاصه سفارش</p>
-                <p className="text-xs text-white/75">دوره‌های منتخب شما</p>
+                <p className="font-bold text-lg">خلاصه سفارش</p>
+                <p className="text-xs opacity-75">دوره‌های منتخب شما</p>
               </div>
             </div>
           </div>
@@ -82,21 +82,21 @@ const CheckoutSidebar = ({
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: 0.2 }}
-                className="bg-gradient-to-l from-primary to-primary border border-primary rounded-xl p-4"
+                className="bg-success/10 border border-success/30 rounded-xl p-4"
               >
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                      <TrendingDown className="w-4 h-4 text-foreground" />
+                    <div className="w-8 h-8 bg-success rounded-lg flex items-center justify-center">
+                      <TrendingDown className="w-4 h-4 text-success-foreground" />
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground dark:text-textSecondary">سود شما از خرید</p>
-                      <p className="text-sm font-bold text-primary">
+                      <p className="text-sm font-bold text-success">
                         {discountPercentage}٪ تخفیف
                       </p>
                     </div>
                   </div>
-                  <span className="text-lg font-bold text-primary">
+                  <span className="text-lg font-bold text-success">
                     {off}
                   </span>
                 </div>
@@ -111,7 +111,7 @@ const CheckoutSidebar = ({
               initial={{ scale: 0.95 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.3, type: "spring" }}
-              className="bg-gradient-to-br from-myPrimary/10 to-destructive border-2 border-myPrimary/30 rounded-xl p-4"
+              className="bg-primary/10 border-2 border-primary/30 rounded-xl p-4"
             >
               <div className="flex justify-between items-center">
                 <div className="space-y-1">
@@ -119,14 +119,14 @@ const CheckoutSidebar = ({
                     مبلغ قابل پرداخت
                   </p>
                   <div className="flex items-center gap-1">
-                    <CheckCircle2 className="w-4 h-4 text-myPrimary" />
+                    <CheckCircle2 className="w-4 h-4 text-primary" />
                     <span className="text-xs text-muted-foreground dark:text-textSecondary">
                       قیمت نهایی با تخفیف
                     </span>
                   </div>
                 </div>
                 <div className="text-left">
-                  <p className="text-3xl font-black text-myPrimary">
+                  <p className="text-3xl font-black text-primary">
                     {lastPrice}
                   </p>
                   <p className="text-xs text-muted-foreground dark:text-textSecondary font-medium">تومان</p>
@@ -139,7 +139,7 @@ const CheckoutSidebar = ({
               {step === "shoppingCart" && (
                 <Button
                   onClick={() => setStep("pay")}
-                  className="w-full h-14 text-lg font-bold bg-gradient-to-l from-myPrimary to-destructive hover:from-destructive hover:to-myPrimary shadow-lg hover:shadow-xl transition-all duration-300 group"
+                  className="w-full h-14 text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300 group"
                 >
                   <span>ادامه فرایند خرید</span>
                   <ArrowLeft className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform" />
@@ -150,7 +150,7 @@ const CheckoutSidebar = ({
                 <Button
                   onClick={handlePayment}
                   disabled={loading}
-                  className="w-full h-14 text-lg font-bold bg-gradient-to-l from-primary to-primary hover:from-primary hover:to-primary shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="w-full h-14 text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {loading ? (
                     <div className="flex items-center gap-2">
@@ -178,14 +178,14 @@ const CheckoutSidebar = ({
         >
           <div className="space-y-3">
             <div className="flex items-center gap-3 text-sm text-muted-foreground dark:text-textSecondary">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <Shield className="w-4 h-4 text-primary" />
+              <div className="w-8 h-8 bg-success/15 rounded-lg flex items-center justify-center">
+                <Shield className="w-4 h-4 text-success" />
               </div>
               <span>پرداخت امن و محافظت شده</span>
             </div>
             <div className="flex items-center gap-3 text-sm text-muted-foreground dark:text-textSecondary">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <Clock className="w-4 h-4 text-primary" />
+              <div className="w-8 h-8 bg-premium/15 rounded-lg flex items-center justify-center">
+                <Clock className="w-4 h-4 text-premium" />
               </div>
               <span>دسترسی فوری پس از پرداخت</span>
             </div>

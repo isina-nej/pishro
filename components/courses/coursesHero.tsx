@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { GraduationCap, Users, BookOpen, TrendingUp } from "lucide-react";
+import { ChevronDown, GraduationCap, Users, BookOpen, TrendingUp } from "lucide-react";
 import Image from "next/image";
 import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import { DynamicIcon } from "@/components/site/DynamicIcon";
@@ -18,8 +18,14 @@ interface CoursesHeroProps {
 export const CoursesHero = ({ stats }: CoursesHeroProps) => {
   const copy = usePublicCopy("courses");
 
+  const scrollToCatalog = () => {
+    document
+      .getElementById("courses-catalog")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
-    <section className="relative overflow-hidden pb-32 pt-36 text-foreground">
+    <section className="relative flex min-h-[86svh] flex-col overflow-hidden text-foreground">
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image
@@ -29,10 +35,10 @@ export const CoursesHero = ({ stats }: CoursesHeroProps) => {
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/15 to-black/55" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/15 to-black/65" />
       </div>
 
-      <div className="container-xl relative z-10 flex flex-col items-center gap-10 text-center">
+      <div className="container-xl relative z-10 flex flex-1 flex-col items-center justify-center gap-10 pb-28 pt-28 text-center md:pt-32">
         <div className="mx-auto max-w-3xl space-y-6 rounded-[2rem] border border-white/20 bg-black/40 p-7 shadow-2xl shadow-black/30 sm:p-9">
           <span className="inline-flex items-center rounded-full border border-white/25 bg-white/10 px-4 py-1 text-sm font-medium text-white">
             {copy("hero.badge", "دوره‌های آموزشی پیشرو")}
@@ -114,6 +120,28 @@ export const CoursesHero = ({ stats }: CoursesHeroProps) => {
           ))}
         </div>
       </div>
+
+      {/* Scroll cue — signals there is more below */}
+      <motion.button
+        type="button"
+        onClick={scrollToCatalog}
+        aria-label="مشاهده دوره‌ها"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.6, duration: 0.5 }}
+        className="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 flex-col items-center gap-1.5 text-white"
+      >
+        <span className="rounded-full border border-white/25 bg-black/45 px-4 py-1.5 text-xs font-medium text-white/90 backdrop-blur-sm">
+          مشاهده دوره‌ها
+        </span>
+        <motion.span
+          animate={{ y: [0, 8, 0] }}
+          transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-black/45 backdrop-blur-sm"
+        >
+          <ChevronDown className="h-5 w-5" />
+        </motion.span>
+      </motion.button>
     </section>
   );
 };

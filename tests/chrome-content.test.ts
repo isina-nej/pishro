@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  DEFAULT_ENAMAD,
   DEFAULT_FOOTER_CONTENT,
   DEFAULT_NAVBAR_ITEMS,
   parseFooterContent,
@@ -35,6 +36,23 @@ test("parseFooterContent merges partial payloads with defaults", () => {
   const parsed = parseFooterContent({
     aboutText: "متن سفارشی فوتر",
     phone: "۰۲۱۱۲۳",
+    columns: [
+      {
+        id: "discover",
+        title: "کاوش سفارشی",
+        links: [{ label: "خانه", link: "/" }],
+      },
+    ],
+  });
+  assert.equal(parsed.aboutText, "متن سفارشی فوتر");
+  assert.equal(parsed.phone, "۰۲۱۱۲۳");
+  assert.equal(parsed.columns.length, 1);
+  assert.equal(parsed.columns[0].title, "کاوش سفارشی");
+  assert.equal(parsed.email, DEFAULT_FOOTER_CONTENT.email);
+});
+
+test("parseFooterContent keeps legacy object columns shape", () => {
+  const parsed = parseFooterContent({
     columns: {
       discover: {
         title: "کاوش سفارشی",
@@ -42,11 +60,43 @@ test("parseFooterContent merges partial payloads with defaults", () => {
       },
     },
   });
-  assert.equal(parsed.aboutText, "متن سفارشی فوتر");
-  assert.equal(parsed.phone, "۰۲۱۱۲۳");
-  assert.equal(parsed.columns.discover.title, "کاوش سفارشی");
-  assert.equal(parsed.columns.learn.title, DEFAULT_FOOTER_CONTENT.columns.learn.title);
-  assert.equal(parsed.email, DEFAULT_FOOTER_CONTENT.email);
+  assert.equal(parsed.columns.length, 4);
+  assert.equal(parsed.columns[0].title, "کاوش سفارشی");
+  assert.equal(parsed.columns[1].title, DEFAULT_FOOTER_CONTENT.columns[1].title);
+});
+
+test("parseFooterContent supports add/remove footer columns", () => {
+  const parsed = parseFooterContent({
+    columns: [
+      { id: "a", title: "ستون یک", links: [{ label: "خانه", link: "/" }] },
+      {
+        id: "b",
+        title: "ستون دو",
+        links: [{ label: "دوره‌ها", link: "/courses" }],
+      },
+    ],
+  });
+  assert.equal(parsed.columns.length, 2);
+  assert.equal(parsed.columns[1].title, "ستون دو");
+
+  const emptied = parseFooterContent({ columns: [] });
+  assert.deepEqual(emptied.columns, []);
+});
+
+test("parseFooterContent parses enamad settings", () => {
+  const parsed = parseFooterContent({
+    enamad: {
+      enabled: false,
+      linkUrl: "https://trustseal.enamad.ir/?id=1",
+      imageUrl: "/images/custom.png",
+    },
+  });
+  assert.equal(parsed.enamad.enabled, false);
+  assert.equal(parsed.enamad.linkUrl, "https://trustseal.enamad.ir/?id=1");
+  assert.equal(parsed.enamad.imageUrl, "/images/custom.png");
+
+  const fallback = parseFooterContent({});
+  assert.deepEqual(fallback.enamad, DEFAULT_ENAMAD);
 });
 
 test("validateFooterContentInput accepts object payloads", () => {

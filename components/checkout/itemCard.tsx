@@ -105,7 +105,7 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
               transition={{ delay: 0.3 + index * 0.1, type: "spring" }}
               className="absolute top-3 left-3 z-20"
             >
-              <div className="bg-gradient-to-br from-myPrimary to-destructive text-foreground px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
+              <div className="bg-primary text-primary-foreground px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
                 <Tag className="w-3.5 h-3.5" />
                 <span className="text-xs font-bold">
                   {data.discountPercent}٪ تخفیف
@@ -182,7 +182,7 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.4 + index * 0.1 }}
-                className="flex items-center gap-2 text-primary bg-primary px-3 py-2 rounded-lg"
+                className="flex items-center gap-2 text-success bg-success/10 border border-success/25 px-3 py-2 rounded-lg"
               >
                 <TrendingDown className="w-4 h-4" />
                 <span className="text-xs font-medium">
@@ -210,7 +210,7 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.5 + index * 0.1 }}
                   className={`text-2xl font-black ${
-                    hasDiscount ? "text-myPrimary" : "text-foreground dark:text-textPrimary"
+                    hasDiscount ? "text-primary" : "text-foreground dark:text-textPrimary"
                   }`}
                 >
                   {data.price.toLocaleString("fa-IR")}
@@ -242,7 +242,7 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
         className="w-full h-fit max-w-[410px] bg-card dark:bg-cardBg shadow-lg hover:shadow-xl rounded-2xl overflow-hidden border border-border dark:border-borderColor transition-all duration-300 group"
       >
         {/* Header with delete button */}
-        <div className="relative w-full bg-gradient-to-br from-mySecondary to-primary p-6">
+        <div className="relative w-full bg-primary text-primary-foreground p-6">
           {/* Delete Button */}
           <motion.button
             onClick={handleRemove}
@@ -255,13 +255,13 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
             <Trash2 className="w-4 h-4" />
           </motion.button>
 
-          <div className="flex items-center gap-3 text-foreground">
-            <div className="p-3 bg-card dark:bg-cardBg rounded-xl backdrop-blur-sm">
+          <div className="flex items-center gap-3">
+            <div className="p-3 bg-primary-foreground/15 rounded-xl backdrop-blur-sm">
               <BarChart3 className="w-6 h-6" />
             </div>
             <div>
               <h6 className="font-bold text-lg">سبد سرمایه‌ گذاری</h6>
-              <p className="text-sm text-foreground/80">
+              <p className="text-sm opacity-80">
                 {getRiskLabel(data.portfolioType)}
               </p>
             </div>
@@ -273,8 +273,8 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
           {/* Portfolio Details */}
           <div className="grid grid-cols-2 gap-3">
             {/* Amount */}
-            <div className="flex items-start gap-2 p-3 bg-primary rounded-lg">
-              <Wallet className="w-5 h-5 text-primary mt-0.5" />
+            <div className="flex items-start gap-2 p-3 bg-success/10 border border-success/25 rounded-lg">
+              <Wallet className="w-5 h-5 text-success mt-0.5" />
               <div>
                 <p className="text-xs text-muted-foreground dark:text-textSecondary mb-1">مبلغ سرمایه</p>
                 <p className="text-sm font-bold text-foreground dark:text-textPrimary">
@@ -307,11 +307,11 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
           </div>
 
           {/* Expected Return */}
-          <div className="bg-primary p-3 rounded-lg">
+          <div className="bg-success/10 border border-success/25 p-3 rounded-lg">
             <p className="text-xs text-muted-foreground dark:text-textSecondary mb-1 text-center">
               بازده تخمینی
             </p>
-            <p className="text-lg font-bold text-primary text-center">
+            <p className="text-lg font-bold text-success text-center">
               {data.expectedReturn.toLocaleString("fa-IR")} تومان
             </p>
             <p className="text-xs text-muted-foreground dark:text-textSecondary text-center mt-1">
@@ -332,7 +332,7 @@ const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
                 initial={{ scale: 0.9 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.5 + index * 0.1 }}
-                className="text-2xl font-black text-mySecondary"
+                className="text-2xl font-black text-primary"
               >
                 {data.price.toLocaleString("fa-IR")}
               </motion.p>

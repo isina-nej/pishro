@@ -26,7 +26,7 @@ const EmptyCart = () => {
           className="relative mx-auto w-32 h-32"
         >
           {/* Gradient Background Circle */}
-          <div className="absolute inset-0 bg-gradient-to-br from-myPrimary/20 to-myGolden/20 rounded-full blur-2xl" />
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-premium/20 rounded-full blur-2xl" />
 
           {/* Main Icon Container */}
           <div className="relative w-full h-full bg-gradient-to-br from-muted to-muted rounded-full flex items-center justify-center border-4 border-border shadow-lg">
@@ -43,7 +43,7 @@ const EmptyCart = () => {
               }}
               className="absolute -top-2 -right-2"
             >
-              <Sparkles className="w-6 h-6 text-myGolden" />
+              <Sparkles className="w-6 h-6 text-premium" />
             </motion.div>
           </div>
         </motion.div>
@@ -81,7 +81,7 @@ const EmptyCart = () => {
           <Link href="/courses" className="w-full sm:w-auto">
             <Button
               size="lg"
-              className="w-full sm:w-auto bg-gradient-to-l from-myPrimary to-destructive hover:from-destructive hover:to-myPrimary shadow-lg hover:shadow-xl transition-all duration-300 group"
+              className="w-full sm:w-auto shadow-lg hover:shadow-xl transition-all duration-300 group"
             >
               <span className="font-bold">مشاهده دوره‌ها</span>
               <ArrowRight className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform" />
