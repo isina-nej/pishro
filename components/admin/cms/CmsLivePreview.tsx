@@ -169,7 +169,10 @@ export default function CmsLivePreview({
 
                   <div className="flex flex-wrap items-center gap-2 pt-1">
                     <span className="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-4 py-1.5 text-xs font-bold text-white shadow transition hover:bg-emerald-500">
-                      {v("hero.cta", "شروع کنید")}
+                      📞 {v("hero.phoneCta", "تماس با پشتیبانی")}
+                    </span>
+                    <span className="inline-flex items-center justify-center rounded-xl bg-amber-600 px-4 py-1.5 text-xs font-bold text-white shadow transition hover:bg-amber-500">
+                      💰 {v("hero.calculatorCta", "محاسبه سود")}
                     </span>
                   </div>
 

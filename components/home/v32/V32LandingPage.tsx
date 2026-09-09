@@ -5,6 +5,7 @@ import Link from "next/link";
 import { contactInfo } from "@/lib/constants/contact";
 import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import { DynamicIcon } from "@/components/site/DynamicIcon";
+import { Calculator, PhoneCall } from "lucide-react";
 import "./v32-landing.css";
 
 /* ── animated typing counter ── */
@@ -60,22 +61,30 @@ export default function V32LandingPage({
 
   const faDigits = "۰۱۲۳۴۵۶۷۸۹";
   const arDigits = "٠١٢٣٤٥٦٧٨٩";
-  const toLatinDigits = (s: string) =>
-    s
-      .replace(/[۰-۹]/g, (d) => String(faDigits.indexOf(d)))
-      .replace(/[٠-٩]/g, (d) => String(arDigits.indexOf(d)));
-  const toLatinRate = (s: string) => {
-    let out = "";
-    for (const ch of toLatinDigits(s)) {
-      if (/[0-9]/.test(ch)) out += ch;
-      else if (ch === "." || ch === "\u066b" || ch === "/") {
-        if (!out.includes(".")) out += ".";
+  const toLatinDigits = (value: string) =>
+    value
+      .replace(/[۰-۹]/g, (digit) => String(faDigits.indexOf(digit)))
+      .replace(/[٠-٩]/g, (digit) => String(arDigits.indexOf(digit)));
+  const toLatinRate = (value: string) => {
+    let numeric = "";
+    for (const char of toLatinDigits(value)) {
+      if (/[0-9]/.test(char)) numeric += char;
+      else if (
+        (char === "." || char === "٫" || char === "/") &&
+        !numeric.includes(".")
+      ) {
+        numeric += ".";
       }
     }
-    return Number(out) || 0;
+    return Number(numeric) || 0;
   };
   const splitBalanceTarget =
-    Number(toLatinDigits(String(copy("split.balanceValue", "۵۲۶٬۸۲۵٬۰۰۰"))).replace(/[^\d]/g, "")) || 526825000;
+    Number(
+      toLatinDigits(String(copy("split.balanceValue", "۵۲۶٬۸۲۵٬۰۰۰"))).replace(
+        /[^\d]/g,
+        ""
+      )
+    ) || 526825000;
   const splitBalance = useAnimatedNumber(splitBalanceTarget);
   const row1Tenths = Math.round(toLatinRate(String(copy("split.row1Value", "+۲٫۱٪"))) * 10);
   const row2Tenths = Math.round(toLatinRate(String(copy("split.row2Value", "+۱٫۴٪"))) * 10);
@@ -96,19 +105,25 @@ export default function V32LandingPage({
               <p>
                 {copy("hero.subtitle", "پیشرو در آموزش و سرمایه‌گذاری")}
               </p>
-              <div className="v32-cta-row flex flex-col sm:flex-row gap-3 mt-1">
-                <a href={`tel:${phoneTel}`} className="v32-btn-green flex items-center gap-2">
-                  <span className="text-2xl">📞</span>
+              <div className="v32-cta-row flex flex-col gap-3 sm:flex-row">
+                <a
+                  href={`tel:${phoneTel}`}
+                  className="v32-btn-green flex items-center gap-2"
+                  aria-label={`${copy("hero.phoneCta", "تماس با پشتیبانی")} ${phoneTel}`}
+                >
+                  <PhoneCall aria-hidden="true" className="size-5" />
                   {copy("hero.phoneCta", "تماس با پشتیبانی")}
                 </a>
                 <button
-                  onClick={() => {
-                    const el = document.getElementById('calculator');
-                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }}
+                  type="button"
+                  onClick={() =>
+                    document
+                      .getElementById("calculator")
+                      ?.scrollIntoView({ behavior: "smooth", block: "start" })
+                  }
                   className="v32-btn-accent flex items-center gap-2"
                 >
-                  <span className="text-2xl">💰</span>
+                  <Calculator aria-hidden="true" className="size-5" />
                   {copy("hero.calculatorCta", "محاسبه سود")}
                 </button>
               </div>

@@ -141,7 +141,23 @@ describe("CMS database round-trip", () => {
       const afterReset = await getPublicContent();
       assert.equal(afterReset["home-v32"]["hero.title"], "پیشرو سرمایه");
     } catch (e) {
-      if (e instanceof Error && e.message.includes("ECONNREFUSED")) {
+      // getSettings() swallows the Prisma error into a generic Persian message,
+      // so detect offline-DB by probing the connection directly.
+      let offline = false;
+      try {
+        const { prisma } = await import("@/lib/prisma");
+        await prisma.$queryRaw`SELECT 1`;
+      } catch {
+        offline = true;
+      } finally {
+        try {
+          const { prisma } = await import("@/lib/prisma");
+          await prisma.$disconnect();
+        } catch {
+          // ignore disconnect errors
+        }
+      }
+      if (offline) {
         console.log("SKIP: Database offline in test environment");
         return;
       }
