@@ -4,8 +4,8 @@ import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import Link from "next/link";
-import { LuArrowLeft } from "react-icons/lu";
 import { HiSparkles } from "react-icons/hi2";
+import { DynamicIcon } from "@/components/site/DynamicIcon";
 import { usePublicCopy } from "@/components/site/PublicContentProvider";
 
 interface CtaSectionProps {
@@ -96,7 +96,7 @@ const CtaSection = ({
                 className="group flex items-center justify-center gap-2 rounded-xl bg-card px-8 py-4 text-lg font-bold text-[var(--home-deep)] shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl dark:text-[var(--home-glow)]"
               >
                 <span>{ctaButtonText}</span>
-                <LuArrowLeft className="transition-transform group-hover:-translate-x-1" />
+                <DynamicIcon name={copy("cta.buttonIcon", "ArrowLeft")} className="transition-transform group-hover:-translate-x-1" />
               </Link>
             </motion.div>
           </div>

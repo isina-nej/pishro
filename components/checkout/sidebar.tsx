@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { DynamicIcon } from "@/components/site/DynamicIcon";
 import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import { motion } from "framer-motion";
 import {
@@ -9,7 +10,6 @@ import {
   Wallet,
   Shield,
   Clock,
-  ArrowLeft,
   CheckCircle2,
 } from "lucide-react";
 
@@ -144,7 +144,7 @@ const CheckoutSidebar = ({
                   className="w-full h-14 text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300 group"
                 >
                   <span>{copy("summary.continue", "ادامه فرایند خرید")}</span>
-                  <ArrowLeft className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform" />
+                  <DynamicIcon name={copy("summary.continueIcon", "ArrowLeft")} className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
               )}
 
@@ -161,7 +161,7 @@ const CheckoutSidebar = ({
                     </div>
                   ) : (
                     <div className="flex items-center gap-2">
-                      <Wallet className="w-5 h-5" />
+                      <DynamicIcon name={copy("summary.securePayIcon", "Wallet")} className="w-5 h-5" />
                       <span>{copy("summary.securePay", "پرداخت امن")}</span>
                     </div>
                   )}

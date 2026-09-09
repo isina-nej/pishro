@@ -111,14 +111,16 @@ export default async function ContactPage() {
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
               href={copy("consultationLink", "/business-consulting")}
-              className="inline-flex items-center rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground"
+              className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground"
             >
+              <DynamicIcon name={copy("consultationIcon", "PhoneCall")} className="size-4" />
               {copy("consultation", "درخواست مشاوره")}
             </Link>
             <Link
               href={copy("faqLink", "/faq")}
-              className="inline-flex items-center rounded-xl border border-border px-4 py-2.5 text-sm font-semibold"
+              className="inline-flex items-center gap-2 rounded-xl border border-border px-4 py-2.5 text-sm font-semibold"
             >
+              <DynamicIcon name={copy("faqIcon", "HelpCircle")} className="size-4" />
               {copy("faq", "سوالات متداول")}
             </Link>
           </div>

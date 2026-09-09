@@ -4,8 +4,9 @@ import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import Link from "next/link";
-import { LuArrowLeft } from "react-icons/lu";
 import { HiSparkles } from "react-icons/hi2";
+import { DynamicIcon } from "@/components/site/DynamicIcon";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 
 interface CtaSectionProps {
   title?: string | null;
@@ -21,16 +22,17 @@ const CtaSection = ({
   buttonLink,
 }: CtaSectionProps) => {
   const ref = useRef(null);
+  const copy = usePublicCopy("courses");
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
-  // Default values
+  // Default values (CMS-managed via صفحه «دوره‌ها» → فراخوان پایانی)
   const ctaTitle =
-    title || "آماده‌اید برای شروع یادگیری؟";
+    title || copy("cta.title", "آماده‌اید برای شروع یادگیری؟");
   const ctaDescription =
     description ||
-    "با ثبت‌نام در دوره‌های ما، دانش و مهارت‌های لازم برای موفقیت بازارهای مالی را کسب کنید";
-  const ctaButtonText = buttonText || "درباره ما بیشتر بدانید";
-  const ctaButtonLink = buttonLink || "/about-us";
+    copy("cta.description", "با ثبت‌نام در دوره‌های ما، دانش و مهارت‌های لازم برای موفقیت بازارهای مالی را کسب کنید");
+  const ctaButtonText = buttonText || copy("cta.button", "درباره ما بیشتر بدانید");
+  const ctaButtonLink = buttonLink || copy("cta.link", "/about-us");
 
   return (
     <div ref={ref} className="container mx-auto px-4 py-20">
@@ -57,7 +59,7 @@ const CtaSection = ({
               className="inline-flex items-center gap-2 bg-card backdrop-blur-sm rounded-full px-6 py-2 mb-6"
             >
               <HiSparkles className="text-premium text-xl" />
-              <span className="text-sm font-medium">شروع مسیر موفقیت</span>
+              <span className="text-sm font-medium">{copy("cta.badge", "شروع مسیر موفقیت")}</span>
             </motion.div>
 
             {/* Title */}
@@ -92,7 +94,7 @@ const CtaSection = ({
                 className="group bg-white text-[var(--btn-primary-bg)] px-8 py-4 rounded-xl font-bold text-lg hover:shadow-2xl transition-all duration-300 flex items-center justify-center gap-2"
               >
                 <span>{ctaButtonText}</span>
-                <LuArrowLeft className="group-hover:-translate-x-1 transition-transform" />
+                <DynamicIcon name={copy("cta.buttonIcon", "ArrowLeft")} className="group-hover:-translate-x-1 transition-transform" />
               </Link>
             </motion.div>
           </div>

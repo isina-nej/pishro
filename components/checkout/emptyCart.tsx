@@ -1,8 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ShoppingCart, ArrowRight, Sparkles } from "lucide-react";
+import { ShoppingCart, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { DynamicIcon } from "@/components/site/DynamicIcon";
 import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import Link from "next/link";
 
@@ -84,7 +85,7 @@ const EmptyCart = () => {
               className="w-full sm:w-auto shadow-lg hover:shadow-xl transition-all duration-300 group"
             >
               <span className="font-bold">{copy("empty.courses", "مشاهده دوره‌ها")}</span>
-              <ArrowRight className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform" />
+              <DynamicIcon name={copy("empty.coursesIcon", "ArrowRight")} className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
 
@@ -94,6 +95,7 @@ const EmptyCart = () => {
               variant="outline"
               className="w-full sm:w-auto border-2 hover:bg-muted"
             >
+              <DynamicIcon name={copy("empty.homeIcon", "Home")} className="size-4" />
               <span className="font-bold">{copy("empty.home", "بازگشت به صفحه اصلی")}</span>
             </Button>
           </Link>

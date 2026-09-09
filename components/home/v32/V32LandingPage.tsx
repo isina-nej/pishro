@@ -261,7 +261,8 @@ export default function V32LandingPage({
               "از آموزش تا سرمایه‌گذاری، همه زیر نظر متخصصان مجموعه و متناسب با نیاز شما طراحی شده است."
             )}
           </p>
-          <a href={splitCtaHref} className="v32-btn-accent">
+          <a href={splitCtaHref} className="v32-btn-accent inline-flex items-center gap-2">
+            <DynamicIcon name={copy("split.ctaIcon", "ArrowLeft")} className="size-4" />
             {copy("split.cta", "شروع کنید")}
           </a>
         </div>

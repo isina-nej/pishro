@@ -97,12 +97,6 @@ const Footer = ({
       href: `tel:${footer.phoneTel}`,
     },
     {
-      icon: Phone,
-      label: "موبایل",
-      value: footer.mobile,
-      href: `tel:${footer.mobileTel}`,
-    },
-    {
       icon: Mail,
       label: "ایمیل",
       value: footer.email,

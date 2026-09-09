@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { PhoneCall, Send, GraduationCap, XIcon } from "lucide-react";
+import { XIcon } from "lucide-react";
+import { DynamicIcon } from "@/components/site/DynamicIcon";
 import {
   Drawer,
   DrawerClose,
@@ -56,14 +57,14 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
           <Drawer>
             <DrawerTrigger asChild>
               <button className="group relative flex w-full items-center justify-center gap-2 rounded-full border border-border/60 bg-card/90 px-6 py-3 font-bold text-foreground shadow-xl transition-all hover:-translate-y-0.5 hover:bg-primary hover:text-primary-foreground sm:w-auto">
-                <PhoneCall className="h-5 w-5 text-primary transition-transform group-hover:scale-110 group-hover:text-primary-foreground" />
+                <DynamicIcon name={copy("inPerson.buttonIcon", "PhoneCall")} className="h-5 w-5 text-primary transition-transform group-hover:scale-110 group-hover:text-primary-foreground" />
                 {copy("inPerson.button", "رزرو مشاوره حضوری")}
               </button>
             </DrawerTrigger>
             <DrawerContent className="p-6 rounded-t-2xl border-t bg-card shadow-2xl">
               <DrawerHeader className="text-center">
                 <div className="flex justify-center">
-                  <PhoneCall className="text-primary h-10 w-10" />
+                  <DynamicIcon name={copy("inPerson.buttonIcon", "PhoneCall")} className="text-primary h-10 w-10" />
                 </div>
                 <DrawerTitle className="text-2xl font-bold text-foreground mt-2">
                   {businessConsultingData.inPersonTitle || copy("inPerson.title", "مشاوره حضوری")}
@@ -96,14 +97,14 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
           <Drawer>
             <DrawerTrigger asChild>
               <button className="group relative flex w-full items-center justify-center gap-2 rounded-full border border-border/60 bg-card/90 px-6 py-3 font-bold text-foreground shadow-xl transition-all hover:-translate-y-0.5 hover:bg-primary hover:text-primary-foreground sm:w-auto">
-                <Send className="h-5 w-5 text-primary transition-transform group-hover:scale-110 group-hover:text-primary-foreground" />
+                <DynamicIcon name={copy("online.buttonIcon", "Send")} className="h-5 w-5 text-primary transition-transform group-hover:scale-110 group-hover:text-primary-foreground" />
                 {copy("online.button", "رزرو مشاوره آنلاین")}
               </button>
             </DrawerTrigger>
             <DrawerContent className="p-6 rounded-t-2xl border-t bg-card shadow-2xl">
               <DrawerHeader className="text-center">
                 <div className="flex justify-center">
-                  <Send className="text-primary h-10 w-10" />
+                  <DynamicIcon name={copy("online.buttonIcon", "Send")} className="text-primary h-10 w-10" />
                 </div>
                 <DrawerTitle className="text-2xl font-bold text-foreground mt-2">
                   {businessConsultingData.onlineTitle || copy("online.title", "مشاوره آنلاین")}
@@ -140,14 +141,14 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
           <Drawer>
             <DrawerTrigger asChild>
               <button className="group relative flex w-full items-center justify-center gap-2 rounded-full border border-border/60 bg-card/90 px-6 py-3 font-bold text-foreground shadow-xl transition-all hover:-translate-y-0.5 hover:bg-premium hover:text-premium-foreground sm:w-auto">
-                <GraduationCap className="h-5 w-5 text-premium transition-transform group-hover:scale-110 group-hover:text-premium-foreground" />
+                <DynamicIcon name={copy("courses.buttonIcon", "GraduationCap")} className="h-5 w-5 text-premium transition-transform group-hover:scale-110 group-hover:text-premium-foreground" />
                 {copy("courses.button", "دوره‌ها")}
               </button>
             </DrawerTrigger>
             <DrawerContent className="p-6 rounded-t-2xl border-t bg-card shadow-2xl">
               <DrawerHeader className="text-center">
                 <div className="flex justify-center">
-                  <GraduationCap className="text-premium h-10 w-10" />
+                  <DynamicIcon name={copy("courses.buttonIcon", "GraduationCap")} className="text-premium h-10 w-10" />
                 </div>
                 <DrawerTitle className="text-2xl font-bold text-foreground mt-2">
                   {businessConsultingData.coursesTitle || copy("courses.title", "دوره‌های آموزشی")}

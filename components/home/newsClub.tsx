@@ -11,6 +11,7 @@ import {
 } from "@/lib/validations/newsletter";
 import { subscribeToNewsletter } from "@/lib/services/newsletter";
 import toast from "react-hot-toast";
+import { DynamicIcon } from "@/components/site/DynamicIcon";
 import { usePublicCopy } from "@/components/site/PublicContentProvider";
 
 /* ponytail: palette-driven via --home-* vars; hardcode olive only if NewsClub needs own brand */
@@ -104,8 +105,9 @@ const NewsClub = () => {
               />
               <Button
                 type="submit"
-                className="h-11 shrink-0 rounded-full bg-[var(--btn-primary-bg)] px-8 text-base font-bold text-primary-foreground shadow-lg transition-all duration-300 ease-out hover:scale-105 hover:bg-[var(--btn-primary-hover)] active:scale-[1.02] sm:h-12 sm:text-lg"
+                className="inline-flex h-11 shrink-0 items-center gap-2 rounded-full bg-[var(--btn-primary-bg)] px-8 text-base font-bold text-primary-foreground shadow-lg transition-all duration-300 ease-out hover:scale-105 hover:bg-[var(--btn-primary-hover)] active:scale-[1.02] sm:h-12 sm:text-lg"
               >
+                <DynamicIcon name={copy("club.submitIcon", "Send")} className="size-4" />
                 {copy("club.submit", "عضویت")}
               </Button>
             </div>

@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { InvestmentPlans, InvestmentPlan, InvestmentTag } from "@prisma/client";
 import { Button } from "@/components/ui/button";
+import { DynamicIcon } from "@/components/site/DynamicIcon";
 import { usePublicCopy } from "@/components/site/PublicContentProvider";
 
 interface InvestmentPlansHeroProps {
@@ -182,8 +183,9 @@ export const InvestmentPlansHero = ({
               <Button
                 onClick={scrollToModels}
                 size="lg"
-                className="bg-[var(--btn-primary-bg)] hover:bg-[var(--btn-primary-hover)] text-primary-foreground shadow-xl shadow-success/25 hover:shadow-2xl hover:shadow-success/40 transition-all duration-300 px-8 py-6 text-lg font-semibold rounded-2xl"
+                className="inline-flex items-center gap-2 bg-[var(--btn-primary-bg)] hover:bg-[var(--btn-primary-hover)] text-primary-foreground shadow-xl shadow-success/25 hover:shadow-2xl hover:shadow-success/40 transition-all duration-300 px-8 py-6 text-lg font-semibold rounded-2xl"
               >
+                <DynamicIcon name={copy("hero.ctaIcon", "ArrowLeft")} className="size-5" />
                 {copy("hero.cta", "شروع سرمایه‌گذاری")}
               </Button>
             </motion.div>

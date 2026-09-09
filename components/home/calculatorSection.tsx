@@ -4,7 +4,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import CountUp from "react-countup";
-import { Wallet, Clock, BarChart3, PhoneCall, XIcon } from "lucide-react";
+import { Wallet, Clock, BarChart3, XIcon } from "lucide-react";
+import { DynamicIcon } from "@/components/site/DynamicIcon";
 import {
   Drawer,
   DrawerClose,
@@ -356,9 +357,10 @@ const CalculatorSection = ({
 
                 <a
                   href={`tel:${phoneTel}`}
-                  className="mt-10 w-full rounded-full border border-[var(--home-on-dark)] bg-[var(--home-on-dark)] px-16 py-4 text-center font-bold text-[var(--home-deep)] transition-all hover:bg-[var(--btn-primary-bg)] hover:text-primary-foreground sm:w-fit"
+                  className="mt-10 inline-flex w-full items-center justify-center gap-2 rounded-full border border-[var(--home-on-dark)] bg-[var(--home-on-dark)] px-16 py-4 text-center font-bold text-[var(--home-deep)] transition-all hover:bg-[var(--btn-primary-bg)] hover:text-primary-foreground sm:w-fit"
                 >
-                  سرمایه‌ گذاری
+                  <DynamicIcon name={copy("calculator.investIcon", "Wallet")} className="size-5" />
+                  {copy("calculator.invest", "سرمایه‌ گذاری")}
                 </a>
               </div>
             </div>
@@ -370,20 +372,20 @@ const CalculatorSection = ({
           <Drawer>
             <DrawerTrigger asChild>
               <button className="group relative flex w-full items-center justify-center gap-2 rounded-xl border border-primary bg-card px-10 py-4 font-medium text-foreground shadow-lg transition-all hover:border-primary hover:bg-primary hover:text-primary-foreground sm:w-auto">
-                <PhoneCall className="h-5 w-5 text-primary transition-transform group-hover:scale-110 group-hover:text-primary-foreground" />
-                رزرو مشاوره حضوری
+                <DynamicIcon name={copy("calculator.reserveIcon", "PhoneCall")} className="h-5 w-5 text-primary transition-transform group-hover:scale-110 group-hover:text-primary-foreground" />
+                {copy("calculator.reserve", "رزرو مشاوره حضوری")}
               </button>
             </DrawerTrigger>
             <DrawerContent className="p-6 rounded-t-2xl border-t bg-card shadow-2xl">
               <DrawerHeader className="text-center">
                 <div className="flex justify-center">
-                  <PhoneCall className="text-primary h-10 w-10" />
+                  <DynamicIcon name={copy("calculator.reserveIcon", "PhoneCall")} className="text-primary h-10 w-10" />
                 </div>
                 <DrawerTitle className="text-2xl font-bold text-foreground mt-2">
-                  مشاوره حضوری
+                  {copy("calculator.drawerTitle", "مشاوره حضوری")}
                 </DrawerTitle>
                 <DrawerDescription className="text-center text-muted-foreground mt-1">
-                  برای رزرو مشاوره حضوری با ما تماس بگیرید:
+                  {copy("calculator.drawerDescription", "برای رزرو مشاوره حضوری با ما تماس بگیرید:")}
                 </DrawerDescription>
               </DrawerHeader>
               <div className="text-center mt-4 space-y-3">
@@ -392,9 +394,10 @@ const CalculatorSection = ({
                 </p>
                 <a
                   href={`tel:${phoneTel}`}
-                  className="inline-block px-6 py-2 bg-primary hover:bg-[var(--home-glow)] text-primary-foreground rounded-md font-medium transition"
+                  className="inline-flex items-center gap-2 px-6 py-2 bg-primary hover:bg-[var(--home-glow)] text-primary-foreground rounded-md font-medium transition"
                 >
-                  تماس بگیرید
+                  <DynamicIcon name={copy("calculator.callIcon", "PhoneCall")} className="size-4" />
+                  {copy("calculator.call", "تماس بگیرید")}
                 </a>
               </div>
               <DrawerFooter>

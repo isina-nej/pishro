@@ -1,8 +1,9 @@
 "use client";
 
 import { motion } from "motion/react";
-import { HiUsers, HiArrowLeft } from "react-icons/hi";
+import { HiUsers } from "react-icons/hi";
 import Link from "next/link";
+import { DynamicIcon } from "@/components/site/DynamicIcon";
 import { useVisibility } from "@/components/site/VisibilityProvider";
 import { usePublicCopy } from "@/components/site/PublicContentProvider";
 
@@ -129,7 +130,7 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
                     animate={{ x: [0, 5, 0] }}
                     transition={{ duration: 1.5, repeat: Infinity }}
                   >
-                    <HiArrowLeft className="text-3xl text-foreground" />
+                    <DynamicIcon name={copy("enterIcon", "ArrowLeft")} className="text-3xl text-foreground" />
                   </motion.div>
                 </div>
               </motion.button>

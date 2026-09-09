@@ -32,6 +32,48 @@ test("validateNavbarItemsInput rejects bad rows", () => {
   assert.ok(validateNavbarItemsInput([{ label: "خانه", link: "/" }]));
 });
 
+test("navbar/footer links keep optional icons", () => {
+  const nav = validateNavbarItemsInput([
+    { label: "خانه", link: "/", icon: "Home" },
+    { label: "بدون آیکن", link: "/courses" },
+  ]);
+  assert.ok(nav);
+  assert.equal(nav[0].icon, "Home");
+  assert.equal(nav[1].icon, undefined);
+
+  const bad = validateNavbarItemsInput([
+    { label: "خانه", link: "/", icon: "alert(1)" },
+  ]);
+  assert.equal(bad?.[0].icon, undefined);
+
+  const parsed = parseFooterContent({
+    columns: [
+      {
+        id: "a",
+        title: "ستون یک",
+        links: [{ label: "خانه", link: "/", icon: "Home" }],
+      },
+    ],
+    legalLinks: [{ label: "حقوقی", link: "/contact", icon: "ShieldCheck" }],
+    socials: [
+      { id: "instagram", name: "اینستاگرام", href: "https://instagram.com/x", icon: "Instagram" },
+      { id: "extra", name: "یوتیوب ما", href: "https://youtube.com/@x", icon: "Youtube" },
+    ],
+  });
+  assert.equal(parsed.columns[0].links[0].icon, "Home");
+  assert.equal(parsed.legalLinks[0].icon, "ShieldCheck");
+  assert.equal(parsed.socials.length, 2);
+  assert.equal(parsed.socials[1].icon, "Youtube");
+
+  const legacy = parseFooterContent({
+    instagram: "https://instagram.com/legacy",
+    telegram: "#",
+    twitter: "#",
+  });
+  assert.equal(legacy.socials.length, 3);
+  assert.equal(legacy.socials[0].href, "https://instagram.com/legacy");
+});
+
 test("parseFooterContent merges partial payloads with defaults", () => {
   const parsed = parseFooterContent({
     aboutText: "متن سفارشی فوتر",
