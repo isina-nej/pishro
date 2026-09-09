@@ -29,6 +29,11 @@ const nextConfig: NextConfig = {
         hostname: "**.parspack.net",
       },
       {
+        // فضای ابری پوشتیبان (S3_ENDPOINT فعلی: teh-1.s3.poshtiban.com)
+        protocol: "https",
+        hostname: "**.poshtiban.com",
+      },
+      {
         protocol: "https",
         hostname: "images.unsplash.com",
       },

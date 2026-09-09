@@ -22,16 +22,14 @@ type ChatMessage = {
   adminName?: string | null;
 };
 
-const TOPICS = [
-  "دوره‌های آموزشی",
-  "سبدهای سرمایه‌گذاری",
-  "کریپتو",
-  "بورس",
-  "متاورس",
-  "NFT",
-  "ایردراپ",
-  "مشاوره کسب‌وکار",
-];
+const FALLBACK_TOPICS = ["دوره‌های آموزشی", "سبدهای سرمایه‌گذاری"];
+
+type WidgetTopic = {
+  id: string;
+  title: string;
+};
+
+const TOPICS_CACHE_KEY = "pishro-live-chat-topics-v1";
 
 const STORAGE_KEY = "pishro-live-chat-v1";
 
@@ -63,11 +61,39 @@ function saveStored(data: {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
+function loadCachedTopics(): WidgetTopic[] | null {
+  try {
+    const raw = localStorage.getItem(TOPICS_CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as unknown;
+    if (!Array.isArray(parsed)) return null;
+    const list = parsed
+      .filter(
+        (item): item is WidgetTopic =>
+          !!item &&
+          typeof item === "object" &&
+          typeof (item as WidgetTopic).title === "string" &&
+          (item as WidgetTopic).title.trim().length > 0
+      )
+      .map((item) => ({
+        id: typeof item.id === "string" ? item.id : item.title,
+        title: item.title.trim(),
+      }));
+    return list.length ? list : null;
+  } catch {
+    return null;
+  }
+}
+
 export default function ChatWidget() {
   const { play } = useSound();
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState<Step>("topics");
   const [topic, setTopic] = useState<string | null>(null);
+  const [topics, setTopics] = useState<WidgetTopic[]>(
+    FALLBACK_TOPICS.map((title) => ({ id: title, title }))
+  );
+  const [topicsLoading, setTopicsLoading] = useState(true);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
@@ -116,14 +142,54 @@ export default function ChatWidget() {
 
   useEffect(() => {
     const stored = loadStored();
-    if (!stored) return;
-    setConversationId(stored.id);
-    setVisitorToken(stored.visitorToken);
-    setFirstName(stored.firstName);
-    setLastName(stored.lastName);
-    setPhone(stored.phone);
-    setTopic(stored.topic || null);
-    setStep("chat");
+    if (stored) {
+      setConversationId(stored.id);
+      setVisitorToken(stored.visitorToken);
+      setFirstName(stored.firstName);
+      setLastName(stored.lastName);
+      setPhone(stored.phone);
+      setTopic(stored.topic || null);
+      setStep("chat");
+    }
+  }, []);
+
+  useEffect(() => {
+    const cached = loadCachedTopics();
+    if (cached) {
+      setTopics(cached);
+      setTopicsLoading(false);
+    }
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/public/live-chat/topics", {
+          cache: "no-store",
+        });
+        const json = await res.json();
+        if (cancelled || !res.ok || json.status !== "success") return;
+        const list = (json.data?.topics || []) as WidgetTopic[];
+        const clean = list
+          .filter((t) => t && typeof t.title === "string" && t.title.trim())
+          .map((t) => ({
+            id: typeof t.id === "string" ? t.id : t.title,
+            title: t.title.trim(),
+          }));
+        if (!clean.length) return;
+        setTopics(clean);
+        try {
+          localStorage.setItem(TOPICS_CACHE_KEY, JSON.stringify(clean));
+        } catch {
+          // private mode — widget still works for this session
+        }
+      } catch {
+        // offline — keep fallback / cached topics
+      } finally {
+        if (!cancelled) setTopicsLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -271,25 +337,31 @@ export default function ChatWidget() {
                     موضوع گفتگو را انتخاب کنید:
                   </p>
                   <div className="grid gap-2">
-                    {TOPICS.map((item, index) => (
-                      <motion.button
-                        key={item}
-                        type="button"
-                        initial={{ opacity: 0, x: 10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.03 }}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => {
-                          setTopic(item);
-                          setStep("identity");
-                        }}
-                        data-sound="chat"
-                        className="rounded-2xl border border-border/60 bg-background/70 px-3 py-2.5 text-start text-sm font-medium text-foreground transition-colors hover:border-primary/40 hover:bg-primary/5"
-                      >
-                        {item}
-                      </motion.button>
-                    ))}
+                    {topicsLoading && topics.length === 0 ? (
+                      <p className="rounded-2xl border border-border/60 bg-background/70 px-3 py-2.5 text-center text-xs text-muted-foreground">
+                        در حال بارگذاری موضوعات...
+                      </p>
+                    ) : (
+                      topics.map((item, index) => (
+                        <motion.button
+                          key={item.id}
+                          type="button"
+                          initial={{ opacity: 0, x: 10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.03 }}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => {
+                            setTopic(item.title);
+                            setStep("identity");
+                          }}
+                          data-sound="chat"
+                          className="rounded-2xl border border-border/60 bg-background/70 px-3 py-2.5 text-start text-sm font-medium text-foreground transition-colors hover:border-primary/40 hover:bg-primary/5"
+                        >
+                          {item.title}
+                        </motion.button>
+                      ))
+                    )}
                   </div>
                 </div>
               )}

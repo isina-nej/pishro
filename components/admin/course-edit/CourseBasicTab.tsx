@@ -44,6 +44,8 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
   const [formData, setFormData] = useState(course);
   const [thumbnailTempPath, setThumbnailTempPath] = useState<string | null>(null);
   const [trailerTempPath, setTrailerTempPath] = useState<string | null>(null);
+  const [thumbUploading, setThumbUploading] = useState(false);
+  const [trailerUploading, setTrailerUploading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const updateMutation = useUpdateAdminCourse();
 
@@ -83,14 +85,15 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
   };
 
   const handleThumbnail = async (file: File) => {
-    if (!ALLOWED_THUMBNAIL_TYPES.includes(file.type as 'image/jpeg' | 'image/png')) {
-      setErrors((e) => ({ ...e, thumbnail: 'فرمت JPEG یا PNG' }));
+    if (!ALLOWED_THUMBNAIL_TYPES.includes(file.type as 'image/jpeg' | 'image/png' | 'image/webp')) {
+      setErrors((e) => ({ ...e, thumbnail: 'فرمت JPEG، PNG یا WebP' }));
       return;
     }
     if (file.size > THUMBNAIL_MAX_BYTES) {
-      setErrors((e) => ({ ...e, thumbnail: 'حداکثر 2MB' }));
+      setErrors((e) => ({ ...e, thumbnail: 'حداکثر 5MB' }));
       return;
     }
+    setThumbUploading(true);
     try {
       const path = await uploadTempFile(file, 'thumbnail');
       setThumbnailTempPath(path);
@@ -99,6 +102,8 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
       const message = error instanceof Error ? error.message : 'خطا در آپلود تصویر';
       setErrors((e) => ({ ...e, thumbnail: message }));
       toast.error(message);
+    } finally {
+      setThumbUploading(false);
     }
   };
 
@@ -111,6 +116,7 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
       setErrors((e) => ({ ...e, trailer: 'حداکثر 500MB' }));
       return;
     }
+    setTrailerUploading(true);
     try {
       const path = await uploadTempFile(file, 'video');
       setTrailerTempPath(path);
@@ -119,6 +125,8 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
       const message = error instanceof Error ? error.message : 'خطا در آپلود ویدیو';
       setErrors((e) => ({ ...e, trailer: message }));
       toast.error(message);
+    } finally {
+      setTrailerUploading(false);
     }
   };
 
@@ -246,17 +254,24 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">تصویر شاخص (JPEG/PNG, max 2MB)</label>
+          <label className="block text-sm font-medium mb-2">تصویر شاخص (JPEG/PNG/WebP, max 5MB)</label>
+          {course.img && !thumbnailTempPath && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={course.img} alt="تصویر فعلی دوره" className="mb-2 h-24 w-full rounded-lg object-cover" />
+          )}
           <input
             type="file"
-            accept="image/jpeg,image/png"
+            accept="image/jpeg,image/png,image/webp"
             aria-label="آپلود تصویر شاخص"
+            disabled={thumbUploading}
             onChange={(e) => {
               const f = e.target.files?.[0];
               if (f) handleThumbnail(f);
             }}
           />
-          {thumbnailTempPath && <p className="text-sm text-success">فایل آماده ذخیره</p>}
+          {thumbUploading && <p className="text-sm text-muted-foreground">در حال آپلود تصویر...</p>}
+          {thumbnailTempPath && !thumbUploading && <p className="text-sm text-success">فایل آماده ذخیره — دکمه ذخیره را بزنید</p>}
+          {errors.thumbnail && <p className="text-destructive text-sm">{errors.thumbnail}</p>}
         </div>
 
         <div>
@@ -265,11 +280,15 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
             type="file"
             accept="video/mp4"
             aria-label="آپلود ویدیو معرفی"
+            disabled={trailerUploading}
             onChange={(e) => {
               const f = e.target.files?.[0];
               if (f) handleTrailer(f);
             }}
           />
+          {trailerUploading && <p className="text-sm text-muted-foreground">در حال آپلود ویدیو...</p>}
+          {trailerTempPath && !trailerUploading && <p className="text-sm text-success">فایل آماده ذخیره — دکمه ذخیره را بزنید</p>}
+          {errors.trailer && <p className="text-destructive text-sm">{errors.trailer}</p>}
         </div>
 
         <label className="flex items-center gap-2">
@@ -283,8 +302,12 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
           <span className="text-sm">استفاده از فصل‌ها</span>
         </label>
 
-        <Button onClick={handleSave} disabled={updateMutation.isPending} aria-label="ذخیره دوره">
-          {updateMutation.isPending ? 'در حال ذخیره...' : 'ذخیره'}
+        <Button
+          onClick={handleSave}
+          disabled={updateMutation.isPending || thumbUploading || trailerUploading}
+          aria-label="ذخیره دوره"
+        >
+          {updateMutation.isPending ? 'در حال ذخیره...' : thumbUploading || trailerUploading ? 'صبر کنید، آپلود در جریان است...' : 'ذخیره'}
         </Button>
       </div>
     </div>

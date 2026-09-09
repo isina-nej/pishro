@@ -1757,3 +1757,18 @@ model GuestChatMessage {
 
   @@index([conversationId, createdAt])
 }
+
+// ============================================================
+// Live-chat support topics (widget buttons ↔ admin management)
+// ============================================================
+
+model GuestChatTopic {
+  id        String    @id @default(cuid())
+  title     String
+  order     Int       @default(0)
+  published Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([published, order])
+}

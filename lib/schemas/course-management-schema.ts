@@ -69,9 +69,9 @@ export const ReorderSchema = z.object({
   order: z.array(z.string().min(1)).min(1),
 });
 
-export const THUMBNAIL_MAX_BYTES = 2 * 1024 * 1024;
+export const THUMBNAIL_MAX_BYTES = 5 * 1024 * 1024;
 export const VIDEO_MAX_BYTES = 500 * 1024 * 1024;
-export const ALLOWED_THUMBNAIL_TYPES = ["image/jpeg", "image/png"] as const;
+export const ALLOWED_THUMBNAIL_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
 export const ALLOWED_VIDEO_TYPE = "video/mp4";
 
 export function validateThumbnailFile(file: {
@@ -79,10 +79,10 @@ export function validateThumbnailFile(file: {
   size: number;
 }): string | null {
   if (!ALLOWED_THUMBNAIL_TYPES.includes(file.type as (typeof ALLOWED_THUMBNAIL_TYPES)[number])) {
-    return "فرمت تصویر باید JPEG یا PNG باشد";
+    return "فرمت تصویر باید JPEG، PNG یا WebP باشد";
   }
   if (file.size > THUMBNAIL_MAX_BYTES) {
-    return "حجم تصویر نباید بیشتر از 2 مگابایت باشد";
+    return "حجم تصویر نباید بیشتر از 5 مگابایت باشد";
   }
   return null;
 }

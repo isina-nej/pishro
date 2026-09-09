@@ -176,20 +176,20 @@ export default function LessonModal({
           )}
 
           <div>
-            <label className="block text-sm font-medium mb-2">تصویر (JPEG/PNG)</label>
+            <label className="block text-sm font-medium mb-2">تصویر (JPEG/PNG/WebP, max 5MB)</label>
             <input
               type="file"
-              accept="image/jpeg,image/png"
+              accept="image/jpeg,image/png,image/webp"
               aria-label="آپلود تصویر درس"
               onChange={async (e) => {
                 const f = e.target.files?.[0];
                 if (!f) return;
-                if (!ALLOWED_THUMBNAIL_TYPES.includes(f.type as 'image/jpeg' | 'image/png')) {
-                  setErrors((err) => ({ ...err, thumbnail: 'JPEG یا PNG' }));
+                if (!ALLOWED_THUMBNAIL_TYPES.includes(f.type as 'image/jpeg' | 'image/png' | 'image/webp')) {
+                  setErrors((err) => ({ ...err, thumbnail: 'JPEG، PNG یا WebP' }));
                   return;
                 }
                 if (f.size > THUMBNAIL_MAX_BYTES) {
-                  setErrors((err) => ({ ...err, thumbnail: 'حداکثر 2MB' }));
+                  setErrors((err) => ({ ...err, thumbnail: 'حداکثر 5MB' }));
                   return;
                 }
                 try {

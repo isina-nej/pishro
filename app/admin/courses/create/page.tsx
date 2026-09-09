@@ -19,7 +19,12 @@ import {
 } from '@/components/ui/select';
 import { api } from '@/lib/api-client';
 import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
-import { useCreateAdminCourse } from '@/lib/hooks/useAdminCourses';
+import { uploadTempFile, useCreateAdminCourse } from '@/lib/hooks/useAdminCourses';
+import {
+  ALLOWED_THUMBNAIL_TYPES,
+  THUMBNAIL_MAX_BYTES,
+} from '@/lib/schemas/course-management-schema';
+import { toast } from 'react-hot-toast';
 
 export const dynamic = 'force-dynamic';
 
@@ -92,6 +97,8 @@ export default function CreateCoursePage() {
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [thumbnailTempPath, setThumbnailTempPath] = useState<string | null>(null);
+  const [thumbUploading, setThumbUploading] = useState(false);
 
   const createCourseMutation = useCreateAdminCourse();
   const isSubmitting = createCourseMutation.isPending;
@@ -162,8 +169,35 @@ export default function CreateCoursePage() {
     return Object.keys(nextErrors).length === 0;
   };
 
+  const handleThumbnail = async (file: File) => {
+    if (!ALLOWED_THUMBNAIL_TYPES.includes(file.type as 'image/jpeg' | 'image/png' | 'image/webp')) {
+      setErrors((prev) => ({ ...prev, thumbnail: 'فرمت JPEG، PNG یا WebP' }));
+      return;
+    }
+    if (file.size > THUMBNAIL_MAX_BYTES) {
+      setErrors((prev) => ({ ...prev, thumbnail: 'حداکثر 5MB' }));
+      return;
+    }
+    setThumbUploading(true);
+    try {
+      const path = await uploadTempFile(file, 'thumbnail');
+      setThumbnailTempPath(path);
+      setErrors((prev) => ({ ...prev, thumbnail: '' }));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'خطا در آپلود تصویر';
+      setErrors((prev) => ({ ...prev, thumbnail: message }));
+      toast.error(message);
+    } finally {
+      setThumbUploading(false);
+    }
+  };
+
   const handleSubmit = async () => {
     setSubmitError(null);
+    if (thumbUploading) {
+      setSubmitError('صبر کنید تا آپلود تصویر تمام شود، بعد ثبت کنید.');
+      return;
+    }
     if (!validate()) {
       setActiveStep(0);
       return;
@@ -183,6 +217,7 @@ export default function CreateCoursePage() {
         featured: formData.featured,
         hasChapters: formData.hasChapters,
         ...(formData.rating.trim() !== '' ? { rating: Number(formData.rating) } : {}),
+        ...(thumbnailTempPath ? { thumbnailTempPath } : {}),
       });
 
       router.push(`/admin/courses/${result.id}/edit`);
@@ -295,6 +330,24 @@ export default function CreateCoursePage() {
                       disabled={isSubmitting}
                       className="text-right"
                     />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">تصویر شاخص (JPEG/PNG/WebP, max 5MB)</label>
+                    <Input
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      disabled={isSubmitting || thumbUploading}
+                      onChange={(event) => {
+                        const f = event.target.files?.[0];
+                        if (f) handleThumbnail(f);
+                      }}
+                    />
+                    {thumbUploading && <p className="text-xs text-slate-500">در حال آپلود تصویر...</p>}
+                    {thumbnailTempPath && !thumbUploading && (
+                      <p className="text-xs text-green-600">تصویر آماده است و با ثبت دوره ذخیره می‌شود</p>
+                    )}
+                    {errors.thumbnail && <p className="text-xs text-red-600">{errors.thumbnail}</p>}
                   </div>
                 </div>
               )}
@@ -459,9 +512,9 @@ export default function CreateCoursePage() {
                       <ArrowLeft className="h-4 w-4" />
                     </Button>
                   ) : (
-                    <Button onClick={handleSubmit} disabled={isSubmitting}>
+                    <Button onClick={handleSubmit} disabled={isSubmitting || thumbUploading}>
                       {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-                      ایجاد دوره
+                      {thumbUploading ? 'صبر کنید، آپلود در جریان است...' : 'ایجاد دوره'}
                     </Button>
                   )}
                 </div>

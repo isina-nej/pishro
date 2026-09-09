@@ -110,7 +110,10 @@ export async function uploadTempFile(
   formData.append("file", file);
   formData.append("kind", kind);
   try {
-    const { data } = await api.post("/api/admin/uploads/temp", formData);
+    // ponytail: global api timeout is 10s; uploads need longer (0 = no timeout for video)
+    const { data } = await api.post("/api/admin/uploads/temp", formData, {
+      timeout: kind === "video" ? 0 : 120000,
+    });
     return data.data.tempPath as string;
   } catch (error) {
     throw new Error(getApiErrorMessage(error, "خطا در آپلود فایل. لطفا دوباره تلاش کنید"));

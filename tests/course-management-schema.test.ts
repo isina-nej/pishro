@@ -35,9 +35,10 @@ describe('course-management validation', () => {
   it('validates thumbnail mime and size', () => {
     assert.equal(
       validateThumbnailFile({ type: 'image/gif', size: 100 }),
-      'فرمت تصویر باید JPEG یا PNG باشد'
+      'فرمت تصویر باید JPEG، PNG یا WebP باشد'
     );
     assert.equal(validateThumbnailFile({ type: 'image/png', size: 100 }), null);
+    assert.equal(validateThumbnailFile({ type: 'image/webp', size: 100 }), null);
   });
 
   it('validates video mime', () => {
