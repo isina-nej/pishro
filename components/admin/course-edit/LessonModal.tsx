@@ -16,6 +16,8 @@ import {
   VIDEO_MAX_BYTES,
 } from '@/lib/schemas/course-management-schema';
 import { toast } from 'react-hot-toast';
+import EmojiTextInput from '@/components/admin/EmojiTextInput';
+import EmojiTextarea from '@/components/admin/EmojiTextarea';
 
 interface Chapter {
   id: string;
@@ -112,8 +114,7 @@ export default function LessonModal({
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium mb-2">نام درس</label>
-            <input
-              type="text"
+            <EmojiTextInput
               value={formData.title}
               onChange={(e) => setFormData((p) => ({ ...p, title: e.target.value }))}
               maxLength={200}
@@ -142,7 +143,7 @@ export default function LessonModal({
 
           <div>
             <label className="block text-sm font-medium mb-2">توضیحات</label>
-            <textarea
+            <EmojiTextarea
               value={formData.description}
               onChange={(e) =>
                 setFormData((p) => ({ ...p, description: e.target.value }))

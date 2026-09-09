@@ -9,6 +9,7 @@ import {
   DEFAULT_NAVBAR_ITEMS,
   type NavbarItem,
 } from "@/lib/site/chrome-content";
+import type { FooterSocialItem } from "@/lib/site/chrome-content";
 import type { NavSocialLinks } from "./NavbarActions";
 
 type NavbarProps = {
@@ -16,7 +17,7 @@ type NavbarProps = {
   siteName?: string;
   hiddenPages?: string[];
   navItems?: NavbarItem[];
-  socials?: NavSocialLinks;
+  socials?: NavSocialLinks | FooterSocialItem[];
 };
 
 const Navbar = ({

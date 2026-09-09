@@ -3,9 +3,11 @@
 import { useMemo } from "react";
 import { useCartStore } from "@/stores/cart-store";
 import { motion } from "framer-motion";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import { Calendar, Tag, Receipt } from "lucide-react";
 
 const PayMain = () => {
+  const copy = usePublicCopy("checkout");
   const { items } = useCartStore();
 
   const cartSummary = useMemo(() => {
@@ -67,9 +69,9 @@ const PayMain = () => {
               <Receipt className="w-6 h-6" />
             </div>
             <div>
-              <p className="font-bold text-lg">بررسی نهایی سفارش</p>
+              <p className="font-bold text-lg">{copy("pay.title", "بررسی نهایی سفارش")}</p>
               <p className="text-xs opacity-90">
-                جزئیات دوره‌های خریداری شده
+                {copy("pay.subtitle", "جزئیات دوره‌های خریداری شده")}
               </p>
             </div>
           </div>
@@ -105,7 +107,7 @@ const PayMain = () => {
                     <div className="flex items-center gap-6">
                       {/* Original Price */}
                       <div className="text-center">
-                        <p className="text-xs text-muted-foreground mb-1">قیمت اصلی</p>
+                        <p className="text-xs text-muted-foreground mb-1">{copy("pay.original", "قیمت اصلی")}</p>
                         <p className="text-sm text-muted-foreground line-through">
                           {item.price.toLocaleString("fa-IR")}
                         </p>
@@ -114,7 +116,7 @@ const PayMain = () => {
                       {/* Discount */}
                       {item.off > 0 && (
                         <div className="text-center">
-                          <p className="text-xs text-muted-foreground mb-1">تخفیف</p>
+                          <p className="text-xs text-muted-foreground mb-1">{copy("pay.discount", "تخفیف")}</p>
                           <div className="flex items-center gap-1 text-primary">
                             <Tag className="w-3.5 h-3.5" />
                             <span className="text-sm font-bold">
@@ -126,7 +128,7 @@ const PayMain = () => {
 
                       {/* Final Price */}
                       <div className="text-center min-w-[120px]">
-                        <p className="text-xs text-muted-foreground mb-1">قیمت نهایی</p>
+                        <p className="text-xs text-muted-foreground mb-1">{copy("pay.final", "قیمت نهایی")}</p>
                         <p className="text-lg font-black text-primary">
                           {item.lastPrice.toLocaleString("fa-IR")}
                         </p>
@@ -150,10 +152,10 @@ const PayMain = () => {
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground font-medium">
-                        مبلغ کل قابل پرداخت
+                        {copy("pay.total", "مبلغ کل قابل پرداخت")}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        جمع {cartSummary.length} دوره آموزشی
+                        {copy("pay.countPrefix", "جمع")} {cartSummary.length} {copy("pay.countSuffix", "دوره آموزشی")}
                       </p>
                     </div>
                   </div>
@@ -161,7 +163,7 @@ const PayMain = () => {
                     <p className="text-3xl font-black text-primary">
                       {totalPrice.toLocaleString("fa-IR")}
                     </p>
-                    <p className="text-sm text-muted-foreground font-medium">تومان</p>
+                    <p className="text-sm text-muted-foreground font-medium">{copy("pay.currency", "تومان")}</p>
                   </div>
                 </div>
               </motion.div>
@@ -171,7 +173,7 @@ const PayMain = () => {
               <div className="w-24 h-24 bg-muted rounded-full mx-auto mb-4 flex items-center justify-center">
                 <Receipt className="w-12 h-12 text-muted-foreground" />
               </div>
-              <p className="text-muted-foreground">سبد خرید شما خالی است.</p>
+              <p className="text-muted-foreground">{copy("pay.empty", "سبد خرید شما خالی است.")}</p>
             </div>
           )}
         </div>

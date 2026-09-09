@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { FaChevronUp } from "react-icons/fa6";
 import { motion } from "framer-motion";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 
 export type FaqItem = {
   id?: string;
@@ -15,6 +16,7 @@ interface QuestionsProps {
 }
 
 const Questions = ({ items }: QuestionsProps) => {
+  const copy = usePublicCopy("faq");
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleQuestion = (index: number) => {
@@ -24,7 +26,7 @@ const Questions = ({ items }: QuestionsProps) => {
   if (!items.length) {
     return (
       <div className="mt-16 mb-20 container-md text-center text-muted-foreground">
-        هنوز سوال متداولی ثبت نشده است.
+        {copy("empty", "هنوز سوال متداولی ثبت نشده است.")}
       </div>
     );
   }

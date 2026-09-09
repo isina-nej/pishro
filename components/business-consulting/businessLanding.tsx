@@ -66,11 +66,11 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
                   <PhoneCall className="text-primary h-10 w-10" />
                 </div>
                 <DrawerTitle className="text-2xl font-bold text-foreground mt-2">
-                  {businessConsultingData.inPersonTitle || "مشاوره حضوری"}
+                  {businessConsultingData.inPersonTitle || copy("inPerson.title", "مشاوره حضوری")}
                 </DrawerTitle>
                 <DrawerDescription className="text-center text-muted-foreground mt-1">
                   {businessConsultingData.inPersonDescription ||
-                    "برای رزرو مشاوره حضوری با ما تماس بگیرید:"}
+                    copy("inPerson.description", "برای رزرو مشاوره حضوری با ما تماس بگیرید:")}
                 </DrawerDescription>
               </DrawerHeader>
               <div className="text-center mt-4 space-y-3">
@@ -81,7 +81,7 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
                   href={`tel:${contactInfo.mobileTel}`}
                   className="inline-block px-6 py-2 bg-primary hover:brightness-110 text-primary-foreground rounded-md font-medium transition"
                 >
-                  تماس بگیرید
+                  {copy("inPerson.call", "تماس بگیرید")}
                 </a>
               </div>
               <DrawerFooter>
@@ -97,7 +97,7 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
             <DrawerTrigger asChild>
               <button className="group relative flex w-full items-center justify-center gap-2 rounded-full border border-border/60 bg-card/90 px-6 py-3 font-bold text-foreground shadow-xl transition-all hover:-translate-y-0.5 hover:bg-primary hover:text-primary-foreground sm:w-auto">
                 <Send className="h-5 w-5 text-primary transition-transform group-hover:scale-110 group-hover:text-primary-foreground" />
-                رزرو مشاوره آنلاین
+                {copy("online.button", "رزرو مشاوره آنلاین")}
               </button>
             </DrawerTrigger>
             <DrawerContent className="p-6 rounded-t-2xl border-t bg-card shadow-2xl">
@@ -106,11 +106,11 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
                   <Send className="text-primary h-10 w-10" />
                 </div>
                 <DrawerTitle className="text-2xl font-bold text-foreground mt-2">
-                  {businessConsultingData.onlineTitle || "مشاوره آنلاین"}
+                  {businessConsultingData.onlineTitle || copy("online.title", "مشاوره آنلاین")}
                 </DrawerTitle>
                 <DrawerDescription className="text-center text-muted-foreground mt-1">
                   {businessConsultingData.onlineDescription ||
-                    "برای دریافت مشاوره آنلاین از طریق تلگرام پیام دهید:"}
+                    copy("online.description", "برای دریافت مشاوره آنلاین از طریق تلگرام پیام دهید:")}
                 </DrawerDescription>
               </DrawerHeader>
               <div className="text-center mt-4 space-y-3">
@@ -125,7 +125,7 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
                   target="_blank"
                   className="inline-block px-6 py-2 bg-primary hover:brightness-110 text-primary-foreground rounded-md font-medium transition"
                 >
-                  پیام در تلگرام
+                  {copy("online.send", "پیام در تلگرام")}
                 </Link>
               </div>
               <DrawerFooter>
@@ -141,7 +141,7 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
             <DrawerTrigger asChild>
               <button className="group relative flex w-full items-center justify-center gap-2 rounded-full border border-border/60 bg-card/90 px-6 py-3 font-bold text-foreground shadow-xl transition-all hover:-translate-y-0.5 hover:bg-premium hover:text-premium-foreground sm:w-auto">
                 <GraduationCap className="h-5 w-5 text-premium transition-transform group-hover:scale-110 group-hover:text-premium-foreground" />
-                دوره‌ها
+                {copy("courses.button", "دوره‌ها")}
               </button>
             </DrawerTrigger>
             <DrawerContent className="p-6 rounded-t-2xl border-t bg-card shadow-2xl">
@@ -150,11 +150,11 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
                   <GraduationCap className="text-premium h-10 w-10" />
                 </div>
                 <DrawerTitle className="text-2xl font-bold text-foreground mt-2">
-                  {businessConsultingData.coursesTitle || "دوره‌های آموزشی"}
+                  {businessConsultingData.coursesTitle || copy("courses.title", "دوره‌های آموزشی")}
                 </DrawerTitle>
                 <DrawerDescription className="text-center text-muted-foreground mt-1">
                   {businessConsultingData.coursesDescription ||
-                    "برای مشاهده دوره‌های ما کلیک کنید:"}
+                    copy("courses.description", "برای مشاهده دوره‌های ما کلیک کنید:")}
                 </DrawerDescription>
               </DrawerHeader>
               <div className="text-center mt-4 space-y-3">
@@ -162,7 +162,7 @@ const BusinessLanding = ({ businessConsultingData }: BusinessLandingProps) => {
                   href={businessConsultingData.coursesLink || "/courses"}
                   className="inline-block px-6 py-2 bg-premium hover:brightness-110 text-premium-foreground rounded-md font-medium transition"
                 >
-                  مشاهده دوره‌ها
+                  {copy("courses.view", "مشاهده دوره‌ها")}
                 </Link>
               </div>
               <DrawerFooter>

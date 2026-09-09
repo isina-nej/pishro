@@ -9,7 +9,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import EmojiTextInput from '@/components/admin/EmojiTextInput';
+import EmojiTextarea from '@/components/admin/EmojiTextarea';
 import {
   Select,
   SelectContent,
@@ -306,7 +307,7 @@ export default function CreateCoursePage() {
                   <div className="grid gap-4 lg:grid-cols-2">
                     <div className="space-y-2">
                       <label className="text-sm font-medium">عنوان دوره *</label>
-                      <Input
+                      <EmojiTextInput
                         name="subject"
                         value={formData.subject}
                         onChange={(event) => {
@@ -339,7 +340,7 @@ export default function CreateCoursePage() {
 
                   <div className="space-y-2">
                     <label className="text-sm font-medium">توضیح دوره</label>
-                    <Textarea
+                    <EmojiTextarea
                       name="description"
                       value={formData.description}
                       onChange={handleInputChange}
@@ -439,7 +440,15 @@ export default function CreateCoursePage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">دسته‌بندی</label>
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm font-medium">دسته‌بندی</label>
+                      <Link
+                        href="/admin/categories"
+                        className="text-xs font-medium text-primary hover:underline"
+                      >
+                        مدیریت دسته‌بندی‌ها
+                      </Link>
+                    </div>
                     <Select
                       value={formData.categoryId || 'none'}
                       onValueChange={(value) =>

@@ -1,14 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import MarkdownPreview from '@/components/BlockNews/MarkdownPreview';
 import BookmarkButton from '@/components/bookmarks/bookmarkButton';
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import type { NewsArticle } from "@prisma/client";
 import type { ProseMirrorNode, ProseMirrorMark } from "@/lib/utils/article-utils";
 import { format } from 'date-fns';
 import { faIR } from 'date-fns/locale/fa-IR';
 import Link from "next/link";
+import { renderWithAnimatedEmoji } from "@/lib/admin/animated-emoji-render";
 
 interface NewsArticleDetailProps {
   article: NewsArticle;
@@ -187,6 +190,19 @@ function isRawMarkdownHtml(content: string) {
 
 export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
   const [progress, setProgress] = useState(0);
+  const copy = usePublicCopy("article");
+  const reduceMotion = useReducedMotion();
+  const heroRef = useRef<HTMLDivElement>(null);
+
+  // پارالاکس هیرو: با اسکرول، عکس آرام پایین می‌لغزد، کمی زوم می‌شود و محو می‌گردد
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+  const heroImgY = useTransform(scrollYProgress, [0, 1], ["0%", "22%"]);
+  const heroImgScale = useTransform(scrollYProgress, [0, 1], [1, 1.16]);
+  const heroFade = useTransform(scrollYProgress, [0, 0.9], [1, 0.2]);
+  const scrimFade = useTransform(scrollYProgress, [0, 1], [1, 0.35]);
 
   const formattedDate = article.publishedAt
     ? format(new Date(article.publishedAt), 'd MMMM yyyy', { locale: faIR })
@@ -209,6 +225,7 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
 
   const contentToDisplay = article.contentHtml || article.content || '';
   const dateSource = article.publishedAt ?? article.createdAt;
+  const scrollStyle = reduceMotion ? undefined : { y: heroImgY, scale: heroImgScale };
 
   return (
     <>
@@ -219,30 +236,84 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
         />
       </div>
 
+      {/* کاور عریض تمام‌عرض */}
+      {article.coverImage && (
+        <motion.div
+          ref={heroRef}
+          initial={reduceMotion ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.55, ease: "easeOut" }}
+          className="relative h-[44svh] min-h-[320px] w-full overflow-hidden bg-muted sm:h-[54svh] lg:h-[60svh] lg:max-h-[620px]"
+        >
+          <motion.div style={scrollStyle} className="absolute inset-0 will-change-transform">
+            <Image
+              src={article.coverImage}
+              alt={article.title}
+              fill
+              sizes="100vw"
+              className="object-cover"
+              priority
+            />
+          </motion.div>
+          {/* اسکریم برای خوانایی و گذار نرم به پس‌زمینه صفحه */}
+          <motion.div
+            style={reduceMotion ? undefined : { opacity: scrimFade }}
+            className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/45 via-black/10 to-background"
+            aria-hidden
+          />
+          <motion.div
+            style={reduceMotion ? undefined : { opacity: heroFade }}
+            className="absolute inset-x-0 bottom-5 flex justify-center sm:bottom-7"
+            aria-hidden
+          >
+            <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-black/35 text-white backdrop-blur-md">
+              <motion.span
+                animate={reduceMotion ? undefined : { y: [0, 6, 0] }}
+                transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                className="block text-sm leading-none"
+              >
+                ↓
+              </motion.span>
+            </span>
+          </motion.div>
+        </motion.div>
+      )}
+
       <div className="mx-auto w-full max-w-3xl px-4 sm:px-6">
-        <div className="flex items-center justify-between gap-3 pt-6">
+        <motion.div
+          initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, ease: "easeOut" }}
+          className="flex items-center justify-between gap-3 pt-6"
+        >
           <Link
             href="/news"
             className="text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
-            <span aria-hidden>←</span> بازگشت به مقالات
+            <span aria-hidden>←</span> {copy("news.back", "بازگشت به مقالات")}
           </Link>
           <BookmarkButton type="news" itemId={article.id} />
-        </div>
+        </motion.div>
 
-        <header className="mt-8">
+        {/* تیتر زیر عکس */}
+        <motion.header
+          initial={reduceMotion ? false : { opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.08 }}
+          className="mt-8"
+        >
           <h1 className="text-right text-3xl font-extrabold leading-[1.7] text-foreground sm:text-4xl">
-            {article.title}
+            {renderWithAnimatedEmoji(article.title)}
           </h1>
 
           {article.excerpt && (
             <p className="mt-4 text-right text-lg leading-9 text-muted-foreground">
-              {article.excerpt}
+              {renderWithAnimatedEmoji(article.excerpt)}
             </p>
           )}
 
           <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 border-y border-border py-4 text-sm text-muted-foreground">
-            {article.author && <span className="font-medium text-foreground/80">{article.author}</span>}
+            {article.author && <span className="font-medium text-foreground/80">{copy("news.writtenBy", "نوشتار توسط:")} {article.author}</span>}
             {article.author && formattedDate && (
               <span aria-hidden className="h-4 w-px bg-border" />
             )}
@@ -252,24 +323,15 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
               </time>
             )}
           </div>
-        </header>
+        </motion.header>
 
-        {article.coverImage && (
-          <figure className="mt-8">
-            <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-border bg-muted/40">
-              <Image
-                src={article.coverImage}
-                alt={article.title}
-                fill
-                sizes="(max-width: 768px) 100vw, 768px"
-                className="object-contain"
-                priority
-              />
-            </div>
-          </figure>
-        )}
-
-        <article className="mt-10">
+        <motion.article
+          initial={reduceMotion ? false : { opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-72px" }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-10"
+        >
           {article.contentHtml ? (
             <div
               className="text-right text-[1.05rem] leading-9 text-foreground/90
@@ -320,7 +382,7 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
               dangerouslySetInnerHTML={{ __html: article.content }}
             />
           )}
-        </article>
+        </motion.article>
 
         <footer className="mb-16 mt-12 border-t border-border pt-6">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">

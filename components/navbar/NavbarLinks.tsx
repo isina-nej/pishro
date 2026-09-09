@@ -8,7 +8,7 @@ import { ChevronDown } from "lucide-react";
 import clsx from "clsx";
 
 import {
-  getNavIcon,
+  NavItemIcon,
   groupNavbarData,
   type NavLinkItem,
 } from "./nav-config";
@@ -51,7 +51,6 @@ const NavbarLinks = ({
             </motion.p>
             <ul className="space-y-1.5">
               {group.items.map((item, itemIndex) => {
-                const Icon = getNavIcon(item.link);
                 const active = isActivePath(pathname, item.link);
                 const hasSub = Boolean(item.data?.length);
                 const open = openSubmenu === item.link;
@@ -81,7 +80,7 @@ const NavbarLinks = ({
                           aria-expanded={open}
                         >
                           <span className="inline-flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                            <Icon className="size-[18px]" />
+                            <NavItemIcon item={item} className="size-[18px]" />
                           </span>
                           <span className="flex-1 text-sm font-semibold">{item.label}</span>
                           <ChevronDown
@@ -141,7 +140,7 @@ const NavbarLinks = ({
                               : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground"
                           )}
                         >
-                          <Icon className="size-[18px]" />
+                          <NavItemIcon item={item} className="size-[18px]" />
                         </span>
                         <span className="flex-1 text-sm font-semibold tracking-tight">
                           {item.label}

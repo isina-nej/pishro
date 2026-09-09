@@ -11,8 +11,10 @@ import StepProgress from "./stepProgress";
 import EmptyCart from "./emptyCart";
 import { useCartStore } from "@/stores/cart-store";
 import { useCreateCheckout } from "@/lib/hooks/useCheckout";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 
 const CheckoutPageContent = () => {
+  const copy = usePublicCopy("checkout");
   const [step, setStep] = useState<"shoppingCart" | "pay" | "result">(
     "shoppingCart"
   );
@@ -90,15 +92,15 @@ const CheckoutPageContent = () => {
           className="mb-8"
         >
           <h1 className="text-4xl font-black text-foreground mb-2">
-            {step === "shoppingCart" && "سبد خرید شما"}
-            {step === "pay" && "تکمیل خرید"}
-            {step === "result" && "نتیجه پرداخت"}
+            {step === "shoppingCart" && copy("steps.cart", "سبد خرید شما")}
+            {step === "pay" && copy("steps.pay", "تکمیل خرید")}
+            {step === "result" && copy("steps.result", "نتیجه پرداخت")}
           </h1>
           <p className="text-muted-foreground">
             {step === "shoppingCart" &&
-              "دوره‌های انتخابی خود را بررسی و خرید کنید"}
-            {step === "pay" && "روش پرداخت را انتخاب کنید"}
-            {step === "result" && "وضعیت پرداخت شما"}
+              copy("steps.cartHint", "دوره‌های انتخابی خود را بررسی و خرید کنید")}
+            {step === "pay" && copy("steps.payHint", "روش پرداخت را انتخاب کنید")}
+            {step === "result" && copy("steps.resultHint", "وضعیت پرداخت شما")}
           </p>
         </motion.div>
 

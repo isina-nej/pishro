@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { MdVideoLibrary } from "react-icons/md";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import VideoPlayer from "./videoPlayer";
 import type { Lesson } from "@/types/lesson";
 
@@ -19,6 +20,7 @@ const ClassPageContent: React.FC<ClassPageContentProps> = ({
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(
     lessonData || courseLessons[0] || null
   );
+  const copy = usePublicCopy("class");
 
   useEffect(() => {
     if (lessonData) {
@@ -43,7 +45,7 @@ const ClassPageContent: React.FC<ClassPageContentProps> = ({
             />
           ) : (
             <div className="text-center py-12 bg-muted dark:bg-darkBgHidden rounded-lg">
-              <p className="text-muted-foreground dark:text-textSecondary">ویدیویی برای نمایش وجود ندارد</p>
+              <p className="text-muted-foreground dark:text-textSecondary">{copy("empty", "ویدیویی برای نمایش وجود ندارد")}</p>
             </div>
           )}
         </div>
@@ -52,7 +54,7 @@ const ClassPageContent: React.FC<ClassPageContentProps> = ({
         <div className="w-96 p-4 rounded-lg mt-8">
           <h3 className="text-sm font-semibold pb-3 border-b mb-4 flex items-center gap-3">
             <MdVideoLibrary className="text-muted-foreground dark:text-textSecondary text-lg" />
-            ویدیو سایر جلسات
+            {copy("sidebar", "ویدیو سایر جلسات")}
           </h3>
           <ul className="space-y-4 max-h-[500px] overflow-y-auto">
             {courseLessons.map((lesson) => (
@@ -86,7 +88,7 @@ const ClassPageContent: React.FC<ClassPageContentProps> = ({
                     </span>
                     {lesson.duration && (
                       <span className="text-xs text-[#666]">
-                        مدت زمان: {lesson.duration}
+                        {copy("duration", "مدت زمان:")} {lesson.duration}
                       </span>
                     )}
                     {lesson.description && (

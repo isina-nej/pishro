@@ -18,6 +18,7 @@ import {
   isFreeCourse,
   redirectToLoginForFreeCourse,
 } from "@/lib/free-course-enrollment";
+import { renderWithAnimatedEmoji } from "@/lib/admin/animated-emoji-render";
 
 // Accept both Course and serialized versions (with string dates)
 type CourseData = Course | (Omit<Course, "createdAt" | "updatedAt"> & {
@@ -92,7 +93,7 @@ const CourseCard = ({ data, link: _link }: CourseCardProps) => {
       {/* Course title + rating — فقط اسم دوره */}
       <div className="mt-3 px-0.5">
         <h3 className="truncate text-center text-base font-bold text-foreground">
-          {data.subject}
+          {renderWithAnimatedEmoji(data.subject)}
         </h3>
       </div>
 

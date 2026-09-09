@@ -1,20 +1,12 @@
-import type { LucideIcon } from "lucide-react";
-import {
-  BookOpen,
-  Briefcase,
-  CandlestickChart,
-  GraduationCap,
-  Home,
-  Library,
-  Newspaper,
-  Presentation,
-  Wallet,
-} from "lucide-react";
+import { BookOpen } from "lucide-react";
+import { DynamicIcon } from "@/components/site/DynamicIcon";
 
 export type NavLinkItem = {
   label: string;
   link: string;
-  data?: { label: string; link: string }[];
+  /** Optional lucide icon name (admin-managed, DynamicIcon registry). */
+  icon?: string;
+  data?: { label: string; link: string; icon?: string }[];
 };
 
 export type NavGroupId = "explore" | "learn" | "invest";
@@ -23,6 +15,18 @@ export type NavGroup = {
   id: NavGroupId;
   title: string;
   links: string[];
+};
+
+export const NAV_ICON_BY_LINK: Record<string, string> = {
+  "/": "Home",
+  "/courses": "GraduationCap",
+  "/crypto-prices": "CandlestickChart",
+  "/business-consulting": "Briefcase",
+  "/investment-plans": "Wallet",
+  "/library": "Library",
+  "/news": "Newspaper",
+  "/about-us": "BookOpen",
+  "/skyroom-classes": "Presentation",
 };
 
 /** Desktop/mobile shared grouping for primary site pages. */
@@ -44,20 +48,19 @@ export const NAV_GROUPS: NavGroup[] = [
   },
 ];
 
-const NAV_ICONS: Record<string, LucideIcon> = {
-  "/": Home,
-  "/courses": GraduationCap,
-  "/crypto-prices": CandlestickChart,
-  "/business-consulting": Briefcase,
-  "/investment-plans": Wallet,
-  "/library": Library,
-  "/news": Newspaper,
-  "/about-us": BookOpen,
-  "/skyroom-classes": Presentation,
-};
-
-export function getNavIcon(link: string): LucideIcon {
-  return NAV_ICONS[link] || BookOpen;
+/**
+ * Icon component for a nav item: admin-chosen icon first,
+ * then the legacy per-route mapping, then BookOpen.
+ */
+export function NavItemIcon({
+  item,
+  className,
+}: {
+  item: Pick<NavLinkItem, "link" | "icon">;
+  className?: string;
+}) {
+  const name = item.icon || NAV_ICON_BY_LINK[item.link] || "BookOpen";
+  return <DynamicIcon name={name} fallback={BookOpen} className={className} />;
 }
 
 export function groupNavbarData(navbarData: NavLinkItem[]) {

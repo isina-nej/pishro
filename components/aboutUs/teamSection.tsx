@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import Image from "next/image";
 import { LuLinkedin, LuMail, LuGraduationCap, LuTwitter } from "react-icons/lu";
 import { FaTelegramPlane, FaWhatsapp } from "react-icons/fa";
@@ -13,6 +14,7 @@ interface TeamSectionProps {
 }
 
 const TeamSection = ({ teamMembers }: TeamSectionProps) => {
+  const copy = usePublicCopy("about");
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -30,10 +32,10 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
         className="text-center mb-16"
       >
         <h2 className="text-4xl font-bold mb-4 text-foreground dark:text-textPrimary">
-          تیم <span className="text-myPrimary">پیشرو</span>
+          {copy("team.title", "تیم پیشرو")}
         </h2>
         <p className="text-lg text-muted-foreground dark:text-textSecondary max-w-2xl mx-auto">
-          بنیانگذاران و رهبران آکادمی مالی پیشرو سرمایه
+          {copy("team.subtitle", "بنیانگذاران و رهبران آکادمی مالی پیشرو سرمایه")}
         </p>
       </motion.div>
 
@@ -101,7 +103,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
               {member.specialties.length > 0 && (
                 <div className="mb-6">
                   <h4 className="font-bold text-foreground dark:text-textPrimary mb-3 text-sm">
-                    تخصص‌های کلیدی:
+                    {copy("team.specialties", "تخصص‌های کلیدی:")}
                   </h4>
                   <div className="flex flex-wrap gap-2">
                     {member.specialties.map((specialty, idx) => (
@@ -127,7 +129,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
                       className="flex min-w-[120px] flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-card py-3 font-medium text-foreground transition-all duration-300 hover:border-primary/40 hover:text-primary"
                     >
                       <LuLinkedin />
-                      <span>لینکدین</span>
+                      <span>{copy("team.linkedin", "لینکدین")}</span>
                     </a>
                   )}
                   {member.emailUrl && (
@@ -136,7 +138,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
                       className="flex min-w-[120px] flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-card py-3 font-medium text-foreground transition-all duration-300 hover:border-primary/40 hover:text-primary"
                     >
                       <LuMail />
-                      <span>ایمیل</span>
+                      <span>{copy("team.email", "ایمیل")}</span>
                     </a>
                   )}
                   {member.twitterUrl && (
@@ -147,7 +149,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
                       className="flex min-w-[120px] flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-card py-3 font-medium text-foreground transition-all duration-300 hover:border-primary/40 hover:text-primary"
                     >
                       <LuTwitter />
-                      <span>توییتر</span>
+                      <span>{copy("team.twitter", "توییتر")}</span>
                     </a>
                   )}
                   {member.whatsappUrl && (
@@ -158,7 +160,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
                       className="flex min-w-[120px] flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-card py-3 font-medium text-foreground transition-all duration-300 hover:border-primary/40 hover:text-primary"
                     >
                       <FaWhatsapp />
-                      <span>واتساپ</span>
+                      <span>{copy("team.whatsapp", "واتساپ")}</span>
                     </a>
                   )}
                   {member.telegramUrl && (
@@ -169,7 +171,7 @@ const TeamSection = ({ teamMembers }: TeamSectionProps) => {
                       className="flex min-w-[120px] flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-card py-3 font-medium text-foreground transition-all duration-300 hover:border-primary/40 hover:text-primary"
                     >
                       <FaTelegramPlane />
-                      <span>تلگرام</span>
+                      <span>{copy("team.telegram", "تلگرام")}</span>
                     </a>
                   )}
                 </div>

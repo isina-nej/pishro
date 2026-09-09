@@ -1,8 +1,10 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { api } from '@/lib/api-client';
 import {
   uploadTempFile,
   useUpdateAdminCourse,
@@ -14,13 +16,18 @@ import {
   VIDEO_MAX_BYTES,
 } from '@/lib/schemas/course-management-schema';
 import { toast } from 'react-hot-toast';
+import { renderWithAnimatedEmoji } from '@/lib/admin/animated-emoji-render';
+import EmojiTextInput from '@/components/admin/EmojiTextInput';
+import EmojiTextarea from '@/components/admin/EmojiTextarea';
 
 export interface CourseBasicTabData {
   id: string;
   subject: string;
+  slug?: string | null;
   price: number;
   description?: string;
   categoryId?: string;
+  category?: { id: string; slug: string; title: string } | null;
   instructor?: string;
   level?: string;
   hasChapters: boolean;
@@ -50,6 +57,31 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
   const [errors, setErrors] = useState<Record<string, string>>({});
   const thumbnailInputRef = useRef<HTMLInputElement>(null);
   const updateMutation = useUpdateAdminCourse();
+  const [categories, setCategories] = useState<Array<{ id: string; title: string }>>([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      try {
+        setCategoriesLoading(true);
+        const { data } = await api.get('/api/admin/categories?limit=100');
+        if (!cancelled) setCategories(data.data?.items ?? []);
+      } catch {
+        if (!cancelled) setCategories([]);
+      } finally {
+        if (!cancelled) setCategoriesLoading(false);
+      }
+    };
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    setFormData(course);
+  }, [course.id]);
 
   useEffect(() => {
     return () => {
@@ -161,10 +193,13 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
         id: course.id,
         data: {
           title: formData.subject,
+          slug: formData.slug || null,
           cost: formData.price,
           description: formData.description,
-          categoryId: formData.categoryId,
+          categoryId: formData.categoryId || null,
           instructor: formData.instructor,
+          level: formData.level || null,
+          status: formData.status,
           hasChapters: formData.hasChapters,
           published: formData.published,
           featured: formData.featured,
@@ -200,8 +235,7 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium mb-2">نام دوره</label>
-          <input
-            type="text"
+          <EmojiTextInput
             name="subject"
             value={formData.subject}
             onChange={handleChange}
@@ -209,7 +243,122 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
             aria-label="نام دوره"
             className="w-full px-4 py-2 border rounded-lg"
           />
+          {formData.subject.includes(':animated-emoji:') && (
+            <p className="mt-1 text-sm">پیش‌نمایش: {renderWithAnimatedEmoji(formData.subject)}</p>
+          )}
           {errors.subject && <p className="text-destructive text-sm">{errors.subject}</p>}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-2">آدرس دوره (اسلاگ)</label>
+          <input
+            type="text"
+            name="slug"
+            value={formData.slug ?? ''}
+            onChange={handleChange}
+            dir="ltr"
+            aria-label="آدرس دوره"
+            placeholder="technical-analysis"
+            className="w-full px-4 py-2 border rounded-lg text-left"
+          />
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <div className="mb-2 flex items-center justify-between">
+              <label className="block text-sm font-medium">دسته‌بندی</label>
+              <Link href="/admin/categories" className="text-xs font-medium text-primary hover:underline">
+                مدیریت دسته‌بندی‌ها
+              </Link>
+            </div>
+            <select
+              name="categoryId"
+              value={formData.categoryId ?? ''}
+              onChange={(e) => setFormData((prev) => ({ ...prev, categoryId: e.target.value || undefined }))}
+              aria-label="دسته‌بندی دوره"
+              disabled={categoriesLoading}
+              className="w-full rounded-lg border bg-background px-4 py-2"
+            >
+              <option value="">بدون دسته‌بندی</option>
+              {formData.categoryId &&
+                formData.category &&
+                !categories.some((c) => c.id === formData.categoryId) && (
+                  <option value={formData.categoryId}>{formData.category.title}</option>
+                )}
+              {categories.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.title}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">مدرس</label>
+            <input
+              type="text"
+              name="instructor"
+              value={formData.instructor ?? ''}
+              onChange={handleChange}
+              maxLength={120}
+              aria-label="مدرس دوره"
+              className="w-full px-4 py-2 border rounded-lg"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">سطح دوره</label>
+            <select
+              name="level"
+              value={formData.level ?? ''}
+              onChange={(e) => setFormData((prev) => ({ ...prev, level: e.target.value || undefined }))}
+              aria-label="سطح دوره"
+              className="w-full rounded-lg border bg-background px-4 py-2"
+            >
+              <option value="">تعیین نشده</option>
+              <option value="BEGINNER">مقدماتی</option>
+              <option value="INTERMEDIATE">متوسط</option>
+              <option value="ADVANCED">پیشرفته</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">وضعیت دوره</label>
+            <select
+              name="status"
+              value={formData.status}
+              onChange={(e) => setFormData((prev) => ({ ...prev, status: e.target.value }))}
+              aria-label="وضعیت دوره"
+              className="w-full rounded-lg border bg-background px-4 py-2"
+            >
+              <option value="ACTIVE">فعال</option>
+              <option value="COMING_SOON">به‌زودی</option>
+              <option value="ARCHIVED">آرشیو</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-3">
+          {[
+            { key: 'published', label: 'نمایش در سایت', hint: 'قابل مشاهده برای کاربران' },
+            { key: 'featured', label: 'دوره ویژه', hint: 'بخش‌های منتخب صفحه اصلی' },
+            { key: 'hasChapters', label: 'فصل‌بندی', hint: 'درس‌ها داخل فصل‌ها' },
+          ].map((item) => (
+            <label
+              key={item.key}
+              className="flex cursor-pointer items-start justify-between gap-3 rounded-xl border p-3"
+            >
+              <input
+                type="checkbox"
+                name={item.key}
+                checked={Boolean(formData[item.key as keyof typeof formData])}
+                onChange={handleChange}
+                aria-label={item.label}
+                className="mt-1"
+              />
+              <span className="text-right">
+                <span className="block text-sm font-semibold">{item.label}</span>
+                <span className="text-xs text-muted-foreground">{item.hint}</span>
+              </span>
+            </label>
+          ))}
         </div>
 
         <div className="grid grid-cols-2 gap-4">
@@ -270,7 +419,7 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
 
         <div>
           <label className="block text-sm font-medium mb-2">توضیحات</label>
-          <textarea
+          <EmojiTextarea
             name="description"
             value={formData.description || ''}
             onChange={handleChange}
@@ -338,17 +487,6 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
           {trailerTempPath && !trailerUploading && <p className="text-sm text-success">فایل آماده ذخیره — دکمه ذخیره را بزنید</p>}
           {errors.trailer && <p className="text-destructive text-sm">{errors.trailer}</p>}
         </div>
-
-        <label className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            name="hasChapters"
-            checked={formData.hasChapters}
-            onChange={handleChange}
-            aria-label="استفاده از فصل‌ها"
-          />
-          <span className="text-sm">استفاده از فصل‌ها</span>
-        </label>
 
         <Button
           onClick={handleSave}

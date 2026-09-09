@@ -27,6 +27,7 @@ import AddToCartButton from "@/components/utils/AddToCartButton";
 import { CourseLevel } from "@prisma/client";
 import CtaSection from "@/components/courses/ctaSection";
 import DoctorExplanationVideo from "@/components/courses/doctorExplanationVideo";
+import { getPublicContent } from "@/lib/services/settings-service";
 
 export const revalidate = 3600;
 export const dynamic = "force-dynamic";
@@ -125,11 +126,17 @@ export default async function CourseDetailPage({
   try {
     const { categorySlug, courseSlug } = await params;
 
-    const course = await getCourseBySlug(categorySlug, courseSlug);
+    const [course, content] = await Promise.all([
+      getCourseBySlug(categorySlug, courseSlug),
+      getPublicContent(),
+    ]);
 
     if (!course) {
       notFound();
     }
+
+    const t = (key: string, fallback: string) =>
+      content["course-detail"]?.[key] || fallback;
 
     const learningGoals = asStringArray(course.learningGoals);
     const prerequisites = asStringArray(course.prerequisites);
@@ -145,18 +152,18 @@ export default async function CourseDetailPage({
           <div className="container-xl">
             <nav className="flex items-center gap-2 text-sm text-muted-foreground">
               <Link href="/" className="hover:text-myPrimary transition">
-                خانه
+                {t("crumb.home", "خانه")}
               </Link>
               <span>/</span>
               <Link href="/courses" className="hover:text-myPrimary transition">
-                دوره‌ها
+                {t("crumb.courses", "دوره‌ها")}
               </Link>
               <span>/</span>
               <Link
                 href={`/courses/${categorySlug}`}
                 className="hover:text-myPrimary transition"
               >
-                {course.category?.title || "دسته‌بندی"}
+                {course.category?.title || t("crumb.categoryFallback", "دسته‌بندی")}
               </Link>
               <span>/</span>
               <span className="text-foreground font-bold">{course.subject}</span>
@@ -199,14 +206,14 @@ export default async function CourseDetailPage({
                   <div className="flex items-center gap-2">
                     <RatingStars rating={course.rating || 4.5} />
                     <span className="text-sm text-muted-foreground">
-                      ({course._count?.comments || 0} نظر)
+                      ({course._count?.comments || 0} {t("info.reviewsSuffix", "نظر")})
                     </span>
                   </div>
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <LuUsers className="text-myPrimary" size={20} />
                     <span className="text-sm font-bold">
                       {course._count?.enrollments || course.students || 0}{" "}
-                      دانشجو
+                      {t("info.students", "دانشجو")}
                     </span>
                   </div>
                 </div>
@@ -219,7 +226,7 @@ export default async function CourseDetailPage({
                       </span>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">مدرس دوره</p>
+                      <p className="text-sm text-muted-foreground">{t("info.teacher", "مدرس دوره")}</p>
                       <p className="font-bold text-foreground">
                         {course.instructor}
                       </p>
@@ -232,7 +239,7 @@ export default async function CourseDetailPage({
                     {course.discountPercent && course.discountPercent > 0 ? (
                       <>
                         <span className="text-3xl font-bold text-mySecondary">
-                          {finalPrice.toLocaleString("fa-IR")} تومان
+                          {finalPrice.toLocaleString("fa-IR")} {t("info.currency", "تومان")}
                         </span>
                         <span className="text-lg line-through text-muted-foreground">
                           {course.price.toLocaleString("fa-IR")}
@@ -243,7 +250,7 @@ export default async function CourseDetailPage({
                       </>
                     ) : (
                       <span className="text-3xl font-bold text-mySecondary">
-                        {course.price.toLocaleString("fa-IR")} تومان
+                        {course.price.toLocaleString("fa-IR")} {t("info.currency", "تومان")}
                       </span>
                     )}
                   </div>
@@ -281,7 +288,7 @@ export default async function CourseDetailPage({
                   <div className="bg-card rounded-2xl shadow-md p-6 sm:p-8">
                     <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-2">
                       <LuBookOpen className="text-myPrimary" size={28} />
-                      چه چیزهایی یاد می‌گیرید؟
+                      {t("tabs.learnTitle", "چه چیزهایی یاد می‌گیرید؟")}
                     </h2>
                     <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {learningGoals.map((goal, idx) => (
@@ -300,7 +307,7 @@ export default async function CourseDetailPage({
                 {prerequisites.length > 0 && (
                   <div className="bg-card rounded-2xl shadow-md p-6 sm:p-8">
                     <h2 className="text-2xl font-bold text-foreground mb-6">
-                      پیش‌نیازهای دوره
+                      {t("tabs.prereqTitle", "پیش‌نیازهای دوره")}
                     </h2>
                     <ul className="space-y-3">
                       {prerequisites.map((prereq, idx) => (
@@ -320,7 +327,7 @@ export default async function CourseDetailPage({
               <div className="lg:col-span-1">
                 <div className="bg-card rounded-2xl shadow-md p-6 sm:p-8 sticky top-24 space-y-6">
                   <h3 className="text-xl font-bold text-foreground border-b border-border pb-4">
-                    مشخصات دوره
+                    {t("tabs.specsTitle", "مشخصات دوره")}
                   </h3>
 
                   <div className="space-y-4">
@@ -328,7 +335,7 @@ export default async function CourseDetailPage({
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2 text-muted-foreground">
                           <LuClock size={20} />
-                          <span className="text-sm">مدت زمان</span>
+                          <span className="text-sm">{t("tabs.duration", "مدت زمان")}</span>
                         </div>
                         <span className="font-bold text-foreground">
                           {course.time}
@@ -340,10 +347,10 @@ export default async function CourseDetailPage({
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2 text-muted-foreground">
                           <LuVideo size={20} />
-                          <span className="text-sm">تعداد ویدئو</span>
+                          <span className="text-sm">{t("tabs.videoCount", "تعداد ویدئو")}</span>
                         </div>
                         <span className="font-bold text-foreground">
-                          {course.videosCount} ویدئو
+                          {course.videosCount} {t("tabs.videoUnit", "ویدئو")}
                         </span>
                       </div>
                     )}
@@ -351,7 +358,7 @@ export default async function CourseDetailPage({
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <LuBan size={20} />
-                        <span className="text-sm">سطح دوره</span>
+                        <span className="text-sm">{t("tabs.level", "سطح دوره")}</span>
                       </div>
                       <span className="font-bold text-foreground">
                         {getLevelLabel(course.level)}
@@ -361,7 +368,7 @@ export default async function CourseDetailPage({
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <LuGlobe size={20} />
-                        <span className="text-sm">زبان</span>
+                        <span className="text-sm">{t("tabs.language", "زبان")}</span>
                       </div>
                       <span className="font-bold text-foreground">
                         {getLanguageLabel(course.language)}
@@ -371,10 +378,10 @@ export default async function CourseDetailPage({
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <LuUsers size={20} />
-                        <span className="text-sm">دانشجویان</span>
+                        <span className="text-sm">{t("tabs.studentsLabel", "دانشجویان")}</span>
                       </div>
                       <span className="font-bold text-foreground">
-                        {course._count?.enrollments || course.students || 0} نفر
+                        {course._count?.enrollments || course.students || 0} {t("tabs.studentsUnit", "نفر")}
                       </span>
                     </div>
                   </div>
@@ -385,10 +392,10 @@ export default async function CourseDetailPage({
         </section>
 
         <CtaSection
-          title="آماده شروع این دوره هستید؟"
-          description="با ثبت‌نام در این دوره، مهارت‌های جدید کسب کنید و در مسیر موفقیت قدم بردارید. همین حالا شروع کنید!"
-          buttonText="مشاهده همه دوره‌ها"
-          buttonLink="/courses"
+          title={t("cta.title", "آماده شروع این دوره هستید؟")}
+          description={t("cta.description", "با ثبت‌نام در این دوره، مهارت‌های جدید کسب کنید و در مسیر موفقیت قدم بردارید. همین حالا شروع کنید!")}
+          buttonText={t("cta.button", "مشاهده همه دوره‌ها")}
+          buttonLink={t("cta.link", "/courses")}
         />
       </main>
     );

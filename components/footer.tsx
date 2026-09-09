@@ -1,14 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { Building2, Mail, MapPin, Phone } from "lucide-react";
-import { FaInstagram, FaXTwitter } from "react-icons/fa6";
-import { RiTelegram2Fill } from "react-icons/ri";
+import { Building2, Globe, Mail, MapPin, Phone } from "lucide-react";
 
 import SiteLogo from "@/components/branding/SiteLogo";
+import { DynamicIcon } from "@/components/site/DynamicIcon";
 import { useFooter } from "@/lib/hooks/useFooter";
 import {
   DEFAULT_FOOTER_CONTENT,
+  footerSocials,
   type ChromeLink,
   type FooterContent,
 } from "@/lib/site/chrome-content";
@@ -16,7 +16,6 @@ import {
   filterNavByHiddenPages,
   isPathHidden,
 } from "@/lib/site/hidable-pages";
-import { cn } from "@/lib/utils";
 
 type FooterProps = {
   logoUrl?: string;
@@ -46,7 +45,14 @@ function FooterColumn({
               href={item.link}
               className="group inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
-              <span className="h-px w-0 bg-primary transition-all duration-300 group-hover:w-3" />
+              {item.icon ? (
+                <DynamicIcon
+                  name={item.icon}
+                  className="size-3.5 shrink-0 text-primary/70 transition-colors group-hover:text-primary"
+                />
+              ) : (
+                <span className="h-px w-0 bg-primary transition-all duration-300 group-hover:w-3" />
+              )}
               {item.label}
             </Link>
           </li>
@@ -81,27 +87,7 @@ const Footer = ({
   }));
   const legalLinks = visibleLinks(footer.legalLinks, hiddenPages);
   const enamad = footer.enamad ?? DEFAULT_FOOTER_CONTENT.enamad;
-
-  const socials = [
-    {
-      name: "اینستاگرام",
-      href: footer.instagram,
-      icon: FaInstagram,
-      hover: "hover:text-[#E1306C]",
-    },
-    {
-      name: "تلگرام",
-      href: footer.telegram,
-      icon: RiTelegram2Fill,
-      hover: "hover:text-[#229ED9]",
-    },
-    {
-      name: "ایکس",
-      href: footer.twitter,
-      icon: FaXTwitter,
-      hover: "hover:text-foreground",
-    },
-  ];
+  const socials = footerSocials(footer);
 
   const contactRows = [
     {
@@ -148,24 +134,19 @@ const Footer = ({
             </p>
 
             <div className="flex flex-wrap gap-2">
-              {socials.map((social) => {
-                const Icon = social.icon;
-                return (
-                  <Link
-                    key={social.name}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={social.name}
-                    className={cn(
-                      "inline-flex size-10 items-center justify-center rounded-xl border border-border/80 bg-card/60 text-muted-foreground backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-card",
-                      social.hover
-                    )}
-                  >
-                    <Icon className="size-[18px]" />
-                  </Link>
-                );
-              })}
+              {socials.map((social) => (
+                <Link
+                  key={social.id || social.name}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.name}
+                  title={social.name}
+                  className="inline-flex size-10 items-center justify-center rounded-xl border border-border/80 bg-card/60 text-muted-foreground backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-card hover:text-foreground"
+                >
+                  <DynamicIcon name={social.icon} fallback={Globe} className="size-[18px]" />
+                </Link>
+              ))}
             </div>
 
             <div className="space-y-3 rounded-2xl border border-border/70 bg-card/50 p-4 backdrop-blur-sm">
@@ -250,8 +231,9 @@ const Footer = ({
                   <Link
                     key={`${item.label}-${item.link}`}
                     href={item.link}
-                    className="transition-colors hover:text-primary"
+                    className="inline-flex items-center gap-1.5 transition-colors hover:text-primary"
                   >
+                    {item.icon ? <DynamicIcon name={item.icon} className="size-3.5" /> : null}
                     {item.label}
                   </Link>
                 ))}

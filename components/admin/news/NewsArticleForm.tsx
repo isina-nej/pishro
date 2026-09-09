@@ -5,8 +5,9 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import EmojiTextInput from '@/components/admin/EmojiTextInput';
+import EmojiTextarea from '@/components/admin/EmojiTextarea';
 import {
   ArrowRight,
   AlertCircle,
@@ -107,7 +108,7 @@ export default function NewsArticleForm({
                 <span className="text-destructive">*</span>
                 عنوان خبر
               </Label>
-              <Input
+              <EmojiTextInput
                 name="title"
                 value={formData.title}
                 onChange={onInputChange}
@@ -119,7 +120,7 @@ export default function NewsArticleForm({
 
             <div className="space-y-2">
               <Label className="text-sm font-semibold">توضیح کوتاه (خلاصه)</Label>
-              <Textarea
+              <EmojiTextarea
                 name="description"
                 value={formData.description}
                 onChange={onInputChange}

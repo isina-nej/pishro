@@ -2,18 +2,19 @@
 
 import { motion } from "framer-motion";
 import { ShoppingCart, CreditCard, CheckCircle2 } from "lucide-react";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 
 interface StepProgressProps {
   currentStep: "shoppingCart" | "pay" | "result";
 }
 
-const steps = [
-  { id: "shoppingCart", label: "سبد خرید", icon: ShoppingCart },
-  { id: "pay", label: "پرداخت", icon: CreditCard },
-  { id: "result", label: "تکمیل خرید", icon: CheckCircle2 },
-];
-
 const StepProgress = ({ currentStep }: StepProgressProps) => {
+  const copy = usePublicCopy("checkout");
+  const steps = [
+    { id: "shoppingCart", label: copy("steps.step1", "سبد خرید"), icon: ShoppingCart },
+    { id: "pay", label: copy("steps.step2", "پرداخت"), icon: CreditCard },
+    { id: "result", label: copy("steps.step3", "تکمیل خرید"), icon: CheckCircle2 },
+  ];
   const currentIndex = steps.findIndex((step) => step.id === currentStep);
 
   return (
@@ -85,7 +86,7 @@ const StepProgress = ({ currentStep }: StepProgressProps) => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
                 >
-                  مرحله {index + 1}
+                  {copy("steps.stage", "مرحله")} {index + 1}
                 </motion.span>
               )}
             </div>

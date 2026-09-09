@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import type { CryptoGlobalMarket, CryptoMarketAsset, CryptoMarketResponse } from '@/types/crypto-market';
 import { useVisibility } from '@/components/site/VisibilityProvider';
+import { usePublicCopy } from '@/components/site/PublicContentProvider';
 
 interface ApiResponse {
   status: 'success' | 'error';
@@ -240,6 +241,7 @@ export default function CryptoPricesPage({
   initialData?: CryptoMarketResponse | null;
 }) {
   const { show } = useVisibility();
+  const copy = usePublicCopy("crypto");
   const [assets, setAssets] = useState<CryptoMarketAsset[]>(
     () => initialData?.assets ?? []
   );

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "my-pack",
+    "title": "پک من",
+    "items": [
+      {
+        "char": "🔥",
+        "fa": "آتش",
+        "keywords": ["fire", "آتش", "داغ"],
+        "src": "https://saeedtahmtan.github.io/telemoji/webp/animated/U+1F525_1.webp"
+      },
+      {
+        "char": "🎓",
+        "fa": "فارغ‌التحصیلی",
+        "keywords": ["grad", "دانشجو"],
+        "src": "/animated-emoji/my-pack/grad.webp"
+      }
+    ]
+  }
+]

@@ -4,24 +4,54 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { HiMiniArrowLeftEndOnRectangle } from "react-icons/hi2";
 import { FiShoppingCart } from "react-icons/fi";
-import { FaInstagram, FaXTwitter } from "react-icons/fa6";
-import { RiTelegram2Fill } from "react-icons/ri";
+import { Globe } from "lucide-react";
+import { DynamicIcon } from "@/components/site/DynamicIcon";
 import { cn } from "@/lib/utils";
 import { contactInfo } from "@/lib/constants/contact";
 import { useSession } from "next-auth/react";
 import { useCartStore } from "@/stores/cart-store";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import SoundMuteToggle from "@/components/sound/SoundMuteToggle";
+import type { FooterSocialItem } from "@/lib/site/chrome-content";
 
+/** @deprecated trio shape — Navbar now receives FooterSocialItem[] from layout. */
 export type NavSocialLinks = {
   instagram?: string;
   telegram?: string;
   twitter?: string;
 };
 
+type NavbarSocialsInput = NavSocialLinks | FooterSocialItem[];
+
+function normalizeSocials(
+  socials: NavbarSocialsInput | undefined
+): FooterSocialItem[] {
+  if (Array.isArray(socials)) return socials;
+  return [
+    {
+      id: "instagram",
+      name: "اینستاگرام",
+      href: socials?.instagram || contactInfo.socials.instagram,
+      icon: "Instagram",
+    },
+    {
+      id: "telegram",
+      name: "تلگرام",
+      href: socials?.telegram || contactInfo.socials.telegram,
+      icon: "Send",
+    },
+    {
+      id: "x",
+      name: "ایکس",
+      href: socials?.twitter || contactInfo.socials.linkedin,
+      icon: "Twitter",
+    },
+  ];
+}
+
 interface NavbarActionsProps {
   isDark?: boolean;
-  socials?: NavSocialLinks;
+  socials?: NavbarSocialsInput;
   /** فشرده‌تر برای نوبار شیشه‌ای دسکتاپ */
   compact?: boolean;
 }
@@ -44,9 +74,7 @@ const NavbarActions = ({
   const authLink = session ? "/profile/acc" : "/login";
   const authLabel = session ? "داشبورد" : "ورود | ثبت‌نام";
   const authShort = session ? "حساب" : "ورود";
-  const instagram = socials?.instagram || contactInfo.socials.instagram;
-  const telegram = socials?.telegram || contactInfo.socials.telegram;
-  const twitter = socials?.twitter || contactInfo.socials.linkedin;
+  const socialItems = normalizeSocials(socials);
 
   return (
     <div
@@ -120,33 +148,19 @@ const NavbarActions = ({
             compact ? "hidden gap-0.5 2xl:flex" : "flex gap-1"
           )}
         >
-          <Link
-            href={twitter}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="ایکس"
-            className="rounded-lg p-1.5 transition-all duration-300 hover:scale-110 hover:opacity-90"
-          >
-            <FaXTwitter className="size-4" />
-          </Link>
-          <Link
-            href={instagram}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="اینستاگرام"
-            className="rounded-lg p-1.5 transition-all duration-300 hover:scale-110 hover:text-[#E1306C]"
-          >
-            <FaInstagram className="size-[18px]" />
-          </Link>
-          <Link
-            href={telegram}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="تلگرام"
-            className="rounded-lg p-1.5 transition-all duration-300 hover:scale-110 hover:text-[#229ED9]"
-          >
-            <RiTelegram2Fill className="size-[18px]" />
-          </Link>
+          {socialItems.map((social) => (
+            <Link
+              key={social.id || social.name}
+              href={social.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={social.name}
+              title={social.name}
+              className="rounded-lg p-1.5 transition-all duration-300 hover:scale-110 hover:text-foreground"
+            >
+              <DynamicIcon name={social.icon} fallback={Globe} className="size-4" />
+            </Link>
+          ))}
         </div>
       </div>
     </div>

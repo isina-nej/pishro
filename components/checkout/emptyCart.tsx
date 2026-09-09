@@ -3,9 +3,11 @@
 import { motion } from "framer-motion";
 import { ShoppingCart, ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import Link from "next/link";
 
 const EmptyCart = () => {
+  const copy = usePublicCopy("checkout");
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -56,7 +58,7 @@ const EmptyCart = () => {
             transition={{ delay: 0.2 }}
             className="text-2xl font-black text-foreground"
           >
-            سبد خرید شما خالی است
+            {copy("empty.title", "سبد خرید شما خالی است")}
           </motion.h3>
 
           <motion.p
@@ -65,9 +67,7 @@ const EmptyCart = () => {
             transition={{ delay: 0.3 }}
             className="text-muted-foreground leading-relaxed"
           >
-            هنوز دوره‌ای به سبد خرید خود اضافه نکرده‌اید.
-            <br />
-            دوره‌های متنوع ما را کشف کنید و یادگیری خود را آغاز کنید!
+            {copy("empty.description", "هنوز دوره‌ای به سبد خرید خود اضافه نکرده‌اید. دوره‌های متنوع ما را کشف کنید و یادگیری خود را آغاز کنید!")}
           </motion.p>
         </div>
 
@@ -83,7 +83,7 @@ const EmptyCart = () => {
               size="lg"
               className="w-full sm:w-auto shadow-lg hover:shadow-xl transition-all duration-300 group"
             >
-              <span className="font-bold">مشاهده دوره‌ها</span>
+              <span className="font-bold">{copy("empty.courses", "مشاهده دوره‌ها")}</span>
               <ArrowRight className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
@@ -94,7 +94,7 @@ const EmptyCart = () => {
               variant="outline"
               className="w-full sm:w-auto border-2 hover:bg-muted"
             >
-              <span className="font-bold">بازگشت به صفحه اصلی</span>
+              <span className="font-bold">{copy("empty.home", "بازگشت به صفحه اصلی")}</span>
             </Button>
           </Link>
         </motion.div>
@@ -107,7 +107,7 @@ const EmptyCart = () => {
           className="pt-8 border-t border-border"
         >
           <p className="text-sm text-muted-foreground">
-            💡 نکته: با افزودن دوره‌ها به سبد خرید، می‌توانید همه را یکجا خریداری کنید
+            {copy("empty.tip", "💡 نکته: با افزودن دوره‌ها به سبد خرید، می‌توانید همه را یکجا خریداری کنید")}
           </p>
         </motion.div>
       </div>

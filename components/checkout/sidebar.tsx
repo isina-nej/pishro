@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import { motion } from "framer-motion";
 import {
   ShoppingBag,
@@ -31,6 +32,7 @@ const CheckoutSidebar = ({
   handlePayment,
   loading,
 }: CheckoutSidebarProps) => {
+  const copy = usePublicCopy("checkout");
   const price = data.price.toLocaleString("fa-IR");
   const off = data.off.toLocaleString("fa-IR");
   const lastPrice = data.lastPrice.toLocaleString("fa-IR");
@@ -57,8 +59,8 @@ const CheckoutSidebar = ({
                 <ShoppingBag className="size-6" />
               </div>
               <div>
-                <p className="font-bold text-lg">خلاصه سفارش</p>
-                <p className="text-xs opacity-75">دوره‌های منتخب شما</p>
+                <p className="font-bold text-lg">{copy("summary.title", "خلاصه سفارش")}</p>
+                <p className="text-xs opacity-75">{copy("summary.subtitle", "دوره‌های منتخب شما")}</p>
               </div>
             </div>
           </div>
@@ -69,7 +71,7 @@ const CheckoutSidebar = ({
             <div className="flex justify-between items-center text-sm">
               <span className="text-muted-foreground flex items-center gap-2">
                 <Wallet className="w-4 h-4" />
-                قیمت کل دوره‌ها
+                {copy("summary.total", "قیمت کل دوره‌ها")}
               </span>
               <span className="font-medium text-muted-foreground line-through">
                 {price} تومان
@@ -90,9 +92,9 @@ const CheckoutSidebar = ({
                       <TrendingDown className="w-4 h-4 text-success-foreground" />
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground">سود شما از خرید</p>
+                      <p className="text-xs text-muted-foreground">{copy("summary.profit", "سود شما از خرید")}</p>
                       <p className="text-sm font-bold text-success">
-                        {discountPercentage}٪ تخفیف
+                        {discountPercentage}{copy("summary.discountSuffix", "٪ تخفیف")}
                       </p>
                     </div>
                   </div>
@@ -116,12 +118,12 @@ const CheckoutSidebar = ({
               <div className="flex justify-between items-center">
                 <div className="space-y-1">
                   <p className="text-sm text-muted-foreground font-medium">
-                    مبلغ قابل پرداخت
+                    {copy("summary.payable", "مبلغ قابل پرداخت")}
                   </p>
                   <div className="flex items-center gap-1">
                     <CheckCircle2 className="w-4 h-4 text-primary" />
                     <span className="text-xs text-muted-foreground">
-                      قیمت نهایی با تخفیف
+                      {copy("summary.finalHint", "قیمت نهایی با تخفیف")}
                     </span>
                   </div>
                 </div>
@@ -129,7 +131,7 @@ const CheckoutSidebar = ({
                   <p className="text-3xl font-black text-primary">
                     {lastPrice}
                   </p>
-                  <p className="text-xs text-muted-foreground font-medium">تومان</p>
+                  <p className="text-xs text-muted-foreground font-medium">{copy("summary.currency", "تومان")}</p>
                 </div>
               </div>
             </motion.div>
@@ -141,7 +143,7 @@ const CheckoutSidebar = ({
                   onClick={() => setStep("pay")}
                   className="w-full h-14 text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300 group"
                 >
-                  <span>ادامه فرایند خرید</span>
+                  <span>{copy("summary.continue", "ادامه فرایند خرید")}</span>
                   <ArrowLeft className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
               )}
@@ -155,12 +157,12 @@ const CheckoutSidebar = ({
                   {loading ? (
                     <div className="flex items-center gap-2">
                       <div className="w-5 h-5 border-3 border-border border-t-transparent rounded-full animate-spin" />
-                      <span>در حال اتصال به درگاه...</span>
+                      <span>{copy("summary.connecting", "در حال اتصال به درگاه...")}</span>
                     </div>
                   ) : (
                     <div className="flex items-center gap-2">
                       <Wallet className="w-5 h-5" />
-                      <span>پرداخت امن</span>
+                      <span>{copy("summary.securePay", "پرداخت امن")}</span>
                     </div>
                   )}
                 </Button>
@@ -181,13 +183,13 @@ const CheckoutSidebar = ({
               <div className="w-8 h-8 bg-success/15 rounded-lg flex items-center justify-center">
                 <Shield className="w-4 h-4 text-success" />
               </div>
-              <span>پرداخت امن و محافظت شده</span>
+              <span>{copy("summary.secureNote", "پرداخت امن و محافظت شده")}</span>
             </div>
             <div className="flex items-center gap-3 text-sm text-muted-foreground">
               <div className="w-8 h-8 bg-premium/15 rounded-lg flex items-center justify-center">
                 <Clock className="w-4 h-4 text-premium" />
               </div>
-              <span>دسترسی فوری پس از پرداخت</span>
+              <span>{copy("summary.instantNote", "دسترسی فوری پس از پرداخت")}</span>
             </div>
           </div>
         </motion.div>

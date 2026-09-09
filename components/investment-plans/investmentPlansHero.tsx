@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { InvestmentPlans, InvestmentPlan, InvestmentTag } from "@prisma/client";
 import { Button } from "@/components/ui/button";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 
 interface InvestmentPlansHeroProps {
   investmentPlansData: InvestmentPlans & {
@@ -23,6 +24,7 @@ interface InvestmentPlansHeroProps {
 export const InvestmentPlansHero = ({
   investmentPlansData,
 }: InvestmentPlansHeroProps) => {
+  const copy = usePublicCopy("investment");
   // Detect mobile for performance optimization
   const isMobile = useMediaQuery("(max-width: 768px)");
 
@@ -158,7 +160,7 @@ export const InvestmentPlansHero = ({
             <motion.div variants={itemVariants} className="flex justify-center">
               <span className="inline-flex items-center gap-2 rounded-full border border-success/40 bg-[color-mix(in_srgb,var(--success)_15%,transparent)] px-6 py-2.5 text-sm font-medium text-[var(--home-on-dark)] shadow-lg shadow-success/10 backdrop-blur-sm">
                 <Sparkles className="h-4 w-4" />
-                سبدهای سرمایه‌ گذاری پیشرو
+                {copy("hero.badge", "سبدهای سرمایه‌ گذاری پیشرو")}
               </span>
             </motion.div>
 
@@ -182,7 +184,7 @@ export const InvestmentPlansHero = ({
                 size="lg"
                 className="bg-[var(--btn-primary-bg)] hover:bg-[var(--btn-primary-hover)] text-primary-foreground shadow-xl shadow-success/25 hover:shadow-2xl hover:shadow-success/40 transition-all duration-300 px-8 py-6 text-lg font-semibold rounded-2xl"
               >
-                شروع سرمایه‌گذاری
+                {copy("hero.cta", "شروع سرمایه‌گذاری")}
               </Button>
             </motion.div>
           </div>
@@ -194,7 +196,7 @@ export const InvestmentPlansHero = ({
           >
             {[
               {
-                label: "نوع سبد",
+                label: copy("hero.stat1", "نوع سبد"),
                 value: stats.totalPlans,
                 icon: <BarChart3 className="h-6 w-6" />,
                 gradient: "from-accent/20 to-accent/20",
@@ -202,7 +204,7 @@ export const InvestmentPlansHero = ({
                 border: "border-accent/30",
               },
               {
-                label: "حداقل سرمایه (میلیون)",
+                label: copy("hero.stat2", "حداقل سرمایه (میلیون)"),
                 value: stats.minInvestment,
                 icon: <Wallet className="h-6 w-6" />,
                 gradient: "from-primary/20 to-primary/20",
@@ -210,7 +212,7 @@ export const InvestmentPlansHero = ({
                 border: "border-primary/30",
               },
               {
-                label: "حداکثر بازدهی",
+                label: copy("hero.stat3", "حداکثر بازدهی"),
                 value: `${stats.maxReturn}٪`,
                 icon: <TrendingUp className="h-6 w-6" />,
                 gradient: "from-primary/20 to-primary/20",
@@ -218,8 +220,8 @@ export const InvestmentPlansHero = ({
                 border: "border-primary/30",
               },
               {
-                label: "تضمین سرمایه",
-                value: "100٪",
+                label: copy("hero.stat4", "تضمین سرمایه"),
+                value: copy("hero.guaranteeValue", "100٪"),
                 icon: <Shield className="h-6 w-6" />,
                 gradient: "from-premium/20 to-premium/20",
                 iconBg: "bg-premium/20",
@@ -273,7 +275,7 @@ export const InvestmentPlansHero = ({
             onClick={scrollToPlans}
           >
             <span className="text-xs text-muted-foreground font-medium">
-              مشاهده سبدها
+              {copy("hero.view", "مشاهده سبدها")}
             </span>
             <motion.div
               animate={{
@@ -307,7 +309,7 @@ export const InvestmentPlansHero = ({
         >
           <div className="flex flex-col items-center gap-2">
             <span className="text-xs text-muted-foreground font-medium">
-              مشاهده سبدها
+              {copy("hero.view", "مشاهده سبدها")}
             </span>
             <ArrowDown className="h-5 w-5 text-foreground/60" />
           </div>

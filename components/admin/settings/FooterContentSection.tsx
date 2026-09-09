@@ -23,10 +23,13 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   DEFAULT_ENAMAD,
   DEFAULT_FOOTER_CONTENT,
+  DEFAULT_FOOTER_SOCIALS,
   type ChromeLink,
   type FooterColumnContent,
   type FooterContent,
+  type FooterSocialItem,
 } from "@/lib/site/chrome-content";
+import IconPicker from "@/components/admin/cms/IconPicker";
 import { cn } from "@/lib/utils";
 
 type FooterContentSectionProps = {
@@ -46,14 +49,29 @@ function newColumn(index: number): FooterColumnContent {
   };
 }
 
+const MAX_SOCIALS_ADMIN = 12;
+
+function newSocial(index: number): FooterSocialItem {
+  return {
+    id: `social-${Date.now().toString(36)}-${index}`,
+    name: "شبکه اجتماعی",
+    href: "https://…",
+    icon: "Globe",
+  };
+}
+
 function LinkEditor({
   title,
   links,
   onChange,
+  withIcon = false,
+  iconHint,
 }: {
   title: string;
   links: ChromeLink[];
   onChange: (links: ChromeLink[]) => void;
+  withIcon?: boolean;
+  iconHint?: string;
 }) {
   return (
     <div className="space-y-2">
@@ -76,7 +94,13 @@ function LinkEditor({
         </p>
       )}
       {links.map((link, index) => (
-        <div key={`${link.link}-${index}`} className="grid gap-2 sm:grid-cols-[1fr_1fr_auto]">
+        <div
+          key={`${link.link}-${index}`}
+          className={cn(
+            "grid gap-2",
+            withIcon ? "sm:grid-cols-[1fr_1fr_1fr_auto]" : "sm:grid-cols-[1fr_1fr_auto]"
+          )}
+        >
           <Input
             value={link.label}
             onChange={(e) =>
@@ -101,12 +125,113 @@ function LinkEditor({
             }
             placeholder="/path یا https://…"
           />
+          {withIcon && (
+            <IconPicker
+              value={link.icon || ""}
+              onChange={(iconName) =>
+                onChange(
+                  links.map((row, i) =>
+                    i === index ? { ...row, icon: iconName || undefined } : row
+                  )
+                )
+              }
+            />
+          )}
           <Button
             type="button"
             size="icon"
             variant="ghost"
             aria-label="حذف لینک"
             onClick={() => onChange(links.filter((_, i) => i !== index))}
+          >
+            <Trash2 className="h-4 w-4 text-destructive" />
+          </Button>
+        </div>
+      ))}
+      {withIcon && iconHint && (
+        <p className="text-[11px] text-muted-foreground">{iconHint}</p>
+      )}
+    </div>
+  );
+}
+
+function SocialsEditor({
+  socials,
+  onChange,
+}: {
+  socials: FooterSocialItem[];
+  onChange: (socials: FooterSocialItem[]) => void;
+}) {
+  const addSocial = () => {
+    if (socials.length >= MAX_SOCIALS_ADMIN) {
+      toast.error(`حداکثر ${MAX_SOCIALS_ADMIN} شبکه اجتماعی مجاز است`);
+      return;
+    }
+    onChange([...socials, newSocial(socials.length)]);
+  };
+
+  const removeSocial = (index: number) => {
+    onChange(socials.filter((_, i) => i !== index));
+  };
+
+  const patchSocial = (index: number, patch: Partial<FooterSocialItem>) => {
+    onChange(socials.map((row, i) => (i === index ? { ...row, ...patch } : row)));
+  };
+
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-xs font-bold text-muted-foreground">
+          دکمه‌های شبکه اجتماعی ({socials.length} فعال)
+        </p>
+        <Button
+          type="button"
+          size="sm"
+          variant="ghost"
+          className="h-7 gap-1 px-2 text-[11px]"
+          disabled={socials.length >= MAX_SOCIALS_ADMIN}
+          onClick={addSocial}
+        >
+          <Plus className="h-3 w-3" />
+          افزودن
+        </Button>
+      </div>
+      {socials.length === 0 && (
+        <p className="rounded-lg border border-dashed border-border px-3 py-2 text-[11px] text-muted-foreground">
+          شبکه‌ای ثبت نشده — آیکن‌های فوتر و نوبار خالی می‌مانند. با «افزودن» بسازید.
+        </p>
+      )}
+      {socials.map((social, index) => (
+        <div key={social.id || index} className="grid gap-2 sm:grid-cols-[1fr_1fr_1fr_auto] sm:items-end">
+          <div className="space-y-1.5">
+            <Label className="text-[11px] font-semibold">نام</Label>
+            <Input
+              value={social.name}
+              onChange={(e) => patchSocial(index, { name: e.target.value })}
+              placeholder="مثلاً اینستاگرام"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label className="text-[11px] font-semibold">لینک</Label>
+            <Input
+              value={social.href}
+              dir="ltr"
+              className="font-mono text-xs"
+              onChange={(e) => patchSocial(index, { href: e.target.value })}
+              placeholder="https://…"
+            />
+          </div>
+          <IconPicker
+            label="آیکن"
+            value={social.icon}
+            onChange={(iconName) => patchSocial(index, { icon: iconName || "Globe" })}
+          />
+          <Button
+            type="button"
+            size="icon"
+            variant="ghost"
+            aria-label="حذف شبکه اجتماعی"
+            onClick={() => removeSocial(index)}
           >
             <Trash2 className="h-4 w-4 text-destructive" />
           </Button>
@@ -386,27 +511,33 @@ export default function FooterContentSection({
       </Card>
 
       <Card className="space-y-4 p-4 sm:p-5">
-        <h3 className="text-sm font-bold">شبکه‌های اجتماعی</h3>
-        <div className="grid gap-3 sm:grid-cols-3">
-          {(
-            [
-              ["instagram", "اینستاگرام"],
-              ["telegram", "تلگرام"],
-              ["twitter", "ایکس / لینکدین"],
-            ] as const
-          ).map(([key, label]) => (
-            <div key={key} className="space-y-1.5">
-              <Label className="text-xs font-semibold">{label}</Label>
-              <Input
-                value={content[key]}
-                dir="ltr"
-                className="font-mono text-xs"
-                onChange={(e) => patch({ [key]: e.target.value })}
-                placeholder="https://…"
-              />
-            </div>
-          ))}
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h3 className="text-sm font-bold">شبکه‌های اجتماعی</h3>
+            <p className="mt-1 text-[11px] text-muted-foreground">
+              دکمه‌های فوتر و نوبار — نام، لینک و آیکن هر شبکه را ویرایش کنید یا شبکه حذف/اضافه کنید.
+            </p>
+          </div>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="gap-1.5"
+            onClick={() =>
+              onChange({
+                ...content,
+                socials: DEFAULT_FOOTER_SOCIALS.map((s) => ({ ...s })),
+              })
+            }
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+            بازگشت به ۳ شبکه پیش‌فرض
+          </Button>
         </div>
+        <SocialsEditor
+          socials={content.socials ?? []}
+          onChange={(socials) => patch({ socials })}
+        />
       </Card>
 
       <Card className="space-y-4 p-4 sm:p-5">
@@ -466,6 +597,8 @@ export default function FooterContentSection({
                   title="لینک‌های ستون"
                   links={column.links}
                   onChange={(links) => patchColumn(index, { ...column, links })}
+                  withIcon
+                  iconHint="آیکن هر لینک اختیاری است — خالی بماند خط تزئینی نمایش داده می‌شود."
                 />
               </Card>
             ))}
@@ -496,6 +629,8 @@ export default function FooterContentSection({
           title="لینک‌های حقوقی پایین فوتر"
           links={content.legalLinks}
           onChange={(legalLinks) => patch({ legalLinks })}
+          withIcon
+          iconHint="آیکن هر لینک حقوقی اختیاری است."
         />
       </Card>
     </div>

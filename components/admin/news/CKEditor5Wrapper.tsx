@@ -16,6 +16,7 @@ import Highlight from '@tiptap/extension-highlight';
 import { Table, TableRow, TableHeader, TableCell } from '@tiptap/extension-table';
 import Placeholder from '@tiptap/extension-placeholder';
 import { AlertCircle } from 'lucide-react';
+import AnimatedEmojiPicker from '@/components/admin/AnimatedEmojiPicker';
 
 interface CKEditor5WrapperProps {
   initialContent?: string;
@@ -308,6 +309,22 @@ export default function CKEditor5Wrapper({
         >
           🖼️
         </button>
+
+        <AnimatedEmojiPicker
+          disabled={disabled}
+          onPick={(item, mode) => {
+            if (!editor) return;
+            if (mode === 'char' && item.char) {
+              editor.chain().focus().insertContent(item.char).run();
+              return;
+            }
+            editor
+              .chain()
+              .focus()
+              .setImage({ src: item.src, alt: item.fa, title: item.fa })
+              .run();
+          }}
+        />
 
         <input
           ref={fileInputRef}

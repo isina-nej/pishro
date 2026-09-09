@@ -5,14 +5,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import useIsDarkNavbar from "./useNavbarTheme";
+import { DynamicIcon } from "@/components/site/DynamicIcon";
 import { cn } from "@/lib/utils";
 
 interface HoverableLinkProps {
   label: string;
   href: string;
+  icon?: string;
 }
 
-const HoverableLink = ({ label, href }: HoverableLinkProps) => {
+const HoverableLink = ({ label, href, icon }: HoverableLinkProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const isDark = useIsDarkNavbar();
   const pathname = usePathname();
@@ -39,7 +41,8 @@ const HoverableLink = ({ label, href }: HoverableLinkProps) => {
             : "text-muted-foreground hover:text-foreground"
       )}
     >
-      <span className="relative z-10 inline-block">
+      <span className="relative z-10 inline-flex items-center gap-1.5">
+        {icon ? <DynamicIcon name={icon} className="size-3.5" /> : null}
         {label}
         <AnimatePresence>
           {(isHovered || active) && (

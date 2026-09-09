@@ -69,6 +69,7 @@ export const navSections: NavSection[] = [
     label: 'آموزش، سرمایه‌گذاری و محتوا',
     items: [
       { href: '/admin/courses', label: 'دوره‌ها', icon: GraduationCap, key: 'courses', roles: ['ADMIN', 'MODERATOR'] },
+      { href: '/admin/categories', label: 'دسته‌بندی‌ها', icon: BookOpen, key: 'categories', roles: ['ADMIN', 'MODERATOR'] },
       { href: '/admin/investment-funds', label: 'صندوق‌های سرمایه‌گذاری', icon: TrendingUp, key: 'investment-funds', roles: ['ADMIN', 'MODERATOR'] },
       { href: '/admin/comments', label: 'نظرات کاربران', icon: MessageSquareQuote, key: 'comments', roles: ['ADMIN', 'MODERATOR'] },
       { href: '/admin/library', label: 'کتابخانه دیجیتال', icon: BookOpen, key: 'library', roles: ['ADMIN', 'MODERATOR'] },

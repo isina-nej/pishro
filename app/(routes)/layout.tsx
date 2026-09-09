@@ -7,6 +7,7 @@ import PublicChromeExtras from "@/components/site/PublicChromeExtras";
 import { VisibilityProvider } from "@/components/site/VisibilityProvider";
 import { SessionProvider } from "next-auth/react";
 import { getPublicSiteChrome } from "@/lib/services/settings-service";
+import { footerSocials } from "@/lib/site/chrome-content";
 import { isItemHidden } from "@/lib/site/hidable-pages";
 
 export const metadata: Metadata = {
@@ -36,11 +37,7 @@ export default async function RoutesLayout({
             siteName={chrome.siteName}
             hiddenPages={hidden}
             navItems={chrome.navbarItems}
-            socials={{
-              instagram: chrome.footerContent.instagram,
-              telegram: chrome.footerContent.telegram,
-              twitter: chrome.footerContent.twitter,
-            }}
+            socials={footerSocials(chrome.footerContent)}
           />
         )}
         <HiddenPageGuard hiddenPages={hidden}>{children}</HiddenPageGuard>

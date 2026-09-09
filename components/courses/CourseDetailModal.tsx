@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dialog";
 import RatingStars from "@/components/utils/RatingStars";
 import CourseActionIcons from "@/components/courses/CourseActionIcons";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import { useCartStore } from "@/stores/cart-store";
 import toast from "react-hot-toast";
 import type { Course } from "@/lib/types/db";
@@ -28,6 +29,7 @@ import {
   isFreeCourse,
   redirectToLoginForFreeCourse,
 } from "@/lib/free-course-enrollment";
+import { renderWithAnimatedEmoji } from "@/lib/admin/animated-emoji-render";
 
 type CourseData = Course | (Omit<Course, "createdAt" | "updatedAt"> & {
   createdAt: string | Date;
@@ -65,6 +67,7 @@ const glassPriceClass =
 export default function CourseDetailModal({ course, trigger }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("about");
+  const copy = usePublicCopy("course-detail");
   const addToCart = useCartStore((state) => state.addToCart);
   const items = useCartStore((state) => state.items);
   const { data: session } = useSession();
@@ -234,7 +237,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
             tone="surface"
           />
           <h2 className="max-w-[70%] truncate text-end text-sm font-semibold text-foreground sm:text-base">
-            {course.subject}
+            {renderWithAnimatedEmoji(course.subject)}
           </h2>
         </div>
 
@@ -253,9 +256,9 @@ export default function CourseDetailModal({ course, trigger }: Props) {
           <div className="mb-5 flex gap-1 rounded-full bg-muted p-1">
             {(
               [
-                ["about", "درباره"],
-                ["lessons", "درس‌ها"],
-                ["reviews", "نظرات"],
+                ["about", copy("tabs.about", "درباره")],
+                ["lessons", copy("tabs.lessons", "درس‌ها")],
+                ["reviews", copy("tabs.reviews", "نظرات")],
               ] as const
             ).map(([tab, label]) => (
               <button
@@ -279,10 +282,10 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                 {course.description ? (
                   <div>
                     <h3 className="mb-2 text-sm font-semibold text-foreground">
-                      توضیحات
+                      {copy("tabs.descriptionTitle", "توضیحات")}
                     </h3>
                     <p className="text-sm leading-7 text-muted-foreground">
-                      {course.description}
+                      {renderWithAnimatedEmoji(course.description)}
                     </p>
                   </div>
                 ) : null}
@@ -290,7 +293,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                 {course.learningGoals && course.learningGoals.length > 0 ? (
                   <div>
                     <h3 className="mb-2 text-sm font-semibold text-foreground">
-                      اهداف یادگیری
+                      {copy("tabs.goalsTitle", "اهداف یادگیری")}
                     </h3>
                     <ul className="space-y-2">
                       {course.learningGoals.map((goal, idx) => (
@@ -310,8 +313,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
 
             {activeTab === "lessons" && (
               <p className="text-sm leading-7 text-muted-foreground">
-                این دوره دارای {course.videosCount ?? "چند"} درس است. برای مشاهده
-                کامل درس‌ها صفحه دوره را باز کنید.
+                {copy("tabs.lessonsHint", "این دوره دارای {count} درس است. برای مشاهده کامل درس‌ها صفحه دوره را باز کنید.").replace("{count}", String(course.videosCount ?? "چند"))}
               </p>
             )}
 
@@ -326,7 +328,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                   </div>
                 ) : null}
                 <p className="text-sm text-muted-foreground">
-                  برای مشاهده تمام نظرات، صفحه کامل دوره را باز کنید.
+                  {copy("tabs.reviewsHint", "برای مشاهده تمام نظرات، صفحه کامل دوره را باز کنید.")}
                 </p>
               </div>
             )}

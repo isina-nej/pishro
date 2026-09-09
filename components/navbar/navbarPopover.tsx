@@ -11,14 +11,17 @@ import { cn } from "@/lib/utils";
 import HoverableLink from "./HoverableLink";
 import Link from "next/link";
 import useIsDarkNavbar from "./useNavbarTheme";
+import { DynamicIcon } from "@/components/site/DynamicIcon";
 
 interface NavbarPopoverProps {
   item: {
     label: string;
     link: string;
+    icon?: string;
     data: {
       label: string;
       link: string;
+      icon?: string;
     }[];
   };
 }
@@ -37,6 +40,7 @@ const NavbarPopover = ({ item }: NavbarPopoverProps) => {
               : "text-muted-foreground hover:text-foreground"
           )}
         >
+          {item.icon ? <DynamicIcon name={item.icon} className="size-3.5" /> : null}
           {item.label}
           <ChevronDown className="h-3.5 w-3.5 opacity-70" />
         </Link>
@@ -76,6 +80,7 @@ const NavbarPopover = ({ item }: NavbarPopoverProps) => {
             key={subIdx}
             label={subItem.label}
             href={subItem.link}
+            icon={subItem.icon}
           />
         ))}
       </HoverCardContent>

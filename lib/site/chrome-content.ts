@@ -8,6 +8,16 @@ import { contactInfo } from "@/lib/constants/contact";
 export type ChromeLink = {
   label: string;
   link: string;
+  /** Optional lucide icon name rendered next to the label (DynamicIcon). */
+  icon?: string;
+};
+
+export type FooterSocialItem = {
+  id: string;
+  name: string;
+  href: string;
+  /** lucide icon name; brand icons fall back to Globe. */
+  icon: string;
 };
 
 export type FooterColumnContent = {
@@ -32,9 +42,14 @@ export type FooterContent = {
   address: string;
   weekdaysHours: string;
   weekendsHours: string;
+  /** @deprecated use socials. Kept so old DB rows keep rendering. */
   instagram: string;
+  /** @deprecated use socials. Kept so old DB rows keep rendering. */
   telegram: string;
+  /** @deprecated use socials. Kept so old DB rows keep rendering. */
   twitter: string;
+  /** Dynamic social buttons (add/delete/icon). Falls back to legacy trio. */
+  socials: FooterSocialItem[];
   columns: FooterColumnContent[];
   enamad: EnamadSettings;
   legalLinks: ChromeLink[];
@@ -46,7 +61,9 @@ export type NavbarItem = ChromeLink;
 const MAX_NAV_ITEMS = 24;
 const MAX_FOOTER_COLUMNS = 8;
 const MAX_COLUMN_LINKS = 20;
+const MAX_SOCIALS = 12;
 const MAX_LABEL = 80;
+const MAX_ICON = 60;
 const MAX_LINK = 600;
 const MAX_ABOUT = 1200;
 
@@ -58,15 +75,21 @@ export const DEFAULT_ENAMAD: EnamadSettings = {
 };
 
 export const DEFAULT_NAVBAR_ITEMS: NavbarItem[] = [
-  { label: "صفحه اصلی", link: "/" },
-  { label: "دوره ها", link: "/courses" },
-  { label: "قیمت ارزها", link: "/crypto-prices" },
-  { label: "مشاوره کسب و کار", link: "/business-consulting" },
-  { label: "سبد های سرمایه گذاری", link: "/investment-plans" },
-  { label: "کتابخانه دیجیتال", link: "/library" },
-  { label: "اخبار", link: "/news" },
-  { label: "درباره ما", link: "/about-us" },
-  { label: "همایش", link: "/skyroom-classes" },
+  { label: "صفحه اصلی", link: "/", icon: "Home" },
+  { label: "دوره ها", link: "/courses", icon: "GraduationCap" },
+  { label: "قیمت ارزها", link: "/crypto-prices", icon: "ChartCandlestick" },
+  { label: "مشاوره کسب و کار", link: "/business-consulting", icon: "Briefcase" },
+  { label: "سبد های سرمایه گذاری", link: "/investment-plans", icon: "Wallet" },
+  { label: "کتابخانه دیجیتال", link: "/library", icon: "Library" },
+  { label: "اخبار", link: "/news", icon: "Newspaper" },
+  { label: "درباره ما", link: "/about-us", icon: "BookOpen" },
+  { label: "همایش", link: "/skyroom-classes", icon: "Presentation" },
+];
+
+export const DEFAULT_FOOTER_SOCIALS: FooterSocialItem[] = [
+  { id: "instagram", name: "اینستاگرام", href: contactInfo.socials.instagram, icon: "Instagram" },
+  { id: "telegram", name: "تلگرام", href: contactInfo.socials.telegram, icon: "Send" },
+  { id: "x", name: "ایکس", href: contactInfo.socials.linkedin, icon: "Twitter" },
 ];
 
 export const DEFAULT_FOOTER_CONTENT: FooterContent = {
@@ -83,6 +106,7 @@ export const DEFAULT_FOOTER_CONTENT: FooterContent = {
   instagram: contactInfo.socials.instagram,
   telegram: contactInfo.socials.telegram,
   twitter: contactInfo.socials.linkedin,
+  socials: DEFAULT_FOOTER_SOCIALS.map((s) => ({ ...s })),
   columns: [
     {
       id: "discover",
@@ -124,10 +148,11 @@ export const DEFAULT_FOOTER_CONTENT: FooterContent = {
     },
   ],
   enamad: { ...DEFAULT_ENAMAD },
+  // ponytail: legal links point at always-visible public routes; never hide /contact or /courses behind hidable-pages without updating these
   legalLinks: [
-    { label: "قوانین و مقررات", link: "/about-us" },
-    { label: "سوالات متداول", link: "/faq" },
-    { label: "حریم خصوصی", link: "/about-us" },
+    { label: "قوانین و مقررات", link: "/contact" },
+    { label: "تماس با ما", link: "/contact" },
+    { label: "دوره‌های آموزشی", link: "/courses" },
   ],
   copyrightSuffix: "تمامی حقوق محفوظ است.",
 };
@@ -163,13 +188,59 @@ function sanitizeLabel(value: unknown): string | null {
   return label;
 }
 
+function sanitizeIcon(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined;
+  const icon = value.trim().slice(0, MAX_ICON);
+  // Letters/digits only — matches DynamicIcon registry keys; empty clears.
+  if (!icon) return undefined;
+  return /^[A-Za-z][A-Za-z0-9]*$/.test(icon) ? icon : undefined;
+}
+
 function parseChromeLink(value: unknown): ChromeLink | null {
   if (!value || typeof value !== "object") return null;
   const row = value as Record<string, unknown>;
   const label = sanitizeLabel(row.label);
   const link = sanitizeLink(row.link);
   if (!label || !link) return null;
-  return { label, link };
+  const icon = sanitizeIcon(row.icon);
+  return icon ? { label, link, icon } : { label, link };
+}
+
+function parseSocial(value: unknown, index: number): FooterSocialItem | null {
+  if (!value || typeof value !== "object") return null;
+  const row = value as Record<string, unknown>;
+  const name = asTrimmedString(row.name, "").slice(0, MAX_LABEL);
+  const href = sanitizeLink(row.href) ?? sanitizeLink(row.link);
+  if (!name || !href) return null;
+  return {
+    id: asTrimmedString(row.id, "").slice(0, MAX_LABEL) || `social-${index + 1}`,
+    name,
+    href,
+    icon: sanitizeIcon(row.icon) ?? "Globe",
+  };
+}
+
+function parseSocials(
+  value: unknown,
+  base: FooterSocialItem[],
+  legacy: { instagram: string; telegram: string; twitter: string }
+): FooterSocialItem[] {
+  if (!Array.isArray(value)) {
+    // Rows saved before socials existed reuse the legacy trio fields.
+    if (value != null) return base.map((s) => ({ ...s }));
+    return [
+      { id: "instagram", name: "اینستاگرام", href: legacy.instagram, icon: "Instagram" },
+      { id: "telegram", name: "تلگرام", href: legacy.telegram, icon: "Send" },
+      { id: "x", name: "ایکس", href: legacy.twitter, icon: "Twitter" },
+    ];
+  }
+  const out: FooterSocialItem[] = [];
+  for (const item of value.slice(0, MAX_SOCIALS)) {
+    const parsed = parseSocial(item, out.length);
+    // Drop empty rows (admin deleted content) instead of refilling defaults.
+    if (parsed) out.push(parsed);
+  }
+  return out;
 }
 
 function parseLinkList(value: unknown, max = MAX_COLUMN_LINKS): ChromeLink[] {
@@ -292,6 +363,12 @@ export function parseFooterContent(value: unknown): FooterContent {
   if (value == null || typeof value !== "object") return base;
 
   const row = value as Record<string, unknown>;
+  const instagram =
+    asTrimmedString(row.instagram, base.instagram).slice(0, MAX_LINK) || base.instagram;
+  const telegram =
+    asTrimmedString(row.telegram, base.telegram).slice(0, MAX_LINK) || base.telegram;
+  const twitter =
+    asTrimmedString(row.twitter, base.twitter).slice(0, MAX_LINK) || base.twitter;
 
   return {
     aboutText: asTrimmedString(row.aboutText, base.aboutText).slice(0, MAX_ABOUT) || base.aboutText,
@@ -307,9 +384,10 @@ export function parseFooterContent(value: unknown): FooterContent {
     weekendsHours:
       asTrimmedString(row.weekendsHours, base.weekendsHours).slice(0, 80) ||
       base.weekendsHours,
-    instagram: asTrimmedString(row.instagram, base.instagram).slice(0, MAX_LINK) || base.instagram,
-    telegram: asTrimmedString(row.telegram, base.telegram).slice(0, MAX_LINK) || base.telegram,
-    twitter: asTrimmedString(row.twitter, base.twitter).slice(0, MAX_LINK) || base.twitter,
+    instagram,
+    telegram,
+    twitter,
+    socials: parseSocials(row.socials, base.socials, { instagram, telegram, twitter }),
     columns: parseColumns(row.columns, base.columns),
     enamad: parseEnamad(row.enamad, base.enamad),
     legalLinks: (() => {
@@ -334,7 +412,18 @@ export function validateFooterContentInput(value: unknown): FooterContent | null
   }
 }
 
+export function footerSocials(footer: FooterContent): FooterSocialItem[] {
+  if (footer.socials?.length) return footer.socials;
+  return [
+    { id: "instagram", name: "اینستاگرام", href: footer.instagram, icon: "Instagram" },
+    { id: "telegram", name: "تلگرام", href: footer.telegram, icon: "Send" },
+    { id: "x", name: "ایکس", href: footer.twitter, icon: "Twitter" },
+  ];
+}
+
 export function footerContentToContactShape(footer: FooterContent) {
+  const socials = footerSocials(footer);
+  const byId = (id: string) => socials.find((s) => s.id === id)?.href;
   return {
     phone: footer.phone,
     phoneTel: footer.phoneTel,
@@ -343,9 +432,9 @@ export function footerContentToContactShape(footer: FooterContent) {
     email: footer.email,
     address: footer.address,
     socials: {
-      instagram: footer.instagram,
-      telegram: footer.telegram,
-      linkedin: footer.twitter,
+      instagram: byId("instagram") ?? footer.instagram,
+      telegram: byId("telegram") ?? footer.telegram,
+      linkedin: byId("x") ?? footer.twitter,
     },
     businessHours: {
       weekdays: footer.weekdaysHours,

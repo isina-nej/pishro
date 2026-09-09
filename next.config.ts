@@ -103,7 +103,26 @@ const nextConfig: NextConfig = {
   async headers() {
     const immutable = "public, max-age=31536000, immutable";
     const month = "public, max-age=2592000, stale-while-revalidate=604800";
+    // ponytail: baseline hardening only; full CSP when inline-script inventory done (boot splash + theme scripts inline)
+    const security = [
+      { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+      { key: "X-Frame-Options", value: "SAMEORIGIN" },
+      { key: "X-Content-Type-Options", value: "nosniff" },
+      { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+      { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+    ];
     return [
+      {
+        source: "/:path*",
+        headers: security,
+      },
+      {
+        source: "/favicon.ico",
+        headers: [
+          { key: "Cache-Control", value: month },
+          { key: "Content-Type", value: "image/png" },
+        ],
+      },
       {
         source: "/_next/static/:path*",
         headers: [{ key: "Cache-Control", value: immutable }],

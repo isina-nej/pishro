@@ -24,8 +24,11 @@ export function toAbsoluteAssetUrl(
 ): string {
   const resolved = resolveAssetUrl(value, fallback);
   if (resolved.startsWith("http://") || resolved.startsWith("https://")) {
-    return resolved;
+    // ponytail: normalize www to canonical apex so OG/icons never split hosts
+    return resolved.replace("://www.pishrosarmaye.com", "://pishrosarmaye.com");
   }
-  const base = baseUrl.replace(/\/+$/, "");
+  const base = baseUrl
+    .replace("://www.pishrosarmaye.com", "://pishrosarmaye.com")
+    .replace(/\/+$/, "");
   return `${base}${resolved.startsWith("/") ? resolved : `/${resolved}`}`;
 }

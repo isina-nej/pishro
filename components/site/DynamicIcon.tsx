@@ -16,6 +16,7 @@ import {
   Compass,
   CreditCard,
   Eye,
+  Facebook,
   FileText,
   Flame,
   Globe,
@@ -23,17 +24,23 @@ import {
   Headphones,
   HeartHandshake,
   HelpCircle,
+  Home,
+  Instagram,
   Laptop,
   Layers,
+  Library,
+  Linkedin,
   Lock,
   Mail,
   MapPin,
   MessageCircle,
   MessageSquare,
+  Newspaper,
   Percent,
   Phone,
   PhoneCall,
   PieChart,
+  Presentation,
   Rocket,
   Send,
   Shield,
@@ -45,9 +52,11 @@ import {
   Target,
   ThumbsUp,
   TrendingUp,
+  Twitter,
   Users,
   Video,
   Wallet,
+  Youtube,
   Zap,
   type LucideIcon,
   type LucideProps,
@@ -56,7 +65,7 @@ import {
 export interface IconMeta {
   name: string;
   labelFa: string;
-  category: "finance" | "education" | "trust" | "contact" | "general";
+  category: "finance" | "education" | "trust" | "contact" | "general" | "social" | "nav";
   icon: LucideIcon;
 }
 
@@ -102,6 +111,19 @@ export const AVAILABLE_ICONS: IconMeta[] = [
   { name: "Send", labelFa: "ارسال و تلگرام", category: "contact", icon: Send },
   { name: "MapPin", labelFa: "موقعیت مکانی", category: "contact", icon: MapPin },
   { name: "Clock", labelFa: "ساعت کاری", category: "contact", icon: Clock },
+
+  // شبکه‌های اجتماعی (brand icons bundled in lucide-react 0.474)
+  { name: "Instagram", labelFa: "اینستاگرام", category: "social", icon: Instagram },
+  { name: "Facebook", labelFa: "فیسبوک", category: "social", icon: Facebook },
+  { name: "Twitter", labelFa: "ایکس / توییتر", category: "social", icon: Twitter },
+  { name: "Linkedin", labelFa: "لینکدین", category: "social", icon: Linkedin },
+  { name: "Youtube", labelFa: "یوتیوب", category: "social", icon: Youtube },
+
+  // منو و صفحات (آیکن نوبار موبایل از همین‌ها می‌آید)
+  { name: "Home", labelFa: "خانه", category: "nav", icon: Home },
+  { name: "Library", labelFa: "کتابخانه", category: "nav", icon: Library },
+  { name: "Newspaper", labelFa: "اخبار", category: "nav", icon: Newspaper },
+  { name: "Presentation", labelFa: "همایش و ارائه", category: "nav", icon: Presentation },
 
   // عمومی و ویژگی‌ها
   { name: "Sparkles", labelFa: "ویژه و ممتاز", category: "general", icon: Sparkles },

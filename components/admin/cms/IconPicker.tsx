@@ -21,6 +21,8 @@ const CATEGORIES: { id: string; label: string }[] = [
   { id: "education", label: "آموزش" },
   { id: "trust", label: "اعتماد و امنیت" },
   { id: "contact", label: "ارتباطات" },
+  { id: "social", label: "شبکه‌های اجتماعی" },
+  { id: "nav", label: "منو و صفحات" },
   { id: "general", label: "عمومی" },
 ];
 

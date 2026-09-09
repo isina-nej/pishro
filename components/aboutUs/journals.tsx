@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { LuArrowLeft, LuNewspaper } from "react-icons/lu";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import type { NewsArticle } from "@/types/about-us";
 
 interface JournalsProps {
@@ -12,6 +13,7 @@ interface JournalsProps {
 }
 
 const Journals = ({ news }: JournalsProps) => {
+  const copy = usePublicCopy("about");
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -30,13 +32,13 @@ const Journals = ({ news }: JournalsProps) => {
       >
         <div className="inline-flex items-center gap-2 bg-myPrimary/10 text-myPrimary px-6 py-2 rounded-full mb-4">
           <LuNewspaper className="text-xl" />
-          <span className="font-medium">اطلاعیه‌ها و مقالات</span>
+          <span className="font-medium">{copy("news.badge", "اطلاعیه‌ها و مقالات")}</span>
         </div>
         <h2 className="text-4xl font-bold mb-4 text-foreground dark:text-textPrimary">
-          تازه‌ها و <span className="text-myPrimary">رویدادهای پیشرو</span>
+          {copy("news.title", "تازه‌ها و رویدادهای پیشرو")}
         </h2>
         <p className="text-lg text-muted-foreground dark:text-textSecondary max-w-2xl mx-auto">
-          آخرین اخبار، رویدادها و مقالات آموزشی ما را دنبال کنید
+          {copy("news.description", "آخرین اخبار، رویدادها و مقالات آموزشی ما را دنبال کنید")}
         </p>
       </motion.div>
 
@@ -77,7 +79,7 @@ const Journals = ({ news }: JournalsProps) => {
               href={`/news/${item.slug}`}
               className="inline-flex items-center gap-2 text-myPrimary font-bold group-hover:gap-4 transition-all"
             >
-              <span>مطالعه بیشتر</span>
+              <span>{copy("news.more", "مطالعه بیشتر")}</span>
               <LuArrowLeft className="text-xl" />
             </Link>
           </motion.div>

@@ -33,6 +33,7 @@ import {
   type FooterContent,
   type NavbarItem,
 } from "@/lib/site/chrome-content";
+import { isPathHidden } from "@/lib/site/hidable-pages";
 import {
   parsePublicContent,
   resolvePublicContent,
@@ -92,6 +93,27 @@ export type PublicUserPanelTheme = {
   dark: PaletteTokens;
   nameFa: string;
 };
+
+/**
+ * Drop footer links that resolve to hidden pages; fall back to always-visible
+ * routes (contact/courses) so the footer never renders dead links.
+ * ponytail: keep fallback list in sync with chrome-content legalLinks defaults.
+ */
+function sanitizeFooterLinks(footer: FooterContent, hiddenPages: string[]): FooterContent {
+  if (!hiddenPages.length) return footer;
+  const isDead = (link: string) => isPathHidden(link.replace(/#.*$/, ""), hiddenPages);
+  if (!footer.legalLinks.some((item) => isDead(item.link))) return footer;
+  const fallbacks = [
+    { label: "قوانین و مقررات", link: "/contact" },
+    { label: "تماس با ما", link: "/contact" },
+    { label: "دوره‌های آموزشی", link: "/courses" },
+  ].filter((item) => !isDead(item.link));
+  return {
+    ...footer,
+    // ponytail: sanitize only; shape comes from parseFooterContent so socials survives
+    legalLinks: fallbacks.length ? fallbacks : footer.legalLinks,
+  };
+}
 
 /**
  * Get site settings (creates default if not exists)
@@ -185,7 +207,10 @@ export async function getPublicSiteChrome(): Promise<PublicSiteChrome> {
       ),
       hiddenPages: parseHiddenPages(settings?.hiddenPages),
       navbarItems: parseNavbarItems(settings?.navbarItems),
-      footerContent: parseFooterContent(settings?.footerContent),
+      footerContent: sanitizeFooterLinks(
+        parseFooterContent(settings?.footerContent),
+        parseHiddenPages(settings?.hiddenPages)
+      ),
     };
   } catch (error) {
     console.error("Error fetching public site chrome:", error);

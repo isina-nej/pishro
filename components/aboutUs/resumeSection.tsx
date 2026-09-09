@@ -5,6 +5,7 @@ import { useInView } from "framer-motion";
 import { useRef } from "react";
 import * as LuIcons from "react-icons/lu";
 import { IconType } from "react-icons";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import type { ResumeItem } from "@/types/about-us";
 
 interface ResumeSectionProps {
@@ -12,6 +13,7 @@ interface ResumeSectionProps {
 }
 
 const ResumeSection = ({ resumeItems }: ResumeSectionProps) => {
+  const copy = usePublicCopy("about");
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -56,11 +58,10 @@ const ResumeSection = ({ resumeItems }: ResumeSectionProps) => {
         className="text-center mb-16"
       >
         <h2 className="text-4xl font-bold mb-4 text-foreground dark:text-textPrimary">
-          داستان <span className="text-myPrimary">پیشرو</span>
+          {copy("resume.title", "داستان پیشرو")}
         </h2>
         <p className="text-lg text-muted-foreground dark:text-textSecondary max-w-2xl mx-auto">
-          از آغاز تا امروز، با هدف واحد: ساختن آینده‌ای روشن‌تر برای
-          سرمایه‌گذاران
+          {copy("resume.subtitle", "از آغاز تا امروز، با هدف واحد: ساختن آینده‌ای روشن‌تر برای سرمایه‌گذاران")}
         </p>
       </motion.div>
 

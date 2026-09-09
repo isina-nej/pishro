@@ -8,17 +8,18 @@ import { AnimatePresence, motion } from "framer-motion";
 import { FiMenu, FiShoppingCart, FiX } from "react-icons/fi";
 import { HiMiniArrowLeftEndOnRectangle } from "react-icons/hi2";
 import { useSession } from "next-auth/react";
-import { FaInstagram, FaXTwitter } from "react-icons/fa6";
-import { RiTelegram2Fill } from "react-icons/ri";
 
 import NavbarLinks from "./NavbarLinks";
 import useHideOnScroll from "./useHideOnScroll";
 import SiteLogo from "@/components/branding/SiteLogo";
 import ThemeToggle from "@/components/ui/ThemeToggle";
-import { contactInfo } from "@/lib/constants/contact";
+import { Globe } from "lucide-react";
+import { DynamicIcon } from "@/components/site/DynamicIcon";
 import { useCartStore } from "@/stores/cart-store";
 import type { NavLinkItem } from "./nav-config";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import type { FooterSocialItem } from "@/lib/site/chrome-content";
+import { DEFAULT_FOOTER_SOCIALS } from "@/lib/site/chrome-content";
 import type { NavSocialLinks } from "./NavbarActions";
 
 type NavbarMobileProps = {
@@ -26,7 +27,7 @@ type NavbarMobileProps = {
   navbarData: NavLinkItem[];
   logoUrl?: string;
   siteName?: string;
-  socials?: NavSocialLinks;
+  socials?: NavSocialLinks | FooterSocialItem[];
 };
 
 const NavbarMobile = ({
@@ -43,6 +44,19 @@ const NavbarMobile = ({
   const cartCount = useCartStore((state) => state.items.length);
   const authLink = session ? "/profile/acc" : "/login";
   const authLabel = session ? "داشبورد" : "ورود | ثبت‌نام";
+  const socialItems: FooterSocialItem[] = useMemo(
+    () =>
+      Array.isArray(socials)
+        ? socials
+        : DEFAULT_FOOTER_SOCIALS.map((s) => ({
+            ...s,
+            href:
+              (socials as NavSocialLinks | undefined)?.[
+                s.id === "x" ? "twitter" : (s.id as "instagram" | "telegram")
+              ] || s.href,
+          })),
+    [socials]
+  );
 
   const openMenu = useCallback(() => setIsOpen(true), []);
   const closeMenu = useCallback(() => setIsOpen(false), []);
@@ -201,33 +215,19 @@ const NavbarMobile = ({
                 <div className="flex items-center justify-between gap-3">
                   <p className="text-[11px] text-muted-foreground">شبکه‌های اجتماعی</p>
                   <div className="flex items-center gap-1.5">
-                    <Link
-                      href={socials?.instagram || contactInfo.socials.instagram}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label="اینستاگرام"
-                      className="inline-flex size-9 items-center justify-center rounded-xl border border-border/70 text-muted-foreground transition hover:text-[#E1306C]"
-                    >
-                      <FaInstagram className="size-4" />
-                    </Link>
-                    <Link
-                      href={socials?.telegram || contactInfo.socials.telegram}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label="تلگرام"
-                      className="inline-flex size-9 items-center justify-center rounded-xl border border-border/70 text-muted-foreground transition hover:text-[#229ED9]"
-                    >
-                      <RiTelegram2Fill className="size-4" />
-                    </Link>
-                    <Link
-                      href={socials?.twitter || contactInfo.socials.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label="ایکس"
-                      className="inline-flex size-9 items-center justify-center rounded-xl border border-border/70 text-muted-foreground transition hover:text-foreground"
-                    >
-                      <FaXTwitter className="size-4" />
-                    </Link>
+                    {socialItems.map((social) => (
+                      <Link
+                        key={social.id || social.name}
+                        href={social.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={social.name}
+                        title={social.name}
+                        className="inline-flex size-9 items-center justify-center rounded-xl border border-border/70 text-muted-foreground transition hover:text-foreground"
+                      >
+                        <DynamicIcon name={social.icon} fallback={Globe} className="size-4" />
+                      </Link>
+                    ))}
                   </div>
                 </div>
               </div>

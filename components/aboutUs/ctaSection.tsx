@@ -6,6 +6,7 @@ import { useRef } from "react";
 import Link from "next/link";
 import { LuArrowLeft } from "react-icons/lu";
 import { HiSparkles } from "react-icons/hi2";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 
 interface CtaSectionProps {
   title?: string | null;
@@ -21,15 +22,16 @@ const CtaSection = ({
   buttonLink,
 }: CtaSectionProps) => {
   const ref = useRef(null);
+  const copy = usePublicCopy("about");
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   // Default values
-  const ctaTitle = title || "آماده‌اید برای شروع سفر سرمایه‌ گذاری هوشمند؟";
+  const ctaTitle = title || copy("cta.title", "آماده‌اید برای شروع سفر سرمایه‌ گذاری هوشمند؟");
   const ctaDescription =
     description ||
-    "با پیوستن به جمع هزاران دانشجوی موفق ما، اولین قدم را برای دستیابی استقلال مالی بردارید";
-  const ctaButtonText = buttonText || "مشاهده دوره‌ها";
-  const ctaButtonLink = buttonLink || "/courses";
+    copy("cta.description", "با پیوستن به جمع هزاران دانشجوی موفق ما، اولین قدم را برای دستیابی استقلال مالی بردارید");
+  const ctaButtonText = buttonText || copy("cta.button", "مشاهده دوره‌ها");
+  const ctaButtonLink = buttonLink || copy("cta.link", "/courses");
 
   return (
     <div ref={ref} className="container-md py-20">
@@ -59,7 +61,7 @@ const CtaSection = ({
               className="home-on-dark mb-6 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-6 py-2 backdrop-blur-sm"
             >
               <HiSparkles className="text-xl text-[var(--home-gold)]" />
-              <span className="text-sm font-medium">شروع مسیر موفقیت</span>
+              <span className="text-sm font-medium">{copy("cta.badge", "شروع مسیر موفقیت")}</span>
             </motion.div>
 
             {/* Title */}

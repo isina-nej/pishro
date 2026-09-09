@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Calendar, Eye, Clock, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
 import BookmarkButton from "@/components/bookmarks/bookmarkButton";
+import { renderWithAnimatedEmoji } from "@/lib/admin/animated-emoji-render";
 
 interface NewsCardProps {
   data: {
@@ -98,11 +99,11 @@ const NewsCard = ({ data }: NewsCardProps) => {
           {/* Title and Excerpt */}
           <div className="mb-4 space-y-3">
             <h3 className="line-clamp-2 text-base font-bold leading-tight text-foreground transition-colors duration-300 group-hover:text-primary sm:text-lg md:text-xl">
-              {data.title}
+              {renderWithAnimatedEmoji(data.title)}
             </h3>
 
             <p className="line-clamp-2 text-sm font-normal leading-relaxed text-muted-foreground">
-              {data.excerpt}
+              {renderWithAnimatedEmoji(data.excerpt)}
             </p>
 
             {/* Tags */}

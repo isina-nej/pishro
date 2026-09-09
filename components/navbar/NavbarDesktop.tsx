@@ -9,7 +9,8 @@ import { cn } from "@/lib/utils";
 import NavbarActions from "./NavbarActions";
 import NavbarPopover from "./navbarPopover";
 import SiteLogo from "@/components/branding/SiteLogo";
-import type { NavLinkItem } from "./nav-config";
+import { NavItemIcon, type NavLinkItem } from "./nav-config";
+import type { FooterSocialItem } from "@/lib/site/chrome-content";
 import type { NavSocialLinks } from "./NavbarActions";
 
 interface NavbarDesktopProps {
@@ -17,7 +18,7 @@ interface NavbarDesktopProps {
   logoUrl?: string;
   siteName?: string;
   navbarData: NavLinkItem[];
-  socials?: NavSocialLinks;
+  socials?: NavSocialLinks | FooterSocialItem[];
 }
 
 function isActivePath(pathname: string | null, link: string) {
@@ -108,7 +109,7 @@ const NavbarDesktop = ({
                         <NavbarPopover
                           item={
                             item as NavLinkItem & {
-                              data: { label: string; link: string }[];
+                              data: { label: string; link: string; icon?: string }[];
                             }
                           }
                         />
@@ -142,7 +143,10 @@ const NavbarDesktop = ({
                           }}
                         />
                       )}
-                      <span className="relative">{item.label}</span>
+                      <span className="relative inline-flex items-center gap-1.5">
+                        {item.icon ? <NavItemIcon item={item} className="size-3.5" /> : null}
+                        {item.label}
+                      </span>
                       <AnimatePresence>
                         {active && (
                           <motion.span

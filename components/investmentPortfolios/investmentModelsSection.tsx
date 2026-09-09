@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/drawer";
 import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import { useInvestmentModels } from "@/lib/hooks/useInvestmentModels";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import { contactInfo } from "@/lib/constants/contact";
 import type { InvestmentModelData } from "@/types/landing";
 
@@ -57,6 +58,7 @@ const InvestmentModelsSection = () => {
   );
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const { data: pageData, isLoading } = useInvestmentModels();
+  const copy = usePublicCopy("investment");
 
   // Fallback data in case DB is empty
   const fallbackModels: InvestmentModelData[] = [
@@ -225,15 +227,14 @@ const InvestmentModelsSection = () => {
 
   const additionalInfo = pageData?.additionalInfoContent
     ? {
-        title: pageData.additionalInfoTitle || "توجه مهم",
+        title: pageData.additionalInfoTitle || copy("models.additionalTitle", "توجه مهم"),
         content:
           pageData.additionalInfoContent ||
-          "در مدل آنلاین، هزینه سبد متناسب با مبلغ سرمایه‌ گذاری و مدت زمان انتخابی شما محاسبه می‌شود.",
+          copy("models.additionalFallback", "در مدل آنلاین، هزینه سبد متناسب با مبلغ سرمایه‌ گذاری و مدت زمان انتخابی شما محاسبه می‌شود."),
       }
     : {
-        title: "توجه مهم",
-        content:
-          "در مدل آنلاین، هزینه سبد متناسب با مبلغ سرمایه‌ گذاری و مدت زمان انتخابی شما محاسبه می‌شود. فرمول دقیق آینده نزدیک به سیستم اضافه خواهد شد. پس از پرداخت، فایل اکسل شامل اطلاعات، سیگنال‌ها فرمول‌های محاسباتی پنل کاربری قرار می‌گیرد.",
+        title: copy("models.additionalTitle", "توجه مهم"),
+        content: copy("models.additionalFallback", "در مدل آنلاین، هزینه سبد متناسب با مبلغ سرمایه‌ گذاری و مدت زمان انتخابی شما محاسبه می‌شود. فرمول دقیق آینده نزدیک به سیستم اضافه خواهد شد. پس از پرداخت، فایل اکسل شامل اطلاعات، سیگنال‌ها فرمول‌های محاسباتی پنل کاربری قرار می‌گیرد."),
       };
 
   // Render contact content
@@ -333,7 +334,7 @@ const InvestmentModelsSection = () => {
                     {/* Features */}
                     <div className="mb-8">
                       <h4 className="text-lg font-bold text-foreground mb-4">
-                        ویژگی‌ها
+                        {copy("models.featuresTitle", "ویژگی‌ها")}
                       </h4>
                       <div className="grid grid-cols-1 gap-4">
                         {model.features.map((feature, idx) => {
@@ -366,7 +367,7 @@ const InvestmentModelsSection = () => {
                     {/* Benefits */}
                     <div className="mb-8">
                       <h4 className="text-lg font-bold text-foreground mb-4">
-                        مزایا
+                        {copy("models.benefitsTitle", "مزایا")}
                       </h4>
                       <ul className="space-y-3">
                         {model.benefits.map((benefit, idx) => (

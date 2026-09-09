@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import IconPicker from "@/components/admin/cms/IconPicker";
 import {
   DEFAULT_NAVBAR_ITEMS,
   type NavbarItem,
@@ -44,7 +45,7 @@ export default function NavbarItemsSection({
   };
 
   const addItem = () => {
-    onChange([...items, { label: "صفحه جدید", link: "/" }]);
+    onChange([...items, { label: "صفحه جدید", link: "/", icon: "Globe" }]);
   };
 
   return (
@@ -91,7 +92,7 @@ export default function NavbarItemsSection({
 
       <div className="space-y-2">
         {items.map((item, index) => (
-          <Card key={`${item.link}-${index}`} className="grid gap-3 p-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
+          <Card key={`${item.link}-${index}`} className="grid gap-3 p-3 sm:grid-cols-[1fr_1fr_1fr_auto] sm:items-end">
             <div className="space-y-1.5">
               <Label className="text-[11px] font-semibold">نام گزینه</Label>
               <Input
@@ -110,6 +111,12 @@ export default function NavbarItemsSection({
                 className="font-mono text-xs"
               />
             </div>
+            <IconPicker
+              label="آیکن"
+              value={item.icon || ""}
+              onChange={(iconName) => updateItem(index, { icon: iconName || undefined })}
+              hint="در منوی موبایل و هاور دسکتاپ نمایش داده می‌شود."
+            />
             <div className="flex items-center gap-1">
               <Button
                 type="button"

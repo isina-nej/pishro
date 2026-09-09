@@ -6,6 +6,7 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import { HiXMark } from "react-icons/hi2";
 import { LuAward } from "react-icons/lu";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import type { Certificate } from "@/types/about-us";
 
 interface CertificatesGalleryProps {
@@ -13,6 +14,7 @@ interface CertificatesGalleryProps {
 }
 
 const CertificatesGallery = ({ certificates }: CertificatesGalleryProps) => {
+  const copy = usePublicCopy("about");
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
@@ -34,13 +36,13 @@ const CertificatesGallery = ({ certificates }: CertificatesGalleryProps) => {
           >
             <div className="inline-flex items-center gap-2 bg-premium/10 text-premium px-6 py-2 rounded-full mb-4">
               <LuAward className="text-xl" />
-              <span className="font-medium">افتخارات و دستاوردها</span>
+              <span className="font-medium">{copy("certificates.badge", "افتخارات و دستاوردها")}</span>
             </div>
             <h2 className="text-4xl font-bold mb-4 text-foreground dark:text-textPrimary">
-              گالری <span className="text-myPrimary">تقدیرنامه‌ها</span>
+              {copy("certificates.title", "گالری تقدیرنامه‌ها")}
             </h2>
             <p className="text-lg text-muted-foreground dark:text-textSecondary max-w-2xl mx-auto">
-              مجموعه‌ای از افتخارات و دستاوردهای ما در مسیر خدمت‌رسانی به جامعه
+              {copy("certificates.description", "مجموعه‌ای از افتخارات و دستاوردهای ما در مسیر خدمت‌رسانی به جامعه")}
             </p>
           </motion.div>
 
@@ -97,7 +99,7 @@ const CertificatesGallery = ({ certificates }: CertificatesGalleryProps) => {
               className="text-center mt-12"
             >
               <p className="text-muted-foreground dark:text-textSecondary mb-4">
-                و افتخارات بیشتری در مسیر خدمت‌رسانی به جامعه...
+                {copy("certificates.more", "و افتخارات بیشتری در مسیر خدمت‌رسانی به جامعه...")}
               </p>
             </motion.div>
           )}

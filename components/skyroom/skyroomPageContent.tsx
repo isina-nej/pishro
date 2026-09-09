@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { HiUsers, HiArrowLeft } from "react-icons/hi";
 import Link from "next/link";
 import { useVisibility } from "@/components/site/VisibilityProvider";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 
 interface SkyRoomPageContentProps {
   meetingLink: string | null;
@@ -13,24 +14,27 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
   meetingLink,
 }) => {
   const { show } = useVisibility();
+  const copy = usePublicCopy("skyroom");
   if (!show("skyroom:landing")) {
     return null;
   }
 
+  const poster = copy("poster", "/images/home/c/main.webp");
+  const videoSrc = copy("video", "/videos/aboutUs.webm");
   return (
     <div className="relative h-screen w-full overflow-hidden">
       {/* Background Video Layer */}
-      <div className="absolute inset-0 z-0 overflow-hidden bg-[url('/images/home/c/main.webp')] bg-cover bg-center">
+      <div className="absolute inset-0 z-0 overflow-hidden bg-cover bg-center" style={{ backgroundImage: `url('${poster}')` }}>
         <video
           autoPlay
           muted
           loop
           playsInline
           preload="metadata"
-          poster="/images/home/c/main.webp"
+          poster={poster}
           className="absolute inset-0 w-full h-full object-cover"
         >
-          <source src="/videos/aboutUs.webm" type="video/webm" />
+          <source src={videoSrc} type="video/webm" />
         </video>
       </div>
       <div className="absolute inset-0 bg-background/40 pointer-events-none z-0"></div>
@@ -80,7 +84,7 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
           </motion.div>
 
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-foreground mb-4 drop-shadow-2xl">
-            همایش آنلاین
+            {copy("heading", "همایش آنلاین")}
           </h1>
 
           <motion.p
@@ -89,7 +93,7 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
             transition={{ duration: 0.8, delay: 0.6 }}
             className="text-xl md:text-2xl text-foreground/90 max-w-2xl mx-auto"
           >
-            به همایش ما خوش آمدید
+            {copy("title", "به همایش ما خوش آمدید")}
           </motion.p>
         </motion.div>
 
@@ -119,7 +123,7 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
 
                 <div className="relative flex items-center gap-4">
                   <span className="text-2xl md:text-3xl font-bold drop-shadow-lg">
-                    ورود به همایش
+                    {copy("enter", "ورود به همایش")}
                   </span>
                   <motion.div
                     animate={{ x: [0, 5, 0] }}
@@ -139,7 +143,7 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
             className="relative rounded-2xl border border-border/20 bg-card/10 px-12 py-6 text-primary-foreground shadow-2xl backdrop-blur-xl"
           >
             <p className="text-xl md:text-2xl text-foreground/80">
-              در حال حاضر همایشی برگزار نمی‌شود
+              {copy("empty", "در حال حاضر همایشی برگزار نمی‌شود")}
             </p>
           </motion.div>
         )}
@@ -155,7 +159,7 @@ const SkyRoomPageContent: React.FC<SkyRoomPageContentProps> = ({
             animate={{ opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
-            پیشرو - پلتفرم آموزش آنلاین
+            {copy("brand", "پیشرو - پلتفرم آموزش آنلاین")}
           </motion.div>
         </motion.div>
       </div>

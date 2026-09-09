@@ -70,8 +70,12 @@ export async function generateMetadata(): Promise<Metadata> {
   const logo = toAbsoluteAssetUrl(base, chrome.logoUrl, DEFAULT_LOGO_URL);
   const og = toAbsoluteAssetUrl(base, chrome.ogImageUrl, DEFAULT_OG_IMAGE_URL);
 
+  // ponytail: single canonical apex (no www) kills duplicate-content; www must 301 to apex at nginx
+  const canonicalBase = "https://pishrosarmaye.com";
+
   return {
-    metadataBase: new URL(base),
+    metadataBase: new URL(canonicalBase),
+    alternates: { canonical: "/" },
     title: {
       default: chrome.siteName,
       template: `%s | ${chrome.siteName}`,

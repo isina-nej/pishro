@@ -2,6 +2,7 @@
 
 import { Shield, TrendingUp, Zap, CheckCircle2 } from "lucide-react";
 import { useInvestmentFunds } from "@/lib/hooks/useInvestmentFunds";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 
 const CARD_THEMES = [
   { icon: Shield, color: "green", gradient: "from-primary to-primary" },
@@ -37,6 +38,7 @@ const getTextColor = (color: string) => {
 
 const PortfoliosDisplay = () => {
   const { data: funds, isLoading } = useInvestmentFunds();
+  const copy = usePublicCopy("investment");
 
   return (
     <section className="w-full py-16 md:py-24">
@@ -44,10 +46,10 @@ const PortfoliosDisplay = () => {
         {/* Header */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            انتخاب صندوق سرمایه‌ گذاری
+            {copy("funds.title", "انتخاب صندوق سرمایه‌ گذاری")}
           </h2>
           <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-            بر اساس هدف سرمایه‌ گذاری خود، یکی از صندوق‌های زیر را انتخاب کنید
+            {copy("funds.description", "بر اساس هدف سرمایه‌ گذاری خود، یکی از صندوق‌های زیر را انتخاب کنید")}
           </p>
         </div>
 
@@ -85,7 +87,7 @@ const PortfoliosDisplay = () => {
 
                   {/* Monthly Return */}
                   <div className="mb-6 p-4 bg-muted rounded-xl">
-                    <p className="text-sm text-muted-foreground mb-1">بازدهی ماهیانه</p>
+                    <p className="text-sm text-muted-foreground mb-1">{copy("funds.return", "بازدهی ماهیانه")}</p>
                     <p className={`text-3xl font-bold ${getTextColor(theme.color)}`}>
                       {(fund.monthlyRate * 100).toFixed(0)}٪
                     </p>
@@ -99,7 +101,7 @@ const PortfoliosDisplay = () => {
                         size={20}
                       />
                       <span className="text-muted-foreground text-sm">
-                        حداقل مدت سرمایه‌ گذاری {fund.minDuration} ماه
+                        {copy("funds.duration", "حداقل مدت سرمایه‌ گذاری")} {fund.minDuration} {copy("funds.durationUnit", "ماه")}
                       </span>
                     </li>
                     <li className="flex items-start gap-2">
@@ -108,7 +110,7 @@ const PortfoliosDisplay = () => {
                         size={20}
                       />
                       <span className="text-muted-foreground text-sm">
-                        سود {(fund.monthlyRate * 100).toFixed(0)}٪ ماهیانه
+                        {copy("funds.profitPrefix", "سود")} {(fund.monthlyRate * 100).toFixed(0)}٪ {copy("funds.profitSuffix", "ماهیانه")}
                       </span>
                     </li>
                   </ul>
@@ -138,11 +140,9 @@ const PortfoliosDisplay = () => {
               </svg>
             </div>
             <div>
-              <h4 className="text-lg font-bold text-foreground mb-2">نکته مهم</h4>
+              <h4 className="text-lg font-bold text-foreground mb-2">{copy("funds.noteTitle", "نکته مهم")}</h4>
               <p className="text-muted-foreground leading-relaxed">
-                تمامی صندوق‌های سرمایه‌ گذاری پیشرو با تضمین اصل سرمایه ارائه
-                می‌شوند. سود هر صندوق متناسب با مبلغ سرمایه‌ گذاری و مدت زمان
-                انتخابی شما محاسبه خواهد شد.
+                {copy("funds.note", "تمامی صندوق‌های سرمایه‌ گذاری پیشرو با تضمین اصل سرمایه ارائه می‌شوند. سود هر صندوق متناسب با مبلغ سرمایه‌ گذاری و مدت زمان انتخابی شما محاسبه خواهد شد.")}
               </p>
             </div>
           </div>
