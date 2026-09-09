@@ -5,7 +5,6 @@ import Link from "next/link";
 import { contactInfo } from "@/lib/constants/contact";
 import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import { DynamicIcon } from "@/components/site/DynamicIcon";
-import { Calculator, PhoneCall } from "lucide-react";
 import "./v32-landing.css";
 
 /* ── animated typing counter ── */
@@ -105,28 +104,6 @@ export default function V32LandingPage({
               <p>
                 {copy("hero.subtitle", "پیشرو در آموزش و سرمایه‌گذاری")}
               </p>
-              <div className="v32-cta-row flex flex-col gap-3 sm:flex-row">
-                <a
-                  href={`tel:${phoneTel}`}
-                  className="v32-btn-green flex items-center gap-2"
-                  aria-label={`${copy("hero.phoneCta", "تماس با پشتیبانی")} ${phoneTel}`}
-                >
-                  <PhoneCall aria-hidden="true" className="size-5" />
-                  {copy("hero.phoneCta", "تماس با پشتیبانی")}
-                </a>
-                <button
-                  type="button"
-                  onClick={() =>
-                    document
-                      .getElementById("calculator")
-                      ?.scrollIntoView({ behavior: "smooth", block: "start" })
-                  }
-                  className="v32-btn-accent flex items-center gap-2"
-                >
-                  <Calculator aria-hidden="true" className="size-5" />
-                  {copy("hero.calculatorCta", "محاسبه سود")}
-                </button>
-              </div>
               <div className="v32-chips">
                 <span>{copy("hero.chip1", "آموزش ترید")}</span>
                 <span>{copy("hero.chip2", "سبدهای تضمینی")}</span>

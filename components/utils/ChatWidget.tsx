@@ -2,14 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  ArrowRight,
-  Headphones,
-  MessageCircle,
-  Send,
-  Sparkles,
-  X,
-} from "lucide-react";
+import { ArrowRight, X } from "lucide-react";
+import { DynamicIcon } from "@/components/site/DynamicIcon";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import { useSound } from "@/components/sound/SoundProvider";
 
 type Step = "topics" | "identity" | "chat";
@@ -87,6 +82,7 @@ function loadCachedTopics(): WidgetTopic[] | null {
 
 export default function ChatWidget() {
   const { play } = useSound();
+  const copy = usePublicCopy("shared");
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState<Step>("topics");
   const [topic, setTopic] = useState<string | null>(null);
@@ -310,12 +306,12 @@ export default function ChatWidget() {
               <div className="relative flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <span className="flex size-10 items-center justify-center rounded-2xl bg-white/15 ring-1 ring-white/25">
-                    <Headphones className="size-5" />
+                    <DynamicIcon name={copy("chat.titleIcon", "Headphones")} className="size-5" />
                   </span>
                   <div>
-                    <p className="text-sm font-bold">پشتیبانی آنلاین پیشرو</p>
+                    <p className="text-sm font-bold">{copy("chat.title", "پشتیبانی آنلاین پیشرو")}</p>
                     <p className="text-[11px] text-primary-foreground/80">
-                      پاسخ‌گویی سریع تیم پشتیبانی
+                      {copy("chat.subtitle", "پاسخ‌گویی سریع تیم پشتیبانی")}
                     </p>
                   </div>
                 </div>
@@ -334,7 +330,7 @@ export default function ChatWidget() {
               {step === "topics" && (
                 <div className="flex-1 space-y-3 overflow-y-auto p-4">
                   <p className="text-sm text-muted-foreground">
-                    موضوع گفتگو را انتخاب کنید:
+                    {copy("chat.choose", "موضوع گفتگو را انتخاب کنید:")}
                   </p>
                   <div className="grid gap-2">
                     {topicsLoading && topics.length === 0 ? (
@@ -377,16 +373,16 @@ export default function ChatWidget() {
                     بازگشت
                   </button>
                   <div className="rounded-2xl border border-primary/20 bg-primary/5 px-3 py-2 text-xs text-foreground">
-                    موضوع: <span className="font-semibold">{topic}</span>
+                    {copy("chat.topicLabel", "موضوع:")} <span className="font-semibold">{topic}</span>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    برای شروع چت، مشخصات تماس را وارد کنید.
+                    {copy("chat.identity", "برای شروع چت، مشخصات تماس را وارد کنید.")}
                   </p>
                   <div className="space-y-2">
                     <input
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
-                      placeholder="نام"
+                      placeholder={copy("chat.firstName", "نام")}
                       className="h-10 w-full rounded-xl border border-border/60 bg-background px-3 text-sm text-foreground outline-none focus:border-primary"
                     />
                     {errors.firstName && (
@@ -395,7 +391,7 @@ export default function ChatWidget() {
                     <input
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
-                      placeholder="نام خانوادگی"
+                      placeholder={copy("chat.lastName", "نام خانوادگی")}
                       className="h-10 w-full rounded-xl border border-border/60 bg-background px-3 text-sm text-foreground outline-none focus:border-primary"
                     />
                     {errors.lastName && (
@@ -404,7 +400,7 @@ export default function ChatWidget() {
                     <input
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      placeholder="شماره تماس"
+                      placeholder={copy("chat.phone", "شماره تماس")}
                       dir="ltr"
                       className="h-10 w-full rounded-xl border border-border/60 bg-background px-3 text-sm text-foreground outline-none focus:border-primary"
                     />
@@ -414,7 +410,7 @@ export default function ChatWidget() {
                     <textarea
                       value={draft}
                       onChange={(e) => setDraft(e.target.value)}
-                      placeholder="پیام اول (اختیاری)"
+                      placeholder={copy("chat.firstMessage", "پیام اول (اختیاری)")}
                       rows={3}
                       className="w-full resize-none rounded-xl border border-border/60 bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-primary"
                     />
@@ -429,8 +425,8 @@ export default function ChatWidget() {
                     onClick={() => void startChat()}
                     className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-primary text-sm font-bold text-primary-foreground transition-transform duration-300 hover:scale-[1.02] disabled:opacity-60"
                   >
-                    <Sparkles className="size-4" />
-                    شروع گفتگو
+                    <DynamicIcon name={copy("chat.startIcon", "Sparkles")} className="size-4" />
+                    {copy("chat.start", "شروع گفتگو")}
                   </button>
                 </div>
               )}
@@ -444,7 +440,7 @@ export default function ChatWidget() {
                   <div ref={listRef} className="flex-1 space-y-2 overflow-y-auto px-3 py-3">
                     {messages.length === 0 && (
                       <p className="rounded-2xl bg-muted/50 px-3 py-2 text-center text-xs text-muted-foreground">
-                        پیام خود را بنویسید؛ پشتیبانی به‌زودی پاسخ می‌دهد.
+                        {copy("chat.empty", "پیام خود را بنویسید؛ پشتیبانی به‌زودی پاسخ می‌دهد.")}
                       </p>
                     )}
                     {messages.map((message) => {
@@ -480,7 +476,7 @@ export default function ChatWidget() {
                         value={draft}
                         onChange={(e) => setDraft(e.target.value)}
                         rows={1}
-                        placeholder="پیام خود را بنویسید..."
+                        placeholder={copy("chat.placeholder", "پیام خود را بنویسید...")}
                         className="max-h-28 min-h-10 flex-1 resize-none rounded-2xl border border-border/60 bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-primary"
                         onKeyDown={(e) => {
                           if (e.key === "Enter" && !e.shiftKey) {
@@ -497,7 +493,7 @@ export default function ChatWidget() {
                         className="flex size-10 items-center justify-center rounded-2xl bg-primary text-primary-foreground transition-transform duration-300 hover:scale-110 disabled:opacity-50"
                         aria-label="ارسال"
                       >
-                        <Send className="size-4" />
+                        <DynamicIcon name={copy("chat.sendIcon", "Send")} className="size-4" />
                       </button>
                     </div>
                   </div>
@@ -542,7 +538,7 @@ export default function ChatWidget() {
               exit={{ rotate: -90, opacity: 0 }}
               className="relative"
             >
-              <MessageCircle className="size-7" strokeWidth={1.75} />
+              <DynamicIcon name={copy("chat.fabIcon", "MessageCircle")} className="size-7" />
             </motion.span>
           )}
         </AnimatePresence>
