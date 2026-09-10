@@ -6,12 +6,16 @@ import { businessConsultingFallback } from "@/lib/data/public-page-fallbacks";
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getBusinessConsultingData();
 
+  const title = data?.metaTitle || "مشاوره کسب و کار | پیشرو";
+  const description =
+    data?.metaDescription ||
+    "دریافت مشاوره تخصصی کسب و کار راه‌اندازی استارتاپ از کارشناسان مجرب پیشرو";
   return {
-    title: data?.metaTitle || "مشاوره کسب و کار | پیشرو",
-    description:
-      data?.metaDescription ||
-      "دریافت مشاوره تخصصی کسب و کار راه‌اندازی استارتاپ از کارشناسان مجرب پیشرو",
+    title,
+    description,
     keywords: data?.metaKeywords || [],
+    alternates: { canonical: "/business-consulting" },
+    openGraph: { title, description, type: "website" },
   };
 }
 

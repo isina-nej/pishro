@@ -64,6 +64,7 @@ export async function generateMetadata({
 
     const relatedTags = (course.tags || []).map((relation) => relation.tag);
 
+    const canonicalPath = `/courses/${categorySlug}/${courseSlug}`;
     return {
       title: `${course.subject} | پیشرو`,
       description: course.description || `آموزش ${course.subject}`,
@@ -72,11 +73,13 @@ export async function generateMetadata({
         course.category?.title || "",
         ...relatedTags.map((tag) => tag.title),
       ],
+      alternates: { canonical: canonicalPath },
       openGraph: {
         title: course.subject,
         description: course.description || `آموزش ${course.subject}`,
         images: course.img ? [course.img] : [],
         type: "website",
+        url: canonicalPath,
       },
       twitter: {
         card: "summary_large_image",
@@ -135,6 +138,16 @@ export default async function CourseDetailPage({
       notFound();
     }
 
+    const canonicalPath = `/courses/${categorySlug}/${courseSlug}`;
+    const courseJsonLd = {
+      "@context": "https://schema.org",
+      "@type": "Course",
+      name: course.subject,
+      description: course.description ?? undefined,
+      ...(course.img ? { image: [course.img] } : {}),
+      provider: { "@type": "Organization", name: "پیشرو", url: "https://pishrosarmaye.com" },
+    };
+
     const t = (key: string, fallback: string) =>
       content["course-detail"]?.[key] || fallback;
 
@@ -148,6 +161,10 @@ export default async function CourseDetailPage({
 
     return (
       <main className="w-full mt-20">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(courseJsonLd) }}
+        />
         <section className="bg-muted py-4">
           <div className="container-xl">
             <nav className="flex items-center gap-2 text-sm text-muted-foreground">

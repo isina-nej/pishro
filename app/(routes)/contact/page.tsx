@@ -10,6 +10,12 @@ import { DynamicIcon } from "@/components/site/DynamicIcon";
 export const metadata: Metadata = {
   title: "تماس با ما | پیشرو",
   description: "راه‌های ارتباطی با مؤسسه پیشرو برای پشتیبانی، مشاوره و همکاری",
+  alternates: { canonical: "/contact" },
+  openGraph: {
+    title: "تماس با ما | پیشرو",
+    description: "راه‌های ارتباطی با مؤسسه پیشرو برای پشتیبانی، مشاوره و همکاری",
+    type: "website",
+  },
 };
 
 export default async function ContactPage() {

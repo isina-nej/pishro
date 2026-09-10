@@ -1,5 +1,3 @@
-import type { Metadata } from "next";
-
 import Navbar from "@/components/navbar/navbar";
 import Footer from "@/components/footer";
 import HiddenPageGuard from "@/components/site/HiddenPageGuard";
@@ -10,10 +8,8 @@ import { getPublicSiteChrome } from "@/lib/services/settings-service";
 import { footerSocials } from "@/lib/site/chrome-content";
 import { isItemHidden } from "@/lib/site/hidable-pages";
 
-export const metadata: Metadata = {
-  title: "پیشرو",
-  description: "پیشرو",
-};
+// ponytail: no metadata here — each route sets its own title/canonical (shared default = duplicate-content)
+export const dynamic = "force-dynamic";
 
 export default async function RoutesLayout({
   children,

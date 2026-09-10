@@ -75,7 +75,6 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     metadataBase: new URL(canonicalBase),
-    alternates: { canonical: "/" },
     title: {
       default: chrome.siteName,
       template: `%s | ${chrome.siteName}`,

@@ -144,7 +144,6 @@ function renderProseMirrorNode(node: ProseMirrorNode | undefined, key: string): 
               sizes="(max-width: 768px) 100vw, 768px"
               className="h-auto w-full"
               loading="lazy"
-              unoptimized
             />
           </div>
           {title && (

@@ -6,12 +6,16 @@ import { investmentPlansFallback } from "@/lib/data/public-page-fallbacks";
 export async function generateMetadata(): Promise<Metadata> {
   const data = await getInvestmentPlansData();
 
+  const title = data?.metaTitle || "سبدهای سرمایه‌ گذاری | پیشرو";
+  const description =
+    data?.metaDescription ||
+    "آشنایی با سبدهای سرمایه‌ گذاری متنوع در ارز دیجیتال، بورس و ترکیبی";
   return {
-    title: data?.metaTitle || "سبدهای سرمایه‌ گذاری | پیشرو",
-    description:
-      data?.metaDescription ||
-      "آشنایی با سبدهای سرمایه‌ گذاری متنوع در ارز دیجیتال، بورس و ترکیبی",
+    title,
+    description,
     keywords: data?.metaKeywords || [],
+    alternates: { canonical: "/investment-plans" },
+    openGraph: { title, description, type: "website" },
   };
 }
 

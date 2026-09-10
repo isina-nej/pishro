@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Calendar, Eye, Clock, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
 import BookmarkButton from "@/components/bookmarks/bookmarkButton";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import { renderWithAnimatedEmoji } from "@/lib/admin/animated-emoji-render";
 
 interface NewsCardProps {
@@ -25,6 +26,7 @@ interface NewsCardProps {
 }
 
 const NewsCard = ({ data }: NewsCardProps) => {
+  const copy = usePublicCopy("news");
   const getReadingTime = (content?: string) => {
     if (!content) return 1;
     const wordsPerMinute = 200;
@@ -153,14 +155,14 @@ const NewsCard = ({ data }: NewsCardProps) => {
 
               <div className="flex items-center gap-1.5">
                 <Clock className="size-3.5 shrink-0" />
-                <span className="truncate">{readingTime} د</span>
+                <span className="truncate">{readingTime} {copy("card.minutesShort", "د")}</span>
               </div>
             </div>
           </div>
 
           {/* Read More Link */}
           <div className="mt-4 flex items-center justify-between border-t border-border/50 pt-4">
-            <span className="text-xs font-semibold text-primary">مطالعه بیشتر</span>
+            <span className="text-xs font-semibold text-primary">{copy("card.more", "مطالعه بیشتر")}</span>
             <ArrowLeft className="size-4 text-primary transition-transform group-hover:translate-x-1" />
           </div>
         </div>

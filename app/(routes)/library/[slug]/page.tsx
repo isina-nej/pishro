@@ -1,320 +1,133 @@
-'use client';
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import BookDetailContent from "@/components/library/BookDetailContent";
+import { getBookBySlug } from "@/lib/services/library-mysql";
 
-import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import Image from 'next/image';
-import { Star, BookOpen, Download, DollarSign, Calendar, User, Eye } from 'lucide-react';
-import Navbar from '@/components/navbar/navbar';
-import Footer from '@/components/footer';
-import BookmarkButton from '@/components/bookmarks/bookmarkButton';
+export const revalidate = 3600;
 
-interface BookDetail {
-  id: string;
-  slug: string;
-  title: string;
-  author: string;
-  description: string;
-  cover?: string;
-  category: string;
-  rating: number;
-  votes: number;
-  views: number;
-  downloads: number;
-  year: number;
-  pages?: number;
-  isbn?: string;
-  language: string;
-  publisher?: string;
-  formats: string[];
-  price?: number;
-  fileUrl?: string;
-  audioUrl?: string;
-  tags: string[];
-  readingTime?: string;
-  isFeatured: boolean;
-  bookStatus?: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
+interface BookPageProps {
+  params: Promise<{ slug: string }>;
 }
 
-export default function BookDetailPage() {
-  const params = useParams();
-  const router = useRouter();
-  const slug = params.slug as string;
-  
-  const [book, setBook] = useState<BookDetail | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!slug) return;
-
-    const fetchBook = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(`/api/library/${slug}`);
-        
-        if (!response.ok) {
-          if (response.status === 404) {
-            setError('کتاب مورد نظر پیدا نشد');
-          } else {
-            setError('خطایی در دریافت اطلاعات کتاب رخ داد');
+function normalizeBook(raw: Record<string, unknown>) {
+  const tags = Array.isArray(raw.tags)
+    ? (raw.tags as unknown[]).filter((t): t is string => typeof t === "string")
+    : typeof raw.tags === "string"
+      ? (() => {
+          try {
+            const parsed = JSON.parse(raw.tags);
+            return Array.isArray(parsed)
+              ? parsed.filter((t): t is string => typeof t === "string")
+              : [];
+          } catch {
+            return [];
           }
-          return;
-        }
+        })()
+      : [];
+  const formats = Array.isArray(raw.formats)
+    ? (raw.formats as unknown[]).filter((f): f is string => typeof f === "string")
+    : typeof raw.formats === "string"
+      ? (() => {
+          try {
+            const parsed = JSON.parse(raw.formats);
+            return Array.isArray(parsed)
+              ? parsed.filter((f): f is string => typeof f === "string")
+              : [];
+          } catch {
+            return [];
+          }
+        })()
+      : [];
+  return {
+    id: String(raw.id ?? ""),
+    slug: String(raw.slug ?? ""),
+    title: String(raw.title ?? ""),
+    author: String(raw.author ?? ""),
+    description: String(raw.description ?? ""),
+    cover: typeof raw.cover === "string" ? raw.cover : undefined,
+    category: String(raw.category ?? ""),
+    rating: Number(raw.rating ?? 0),
+    votes: Number(raw.votes ?? 0),
+    views: Number(raw.views ?? 0),
+    downloads: Number(raw.downloads ?? 0),
+    year: Number(raw.year ?? new Date().getFullYear()),
+    pages: raw.pages != null ? Number(raw.pages) : undefined,
+    isbn: typeof raw.isbn === "string" ? raw.isbn : undefined,
+    language: String(raw.language ?? "فارسی"),
+    publisher: typeof raw.publisher === "string" ? raw.publisher : undefined,
+    formats,
+    price: raw.price != null ? Number(raw.price) : undefined,
+    fileUrl: typeof raw.fileUrl === "string" ? raw.fileUrl : undefined,
+    audioUrl: typeof raw.audioUrl === "string" ? raw.audioUrl : undefined,
+    tags,
+    readingTime: typeof raw.readingTime === "string" ? raw.readingTime : undefined,
+    isFeatured: Boolean(raw.isFeatured),
+  };
+}
 
-        const data = await response.json();
-        setBook(data.data || data);
-      } catch (err) {
-        console.error('Error fetching book:', err);
-        setError('خطایی در دریافت اطلاعات کتاب رخ داد');
-      } finally {
-        setLoading(false);
-      }
-    };
+export async function generateMetadata({ params }: BookPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const book = await getBookBySlug(slug);
 
-    fetchBook();
-  }, [slug]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex flex-col bg-card dark:bg-background">
-        <Navbar />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-            <p className="mt-4 text-muted-foreground">در حال بارگذاری...</p>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
+  if (!book || (book.bookStatus && book.bookStatus !== "PUBLISHED")) {
+    return { title: "کتاب یافت نشد | پیشرو" };
   }
 
-  if (error || !book) {
-    return (
-      <div className="min-h-screen flex flex-col bg-card dark:bg-background">
-        <Navbar />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="text-center max-w-md">
-            <BookOpen className="mx-auto h-16 w-16 text-muted-foreground mb-4" />
-            <h1 className="text-2xl font-bold text-foreground mb-2">
-              {error || 'کتاب پیدا نشد'}
-            </h1>
-            <p className="text-muted-foreground mb-6">
-              ممکن است این کتاب حذف شده باشد یا دسترسی محدود داشته باشد.
-            </p>
-            <button
-              onClick={() => router.back()}
-              className="inline-flex items-center px-6 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-            >
-              بازگشت
-            </button>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
+  const canonicalPath = `/library/${slug}`;
+  const title = `${book.title} | پیشرو`;
+  const description = (book.description ?? "").slice(0, 160);
+  return {
+    title,
+    description,
+    alternates: { canonical: canonicalPath },
+    openGraph: {
+      title,
+      description,
+      type: "book",
+      url: canonicalPath,
+      images: book.cover ? [book.cover] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: book.cover ? [book.cover] : [],
+    },
+  };
+}
+
+export default async function BookDetailPage({ params }: BookPageProps) {
+  const { slug } = await params;
+  const book = await getBookBySlug(slug);
+
+  if (!book || (book.bookStatus && book.bookStatus !== "PUBLISHED")) {
+    notFound();
   }
+
+  const normalized = normalizeBook(book as unknown as Record<string, unknown>);
+  const canonicalPath = `/library/${slug}`;
+  const bookJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Book",
+    name: normalized.title,
+    author: { "@type": "Person", name: normalized.author },
+    description: normalized.description,
+    ...(normalized.cover ? { image: [normalized.cover] } : {}),
+    ...(normalized.isbn ? { isbn: normalized.isbn } : {}),
+    inLanguage: normalized.language,
+    publisher: normalized.publisher
+      ? { "@type": "Organization", name: normalized.publisher }
+      : { "@type": "Organization", name: "پیشرو" },
+    url: `https://pishrosarmaye.com${canonicalPath}`,
+  };
 
   return (
-    <div className="min-h-screen flex flex-col bg-card dark:bg-background">
-      <Navbar />
-      
-      <main className="flex-1">
-        {/* Hero Section */}
-        <div className="relative py-12 md:py-20 px-4 md:px-6">
-          <div className="container mx-auto max-w-6xl">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
-              {/* Book Cover */}
-              <div className="flex justify-center md:justify-start">
-                <div className="relative w-full max-w-xs">
-                  <div className="aspect-[3/4] relative rounded-2xl overflow-hidden shadow-2xl bg-muted">
-                    {book.cover ? (
-                      <Image
-                        src={book.cover}
-                        alt={book.title}
-                        fill
-                        className="object-contain"
-                        priority
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <BookOpen className="h-16 w-16 text-muted-foreground" />
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Book Info */}
-              <div className="md:col-span-2 space-y-6">
-                {/* Category Badge */}
-                <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 text-primary font-semibold text-sm">
-                  {book.category}
-                </div>
-
-                {/* Title */}
-                <div>
-                  <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-                    {book.title}
-                  </h1>
-                  <p className="text-lg text-muted-foreground flex items-center gap-2">
-                    <User className="h-5 w-5" />
-                    {book.author}
-                  </p>
-                </div>
-
-                {/* Rating */}
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2">
-                    <div className="flex">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`h-5 w-5 ${
-                            i < Math.round(book.rating)
-                              ? 'fill-premium text-premium'
-                              : 'text-muted-foreground'
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <span className="font-bold text-lg">{book.rating.toFixed(1)}</span>
-                    <span className="text-muted-foreground">({book.votes} نظر)</span>
-                  </div>
-                </div>
-
-                {/* Stats */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="flex items-center gap-3 p-3 rounded-lg bg-muted">
-                    <Eye className="h-5 w-5 text-primary" />
-                    <div>
-                      <p className="text-xs text-muted-foreground">بازدیدها</p>
-                      <p className="font-semibold">{book.views.toLocaleString('fa-IR')}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-3 p-3 rounded-lg bg-muted">
-                    <Download className="h-5 w-5 text-primary" />
-                    <div>
-                      <p className="text-xs text-muted-foreground">دانلودها</p>
-                      <p className="font-semibold">{book.downloads.toLocaleString('fa-IR')}</p>
-                    </div>
-                  </div>
-                  
-                  {book.pages && (
-                    <div className="flex items-center gap-3 p-3 rounded-lg bg-muted">
-                      <BookOpen className="h-5 w-5 text-primary" />
-                      <div>
-                        <p className="text-xs text-muted-foreground">صفحات</p>
-                        <p className="font-semibold">{book.pages}</p>
-                      </div>
-                    </div>
-                  )}
-                  
-                  {book.year && (
-                    <div className="flex items-center gap-3 p-3 rounded-lg bg-muted">
-                      <Calendar className="h-5 w-5 text-accent-foreground" />
-                      <div>
-                        <p className="text-xs text-muted-foreground">سال</p>
-                        <p className="font-semibold">{book.year}</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                  <BookmarkButton
-                    type="book"
-                    itemId={book.id}
-                    showLabel
-                    className="justify-center px-6 py-3 font-semibold"
-                  />
-                  {book.fileUrl && (
-                    <button className="flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-semibold">
-                      <Download className="h-5 w-5" />
-                      دانلود کتاب
-                    </button>
-                  )}
-                  {book.audioUrl && (
-                    <button className="flex items-center justify-center gap-2 px-6 py-3 rounded-lg border-2 border-primary text-primary hover:bg-primary/5 transition-colors font-semibold">
-                      <BookOpen className="h-5 w-5" />
-                      گوش دادن
-                    </button>
-                  )}
-                  {book.price && (
-                    <div className="flex items-center gap-2 px-6 py-3 rounded-lg bg-muted">
-                      <DollarSign className="h-5 w-5 text-primary" />
-                      <span className="font-semibold">{book.price.toLocaleString('fa-IR')} تومان</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Description Section */}
-        <div className="py-12 md:py-16 px-4 md:px-6 border-t border-border">
-          <div className="container mx-auto max-w-6xl">
-            <h2 className="text-2xl font-bold text-foreground mb-6">
-              درباره این کتاب
-            </h2>
-            <div className="prose dark:prose-invert max-w-none">
-              <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                {book.description}
-              </p>
-            </div>
-
-            {/* Additional Info */}
-            <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-              {book.publisher && (
-                <div>
-                  <h3 className="font-semibold text-foreground mb-2">ناشر</h3>
-                  <p className="text-muted-foreground">{book.publisher}</p>
-                </div>
-              )}
-              {book.isbn && (
-                <div>
-                  <h3 className="font-semibold text-foreground mb-2">ISBN</h3>
-                  <p className="text-muted-foreground">{book.isbn}</p>
-                </div>
-              )}
-              {book.language && (
-                <div>
-                  <h3 className="font-semibold text-foreground mb-2">زبان</h3>
-                  <p className="text-muted-foreground">{book.language}</p>
-                </div>
-              )}
-              {book.readingTime && (
-                <div>
-                  <h3 className="font-semibold text-foreground mb-2">مدت زمان مطالعه</h3>
-                  <p className="text-muted-foreground">{book.readingTime}</p>
-                </div>
-              )}
-            </div>
-
-            {/* Tags */}
-            {book.tags && book.tags.length > 0 && (
-              <div className="mt-8">
-                <h3 className="font-semibold text-foreground mb-4">برچسب‌ها</h3>
-                <div className="flex flex-wrap gap-2">
-                  {book.tags.map((tag: string | { name: string }, index: number) => (
-                    <span
-                      key={index}
-                      className="px-4 py-2 rounded-full bg-muted text-muted-foreground text-sm"
-                    >
-                      {typeof tag === 'string' ? tag : tag.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </main>
-
-      <Footer />
-    </div>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(bookJsonLd) }}
+      />
+      <BookDetailContent book={normalized} />
+    </>
   );
 }

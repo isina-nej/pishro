@@ -1,7 +1,19 @@
+import type { Metadata } from "next";
 import FaqPageContent from "@/components/faq/pageContent";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "سوالات متداول | پیشرو",
+  description: "پاسخ پرسش‌های پرتکرار درباره دوره‌ها، سرمایه‌ گذاری و پشتیبانی پیشرو.",
+  alternates: { canonical: "/faq" },
+  openGraph: {
+    title: "سوالات متداول | پیشرو",
+    description: "پاسخ پرسش‌های پرتکرار درباره دوره‌ها، سرمایه‌ گذاری و پشتیبانی پیشرو.",
+    type: "website",
+  },
+};
 
 async function getPublishedFaqs() {
   try {
@@ -36,8 +48,26 @@ async function getPublishedFaqs() {
 const FaqPage = async () => {
   const items = await getPublishedFaqs();
 
+  const faqJsonLd = items.length
+    ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: items.map((item) => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: { "@type": "Answer", text: item.answer },
+        })),
+      }
+    : null;
+
   return (
     <div>
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
       <FaqPageContent items={items} />
     </div>
   );

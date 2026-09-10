@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import type { NewsSortOption } from "./hooks/useNewsFilters";
 
 interface NewsFilterControlsProps {
@@ -28,14 +29,6 @@ interface NewsFilterControlsProps {
   compact?: boolean;
 }
 
-const timeRangeOptions = [
-  { label: "همه", value: "همه" },
-  { label: "امروز", value: "امروز" },
-  { label: "هفته گذشته", value: "هفته" },
-  { label: "ماه گذشته", value: "ماه" },
-  { label: "سال گذشته", value: "سال" },
-];
-
 export const NewsFilterControls = ({
   categories,
   selectedCategory,
@@ -52,6 +45,14 @@ export const NewsFilterControls = ({
   disabled = false,
   compact = false,
 }: NewsFilterControlsProps) => {
+  const copy = usePublicCopy("news");
+  const timeRangeOptions = [
+    { label: copy("list.timeAll", "همه"), value: "همه" },
+    { label: copy("list.timeToday", "امروز"), value: "امروز" },
+    { label: copy("list.timeWeek", "هفته گذشته"), value: "هفته" },
+    { label: copy("list.timeMonth", "ماه گذشته"), value: "ماه" },
+    { label: copy("list.timeYear", "سال گذشته"), value: "سال" },
+  ];
   return (
     <div className={cn("flex flex-col", compact ? "gap-3" : "gap-4")}>
       <div className="flex items-center justify-between gap-2">
@@ -61,10 +62,10 @@ export const NewsFilterControls = ({
           </span>
           <div>
             <h2 className={cn("font-bold text-foreground", compact ? "text-sm" : "text-base")}>
-              فیلترها
+              {copy("list.filters", "فیلترها")}
             </h2>
             {!compact && (
-              <p className="text-[11px] text-muted-foreground">جستجو، دسته و زمان</p>
+              <p className="text-[11px] text-muted-foreground">{copy("list.filtersHint", "جستجو، دسته و زمان")}</p>
             )}
           </div>
         </div>
@@ -75,7 +76,7 @@ export const NewsFilterControls = ({
             disabled={disabled}
             className="rounded-full border border-border/50 bg-background/40 px-2.5 py-1 text-[11px] font-medium text-foreground transition-transform duration-300 hover:scale-105"
           >
-            پاک کردن
+            {copy("list.clearShort", "پاک کردن")}
           </button>
         )}
       </div>
@@ -91,7 +92,7 @@ export const NewsFilterControls = ({
           value={query}
           onChange={(event) => onQueryChange(event.target.value)}
           className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
-          placeholder="جستجو در اخبار..."
+          placeholder={copy("list.searchPlaceholder", "جستجو در اخبار...")}
           disabled={disabled}
         />
         {query ? (
@@ -113,7 +114,7 @@ export const NewsFilterControls = ({
           disabled={disabled}
         >
           <SelectTrigger className="h-9 rounded-xl border-border/70 bg-card text-xs text-foreground">
-            <SelectValue placeholder="مرتب‌سازی" />
+            <SelectValue placeholder={copy("list.sortPlaceholder", "مرتب‌سازی")} />
           </SelectTrigger>
           <SelectContent>
             {sortOptions.map((option) => (
@@ -126,7 +127,7 @@ export const NewsFilterControls = ({
 
         <Select value={timeRange} onValueChange={onTimeRangeChange} disabled={disabled}>
           <SelectTrigger className="h-9 rounded-xl border-border/70 bg-card text-xs text-foreground">
-            <SelectValue placeholder="بازه زمانی" />
+            <SelectValue placeholder={copy("list.timePlaceholder", "بازه زمانی")} />
           </SelectTrigger>
           <SelectContent>
             {timeRangeOptions.map((option) => (
@@ -139,7 +140,7 @@ export const NewsFilterControls = ({
       </div>
 
       <div className="space-y-1.5">
-        <p className="text-[11px] font-medium text-muted-foreground">دسته‌بندی</p>
+        <p className="text-[11px] font-medium text-muted-foreground">{copy("list.categoryLabel", "دسته‌بندی")}</p>
         <div className={cn("flex gap-1.5", compact ? "flex-col" : "flex-wrap")}>
           {categories.map((category) => {
             const active = selectedCategory === category;

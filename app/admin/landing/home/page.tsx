@@ -107,11 +107,11 @@ export default function LandingHomeCmsPage() {
         </Button>
       </div>
 
-      <Tabs defaultValue="content" className="space-y-4">
+      <Tabs defaultValue="mobile" className="space-y-4">
         <TabsList className="flex h-auto flex-wrap gap-1">
-          <TabsTrigger value="content">محتوای اصلی</TabsTrigger>
-          <TabsTrigger value="calculator">ماشین‌حساب</TabsTrigger>
           <TabsTrigger value="mobile">قدم‌های موبایل</TabsTrigger>
+          <TabsTrigger value="calculator">ماشین‌حساب</TabsTrigger>
+          <TabsTrigger value="content">محتوای اصلی</TabsTrigger>
         </TabsList>
 
         <TabsContent value="content" className="space-y-4">
@@ -120,11 +120,6 @@ export default function LandingHomeCmsPage() {
               هیرو اول صفحه (سکه‌ها) ثابت است و از اینجا ویرایش نمی‌شود.
             </p>
             <JsonField label="آمار (JSON)" value={form.statsData} onChange={(v) => set('statsData', v)} hint='[{"label":"...","value":3000,"suffix":"+"}]' />
-            <TextField label="عنوان چرا پیشرو" value={str(form.whyUsTitle)} onChange={(v) => set('whyUsTitle', v)} />
-            <TextField label="توضیح چرا پیشرو" value={str(form.whyUsDescription)} onChange={(v) => set('whyUsDescription', v)} multiline />
-            <JsonField label="آیتم‌های چرا پیشرو (JSON)" value={form.whyUsItems} onChange={(v) => set('whyUsItems', v)} />
-            <TextField label="عنوان باشگاه خبری" value={str(form.newsClubTitle)} onChange={(v) => set('newsClubTitle', v)} />
-            <TextField label="توضیح باشگاه خبری" value={str(form.newsClubDescription)} onChange={(v) => set('newsClubDescription', v)} multiline />
             <TextField label="Meta Title" value={str(form.metaTitle)} onChange={(v) => set('metaTitle', v)} />
             <TextField label="Meta Description" value={str(form.metaDescription)} onChange={(v) => set('metaDescription', v)} multiline />
             <PublishedSwitch checked={Boolean(form.published)} onChange={(v) => set('published', v)} />
@@ -143,16 +138,14 @@ export default function LandingHomeCmsPage() {
 
         <TabsContent value="calculator" className="space-y-4">
           <Card className="space-y-4 p-4">
+            <p className="text-sm text-muted-foreground">
+              نرخ‌ها و محدوده‌ها از «صندوق‌های سرمایه‌گذاری» می‌آیند و منبع واحد محاسبه همان‌جاست؛ اینجا فقط نمایشی است.
+            </p>
             <TextField label="عنوان ماشین‌حساب" value={str(form.calculatorTitle)} onChange={(v) => set('calculatorTitle', v)} />
             <TextField label="توضیح" value={str(form.calculatorDescription)} onChange={(v) => set('calculatorDescription', v)} multiline />
-            <TextField label="نرخ کم" value={str(form.calculatorRateLow)} onChange={(v) => set('calculatorRateLow', Number(v))} dir="ltr" />
-            <TextField label="نرخ متوسط" value={str(form.calculatorRateMedium)} onChange={(v) => set('calculatorRateMedium', Number(v))} dir="ltr" />
-            <TextField label="نرخ بالا" value={str(form.calculatorRateHigh)} onChange={(v) => set('calculatorRateHigh', Number(v))} dir="ltr" />
             <TextField label="توضیح پورتفوی کم" value={str(form.calculatorPortfolioLowDesc)} onChange={(v) => set('calculatorPortfolioLowDesc', v)} />
             <TextField label="توضیح پورتفوی متوسط" value={str(form.calculatorPortfolioMediumDesc)} onChange={(v) => set('calculatorPortfolioMediumDesc', v)} />
             <TextField label="توضیح پورتفوی بالا" value={str(form.calculatorPortfolioHighDesc)} onChange={(v) => set('calculatorPortfolioHighDesc', v)} />
-            <JsonField label="گام‌های مبلغ (JSON)" value={form.calculatorAmountSteps} onChange={(v) => set('calculatorAmountSteps', v)} />
-            <JsonField label="گام‌های مدت (JSON)" value={form.calculatorDurationSteps} onChange={(v) => set('calculatorDurationSteps', v)} />
             <TextField label="تلفن حضوری" value={str(form.calculatorInPersonPhone)} onChange={(v) => set('calculatorInPersonPhone', v)} />
             <TextField label="آیدی تلگرام" value={str(form.calculatorOnlineTelegram)} onChange={(v) => set('calculatorOnlineTelegram', v)} dir="ltr" />
             <TextField label="لینک تلگرام" value={str(form.calculatorOnlineTelegramLink)} onChange={(v) => set('calculatorOnlineTelegramLink', v)} dir="ltr" />

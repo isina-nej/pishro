@@ -8,6 +8,7 @@ import { CoursesHero } from "./coursesHero";
 import { CoursesFilterControls } from "./coursesFilterControls";
 import CourseCard from "@/components/utils/courseCard";
 import { useVisibility } from "@/components/site/VisibilityProvider";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 
 type CategoryWithCourses = Category & {
   courses: Course[];
@@ -21,6 +22,7 @@ const CoursesPageContent = ({
   categoriesWithCourses,
 }: CoursesPageContentProps) => {
   const { show } = useVisibility();
+  const copy = usePublicCopy("courses");
   const {
     sortOptions,
     query,
@@ -90,21 +92,21 @@ const CoursesPageContent = ({
                           <>
                             <span className="font-semibold text-foreground">
                               {filteredCourses.length}
-                            </span>
-                            دوره
+                            </span>{" "}
+                            {copy("results.unit", "دوره")}
                             {query && (
                               <>
-                                برای جستجوی
+                                {copy("results.queryPrefix", "برای جستجوی")}
                                 <span className="font-semibold text-foreground">
                                   &quot;{query}&quot;
                                 </span>
                               </>
                             )}
-                            یافت شد
+                            {copy("results.found", "یافت شد")}
                           </>
                         ) : (
                           <span className="text-muted-foreground">
-                            هیچ دوره‌ای با این فیلترها یافت نشد
+                            {copy("results.empty", "هیچ دوره‌ای با این فیلترها یافت نشد")}
                           </span>
                         )}
                       </p>
@@ -137,14 +139,14 @@ const CoursesPageContent = ({
                     <div className="flex min-h-[300px] items-center justify-center">
                       <div className="text-center">
                         <p className="text-lg text-muted-foreground">
-                          هیچ دوره‌ای برای نمایش وجود ندارد
+                          {copy("results.none", "هیچ دوره‌ای برای نمایش وجود ندارد")}
                         </p>
                         {hasActiveFilters && (
                           <button
                             onClick={handleResetFilters}
                             className="mt-4 rounded-full border border-border bg-card px-6 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted"
                           >
-                            پاک کردن فیلترها
+                            {copy("filters.clear", "پاک کردن فیلترها")}
                           </button>
                         )}
                       </div>

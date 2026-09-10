@@ -52,10 +52,12 @@ export async function generateMetadata({
       };
     }
 
+    const canonicalPath = `/courses/${categorySlug}`;
     return {
       title: category.metaTitle || category.title,
       description: category.metaDescription || category.description,
       keywords: category.metaKeywords as string[] | undefined,
+      alternates: { canonical: canonicalPath },
       openGraph: {
         title: category.metaTitle || category.title,
         description:
@@ -64,6 +66,7 @@ export async function generateMetadata({
           "توضیحات پیدا نشد",
         images: category.coverImage ? [category.coverImage] : [],
         type: "website",
+        url: canonicalPath,
       },
       twitter: {
         card: "summary_large_image",

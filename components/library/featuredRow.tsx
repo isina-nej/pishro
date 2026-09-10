@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import { BookCoverCard } from "./BookCoverCard";
 import type { LibraryBook } from "./data";
 
@@ -10,6 +11,7 @@ interface FeaturedRowProps {
 }
 
 export const FeaturedRow = ({ books }: FeaturedRowProps) => {
+  const copy = usePublicCopy("library");
   if (!books.length) {
     return null;
   }
@@ -23,14 +25,14 @@ export const FeaturedRow = ({ books }: FeaturedRowProps) => {
           transition={{ delay: 0.1 }}
         >
           <h3 className="text-lg font-bold text-foreground">
-            🌟 پیشنهادهای ویژه کتابخانه
+            🌟 {copy("featured.title", "پیشنهادهای ویژه کتابخانه")}
           </h3>
           <p className="text-sm text-muted-foreground">
-            کتاب‌هایی که بیشترین امتیاز و بازدید را این هفته داشته‌اند
+            {copy("featured.description", "کتاب‌هایی که بیشترین امتیاز و بازدید را این هفته داشته‌اند")}
           </p>
         </motion.div>
         <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
-          مشاهده همه پیشنهادها
+          {copy("featured.all", "مشاهده همه پیشنهادها")}
         </Button>
       </div>
 

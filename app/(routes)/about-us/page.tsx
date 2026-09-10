@@ -12,6 +12,14 @@ export async function generateMetadata(): Promise<Metadata> {
       aboutPage?.metaDescription ||
       "آشنایی با تیم، تاریخچه و ماموریت مؤسسه سرمایه‌ گذاری پیشرو",
     keywords: aboutPage?.metaKeywords || [],
+    alternates: { canonical: "/about-us" },
+    openGraph: {
+      title: aboutPage?.metaTitle || "درباره ما | پیشرو",
+      description:
+        aboutPage?.metaDescription ||
+        "آشنایی با تیم، تاریخچه و ماموریت مؤسسه سرمایه‌ گذاری پیشرو",
+      type: "website",
+    },
   };
 }
 

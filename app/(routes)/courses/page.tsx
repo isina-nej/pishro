@@ -8,6 +8,12 @@ import { CourseLevel, CourseStatus, Language } from "@/lib/types/db";
 export const metadata: Metadata = {
   title: "همه دوره‌ها | پیشرو",
   description: "مشاهده همه دوره‌های آموزشی پیشرو در یک صفحه",
+  alternates: { canonical: "/courses" },
+  openGraph: {
+    title: "همه دوره‌ها | پیشرو",
+    description: "مشاهده همه دوره‌های آموزشی پیشرو در یک صفحه",
+    type: "website",
+  },
 };
 
 export const revalidate = 3600;

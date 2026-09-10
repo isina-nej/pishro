@@ -10,6 +10,7 @@ import { NewsFilterControls } from "./newsFilterControls";
 import NewsCard from "./newsCard";
 import { Sparkles } from "lucide-react";
 import { useVisibility } from "@/components/site/VisibilityProvider";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import { cn } from "@/lib/utils";
 
 type NewsQueryReturn = {
@@ -23,6 +24,7 @@ type NewsQueryReturn = {
 
 const NewsPageContent = () => {
   const { show } = useVisibility();
+  const copy = usePublicCopy("news");
   const { data: newsData, isLoading } = useNewsList({
     page: 1,
     limit: 100,
@@ -70,7 +72,7 @@ const NewsPageContent = () => {
               className="mx-auto h-10 w-10 rounded-full border-4 border-border border-t-primary"
             />
             <p className="mt-4 text-sm text-muted-foreground">
-              در حال بارگذاری اخبار...
+              {copy("list.loading", "در حال بارگذاری اخبار...")}
             </p>
           </div>
         </div>
@@ -126,18 +128,18 @@ const NewsPageContent = () => {
               <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border/50 bg-card/70 px-4 py-3 backdrop-blur-xl">
                 <div>
                   <p className="text-xs text-muted-foreground">
-                    نمایش{" "}
+                    {copy("list.countPrefix", "نمایش")}{" "}
                     <span className="font-semibold text-foreground">
                       {filteredNews.length}
                     </span>{" "}
-                    از{" "}
+                    {copy("list.countMiddle", "از")}{" "}
                     <span className="font-semibold text-foreground">
                       {news.length}
                     </span>{" "}
-                    خبر
+                    {copy("list.countSuffix", "خبر")}
                   </p>
                   <h2 className="text-lg font-bold text-foreground sm:text-xl">
-                    آخرین اخبار پیشرو
+                    {copy("list.title", "آخرین اخبار پیشرو")}
                   </h2>
                 </div>
                 {stats.featured > 0 && (
@@ -150,7 +152,7 @@ const NewsPageContent = () => {
                 )}
                 {query.trim().length > 0 && (
                   <p className="w-full text-xs text-muted-foreground">
-                    نتایج برای:{" "}
+                    {copy("list.queryPrefix", "نتایج برای:")}{" "}
                     <span className="font-semibold text-foreground">
                       «{query}»
                     </span>
@@ -176,11 +178,10 @@ const NewsPageContent = () => {
               ) : (
                 <div className="rounded-3xl border border-border/50 bg-card/70 p-10 text-center backdrop-blur-xl">
                   <p className="text-base font-semibold text-foreground">
-                    هیچ خبری پیدا نشد
+                    {copy("list.empty", "هیچ خبری پیدا نشد")}
                   </p>
                   <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
-                    با فیلترهای فعلی خبری نیست. فیلترها را تغییر دهید یا پاک
-                    کنید.
+                    {copy("list.emptyHint", "با فیلترهای فعلی خبری نیست. فیلترها را تغییر دهید یا پاک کنید.")}
                   </p>
                   {hasActiveFilters && (
                     <button
@@ -188,7 +189,7 @@ const NewsPageContent = () => {
                       onClick={handleResetFilters}
                       className="mt-5 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-transform duration-300 hover:scale-105"
                     >
-                      حذف تمام فیلترها
+                      {copy("list.clear", "حذف تمام فیلترها")}
                     </button>
                   )}
                 </div>

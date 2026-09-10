@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import type { BookCategory, BookFormat } from "./data";
 import type { SortOption } from "./hooks/useLibraryFilters";
 
@@ -45,14 +46,14 @@ export const FilterControls = ({
   onResetFilters,
   disabled = false,
 }: FilterControlsProps) => {
+  const copy = usePublicCopy("library");
   return (
     <div className="flex flex-col gap-6 border-b border-border pb-8">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-col gap-3 md:flex-row md:items-center">
-          <h2 className="text-xl font-bold text-foreground">کتاب‌ها</h2>
+          <h2 className="text-xl font-bold text-foreground">{copy("filters.title", "کتاب‌ها")}</h2>
           <p className="text-sm text-muted-foreground">
-            کتابخانه را بر اساس علاقه خود فیلتر کنید و پیشنهادهای جدید را
-            ببینید.
+            {copy("filters.description", "کتابخانه را بر اساس علاقه خود فیلتر کنید و پیشنهادهای جدید را ببینید.")}
           </p>
         </div>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -68,7 +69,7 @@ export const FilterControls = ({
               )}
               aria-disabled={disabled}
             >
-              <SelectValue placeholder="فرمت" />
+              <SelectValue placeholder={copy("filters.formatPlaceholder", "فرمت")} />
             </SelectTrigger>
             <SelectContent>
               {formatOptions.map((format) => (
@@ -91,7 +92,7 @@ export const FilterControls = ({
               )}
               aria-disabled={disabled}
             >
-              <SelectValue placeholder="مرتب‌سازی" />
+              <SelectValue placeholder={copy("filters.sortPlaceholder", "مرتب‌سازی")} />
             </SelectTrigger>
             <SelectContent>
               {sortOptions.map((option) => (
@@ -116,7 +117,7 @@ export const FilterControls = ({
             value={query}
             onChange={(event) => onQueryChange(event.target.value)}
             className="w-full bg-transparent text-sm text-muted-foreground outline-none"
-            placeholder="جستجوی سریع در بین کتاب‌ها"
+            placeholder={copy("filters.searchPlaceholder", "جستجوی سریع در بین کتاب‌ها")}
             disabled={disabled}
             aria-disabled={disabled}
           />
@@ -126,7 +127,7 @@ export const FilterControls = ({
               className="whitespace-nowrap text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
               disabled={disabled}
             >
-              حذف فیلترها
+              {copy("filters.clear", "حذف فیلترها")}
             </button>
           )}
         </div>

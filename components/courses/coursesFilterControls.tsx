@@ -3,6 +3,7 @@
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import type { CourseSortOption } from "./hooks/useCoursesFilters";
 
 interface CoursesFilterControlsProps {
@@ -17,13 +18,6 @@ interface CoursesFilterControlsProps {
   onResetFilters: () => void;
   disabled?: boolean;
 }
-
-const levelOptions = [
-  { label: "همه سطح‌ها", value: "همه" },
-  { label: "مقدماتی", value: "مقدماتی" },
-  { label: "متوسط", value: "متوسط" },
-  { label: "پیشرفته", value: "پیشرفته" },
-];
 
 function ChipGroup({
   label,
@@ -93,6 +87,13 @@ export const CoursesFilterControls = ({
   onResetFilters,
   disabled = false,
 }: CoursesFilterControlsProps) => {
+  const copy = usePublicCopy("courses");
+  const levelOptions = [
+    { label: copy("filters.level1", "همه سطح‌ها"), value: "همه" },
+    { label: copy("filters.level2", "مقدماتی"), value: "مقدماتی" },
+    { label: copy("filters.level3", "متوسط"), value: "متوسط" },
+    { label: copy("filters.level4", "پیشرفته"), value: "پیشرفته" },
+  ];
   return (
     <div className="flex flex-col gap-6 border-b border-border/40 pb-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -101,9 +102,9 @@ export const CoursesFilterControls = ({
             <SlidersHorizontal className="size-4" />
           </span>
           <div>
-            <h2 className="text-xl font-bold text-foreground">دوره‌های آموزشی</h2>
+            <h2 className="text-xl font-bold text-foreground">{copy("filters.title", "دوره‌های آموزشی")}</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              سطح و مرتب‌سازی را انتخاب کنید
+              {copy("filters.description", "سطح و مرتب‌سازی را انتخاب کنید")}
             </p>
           </div>
         </div>
@@ -120,7 +121,7 @@ export const CoursesFilterControls = ({
             className="inline-flex items-center gap-1.5 self-start rounded-full border border-border/60 bg-card/80 px-3.5 py-1.5 text-xs font-semibold text-foreground shadow-sm"
           >
             <X className="size-3.5" />
-            پاک کردن فیلترها
+            {copy("filters.clear", "پاک کردن فیلترها")}
           </motion.button>
         ) : null}
       </div>
@@ -136,7 +137,7 @@ export const CoursesFilterControls = ({
           value={query}
           onChange={(event) => onQueryChange(event.target.value)}
           className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
-          placeholder="جستجوی سریع در بین دوره‌ها"
+          placeholder={copy("filters.searchPlaceholder", "جستجوی سریع در بین دوره‌ها")}
           disabled={disabled}
           aria-disabled={disabled}
         />
@@ -154,7 +155,7 @@ export const CoursesFilterControls = ({
 
       <div className="grid gap-5 lg:grid-cols-2">
         <ChipGroup
-          label="سطح دوره"
+          label={copy("filters.levelLabel", "سطح دوره")}
           options={levelOptions}
           value={levelFilter}
           onChange={onLevelFilterChange}
@@ -162,7 +163,7 @@ export const CoursesFilterControls = ({
           disabled={disabled}
         />
         <ChipGroup
-          label="مرتب‌سازی"
+          label={copy("filters.sortLabel", "مرتب‌سازی")}
           options={sortOptions.map((option) => ({
             label: option,
             value: option,

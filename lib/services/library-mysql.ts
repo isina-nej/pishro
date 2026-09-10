@@ -126,6 +126,11 @@ export async function getBookBySlug(slug: string) {
       `SELECT * FROM DigitalBook WHERE slug = ? LIMIT 1`,
       [slug]
     );
+    if (books[0]) {
+      await query(`UPDATE DigitalBook SET views = views + 1 WHERE id = ?`, [
+        books[0].id,
+      ]).catch(() => undefined);
+    }
     return books[0] || null;
   } catch (error) {
     console.error("Error fetching book:", error);

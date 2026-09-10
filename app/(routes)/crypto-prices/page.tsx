@@ -5,6 +5,12 @@ import { ensureCryptoMarketWarmer } from '@/lib/services/crypto-market-service';
 export const metadata: Metadata = {
   title: 'قیمت لحظه‌ای ارزهای دیجیتال | پیشرو',
   description: 'مشاهده قیمت، نوسان و اطلاعات بازار ارزهای دیجیتال در پیشرو',
+  alternates: { canonical: "/crypto-prices" },
+  openGraph: {
+    title: 'قیمت لحظه‌ای ارزهای دیجیتال | پیشرو',
+    description: 'مشاهده قیمت، نوسان و اطلاعات بازار ارزهای دیجیتال در پیشرو',
+    type: "website",
+  },
 };
 
 export const dynamic = 'force-dynamic';

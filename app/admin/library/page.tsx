@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
 import type { ColumnDef } from '@tanstack/react-table';
-import { Loader2, Plus } from 'lucide-react';
+import { ExternalLink, Loader2, Plus } from 'lucide-react';
 import { AdminLoadingState, AdminEmptyState, AdminPageShell } from '@/components/admin/AdminPageShell';
 import { DataTable } from '@/components/admin/data-table/DataTable';
 import DataTableToolbar from '@/components/admin/data-table/DataTableToolbar';
@@ -261,6 +261,12 @@ export default function LibraryManagementPage() {
                   <Link href={`/admin/library/${book.id}`}>
                     <Button variant="outline" size="sm" className="h-7 px-2 text-xs">
                       ویرایش
+                    </Button>
+                  </Link>
+                  <Link href={`/library/${book.slug}`} target="_blank">
+                    <Button variant="ghost" size="sm" className="h-7 px-2 text-xs" title="مشاهده صفحه عمومی (SSR + سئو)">
+                      <ExternalLink className="h-3 w-3" />
+                      مشاهده
                     </Button>
                   </Link>
                   <Button

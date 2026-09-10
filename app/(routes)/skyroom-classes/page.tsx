@@ -7,6 +7,12 @@ import { getSkyRoomMeetingLink } from "@/lib/services/skyroom-service";
 export const metadata: Metadata = {
   title: "همایش آنلاین | پیشرو",
   description: "ورود به همایش آنلاین پیشرو - عنوان مهمان",
+  alternates: { canonical: "/skyroom-classes" },
+  openGraph: {
+    title: "همایش آنلاین | پیشرو",
+    description: "ورود به همایش آنلاین پیشرو - عنوان مهمان",
+    type: "website",
+  },
 };
 
 export const revalidate = 3600;
