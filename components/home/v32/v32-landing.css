@@ -420,6 +420,14 @@
   line-height: 1.7;
 }
 
+@media (min-width: 961px) {
+  .v32-wrap.v32-trust {
+    width: 80%;
+    margin-inline: auto;
+    gap: 28px;
+  }
+}
+
 /* Split section */
 .v32-split {
   display: grid;
