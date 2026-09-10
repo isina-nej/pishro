@@ -868,11 +868,27 @@
   }
 }
 
-@media (min-width: 961px) {
-  /* هم‌راستایی عمودی: لبه شروع (راست) تیتر هیرو با لبه شروع باکس اعتماد — گوشی و موبایل دست‌نخورده */
+@media (min-width: 961px) and (max-width: 1023px) {
+  /* هم‌راستایی با لبه بیرونی باکس نوبار (راست، RTL):
+     باکس نوبار = max-1480 وسط‌چین داخل outer‏-px؛ پس لبه‌اش ‎(vw-1480)/2 است.
+     کانتینر border-box‏ است، پس max‏ = ‎1480 + 2*pad تا لبه محتوا = لبه باکس شود.
+     sm‏: outer‏-px نوبار 20 است */
   .v32-hero > .v32-wrap.v32-hero-grid,
   .v32-wrap.v32-trust {
-    width: 80%;
+    width: 100%;
+    max-width: 1520px;
+    margin-inline: auto;
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* lg‏: outer‏-px نوبار 24 است */
+  .v32-hero > .v32-wrap.v32-hero-grid,
+  .v32-wrap.v32-trust {
+    width: 100%;
+    max-width: 1528px;
     margin-inline: auto;
     padding-right: 24px;
     padding-left: 24px;
