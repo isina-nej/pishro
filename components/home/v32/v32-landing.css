@@ -412,19 +412,7 @@
   transform: translateY(-1px);
 }
 
-/* ponytail: even cards use --v32-gold for variety; add more stops when palette gains extra accents */
-.v32-trust article:nth-child(even) .v32-trust-icon {
-  background: color-mix(in srgb, var(--v32-gold) 14%, transparent);
-  color: var(--v32-gold);
-  border-color: color-mix(in srgb, var(--v32-gold) 30%, transparent);
-}
-
-.v32-trust article:nth-child(even):hover .v32-trust-icon {
-  background: var(--v32-gold);
-  border-color: var(--v32-gold);
-  color: var(--v32-on-success);
-  box-shadow: 0 8px 24px -8px var(--v32-gold);
-}
+/* ponytail: all trust icons share --v32-success; reintroduce per-card accent when palette gains extra stops */
 
 .v32-trust span {
   font-size: 13px;
