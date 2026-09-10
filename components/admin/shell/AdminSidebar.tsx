@@ -58,7 +58,7 @@ export const navSections: NavSection[] = [
     label: 'مدیریت ارتباط با مشتری (CRM)',
     items: [
       { href: '/admin/crm/customers', label: 'مشتریان', icon: UsersRound, key: 'crm-customers', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
-      { href: '/admin/crm/leads', label: 'سرنخ‌ها', icon: Contact, key: 'crm-leads', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
+      { href: '/admin/crm/leads', label: 'سرنخ‌های فروش', icon: Contact, key: 'crm-leads', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
       { href: '/admin/crm/deals', label: 'فرصت‌های فروش', icon: Handshake, key: 'crm-deals', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
       { href: '/admin/crm/tickets', label: 'تیکت‌های پشتیبانی', icon: Ticket, key: 'crm-tickets', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },
       { href: '/admin/live-chat', label: 'چت زنده سایت', icon: MessageCircle, key: 'live-chat', roles: ['ADMIN', 'MODERATOR', 'VIEWER'] },

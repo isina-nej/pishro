@@ -63,8 +63,8 @@ export default function NewCrmLeadPage() {
 
   return (
     <AdminPageShell
-      title="سرنخ جدید"
-      description="اطلاعات سرنخ ورودی را ثبت کنید تا در قیف فروش پیگیری شود."
+      title="سرنخ فروش جدید"
+      description="مشتری بالقوه‌ای که هنوز خرید نکرده را ثبت کن تا در قیف فروش پیگیری شود."
       actions={
         <Button asChild variant="outline">
           <Link href="/admin/crm/leads">

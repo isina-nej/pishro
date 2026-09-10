@@ -22,6 +22,8 @@ import {
 } from '@/lib/hooks/useCrmLeads';
 import { BulkActionBar } from '@/components/admin/data-table/BulkActionBar';
 import { useBulkSelection } from '@/lib/hooks/useBulkSelection';
+import LeadRowActions from '@/components/admin/crm/LeadRowActions';
+import { LeadsGuideBox, LeadsHelpPopover } from '@/components/admin/crm/LeadsHelp';
 
 export const dynamic = 'force-dynamic';
 
@@ -99,11 +101,7 @@ const columns: ColumnDef<CrmLeadListItem>[] = [
   {
     id: 'actions',
     header: 'عملیات',
-    cell: ({ row }) => (
-      <Button asChild variant="outline" size="sm">
-        <Link href={`/admin/crm/leads/${row.original.id}`}>مشاهده</Link>
-      </Button>
-    ),
+    cell: ({ row }) => <LeadRowActions lead={row.original} />,
   },
 ];
 
@@ -145,18 +143,22 @@ export default function AdminCrmLeadsPage() {
 
   return (
     <AdminPageShell
-      title="سرنخ‌ها"
-      description="سرنخ‌های ورودی را مدیریت، پیگیری و به فرصت فروش تبدیل کنید."
+      title="سرنخ‌های فروش"
+      description="مشتری بالقوه‌ای که هنوز خرید نکرده: شماره‌اش را نگه دار، پیگیری کن، خوب‌ها را به فرصت فروش تبدیل کن."
       actions={
-        <Button asChild>
-          <Link href="/admin/crm/leads/new">
-            <Plus className="h-4 w-4" />
-            سرنخ جدید
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <LeadsHelpPopover />
+          <Button asChild>
+            <Link href="/admin/crm/leads/new">
+              <Plus className="h-4 w-4" />
+              سرنخ جدید
+            </Link>
+          </Button>
+        </div>
       }
     >
       <div className="space-y-4">
+        <LeadsGuideBox />
         <DataTableToolbar
           searchValue={searchInput}
           onSearchChange={setSearchInput}
@@ -208,8 +210,8 @@ export default function AdminCrmLeadsPage() {
           isLoading={isLeadsLoading}
           pagination={pagination}
           onPageChange={setPage}
-          emptyTitle="سرنخی یافت نشد"
-          emptyDescription={search ? 'عبارت جستجو را تغییر دهید یا یک سرنخ جدید ثبت کنید.' : 'هنوز سرنخی ثبت نشده است.'}
+          emptyTitle="سرنخ فروشی یافت نشد"
+          emptyDescription={search ? 'عبارت جستجو را تغییر دهید یا یک سرنخ جدید ثبت کنید.' : 'هنوز سرنخی ثبت نشده است. اولین مشتری بالقوه را با «سرنخ جدید» اضافه کنید.'}
           enableSelection
           selectedIds={selectedIds}
           onSelectedIdsChange={setSelectedIds}
@@ -217,7 +219,7 @@ export default function AdminCrmLeadsPage() {
 
         <BulkActionBar
           entity="lead"
-          entityLabel="سرنخ"
+          entityLabel="سرنخ فروش"
           selectedIds={selectedIds}
           onClear={clear}
           onDone={onDone}

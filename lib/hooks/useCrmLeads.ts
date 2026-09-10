@@ -147,6 +147,23 @@ export function useUpdateCrmLead() {
   });
 }
 
+export function useDeleteCrmLead() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      await api.delete(`/api/admin/crm/leads/${id}`);
+      return id;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: crmLeadKeys.lists() });
+      toast.success("سرنخ فروش حذف شد");
+    },
+    onError: (error: { response?: { data?: { message?: string } } }) => {
+      toast.error(error?.response?.data?.message || "خطا در حذف سرنخ فروش");
+    },
+  });
+}
+
 export function useConvertLead() {
   const queryClient = useQueryClient();
   return useMutation({
