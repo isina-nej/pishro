@@ -121,10 +121,10 @@ export function useCreateCrmLead() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: crmLeadKeys.lists() });
-      toast.success("سرنخ با موفقیت ایجاد شد");
+      toast.success("سرنخ فروش با موفقیت ایجاد شد");
     },
     onError: (error: { response?: { data?: { message?: string } } }) => {
-      toast.error(error?.response?.data?.message || "خطا در ایجاد سرنخ");
+      toast.error(error?.response?.data?.message || "خطا در ایجاد سرنخ فروش");
     },
   });
 }
@@ -139,10 +139,10 @@ export function useUpdateCrmLead() {
     onSuccess: (_data, { id }) => {
       queryClient.invalidateQueries({ queryKey: crmLeadKeys.detail(id) });
       queryClient.invalidateQueries({ queryKey: crmLeadKeys.lists() });
-      toast.success("سرنخ بروزرسانی شد");
+      toast.success("سرنخ فروش بروزرسانی شد");
     },
     onError: (error: { response?: { data?: { message?: string } } }) => {
-      toast.error(error?.response?.data?.message || "خطا در بروزرسانی سرنخ");
+      toast.error(error?.response?.data?.message || "خطا در بروزرسانی سرنخ فروش");
     },
   });
 }
@@ -185,10 +185,10 @@ export function useConvertLead() {
     onSuccess: (_data, { id }) => {
       queryClient.invalidateQueries({ queryKey: crmLeadKeys.detail(id) });
       queryClient.invalidateQueries({ queryKey: crmLeadKeys.lists() });
-      toast.success("سرنخ به فرصت فروش تبدیل شد");
+      toast.success("سرنخ فروش به فرصت فروش تبدیل شد");
     },
     onError: (error: { response?: { data?: { message?: string } } }) => {
-      toast.error(error?.response?.data?.message || "خطا در تبدیل سرنخ به فرصت فروش");
+      toast.error(error?.response?.data?.message || "خطا در تبدیل سرنخ فروش به فرصت فروش");
     },
   });
 }

@@ -232,7 +232,7 @@ export const ADMIN_GUIDE_CATEGORIES: GuideCategory[] = [
   },
   {
     id: "crm-leads",
-    title: "سرنخ‌ها",
+    title: "سرنخ‌های فروش",
     description: "ثبت، پیگیری و تبدیل سرنخ به فرصت فروش",
     icon: "contact",
     articles: [

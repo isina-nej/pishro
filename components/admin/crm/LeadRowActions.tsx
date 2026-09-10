@@ -44,7 +44,7 @@ export default function LeadRowActions({ lead }: { lead: CrmLeadListItem }) {
             عملیات
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" dir="rtl">
+        <DropdownMenuContent align="end">
           <DropdownMenuItem asChild>
             <Link href={`/admin/crm/leads/${lead.id}`} className="flex items-center gap-2">
               <Eye className="h-4 w-4" />

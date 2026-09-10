@@ -120,7 +120,7 @@ export const ENTITY_REGISTRY = {
   },
   lead: {
     delegate: "lead",
-    label: "سرنخ",
+    label: "سرنخ فروش",
     entityType: "Lead",
     labelFields: ["firstName", "lastName", "phone"],
     toLabel: (r) => joinName(r),
