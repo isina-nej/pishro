@@ -35,7 +35,9 @@ const ScrollToTopButton = () => {
           initial={{ opacity: 0, scale: 0.7 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.7 }}
-          transition={{ duration: 0.3 }}
+          transition={{ type: "spring", stiffness: 400, damping: 20 }}
+          whileHover={{ scale: 1.12 }}
+          whileTap={{ scale: 0.85 }}
           className="fixed bottom-5 left-4 z-50 rounded-full bg-primary/80 text-primary-foreground p-3 shadow-lg shadow-primary/20 hover:bg-primary transition-colors sm:left-6"
         >
           <ArrowUp className="size-6" />

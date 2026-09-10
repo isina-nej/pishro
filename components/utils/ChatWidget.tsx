@@ -511,8 +511,9 @@ export default function ChatWidget() {
         data-sound-role="chat"
         data-cursor="chat"
         onClick={() => (isOpen ? setIsOpen(false) : openWidget())}
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.95 }}
+        transition={{ type: "spring", stiffness: 400, damping: 17 }}
+        whileHover={{ scale: 1.12, rotate: 8 }}
+        whileTap={{ scale: 0.85 }}
         aria-label="پشتیبانی آنلاین"
         className="fixed bottom-5 right-4 z-[60] flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-xl shadow-primary/30 sm:bottom-6 sm:right-6 sm:size-16"
       >
