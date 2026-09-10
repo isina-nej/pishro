@@ -112,62 +112,64 @@ export default function V32LandingPage({
               </div>
             </div>
             <div className="v32-phone-wrap">
-              <div className="v32-glass v32-g1">
-                <div style={{ fontSize: 12, opacity: 0.7 }}>
-                  {copy("phone.card1Label", "سرمایه‌گذاری")}
+              <div className="v32-phone-cluster">
+                <div className="v32-glass v32-g1">
+                  <div style={{ fontSize: 12, opacity: 0.7 }}>
+                    {copy("phone.card1Label", "سرمایه‌گذاری")}
+                  </div>
+                  <div style={{ fontWeight: 800, marginTop: 4 }}>
+                    {copy("phone.card1Value", "تضمینی")}
+                  </div>
                 </div>
-                <div style={{ fontWeight: 800, marginTop: 4 }}>
-                  {copy("phone.card1Value", "تضمینی")}
+                <div className="v32-glass v32-g2">
+                  <div style={{ fontSize: 12, opacity: 0.7 }}>
+                    {copy("phone.card2Label", "سرمایه‌گذاری خودکار")}
+                  </div>
+                  <div style={{ fontWeight: 800, marginTop: 4 }}>
+                    {copy("phone.card2Value", "ماهانه")}
+                  </div>
                 </div>
-              </div>
-              <div className="v32-glass v32-g2">
-                <div style={{ fontSize: 12, opacity: 0.7 }}>
-                  {copy("phone.card2Label", "سرمایه‌گذاری خودکار")}
+                <div className="v32-glass v32-g3">
+                  <div style={{ fontSize: 12, opacity: 0.7 }}>
+                    {copy("phone.portfolioLabel", "ارزش سبد")}
+                  </div>
+                  <div style={{ fontWeight: 800, marginTop: 4, fontSize: 20 }}>
+                    {copy("phone.portfolioValue", "۲۲۳٬۱۵۸٬۷۰۰")}
+                  </div>
+                  <div
+                    style={{
+                      color: "var(--v32-success)",
+                      fontSize: 12,
+                      marginTop: 4,
+                    }}
+                  >
+                    {copy("phone.portfolioChange", "+۴٫۲٪")}
+                  </div>
                 </div>
-                <div style={{ fontWeight: 800, marginTop: 4 }}>
-                  {copy("phone.card2Value", "ماهانه")}
+                <div className="v32-phone">
+                  <div className="v32-phone-bar">
+                    <span />
+                  </div>
+                  <h3>{copy("phone.title", "سرمایه‌گذاری")}</h3>
+                  <div ref={phoneAmount.ref} className="v32-amt">
+                    {formatFa(phoneAmount.value)}
+                  </div>
+                  <div className="v32-phone-sub" style={{ fontSize: 12, marginTop: 4 }}>
+                    {copy("phone.currency", "تومان")}
+                  </div>
+                  <div className="v32-pad">
+                    {["۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹", ".", "۰", "⌫"].map(
+                      (k) => (
+                        <button key={k} type="button" className="v32-key">
+                          {k}
+                        </button>
+                      )
+                    )}
+                  </div>
+                  <button type="button" className="v32-buy">
+                    {copy("phone.confirm", "تأیید سرمایه‌گذاری")}
+                  </button>
                 </div>
-              </div>
-              <div className="v32-glass v32-g3">
-                <div style={{ fontSize: 12, opacity: 0.7 }}>
-                  {copy("phone.portfolioLabel", "ارزش سبد")}
-                </div>
-                <div style={{ fontWeight: 800, marginTop: 4, fontSize: 20 }}>
-                  {copy("phone.portfolioValue", "۲۲۳٬۱۵۸٬۷۰۰")}
-                </div>
-                <div
-                  style={{
-                    color: "var(--v32-success)",
-                    fontSize: 12,
-                    marginTop: 4,
-                  }}
-                >
-                  {copy("phone.portfolioChange", "+۴٫۲٪")}
-                </div>
-              </div>
-              <div className="v32-phone">
-                <div className="v32-phone-bar">
-                  <span />
-                </div>
-                <h3>{copy("phone.title", "سرمایه‌گذاری")}</h3>
-                <div ref={phoneAmount.ref} className="v32-amt">
-                  {formatFa(phoneAmount.value)}
-                </div>
-                <div className="v32-phone-sub" style={{ fontSize: 12, marginTop: 4 }}>
-                  {copy("phone.currency", "تومان")}
-                </div>
-                <div className="v32-pad">
-                  {["۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹", ".", "۰", "⌫"].map(
-                    (k) => (
-                      <button key={k} type="button" className="v32-key">
-                        {k}
-                      </button>
-                    )
-                  )}
-                </div>
-                <button type="button" className="v32-buy">
-                  {copy("phone.confirm", "تأیید سرمایه‌گذاری")}
-                </button>
               </div>
             </div>
           </div>

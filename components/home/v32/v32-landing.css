@@ -162,6 +162,10 @@
   isolation: isolate;
 }
 
+.v32-phone-cluster {
+  position: relative;
+}
+
 .v32-phone {
   /* ponytail: mockup bezel intentionally fixed dark (like iPhone frame); lift to palette when bezel theming requested */
   width: 260px;
@@ -893,6 +897,15 @@
     padding-right: 24px;
     padding-left: 24px;
   }
+  /* ماکت گوشی (ستون دوم گرید) به لبه پایان (چپ در RTL) بچسبد */
+  .v32-hero-grid > .v32-phone-wrap {
+    justify-content: flex-end;
+  }
+  .v32-phone-cluster {
+    margin-inline: 0;
+  }
+  /* تراست: گرید ۴ ستونه لبه‌ها را پر می‌کند؛ باکس پایانی (+۶ سال) خودکار لب‌به‌لب لبه پایان است.
+     فاصله ۲ باکس وسط با gap یکنواخت نصف می‌شود — stretch عرض‌ها را برابر نگه می‌دارد */
   .v32-hero-grid > div:first-child {
     text-align: right;
     transform: none;
