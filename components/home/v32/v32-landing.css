@@ -422,8 +422,6 @@
 
 @media (min-width: 961px) {
   .v32-wrap.v32-trust {
-    width: 80%;
-    margin-inline: auto;
     gap: 28px;
   }
 }
@@ -827,13 +825,24 @@
 }
 
 @media (min-width: 961px) {
-  /* فقط بلوک متن هیرو به لبه راست نزدیک شود — گوشی و موبایل دست‌نخورده */
-  .v32-hero > .v32-wrap.v32-hero-grid {
-    padding-right: 8px;
+  /* هم‌راستایی عمودی: لبه شروع (راست) تیتر هیرو با لبه شروع باکس اعتماد — گوشی و موبایل دست‌نخورده */
+  .v32-hero > .v32-wrap.v32-hero-grid,
+  .v32-wrap.v32-trust {
+    width: 80%;
+    margin-inline: auto;
+    padding-right: 24px;
+    padding-left: 24px;
   }
   .v32-hero-grid > div:first-child {
     text-align: right;
-    transform: translateX(max(0px, calc((100vw - 1180px) / 2 - 12px)));
+    transform: none;
+    margin: 0;
+    padding: 0;
+  }
+  .v32-hero h1,
+  .v32-hero p,
+  .v32-chips {
+    margin-right: 0;
   }
   .v32-hero p {
     margin-left: auto;
