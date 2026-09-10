@@ -213,19 +213,36 @@
   margin-top: 18px;
 }
 
-.v32-pad b {
+.v32-pad .v32-key {
   height: 46px;
   border-radius: 12px;
+  border: 0;
   background: var(--v32-shot-key);
+  color: inherit;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
+  font-size: inherit;
+  cursor: pointer;
+  transition: transform 0.12s ease, filter 0.18s ease, background 0.18s ease;
+}
+
+.v32-pad .v32-key:hover {
+  filter: brightness(1.25);
+  transform: translateY(-2px) scale(1.05);
+}
+
+.v32-pad .v32-key:active {
+  transform: scale(0.88);
+  filter: brightness(1.5);
 }
 
 .v32-buy {
   margin-top: 14px;
   height: 44px;
+  width: 100%;
+  border: 0;
   border-radius: 999px;
   background: var(--v32-accent);
   color: var(--v32-on-accent);
@@ -233,6 +250,33 @@
   align-items: center;
   justify-content: center;
   font-weight: 800;
+  font-size: inherit;
+  cursor: pointer;
+  transition: transform 0.12s ease, filter 0.18s ease;
+}
+
+.v32-buy:hover {
+  filter: brightness(1.12);
+  transform: translateY(-1px) scale(1.02);
+}
+
+.v32-buy:active {
+  transform: scale(0.94);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v32-pad .v32-key,
+  .v32-buy {
+    transition: filter 0.1s ease;
+  }
+  .v32-pad .v32-key:hover,
+  .v32-buy:hover {
+    transform: none;
+  }
+  .v32-pad .v32-key:active,
+  .v32-buy:active {
+    transform: scale(0.97);
+  }
 }
 
 .v32-glass {

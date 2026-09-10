@@ -159,11 +159,15 @@ export default function V32LandingPage({
                 <div className="v32-pad">
                   {["۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹", ".", "۰", "⌫"].map(
                     (k) => (
-                      <b key={k}>{k}</b>
+                      <button key={k} type="button" className="v32-key">
+                        {k}
+                      </button>
                     )
                   )}
                 </div>
-                <div className="v32-buy">{copy("phone.confirm", "تأیید سرمایه‌گذاری")}</div>
+                <button type="button" className="v32-buy">
+                  {copy("phone.confirm", "تأیید سرمایه‌گذاری")}
+                </button>
               </div>
             </div>
           </div>
