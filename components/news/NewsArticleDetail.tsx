@@ -278,7 +278,7 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
         </motion.div>
       )}
 
-      <div className="mx-auto w-full max-w-3xl px-4 sm:px-6">
+      <div className="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={reduceMotion ? false : { opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}

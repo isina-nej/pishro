@@ -3,7 +3,6 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown, Folder } from "lucide-react";
 import {
@@ -86,14 +85,6 @@ export default function CoursesGridClient({ courses }: Props) {
           <span className="mb-3 rounded-full border border-primary/20 bg-card/70 px-4 py-2 text-[11px] font-bold text-primary backdrop-blur-xl">مسیر یادگیری شما</span>
           <h2 className="flex items-center justify-center gap-2 text-2xl font-black tracking-tight text-foreground sm:gap-2.5 sm:text-3xl md:gap-3 md:text-4xl lg:text-5xl">
             <span>دوره‌ها</span>
-            <div className="relative w-12 h-6 sm:w-14 sm:h-7 md:w-16 md:h-8">
-              <Image
-                src={"/icons/smile.svg"}
-                alt="ایموجی خوشحالی"
-                fill
-                className="object-fill"
-              />
-            </div>
           </h2>
           <p className="text-muted-foreground mt-1 sm:mt-1.5 md:mt-2 font-bold text-xs sm:text-sm md:text-base max-w-xl">
             این دوره‌ها منتخب بهترین دوره‌های مجموعه ماست
