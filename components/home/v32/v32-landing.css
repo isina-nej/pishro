@@ -373,7 +373,7 @@
   --v32-card-hover-y: -8px;
   --v32-card-hover-r: -1deg;
   top: 18%;
-  right: 4%;
+  right: -6%;
   width: 128px;
   animation-duration: 6.1s;
 }
