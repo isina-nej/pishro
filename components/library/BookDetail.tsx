@@ -44,10 +44,7 @@ const BookDetail = ({ bookId }: BookDetailProps) => {
   if (isLoading) {
     return (
       <div className="container-xl py-20 flex justify-center items-center min-h-[600px]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground dark:text-textSecondary">در حال بارگذاری...</p>
-        </div>
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mx-auto"></div>
       </div>
     );
   }

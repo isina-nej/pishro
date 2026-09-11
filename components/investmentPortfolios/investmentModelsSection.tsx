@@ -286,12 +286,17 @@ const InvestmentModelsSection = () => {
     }
   };
 
-  // Loading state
+  // Loading state (icon-only)
   if (isLoading) {
     return (
       <section className="mt-24 w-full py-16 md:py-24">
         <div className="container-xl">
-          <div className="text-center">در حال بارگذاری...</div>
+          <div className="flex items-center justify-center">
+            <div className="relative h-10 w-10">
+              <div className="absolute inset-0 rounded-full border-4 border-muted" />
+              <div className="absolute inset-0 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+            </div>
+          </div>
         </div>
       </section>
     );

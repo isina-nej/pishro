@@ -151,13 +151,10 @@ export function VideoPlayer({
         مرورگر شما از پخش ویدیو پشتیبانی نمی‌کند.
       </video>
 
-      {/* Loading Overlay */}
+      {/* Loading Overlay (icon-only) */}
       {isLoading && !error && (
         <div className="absolute inset-0 flex items-center justify-center bg-background bg-opacity-50 rounded-lg">
-          <div className="flex flex-col items-center">
-            <div className="w-12 h-12 border-4 border-border border-t-transparent rounded-full animate-spin" />
-            <p className="mt-4 text-foreground text-sm">در حال بارگذاری...</p>
-          </div>
+          <div className="w-12 h-12 border-4 border-border border-t-transparent rounded-full animate-spin" />
         </div>
       )}
 

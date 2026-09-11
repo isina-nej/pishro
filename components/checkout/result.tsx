@@ -27,7 +27,7 @@ const Result = () => {
   if (!status) {
     return (
       <main className="flex items-center justify-center min-h-[400px]">
-        <p className="text-muted-foreground text-lg">در حال بررسی پرداخت...</p>
+        <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
       </main>
     );
   }
@@ -35,10 +35,7 @@ const Result = () => {
   if (loading) {
     return (
       <main className="flex items-center justify-center min-h-[400px]">
-        <span className="ml-2 text-muted-foreground text-sm">
-          در حال بارگذاری سفارش...
-        </span>
-        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+        <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
       </main>
     );
   }

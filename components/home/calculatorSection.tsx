@@ -133,8 +133,11 @@ const CalculatorSection = ({
         </div>
 
         {fundsLoading || !selectedFund ? (
-          <div className="flex items-center justify-center py-20 text-lg home-on-dark-muted">
-            در حال بارگذاری صندوق‌های سرمایه‌گذاری...
+          <div className="flex items-center justify-center py-20">
+            <div className="relative h-10 w-10">
+              <div className="absolute inset-0 rounded-full border-4 border-white/20" />
+              <div className="absolute inset-0 animate-spin rounded-full border-4 border-white border-t-transparent" />
+            </div>
           </div>
         ) : (
           <>
@@ -334,7 +337,7 @@ const CalculatorSection = ({
                   </div>
 
                   {/* 🛡 پیام تضمین سرمایه */}
-                  {selectedFund.description && selectedFund.key !== "hold" && (
+                  {selectedFund.description && (
                     <div className="mt-4 flex items-start gap-2 rounded-xl border border-[var(--home-deep)]/25 bg-[var(--home-deep)]/10 px-4 py-3 text-sm font-medium text-[var(--home-deep)] shadow-sm">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

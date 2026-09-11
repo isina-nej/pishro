@@ -22,6 +22,7 @@ import {
 import type { EnrolledCourse, UserOrder } from "@/lib/services/user-service";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { LoadingSpinner, useDelayedLoading } from "@/components/ui/loading-spinner";
 import EmptyState from "./emptyState";
 
 const formatDate = (dateString?: string) => {
@@ -174,6 +175,9 @@ const ProfileMainContent = () => {
   const { data: coursesResponse, isLoading: coursesLoading } =
     useEnrolledCourses(1, 3);
   const { data: ordersResponse, isLoading: ordersLoading } = useUserOrders(1, 5);
+  // Icon-only, delayed — cached data renders instantly, no spinner flash
+  const showCoursesLoading = useDelayedLoading(coursesLoading && !coursesResponse);
+  const showOrdersLoading = useDelayedLoading(ordersLoading && !ordersResponse);
 
   const user = userResponse?.data;
   const courses = coursesResponse?.data?.items || [];
@@ -349,15 +353,8 @@ const ProfileMainContent = () => {
             </Link>
           </div>
           <div className="p-5">
-            {coursesLoading ? (
-              <div className="grid gap-4 md:grid-cols-3">
-                {[1, 2, 3].map((item) => (
-                  <div
-                    key={item}
-                    className="h-72 animate-pulse rounded-2xl bg-muted"
-                  />
-                ))}
-              </div>
+            {showCoursesLoading ? (
+              <LoadingSpinner size={36} />
             ) : courses.length > 0 ? (
               <div className="grid gap-4 md:grid-cols-3">
                 {courses.map((course) => (
@@ -451,11 +448,9 @@ const ProfileMainContent = () => {
           </Link>
         </div>
         <div className="px-5">
-          {ordersLoading ? (
-            <div className="space-y-3 py-5">
-              {[1, 2, 3].map((item) => (
-                <div key={item} className="h-16 animate-pulse rounded-xl bg-muted" />
-              ))}
+          {showOrdersLoading ? (
+            <div className="py-5">
+              <LoadingSpinner size={36} />
             </div>
           ) : (
             <OrdersPreview orders={orders} />

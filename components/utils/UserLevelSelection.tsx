@@ -153,9 +153,6 @@ const UserLevelSection = ({ categorySlug }: UserLevelSectionProps) => {
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
               <FaSpinner className="animate-spin text-mySecondary text-3xl" />
-              <span className="mr-3 text-muted-foreground">
-                در حال بارگذاری آزمون...
-              </span>
             </div>
           ) : error ? (
             <div className="text-center py-8 text-destructive">

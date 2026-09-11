@@ -334,9 +334,9 @@ export default function ChatWidget() {
                   </p>
                   <div className="grid gap-2">
                     {topicsLoading && topics.length === 0 ? (
-                      <p className="rounded-2xl border border-border/60 bg-background/70 px-3 py-2.5 text-center text-xs text-muted-foreground">
-                        در حال بارگذاری موضوعات...
-                      </p>
+                      <div className="flex items-center justify-center rounded-2xl border border-border/60 bg-background/70 px-3 py-2.5">
+                        <div className="h-5 w-5 animate-spin rounded-full border-2 border-muted border-t-primary" />
+                      </div>
                     ) : (
                       topics.map((item, index) => (
                         <motion.button

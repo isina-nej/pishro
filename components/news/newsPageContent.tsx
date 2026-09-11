@@ -11,6 +11,7 @@ import NewsCard from "./newsCard";
 import { Sparkles } from "lucide-react";
 import { useVisibility } from "@/components/site/VisibilityProvider";
 import { usePublicCopy } from "@/components/site/PublicContentProvider";
+import { LoadingSpinner, useDelayedLoading } from "@/components/ui/loading-spinner";
 import { cn } from "@/lib/utils";
 
 type NewsQueryReturn = {
@@ -60,21 +61,15 @@ const NewsPageContent = () => {
   };
 
   const filtersVisible = show("news:filters");
+  // Icon-only, delayed loader — cached data usually renders before it appears.
+  // Keeping hooks above the early return so the hook count stays stable.
+  const showLoading = useDelayedLoading(isLoading && newsData?.items == null);
 
-  if (isLoading) {
+  if (showLoading) {
     return (
       <div className="w-full pb-24">
         <div className="flex min-h-[320px] items-center justify-center">
-          <div className="text-center">
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-              className="mx-auto h-10 w-10 rounded-full border-4 border-border border-t-primary"
-            />
-            <p className="mt-4 text-sm text-muted-foreground">
-              {copy("list.loading", "در حال بارگذاری اخبار...")}
-            </p>
-          </div>
+          <LoadingSpinner />
         </div>
       </div>
     );

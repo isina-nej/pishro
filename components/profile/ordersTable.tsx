@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import OrderDetail from "./orderDetail";
 import EmptyState from "./emptyState";
+import { LoadingSpinner, useDelayedLoading } from "@/components/ui/loading-spinner";
 import type { UserOrder } from "@/lib/services/user-service";
 
 const OrdersTable = () => {
@@ -22,7 +23,8 @@ const OrdersTable = () => {
   const pageSize = 10;
 
   // استفاده از React Query hook
-  const { data: response, isLoading: loading } = useUserOrders(page, pageSize);
+  const { data: response, isLoading } = useUserOrders(page, pageSize);
+  const showLoading = useDelayedLoading(isLoading && !response);
   const orders = response?.data?.items || [];
   const total = response?.data?.pagination?.total || 0;
 
@@ -53,14 +55,11 @@ const OrdersTable = () => {
     }).format(date);
   };
 
-  // ====== Loading State ======
-  if (loading) {
+  // ====== Loading State (icon-only, delayed) ======
+  if (showLoading) {
     return (
-      <div className="bg-card rounded-md mb-8 shadow p-10 flex justify-center items-center">
-        <div className="relative">
-          <div className="w-10 h-10 border-4 border-muted rounded-full"></div>
-          <div className="absolute top-0 left-0 w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-        </div>
+      <div className="bg-card rounded-md mb-8 shadow p-10">
+        <LoadingSpinner />
       </div>
     );
   }

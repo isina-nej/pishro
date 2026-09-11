@@ -6,6 +6,7 @@ import Link from "next/link";
 import { BookOpen, GraduationCap, Newspaper, Trash2 } from "lucide-react";
 import ProfileHeader from "./header";
 import EmptyState from "./emptyState";
+import { LoadingSpinner, useDelayedLoading } from "@/components/ui/loading-spinner";
 import { cn } from "@/lib/utils";
 import { useBookmarks, useToggleBookmark } from "@/lib/hooks/useBookmarks";
 import type { BookmarkType } from "@/lib/schemas/bookmark-schema";
@@ -105,6 +106,7 @@ const BookmarkCard = ({ item }: { item: BookmarkItem }) => {
 const FavoritesList = () => {
   const [filter, setFilter] = useState<FilterKey>("all");
   const { data, isLoading } = useBookmarks();
+  const showLoading = useDelayedLoading(isLoading && !data);
 
   const items = useMemo(() => data ?? [], [data]);
   const visibleItems = useMemo(
@@ -112,14 +114,11 @@ const FavoritesList = () => {
     [items, filter]
   );
 
-  // ===== Loading State =====
-  if (isLoading) {
+  // ===== Loading State (icon-only, delayed) =====
+  if (showLoading) {
     return (
-      <div className="mb-8 flex items-center justify-center rounded-md bg-card p-10 shadow">
-        <div className="relative">
-          <div className="size-10 rounded-full border-4 border-muted" />
-          <div className="absolute left-0 top-0 size-10 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-        </div>
+      <div className="mb-8 rounded-md bg-card p-10 shadow">
+        <LoadingSpinner />
       </div>
     );
   }

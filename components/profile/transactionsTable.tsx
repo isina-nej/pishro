@@ -4,6 +4,7 @@ import { useState } from "react";
 import ProfileHeader from "./header";
 import { useUserTransactions } from "@/lib/hooks/useUser";
 import { Badge } from "@/components/ui/badge";
+import { LoadingSpinner, useDelayedLoading } from "@/components/ui/loading-spinner";
 import EmptyState from "./emptyState";
 
 const TransactionsTable = () => {
@@ -11,7 +12,8 @@ const TransactionsTable = () => {
   const pageSize = 10;
 
   // استفاده از React Query hook
-  const { data: response, isLoading: loading } = useUserTransactions(page, pageSize);
+  const { data: response, isLoading } = useUserTransactions(page, pageSize);
+  const loading = useDelayedLoading(isLoading && !response);
   const transactions = response?.data?.items || [];
   const total = response?.data?.pagination?.total || 0;
 
@@ -62,9 +64,7 @@ const TransactionsTable = () => {
   if (loading && transactions.length === 0) {
     return (
       <div className="bg-card rounded-md mb-8 shadow p-8">
-        <div className="flex justify-center items-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-        </div>
+        <LoadingSpinner size={32} />
       </div>
     );
   }
