@@ -373,7 +373,7 @@
   --v32-card-hover-y: -8px;
   --v32-card-hover-r: -1deg;
   top: 18%;
-  right: -6%;
+  right: 0;
   width: 128px;
   animation-duration: 6.1s;
 }
@@ -387,7 +387,7 @@
   --v32-card-hover-r: 1deg;
   --v32-card-glow: color-mix(in srgb, var(--v32-success) 45%, transparent);
   top: 38%;
-  left: 0;
+  left: 6%;
   width: 118px;
   animation-duration: 7.2s;
   animation-delay: -2.6s;
@@ -402,7 +402,7 @@
   --v32-card-hover-r: -0.7deg;
   --v32-card-glow: color-mix(in srgb, var(--v32-success) 48%, transparent);
   bottom: 16%;
-  right: 8%;
+  right: 2%;
   width: 168px;
   animation-duration: 7.8s;
   animation-delay: -4.1s;
@@ -897,9 +897,9 @@
     padding-right: 24px;
     padding-left: 24px;
   }
-  /* ماکت گوشی (ستون دوم گرید) به لبه پایان (چپ در RTL) بچسبد */
+  /* گوشی نزدیک مرکز (وسط خالی پر شود) ولی چیپ‌ها همچنان نزدیک بدنه */
   .v32-hero-grid > .v32-phone-wrap {
-    justify-content: flex-end;
+    justify-content: center;
   }
   .v32-phone-cluster {
     margin-inline: 0;
