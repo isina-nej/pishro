@@ -164,6 +164,10 @@
 
 .v32-phone-cluster {
   position: relative;
+  width: min(560px, 100%);
+  margin-inline: auto;
+  display: flex;
+  justify-content: center;
 }
 
 .v32-phone {
@@ -372,8 +376,8 @@
   --v32-card-hover-x: -5px;
   --v32-card-hover-y: -8px;
   --v32-card-hover-r: -1deg;
-  top: 18%;
-  right: 0;
+  top: 16%;
+  right: calc(50% + 130px);
   width: 128px;
   animation-duration: 6.1s;
 }
@@ -387,7 +391,7 @@
   --v32-card-hover-r: 1deg;
   --v32-card-glow: color-mix(in srgb, var(--v32-success) 45%, transparent);
   top: 38%;
-  left: 6%;
+  left: calc(50% + 130px);
   width: 118px;
   animation-duration: 7.2s;
   animation-delay: -2.6s;
@@ -401,8 +405,8 @@
   --v32-card-hover-y: -9px;
   --v32-card-hover-r: -0.7deg;
   --v32-card-glow: color-mix(in srgb, var(--v32-success) 48%, transparent);
-  bottom: 16%;
-  right: 2%;
+  bottom: 14%;
+  right: calc(50% + 130px);
   width: 168px;
   animation-duration: 7.8s;
   animation-delay: -4.1s;
@@ -869,6 +873,12 @@
 
   .v32-coin-reel {
     margin-top: 4px;
+  }
+
+  /* موبایل: کلاستر وسط‌چین با فضای تنفس برای چیپ‌های اطراف */
+  .v32-phone-cluster {
+    width: 100%;
+    max-width: 420px;
   }
 }
 
