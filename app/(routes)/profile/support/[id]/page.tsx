@@ -95,9 +95,8 @@ export default function ProfileTicketDetailPage() {
 
   if (loading) {
     return (
-      <Card className="flex items-center justify-center gap-2 p-10 text-sm text-muted-foreground">
-        <Loader2 className="h-4 w-4 animate-spin" />
-        در حال بارگذاری...
+      <Card className="flex items-center justify-center p-10">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
       </Card>
     );
   }

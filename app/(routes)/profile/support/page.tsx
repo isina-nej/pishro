@@ -142,9 +142,8 @@ export default function ProfileSupportPage() {
       )}
 
       {loading ? (
-        <Card className="flex items-center justify-center gap-2 p-8 text-sm text-muted-foreground">
-          <Loader2 className="h-4 w-4 animate-spin" />
-          در حال بارگذاری...
+        <Card className="flex items-center justify-center p-8">
+          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
         </Card>
       ) : tickets.length === 0 ? (
         <Card className="flex flex-col items-center gap-2 p-10 text-center">

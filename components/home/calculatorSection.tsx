@@ -65,7 +65,7 @@ const CalculatorSection = ({
   phoneTel = contactInfo.phoneTel,
 }: CalculatorSectionProps) => {
   const copy = usePublicCopy("home-sections");
-  const { data: funds, isLoading: fundsLoading } = useInvestmentFunds();
+  const { data: funds, isLoading: fundsLoading, isFetched } = useInvestmentFunds();
 
   const [selectedFundKey, setSelectedFundKey] = useState<string | null>(null);
   const [amount, setAmount] = useState(10_000_000);
@@ -132,12 +132,16 @@ const CalculatorSection = ({
           </p>
         </div>
 
-        {fundsLoading || !selectedFund ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="relative h-10 w-10">
-              <div className="absolute inset-0 rounded-full border-4 border-white/20" />
-              <div className="absolute inset-0 animate-spin rounded-full border-4 border-white border-t-transparent" />
-            </div>
+        {!selectedFund ? (
+          <div className="min-h-[320px]" aria-busy={fundsLoading || !isFetched}>
+            {fundsLoading && !isFetched ? (
+              <div className="flex items-center justify-center py-20">
+                <div className="relative h-10 w-10">
+                  <div className="absolute inset-0 rounded-full border-4 border-white/20" />
+                  <div className="absolute inset-0 animate-spin rounded-full border-4 border-white border-t-transparent" />
+                </div>
+              </div>
+            ) : null}
           </div>
         ) : (
           <>
