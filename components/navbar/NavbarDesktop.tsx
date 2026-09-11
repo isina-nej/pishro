@@ -46,7 +46,7 @@ const NavbarDesktop = ({
         className={cn(
           "pointer-events-auto relative mx-auto flex h-14 max-w-[1480px] items-center gap-2 rounded-2xl border px-2.5 shadow-2xl backdrop-blur-2xl sm:h-[3.75rem] sm:gap-3 sm:px-3 lg:px-4",
           isDark
-            ? "border-white/15 bg-white/10 text-white dark:border-white/12 dark:bg-card/55"
+            ? "border-border/70 bg-card/90 text-foreground shadow-primary/10 dark:border-white/15 dark:bg-white/10 dark:text-white dark:shadow-black/35"
             : "border-border/70 bg-card/90 text-foreground shadow-primary/10 dark:border-white/12 dark:bg-card/70 dark:text-white"
         )}
         style={{
@@ -96,7 +96,9 @@ const NavbarDesktop = ({
                           layoutId="nav-desktop-pill"
                           className={cn(
                             "absolute inset-0 rounded-xl",
-                            isDark ? "bg-white/14" : "bg-primary/12"
+                            isDark
+                              ? "bg-primary/12 dark:bg-white/14"
+                              : "bg-primary/12"
                           )}
                           transition={{
                             type: "spring",
@@ -122,8 +124,8 @@ const NavbarDesktop = ({
                         "relative z-10 block whitespace-nowrap rounded-xl px-2 py-2 text-[11px] font-semibold tracking-tight transition-colors duration-300 lg:px-2.5 lg:text-xs xl:px-3 xl:text-[13px]",
                         isDark
                           ? active
-                            ? "text-white"
-                            : "text-white/80 hover:text-white"
+                            ? "text-foreground dark:text-white"
+                            : "text-muted-foreground hover:text-foreground dark:text-white/80 dark:hover:text-white"
                           : active
                             ? "text-foreground"
                             : "text-muted-foreground hover:text-foreground"
@@ -134,7 +136,9 @@ const NavbarDesktop = ({
                           layoutId="nav-desktop-pill"
                           className={cn(
                             "absolute inset-0 -z-10 rounded-xl",
-                            isDark ? "bg-white/14" : "bg-primary/12"
+                            isDark
+                              ? "bg-primary/12 dark:bg-white/14"
+                              : "bg-primary/12"
                           )}
                           transition={{
                             type: "spring",
@@ -155,7 +159,9 @@ const NavbarDesktop = ({
                             exit={{ opacity: 0 }}
                             className={cn(
                               "absolute inset-x-3 -bottom-0.5 h-0.5 origin-center rounded-full",
-                              isDark ? "bg-[var(--home-gold,#D4B06A)]" : "bg-primary"
+                              isDark
+                                ? "bg-primary dark:bg-[var(--home-gold,#D4B06A)]"
+                                : "bg-primary"
                             )}
                           />
                         )}

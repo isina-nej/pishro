@@ -60,7 +60,7 @@ const iconBtn = (isDark?: boolean) =>
   cn(
     "inline-flex size-9 items-center justify-center rounded-xl border transition-all duration-300 hover:scale-105 active:scale-95",
     isDark
-      ? "border-white/20 bg-white/10 text-white hover:bg-white/18"
+      ? "border-border/70 bg-card/70 text-muted-foreground hover:border-primary/35 hover:text-foreground dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/18 dark:hover:text-white"
       : "border-border/70 bg-card/70 text-muted-foreground hover:border-primary/35 hover:text-foreground"
   );
 
@@ -96,7 +96,7 @@ const NavbarActions = ({
               "inline-flex items-center gap-1.5 rounded-xl text-xs font-semibold transition-all duration-300",
               compact ? "px-2.5 py-2 xl:px-3.5" : "px-4 py-2",
               isDark
-                ? "border border-white/25 bg-white/12 text-white hover:bg-white/20"
+                ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 hover:bg-primary/90 dark:border dark:border-white/25 dark:bg-white/12 dark:text-white dark:shadow-none dark:hover:bg-white/20"
                 : "bg-primary text-primary-foreground shadow-md shadow-primary/20 hover:bg-primary/90"
             )}
           >
@@ -131,13 +131,15 @@ const NavbarActions = ({
         className={cn(
           "flex items-center",
           compact ? "gap-0.5" : "gap-1",
-          isDark ? "text-white" : "text-muted-foreground"
+          isDark
+            ? "text-muted-foreground dark:text-white"
+            : "text-muted-foreground"
         )}
       >
         <SoundMuteToggle
           className={
             isDark
-              ? "border border-white/20 bg-white/10 text-white hover:bg-white/18"
+              ? "dark:border dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/18"
               : undefined
           }
         />
@@ -156,7 +158,7 @@ const NavbarActions = ({
               rel="noopener noreferrer"
               aria-label={social.name}
               title={social.name}
-              className="rounded-lg p-1.5 transition-all duration-300 hover:scale-110 hover:text-foreground"
+              className="rounded-lg p-1.5 transition-all duration-300 hover:scale-110 hover:text-foreground dark:hover:text-white"
             >
               <DynamicIcon name={social.icon} fallback={Globe} className="size-4" />
             </Link>

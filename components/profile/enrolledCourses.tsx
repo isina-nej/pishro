@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useEnrolledCourses } from "@/lib/hooks/useUser";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { LoadingSpinner, useDelayedLoading } from "@/components/ui/loading-spinner";
 import EmptyState from "./emptyState";
 
 const EnrolledCourses = () => {
@@ -14,7 +15,8 @@ const EnrolledCourses = () => {
   const pageSize = 9;
 
   // استفاده از React Query hook
-  const { data: response, isLoading: loading } = useEnrolledCourses(page, pageSize);
+  const { data: response, isLoading, isFetching } = useEnrolledCourses(page, pageSize);
+  const showLoading = useDelayedLoading(isLoading && !response);
   const courses = response?.data?.items || [];
   const total = response?.data?.pagination?.total || 0;
 
@@ -27,14 +29,11 @@ const EnrolledCourses = () => {
     }).format(date);
   };
 
-  // ===== Loading State =====
-  if (loading) {
+  // ===== Loading State (icon-only, delayed; cached data renders instantly) =====
+  if (showLoading) {
     return (
-      <div className="bg-card rounded-md mb-8 shadow p-10 flex justify-center items-center">
-        <div className="relative">
-          <div className="w-10 h-10 border-4 border-muted rounded-full"></div>
-          <div className="absolute top-0 left-0 w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-        </div>
+      <div className="bg-card rounded-md mb-8 shadow p-10">
+        <LoadingSpinner />
       </div>
     );
   }
@@ -60,7 +59,7 @@ const EnrolledCourses = () => {
 
   // ===== Course List =====
   return (
-    <div className="bg-card rounded-md mb-8 shadow">
+    <div className={`bg-card rounded-md mb-8 shadow ${isFetching ? "opacity-70" : ""}`}>
       <ProfileHeader>
         <h4 className="font-medium text-sm text-foreground">
           دوره‌های من ({total})

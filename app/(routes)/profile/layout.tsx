@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import ProfileHeader from "@/components/profile/profileHeader";
 import ProfileAside from "@/components/profile/profileAside";
+import ProfilePrefetch from "@/components/profile/ProfilePrefetch";
 import UserPanelThemeShell from "@/components/theme/UserPanelPaletteApplier";
 import {
   getHiddenPages,
@@ -55,6 +56,7 @@ export default async function ProfileLayout({
       dark={panelTheme.dark}
       className="min-h-screen w-full bg-background py-6 text-foreground md:py-8 mt-16 md:mt-20"
     >
+      <ProfilePrefetch />
       <ProfileHeader />
       <div className="container-xl w-full flex flex-col gap-5 px-4 md:flex-row md:px-0">
         <ProfileAside hiddenPages={hiddenPages} />

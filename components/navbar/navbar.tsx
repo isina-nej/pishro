@@ -1,8 +1,10 @@
 "use client";
 
 import { useMemo } from "react";
+import { usePathname } from "next/navigation";
 import NavbarDesktop from "./NavbarDesktop";
 import NavbarMobile from "./NavbarMobile";
+import DetailBackButton, { isDetailPage } from "./DetailBackButton";
 import { useIsDarkNavbar } from "./useNavbarTheme";
 import { filterNavByHiddenPages } from "@/lib/site/hidable-pages";
 import {
@@ -28,6 +30,7 @@ const Navbar = ({
   socials,
 }: NavbarProps) => {
   const isDark = useIsDarkNavbar();
+  const pathname = usePathname();
   const links = useMemo(
     () =>
       filterNavByHiddenPages(
@@ -36,6 +39,10 @@ const Navbar = ({
       ),
     [hiddenPages, navItems]
   );
+
+  if (isDetailPage(pathname)) {
+    return <DetailBackButton pathname={pathname} />;
+  }
 
   return (
     <nav className="z-[9999] flex w-full flex-col">

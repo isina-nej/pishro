@@ -31,6 +31,7 @@ type NavbarMobileProps = {
 };
 
 const NavbarMobile = ({
+  isDark,
   navbarData,
   logoUrl,
   siteName,
@@ -83,9 +84,9 @@ const NavbarMobile = ({
           isHidden ? "-translate-y-full" : "translate-y-0",
           isOpen
             ? "border-b border-border/40 bg-background/80 text-foreground backdrop-blur-xl"
-            : isHome
+            : isHome && isDark
               ? "border-b border-transparent bg-transparent text-white"
-              : "border-b border-border/30 bg-card/90 text-foreground shadow-sm backdrop-blur-md dark:bg-card/90"
+              : "border-b border-border/30 bg-card/90 text-foreground shadow-sm backdrop-blur-md dark:border-white/15 dark:bg-white/10 dark:text-white"
         )}
       >
         <div className="relative flex w-full items-center justify-between">
@@ -99,7 +100,9 @@ const NavbarMobile = ({
                 "inline-flex size-10 items-center justify-center rounded-xl border transition-all duration-200",
                 isOpen
                   ? "border-primary/30 bg-primary/10 text-primary"
-                  : "border-border/70 bg-background/50 text-foreground hover:border-primary/30 hover:bg-primary/5"
+                  : isHome && isDark
+                    ? "border-white/20 bg-white/10 text-white hover:bg-white/18"
+                    : "border-border/70 bg-background/50 text-foreground hover:border-primary/30 hover:bg-primary/5"
               )}
             >
               <span className="relative block size-5">
@@ -128,7 +131,12 @@ const NavbarMobile = ({
           <div className="flex items-center gap-2">
             <Link
               href="/checkout"
-              className="relative inline-flex size-10 items-center justify-center rounded-xl border border-border/70 bg-background/40 text-foreground transition-colors hover:border-primary/30"
+              className={clsx(
+                "relative inline-flex size-10 items-center justify-center rounded-xl border transition-colors hover:border-primary/30",
+                isHome && isDark && !isOpen
+                  ? "border-white/20 bg-white/10 text-white"
+                  : "border-border/70 bg-background/40 text-foreground"
+              )}
               aria-label="سبد خرید"
             >
               <FiShoppingCart className="size-[18px]" />
