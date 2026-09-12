@@ -53,7 +53,7 @@ const NavbarMobile = ({
             ...s,
             href:
               (socials as NavSocialLinks | undefined)?.[
-                s.id === "x" ? "twitter" : (s.id as "instagram" | "telegram")
+                s.id as "instagram" | "telegram"
               ] || s.href,
           })),
     [socials]

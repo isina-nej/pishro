@@ -35,16 +35,10 @@ function normalizeSocials(
       icon: "Instagram",
     },
     {
-      id: "telegram",
-      name: "تلگرام",
-      href: socials?.telegram || contactInfo.socials.telegram,
-      icon: "Send",
-    },
-    {
-      id: "x",
-      name: "ایکس",
-      href: socials?.twitter || contactInfo.socials.linkedin,
-      icon: "Twitter",
+      id: "bale",
+      name: "بله",
+      href: contactInfo.socials.bale,
+      icon: "Bale",
     },
   ];
 }

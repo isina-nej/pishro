@@ -88,8 +88,7 @@ export const DEFAULT_NAVBAR_ITEMS: NavbarItem[] = [
 
 export const DEFAULT_FOOTER_SOCIALS: FooterSocialItem[] = [
   { id: "instagram", name: "اینستاگرام", href: contactInfo.socials.instagram, icon: "Instagram" },
-  { id: "telegram", name: "تلگرام", href: contactInfo.socials.telegram, icon: "Send" },
-  { id: "x", name: "ایکس", href: contactInfo.socials.linkedin, icon: "Twitter" },
+  { id: "bale", name: "بله", href: contactInfo.socials.bale, icon: "Bale" },
 ];
 
 export const DEFAULT_FOOTER_CONTENT: FooterContent = {
@@ -230,8 +229,7 @@ function parseSocials(
     if (value != null) return base.map((s) => ({ ...s }));
     return [
       { id: "instagram", name: "اینستاگرام", href: legacy.instagram, icon: "Instagram" },
-      { id: "telegram", name: "تلگرام", href: legacy.telegram, icon: "Send" },
-      { id: "x", name: "ایکس", href: legacy.twitter, icon: "Twitter" },
+      { id: "bale", name: "بله", href: contactInfo.socials.bale, icon: "Bale" },
     ];
   }
   const out: FooterSocialItem[] = [];
@@ -416,8 +414,7 @@ export function footerSocials(footer: FooterContent): FooterSocialItem[] {
   if (footer.socials?.length) return footer.socials;
   return [
     { id: "instagram", name: "اینستاگرام", href: footer.instagram, icon: "Instagram" },
-    { id: "telegram", name: "تلگرام", href: footer.telegram, icon: "Send" },
-    { id: "x", name: "ایکس", href: footer.twitter, icon: "Twitter" },
+    { id: "bale", name: "بله", href: contactInfo.socials.bale, icon: "Bale" },
   ];
 }
 

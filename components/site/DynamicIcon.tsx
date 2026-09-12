@@ -61,6 +61,7 @@ import {
   type LucideIcon,
   type LucideProps,
 } from "lucide-react";
+import BaleIcon from "./BaleIcon";
 
 export interface IconMeta {
   name: string;
@@ -113,6 +114,7 @@ export const AVAILABLE_ICONS: IconMeta[] = [
   { name: "Clock", labelFa: "ساعت کاری", category: "contact", icon: Clock },
 
   // شبکه‌های اجتماعی (brand icons bundled in lucide-react 0.474)
+  { name: "Bale", labelFa: "بله", category: "social", icon: BaleIcon as unknown as LucideIcon },
   { name: "Instagram", labelFa: "اینستاگرام", category: "social", icon: Instagram },
   { name: "Facebook", labelFa: "فیسبوک", category: "social", icon: Facebook },
   { name: "Twitter", labelFa: "ایکس / توییتر", category: "social", icon: Twitter },

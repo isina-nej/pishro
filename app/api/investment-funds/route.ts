@@ -6,6 +6,10 @@
 import { prisma } from "@/lib/prisma";
 import { successResponse, errorResponse, ErrorCodes } from "@/lib/api-response";
 
+// Admin edits must show immediately: without this, Next statically
+// prerenders the GET response at build time and serves stale funds forever.
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     const funds = await prisma.investmentFund.findMany({

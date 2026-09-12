@@ -7,6 +7,7 @@ export const contactInfo = {
   address: "تهران، خیابان ولیعصر، پلاک ۱۲۳",
   socials: {
     instagram: "https://instagram.com/academi_maali_jahani",
+    bale: "https://ble.ir/pishrosarmaye_main",
     telegram: "#",
     linkedin: "#",
   },

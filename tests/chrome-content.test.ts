@@ -70,8 +70,9 @@ test("navbar/footer links keep optional icons", () => {
     telegram: "#",
     twitter: "#",
   });
-  assert.equal(legacy.socials.length, 3);
+  assert.equal(legacy.socials.length, 2);
   assert.equal(legacy.socials[0].href, "https://instagram.com/legacy");
+  assert.equal(legacy.socials[1].id, "bale");
 });
 
 test("parseFooterContent merges partial payloads with defaults", () => {

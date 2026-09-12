@@ -531,7 +531,7 @@ export default function FooterContentSection({
             }
           >
             <RotateCcw className="h-3.5 w-3.5" />
-            بازگشت به ۳ شبکه پیش‌فرض
+            بازگشت به ۲ شبکه پیش‌فرض
           </Button>
         </div>
         <SocialsEditor
