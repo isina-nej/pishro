@@ -235,7 +235,7 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
         />
       </div>
 
-      {/* کاور عریض تمام‌عرض */}
+      {/* کاور عریض تمام‌عرض — دسکتاپ 16:9، موبایل 4:5 (خالی = همان دسکتاپ) */}
       {article.coverImage && (
         <motion.div
           ref={heroRef}
@@ -245,12 +245,24 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
           className="relative h-[44svh] min-h-[320px] w-full overflow-hidden bg-muted sm:h-[54svh] lg:h-[60svh] lg:max-h-[620px]"
         >
           <motion.div style={scrollStyle} className="absolute inset-0 will-change-transform">
+            {/* موبایل: نسخه عمودی */}
+            {article.coverImageMobile ? (
+              <Image
+                src={article.coverImageMobile}
+                alt={article.title}
+                fill
+                sizes="100vw"
+                className="object-cover sm:hidden"
+                priority
+              />
+            ) : null}
+            {/* دسکتاپ/تبلت: نسخه عریض (روی موبایل مخفی اگر نسخه موبایل هست) */}
             <Image
               src={article.coverImage}
               alt={article.title}
               fill
               sizes="100vw"
-              className="object-cover"
+              className={article.coverImageMobile ? 'hidden object-cover sm:block' : 'object-cover'}
               priority
             />
           </motion.div>

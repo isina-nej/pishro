@@ -1,5 +1,8 @@
+"use client";
+
 import { useMemo } from "react";
 import { usePathname } from "next/navigation";
+import { useTheme } from "next-themes";
 
 /**
  * Pages whose first viewport is dark media (video/photo) so the floating
@@ -24,11 +27,15 @@ export const isSkyroomPath = (pathname: string | null | undefined) =>
 
 export const useIsDarkNavbar = () => {
   const pathname = usePathname();
+  const { resolvedTheme } = useTheme();
 
   return useMemo(() => {
     if (isSkyroomPath(pathname)) return false;
+    // In light mode the glass bar is light, so white navbar text would be
+    // invisible — dark styling only applies when the site theme is dark.
+    if (resolvedTheme !== "dark") return false;
     return DARK_HERO_NAV_PATHS.has(pathname ?? "/");
-  }, [pathname]);
+  }, [pathname, resolvedTheme]);
 };
 
 export default useIsDarkNavbar;

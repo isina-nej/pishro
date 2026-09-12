@@ -145,6 +145,17 @@ export const CreateNewsSchema = z.object({
     .optional()
     .nullable()
     .transform((val) => val === null ? undefined : val),
+  // کاور عمودی موبایل (1080×1350) — اختیاری، خالی = همان کاور دسکتاپ
+  coverImageMobile: z.string()
+    .refine(
+      (val) => {
+        return val.startsWith('/') || val.match(/^https?:\/\//);
+      },
+      'آدرس تصویر موبایل معتبر نیست'
+    )
+    .optional()
+    .nullable()
+    .transform((val) => (val === null || val === '' ? undefined : val)),
   categoryId: z.string()
     .trim()
     .refine((val) => val === '' || val.length > 0, {
@@ -221,6 +232,17 @@ export const UpdateNewsSchema = z.object({
     .optional()
     .nullable()
     .transform((val) => val === null ? undefined : val),
+  // کاور عمودی موبایل (1080×1350) — اختیاری، خالی = همان کاور دسکتاپ
+  coverImageMobile: z.string()
+    .refine(
+      (val) => {
+        return val.startsWith('/') || val.match(/^https?:\/\//);
+      },
+      'آدرس تصویر موبایل معتبر نیست'
+    )
+    .optional()
+    .nullable()
+    .transform((val) => (val === null || val === '' ? undefined : val)),
   publishedAt: z.string()
     .datetime('تاریخ انتشار باید یک ISO datetime معتبر باشد')
     .nullable()

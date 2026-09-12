@@ -39,14 +39,14 @@ export default function ThemeToggle() {
       data-sound="toggle"
       data-sound-role="toggle"
       onClick={toggleTheme}
-      className="relative inline-flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 text-slate-700 transition-all duration-300 hover:bg-gray-200 dark:bg-cardBg dark:text-textSecondary dark:hover:bg-darkBgHidden"
+      className="relative inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border/70 bg-card/70 text-muted-foreground transition-all duration-300 hover:border-primary/35 hover:text-foreground"
       aria-label={isDark ? 'روشن کردن حالت روز' : 'روشن کردن حالت شب'}
       title={isDark ? 'تغییر به حالت روز' : 'تغییر به حالت شب'}
     >
       {isDark ? (
-        <Sun className="h-5 w-5 text-myGolden transition-transform duration-300" />
+        <Sun className="h-5 w-5 transition-transform duration-300" />
       ) : (
-        <Moon className="h-5 w-5 text-mySecondary transition-transform duration-300" />
+        <Moon className="h-5 w-5 transition-transform duration-300" />
       )}
     </button>
   );

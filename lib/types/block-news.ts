@@ -13,6 +13,7 @@ export interface NewsDetailResponse {
   excerpt: string;
   content: string;
   coverImage: string | null;
+  coverImageMobile: string | null;
   published: boolean;
   draft?: boolean;
   categoryId: string | null;
@@ -40,6 +41,7 @@ export interface NewsListItem {
   excerpt: string;
   content: string;
   coverImage: string | null;
+  coverImageMobile: string | null;
   published: boolean;
   draft?: boolean;
   category: string;
@@ -73,6 +75,7 @@ export interface CreateNewsRequest {
   content?: string;
   coverImage?: string;
   thumbnail?: string;   // Old naming - will be converted to coverImage
+  coverImageMobile?: string;
   categoryId?: string;
   author?: string;
   publishedAt?: string;
@@ -87,6 +90,7 @@ export interface UpdateNewsRequest {
   categoryId?: string | null;
   coverImage?: string;
   thumbnail?: string;   // Old naming - will be converted to coverImage
+  coverImageMobile?: string | null;
   author?: string;
   publishedAt?: string | null;
 }

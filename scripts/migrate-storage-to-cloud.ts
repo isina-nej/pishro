@@ -35,7 +35,7 @@ const MEDIA_FIELDS: Record<string, string[]> = {
   comment: ["userAvatar"],
   course: ["introVideoUrl"],
   lesson: ["thumbnail", "videoUrl"],
-  newsArticle: ["coverImage"],
+  newsArticle: ["coverImage", "coverImageMobile"],
   digitalBook: ["cover", "fileUrl", "audioUrl"],
   category: ["coverImage", "heroImage", "aboutImage", "icon"],
   certificate: ["image"],

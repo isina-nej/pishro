@@ -45,7 +45,9 @@ export default function EditBlockNewsPage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [isUploadingMobileImage, setIsUploadingMobileImage] = useState(false);
   const [uploadError, setUploadError] = useState<string>('');
+  const [uploadMobileError, setUploadMobileError] = useState<string>('');
   const [error, setError] = useState<string>('');
 
   // Get article data — api client attaches the admin Bearer token automatically
@@ -67,6 +69,7 @@ export default function EditBlockNewsPage() {
           description: newsArticle.excerpt || '',
           content: newsArticle.content || '',
           thumbnail: newsArticle.coverImage || '',
+          thumbnailMobile: newsArticle.coverImageMobile || '',
           categoryId: newsArticle.categoryId || '',
           author: newsArticle.author || '',
           publishOption: isScheduled ? 'scheduled' : 'manual',
@@ -115,6 +118,29 @@ export default function EditBlockNewsPage() {
     setFormData((prev) => ({ ...prev, thumbnail: '' }));
   };
 
+  const handleMobileImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingMobileImage(true);
+    setUploadMobileError('');
+
+    try {
+      const imageUrl = await uploadNewsThumbnail(file);
+      setFormData((prev) => ({ ...prev, thumbnailMobile: imageUrl }));
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'خطا در آپلود فایل';
+      setUploadMobileError(errorMessage);
+    } finally {
+      setIsUploadingMobileImage(false);
+      e.target.value = '';
+    }
+  };
+
+  const handleRemoveMobileImage = () => {
+    setFormData((prev) => ({ ...prev, thumbnailMobile: '' }));
+  };
+
   const handleSubmit = async () => {
     if (!formData.title.trim()) {
       setError('عنوان خبر الزامی است');
@@ -149,6 +175,7 @@ export default function EditBlockNewsPage() {
         description: formData.description || undefined,
         content: formData.content || undefined,
         thumbnail: formData.thumbnail || undefined,
+        coverImageMobile: formData.thumbnailMobile || null,
         categoryId: formData.categoryId || undefined,
         author: formData.author || undefined,
         publishedAt: publishedAtTime,
@@ -181,12 +208,16 @@ export default function EditBlockNewsPage() {
       onInputChange={handleInputChange}
       isSubmitting={isSubmitting}
       isUploadingImage={isUploadingImage}
+      isUploadingMobileImage={isUploadingMobileImage}
       uploadError={uploadError}
+      uploadMobileError={uploadMobileError}
       error={error}
       isEdit
       onSubmit={handleSubmit}
       onImageUpload={handleImageUpload}
+      onMobileImageUpload={handleMobileImageUpload}
       onRemoveImage={handleRemoveImage}
+      onRemoveMobileImage={handleRemoveMobileImage}
     />
   );
 }

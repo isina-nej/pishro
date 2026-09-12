@@ -17,6 +17,7 @@ export async function generateMetadata({ params }: NewsPageProps): Promise<Metad
 
   const canonicalPath = `/news/${slug}`;
   const publishedTime = article.publishedAt?.toISOString?.() ?? undefined;
+  const ogImage = article.coverImageMobile ?? article.coverImage;
   return {
     title: article.title,
     description: article.excerpt,
@@ -27,13 +28,13 @@ export async function generateMetadata({ params }: NewsPageProps): Promise<Metad
       type: "article",
       url: canonicalPath,
       publishedTime,
-      images: article.coverImage ? [article.coverImage] : [],
+      images: ogImage ? [ogImage] : [],
     },
     twitter: {
       card: "summary_large_image",
       title: article.title,
       description: article.excerpt,
-      images: article.coverImage ? [article.coverImage] : [],
+      images: ogImage ? [ogImage] : [],
     },
   };
 }
@@ -51,7 +52,7 @@ export default async function NewsDetailPage({ params }: NewsPageProps) {
     "@type": "Article",
     headline: article.title,
     description: article.excerpt,
-    ...(article.coverImage ? { image: [article.coverImage] } : {}),
+    ...((article.coverImageMobile ?? article.coverImage) ? { image: [article.coverImageMobile ?? article.coverImage] } : {}),
     ...(publishedTime ? { datePublished: publishedTime } : {}),
     author: article.author ? { "@type": "Person", name: article.author } : undefined,
   };

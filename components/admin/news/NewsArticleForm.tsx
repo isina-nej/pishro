@@ -28,6 +28,7 @@ export interface NewsFormData {
   description: string;
   content: string;
   thumbnail: string;
+  thumbnailMobile: string;
   categoryId: string;
   author: string;
   publishOption: string;
@@ -40,6 +41,7 @@ export const emptyNewsForm = (): NewsFormData => ({
   description: '',
   content: '',
   thumbnail: '',
+  thumbnailMobile: '',
   categoryId: '',
   author: '',
   publishOption: 'manual',
@@ -53,12 +55,108 @@ interface NewsArticleFormProps {
   onInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   isSubmitting: boolean;
   isUploadingImage: boolean;
+  isUploadingMobileImage: boolean;
   uploadError: string;
+  uploadMobileError: string;
   error: string;
   isEdit?: boolean;
   onSubmit: () => void;
   onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onMobileImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onRemoveImage: () => void;
+  onRemoveMobileImage: () => void;
+}
+
+function CoverUploader({
+  label,
+  ratioLabel,
+  sizeLabel,
+  preview,
+  inputRef,
+  uploading,
+  onUpload,
+  onRemove,
+  testId,
+}: {
+  label: string;
+  ratioLabel: string;
+  sizeLabel: string;
+  preview: string;
+  inputRef: React.RefObject<HTMLInputElement | null>;
+  uploading: boolean;
+  onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onRemove: () => void;
+  testId: string;
+}) {
+  return (
+    <div className="space-y-3" data-testid={testId}>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="text-sm font-semibold">{label}</p>
+        <span className="rounded-full bg-muted px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
+          {ratioLabel} · {sizeLabel}
+        </span>
+      </div>
+      {!preview ? (
+        <div>
+          <input
+            ref={inputRef}
+            type="file"
+            accept="image/*"
+            onChange={onUpload}
+            disabled={uploading}
+            className="hidden"
+          />
+          <Button
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            disabled={uploading}
+            variant="outline"
+            className="flex h-32 w-full flex-col items-center justify-center gap-3 border-2 border-dashed md:h-40"
+          >
+            <Upload className="size-6 text-primary md:size-8" />
+            <div className="px-2 text-center">
+              <p className="text-sm font-semibold text-primary md:text-base">
+                {uploading ? 'درحال آپلود...' : 'انتخاب تصویر'}
+              </p>
+              <p className="mt-1 text-xs text-muted-foreground">یا اینجا رها کنید</p>
+            </div>
+          </Button>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          <div className="relative w-full overflow-hidden rounded-lg shadow-md ring-2 ring-primary/20">
+            <div className={ratioLabel.includes('4:5') ? 'aspect-[4/5] max-h-72' : 'aspect-[16/9]'}>
+              {/* eslint-disable-next-line @next/next/no-img-element -- admin-supplied thumbnail URL, host is not in next.config remotePatterns */}
+              <img
+                src={preview}
+                alt="Preview"
+                className="size-full object-cover"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={onRemove}
+              disabled={uploading}
+              className="absolute right-2 top-2 rounded-lg bg-destructive p-2 text-destructive-foreground shadow-lg transition-all hover:bg-destructive/90"
+              aria-label="حذف تصویر"
+            >
+              <X className="size-4" />
+            </button>
+          </div>
+          <Button
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            disabled={uploading}
+            variant="outline"
+            className="h-10 w-full text-sm md:h-11 md:text-base"
+          >
+            <Upload className="ml-2 size-4" />
+            تغییر تصویر
+          </Button>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default function NewsArticleForm({
@@ -67,15 +165,20 @@ export default function NewsArticleForm({
   onInputChange,
   isSubmitting,
   isUploadingImage,
+  isUploadingMobileImage,
   uploadError,
+  uploadMobileError,
   error,
   isEdit = false,
   onSubmit,
   onImageUpload,
+  onMobileImageUpload,
   onRemoveImage,
+  onRemoveMobileImage,
 }: NewsArticleFormProps) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const mobileFileInputRef = useRef<HTMLInputElement>(null);
 
   return (
     <AdminPageShell
@@ -145,72 +248,26 @@ export default function NewsArticleForm({
             </div>
           </Card>
 
-          <Card className="space-y-4 p-4 md:p-6">
+          <Card className="space-y-6 p-4 md:p-6">
             <div className="flex items-center gap-3">
               <ImageIcon className="size-5 shrink-0 text-primary" />
               <h2 className="text-lg font-bold md:text-xl">تصویر شاخص (کاور)</h2>
             </div>
+            <p className="text-xs leading-6 text-muted-foreground">
+              کاور فعلی همان نسخه دسکتاپ است؛ نسخه موبایل جدا آپلود می‌شود و اگر خالی بماند همان دسکتاپ نمایش داده می‌شود.
+            </p>
 
-            {!formData.thumbnail ? (
-              <div>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={onImageUpload}
-                  disabled={isUploadingImage}
-                  className="hidden"
-                />
-                <Button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={isUploadingImage}
-                  variant="outline"
-                  className="flex h-32 w-full flex-col items-center justify-center gap-3 border-2 border-dashed md:h-40"
-                >
-                  <Upload className="size-6 text-primary md:size-8" />
-                  <div className="px-2 text-center">
-                    <p className="text-sm font-semibold text-primary md:text-base">
-                      {isUploadingImage ? 'درحال آپلود...' : 'انتخاب تصویر'}
-                    </p>
-                    <p className="mt-1 text-xs text-muted-foreground">یا اینجا رها کنید</p>
-                  </div>
-                </Button>
-                <p className="mt-3 text-xs text-muted-foreground">
-                  فرمت‌های پشتیبانی‌شده: JPG, PNG, WebP (حداکثر 5MB)
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                <div className="relative h-40 w-full overflow-hidden rounded-lg shadow-md ring-2 ring-primary/20 md:h-48">
-                  {/* eslint-disable-next-line @next/next/no-img-element -- admin-supplied thumbnail URL, host is not in next.config remotePatterns */}
-                  <img
-                    src={formData.thumbnail}
-                    alt="Preview"
-                    className="size-full object-cover"
-                  />
-                  <button
-                    type="button"
-                    onClick={onRemoveImage}
-                    disabled={isUploadingImage}
-                    className="absolute right-2 top-2 rounded-lg bg-destructive p-2 text-destructive-foreground shadow-lg transition-all hover:bg-destructive/90"
-                    aria-label="حذف تصویر"
-                  >
-                    <X className="size-4" />
-                  </button>
-                </div>
-                <Button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={isUploadingImage}
-                  variant="outline"
-                  className="h-10 w-full text-sm md:h-11 md:text-base"
-                >
-                  <Upload className="ml-2 size-4" />
-                  تغییر تصویر
-                </Button>
-              </div>
-            )}
+            <CoverUploader
+              label="کاور دسکتاپ (عریض)"
+              ratioLabel="نسبت 16:9"
+              sizeLabel="پیشنهاد 1920×1080"
+              preview={formData.thumbnail}
+              inputRef={fileInputRef}
+              uploading={isUploadingImage}
+              onUpload={onImageUpload}
+              onRemove={onRemoveImage}
+              testId="cover-desktop"
+            />
 
             {uploadError && (
               <div className="flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/10 p-3">
@@ -218,6 +275,31 @@ export default function NewsArticleForm({
                 <p className="text-xs text-destructive md:text-sm">{uploadError}</p>
               </div>
             )}
+
+            <div className="border-t border-border pt-5">
+              <CoverUploader
+                label="کاور موبایل (عمودی)"
+                ratioLabel="نسبت 4:5"
+                sizeLabel="پیشنهاد 1080×1350"
+                preview={formData.thumbnailMobile}
+                inputRef={mobileFileInputRef}
+                uploading={isUploadingMobileImage}
+                onUpload={onMobileImageUpload}
+                onRemove={onRemoveMobileImage}
+                testId="cover-mobile"
+              />
+            </div>
+
+            {uploadMobileError && (
+              <div className="flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/10 p-3">
+                <AlertCircle className="mt-0.5 size-5 shrink-0 text-destructive" />
+                <p className="text-xs text-destructive md:text-sm">{uploadMobileError}</p>
+              </div>
+            )}
+
+            <p className="text-xs text-muted-foreground">
+              فرمت‌های پشتیبانی‌شده: JPG, PNG, WebP (حداکثر 5MB)
+            </p>
           </Card>
 
           <Card className="space-y-4 p-4 md:p-6">

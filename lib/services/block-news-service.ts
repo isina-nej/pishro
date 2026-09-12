@@ -23,6 +23,7 @@ export async function createNews(data: {
   content?: string;
   coverImage?: string;
   thumbnail?: string;  // Accept old naming
+  coverImageMobile?: string;
   categoryId?: string;
   author?: string;
   authorId?: string;
@@ -58,6 +59,7 @@ export async function createNews(data: {
       excerpt: validated.excerpt || '',
       content: validated.content || '',
       coverImage: validated.coverImage || null,
+      coverImageMobile: (validated as { coverImageMobile?: string }).coverImageMobile || null,
       categoryId: validated.categoryId,
       author: validated.author,
       category: categoryTitle,
@@ -166,6 +168,7 @@ export async function updateNewsMetadata(
     categoryId?: string | null;
     coverImage?: string;
     thumbnail?: string;
+    coverImageMobile?: string | null;
     author?: string;
     publishedAt?: string | null;
   }
@@ -203,6 +206,7 @@ export async function updateNewsMetadata(
       ...(validated.categoryId !== undefined && { categoryId: validated.categoryId }),
       ...(categoryTitle !== undefined && { category: categoryTitle }),
       ...(validated.coverImage !== undefined && { coverImage: validated.coverImage }),
+      ...((validated as { coverImageMobile?: string }).coverImageMobile !== undefined && { coverImageMobile: (validated as { coverImageMobile?: string }).coverImageMobile }),
       ...(validated.author !== undefined && { author: validated.author }),
       ...(validated.publishedAt !== undefined && { publishedAt: validated.publishedAt ? new Date(validated.publishedAt) : null }),
     },
@@ -284,6 +288,16 @@ export async function deleteNews(id: string) {
     } catch (error) {
       console.error('[deleteNews] Error deleting cover image:', error);
       // Continue with deletion even if image deletion fails
+    }
+  }
+  // کاور موبایل هم پاک شود (اگر جدا از دسکتاپ بود)
+  const mobile = (news as { coverImageMobile?: string | null }).coverImageMobile;
+  if (mobile && mobile !== news.coverImage) {
+    try {
+      await deleteFileFromStorage(getRelativePathFromUrl(mobile));
+      console.log(`[deleteNews] Deleted mobile cover image`);
+    } catch (error) {
+      console.error('[deleteNews] Error deleting mobile cover image:', error);
     }
   }
 

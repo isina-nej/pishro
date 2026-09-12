@@ -337,6 +337,8 @@ model NewsArticle {
   draftMarkdown String? @db.LongText // Auto-saved markdown version
 
   coverImage  String?
+  /// کاور عمودی موبایل (1080×1350) — خالی = همان کاور دسکتاپ نمایش داده می‌شود
+  coverImageMobile String?
   author      String?
   /// @deprecated use relatedCategory FK instead — kept for backward compat
   category    String

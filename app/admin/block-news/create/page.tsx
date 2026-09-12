@@ -22,7 +22,9 @@ export default function CreateBlockNewsPage() {
   const [formData, setFormData] = useState(emptyNewsForm);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [isUploadingMobileImage, setIsUploadingMobileImage] = useState(false);
   const [uploadError, setUploadError] = useState<string>('');
+  const [uploadMobileError, setUploadMobileError] = useState<string>('');
   const [error, setError] = useState<string>('');
 
   const createNewsMutation = useCreateBlockNews();
@@ -56,6 +58,29 @@ export default function CreateBlockNewsPage() {
     setFormData((prev) => ({ ...prev, thumbnail: '' }));
   };
 
+  const handleMobileImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingMobileImage(true);
+    setUploadMobileError('');
+
+    try {
+      const imageUrl = await uploadNewsThumbnail(file);
+      setFormData((prev) => ({ ...prev, thumbnailMobile: imageUrl }));
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'خطا در آپلود فایل';
+      setUploadMobileError(errorMessage);
+    } finally {
+      setIsUploadingMobileImage(false);
+      e.target.value = '';
+    }
+  };
+
+  const handleRemoveMobileImage = () => {
+    setFormData((prev) => ({ ...prev, thumbnailMobile: '' }));
+  };
+
   const handleSubmit = async () => {
     if (!formData.title.trim()) {
       setError('عنوان خبر الزامی است');
@@ -82,6 +107,7 @@ export default function CreateBlockNewsPage() {
         description: formData.description || undefined,
         content: formData.content || undefined,
         thumbnail: formData.thumbnail || undefined,
+        coverImageMobile: formData.thumbnailMobile || undefined,
         categoryId: formData.categoryId || undefined,
         author: formData.author || undefined,
         publishedAt: publishedAtTime,
@@ -103,11 +129,15 @@ export default function CreateBlockNewsPage() {
       onInputChange={handleInputChange}
       isSubmitting={isSubmitting}
       isUploadingImage={isUploadingImage}
+      isUploadingMobileImage={isUploadingMobileImage}
       uploadError={uploadError}
+      uploadMobileError={uploadMobileError}
       error={error}
       onSubmit={handleSubmit}
       onImageUpload={handleImageUpload}
+      onMobileImageUpload={handleMobileImageUpload}
       onRemoveImage={handleRemoveImage}
+      onRemoveMobileImage={handleRemoveMobileImage}
     />
   );
 }
