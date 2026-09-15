@@ -242,7 +242,7 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
           initial={reduceMotion ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.55, ease: "easeOut" }}
-          className="relative h-[44svh] min-h-[320px] w-full overflow-hidden bg-muted sm:h-[54svh] lg:h-[60svh] lg:max-h-[620px]"
+          className="relative h-[52svh] max-h-[calc(100svh-220px)] min-h-[380px] w-full overflow-hidden bg-muted sm:h-[62svh] lg:h-[68svh] lg:max-h-[720px]"
         >
           <motion.div style={scrollStyle} className="absolute inset-0 will-change-transform">
             {/* موبایل: نسخه عمودی، کشیده به عرض قاب — بدون برش */}
