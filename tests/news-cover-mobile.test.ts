@@ -29,7 +29,7 @@ describe('news dual cover (desktop + mobile)', () => {
   it('admin form has two upload boxes with exact dimensions', () => {
     const form = read('components/admin/news/NewsArticleForm.tsx');
     assert.ok(form.includes('thumbnailMobile'), 'form state has mobile field');
-    assert.ok(form.includes('1920×1080'), 'desktop size shown');
+    assert.ok(form.includes('1920×820'), 'desktop size shown');
     assert.ok(form.includes('1080×1350'), 'mobile size shown');
     assert.ok(form.includes('cover-desktop') && form.includes('cover-mobile'), 'two testids');
   });

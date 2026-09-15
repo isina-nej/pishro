@@ -125,7 +125,7 @@ function CoverUploader({
       ) : (
         <div className="space-y-3">
           <div className="relative w-full overflow-hidden rounded-lg shadow-md ring-2 ring-primary/20">
-            <div className={ratioLabel.includes('4:5') ? 'aspect-[4/5] max-h-72' : 'aspect-[16/9]'}>
+            <div className={ratioLabel.includes('4:5') ? 'aspect-[4/5] max-h-72' : 'aspect-[21/9]'}>
               {/* eslint-disable-next-line @next/next/no-img-element -- admin-supplied thumbnail URL, host is not in next.config remotePatterns */}
               <img
                 src={preview}
@@ -259,8 +259,8 @@ export default function NewsArticleForm({
 
             <CoverUploader
               label="کاور دسکتاپ (عریض)"
-              ratioLabel="نسبت 16:9"
-              sizeLabel="پیشنهاد 1920×1080"
+              ratioLabel="نسبت 21:9"
+              sizeLabel="پیشنهاد 1920×820"
               preview={formData.thumbnail}
               inputRef={fileInputRef}
               uploading={isUploadingImage}
