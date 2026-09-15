@@ -44,7 +44,8 @@ describe('news dual cover (desktop + mobile)', () => {
     const detail = read('components/news/NewsArticleDetail.tsx');
     // نسخه موبایل فقط وقتی رندر می‌شود که مقدار داشته باشد
     assert.ok(detail.includes('article.coverImageMobile ?'), 'mobile guarded');
-    // نسخه دسکتاپ همیشه هست و روی موبایل فقط وقتی تنها گزینه است نمایش داده می‌شود
-    assert.ok(detail.includes("article.coverImageMobile ? 'hidden object-cover sm:block' : 'object-cover'"), 'desktop fallback');
+    // نسخه دسکتاپ همیشه هست و بدون کراپ (object-contain) نمایش داده می‌شود
+    assert.ok(detail.includes('object-contain'), 'no-crop fit');
+    assert.ok(detail.includes('blur-2xl'), 'blurred backdrop fills frame');
   });
 });
