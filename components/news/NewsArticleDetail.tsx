@@ -245,45 +245,24 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
           className="relative h-[44svh] min-h-[320px] w-full overflow-hidden bg-muted sm:h-[54svh] lg:h-[60svh] lg:max-h-[620px]"
         >
           <motion.div style={scrollStyle} className="absolute inset-0 will-change-transform">
-            {/* بک‌گراند بلوری هم‌عکس: قاب همیشه پر، سوژه هیچ‌وقت کات نمی‌شود */}
-            {article.coverImageMobile ? (
-              <Image
-                src={article.coverImageMobile}
-                alt=""
-                aria-hidden
-                fill
-                sizes="100vw"
-                className="object-cover blur-2xl scale-110 opacity-60 sm:hidden"
-                priority
-              />
-            ) : null}
-            <Image
-              src={article.coverImage}
-              alt=""
-              aria-hidden
-              fill
-              sizes="100vw"
-              className={article.coverImageMobile ? 'hidden object-cover blur-2xl scale-110 opacity-60 sm:block' : 'object-cover blur-2xl scale-110 opacity-60'}
-              priority
-            />
-            {/* موبایل: نسخه عمودی کامل بدون کراپ */}
+            {/* موبایل: نسخه عمودی، کل عرض را می‌پوشاند */}
             {article.coverImageMobile ? (
               <Image
                 src={article.coverImageMobile}
                 alt={article.title}
                 fill
                 sizes="100vw"
-                className="object-contain sm:hidden"
+                className="object-cover object-center sm:hidden"
                 priority
               />
             ) : null}
-            {/* دسکتاپ/تبلت: نسخه عریض کامل بدون کراپ (روی موبایل مخفی اگر نسخه موبایل هست) */}
+            {/* دسکتاپ/تبلت: نسخه عریض، کل عرض را می‌پوشاند (روی موبایل مخفی اگر نسخه موبایل هست) */}
             <Image
               src={article.coverImage}
               alt={article.title}
               fill
               sizes="100vw"
-              className={article.coverImageMobile ? 'hidden object-contain sm:block' : 'object-contain'}
+              className={article.coverImageMobile ? 'hidden object-cover object-center sm:block' : 'object-cover object-center'}
               priority
             />
           </motion.div>
