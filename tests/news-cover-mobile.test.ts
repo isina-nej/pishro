@@ -44,7 +44,7 @@ describe('news dual cover (desktop + mobile)', () => {
     const detail = read('components/news/NewsArticleDetail.tsx');
     // نسخه موبایل فقط وقتی رندر می‌شود که مقدار داشته باشد
     assert.ok(detail.includes('article.coverImageMobile ?'), 'mobile guarded');
-    // هیرو تمام‌عرض با پوشش کامل (object-cover) — ارتفاع ثابت، عرض کامل
-    assert.ok(detail.includes('object-cover object-center'), 'full-bleed cover fit');
+    // هیرو کشیده به قاب (object-fill) — عرض همیشه فیت، بدون برش
+    assert.ok(detail.includes('object-fill'), 'stretch fit, no crop');
   });
 });

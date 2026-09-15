@@ -245,24 +245,24 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
           className="relative h-[44svh] min-h-[320px] w-full overflow-hidden bg-muted sm:h-[54svh] lg:h-[60svh] lg:max-h-[620px]"
         >
           <motion.div style={scrollStyle} className="absolute inset-0 will-change-transform">
-            {/* موبایل: نسخه عمودی، کل عرض را می‌پوشاند */}
+            {/* موبایل: نسخه عمودی، کشیده به عرض قاب — بدون برش */}
             {article.coverImageMobile ? (
               <Image
                 src={article.coverImageMobile}
                 alt={article.title}
                 fill
                 sizes="100vw"
-                className="object-cover object-center sm:hidden"
+                className="object-fill sm:hidden"
                 priority
               />
             ) : null}
-            {/* دسکتاپ/تبلت: نسخه عریض، کل عرض را می‌پوشاند (روی موبایل مخفی اگر نسخه موبایل هست) */}
+            {/* دسکتاپ/تبلت: نسخه عریض، کشیده به عرض قاب — بدون برش (روی موبایل مخفی اگر نسخه موبایل هست) */}
             <Image
               src={article.coverImage}
               alt={article.title}
               fill
               sizes="100vw"
-              className={article.coverImageMobile ? 'hidden object-cover object-center sm:block' : 'object-cover object-center'}
+              className={article.coverImageMobile ? 'hidden object-fill sm:block' : 'object-fill'}
               priority
             />
           </motion.div>
