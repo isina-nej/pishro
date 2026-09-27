@@ -51,6 +51,9 @@ import {
  */
 export interface UpdateSettingsInput {
   zarinpalMerchantId?: string | null;
+  activePaymentGateway?: string;
+  paymentGatewayApiKey?: string | null;
+  paymentGatewaySandbox?: boolean;
   siteName?: string | null;
   siteDescription?: string | null;
   supportEmail?: string | null;
@@ -132,6 +135,9 @@ export async function getSettings(): Promise<SiteSettings> {
           themeMode: DEFAULT_THEME_MODE,
           userPanelPaletteId: DEFAULT_USER_PANEL_PALETTE_ID,
           hiddenPages: [],
+          activePaymentGateway: "zarinpal",
+          paymentGatewayApiKey: null,
+          paymentGatewaySandbox: false,
         },
       });
     }
@@ -406,6 +412,42 @@ export async function updateSettings(
   } catch (error) {
     console.error("Error updating settings:", error);
     throw new Error("خطا در به‌روزرسانی تنظیمات");
+  }
+}
+
+/**
+ * Payment Gateway Configuration
+ */
+export interface PaymentGatewayConfig {
+  gateway: string;
+  apiKey: string;
+  sandbox: boolean;
+}
+
+export async function getPaymentGatewayConfig(): Promise<PaymentGatewayConfig> {
+  try {
+    const settings = await getSettings();
+    const gateway = settings.activePaymentGateway || "zarinpal";
+    const apiKey =
+      settings.paymentGatewayApiKey ||
+      settings.zarinpalMerchantId ||
+      process.env.ZARINPAL_MERCHANT_ID ||
+      process.env.PAYMENT_GATEWAY_API_KEY ||
+      "";
+    const sandbox = Boolean(settings.paymentGatewaySandbox);
+
+    return {
+      gateway,
+      apiKey,
+      sandbox,
+    };
+  } catch (error) {
+    console.error("Error getting payment gateway config:", error);
+    return {
+      gateway: "zarinpal",
+      apiKey: process.env.ZARINPAL_MERCHANT_ID || "",
+      sandbox: process.env.NODE_ENV !== "production",
+    };
   }
 }
 

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   Check,
+  CreditCard,
   EyeOff,
   ImageIcon,
   Loader2,
@@ -36,6 +37,7 @@ import UserPanelPaletteSection from "@/components/admin/settings/UserPanelPalett
 import NavbarItemsSection from "@/components/admin/settings/NavbarItemsSection";
 import FooterContentSection from "@/components/admin/settings/FooterContentSection";
 import HomeLayoutSection from "@/components/admin/settings/HomeLayoutSection";
+import PaymentGatewaySection from "@/components/admin/settings/PaymentGatewaySection";
 import { useAdminAuth } from "@/lib/hooks/useAdminAuth";
 import {
   LANDING_PALETTES,
@@ -68,7 +70,7 @@ import {
   type HomeLayout,
 } from "@/lib/site/home-layout";
 
-type SettingsTab = "site" | "panel" | "branding" | "pages" | "nav" | "footer";
+type SettingsTab = "site" | "panel" | "branding" | "pages" | "nav" | "footer" | "payment";
 
 type SettingsPayload = {
   paletteId?: string;
@@ -84,6 +86,10 @@ type SettingsPayload = {
   footerContent?: unknown;
   homeLayout?: string;
   publicContent?: unknown;
+  activePaymentGateway?: string;
+  paymentGatewayApiKey?: string | null;
+  paymentGatewaySandbox?: boolean;
+  zarinpalMerchantId?: string | null;
 };
 
 type CustomPaletteItem = {
@@ -171,6 +177,9 @@ export default function AdminSettingsPage() {
   const [homeLayout, setHomeLayout] = useState<HomeLayout>(DEFAULT_HOME_LAYOUT);
   const [savedHomeLayout, setSavedHomeLayout] =
     useState<HomeLayout>(DEFAULT_HOME_LAYOUT);
+  const [activePaymentGateway, setActivePaymentGateway] = useState("zarinpal");
+  const [paymentGatewayApiKey, setPaymentGatewayApiKey] = useState("");
+  const [paymentGatewaySandbox, setPaymentGatewaySandbox] = useState(false);
 
   const reload = async () => {
     const [settings, customList] = await Promise.all([
@@ -201,6 +210,9 @@ export default function AdminSettingsPage() {
     setFooterContent(parseFooterContent(settings.footerContent));
     setHomeLayout(parseHomeLayout(settings.homeLayout));
     setSavedHomeLayout(parseHomeLayout(settings.homeLayout));
+    setActivePaymentGateway(settings.activePaymentGateway || "zarinpal");
+    setPaymentGatewayApiKey(settings.paymentGatewayApiKey || settings.zarinpalMerchantId || "");
+    setPaymentGatewaySandbox(Boolean(settings.paymentGatewaySandbox));
     setCustoms(customList);
   };
 
@@ -342,6 +354,27 @@ export default function AdminSettingsPage() {
     }
   };
 
+  const onSavePaymentGateway = async (data: {
+    activePaymentGateway: string;
+    paymentGatewayApiKey: string;
+    paymentGatewaySandbox: boolean;
+  }) => {
+    setSaving(true);
+    try {
+      await saveSettings(data);
+      setActivePaymentGateway(data.activePaymentGateway);
+      setPaymentGatewayApiKey(data.paymentGatewayApiKey);
+      setPaymentGatewaySandbox(data.paymentGatewaySandbox);
+      toast.success("تنظیمات درگاه پرداخت ذخیره شد");
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "خطا در ذخیره درگاه پرداخت"
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const openCreate = () => {
     setEditor(emptyEditor());
     setEditorTab("light");
@@ -435,6 +468,7 @@ export default function AdminSettingsPage() {
     { id: "site", label: "پالت سایت", icon: Palette },
     { id: "panel", label: "پالت پنل کاربر", icon: UserRound },
     { id: "branding", label: "لوگو و آیکن", icon: ImageIcon },
+    { id: "payment", label: "درگاه پرداخت", icon: CreditCard },
     { id: "nav", label: "منوی صفحات", icon: Menu },
     { id: "footer", label: "فوتر", icon: PanelBottom },
     { id: "pages", label: "مدیریت نمایش", icon: EyeOff },
@@ -544,6 +578,16 @@ export default function AdminSettingsPage() {
           content={footerContent}
           onChange={setFooterContent}
           onSave={onSaveFooterContent}
+          saving={saving}
+        />
+      )}
+
+      {tab === "payment" && (
+        <PaymentGatewaySection
+          activeGateway={activePaymentGateway}
+          apiKey={paymentGatewayApiKey}
+          sandbox={paymentGatewaySandbox}
+          onSave={onSavePaymentGateway}
           saving={saving}
         />
       )}

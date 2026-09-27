@@ -8,7 +8,7 @@ import {
   errorResponse,
   ErrorCodes,
 } from "@/lib/api-response";
-// Zarinpal SDK removed — enable via official REST API when going live.
+import { initiatePayment } from "@/lib/payment";
 
 export async function POST(req: Request) {
   try {
@@ -79,21 +79,48 @@ export async function POST(req: Request) {
 
     console.log(`[Checkout] Order ${order.id} created. Total: ${total}`);
 
-    // Fake gateway disabled in production — real Zarinpal PaymentRequest wiring goes here.
-    if (process.env.NODE_ENV === "production") {
+    // Determine Base URL for callback
+    const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || "localhost:3000";
+    const protocol = req.headers.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || `${protocol}://${host}`;
+    const callbackUrl = `${baseUrl}/api/payment/verify?orderId=${order.id}`;
+
+    // Get user info if available
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { phone: true, email: true },
+    });
+
+    // Request payment via configured gateway
+    const paymentResult = await initiatePayment({
+      orderId: order.id,
+      amount: total,
+      callbackUrl,
+      description: `پرداخت سفارش دوره ${order.id}`,
+      mobile: user?.phone || undefined,
+      email: user?.email || undefined,
+    });
+
+    if (!paymentResult.success || !paymentResult.payUrl) {
       return errorResponse(
-        "درگاه پرداخت فعال نیست",
+        paymentResult.errorMessage || "خطا در اتصال به درگاه پرداخت",
         ErrorCodes.INTERNAL_ERROR
       );
     }
 
-    // ⚠️ حالت تستی فقط در non-production (Fake payment URL)
-    const fakePayUrl = `https://sandbox.zarinpal.com/pg/StartPay/fake-${order.id}`;
+    // Save gateway & authority on order
+    await prisma.order.update({
+      where: { id: order.id },
+      data: {
+        paymentGateway: paymentResult.gateway,
+        paymentAuthority: paymentResult.authority,
+      },
+    });
 
     return successResponse(
       {
         orderId: order.id,
-        payUrl: fakePayUrl,
+        payUrl: paymentResult.payUrl,
         total,
       },
       "سفارش با موفقیت ایجاد شد"

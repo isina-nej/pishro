@@ -209,8 +209,10 @@ model Order {
   items        Json
   total        Int
   status       OrderStatus   @default(PENDING)
-  paymentRef   String?
-  createdAt    DateTime?     @default(now())
+  paymentRef       String?
+  paymentGateway   String?
+  paymentAuthority String?
+  createdAt        DateTime?     @default(now())
   orderItems   OrderItem[]   @relation("OrderOrderItems")
   transactions Transaction[] @relation("OrderTransactions")
   portfolios   UserInvestmentPortfolio[] @relation("PortfolioOrder")
@@ -1293,8 +1295,11 @@ enum ImageCategory {
 model SiteSettings {
   id String @id @default(cuid())
 
-  // تنظیمات درگاه پرداخت زرین‌پال
-  zarinpalMerchantId String?
+  // تنظیمات درگاه پرداخت
+  activePaymentGateway  String  @default("zarinpal")
+  paymentGatewayApiKey  String?
+  paymentGatewaySandbox Boolean @default(false)
+  zarinpalMerchantId    String?
 
   // سایر تنظیمات می‌توانند در آینده اضافه شوند
   siteName        String?
