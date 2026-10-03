@@ -33,7 +33,7 @@ interface ApiResponse {
   message?: string;
 }
 
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 24;
 const MAX_ASSETS = 150;
 /** فاصله ظاهر شدن هر ردیف تا حس «قیمت‌گذاری دانه‌دانه» بدون فشار */
 const REVEAL_GAP_MS = 42;
@@ -568,7 +568,7 @@ export default function CryptoPricesPage({
                     <div className="rounded-2xl bg-gradient-to-br from-primary to-success p-2.5 text-primary-foreground"><LayoutGrid className="h-5 w-5" /></div>
                     <div>
                       <h2 className="text-lg font-black text-foreground">۱۵۰ ارز برتر بازار</h2>
-                      <p className="mt-1 text-xs text-muted-foreground">صفحه فوری باز می‌شود؛ قیمت‌ها دانه‌دانه تکمیل می‌شوند</p>
+                      <p className="mt-1 text-xs text-muted-foreground">{faNumber.format(assets.length)} از {faNumber.format(MAX_ASSETS)} ارز بارگذاری شده · صفحه فوری باز می‌شود؛ با اسکرول بقیه می‌آیند</p>
                     </div>
                   </div>
                   <div className="relative w-full max-w-xs">

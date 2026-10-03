@@ -626,10 +626,12 @@ function takePage<T>(assets: T[], limit: number, page: number): T[] {
 }
 
 function buildPagination(page: number, limit: number, total: number) {
+  const capped = Math.min(total, DEFAULT_MARKET_LIMIT);
   return {
     page,
     limit,
-    hasMore: page * limit < Math.min(total, DEFAULT_MARKET_LIMIT),
+    total: capped,
+    hasMore: page * limit < capped,
   };
 }
 

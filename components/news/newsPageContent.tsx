@@ -1,10 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNewsList } from "@/lib/hooks/useNews";
-import type { NewsArticle } from "@prisma/client";
-import { useNewsFilters } from "./hooks/useNewsFilters";
+import { useNewsInfinite, useNewsStats } from "@/lib/hooks/useNews";
+import { flattenNewsPages, getNewsTotal, type NewsSortOption } from "@/lib/services/news-service";
 import { NewsHero } from "./newsHero";
 import { NewsFilterControls } from "./newsFilterControls";
 import NewsCard from "./newsCard";
@@ -14,39 +13,49 @@ import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import { LoadingSpinner, useDelayedLoading } from "@/components/ui/loading-spinner";
 import { cn } from "@/lib/utils";
 
-type NewsQueryReturn = {
-  data?: {
-    items: NewsArticle[];
-    total?: number;
-  };
-  isLoading: boolean;
-  error?: Error | null;
-};
+const sortOptions: NewsSortOption[] = ["جدیدترین", "پربازدیدترین", "محبوب‌ترین"];
 
 const NewsPageContent = () => {
   const { show } = useVisibility();
   const copy = usePublicCopy("news");
-  const { data: newsData, isLoading } = useNewsList({
-    page: 1,
-    limit: 100,
-  }) as NewsQueryReturn;
 
-  const news = newsData?.items ?? [];
+  const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("همه");
+  const [selectedSort, setSelectedSort] = useState<NewsSortOption>("جدیدترین");
+  const [timeRange, setTimeRange] = useState("همه");
+
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedQuery(query.trim()), 400);
+    return () => clearTimeout(t);
+  }, [query]);
 
   const {
-    categories,
-    sortOptions,
-    query,
-    selectedCategory,
-    selectedSort,
-    timeRange,
-    setQuery,
-    setCategory,
-    setSort,
-    setTimeRange,
-    filteredNews,
-    stats,
-  } = useNewsFilters(news);
+    data,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useNewsInfinite({
+    category: selectedCategory !== "همه" ? selectedCategory : undefined,
+    search: debouncedQuery || undefined,
+    sort: selectedSort,
+    timeRange: timeRange !== "همه" ? timeRange : undefined,
+  });
+  const { data: serverStats } = useNewsStats();
+
+  const news = flattenNewsPages(data?.pages as never) as unknown as Parameters<typeof NewsCard>[0]["data"][];
+  const filteredTotal = getNewsTotal(data?.pages as never);
+
+  const categories =
+    serverStats?.categories?.length ? serverStats.categories : ["همه"];
+
+  const stats = {
+    totalNews: serverStats?.totalNews ?? filteredTotal,
+    featured: serverStats?.featured ?? 0,
+    thisMonth: serverStats?.thisMonth ?? 0,
+    avgViews: serverStats?.avgViews ?? 0,
+  };
 
   const hasActiveFilters =
     query.trim().length > 0 ||
@@ -60,10 +69,28 @@ const NewsPageContent = () => {
     setTimeRange("همه");
   };
 
+  const setCategory = (v: string) => setSelectedCategory(v);
+  const setSort = (v: NewsSortOption) => setSelectedSort(v);
+
+  // ponytail: sentinel only; chain-load-all removed, observer pulls next page near viewport
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el || !hasNextPage) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !isFetchingNextPage) fetchNextPage();
+      },
+      { rootMargin: "600px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
   const filtersVisible = show("news:filters");
   // Icon-only, delayed loader — cached data usually renders before it appears.
   // Keeping hooks above the early return so the hook count stays stable.
-  const showLoading = useDelayedLoading(isLoading && newsData?.items == null);
+  const showLoading = useDelayedLoading(isLoading && !data);
 
   if (showLoading) {
     return (
@@ -125,11 +152,11 @@ const NewsPageContent = () => {
                   <p className="text-xs text-muted-foreground">
                     {copy("list.countPrefix", "نمایش")}{" "}
                     <span className="font-semibold text-foreground">
-                      {filteredNews.length}
+                      {news.length}
                     </span>{" "}
                     {copy("list.countMiddle", "از")}{" "}
                     <span className="font-semibold text-foreground">
-                      {news.length}
+                      {filteredTotal.toLocaleString("fa-IR")}
                     </span>{" "}
                     {copy("list.countSuffix", "خبر")}
                   </p>
@@ -155,9 +182,9 @@ const NewsPageContent = () => {
                 )}
               </div>
 
-              {filteredNews.length > 0 ? (
+              {news.length > 0 ? (
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
-                  {filteredNews.map((newsItem) => (
+                  {news.map((newsItem) => (
                     <NewsCard
                       key={newsItem.id}
                       data={{
@@ -171,23 +198,37 @@ const NewsPageContent = () => {
                   ))}
                 </div>
               ) : (
-                <div className="rounded-3xl border border-border/50 bg-card/70 p-10 text-center backdrop-blur-xl">
-                  <p className="text-base font-semibold text-foreground">
-                    {copy("list.empty", "هیچ خبری پیدا نشد")}
-                  </p>
-                  <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
-                    {copy("list.emptyHint", "با فیلترهای فعلی خبری نیست. فیلترها را تغییر دهید یا پاک کنید.")}
-                  </p>
-                  {hasActiveFilters && (
-                    <button
-                      type="button"
-                      onClick={handleResetFilters}
-                      className="mt-5 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-transform duration-300 hover:scale-105"
-                    >
-                      {copy("list.clear", "حذف تمام فیلترها")}
-                    </button>
-                  )}
+                !isLoading && (
+                  <div className="rounded-3xl border border-border/50 bg-card/70 p-10 text-center backdrop-blur-xl">
+                    <p className="text-base font-semibold text-foreground">
+                      {copy("list.empty", "هیچ خبری پیدا نشد")}
+                    </p>
+                    <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
+                      {copy("list.emptyHint", "با فیلترهای فعلی خبری نیست. فیلترها را تغییر دهید یا پاک کنید.")}
+                    </p>
+                    {hasActiveFilters && (
+                      <button
+                        type="button"
+                        onClick={handleResetFilters}
+                        className="mt-5 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-transform duration-300 hover:scale-105"
+                      >
+                        {copy("list.clear", "حذف تمام فیلترها")}
+                      </button>
+                    )}
+                  </div>
+                )
+              )}
+
+              <div ref={sentinelRef} aria-hidden className="h-1 w-full" />
+              {isFetchingNextPage && (
+                <div className="flex justify-center py-6">
+                  <LoadingSpinner />
                 </div>
+              )}
+              {!hasNextPage && news.length > 0 && (
+                <p className="py-4 text-center text-xs text-muted-foreground">
+                  {copy("list.end", "همه خبرها نمایش داده شد")}
+                </p>
               )}
             </div>
           )}

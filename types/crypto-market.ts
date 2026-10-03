@@ -54,6 +54,7 @@ export interface CryptoGlobalMarket {
 export interface CryptoMarketPagination {
   page: number;
   limit: number;
+  total: number;
   hasMore: boolean;
 }
 
