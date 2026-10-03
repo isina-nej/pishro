@@ -1,12 +1,11 @@
 import { NextRequest } from "next/server";
-import { PrismaClient, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import {
   errorResponse,
   paginatedResponse,
   ErrorCodes,
 } from "@/lib/api-response";
-
-const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest) {
   try {
@@ -20,40 +19,78 @@ export async function GET(req: NextRequest) {
     // Filter parameters
     const category = searchParams.get("category") || undefined;
     const search = searchParams.get("search") || undefined;
+    const sort = searchParams.get("sort") || "جدیدترین";
+    const timeRange = searchParams.get("timeRange") || undefined;
 
-    const where: Prisma.NewsArticleWhereInput = {
-      published: true, // Only show published articles
-      // خبرهای تایم‌دار تا رسیدن زمان انتشارشان نمایش داده نمی‌شوند.
-      // publishedAt خالی یعنی خبر قدیمی بدون تاریخ انتشار — آن‌ها نمایش داده می‌شوند.
-      OR: [
-        { publishedAt: null },
-        { publishedAt: { lte: new Date() } },
-      ],
-    };
+    const andConditions: Prisma.NewsArticleWhereInput[] = [
+      { published: true },
+    ];
 
-    if (category) {
-      where.categoryId = category;
+    const now = new Date();
+
+    if (timeRange && timeRange !== "همه") {
+      let diffDays = 30;
+      if (timeRange === "امروز") diffDays = 1;
+      else if (timeRange === "هفته") diffDays = 7;
+      else if (timeRange === "ماه") diffDays = 30;
+      else if (timeRange === "سال") diffDays = 365;
+
+      const cutoff = new Date(now.getTime() - diffDays * 24 * 60 * 60 * 1000);
+      andConditions.push({
+        publishedAt: {
+          gte: cutoff,
+          lte: now,
+        },
+      });
+    } else {
+      andConditions.push({
+        OR: [
+          { publishedAt: null },
+          { publishedAt: { lte: now } },
+        ],
+      });
     }
 
-    if (search) {
-      // OR سطح بالا برای زمان انتشار رزرو شده، پس جستجو داخل AND می‌رود
-      where.AND = [
-        {
-          OR: [
-            { title: { contains: search } },
-            { excerpt: { contains: search } },
-          ],
-        },
-      ];
+    if (category && category !== "همه") {
+      andConditions.push({
+        OR: [
+          { category: category },
+          { categoryId: category },
+          { relatedCategory: { title: category } },
+        ],
+      });
+    }
+
+    if (search && search.trim()) {
+      const term = search.trim();
+      andConditions.push({
+        OR: [
+          { title: { contains: term } },
+          { excerpt: { contains: term } },
+          { author: { contains: term } },
+        ],
+      });
+    }
+
+    const where: Prisma.NewsArticleWhereInput = {
+      AND: andConditions,
+    };
+
+    let orderBy: Prisma.NewsArticleOrderByWithRelationInput[] = [
+      { publishedAt: "desc" },
+      { createdAt: "desc" },
+    ];
+
+    if (sort === "پربازدیدترین" || sort === "views") {
+      orderBy = [{ views: "desc" }, { publishedAt: "desc" }];
+    } else if (sort === "محبوب‌ترین" || sort === "likes") {
+      orderBy = [{ likes: "desc" }, { publishedAt: "desc" }];
     }
 
     const [items, total] = await Promise.all([
       prisma.newsArticle.findMany({
         where,
-        orderBy: [
-          { publishedAt: "desc" },
-          { createdAt: "desc" },
-        ],
+        orderBy,
         skip,
         take: limit,
         include: {
