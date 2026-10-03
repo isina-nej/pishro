@@ -152,7 +152,9 @@ export default function PaymentGatewaySection({
       <Card className="p-5 space-y-5">
         <div className="space-y-2">
           <Label htmlFor="apiKey" className="font-semibold text-sm">
-            {selectedGateway === "zarinpal"
+            {selectedGateway === "saman"
+              ? "شماره ترمینال سامان (TerminalId)"
+              : selectedGateway === "zarinpal"
               ? "مرچنت آیدی زرین‌پال (Merchant ID)"
               : selectedGateway === "zibal"
               ? "مرچنت کد زیبال (برای تست کلمه zibal مجاز است)"
@@ -165,7 +167,9 @@ export default function PaymentGatewaySection({
             value={keyInput}
             onChange={(e) => setKeyInput(e.target.value)}
             placeholder={
-              selectedGateway === "zarinpal"
+              selectedGateway === "saman"
+                ? "مثلاً 12345678"
+                : selectedGateway === "zarinpal"
                 ? "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
                 : selectedGateway === "zibal"
                 ? "zibal یا کد اختصاصی شما"
@@ -174,7 +178,9 @@ export default function PaymentGatewaySection({
             className="dir-ltr font-mono text-sm"
           />
           <p className="text-xs text-muted-foreground">
-            {selectedGateway === "test"
+            {selectedGateway === "saman"
+              ? "شماره ترمینال اختصاص‌یافته از سامان. آی‌پی سرور باید نزد سامان ثبت باشد؛ آدرس بازگشت بالا را در پنل سامان ثبت کنید."
+              : selectedGateway === "test"
               ? "درگاه آزمایشی نیازی به وارد کردن مرچنت ندارد و تراکنش را به‌صورت محلی شبیه‌سازی می‌کند."
               : "این کلید در دیتابیس امن نگهداری می‌شود و پرداخت‌های کاربران با آن پردازش می‌گردد."}
           </p>

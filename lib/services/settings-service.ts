@@ -431,6 +431,7 @@ export async function getPaymentGatewayConfig(): Promise<PaymentGatewayConfig> {
     const apiKey =
       settings.paymentGatewayApiKey ||
       settings.zarinpalMerchantId ||
+      process.env.SEP_TERMINAL_ID ||
       process.env.ZARINPAL_MERCHANT_ID ||
       process.env.PAYMENT_GATEWAY_API_KEY ||
       "";

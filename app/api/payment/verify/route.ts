@@ -51,16 +51,25 @@ async function handleVerify(req: Request) {
     const authority =
       params.Authority ||
       params.authority ||
+      params.Token ||
+      params.token ||
+      params.RefNum ||
+      params.refNum ||
       params.trackId ||
       params.trans_id ||
-      params.token ||
       "";
 
     const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || "localhost:3000";
     const protocol = req.headers.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || `${protocol}://${host}`;
 
-    let orderId = params.orderId || params.order_id || params.OrderId || "";
+    let orderId =
+      params.orderId ||
+      params.order_id ||
+      params.OrderId ||
+      params.ResNum ||
+      params.resNum ||
+      "";
 
     // If orderId is missing, attempt lookup by paymentAuthority
     if (!orderId && authority) {

@@ -97,7 +97,7 @@ export async function PATCH(req: NextRequest) {
       );
     }
 
-    const ALLOWED_GATEWAYS = ["zarinpal", "zibal", "nextpay", "idpay", "test"];
+    const ALLOWED_GATEWAYS = ["saman", "zarinpal", "zibal", "nextpay", "idpay", "test"];
     if (body.activePaymentGateway !== undefined && body.activePaymentGateway !== null) {
       if (!ALLOWED_GATEWAYS.includes(body.activePaymentGateway)) {
         return validationError(
