@@ -59,6 +59,8 @@ export default function LessonModal({
   });
   const [thumbnailTempPath, setThumbnailTempPath] = useState<string | null>(null);
   const [videoTempPath, setVideoTempPath] = useState<string | null>(null);
+  const [videoFileName, setVideoFileName] = useState<string | null>(null);
+  const [videoUploading, setVideoUploading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -74,6 +76,8 @@ export default function LessonModal({
     }
     setThumbnailTempPath(null);
     setVideoTempPath(null);
+    setVideoFileName(null);
+    setVideoUploading(false);
     setErrors({});
   }, [lesson, isOpen]);
 
@@ -85,7 +89,9 @@ export default function LessonModal({
     if (!formData.durationSeconds || !Number.isInteger(dur) || dur <= 0) {
       newErrors.durationSeconds = 'مدت زمان باید عدد صحیح مثبت باشد';
     }
-    if (!lesson && !videoTempPath) {
+    if (videoUploading) {
+      newErrors.video = 'صبر کنید تا آپلود ویدیو تمام شود، بعد ثبت کنید.';
+    } else if (!lesson && !videoTempPath) {
       newErrors.video = 'ویدیو الزامی است';
     }
     setErrors(newErrors);
@@ -212,6 +218,7 @@ export default function LessonModal({
               type="file"
               accept="video/mp4"
               aria-label="آپلود ویدیو درس"
+              disabled={videoUploading}
               onChange={async (e) => {
                 const f = e.target.files?.[0];
                 if (!f) return;
@@ -223,16 +230,30 @@ export default function LessonModal({
                   setErrors((err) => ({ ...err, video: 'حداکثر 500MB' }));
                   return;
                 }
+                setVideoUploading(true);
+                setVideoFileName(f.name);
+                setVideoTempPath(null);
+                setErrors((err) => ({ ...err, video: '' }));
                 try {
                   setVideoTempPath(await uploadTempFile(f, 'video'));
-                  setErrors((err) => ({ ...err, video: '' }));
                 } catch (error) {
                   const message = error instanceof Error ? error.message : 'خطا در آپلود ویدیو';
                   setErrors((err) => ({ ...err, video: message }));
+                  setVideoFileName(null);
                   toast.error(message);
+                } finally {
+                  setVideoUploading(false);
                 }
               }}
             />
+            {videoUploading && (
+              <p className="mt-1 text-sm text-muted-foreground">
+                در حال آپلود {videoFileName ? `«${videoFileName}»` : 'ویدیو'}... لطفاً صبر کنید
+              </p>
+            )}
+            {!videoUploading && videoFileName && videoTempPath && (
+              <p className="mt-1 text-sm text-green-600">آپلود شد: {videoFileName}</p>
+            )}
             {errors.video && <p className="text-red-500 text-sm">{errors.video}</p>}
           </div>
 
@@ -255,8 +276,8 @@ export default function LessonModal({
             <Button variant="outline" onClick={onClose} disabled={isLoading} aria-label="انصراف">
               انصراف
             </Button>
-            <Button onClick={handleSubmit} disabled={isLoading} aria-label="ذخیره درس">
-              {isLoading ? 'درحال پردازش...' : lesson ? 'ذخیره' : 'ایجاد'}
+            <Button onClick={handleSubmit} disabled={isLoading || videoUploading} aria-label="ذخیره درس">
+              {videoUploading ? 'در حال آپلود ویدیو...' : isLoading ? 'درحال پردازش...' : lesson ? 'ذخیره' : 'ایجاد'}
             </Button>
           </div>
         </div>
