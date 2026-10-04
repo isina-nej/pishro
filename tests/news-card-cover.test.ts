@@ -12,7 +12,7 @@ describe("news card cover — no crop, wider cards", () => {
     const src = read("components/news/newsCard.tsx");
     assert.match(src, /object-fill/, "must stretch, not crop");
     assert.ok(!src.includes("object-cover"), "no cover-crop allowed");
-    assert.match(src, /aspect-\[21\/9\]/, "wide frame matches 1920x820 uploads");
+    assert.match(src, /aspect-\[3\/1\]/, "frame matches 3:1 uploads");
   });
 
   it("grid is 2-col so cards are wider", () => {

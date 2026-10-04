@@ -60,11 +60,11 @@ const NewsCard = ({ data }: NewsCardProps) => {
         className="flex h-full flex-col"
         href={`/news/${data.slug}`}
       >
-        {/* Image Container — full-bleed 21/9 frame, object-fill stretches
+        {/* Image Container — full-bleed 3/1 frame, object-fill stretches
             the cover to the frame edges so headlines never crop.
-            Frame is wider than tall to match the 1920x820 upload size. */}
+            Frame matches the 3:1 upload size, zero stretch, zero crop. */}
         <div className="relative w-full shrink-0 overflow-hidden bg-[var(--home-deep)] dark:bg-black/60">
-          <div className="relative aspect-[21/9] w-full">
+          <div className="relative aspect-[3/1] w-full">
             <Image
               src={data.coverImage ?? "/images/default-news.jpg"}
               alt={data.title}
