@@ -60,18 +60,17 @@ const NewsCard = ({ data }: NewsCardProps) => {
         className="flex h-full flex-col"
         href={`/news/${data.slug}`}
       >
-        {/* Image Container — uniform 16/10 frame, cover fills without distortion.
-            object-cover keeps every card identical; object-position top shows
-            headlines instead of cropping them. Dark scrim behind image adds
-            contrast in light mode; in dark mode the frame blends into the card. */}
+        {/* Image Container — full-bleed 21/9 frame, object-fill stretches
+            the cover to the frame edges so headlines never crop.
+            Frame is wider than tall to match the 1920x820 upload size. */}
         <div className="relative w-full shrink-0 overflow-hidden bg-[var(--home-deep)] dark:bg-black/60">
-          <div className="relative aspect-[16/10] w-full">
+          <div className="relative aspect-[21/9] w-full">
             <Image
               src={data.coverImage ?? "/images/default-news.jpg"}
               alt={data.title}
               fill
-              className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 500px, 600px"
+              className="object-fill transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 700px, 800px"
               priority={false}
             />
             {/* readability scrim — softens bright covers in light mode */}
