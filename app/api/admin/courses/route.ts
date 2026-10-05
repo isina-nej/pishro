@@ -220,6 +220,7 @@ export async function POST(req: NextRequest) {
       trailerVideoPath,
       thumbnailTempPath,
       trailerTempPath,
+      introMutedByDefault,
     } = parsed.data;
 
     // Normalize image paths
@@ -243,6 +244,7 @@ export async function POST(req: NextRequest) {
         hasChapters: hasChapters ?? false,
         img: normalizedThumbnail,
         introVideoUrl: normalizedTrailer,
+        introMutedByDefault: introMutedByDefault ?? true,
         language: "FA",
         status: status ?? "ACTIVE",
         published: published ?? true,

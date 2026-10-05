@@ -39,6 +39,7 @@ export interface CourseBasicTabData {
   dislikes?: number;
   img?: string;
   introVideoUrl?: string;
+  introMutedByDefault?: boolean;
 }
 
 interface CourseBasicTabProps {
@@ -211,6 +212,7 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
           dislikes: formData.dislikes ?? 0,
           ...(thumbnailTempPath ? { thumbnailTempPath } : {}),
           ...(trailerTempPath ? { trailerTempPath } : {}),
+          introMutedByDefault: formData.introMutedByDefault ?? true,
         },
       });
       onUpdate(updated);
@@ -486,6 +488,16 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
           {trailerUploading && <p className="text-sm text-muted-foreground">در حال آپلود ویدیو...</p>}
           {trailerTempPath && !trailerUploading && <p className="text-sm text-success">فایل آماده ذخیره — دکمه ذخیره را بزنید</p>}
           {errors.trailer && <p className="text-destructive text-sm">{errors.trailer}</p>}
+          <label className="mt-3 flex cursor-pointer items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={formData.introMutedByDefault ?? true}
+              onChange={(e) => setFormData((prev) => ({ ...prev, introMutedByDefault: e.target.checked }))}
+              className="size-4 accent-primary"
+              aria-label="پخش بی‌صدا"
+            />
+            پخش بی‌صدا (پیش‌فرض روشن)
+          </label>
         </div>
 
         <Button

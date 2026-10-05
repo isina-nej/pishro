@@ -120,6 +120,39 @@ describe("course admin panel — list/create/edit wired", () => {
   });
 });
 
+describe("video mute flags — admin toggle + muted default", () => {
+  it("migration adds muted columns defaulting to true", () => {
+    const sql = read("prisma/migrations/20261004000000_add_video_mute_flags/migration.sql");
+    assert.match(sql, /ADD COLUMN `mutedByDefault`.*DEFAULT 1/, "lesson muted default");
+    assert.match(sql, /ADD COLUMN `introMutedByDefault`.*DEFAULT 1/, "trailer muted default");
+  });
+
+  it("lesson create/update accept mutedByDefault", () => {
+    const schema = read("lib/schemas/course-management-schema.ts");
+    assert.match(schema, /mutedByDefault: z\.boolean/, "lesson schema carries flag");
+    assert.match(schema, /introMutedByDefault: z\.boolean/, "course schema carries flag");
+    const svc = read("lib/services/lesson-service.ts");
+    assert.match(svc, /mutedByDefault: data\.mutedByDefault \?\? true/, "create defaults muted");
+    assert.match(svc, /updateData\.mutedByDefault = data\.mutedByDefault/, "update persists flag");
+  });
+
+  it("lesson modal + course tab expose mute checkbox default on", () => {
+    const modal = read("components/admin/course-edit/LessonModal.tsx");
+    assert.match(modal, /mutedByDefault: true/, "new lesson defaults muted");
+    assert.match(modal, /پخش بی‌صدا/, "modal has mute toggle");
+    const tab = read("components/admin/course-edit/CourseBasicTab.tsx");
+    assert.match(tab, /introMutedByDefault/, "trailer tab carries flag");
+    assert.match(tab, /پخش بی‌صدا/, "trailer tab has mute toggle");
+  });
+
+  it("player starts muted from DB flag", () => {
+    const player = read("components/course/purchasedCourseContent.tsx");
+    assert.match(player, /mutedByDefault/, "player reads lesson flag");
+    const modal = read("components/courses/CourseDetailModal.tsx");
+    assert.match(modal, /introMutedByDefault \?\? true/, "teaser reads course flag");
+  });
+});
+
 describe("course upload chain — auth everywhere", () => {
   it("every admin course/lesson route requires auth", () => {
     const routes = [

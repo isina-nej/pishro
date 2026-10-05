@@ -28,6 +28,7 @@ export const CourseCreateSchema = z.object({
   trailerVideoPath: z.string().optional().nullable(),
   thumbnailTempPath: z.string().optional().nullable(),
   trailerTempPath: z.string().optional().nullable(),
+  introMutedByDefault: z.boolean().optional(),
 });
 
 export const CourseUpdateSchema = CourseCreateSchema.partial();
@@ -54,6 +55,7 @@ const lessonBaseSchema = z.object({
   videoPath: z.string().optional().nullable(),
   thumbnailTempPath: z.string().optional().nullable(),
   videoTempPath: z.string().optional().nullable(),
+  mutedByDefault: z.boolean().optional(),
 });
 
 export const LessonCreateSchema = lessonBaseSchema.refine(

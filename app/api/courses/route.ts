@@ -60,7 +60,8 @@ export async function GET(req: NextRequest) {
 
     const rows = await query(
       `SELECT id, subject, price, img, rating, description, discountPercent, time, students,
-              videosCount, instructor, slug, categoryId, level, status, published, createdAt, updatedAt
+              videosCount, instructor, slug, categoryId, level, status, published, createdAt, updatedAt,
+              introVideoUrl, introMutedByDefault
        FROM Course ${whereSql}
        ORDER BY ${order}
        LIMIT ${limit} OFFSET ${skip}`,

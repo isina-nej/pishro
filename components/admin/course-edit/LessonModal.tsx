@@ -30,6 +30,7 @@ interface Lesson {
   description?: string;
   durationSeconds?: number;
   chapterId?: string;
+  mutedByDefault?: boolean;
 }
 
 interface LessonModalProps {
@@ -56,6 +57,7 @@ export default function LessonModal({
     description: '',
     durationSeconds: '',
     chapterId: '',
+    mutedByDefault: true,
   });
   const [thumbnailTempPath, setThumbnailTempPath] = useState<string | null>(null);
   const [videoTempPath, setVideoTempPath] = useState<string | null>(null);
@@ -70,9 +72,10 @@ export default function LessonModal({
         description: lesson.description || '',
         durationSeconds: String(lesson.durationSeconds ?? ''),
         chapterId: lesson.chapterId || '',
+        mutedByDefault: lesson.mutedByDefault ?? true,
       });
     } else {
-      setFormData({ title: '', description: '', durationSeconds: '', chapterId: '' });
+      setFormData({ title: '', description: '', durationSeconds: '', chapterId: '', mutedByDefault: true });
     }
     setThumbnailTempPath(null);
     setVideoTempPath(null);
@@ -107,6 +110,7 @@ export default function LessonModal({
       chapterId: hasChapters && formData.chapterId ? formData.chapterId : undefined,
       ...(thumbnailTempPath ? { thumbnailTempPath } : {}),
       ...(videoTempPath ? { videoTempPath } : {}),
+      mutedByDefault: formData.mutedByDefault,
     });
     onClose();
   };
@@ -255,6 +259,16 @@ export default function LessonModal({
               <p className="mt-1 text-sm text-green-600">آپلود شد: {videoFileName}</p>
             )}
             {errors.video && <p className="text-red-500 text-sm">{errors.video}</p>}
+            <label className="mt-3 flex cursor-pointer items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={formData.mutedByDefault}
+                onChange={(e) => setFormData((p) => ({ ...p, mutedByDefault: e.target.checked }))}
+                className="size-4 accent-primary"
+                aria-label="پخش بی‌صدا"
+              />
+              پخش بی‌صدا (پیش‌فرض روشن)
+            </label>
           </div>
 
           {lesson?.id && (

@@ -126,6 +126,7 @@ export async function PATCH(
       trailerVideoPath,
       thumbnailTempPath,
       trailerTempPath,
+      introMutedByDefault,
     } = parsed.data;
 
     if (title !== undefined) data.subject = title;
@@ -144,6 +145,7 @@ export async function PATCH(
     if (likes !== undefined) data.likes = likes;
     if (dislikes !== undefined) data.dislikes = dislikes;
     if (hasChapters !== undefined) data.hasChapters = hasChapters;
+    if (introMutedByDefault !== undefined) data.introMutedByDefault = introMutedByDefault;
     const existing =
       thumbnailTempPath || trailerTempPath
         ? await prisma.course.findUnique({

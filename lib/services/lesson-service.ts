@@ -126,6 +126,7 @@ export async function createLessonForCourse(
       durationSeconds: data.durationSeconds,
       duration: String(data.durationSeconds),
       published: true,
+      mutedByDefault: data.mutedByDefault ?? true,
     },
   });
 
@@ -225,6 +226,7 @@ export async function updateLesson(lessonId: string, data: LessonUpdateInput) {
   if (data.videoPath !== undefined && !data.videoTempPath) {
     updateData.videoUrl = data.videoPath;
   }
+  if (data.mutedByDefault !== undefined) updateData.mutedByDefault = data.mutedByDefault;
 
   try {
     if (data.thumbnailTempPath) {

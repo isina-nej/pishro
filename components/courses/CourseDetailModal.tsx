@@ -69,7 +69,7 @@ const glassPriceClass =
 export default function CourseDetailModal({ course, trigger }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("about");
-  const [muted, setMuted] = useState(true);
+  const [muted, setMuted] = useState(course.introMutedByDefault ?? true);
   const [hasAudio, setHasAudio] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -139,7 +139,7 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                 className="h-full w-full object-cover"
                 autoPlay
                 loop
-                muted
+                muted={muted}
                 playsInline
                 preload="auto"
                 disablePictureInPicture

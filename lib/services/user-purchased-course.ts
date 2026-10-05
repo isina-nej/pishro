@@ -9,6 +9,7 @@ const lessonSelect = {
   thumbnail: true,
   order: true,
   chapterId: true,
+  mutedByDefault: true,
 } as const;
 
 export type PurchasedLessonSummary = {
@@ -20,6 +21,7 @@ export type PurchasedLessonSummary = {
   thumbnail: string | null;
   order: number;
   chapterId: string | null;
+  mutedByDefault: boolean;
 };
 
 export type PurchasedChapterSummary = {

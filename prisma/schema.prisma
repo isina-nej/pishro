@@ -109,6 +109,7 @@ model Course {
   students        Int?
   videosCount     Int?
   introVideoUrl   String? // ویدیو معرفی دوره (trailer)
+  introMutedByDefault Boolean @default(true) // پیش‌فرض بی‌صدا برای تیزر موجود
   likes           Int       @default(0)
   dislikes        Int       @default(0)
   hasChapters     Boolean   @default(false) // نشان‌دهنده وجود فصل‌های تنظیم شده
@@ -301,6 +302,7 @@ model Lesson {
   thumbnail       String?
   duration        String? // legacy display duration
   durationSeconds Int?
+  mutedByDefault  Boolean @default(true) // پیش‌فرض بی‌صدا برای ویدیوهای موجود
 
   order     Int     @default(0) // position within course/chapter container
   published Boolean @default(true)

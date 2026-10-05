@@ -48,7 +48,7 @@ export default function PurchasedCourseContent({
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const playerShellRef = useRef<HTMLDivElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -72,6 +72,7 @@ export default function PurchasedCourseContent({
     setIsPlaying(false);
     setCurrentTime(0);
     setDuration(0);
+    setIsMuted(selectedLesson?.mutedByDefault ?? true);
   }, [selectedLessonId]);
 
   const togglePlay = async () => {

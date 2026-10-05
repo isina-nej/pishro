@@ -123,6 +123,7 @@ export interface Course {
   students?: number | null;
   videosCount?: number | null;
   introVideoUrl?: string | null;
+  introMutedByDefault?: boolean | null;
   createdAt?: Date | null;
   updatedAt?: Date | null;
   categoryId?: string | null;
