@@ -112,18 +112,17 @@ export default function CourseDetailModal({ course, trigger }: Props) {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="flex max-h-screen w-full max-w-3xl flex-col overflow-hidden rounded-none border-border/40 bg-card p-0 text-foreground sm:max-h-[88vh] sm:w-[92vw] sm:rounded-[1.75rem]">
-        {/* Hero — فقط تصویر، بدون تیتر/توضیح/آیکن روی عکس */}
+        {/* Hero — ویدیو معرفی با کنترل پخش؛ بدون ویدیو فقط تصویر */}
         <div className="relative h-72 flex-shrink-0 overflow-hidden sm:h-80">
           {course.introVideoUrl ? (
             <video
+              key={course.introVideoUrl}
               src={course.introVideoUrl}
               poster={course.img || undefined}
               className="h-full w-full object-cover"
-              controls={false}
-              autoPlay
-              loop
-              muted
+              controls
               playsInline
+              preload="metadata"
             />
           ) : course.img ? (
             <Image
