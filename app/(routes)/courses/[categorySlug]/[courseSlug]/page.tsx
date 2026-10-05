@@ -285,13 +285,28 @@ export default async function CourseDetailPage({
               </div>
 
               <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-2xl">
-                <Image
-                  src={course.img || "/images/default-course.jpg"}
-                  alt={course.subject}
-                  fill
-                  className="object-cover"
-                  priority
-                />
+                {course.introVideoUrl ? (
+                  <video
+                    key={course.introVideoUrl}
+                    src={course.introVideoUrl}
+                    poster={course.img || "/images/default-course.jpg"}
+                    className="h-full w-full object-cover"
+                    autoPlay
+                    loop
+                    muted={course.introMutedByDefault ?? true}
+                    playsInline
+                    preload="auto"
+                    disablePictureInPicture
+                  />
+                ) : (
+                  <Image
+                    src={course.img || "/images/default-course.jpg"}
+                    alt={course.subject}
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                )}
               </div>
             </div>
           </div>

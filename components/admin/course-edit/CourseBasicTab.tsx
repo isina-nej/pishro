@@ -189,6 +189,10 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
       setErrors((e) => ({ ...e, thumbnail: 'صبر کنید تا آپلود تصویر تمام شود، بعد ذخیره کنید.' }));
       return;
     }
+    if (trailerUploading) {
+      setErrors((e) => ({ ...e, trailer: 'صبر کنید تا آپلود ویدیو تمام شود، بعد ذخیره کنید.' }));
+      return;
+    }
     try {
       const updated = await updateMutation.mutateAsync({
         id: course.id,
@@ -488,6 +492,17 @@ export default function CourseBasicTab({ course, onUpdate }: CourseBasicTabProps
           {trailerUploading && <p className="text-sm text-muted-foreground">در حال آپلود ویدیو...</p>}
           {trailerTempPath && !trailerUploading && <p className="text-sm text-success">فایل آماده ذخیره — دکمه ذخیره را بزنید</p>}
           {errors.trailer && <p className="text-destructive text-sm">{errors.trailer}</p>}
+          {(formData.introVideoUrl || trailerTempPath) && !trailerUploading && (
+            <video
+              key={trailerTempPath ?? formData.introVideoUrl}
+              src={trailerTempPath ?? formData.introVideoUrl}
+              className="mt-2 w-full max-h-56 rounded-lg bg-black"
+              controls
+              playsInline
+              preload="metadata"
+              aria-label="پیش‌نمایش ویدیو معرفی"
+            />
+          )}
           <label className="mt-3 flex cursor-pointer items-center gap-2 text-sm">
             <input
               type="checkbox"

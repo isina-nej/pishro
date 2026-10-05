@@ -58,10 +58,21 @@ export async function GET(req: NextRequest) {
     );
     const total = Number(countRows?.[0]?.total ?? 0);
 
+    // ponytail: mute flags may not be migrated yet on older DBs — probe once, degrade silently
+    let muteCols = "";
+    try {
+      const probe = await query(
+        `SELECT introMutedByDefault FROM Course LIMIT 0`
+      );
+      void probe;
+      muteCols = ",\n              introVideoUrl, introMutedByDefault";
+    } catch {
+      muteCols = ",\n              introVideoUrl, 1 AS introMutedByDefault";
+    }
+
     const rows = await query(
       `SELECT id, subject, price, img, rating, description, discountPercent, time, students,
-              videosCount, instructor, slug, categoryId, level, status, published, createdAt, updatedAt,
-              introVideoUrl, introMutedByDefault
+              videosCount, instructor, slug, categoryId, level, status, published, createdAt, updatedAt${muteCols}
        FROM Course ${whereSql}
        ORDER BY ${order}
        LIMIT ${limit} OFFSET ${skip}`,

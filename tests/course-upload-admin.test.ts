@@ -151,6 +151,23 @@ describe("video mute flags — admin toggle + muted default", () => {
     const modal = read("components/courses/CourseDetailModal.tsx");
     assert.match(modal, /introMutedByDefault \?\? true/, "teaser reads course flag");
   });
+
+  it("trailer shows in modal, detail page, and admin tab", () => {
+    const modal = read("components/courses/CourseDetailModal.tsx");
+    assert.match(modal, /course\.introVideoUrl \? \(/, "modal prefers trailer over image");
+    assert.match(modal, /autoPlay/, "modal teaser autoplays");
+    const page = read("app/(routes)/courses/[categorySlug]/[courseSlug]/page.tsx");
+    assert.match(page, /course\.introVideoUrl \? \(/, "detail page prefers trailer over image");
+    const tab = read("components/admin/course-edit/CourseBasicTab.tsx");
+    assert.match(tab, /پیش‌نمایش ویدیو معرفی/, "admin tab previews uploaded trailer");
+    assert.match(tab, /trailerUploading/, "save gated during trailer upload");
+  });
+
+  it("public courses API degrades when mute migration missing", () => {
+    const src = read("app/api/courses/route.ts");
+    assert.match(src, /SELECT introMutedByDefault FROM Course LIMIT 0/, "probes mute column");
+    assert.match(src, /1 AS introMutedByDefault/, "falls back to muted");
+  });
 });
 
 describe("course upload chain — auth everywhere", () => {
