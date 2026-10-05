@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import {
@@ -11,6 +11,8 @@ import {
   Lightbulb,
   BookOpen,
   Sparkles,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 import {
   Dialog,
@@ -67,6 +69,19 @@ const glassPriceClass =
 export default function CourseDetailModal({ course, trigger }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("about");
+  const [muted, setMuted] = useState(true);
+  const [hasAudio, setHasAudio] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const toggleMute = () => {
+    const v = videoRef.current;
+    const next = !muted;
+    setMuted(next);
+    if (v) {
+      v.muted = next;
+      if (!next) void v.play().catch(() => undefined);
+    }
+  };
   const copy = usePublicCopy("course-detail");
   const addToCart = useCartStore((state) => state.addToCart);
   const items = useCartStore((state) => state.items);
@@ -112,18 +127,44 @@ export default function CourseDetailModal({ course, trigger }: Props) {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="flex max-h-screen w-full max-w-3xl flex-col overflow-hidden rounded-none border-border/40 bg-card p-0 text-foreground sm:max-h-[88vh] sm:w-[92vw] sm:rounded-[1.75rem]">
-        {/* Hero — ویدیو معرفی با کنترل پخش؛ بدون ویدیو فقط تصویر */}
+        {/* Hero — تیزر ریلزی: پخش خودکار بی‌صدا، لوپ، فقط دکمه سایلنت */}
         <div className="relative h-72 flex-shrink-0 overflow-hidden sm:h-80">
           {course.introVideoUrl ? (
-            <video
-              key={course.introVideoUrl}
-              src={course.introVideoUrl}
-              poster={course.img || undefined}
-              className="h-full w-full object-cover"
-              controls
-              playsInline
-              preload="metadata"
-            />
+            <>
+              <video
+                key={course.introVideoUrl}
+                ref={videoRef}
+                src={course.introVideoUrl}
+                poster={course.img || undefined}
+                className="h-full w-full object-cover"
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="auto"
+                disablePictureInPicture
+                onLoadedMetadata={(e) => {
+                  const v = e.currentTarget as HTMLVideoElement & {
+                    mozHasAudio?: boolean;
+                    webkitAudioDecodedByteCount?: number;
+                    audioTracks?: { length: number };
+                  };
+                  setHasAudio(
+                    !!(v.mozHasAudio || v.webkitAudioDecodedByteCount || v.audioTracks?.length)
+                  );
+                }}
+              />
+              {hasAudio && (
+                <button
+                  type="button"
+                  onClick={toggleMute}
+                  aria-label={muted ? "روشن کردن صدا" : "بی‌صدا کردن"}
+                  className="absolute bottom-4 end-4 z-20 flex size-10 items-center justify-center rounded-full border border-white/30 bg-black/55 text-white shadow-lg backdrop-blur-xl transition hover:scale-105 hover:bg-black/70"
+                >
+                  {muted ? <VolumeX className="size-4" /> : <Volume2 className="size-4" />}
+                </button>
+              )}
+            </>
           ) : course.img ? (
             <Image
               src={course.img}
