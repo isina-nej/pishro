@@ -277,6 +277,44 @@ h3 {
   }
 }
 
+@layer components {
+  /* Article headings: readable hierarchy without oversized display text. */
+  .article-content :where(h1, h2, h3, h4, h5, h6) {
+    color: hsl(var(--foreground));
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.55;
+    text-align: right;
+  }
+
+  .article-content :where(h1) {
+    margin-block: 2.5rem 1.25rem;
+    font-size: clamp(1.5rem, 1.22rem + 1.1vw, 2rem);
+  }
+
+  .article-content :where(h2) {
+    margin-block: 2.5rem 1rem;
+    border-top: 1px solid hsl(var(--border));
+    padding-top: 1.5rem;
+    font-size: clamp(1.25rem, 1.08rem + 0.8vw, 1.75rem);
+  }
+
+  .article-content :where(h3) {
+    margin-block: 2rem 0.75rem;
+    font-size: clamp(1.125rem, 1rem + 0.55vw, 1.5rem);
+  }
+
+  .article-content :where(h4) {
+    margin-block: 1.75rem 0.75rem;
+    font-size: clamp(1rem, 0.95rem + 0.3vw, 1.25rem);
+  }
+
+  .article-content :where(h5, h6) {
+    margin-block: 1.5rem 0.75rem;
+    font-size: 1rem;
+  }
+}
+
 html:not(.dark)
   :where(button, a, [role="button"])[class~="bg-white"][class~="text-white"],
 html:not(.dark)

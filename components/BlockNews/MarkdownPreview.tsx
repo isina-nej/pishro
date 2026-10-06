@@ -31,32 +31,32 @@ export default function MarkdownPreview({ content, className = '' }: MarkdownPre
   // Custom components for markdown rendering with magazine-style typography
   const markdownComponents: Components = {
     h1: ({ children }) => (
-      <h2 className="mb-4 mt-12 border-t border-border pt-8 text-right text-2xl font-bold text-foreground">
+      <h2 className="mb-4 mt-10 border-t border-border pt-6 text-right text-xl font-bold text-foreground sm:text-2xl">
         {children}
       </h2>
     ),
     h2: ({ children }) => (
-      <h2 className="mb-4 mt-12 border-t border-border pt-8 text-right text-2xl font-bold text-foreground">
+      <h2 className="mb-4 mt-10 border-t border-border pt-6 text-right text-xl font-bold text-foreground sm:text-2xl">
         {children}
       </h2>
     ),
     h3: ({ children }) => (
-      <h3 className="mb-3 mt-10 text-right text-xl font-bold text-foreground">
+      <h3 className="mb-3 mt-8 text-right text-lg font-bold text-foreground sm:text-xl">
         {children}
       </h3>
     ),
     h4: ({ children }) => (
-      <h4 className="mb-3 mt-8 text-right text-lg font-bold text-foreground">
+      <h4 className="mb-3 mt-6 text-right text-base font-bold text-foreground sm:text-lg">
         {children}
       </h4>
     ),
     h5: ({ children }) => (
-      <h5 className="mb-3 mt-8 text-right text-base font-bold text-foreground">
+      <h5 className="mb-3 mt-6 text-right text-base font-bold text-foreground">
         {children}
       </h5>
     ),
     h6: ({ children }) => (
-      <h6 className="mb-3 mt-8 text-right text-base font-bold text-foreground">
+      <h6 className="mb-3 mt-6 text-right text-base font-bold text-foreground">
         {children}
       </h6>
     ),

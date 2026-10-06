@@ -79,11 +79,11 @@ function renderProseMirrorNode(node: ProseMirrorNode | undefined, key: string): 
       const level = Math.min(Math.max(Number(node.attrs?.level) || 2, 1), 6);
       const HeadingTag = `h${level}` as `h${1|2|3|4|5|6}`;
       const headingClasses = [
-        'text-right font-bold tracking-tight text-foreground',
-        level === 1 && 'mb-6 mt-12 text-3xl',
-        level === 2 && 'mb-4 mt-12 border-t border-border pt-8 text-2xl',
-        level === 3 && 'mb-3 mt-10 text-xl',
-        level > 3 && 'mb-3 mt-8 text-lg',
+        'article-heading text-right font-bold tracking-tight text-foreground',
+        level === 1 && 'mb-5 mt-10 text-2xl sm:text-3xl',
+        level === 2 && 'mb-4 mt-10 border-t border-border pt-6 text-xl sm:text-2xl',
+        level === 3 && 'mb-3 mt-8 text-lg sm:text-xl',
+        level > 3 && 'mb-3 mt-6 text-base sm:text-lg',
       ].filter(Boolean).join(' ');
       return (
         <HeadingTag key={key} className={headingClasses}>
@@ -313,7 +313,7 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.08 }}
           className="mt-8"
         >
-          <h1 className="text-right text-3xl font-extrabold leading-[1.7] text-foreground sm:text-4xl">
+          <h1 className="text-right text-2xl font-extrabold leading-[1.55] text-foreground sm:text-3xl">
             {renderWithAnimatedEmoji(article.title)}
           </h1>
 
@@ -345,11 +345,12 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
         >
           {article.contentHtml ? (
             <div
-              className="text-right text-[1.05rem] leading-9 text-foreground/90
+              className="article-content text-right text-[1.05rem] leading-9 text-foreground/90
               [&_p]:mb-6
-              [&_h1]:mb-6 [&_h1]:mt-12 [&_h1]:text-3xl [&_h1]:font-bold
-              [&_h2]:mb-4 [&_h2]:mt-12 [&_h2]:border-t [&_h2]:border-border [&_h2]:pt-8 [&_h2]:text-2xl [&_h2]:font-bold
-              [&_h3]:mb-3 [&_h3]:mt-10 [&_h3]:text-xl [&_h3]:font-bold
+              [&_h1]:mb-5 [&_h1]:mt-10 [&_h1]:text-2xl [&_h1]:font-bold sm:[&_h1]:text-3xl
+              [&_h2]:mb-4 [&_h2]:mt-10 [&_h2]:border-t [&_h2]:border-border [&_h2]:pt-6 [&_h2]:text-xl [&_h2]:font-bold sm:[&_h2]:text-2xl
+              [&_h3]:mb-3 [&_h3]:mt-8 [&_h3]:text-lg [&_h3]:font-bold sm:[&_h3]:text-xl
+              [&_h4]:mb-3 [&_h4]:mt-6 [&_h4]:text-base [&_h4]:font-bold sm:[&_h4]:text-lg [&_h5]:mb-3 [&_h5]:mt-6 [&_h5]:text-base [&_h5]:font-bold [&_h6]:mb-3 [&_h6]:mt-6 [&_h6]:text-base [&_h6]:font-bold
               [&_ul]:my-6 [&_ul]:list-disc [&_ul]:space-y-2.5 [&_ul]:ps-5
               [&_ol]:my-6 [&_ol]:list-decimal [&_ol]:space-y-2.5 [&_ol]:ps-5
               [&_li]:leading-8
@@ -375,14 +376,17 @@ export default function NewsArticleDetail({ article }: NewsArticleDetailProps) {
               className="prose-magazine"
             />
           ) : isProseMirrorDoc(article.content) ? (
-            <div className="text-right text-[1.05rem] leading-9 text-foreground/90">
+            <div className="article-content text-right text-[1.05rem] leading-9 text-foreground/90">
               {renderProseMirrorContent(article.content)}
             </div>
           ) : (
             <div
-              className="text-right text-[1.05rem] leading-9 text-foreground/90
+              className="article-content text-right text-[1.05rem] leading-9 text-foreground/90
               [&_p]:mb-6
-              [&_h2]:mb-4 [&_h2]:mt-12 [&_h2]:border-t [&_h2]:border-border [&_h2]:pt-8 [&_h2]:text-2xl [&_h2]:font-bold
+              [&_h1]:mb-5 [&_h1]:mt-10 [&_h1]:text-2xl [&_h1]:font-bold sm:[&_h1]:text-3xl
+              [&_h2]:mb-4 [&_h2]:mt-10 [&_h2]:border-t [&_h2]:border-border [&_h2]:pt-6 [&_h2]:text-xl [&_h2]:font-bold sm:[&_h2]:text-2xl
+              [&_h3]:mb-3 [&_h3]:mt-8 [&_h3]:text-lg [&_h3]:font-bold sm:[&_h3]:text-xl
+              [&_h4]:mb-3 [&_h4]:mt-6 [&_h4]:text-base [&_h4]:font-bold sm:[&_h4]:text-lg [&_h5]:mb-3 [&_h5]:mt-6 [&_h5]:text-base [&_h5]:font-bold [&_h6]:mb-3 [&_h6]:mt-6 [&_h6]:text-base [&_h6]:font-bold
               [&_ul]:my-6 [&_ul]:list-disc [&_ul]:space-y-2.5 [&_ul]:ps-5
               [&_ol]:my-6 [&_ol]:list-decimal [&_ol]:space-y-2.5 [&_ol]:ps-5
               [&_a]:text-primary [&_a]:underline-offset-4 [&_a]:hover:underline
