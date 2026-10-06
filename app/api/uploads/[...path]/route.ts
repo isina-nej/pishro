@@ -81,7 +81,9 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    // فایل‌های خصوصی: از داخل اپ استریم می‌شوند تا کنترل دسترسی حفظ شود
+    // فایل‌های خصوصی: از داخل اپ استریم می‌شوند تا کنترل دسترسی حفظ شود.
+    // تریلر دوره عمومی‌نما است ولی خصوصی ذخیره می‌شود تا هات‌لینک نشود —
+    // باید مثل ویدیو range بخورد وگرنه <video> پخش نمی‌کند.
     const range = req.headers.get('range') || undefined;
     const object = await getS3ObjectStream(pathParam, range);
 
@@ -89,9 +91,15 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'File not found' }, { status: 404 });
     }
 
+    const isTrailer = /^courses\/[^/]+\/trailer\//i.test(
+      pathParam.replace(/\\/g, '/').replace(/^\/+/, '')
+    );
     const headers: Record<string, string> = {
       'Content-Type': object.contentType,
-      'Cache-Control': 'private, no-store',
+      'Cache-Control': isTrailer
+        ? 'public, max-age=86400, stale-while-revalidate=604800'
+        : 'private, no-store',
+      'Accept-Ranges': 'bytes',
       'X-Robots-Tag': 'noindex, nofollow, noarchive',
     };
     if (object.contentLength !== undefined) {
@@ -99,7 +107,6 @@ export async function GET(req: NextRequest) {
     }
     if (object.contentRange) {
       headers['Content-Range'] = object.contentRange;
-      headers['Accept-Ranges'] = 'bytes';
     }
 
     return new NextResponse(object.body, {
@@ -147,19 +154,42 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    const fileStream = createReadStream(resolvedPath);
+    // ویدیو باید range بخورد وگرنه <video> seek/play نمی‌کند — کل فایل یکجا هم سنگین است
+    const rangeHeader = req.headers.get('range');
+    const totalSize = fileStat.size;
+    let start = 0;
+    let end = totalSize - 1;
+    let partial = false;
+    if (rangeHeader) {
+      const match = /bytes=(\d*)-(\d*)/.exec(rangeHeader);
+      if (match) {
+        partial = true;
+        if (match[1]) start = Math.min(parseInt(match[1], 10), totalSize - 1);
+        if (match[2]) end = Math.min(parseInt(match[2], 10), totalSize - 1);
+        if (end < start) {
+          return new NextResponse(null, {
+            status: 416,
+            headers: { 'Content-Range': `bytes */${totalSize}` },
+          });
+        }
+      }
+    }
+    const chunkSize = end - start + 1;
+    const fileStream = createReadStream(resolvedPath, partial ? { start, end } : {});
+    const headers: Record<string, string> = {
+      'Content-Type': getMimeType(resolvedPath),
+      'Content-Length': chunkSize.toString(),
+      'Cache-Control': cacheControl,
+      ETag: etag,
+      'Accept-Ranges': 'bytes',
+      // Served bytes are user uploads — never let the browser sniff/execute them.
+      'X-Content-Type-Options': 'nosniff',
+      'Content-Disposition': 'inline',
+    };
+    if (partial) headers['Content-Range'] = `bytes ${start}-${end}/${totalSize}`;
     return new NextResponse(Readable.toWeb(fileStream) as ReadableStream, {
-      status: 200,
-      headers: {
-        'Content-Type': getMimeType(resolvedPath),
-        'Content-Length': fileStat.size.toString(),
-        'Cache-Control': cacheControl,
-        ETag: etag,
-        'Accept-Ranges': 'bytes',
-        // Served bytes are user uploads — never let the browser sniff/execute them.
-        'X-Content-Type-Options': 'nosniff',
-        'Content-Disposition': 'inline',
-      },
+      status: partial ? 206 : 200,
+      headers,
     });
   } catch {
     return NextResponse.json({ error: 'File not found' }, { status: 404 });

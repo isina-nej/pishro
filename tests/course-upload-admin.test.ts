@@ -168,6 +168,16 @@ describe("video mute flags — admin toggle + muted default", () => {
     assert.match(src, /SELECT introMutedByDefault FROM Course LIMIT 0/, "probes mute column");
     assert.match(src, /1 AS introMutedByDefault/, "falls back to muted");
   });
+
+  it("uploads route serves byte ranges so <video> can play", () => {
+    const src = read("app/api/uploads/[...path]/route.ts");
+    assert.match(src, /bytes=/, "parses Range header");
+    assert.match(src, /Content-Range/, "returns Content-Range");
+    assert.match(src, /206/, "returns 206 for partial content");
+    assert.match(src, /Accept-Ranges/, "advertises range support");
+    assert.match(src, /416/, "rejects unsatisfiable ranges");
+    assert.match(src, /isTrailer/, "trailer gets cacheable headers");
+  });
 });
 
 describe("course upload chain — auth everywhere", () => {
