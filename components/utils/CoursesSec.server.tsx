@@ -26,6 +26,7 @@ export default async function CoursesSec() {
         c.discountPercent, c.time, c.students, c.videosCount, c.instructor,
         c.slug, c.level, c.language, c.featured, c.views, c.status,
         c.prerequisites, c.learningGoals, c.published,
+        c.introVideoUrl, c.introMutedByDefault,
         cat.id as categoryId, cat.slug as categorySlug, 
         cat.title as categoryTitle, cat.icon as categoryIcon
       FROM Course c
