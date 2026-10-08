@@ -42,9 +42,26 @@ export const checkoutService = {
       }
 
       return { error: res.data.message || "پرداخت ناموفق بود" };
-    } catch (err) {
+    } catch (err: unknown) {
       console.error("[checkoutService] createCheckoutSession error:", err);
-      return { error: "خطایی در ارتباط با سرور رخ داد" };
+      const resData =
+        typeof err === "object" && err !== null && "response" in err
+          ? (err as {
+              response?: {
+                data?: {
+                  message?: string;
+                  error?: string;
+                  data?: Record<string, string | string[]>;
+                };
+              };
+            }).response?.data
+          : undefined;
+      const validationMsg =
+        resData?.data && typeof resData.data === "object"
+          ? Object.values(resData.data).flat().filter(Boolean).join(" - ")
+          : undefined;
+      const serverMsg = resData?.message || resData?.error || validationMsg;
+      return { error: serverMsg || "خطایی در ارتباط با سرور رخ داد" };
     }
   },
 };

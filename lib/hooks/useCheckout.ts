@@ -63,11 +63,12 @@ export function useCreateCheckout() {
       }
     },
     onError: (error: Error) => {
-      const errorMessage =
+      const resData =
         typeof error === "object" && error !== null && "response" in error
-          ? (error as { response?: { data?: { error?: string } } }).response
-              ?.data?.error
+          ? (error as { response?: { data?: { message?: string; error?: string } } }).response
+              ?.data
           : undefined;
+      const errorMessage = resData?.message || resData?.error;
       toast.error(errorMessage || "خطا در ارتباط با سرور");
     },
   });

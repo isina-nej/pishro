@@ -61,11 +61,16 @@ export async function POST(req: Request) {
       return validationError({ amount: "مبلغ سفارش معتبر نیست یا کمتر از حداقل زیبال است" });
     }
 
-    // Gateway callbacks must use the configured public origin, never a request-supplied Host.
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/$/, "");
-    if (!baseUrl || (process.env.NODE_ENV === "production" && !/^https:\/\//.test(baseUrl))) {
-      return errorResponse("آدرس عمومی HTTPS سایت برای درگاه تنظیم نشده است", ErrorCodes.INTERNAL_ERROR);
-    }
+    // Resolve public base URL with fallback to production origin
+    const configuredBaseUrl = process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/$/, "");
+    const reqOrigin = req.headers.get("origin")?.replace(/\/$/, "");
+    const rawBaseUrl =
+      configuredBaseUrl ||
+      (reqOrigin && reqOrigin.startsWith("http") ? reqOrigin : "https://pishrosarmaye.com");
+    const baseUrl =
+      process.env.NODE_ENV === "production"
+        ? (rawBaseUrl.startsWith("https://") ? rawBaseUrl : rawBaseUrl.replace(/^http:\/\//, "https://"))
+        : rawBaseUrl;
 
     // ✅ Create order in DB with OrderItems
     const order = await prisma.order.create({
@@ -113,7 +118,9 @@ export async function POST(req: Request) {
       await prisma.order.update({ where: { id: order.id }, data: { status: "FAILED" } });
       return errorResponse(
         paymentResult.errorMessage || "خطا در اتصال به درگاه پرداخت",
-        ErrorCodes.INTERNAL_ERROR
+        ErrorCodes.PAYMENT_FAILED,
+        undefined,
+        400
       );
     }
 

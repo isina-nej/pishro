@@ -11,10 +11,14 @@ async function handleVerify(req: Request) {
     // The order ID comes from our request callback URL; gateway callback parameters
     // are untrusted and must not override it.
     if (!orderId) return NextResponse.json({ error: "شناسه سفارش ارسال نشده است" }, { status: 400 });
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/$/, "");
-    if (!baseUrl || (process.env.NODE_ENV === "production" && !baseUrl.startsWith("https://"))) {
-      throw new Error("NEXT_PUBLIC_BASE_URL must be HTTPS");
-    }
+    const configuredBaseUrl = process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/$/, "");
+    const rawBaseUrl =
+      configuredBaseUrl ||
+      (url.origin.startsWith("http") ? url.origin : "https://pishrosarmaye.com");
+    const baseUrl =
+      process.env.NODE_ENV === "production"
+        ? (rawBaseUrl.startsWith("https://") ? rawBaseUrl : rawBaseUrl.replace(/^http:\/\//, "https://"))
+        : rawBaseUrl;
     const redirect = (result: "success" | "failed" | "pending") =>
       NextResponse.redirect(`${baseUrl}/checkout/result?result=${result}&orderId=${encodeURIComponent(orderId)}`);
 
