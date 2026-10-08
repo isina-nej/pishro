@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { toast } from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
@@ -12,16 +13,31 @@ import EmptyCart from "./emptyCart";
 import { useCartStore } from "@/stores/cart-store";
 import { useCreateCheckout } from "@/lib/hooks/useCheckout";
 import { usePublicCopy } from "@/components/site/PublicContentProvider";
+import { checkoutLoginUrl } from "@/lib/checkout-redirect";
 
 const CheckoutPageContent = () => {
   const copy = usePublicCopy("checkout");
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [step, setStep] = useState<"shoppingCart" | "pay" | "result">(
     "shoppingCart"
   );
 
-  const { data: session } = useSession();
+  const { data: session, status: sessionStatus } = useSession();
   const userId = session?.user?.id;
   const { items } = useCartStore();
+
+  const requireLogin = () => {
+    if (sessionStatus === "authenticated" && userId) return false;
+    router.push(checkoutLoginUrl("/checkout?step=pay"));
+    return true;
+  };
+
+  useEffect(() => {
+    if (searchParams?.get("step") !== "pay" || items.length === 0 || sessionStatus === "loading") return;
+    if (sessionStatus === "authenticated" && userId) setStep("pay");
+    else router.replace(checkoutLoginUrl("/checkout?step=pay"));
+  }, [searchParams, items.length, sessionStatus, userId, router]);
 
   // استفاده از React Query mutation
   const createCheckoutMutation = useCreateCheckout();
@@ -51,13 +67,14 @@ const CheckoutPageContent = () => {
     };
   }, [items]);
 
+  const handleContinue = () => {
+    if (!requireLogin()) setStep("pay");
+  };
+
   // 💳 هندل پرداخت
   const handlePayment = async () => {
     if (items.length === 0) return;
-    if (!userId) {
-      toast.error("برای ادامه ابتدا وارد حساب خود شوید");
-      return;
-    }
+    if (requireLogin()) return;
 
     const formattedItems = items.map((item) => ({
       courseId: item.id,
@@ -141,9 +158,9 @@ const CheckoutPageContent = () => {
               <CheckoutSidebar
                 data={priceSummary}
                 step={step}
-                setStep={setStep}
+                handleContinue={handleContinue}
                 handlePayment={handlePayment}
-                loading={createCheckoutMutation.isPending}
+                loading={createCheckoutMutation.isPending || sessionStatus === "loading"}
               />
             </motion.div>
           )}

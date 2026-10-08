@@ -21,6 +21,7 @@ export interface CheckoutResponse {
   payUrl?: string;
   orderId?: string;
   error?: string;
+  unauthorized?: boolean;
 }
 
 export const checkoutService = {
@@ -44,6 +45,9 @@ export const checkoutService = {
       return { error: res.data.message || "پرداخت ناموفق بود" };
     } catch (err: unknown) {
       console.error("[checkoutService] createCheckoutSession error:", err);
+      if (axios.isAxiosError(err) && err.response?.status === 401) {
+        return { unauthorized: true };
+      }
       const resData =
         typeof err === "object" && err !== null && "response" in err
           ? (err as {

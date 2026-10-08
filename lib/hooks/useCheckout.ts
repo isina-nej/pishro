@@ -7,6 +7,7 @@ import {
   type CheckoutResponse,
 } from "@/lib/services/checkout-service";
 import { userKeys } from "./useUser";
+import { checkoutLoginUrl } from "@/lib/checkout-redirect";
 
 // ===========================
 // Query Keys
@@ -58,6 +59,8 @@ export function useCreateCheckout() {
           data.payUrl
         )}&orderId=${data.orderId}`;
         window.location.href = processingUrl;
+      } else if (data.unauthorized) {
+        window.location.assign(checkoutLoginUrl("/checkout?step=pay"));
       } else {
         toast.error(data.error || "خطا در ایجاد سفارش");
       }

@@ -27,6 +27,7 @@ export interface OrderResponse {
   ok: boolean;
   order?: OrderDetail;
   error?: string;
+  unauthorized?: boolean;
 }
 
 export const orderService = {
@@ -41,6 +42,9 @@ export const orderService = {
       return { ok: false, error: res.data.message || "خطا در دریافت سفارش" };
     } catch (err) {
       console.error("[orderService] getOrderById error:", err);
+      if (axios.isAxiosError(err) && err.response?.status === 401) {
+        return { ok: false, unauthorized: true };
+      }
       return { ok: false, error: "خطایی در دریافت اطلاعات سفارش رخ داد" };
     }
   },

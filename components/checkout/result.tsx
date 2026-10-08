@@ -5,13 +5,15 @@ import Link from "next/link";
 import { Loader2, LayoutDashboard, GraduationCap, ArrowLeft, RefreshCw } from "lucide-react";
 import { format } from "date-fns-jalali";
 import clsx from "clsx";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { checkoutLoginUrl, checkoutResultPath } from "@/lib/checkout-redirect";
 import { useQueryClient } from "@tanstack/react-query";
 import { useOrder } from "@/lib/hooks/useCheckout";
 import { useCartStore } from "@/stores/cart-store";
 
 const Result = () => {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const result = searchParams?.get("result");
   const orderId = searchParams?.get("orderId");
   const queryClient = useQueryClient();
@@ -19,8 +21,15 @@ const Result = () => {
   const { data: orderResponse, isLoading: loading } = useOrder(orderId || "");
   const order = orderResponse?.order;
   const error = orderResponse?.error;
+  const unauthorized = orderResponse?.unauthorized;
   const clearCart = useCartStore((state) => state.clearCart);
   const status = order?.status === "PAID" ? "success" : order?.status === "FAILED" ? "failed" : null;
+
+  useEffect(() => {
+    if (unauthorized) {
+      router.replace(checkoutLoginUrl(checkoutResultPath(orderId, result)));
+    }
+  }, [unauthorized, orderId, result, router]);
 
   useEffect(() => {
     if (status === "success") {
@@ -28,6 +37,10 @@ const Result = () => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
     }
   }, [status, clearCart, queryClient]);
+
+  if (unauthorized) {
+    return <main className="min-h-[400px] flex items-center justify-center"><Loader2 className="size-8 animate-spin" /></main>;
+  }
 
   if (result === "pending" && !loading && !error && order?.status === "PENDING") {
     return (
