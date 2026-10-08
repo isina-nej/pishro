@@ -1,10 +1,12 @@
 "use client";
 import { useEffect } from "react";
 import Image from "next/image";
-import { Loader2 } from "lucide-react";
+import Link from "next/link";
+import { Loader2, LayoutDashboard, GraduationCap, ArrowLeft, RefreshCw } from "lucide-react";
 import { format } from "date-fns-jalali";
 import clsx from "clsx";
 import { useSearchParams } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import { useOrder } from "@/lib/hooks/useCheckout";
 import { useCartStore } from "@/stores/cart-store";
 
@@ -12,21 +14,43 @@ const Result = () => {
   const searchParams = useSearchParams();
   const result = searchParams?.get("result");
   const orderId = searchParams?.get("orderId");
+  const queryClient = useQueryClient();
   // Trust the authenticated order endpoint, never the result query string.
   const { data: orderResponse, isLoading: loading } = useOrder(orderId || "");
   const order = orderResponse?.order;
   const error = orderResponse?.error;
   const clearCart = useCartStore((state) => state.clearCart);
   const status = order?.status === "PAID" ? "success" : order?.status === "FAILED" ? "failed" : null;
-  useEffect(() => { if (status === "success") clearCart(); }, [status, clearCart]);
+
+  useEffect(() => {
+    if (status === "success") {
+      clearCart();
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+    }
+  }, [status, clearCart, queryClient]);
 
   if (result === "pending" && !loading && !error && order?.status === "PENDING") {
-    return <main className="min-h-[400px] flex flex-col items-center justify-center gap-4 p-5 text-center">
-      <p>وضعیت پرداخت هنوز تأیید نشده است. مبلغی دوباره پرداخت نکنید.</p>
-      <a className="text-primary underline" href={`/api/payment/verify?orderId=${encodeURIComponent(orderId || "")}&trackId=${encodeURIComponent(order?.paymentAuthority || "")}`}>
-        بررسی دوباره پرداخت
-      </a>
-    </main>;
+    return (
+      <main className="min-h-[400px] flex flex-col items-center justify-center gap-4 p-5 text-center">
+        <p className="text-base text-foreground font-semibold">وضعیت پرداخت هنوز تأیید نشده است. مبلغی دوباره پرداخت نکنید.</p>
+        <div className="flex flex-wrap items-center justify-center gap-3 mt-4">
+          <a
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground shadow hover:brightness-110"
+            href={`/api/payment/verify?orderId=${encodeURIComponent(orderId || "")}&trackId=${encodeURIComponent(order?.paymentAuthority || "")}`}
+          >
+            <RefreshCw className="size-4" />
+            <span>بررسی دوباره پرداخت</span>
+          </a>
+          <Link
+            href="/profile"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground hover:bg-muted"
+          >
+            <LayoutDashboard className="size-4" />
+            <span>رفتن به داشبورد</span>
+          </Link>
+        </div>
+      </main>
+    );
   }
 
   if (!loading && !error && !status) {
@@ -158,6 +182,59 @@ const Result = () => {
                   : "در انتظار پرداخت"}
               </span>
             </div>
+          </div>
+
+          {/* دکمه‌های عملیاتی / رفتن به داشبورد */}
+          <div className="mt-8 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-center gap-3">
+            {status === "success" ? (
+              <>
+                <Link
+                  href="/profile/courses"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-bold text-primary-foreground shadow-md transition-all hover:brightness-110 active:scale-[0.98]"
+                >
+                  <GraduationCap className="size-4" />
+                  <span>مشاهده دوره‌های من</span>
+                </Link>
+                <Link
+                  href="/profile"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-muted/40 hover:bg-muted px-6 py-3 text-sm font-semibold text-foreground transition-all active:scale-[0.98]"
+                >
+                  <LayoutDashboard className="size-4" />
+                  <span>رفتن به داشبورد</span>
+                </Link>
+                <Link
+                  href="/"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-xl px-5 py-3 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <span>صفحه اصلی</span>
+                  <ArrowLeft className="size-4" />
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/checkout"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-bold text-primary-foreground shadow-md transition-all hover:brightness-110 active:scale-[0.98]"
+                >
+                  <RefreshCw className="size-4" />
+                  <span>تلاش مجدد و بازگشت به سبد خرید</span>
+                </Link>
+                <Link
+                  href="/profile"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-card hover:bg-muted px-6 py-3 text-sm font-semibold text-foreground transition-all active:scale-[0.98]"
+                >
+                  <LayoutDashboard className="size-4" />
+                  <span>رفتن به داشبورد</span>
+                </Link>
+                <Link
+                  href="/"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-xl px-5 py-3 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <span>صفحه اصلی</span>
+                  <ArrowLeft className="size-4" />
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}

@@ -2,9 +2,11 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   ShoppingCart,
+  CheckCircle,
   BarChart3,
   Target,
   TrendingUp,
@@ -26,6 +28,8 @@ import { useCartStore } from "@/stores/cart-store";
 import toast from "react-hot-toast";
 import type { Course } from "@/lib/types/db";
 import { useSession } from "next-auth/react";
+import { useEnrolledCourseIds } from "@/lib/hooks/useUser";
+import { cn } from "@/lib/utils";
 import {
   enrollFreeCourse,
   isFreeCourse,
@@ -82,10 +86,13 @@ export default function CourseDetailModal({ course, trigger }: Props) {
       if (!next) void v.play().catch(() => undefined);
     }
   };
+  const router = useRouter();
   const copy = usePublicCopy("course-detail");
   const addToCart = useCartStore((state) => state.addToCart);
   const items = useCartStore((state) => state.items);
   const { data: session } = useSession();
+  const { data: enrolledIds } = useEnrolledCourseIds();
+  const isEnrolled = Boolean(enrolledIds?.includes(course.id));
 
   const finalPrice = course.discountPercent
     ? Math.round(course.price * (1 - course.discountPercent / 100))
@@ -99,6 +106,12 @@ export default function CourseDetailModal({ course, trigger }: Props) {
   ].slice(0, 4);
 
   const handleAddToCart = async () => {
+    if (isEnrolled) {
+      setIsOpen(false);
+      router.push(`/courses/view/${course.id}`);
+      return;
+    }
+
     if (freeCourse) {
       if (!session?.user) {
         redirectToLoginForFreeCourse(course.id);
@@ -232,8 +245,11 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleAddToCart}
-                disabled={!freeCourse && isInCart}
-                className={glassPriceClass}
+                disabled={!isEnrolled && !freeCourse && isInCart}
+                className={cn(
+                  glassPriceClass,
+                  isEnrolled && "border-emerald-400/50 bg-emerald-600/90 hover:bg-emerald-600"
+                )}
               >
                 {/* شکست نور متحرک */}
                 <span
@@ -244,20 +260,30 @@ export default function CourseDetailModal({ course, trigger }: Props) {
                   aria-hidden
                   className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_80%_at_12%_0%,rgba(255,255,255,0.45),transparent_45%),radial-gradient(90%_70%_at_88%_100%,rgba(180,220,255,0.18),transparent_50%)]"
                 />
-                <ShoppingCart size={18} strokeWidth={1.75} className="relative z-[1] drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)]" />
+                {isEnrolled ? (
+                  <CheckCircle size={18} strokeWidth={2} className="relative z-[1] drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)]" />
+                ) : (
+                  <ShoppingCart size={18} strokeWidth={1.75} className="relative z-[1] drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)]" />
+                )}
                 <span className="relative z-[1] flex flex-col items-start leading-tight">
                   <span className="text-[11px] font-medium text-white/95">
-                    {freeCourse
-                      ? "ثبت‌نام رایگان"
-                      : isInCart
-                        ? "به سبد اضافه شد"
-                        : "افزودن به سبد"}
+                    {isEnrolled
+                      ? "دانشجوی دوره هستید"
+                      : freeCourse
+                        ? "ثبت‌نام رایگان"
+                        : isInCart
+                          ? "به سبد اضافه شد"
+                          : "افزودن به سبد"}
                   </span>
                   <span className="text-base font-bold tracking-tight">
-                    {freeCourse ? "رایگان" : `${formatToman(finalPrice)} تومان`}
+                    {isEnrolled
+                      ? "ورود به کلاس"
+                      : freeCourse
+                        ? "رایگان"
+                        : `${formatToman(finalPrice)} تومان`}
                   </span>
                 </span>
-                {course.discountPercent && !freeCourse ? (
+                {course.discountPercent && !freeCourse && !isEnrolled ? (
                   <span className="relative z-[1] text-xs text-white/70 line-through [text-shadow:0_1px_2px_rgba(0,0,0,0.85)]">
                     {formatToman(course.price)}
                   </span>

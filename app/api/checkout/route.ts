@@ -39,13 +39,32 @@ export async function POST(req: Request) {
     // ✅ Fetch courses from DB
     const courses = await prisma.course.findMany({
       where: { id: { in: courseIds } },
-      select: { id: true, price: true, discountPercent: true },
+      select: { id: true, subject: true, price: true, discountPercent: true },
     });
 
     if (courses.length !== items.length) {
       return validationError(
         { courses: "دوره‌ای با شناسه‌های ارسالی یافت نشد" },
         "دوره‌ای یافت نشد"
+      );
+    }
+
+    // 🔒 Guard: check if user is already enrolled in any of these courses
+    const existingEnrollments = await prisma.enrollment.findMany({
+      where: {
+        userId,
+        courseId: { in: courseIds },
+      },
+      select: {
+        course: { select: { subject: true } },
+      },
+    });
+
+    if (existingEnrollments.length > 0) {
+      const names = existingEnrollments.map((e) => `«${e.course.subject}»`).join("، ");
+      return validationError(
+        { courses: `شما قبلاً در ${names} ثبت‌نام کرده‌اید و نیازی به خرید مجدد نیست` },
+        "دوره قبلاً خریداری شده است"
       );
     }
 

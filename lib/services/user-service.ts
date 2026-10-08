@@ -186,3 +186,15 @@ export async function uploadAvatarImage(file: File) {
   );
   return data;
 }
+
+// ✅ Get enrolled course IDs for the current user
+export async function getEnrolledCourseIds(): Promise<string[]> {
+  try {
+    const { data: res } = await api.get<ApiSuccessResponse<{ courseIds: string[] }>>(
+      "/api/user/enrolled-course-ids"
+    );
+    return res.data?.courseIds || [];
+  } catch {
+    return [];
+  }
+}

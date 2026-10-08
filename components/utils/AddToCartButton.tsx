@@ -1,10 +1,12 @@
 "use client";
 
 import { Course } from "@prisma/client";
+import { useRouter } from "next/navigation";
 import { useCartStore } from "@/stores/cart-store";
 import toast from "react-hot-toast";
-import { LuShoppingCart } from "react-icons/lu";
+import { LuShoppingCart, LuCheck } from "react-icons/lu";
 import { useSession } from "next-auth/react";
+import { useEnrolledCourseIds } from "@/lib/hooks/useUser";
 import {
   enrollFreeCourse,
   isFreeCourse,
@@ -16,14 +18,22 @@ interface AddToCartButtonProps {
 }
 
 export default function AddToCartButton({ course }: AddToCartButtonProps) {
+  const router = useRouter();
   const addToCart = useCartStore((state) => state.addToCart);
   const items = useCartStore((state) => state.items);
   const { data: session } = useSession();
+  const { data: enrolledIds } = useEnrolledCourseIds();
+  const isEnrolled = Boolean(enrolledIds?.includes(course.id));
 
   const isInCart = items.some((item) => item.id === course.id);
   const freeCourse = isFreeCourse(course);
 
   const handleAddToCart = async () => {
+    if (isEnrolled) {
+      router.push(`/courses/view/${course.id}`);
+      return;
+    }
+
     if (freeCourse) {
       if (!session?.user) {
         redirectToLoginForFreeCourse(course.id);
@@ -52,14 +62,22 @@ export default function AddToCartButton({ course }: AddToCartButtonProps) {
     <button
       onClick={handleAddToCart}
       className={`flex items-center gap-2 px-6 py-3 rounded-full font-bold text-base shadow-lg hover:opacity-90 transition ${
-        !freeCourse && isInCart
+        isEnrolled
+          ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+          : !freeCourse && isInCart
           ? "bg-accent dark:bg-darkBgHidden dark:bg-darkBgHidden0 text-primary-foreground cursor-not-allowed"
           : "bg-mySecondary text-foreground"
       }`}
-      disabled={!freeCourse && isInCart}
+      disabled={!isEnrolled && !freeCourse && isInCart}
     >
-      <LuShoppingCart size={20} />
-      {freeCourse ? "ثبت‌نام رایگان" : isInCart ? "در سبد خرید" : "افزودن به سبد خرید"}
+      {isEnrolled ? <LuCheck size={20} /> : <LuShoppingCart size={20} />}
+      {isEnrolled
+        ? "مشاهده دوره"
+        : freeCourse
+        ? "ثبت‌نام رایگان"
+        : isInCart
+        ? "در سبد خرید"
+        : "افزودن به سبد خرید"}
     </button>
   );
 }

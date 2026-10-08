@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Users, Video, ShoppingCart } from "lucide-react";
+import { Users, Video, ShoppingCart, CheckCircle } from "lucide-react";
 import Price from "./price";
 import { FormatTime } from "./FormatTime";
 import RatingStars from "./RatingStars";
@@ -13,6 +14,8 @@ import CourseActionIcons from "@/components/courses/CourseActionIcons";
 import toast from "react-hot-toast";
 import type { Course } from "@/lib/types/db";
 import { useSession } from "next-auth/react";
+import { useEnrolledCourseIds } from "@/lib/hooks/useUser";
+import { cn } from "@/lib/utils";
 import {
   enrollFreeCourse,
   isFreeCourse,
@@ -32,8 +35,13 @@ interface CourseCardProps {
 }
 
 const CourseCard = ({ data, link: _link }: CourseCardProps) => {
+  const router = useRouter();
   const [imageError, setImageError] = useState(false);
   const addToCart = useCartStore((state) => state.addToCart);
+  const items = useCartStore((state) => state.items);
+  const isInCart = items.some((item) => item.id === data.id);
+  const { data: enrolledIds } = useEnrolledCourseIds();
+  const isEnrolled = Boolean(enrolledIds?.includes(data.id));
   const imageSrc = data.img || "/images/courses/placeholder.png";
   const fallbackImage = "/images/courses/placeholder.png";
   const { data: session } = useSession();
@@ -41,6 +49,11 @@ const CourseCard = ({ data, link: _link }: CourseCardProps) => {
 
   const handleAddToCart = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
+    if (isEnrolled) {
+      router.push(`/courses/view/${data.id}`);
+      return;
+    }
+
     if (freeCourse) {
       if (!session?.user) {
         redirectToLoginForFreeCourse(data.id);
@@ -53,6 +66,11 @@ const CourseCard = ({ data, link: _link }: CourseCardProps) => {
       } catch (error) {
         toast.error(error instanceof Error ? error.message : "خطا در ثبت‌نام دوره رایگان");
       }
+      return;
+    }
+
+    if (isInCart) {
+      toast.success("این دوره قبلاً به سبد خرید اضافه شده است");
       return;
     }
 
@@ -83,10 +101,26 @@ const CourseCard = ({ data, link: _link }: CourseCardProps) => {
           onClick={handleAddToCart}
           initial={{ opacity: 0, scale: 0.8 }}
           whileHover={{ scale: 1.05 }}
-          className="absolute bottom-2 right-2 flex items-center gap-1 rounded-full border border-white/25 bg-black/60 px-2 py-1 text-xs font-bold text-white shadow-lg backdrop-blur-xl transition hover:bg-black/75"
+          className={cn(
+            "absolute bottom-2 right-2 flex items-center gap-1 rounded-full border px-2 py-1 text-xs font-bold text-white shadow-lg backdrop-blur-xl transition",
+            isEnrolled
+              ? "border-emerald-400/50 bg-emerald-600/90 hover:bg-emerald-600"
+              : isInCart
+              ? "border-primary/50 bg-primary/80 hover:bg-primary"
+              : "border-white/25 bg-black/60 hover:bg-black/75"
+          )}
         >
-          <ShoppingCart size={14} />
-          {freeCourse ? "رایگان" : "خرید"}
+          {isEnrolled ? (
+            <>
+              <CheckCircle size={14} />
+              <span>مشاهده</span>
+            </>
+          ) : (
+            <>
+              <ShoppingCart size={14} />
+              <span>{freeCourse ? "رایگان" : isInCart ? "در سبد" : "خرید"}</span>
+            </>
+          )}
         </motion.button>
       </motion.div>
 
@@ -134,13 +168,26 @@ const CourseCard = ({ data, link: _link }: CourseCardProps) => {
         </motion.div>
       </motion.div>
 
-      {/* دکمه افزودن به سبد خرید */}
+      {/* دکمه افزودن به سبد خرید / مشاهده دوره */}
       <div className="absolute -bottom-5 w-full flex justify-center pl-6">
         <button
           onClick={handleAddToCart}
-          className="w-48 rounded-full bg-[var(--btn-primary-bg)] py-2 text-sm font-bold text-white shadow-lg transition-all duration-300 ease-out hover:scale-105 hover:bg-[var(--btn-primary-hover)] active:scale-[1.02] sm:text-base"
+          className={cn(
+            "w-48 rounded-full py-2 text-sm font-bold shadow-lg transition-all duration-300 ease-out hover:scale-105 active:scale-[1.02] sm:text-base",
+            isEnrolled
+              ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-900/30"
+              : isInCart
+              ? "bg-muted text-foreground border border-border"
+              : "bg-[var(--btn-primary-bg)] hover:bg-[var(--btn-primary-hover)] text-white"
+          )}
         >
-          {freeCourse ? "ثبت‌نام رایگان" : "افزودن به سبد خرید"}
+          {isEnrolled
+            ? "مشاهده دوره"
+            : freeCourse
+            ? "ثبت‌نام رایگان"
+            : isInCart
+            ? "در سبد خرید"
+            : "افزودن به سبد خرید"}
         </button>
       </div>
     </div>

@@ -1,8 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import { toast } from "react-hot-toast";
 import {
   getCurrentUser,
   getEnrolledCourses,
+  getEnrolledCourseIds,
   getUserTransactions,
   getUserOrders,
   updateEnrollmentProgress,
@@ -23,6 +25,8 @@ import { ApiSuccessResponse, PaginatedData } from "@/lib/api-response";
 export const userKeys = {
   all: ["user"] as const,
   me: () => [...userKeys.all, "me"] as const,
+  enrolledCourseIds: (userId?: string) =>
+    [...userKeys.all, "enrolled-course-ids", userId || "guest"] as const,
   enrolledCourses: (page: number, limit: number) =>
     [...userKeys.all, "enrolled-courses", { page, limit }] as const,
   transactions: (page: number, limit: number, type?: string, status?: string) =>
@@ -46,6 +50,22 @@ export function useCurrentUser() {
     staleTime: 5 * 60 * 1000, // 5 دقیقه fresh
     gcTime: 10 * 60 * 1000, // 10 دقیقه در cache
     retry: 1,
+  });
+}
+
+/**
+ * Hook برای دریافت تمام شناسه‌های دوره‌های خریداری/ثبت‌نام شده کاربر
+ */
+export function useEnrolledCourseIds() {
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
+
+  return useQuery<string[]>({
+    queryKey: userKeys.enrolledCourseIds(userId),
+    queryFn: getEnrolledCourseIds,
+    enabled: !!userId,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 }
 
