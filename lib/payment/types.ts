@@ -7,6 +7,7 @@ export interface PaymentRequestInput {
   description: string;
   mobile?: string;
   email?: string;
+  nationalCode?: string;
 }
 
 export interface PaymentRequestOutput {

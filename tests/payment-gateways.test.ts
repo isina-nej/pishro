@@ -217,3 +217,143 @@ test("zibal verify stays retryable when gateway is unreachable", async () => {
     fetchMock.mock.restore();
   }
 });
+
+test("zibal verify when status is 2 (unverified) calls verify endpoint and fulfills", async () => {
+  const calls: string[] = [];
+  const fetchMock = mockZibal((path) => {
+    calls.push(path);
+    if (path.endsWith("/v1/inquiry")) {
+      return { result: 100, status: 2, trackId: 111, amount: 500000, orderId: "order-1" };
+    }
+    if (path.endsWith("/v1/verify")) {
+      return {
+        result: 100,
+        status: 1,
+        trackId: 111,
+        amount: 500000,
+        orderId: "order-1",
+        refNumber: 998877,
+        cardNumber: "502229****1111",
+      };
+    }
+    throw new Error(`unexpected call ${path}`);
+  });
+
+  try {
+    const res = await new ZibalAdapter().verifyPayment(
+      { orderId: "order-1", amount: 50000, authority: "111", params: { success: "1", trackId: "111" } },
+      { apiKey: "m", sandbox: false }
+    );
+    assert.equal(res.success, true);
+    assert.equal(res.refNumber, "998877");
+    assert.equal(res.cardPan, "502229****1111");
+    assert.deepEqual(calls, ["https://gateway.zibal.ir/v1/inquiry", "https://gateway.zibal.ir/v1/verify"]);
+  } finally {
+    fetchMock.mock.restore();
+  }
+});
+
+test("zibal maps specific failure status codes to descriptive Persian messages", async () => {
+  const fetchMock = mockZibal(() => ({ result: 100, status: 5, trackId: 111, amount: 500000, orderId: "order-1" }));
+  try {
+    const res = await new ZibalAdapter().verifyPayment(
+      { orderId: "order-1", amount: 50000, authority: "111", params: { success: "0", trackId: "111" } },
+      { apiKey: "m", sandbox: false }
+    );
+    assert.equal(res.success, false);
+    assert.match(res.errorMessage || "", /موجودی حساب کافی نمی‌باشد/);
+  } finally {
+    fetchMock.mock.restore();
+  }
+});
+
+test("zibal request passes optional nationalCode and mobile", async () => {
+  let capturedPayload: Record<string, unknown> = {};
+  const fetchMock = mockZibal((_path, body) => {
+    capturedPayload = body;
+    return { result: 100, trackId: 888 };
+  });
+  try {
+    const res = await new ZibalAdapter().requestPayment(
+      {
+        orderId: "order-nat",
+        amount: 25000,
+        callbackUrl: "https://example.com/cb",
+        description: "Desc",
+        mobile: "09121112233",
+        nationalCode: "0011223344",
+      },
+      { apiKey: "my-key", sandbox: false }
+    );
+    assert.equal(res.success, true);
+    assert.equal(capturedPayload.mobile, "09121112233");
+    assert.equal(capturedPayload.nationalCode, "0011223344");
+    assert.equal(capturedPayload.amount, 250000);
+  } finally {
+    fetchMock.mock.restore();
+  }
+});
+
+test("zibal inquiryPayment method queries gateway inquiry endpoint", async () => {
+  const fetchMock = mockZibal((path, body) => {
+    assert.equal(path, "https://gateway.zibal.ir/v1/inquiry");
+    assert.equal(body.trackId, 777);
+    return { result: 100, status: 1, amount: 10000, refNumber: 12345 };
+  });
+  try {
+    const res = await new ZibalAdapter().inquiryPayment("777", { apiKey: "key", sandbox: false });
+    assert.equal(res.result, 100);
+    assert.equal(res.status, 1);
+    assert.equal(res.refNumber, 12345);
+  } finally {
+    fetchMock.mock.restore();
+  }
+});
+
+test("zibal platform client interacts with platform endpoints", async () => {
+  const calls: string[] = [];
+  const fetchMock = mock.method(globalThis, "fetch", async (input: RequestInfo | URL) => {
+    const url = String(input);
+    calls.push(url);
+    if (url === "https://api.zibal.ir/v1/wallet/list") {
+      return new Response(
+        JSON.stringify({
+          result: 1,
+          message: "موفق",
+          data: [{ id: 1, name: "اصلی", balance: 1000000, withdrawableBalance: 800000 }],
+        }),
+        { status: 200, headers: { "Content-Type": "application/json" } }
+      );
+    }
+    if (url === "https://api.zibal.ir/v1/account/refund") {
+      return new Response(
+        JSON.stringify({
+          result: 1,
+          message: "موفق",
+          data: { reversed: true },
+        }),
+        { status: 200, headers: { "Content-Type": "application/json" } }
+      );
+    }
+    throw new Error(`unexpected url ${url}`);
+  });
+
+  try {
+    const { zibalPlatform } = await import("../lib/payment/zibal-platform");
+    const wallets = await zibalPlatform.getWalletList("test-token");
+    assert.equal(wallets.result, 1);
+    assert.equal(wallets.data?.[0]?.name, "اصلی");
+
+    const refund = await zibalPlatform.requestRefund("test-token", {
+      accountId: "acc-1",
+      trackId: 123456,
+      tryReverse: true,
+    });
+    assert.equal(refund.result, 1);
+    assert.equal(refund.data?.reversed, true);
+  } finally {
+    fetchMock.mock.restore();
+  }
+});
+
+

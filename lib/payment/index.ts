@@ -14,8 +14,15 @@ import { SepAdapter } from "./adapters/sep";
 import { MockAdapter } from "./adapters/mock";
 
 export * from "./types";
+export {
+  ZibalAdapter,
+  ZIBAL_STATUS_CODES,
+  ZIBAL_RESULT_CODES,
+  getZibalStatusMessage,
+  getZibalResultMessage,
+} from "./adapters/zibal";
+export { zibalPlatform } from "./zibal-platform";
 export { ZarinpalAdapter } from "./adapters/zarinpal";
-export { ZibalAdapter } from "./adapters/zibal";
 export { NextPayAdapter } from "./adapters/nextpay";
 export { SepAdapter } from "./adapters/sep";
 export { MockAdapter } from "./adapters/mock";
