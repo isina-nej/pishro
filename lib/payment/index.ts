@@ -6,7 +6,6 @@ import {
   PaymentRequestOutput,
   PaymentVerifyInput,
   PaymentVerifyOutput,
-  GatewayConfig,
 } from "./types";
 import { ZarinpalAdapter } from "./adapters/zarinpal";
 import { ZibalAdapter } from "./adapters/zibal";
@@ -58,7 +57,7 @@ export async function initiatePayment(
   const gateway = overrideGateway || config.gateway;
 
   // If no API key is provided and not in test gateway, fall back to mock in non-prod
-  if (!config.apiKey && gateway !== "test") {
+  if (!config.apiKey && gateway !== "test" && !(gateway === "zibal" && config.sandbox)) {
     if (process.env.NODE_ENV !== "production" || config.sandbox) {
       console.warn(`[Payment] No API key for ${gateway}. Falling back to test adapter.`);
       const mockAdapter = adapters.test;

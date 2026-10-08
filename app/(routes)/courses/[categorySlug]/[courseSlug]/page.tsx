@@ -138,7 +138,6 @@ export default async function CourseDetailPage({
       notFound();
     }
 
-    const canonicalPath = `/courses/${categorySlug}/${courseSlug}`;
     const courseJsonLd = {
       "@context": "https://schema.org",
       "@type": "Course",

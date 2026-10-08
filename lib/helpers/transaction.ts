@@ -69,33 +69,9 @@ export async function createEnrollmentsFromOrder(
     (item) => item.courseId
   );
 
-  // Create enrollments for each course
-  const enrollments = await Promise.all(
-    courseIds.map(async (courseId) => {
-      // Check if enrollment already exists
-      const existingEnrollment = await prisma.enrollment.findUnique({
-        where: {
-          userId_courseId: {
-            userId,
-            courseId,
-          },
-        },
-      });
-
-      // Only create if doesn't exist
-      if (!existingEnrollment) {
-        return await prisma.enrollment.create({
-          data: {
-            userId,
-            courseId,
-            progress: 0,
-          },
-        });
-      }
-
-      return existingEnrollment;
-    })
-  );
-
-  return enrollments;
+  // Database uniqueness makes callback retries safe even across app instances.
+  return prisma.enrollment.createMany({
+    data: [...new Set(courseIds)].map((courseId) => ({ userId, courseId, progress: 0 })),
+    skipDuplicates: true,
+  });
 }

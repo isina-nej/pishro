@@ -1,35 +1,36 @@
 "use client";
-
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Image from "next/image";
 import { Loader2 } from "lucide-react";
 import { format } from "date-fns-jalali";
 import clsx from "clsx";
 import { useSearchParams } from "next/navigation";
 import { useOrder } from "@/lib/hooks/useCheckout";
+import { useCartStore } from "@/stores/cart-store";
 
 const Result = () => {
   const searchParams = useSearchParams();
   const result = searchParams?.get("result");
   const orderId = searchParams?.get("orderId");
-  const [status, setStatus] = useState<"success" | "failed" | null>(null);
-
-  // استفاده از React Query hook
+  // Trust the authenticated order endpoint, never the result query string.
   const { data: orderResponse, isLoading: loading } = useOrder(orderId || "");
   const order = orderResponse?.order;
   const error = orderResponse?.error;
+  const clearCart = useCartStore((state) => state.clearCart);
+  const status = order?.status === "PAID" ? "success" : order?.status === "FAILED" ? "failed" : null;
+  useEffect(() => { if (status === "success") clearCart(); }, [status, clearCart]);
 
-  useEffect(() => {
-    if (result === "success") setStatus("success");
-    else if (result === "failed") setStatus("failed");
-  }, [result]);
+  if (result === "pending" && !loading && !error && order?.status === "PENDING") {
+    return <main className="min-h-[400px] flex flex-col items-center justify-center gap-4 p-5 text-center">
+      <p>وضعیت پرداخت هنوز تأیید نشده است. مبلغی دوباره پرداخت نکنید.</p>
+      <a className="text-primary underline" href={`/api/payment/verify?orderId=${encodeURIComponent(orderId || "")}&trackId=${encodeURIComponent(order?.paymentAuthority || "")}`}>
+        بررسی دوباره پرداخت
+      </a>
+    </main>;
+  }
 
-  if (!status) {
-    return (
-      <main className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
-      </main>
-    );
+  if (!loading && !error && !status) {
+    return <main className="min-h-[400px] flex items-center justify-center">در انتظار تأیید پرداخت</main>;
   }
 
   if (loading) {

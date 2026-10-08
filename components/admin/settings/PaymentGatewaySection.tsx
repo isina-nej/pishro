@@ -10,7 +10,6 @@ import {
   ShieldAlert,
   ShieldCheck,
   HelpCircle,
-  ExternalLink,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
@@ -18,7 +17,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { SUPPORTED_GATEWAYS, SupportedGatewayId } from "@/lib/payment";
+import { SUPPORTED_GATEWAYS } from "@/lib/payment";
 
 interface PaymentGatewaySectionProps {
   activeGateway: string;

@@ -25,6 +25,7 @@ export interface PaymentVerifyInput {
 
 export interface PaymentVerifyOutput {
   success: boolean;
+  retryable?: boolean; // Unknown/provider unavailable: leave order pending for a later inquiry.
   refNumber?: string;
   cardPan?: string;
   errorMessage?: string;

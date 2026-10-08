@@ -428,13 +428,13 @@ export async function getPaymentGatewayConfig(): Promise<PaymentGatewayConfig> {
   try {
     const settings = await getSettings();
     const gateway = settings.activePaymentGateway || "zarinpal";
-    const apiKey =
-      settings.paymentGatewayApiKey ||
-      settings.zarinpalMerchantId ||
-      process.env.SEP_TERMINAL_ID ||
-      process.env.ZARINPAL_MERCHANT_ID ||
-      process.env.PAYMENT_GATEWAY_API_KEY ||
-      "";
+    // Never use one gateway's credentials for another gateway.
+    const apiKey = settings.paymentGatewayApiKey || (
+      gateway === "zibal" ? process.env.ZIBAL_MERCHANT_ID :
+      gateway === "saman" ? process.env.SEP_TERMINAL_ID :
+      gateway === "zarinpal" ? settings.zarinpalMerchantId || process.env.ZARINPAL_MERCHANT_ID :
+      gateway === "nextpay" ? process.env.NEXTPAY_API_KEY : ""
+    ) || "";
     const sandbox = Boolean(settings.paymentGatewaySandbox);
 
     return {

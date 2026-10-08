@@ -23,12 +23,6 @@ interface CoursesPageContentProps {
 
 const sortOptions: CourseSortOption[] = ["جدیدترین", "محبوب‌ترین", "پرفروش‌ترین"];
 
-const LEVEL_ENUM_MAP: Record<string, string> = {
-  "مقدماتی": "BEGINNER",
-  "متوسط": "INTERMEDIATE",
-  "پیشرفته": "ADVANCED",
-};
-
 const CoursesPageContent = ({
   categoriesWithCourses,
 }: CoursesPageContentProps) => {

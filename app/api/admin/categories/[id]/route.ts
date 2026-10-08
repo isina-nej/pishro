@@ -13,7 +13,6 @@ import {
   successResponse,
   notFoundResponse,
   ErrorCodes,
-  validationError,
   HttpStatus,
 } from "@/lib/api-response";
 import { normalizeImageUrl } from "@/lib/utils";

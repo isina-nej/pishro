@@ -21,8 +21,10 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { items } = body;
 
-    // ✅ Validate input
-    if (!items || items.length === 0) {
+    // Reject malformed/duplicated IDs before consulting the database.
+    if (!Array.isArray(items) || items.length === 0 || items.length > 50 ||
+        items.some((item) => !item || typeof item.courseId !== "string" || !item.courseId.trim()) ||
+        new Set(items.map((item) => item.courseId)).size !== items.length) {
       return validationError(
         {
           items: "آیتم‌های سفارش الزامی است",
@@ -40,7 +42,7 @@ export async function POST(req: Request) {
       select: { id: true, price: true, discountPercent: true },
     });
 
-    if (courses.length === 0) {
+    if (courses.length !== items.length) {
       return validationError(
         { courses: "دوره‌ای با شناسه‌های ارسالی یافت نشد" },
         "دوره‌ای یافت نشد"
@@ -54,6 +56,16 @@ export async function POST(req: Request) {
         : course.price;
       return sum + finalPrice;
     }, 0);
+
+    if (!Number.isSafeInteger(total) || total <= 100) {
+      return validationError({ amount: "مبلغ سفارش معتبر نیست یا کمتر از حداقل زیبال است" });
+    }
+
+    // Gateway callbacks must use the configured public origin, never a request-supplied Host.
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/$/, "");
+    if (!baseUrl || (process.env.NODE_ENV === "production" && !/^https:\/\//.test(baseUrl))) {
+      return errorResponse("آدرس عمومی HTTPS سایت برای درگاه تنظیم نشده است", ErrorCodes.INTERNAL_ERROR);
+    }
 
     // ✅ Create order in DB with OrderItems
     const order = await prisma.order.create({
@@ -70,7 +82,7 @@ export async function POST(req: Request) {
             return {
               courseId: course.id,
               price: finalPrice,
-              discount: course.discountPercent || 0,
+              discountPercent: course.discountPercent || 0,
             };
           }),
         },
@@ -79,10 +91,6 @@ export async function POST(req: Request) {
 
     console.log(`[Checkout] Order ${order.id} created. Total: ${total}`);
 
-    // Determine Base URL for callback
-    const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || "localhost:3000";
-    const protocol = req.headers.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || `${protocol}://${host}`;
     const callbackUrl = `${baseUrl}/api/payment/verify?orderId=${order.id}`;
 
     // Get user info if available
@@ -102,6 +110,7 @@ export async function POST(req: Request) {
     });
 
     if (!paymentResult.success || !paymentResult.payUrl) {
+      await prisma.order.update({ where: { id: order.id }, data: { status: "FAILED" } });
       return errorResponse(
         paymentResult.errorMessage || "خطا در اتصال به درگاه پرداخت",
         ErrorCodes.INTERNAL_ERROR

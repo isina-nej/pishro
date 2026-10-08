@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { query } from "@/lib/db";
-import { successResponse, errorResponse, paginatedResponse, ErrorCodes } from "@/lib/api-response";
+import { errorResponse, paginatedResponse, ErrorCodes } from "@/lib/api-response";
 
 /** Page size for courses infinite scroll — 12 cards = 4 rows x 3 cols on desktop. */
 const COURSES_PAGE_SIZE = 12;

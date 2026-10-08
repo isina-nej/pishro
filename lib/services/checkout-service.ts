@@ -31,14 +31,7 @@ export const checkoutService = {
     data: CheckoutRequest
   ): Promise<CheckoutResponse> {
     try {
-      const payload = {
-        ...data,
-        _callbackUrl:
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/payment/verify` ||
-          `${window.location.origin}/api/payment/verify`,
-      };
-
-      const res = await axios.post<ApiSuccessResponse<CheckoutData>>("/api/checkout", payload);
+      const res = await axios.post<ApiSuccessResponse<CheckoutData>>("/api/checkout", data);
 
       if (res.data.status === "success") {
         return {

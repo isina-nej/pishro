@@ -21,7 +21,7 @@ const CheckoutPageContent = () => {
 
   const { data: session } = useSession();
   const userId = session?.user?.id;
-  const { items, clearCart } = useCartStore();
+  const { items } = useCartStore();
 
   // استفاده از React Query mutation
   const createCheckoutMutation = useCreateCheckout();
@@ -72,7 +72,7 @@ const CheckoutPageContent = () => {
         onSuccess: (data) => {
           if (data.ok && data.payUrl) {
             toast.success("در حال انتقال به صفحه پرداخت...");
-            clearCart();
+            // Keep the cart until the gateway confirms payment.
           }
         },
       }

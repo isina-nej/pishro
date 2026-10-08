@@ -1,206 +1,104 @@
-// app/api/payment/verify/route.ts
 import { NextResponse } from "next/server";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { TransactionType, TransactionStatus } from "@prisma/client";
-import {
-  createTransaction,
-  createEnrollmentsFromOrder,
-} from "@/lib/helpers/transaction";
+import { createEnrollmentsFromOrder } from "@/lib/helpers/transaction";
 import { verifyPayment } from "@/lib/payment";
-
-async function extractParams(req: Request): Promise<Record<string, string>> {
-  const url = new URL(req.url);
-  const params: Record<string, string> = {};
-
-  // Extract from query string
-  url.searchParams.forEach((val, key) => {
-    params[key] = val;
-  });
-
-  // Extract from body if POST
-  if (req.method === "POST") {
-    try {
-      const contentType = req.headers.get("content-type") || "";
-      if (contentType.includes("application/json")) {
-        const json = await req.json();
-        Object.entries(json).forEach(([k, v]) => {
-          if (v !== undefined && v !== null) params[k] = String(v);
-        });
-      } else if (
-        contentType.includes("application/x-www-form-urlencoded") ||
-        contentType.includes("multipart/form-data")
-      ) {
-        const formData = await req.formData();
-        formData.forEach((val, key) => {
-          if (typeof val === "string") params[key] = val;
-        });
-      }
-    } catch (err) {
-      console.warn("[PaymentVerify] Body parse warning:", err);
-    }
-  }
-
-  return params;
-}
 
 async function handleVerify(req: Request) {
   try {
-    const params = await extractParams(req);
-
-    const authority =
-      params.Authority ||
-      params.authority ||
-      params.Token ||
-      params.token ||
-      params.RefNum ||
-      params.refNum ||
-      params.trackId ||
-      params.trans_id ||
-      "";
-
-    const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || "localhost:3000";
-    const protocol = req.headers.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || `${protocol}://${host}`;
-
-    let orderId =
-      params.orderId ||
-      params.order_id ||
-      params.OrderId ||
-      params.ResNum ||
-      params.resNum ||
-      "";
-
-    // If orderId is missing, attempt lookup by paymentAuthority
-    if (!orderId && authority) {
-      const foundOrder = await prisma.order.findFirst({
-        where: { paymentAuthority: authority },
-      });
-      if (foundOrder) {
-        orderId = foundOrder.id;
-      }
+    const url = new URL(req.url);
+    const orderId = url.searchParams.get("orderId");
+    // The order ID comes from our request callback URL; gateway callback parameters
+    // are untrusted and must not override it.
+    if (!orderId) return NextResponse.json({ error: "شناسه سفارش ارسال نشده است" }, { status: 400 });
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/$/, "");
+    if (!baseUrl || (process.env.NODE_ENV === "production" && !baseUrl.startsWith("https://"))) {
+      throw new Error("NEXT_PUBLIC_BASE_URL must be HTTPS");
     }
+    const redirect = (result: "success" | "failed" | "pending") =>
+      NextResponse.redirect(`${baseUrl}/checkout/result?result=${result}&orderId=${encodeURIComponent(orderId)}`);
 
-    if (!orderId) {
-      return NextResponse.json(
-        { error: "شناسه سفارش در اطلاعات بازگشتی درگاه یافت نشد" },
-        { status: 400 }
-      );
-    }
-
-    // Fetch order from DB
     const order = await prisma.order.findUnique({ where: { id: orderId } });
-    if (!order) {
-      return NextResponse.json({ error: "سفارش یافت نشد" }, { status: 404 });
-    }
-
-    // Optional user verification if signed in
-    const session = await auth();
-    if (session?.user?.id && order.userId && order.userId !== session.user.id) {
-      return NextResponse.json(
-        { error: "دسترسی غیرمجاز به سفارش" },
-        { status: 403 }
-      );
-    }
-
-    // Idempotent: already-finalized orders
+    if (!order) return NextResponse.json({ error: "سفارش یافت نشد" }, { status: 404 });
     if (order.status === "PAID") {
-      return NextResponse.redirect(
-        `${baseUrl}/checkout/result?result=success&orderId=${orderId}`
-      );
-    }
-    if (order.status === "FAILED") {
-      return NextResponse.redirect(
-        `${baseUrl}/checkout/result?result=failed&orderId=${orderId}`
-      );
-    }
-
-    // Verify payment using modular gateway system
-    const verifyResult = await verifyPayment(
-      {
-        orderId: order.id,
-        amount: order.total,
-        authority: order.paymentAuthority || authority,
-        params,
-      },
-      order.paymentGateway || undefined
-    );
-
-    const gatewayName = order.paymentGateway || "payment_gateway";
-
-    if (verifyResult.success) {
-      const refNumber = verifyResult.refNumber || `REF-${Date.now()}`;
-
-      // Update order to PAID
-      await prisma.order.update({
-        where: { id: orderId },
-        data: {
-          status: "PAID",
-          paymentRef: refNumber,
-        },
-      });
-
-      // Record successful transaction
       if (order.userId) {
-        await createTransaction({
-          userId: order.userId,
-          orderId: order.id,
-          amount: order.total,
-          type: TransactionType.PAYMENT,
-          status: TransactionStatus.SUCCESS,
-          gateway: gatewayName,
-          refNumber,
-          description: `پرداخت موفق سفارش از طریق ${gatewayName}`,
-        });
+        try { await createEnrollmentsFromOrder(order.userId, orderId); }
+        catch (error) { console.error("[PaymentVerify] Enrollment retry failed", error); return redirect("pending"); }
+      }
+      return redirect("success");
+    }
+    if (order.status === "FAILED") return redirect("failed");
+    if (!order.paymentGateway || !order.paymentAuthority) return redirect("pending");
 
-        // Grant access / create enrollments
-        try {
-          await createEnrollmentsFromOrder(order.userId, order.id);
-        } catch (enrollErr) {
-          console.error("[PaymentVerify] Enrollment error:", enrollErr);
+    const params: Record<string, string> = Object.fromEntries(url.searchParams);
+    // Legacy gateways may POST form/JSON callbacks. Zibal uses GET query parameters.
+    if (req.method === "POST" && order.paymentGateway !== "zibal") {
+      const contentType = req.headers.get("content-type") || "";
+      if (contentType.includes("application/json")) {
+        const body = await req.json();
+        if (body && typeof body === "object" && !Array.isArray(body)) {
+          for (const [key, value] of Object.entries(body)) {
+            if (value !== null && value !== undefined) params[key] = String(value);
+          }
         }
+      } else if (contentType.includes("application/x-www-form-urlencoded")) {
+        const body = await req.formData();
+        body.forEach((value, key) => { if (typeof value === "string") params[key] = value; });
       }
+    }
+    if (order.paymentGateway === "zibal" && params.trackId !== order.paymentAuthority) {
+      return redirect("pending");
+    }
 
-      return NextResponse.redirect(
-        `${baseUrl}/checkout/result?result=success&orderId=${orderId}`
-      );
-    } else {
-      // Mark order FAILED
-      await prisma.order.update({
+    const result = await verifyPayment({
+      orderId,
+      amount: order.total,
+      authority: order.paymentAuthority,
+      params,
+    }, order.paymentGateway);
+    if (result.retryable) return redirect("pending");
+
+    const status = result.success ? "PAID" : "FAILED";
+    const refNumber = result.refNumber || order.paymentAuthority;
+    // Lock the row; only one callback commits the transition and transaction.
+    const changed = await prisma.$transaction(async (tx) => {
+      await tx.$queryRaw`SELECT id FROM \`Order\` WHERE id = ${orderId} FOR UPDATE`;
+      const current = await tx.order.findUnique({ where: { id: orderId }, select: { status: true } });
+      if (current?.status !== "PENDING") return current?.status;
+      await tx.order.update({
         where: { id: orderId },
-        data: { status: "FAILED" },
+        data: { status, ...(result.success ? { paymentRef: refNumber } : {}) },
       });
-
-      // Record failed transaction
       if (order.userId) {
-        await createTransaction({
-          userId: order.userId,
-          orderId: order.id,
-          amount: order.total,
-          type: TransactionType.PAYMENT,
-          status: TransactionStatus.FAILED,
-          gateway: gatewayName,
-          description: verifyResult.errorMessage || "پرداخت ناموفق یا لغوشده",
+        await tx.transaction.create({
+          data: {
+            userId: order.userId,
+            orderId,
+            amount: order.total,
+            type: TransactionType.PAYMENT,
+            status: result.success ? TransactionStatus.SUCCESS : TransactionStatus.FAILED,
+            gateway: order.paymentGateway,
+            ...(result.success ? { refNumber } : {}),
+            description: result.success ? `پرداخت موفق سفارش از طریق ${order.paymentGateway}` : result.errorMessage || "پرداخت ناموفق",
+          },
         });
       }
-
-      return NextResponse.redirect(
-        `${baseUrl}/checkout/result?result=failed&orderId=${orderId}`
-      );
+      return status;
+    });
+    if (changed === "PAID" && order.userId) {
+      try {
+        await createEnrollmentsFromOrder(order.userId, orderId);
+      } catch (error) {
+        console.error("[PaymentVerify] Enrollment failed", error);
+        return redirect("pending");
+      }
     }
-  } catch (err: unknown) {
-    console.error("[PaymentVerify Handler Error]:", err);
-    return NextResponse.json(
-      { error: "خطایی در بررسی و تأیید پرداخت رخ داد" },
-      { status: 500 }
-    );
+    return redirect(changed === "PAID" ? "success" : changed === "FAILED" ? "failed" : "pending");
+  } catch (error) {
+    console.error("[PaymentVerify]", error);
+    return NextResponse.json({ error: "تأیید پرداخت موقتاً در دسترس نیست؛ بعداً دوباره تلاش کنید" }, { status: 503 });
   }
 }
 
-export async function GET(req: Request) {
-  return handleVerify(req);
-}
-
-export async function POST(req: Request) {
-  return handleVerify(req);
-}
+export async function GET(req: Request) { return handleVerify(req); }
+export async function POST(req: Request) { return handleVerify(req); }

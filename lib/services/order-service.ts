@@ -13,6 +13,7 @@ export interface OrderDetail {
   total: number;
   status: string;
   paymentRef?: string | null;
+  paymentAuthority?: string | null;
   createdAt: string;
   items: OrderItem[];
   user?: {
