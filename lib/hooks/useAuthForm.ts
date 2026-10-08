@@ -16,6 +16,7 @@ import {
   Variant,
 } from "@/lib/schemas/authSchema";
 import { completeFreeEnrollmentFromLoginUrl } from "@/lib/free-course-enrollment";
+import { safeLocalReturnPath } from "@/lib/checkout-redirect";
 
 export function useAuthForm() {
   const [variant, setVariant] = useState<Variant>("login");
@@ -46,9 +47,13 @@ export function useAuthForm() {
     }
 
     if (typeof window !== "undefined") {
-      const callbackUrl = new URLSearchParams(window.location.search).get("callbackUrl");
-      if (callbackUrl?.startsWith("/")) {
-        router.push(callbackUrl);
+      const callbackUrl = safeLocalReturnPath(
+        new URLSearchParams(window.location.search).get("callbackUrl"),
+        window.location.origin
+      );
+      if (callbackUrl) {
+        // A full navigation refreshes the server session before protected checkout pages load.
+        window.location.assign(callbackUrl);
         return;
       }
     }

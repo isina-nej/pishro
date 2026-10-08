@@ -20,7 +20,7 @@ interface CheckoutSidebarProps {
     lastPrice: number;
   };
   step: "shoppingCart" | "result" | "pay";
-  setStep: (i: "result" | "pay" | "shoppingCart") => void;
+  handleContinue: () => void;
   handlePayment: () => void;
   loading: boolean;
 }
@@ -28,7 +28,7 @@ interface CheckoutSidebarProps {
 const CheckoutSidebar = ({
   data,
   step,
-  setStep,
+  handleContinue,
   handlePayment,
   loading,
 }: CheckoutSidebarProps) => {
@@ -140,7 +140,8 @@ const CheckoutSidebar = ({
             <div className="pt-2">
               {step === "shoppingCart" && (
                 <Button
-                  onClick={() => setStep("pay")}
+                  onClick={handleContinue}
+                  disabled={loading}
                   className="w-full h-14 text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300 group"
                 >
                   <span>{copy("summary.continue", "ادامه فرایند خرید")}</span>
