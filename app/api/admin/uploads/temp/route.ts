@@ -7,6 +7,7 @@ import {
   HttpStatus,
 } from "@/lib/api-response";
 import { saveTempFileToStorage } from "@/lib/services/storage-adapter";
+import { optimizePublicImage } from "@/lib/services/image-optimization";
 import {
   validateThumbnailFile,
   validateVideoFile,
@@ -89,11 +90,14 @@ export async function POST(req: NextRequest) {
       errorDetails = "Buffer conversion";
       const buffer = Buffer.from(await file.arrayBuffer());
 
+      const image = kind === "video" ? null : await optimizePublicImage(buffer);
       errorDetails = "File storage";
-      const tempPath = await saveTempFileToStorage(buffer, file.name);
-
+      const tempPath = await saveTempFileToStorage(
+        image?.buffer ?? buffer,
+        image ? `thumbnail_${Date.now()}.${image.ext}` : file.name
+      );
       return successResponse(
-        { tempPath, fileName: file.name, mimeType: file.type },
+        { tempPath, fileName: file.name, mimeType: image?.mime ?? file.type },
         "فایل موقت ذخیره شد"
       );
     } catch (processError) {

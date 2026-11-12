@@ -3,6 +3,7 @@ import { randomBytes } from "crypto";
 import { auth } from "@/auth";
 import { saveFileToStorage } from "@/lib/services/storage-adapter";
 import { detectImageType } from "@/lib/upload-validation";
+import { optimizePublicImage } from "@/lib/services/image-optimization";
 import {
   successResponse,
   unauthorizedResponse,
@@ -65,13 +66,12 @@ export async function POST(req: NextRequest) {
     // ایجاد نام منحصر به فرد برای فایل — extension از magic bytes، نه نام فایل.
     const timestamp = Date.now();
     const randomString = randomBytes(8).toString("hex");
-    const filename = `${session.user.id}_${timestamp}_${randomString}.${detected.ext}`;
-
-    // ذخیره در storage (ابری یا محلی، بسته به STORAGE_DRIVER)
+    const image = await optimizePublicImage(buffer, { maxWidth: 512, maxHeight: 512 });
+    const filename = `${session.user.id}_${timestamp}_${randomString}.${image.ext}`;
     const avatarUrl = await saveFileToStorage(
-      buffer,
+      image.buffer,
       `avatars/${filename}`,
-      detected.mime
+      image.mime
     );
 
     // بروزرسانی آواتار کاربر در دیتابیس

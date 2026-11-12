@@ -70,7 +70,7 @@ const NewsCard = ({ data }: NewsCardProps) => {
               alt={data.title}
               fill
               className="object-fill transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 700px, 800px"
+              sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 1280px) 45vw, 560px"
               priority={false}
             />
             {/* readability scrim — softens bright covers in light mode */}

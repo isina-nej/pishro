@@ -332,7 +332,7 @@ export function PhoneStoryScroller({
                       progress={smoothProgress}
                       stepIndex={i}
                       stepCount={steps.length}
-                      priority={i === 0}
+                      priority={false}
                       isNearActive={Math.abs(i - index) <= 1}
                       isActive={i === index}
                     />

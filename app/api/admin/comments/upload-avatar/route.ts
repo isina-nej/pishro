@@ -14,6 +14,7 @@ import {
 import { requireAdminUser } from "@/lib/admin/landing-cms-api";
 import { saveFileToStorage } from "@/lib/services/storage-adapter";
 import { randomSlug, sniffUpload } from "@/lib/upload-validation";
+import { optimizePublicImage } from "@/lib/services/image-optimization";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
@@ -48,11 +49,12 @@ export async function POST(req: NextRequest) {
 
     const timestamp = Date.now();
     const random = await randomSlug(5);
-    const filename = `avatar_${timestamp}_${random}.${detected.ext}`;
+    const image = await optimizePublicImage(buffer, { maxWidth: 512, maxHeight: 512 });
+    const filename = `avatar_${timestamp}_${random}.${image.ext}`;
     const url = await saveFileToStorage(
-      buffer,
+      image.buffer,
       `comments/avatars/${filename}`,
-      detected.mime
+      image.mime
     );
 
     return createdResponse({ url, fileName: filename }, "عکس پروفایل آپلود شد");
