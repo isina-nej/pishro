@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { TransactionType, TransactionStatus } from "@prisma/client";
 import { createEnrollmentsFromOrder } from "@/lib/helpers/transaction";
 import { verifyPayment } from "@/lib/payment";
+import { resolvePaymentBaseUrl } from "@/lib/payment/base-url";
 
 async function handleVerify(req: Request) {
   try {
@@ -11,14 +12,7 @@ async function handleVerify(req: Request) {
     // The order ID comes from our request callback URL; gateway callback parameters
     // are untrusted and must not override it.
     if (!orderId) return NextResponse.json({ error: "شناسه سفارش ارسال نشده است" }, { status: 400 });
-    const configuredBaseUrl = process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/$/, "");
-    const rawBaseUrl =
-      configuredBaseUrl ||
-      (url.origin.startsWith("http") ? url.origin : "https://pishrosarmaye.com");
-    const baseUrl =
-      process.env.NODE_ENV === "production"
-        ? (rawBaseUrl.startsWith("https://") ? rawBaseUrl : rawBaseUrl.replace(/^http:\/\//, "https://"))
-        : rawBaseUrl;
+    const baseUrl = resolvePaymentBaseUrl(process.env.NEXT_PUBLIC_BASE_URL, url.origin);
     const redirect = (result: "success" | "failed" | "pending") =>
       NextResponse.redirect(`${baseUrl}/checkout/result?result=${result}&orderId=${encodeURIComponent(orderId)}`);
 

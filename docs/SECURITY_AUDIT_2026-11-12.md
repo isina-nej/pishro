@@ -36,3 +36,6 @@ Scope: targeted source review of high-risk authentication, payment, SMS, deploym
 - File-serving APIs deny direct access to private backups, raw videos, temporary and HLS objects, even when the underlying S3 client can read them.
 - Published free books and admin previews remain readable; paid books require a future entitlement model and are intentionally not accessible through generic download routes.
 - Private content is no longer sent with public immutable cache headers in the legacy book route.
+
+- Production payment callback URLs now require a trusted HTTPS `NEXT_PUBLIC_BASE_URL` and never derive their redirect target from an untrusted request Origin/Host header.
+- Local uploads classified private are no longer cached by shared caches.

@@ -152,9 +152,11 @@ export async function GET(req: NextRequest) {
     }
 
     const isExact = resolvedPath === fullPath;
-    const cacheControl = isExact
-      ? 'public, max-age=31536000, immutable'
-      : 'public, max-age=300, stale-while-revalidate=86400';
+    const cacheControl = isPrivateStoragePath(pathParam)
+      ? 'private, no-store'
+      : isExact
+        ? 'public, max-age=31536000, immutable'
+        : 'public, max-age=300, stale-while-revalidate=86400';
     const etag = `"${fileStat.size.toString(16)}-${Math.trunc(fileStat.mtimeMs).toString(16)}"`;
     const ifNoneMatch = req.headers.get('if-none-match');
     if (ifNoneMatch && ifNoneMatch === etag) {

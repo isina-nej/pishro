@@ -9,6 +9,7 @@ import {
   ErrorCodes,
 } from "@/lib/api-response";
 import { initiatePayment } from "@/lib/payment";
+import { resolvePaymentBaseUrl } from "@/lib/payment/base-url";
 
 export async function POST(req: Request) {
   try {
@@ -80,16 +81,11 @@ export async function POST(req: Request) {
       return validationError({ amount: "مبلغ سفارش معتبر نیست یا کمتر از حداقل زیبال است" });
     }
 
-    // Resolve public base URL with fallback to production origin
-    const configuredBaseUrl = process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/$/, "");
-    const reqOrigin = req.headers.get("origin")?.replace(/\/$/, "");
-    const rawBaseUrl =
-      configuredBaseUrl ||
-      (reqOrigin && reqOrigin.startsWith("http") ? reqOrigin : "https://pishrosarmaye.com");
-    const baseUrl =
-      process.env.NODE_ENV === "production"
-        ? (rawBaseUrl.startsWith("https://") ? rawBaseUrl : rawBaseUrl.replace(/^http:\/\//, "https://"))
-        : rawBaseUrl;
+    // Never use a caller-controlled Origin header for production callbacks.
+    const baseUrl = resolvePaymentBaseUrl(
+      process.env.NEXT_PUBLIC_BASE_URL,
+      req.headers.get("origin")
+    );
 
     // ✅ Create order in DB with OrderItems
     const order = await prisma.order.create({
