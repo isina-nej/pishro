@@ -32,6 +32,7 @@ export const CoursesHero = ({ stats }: CoursesHeroProps) => {
           src={copy("hero.image", "/images/courses/landing.jpg")}
           alt="courses-background"
           fill
+          sizes="100vw"
           className="object-cover"
           priority
         />

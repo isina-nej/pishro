@@ -1,139 +1,122 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
-import { motion } from "framer-motion";
-import { Loader2, ShieldCheck, CreditCard, ArrowLeft } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Clock3, CreditCard, ExternalLink, LockKeyhole, ShieldCheck } from "lucide-react";
 
-const PaymentProcessing = () => {
+/** Payment gateway URL must be provided by checkout; disallow script/data URLs. */
+function canNavigateToGateway(url: string) {
+  try {
+    const target = new URL(url);
+    return target.protocol === "https:" ||
+      (target.protocol === "http:" && ["localhost", "127.0.0.1"].includes(target.hostname));
+  } catch {
+    return false;
+  }
+}
+
+export default function PaymentProcessing() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const payUrl = searchParams?.get("payUrl");
   const orderId = searchParams?.get("orderId");
+  const validUrl = Boolean(payUrl && canNavigateToGateway(payUrl));
   const [countdown, setCountdown] = useState(3);
 
   useEffect(() => {
-    if (!payUrl) {
-      router.push("/checkout");
+    if (!validUrl || !payUrl) {
+      router.replace("/checkout");
       return;
     }
-
-    // Countdown timer
-    const timer = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          // Redirect to payment gateway
-          window.location.href = payUrl;
-          return 0;
-        }
-        return prev - 1;
-      });
+    const timer = window.setInterval(() => {
+      setCountdown((prev) => Math.max(0, prev - 1));
     }, 1000);
+    return () => window.clearInterval(timer);
+  }, [payUrl, validUrl, router]);
 
-    return () => clearInterval(timer);
-  }, [payUrl, router]);
+  // Navigation is an effect, not a side effect of a state updater.
+  useEffect(() => {
+    if (validUrl && payUrl && countdown === 0) window.location.assign(payUrl);
+  }, [countdown, payUrl, validUrl]);
 
-  if (!payUrl) {
-    return null;
+  if (!validUrl || !payUrl) {
+    return <div role="status" className="min-h-[70vh] bg-[var(--home-bg)] px-4 py-24 text-center text-sm text-muted-foreground">در حال بازگشت به سبد خرید...</div>;
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary via-card to-accent flex items-center justify-center p-4">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        className="bg-card rounded-2xl shadow-2xl p-8 md:p-12 max-w-md w-full text-center"
-      >
-        {/* Animated Icon */}
-        <motion.div
-          animate={{
-            scale: [1, 1.1, 1],
-            rotate: [0, 5, -5, 0],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="mb-6 flex justify-center"
-        >
-          <div className="relative">
-            <div className="absolute inset-0 bg-primary rounded-full blur-xl opacity-50"></div>
-            <div className="relative bg-gradient-to-br from-primary to-accent p-6 rounded-full">
-              <CreditCard className="w-12 h-12 text-primary-foreground" />
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Title */}
-        <h1 className="text-3xl font-bold text-foreground mb-3">
-          در حال انتقال به درگاه پرداخت
-        </h1>
-
-        {/* Description */}
-        <p className="text-muted-foreground mb-8">
-          لطفاً صبر کنید. شما به درگاه امن پرداخت منتقل می‌شوید...
-        </p>
-
-        {/* Countdown */}
-        <motion.div
-          key={countdown}
-          initial={{ scale: 1.2, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="mb-8"
-        >
-          <div className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
-            {countdown}
-          </div>
-          <p className="text-sm text-muted-foreground mt-2">ثانیه تا انتقال</p>
-        </motion.div>
-
-        {/* Loading Spinner */}
-        <div className="flex justify-center mb-6">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+    <main dir="rtl" className="relative flex min-h-[calc(100vh-5rem)] items-center justify-center overflow-hidden bg-[var(--home-bg)] px-4 py-12 text-foreground sm:py-20">
+      <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_55%_0%,hsl(var(--primary)/.11),transparent_60%),radial-gradient(ellipse_at_0%_85%,hsl(var(--premium)/.10),transparent_48%)]" />
+      <div className="relative w-full max-w-2xl">
+        <div className="mb-6 flex justify-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-card/75 px-4 py-2 text-xs font-bold text-primary">
+            <LockKeyhole className="size-4" /> مرحله انتقال به درگاه
+          </span>
         </div>
 
-        {/* Security Badge */}
-        <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground mb-6">
-          <ShieldCheck className="w-5 h-5 text-primary" />
-          <span>اتصال امن و رمزنگاری شده</span>
-        </div>
-
-        {/* Order Info */}
-        {orderId && (
-          <div className="bg-muted rounded-lg p-4 text-right">
-            <div className="flex justify-between items-center text-sm">
-              <span className="text-muted-foreground">شماره سفارش:</span>
-              <span className="font-mono font-semibold text-foreground">
-                {orderId.substring(0, 8)}...
+        <section aria-labelledby="redirect-title" className="overflow-hidden rounded-[2rem] border border-border/75 bg-card shadow-[0_30px_90px_-40px_rgba(0,0,0,.3)]">
+          <div className="relative overflow-hidden border-b border-border/70 px-6 pb-9 pt-10 text-center sm:px-10 sm:pt-12">
+            <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-primary/5 to-transparent" />
+            <div className="relative mx-auto mb-6 flex size-20 items-center justify-center rounded-[1.65rem] border border-primary/20 bg-primary/10 text-primary">
+              <CreditCard className="size-9" strokeWidth={1.6} />
+              <span className="absolute -left-2 -top-2 flex size-7 items-center justify-center rounded-full bg-card text-success shadow-sm">
+                <CheckCircle2 className="size-5" />
               </span>
             </div>
+            <p className="mb-2 text-xs font-bold text-premium">آخرین مرحله پیش از پرداخت</p>
+            <h1 id="redirect-title" className="text-2xl font-black text-foreground sm:text-3xl">در حال انتقال به درگاه پرداخت</h1>
+            <p className="mx-auto mt-4 max-w-md text-sm leading-8 text-muted-foreground">
+              سفارش شما آماده است. تا چند لحظه دیگر به صفحه درگاه منتقل می‌شوید؛ اطلاعات کارت را فقط در خود درگاه وارد کنید.
+            </p>
+            <div role="status" aria-live="polite" className="mx-auto mt-7 inline-flex items-baseline gap-2 rounded-2xl bg-primary/5 px-6 py-4 text-primary">
+              <span className="text-4xl font-black tabular-nums">{countdown.toLocaleString("fa-IR")}</span>
+              <span className="text-sm font-semibold">ثانیه تا انتقال</span>
+            </div>
+            <div className="mx-auto mt-5 h-1.5 max-w-[300px] overflow-hidden rounded-full bg-primary/10" aria-hidden>
+              <div className="h-full rounded-full bg-primary transition-[width] duration-500" style={{ width: String(((3 - countdown) / 3) * 100) + "%" }} />
+            </div>
           </div>
-        )}
 
-        {/* Manual redirect button (in case auto-redirect fails) */}
-        <motion.button
-          onClick={() => (window.location.href = payUrl)}
-          className="mt-6 w-full bg-gradient-to-r from-primary to-accent text-primary-foreground py-3 px-6 rounded-lg font-semibold hover:brightness-110 transition-all duration-300 flex items-center justify-center gap-2 group"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          <span>انتقال دستی به درگاه</span>
-          <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-        </motion.button>
+          <div className="space-y-6 p-6 sm:p-8">
+            <div className="grid grid-cols-3 gap-2" aria-label="وضعیت فرایند">
+              <div className="rounded-xl border border-success/20 bg-success/5 px-2 py-3 text-center">
+                <CheckCircle2 className="mx-auto mb-2 size-5 text-success" />
+                <span className="text-[11px] font-bold text-success">ثبت سفارش</span>
+              </div>
+              <div className="rounded-xl border border-primary/25 bg-primary/5 px-2 py-3 text-center">
+                <CreditCard className="mx-auto mb-2 size-5 text-primary" />
+                <span className="text-[11px] font-bold text-primary">ورود به درگاه</span>
+              </div>
+              <div className="rounded-xl border border-border bg-muted/30 px-2 py-3 text-center">
+                <Clock3 className="mx-auto mb-2 size-5 text-muted-foreground" />
+                <span className="text-[11px] font-bold text-muted-foreground">تأیید پرداخت</span>
+              </div>
+            </div>
 
-        {/* Back to cart link */}
-        <button
-          onClick={() => router.push("/checkout")}
-          className="mt-4 text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          بازگشت به سبد خرید
-        </button>
-      </motion.div>
-    </div>
+            {orderId && (
+              <div className="flex flex-col gap-1 rounded-xl border border-border/70 bg-muted/35 px-4 py-3 text-xs sm:flex-row sm:items-center sm:justify-between">
+                <span className="text-muted-foreground">شناسه سفارش</span>
+                <span dir="ltr" className="break-all font-mono font-semibold text-foreground">{orderId}</span>
+              </div>
+            )}
+
+            <button
+              type="button"
+              onClick={() => window.location.assign(payUrl)}
+              className="flex min-h-13 w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3.5 text-sm font-black text-primary-foreground transition-all hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            >
+              <ExternalLink className="size-4.5" />
+              انتقال دستی به درگاه
+              <ArrowLeft className="size-4" />
+            </button>
+
+            <div className="flex flex-col items-center justify-between gap-3 text-xs text-muted-foreground sm:flex-row">
+              <span className="inline-flex items-center gap-2"><ShieldCheck className="size-4 text-primary" /> نتیجه پرداخت پس از بررسی سرور مشخص می‌شود.</span>
+              <Link href="/checkout" className="font-semibold text-primary underline-offset-4 hover:underline">بازگشت به سبد خرید</Link>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
   );
-};
-
-export default PaymentProcessing;
+}

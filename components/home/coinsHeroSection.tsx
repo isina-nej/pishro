@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { shouldPlayAmbientVideo } from "@/lib/utils/media-playback";
 
 type CoinsHeroSectionProps = {
   title?: string;
@@ -18,51 +19,48 @@ export default function CoinsHeroSection({
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
+    const video = videoRef.current;
+    if (!video) return;
 
-    v.muted = true;
-    v.defaultMuted = true;
-    v.loop = true;
-    v.playsInline = true;
-    v.setAttribute("muted", "");
-    v.setAttribute("playsinline", "");
-    v.setAttribute("autoplay", "");
+    let inView = true;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const saveData = Boolean(
+      (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData
+    );
+    video.muted = true;
+    video.defaultMuted = true;
+    video.loop = true;
+    video.playsInline = true;
+    if (reducedMotion || saveData) video.preload = "none";
 
+    const canPlay = () => shouldPlayAmbientVideo({ inView, reducedMotion, saveData, hidden: document.hidden });
     const tryPlay = () => {
-      const p = v.play();
-      if (p && typeof p.catch === "function") p.catch(() => {});
+      if (!canPlay()) return;
+      void video.play().catch(() => undefined);
     };
-
-    tryPlay();
-
     const onPause = () => {
-      if (v.ended || document.hidden) return;
-      tryPlay();
+      // Do not restart a video that was intentionally paused offscreen.
+      if (!video.ended && canPlay()) tryPlay();
     };
     const onVisibility = () => {
-      if (!document.hidden) tryPlay();
+      if (document.hidden) video.pause();
+      else tryPlay();
     };
 
-    v.addEventListener("pause", onPause);
+    video.addEventListener("pause", onPause);
     document.addEventListener("visibilitychange", onVisibility);
-
-    let io: IntersectionObserver | undefined;
-    if (typeof IntersectionObserver === "function") {
-      io = new IntersectionObserver(
-        (entries) => {
-          if (entries.some((e) => e.isIntersecting)) tryPlay();
-          else v.pause();
-        },
-        { threshold: 0.15 }
-      );
-      io.observe(v);
-    }
+    const observer = new IntersectionObserver(([entry]) => {
+      inView = Boolean(entry.isIntersecting);
+      if (canPlay()) tryPlay();
+      else video.pause();
+    }, { threshold: 0.15 });
+    observer.observe(video);
 
     return () => {
-      v.removeEventListener("pause", onPause);
+      video.removeEventListener("pause", onPause);
       document.removeEventListener("visibilitychange", onVisibility);
-      io?.disconnect();
+      observer.disconnect();
+      video.pause();
     };
   }, []);
 
@@ -98,7 +96,6 @@ export default function CoinsHeroSection({
           <video
             ref={videoRef}
             src={videoSrc}
-            autoPlay
             muted
             loop
             playsInline

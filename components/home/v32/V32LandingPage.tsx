@@ -7,41 +7,61 @@ import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import { DynamicIcon } from "@/components/site/DynamicIcon";
 import "./v32-landing.css";
 
-/* ── animated typing counter ── */
-function useAnimatedNumber(target: number, durationMs = 1800) {
+/* Each animated number owns its state; the whole landing page no longer
+   re-renders at 60fps for four independent counters. */
+function useAnimatedNumber(target: number, durationMs = 1500) {
   const [value, setValue] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
 
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setValue(target);
+      return;
+    }
+
     let running = false;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting || running) return;
-        running = true;
-        const start = performance.now();
-        const tick = (now: number) => {
-          const t = Math.min((now - start) / durationMs, 1);
-          // ease-out quad
-          const eased = 1 - (1 - t) * (1 - t);
-          setValue(Math.round(eased * target));
-          if (t < 1) requestAnimationFrame(tick);
-        };
-        requestAnimationFrame(tick);
-      },
-      { threshold: 0.3 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
+    let frame = 0;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting || running) return;
+      running = true;
+      const started = performance.now();
+      const tick = (now: number) => {
+        const progress = Math.min((now - started) / durationMs, 1);
+        const eased = 1 - (1 - progress) ** 2;
+        setValue(Math.round(eased * target));
+        if (progress < 1) frame = requestAnimationFrame(tick);
+      };
+      frame = requestAnimationFrame(tick);
+      observer.disconnect();
+    }, { threshold: 0.3 });
+
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+    };
   }, [target, durationMs]);
 
   return { value, ref };
 }
 
+const faNumberFormatter = new Intl.NumberFormat("fa-IR");
 function formatFa(n: number) {
-  return new Intl.NumberFormat("fa-IR").format(n);
+  return faNumberFormatter.format(n);
+}
+
+function AnimatedCounter({ target, percentage = false }: { target: number; percentage?: boolean }) {
+  const { value, ref } = useAnimatedNumber(target);
+  return (
+    <span ref={ref}>
+      {percentage
+        ? `+${formatFa(Math.floor(value / 10))}٫${formatFa(value % 10)}٪`
+        : formatFa(value)}
+    </span>
+  );
 }
 
 type V32LandingPageProps = {
@@ -56,7 +76,6 @@ export default function V32LandingPage({
   phoneTel = contactInfo.phoneTel,
 }: V32LandingPageProps) {
   const copy = usePublicCopy("home-v32");
-  const phoneAmount = useAnimatedNumber(200_000_000);
 
   const faDigits = "۰۱۲۳۴۵۶۷۸۹";
   const arDigits = "٠١٢٣٤٥٦٧٨٩";
@@ -84,11 +103,8 @@ export default function V32LandingPage({
         ""
       )
     ) || 526825000;
-  const splitBalance = useAnimatedNumber(splitBalanceTarget);
   const row1Tenths = Math.round(toLatinRate(String(copy("split.row1Value", "+۲٫۱٪"))) * 10);
   const row2Tenths = Math.round(toLatinRate(String(copy("split.row2Value", "+۱٫۴٪"))) * 10);
-  const row1 = useAnimatedNumber(row1Tenths);
-  const row2 = useAnimatedNumber(row2Tenths);
 
   const splitCtaHref = copy("split.ctaLink", "") || `tel:${phoneTel}`;
 
@@ -151,9 +167,7 @@ export default function V32LandingPage({
                     <span />
                   </div>
                   <h3>{copy("phone.title", "سرمایه‌گذاری")}</h3>
-                  <div ref={phoneAmount.ref} className="v32-amt">
-                    {formatFa(phoneAmount.value)}
-                  </div>
+                  <div className="v32-amt"><AnimatedCounter target={200_000_000} /></div>
                   <div className="v32-phone-sub" style={{ fontSize: 12, marginTop: 4 }}>
                     {copy("phone.currency", "تومان")}
                   </div>
@@ -220,9 +234,7 @@ export default function V32LandingPage({
             <div className="v32-shot-label" style={{ fontSize: 12 }}>
               {copy("split.balanceLabel", "موجودی سبد")}
             </div>
-            <div ref={splitBalance.ref} style={{ fontSize: 28, fontWeight: 800, margin: "6px 0 12px" }}>
-              {formatFa(splitBalance.value)}
-            </div>
+            <div style={{ fontSize: 28, fontWeight: 800, margin: "6px 0 12px" }}><AnimatedCounter target={splitBalanceTarget} /></div>
             <svg viewBox="0 0 280 80" width="100%" height="80" aria-hidden>
               <path
                 d="M0,60 C40,55 60,30 90,38 C120,46 140,18 180,22 C220,26 240,10 280,16"
@@ -241,7 +253,7 @@ export default function V32LandingPage({
               }}
             >
               <span>{copy("split.row1Label", "سبد ثابت")}</span>
-              <span ref={row1.ref}>+{formatFa(Math.floor(row1.value / 10))}٫{formatFa(row1.value % 10)}٪</span>
+              <AnimatedCounter target={row1Tenths} percentage />
             </div>
             <div
               className="v32-shot-row"
@@ -253,7 +265,7 @@ export default function V32LandingPage({
               }}
             >
               <span>{copy("split.row2Label", "سبد ترکیبی")}</span>
-              <span ref={row2.ref}>+{formatFa(Math.floor(row2.value / 10))}٫{formatFa(row2.value % 10)}٪</span>
+              <AnimatedCounter target={row2Tenths} percentage />
             </div>
           </div>
         </div>

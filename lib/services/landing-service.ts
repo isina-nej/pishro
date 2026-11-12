@@ -1,6 +1,7 @@
 // @/lib/services/landing-service.ts
 
 import * as db from "@/lib/db";
+import { cache } from "react";
 import { prisma } from "@/lib/prisma";
 import type {
   HomeLanding,
@@ -52,7 +53,7 @@ function logLandingError(scope: string, error: unknown) {
 
 // ==================== HOME LANDING ====================
 
-export async function getHomeLandingData() {
+export const getHomeLandingData = cache(async () => {
   try {
     const [homeLanding] = await db.query<HomeLandingRow>(
       `SELECT * FROM HomeLanding WHERE published = true ORDER BY \`order\` ASC LIMIT 1`
@@ -62,7 +63,7 @@ export async function getHomeLandingData() {
     logLandingError("getHomeLandingData", error);
     return null;
   }
-}
+});
 
 export async function getMobileScrollerSteps() {
   try {
@@ -86,33 +87,26 @@ export async function getAboutPageData() {
 
     if (!aboutPage) return null;
 
-    const resumeItems = await db.query<ResumeItem>(
-      `SELECT * FROM ResumeItem WHERE published = true AND aboutPageId = ? ORDER BY \`order\` ASC`,
-      [aboutPage.id]
-    );
-
-    const teamMembers = await db.query<TeamMember>(
-      `SELECT * FROM TeamMember WHERE published = true AND aboutPageId = ? ORDER BY \`order\` ASC`,
-      [aboutPage.id]
-    );
-
-    const certificates = await db.query<Certificate>(
-      `SELECT * FROM Certificate WHERE published = true AND aboutPageId = ? ORDER BY \`order\` ASC`,
-      [aboutPage.id]
-    );
-
-    const news = await prisma.newsArticle.findMany({
-      where: { published: true },
-      orderBy: { publishedAt: "desc" },
-      take: 3,
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        excerpt: true,
-        category: true,
-      },
-    });
+    const [resumeItems, teamMembers, certificates, news] = await Promise.all([
+      db.query<ResumeItem>(
+        `SELECT * FROM ResumeItem WHERE published = true AND aboutPageId = ? ORDER BY \`order\` ASC`,
+        [aboutPage.id]
+      ),
+      db.query<TeamMember>(
+        `SELECT * FROM TeamMember WHERE published = true AND aboutPageId = ? ORDER BY \`order\` ASC`,
+        [aboutPage.id]
+      ),
+      db.query<Certificate>(
+        `SELECT * FROM Certificate WHERE published = true AND aboutPageId = ? ORDER BY \`order\` ASC`,
+        [aboutPage.id]
+      ),
+      prisma.newsArticle.findMany({
+        where: { published: true },
+        orderBy: { publishedAt: "desc" },
+        take: 3,
+        select: { id: true, title: true, slug: true, excerpt: true, category: true },
+      }),
+    ]);
 
     return {
       ...aboutPage,
@@ -151,15 +145,16 @@ export async function getInvestmentPlansData() {
 
     if (!data) return null;
 
-    const plans = await db.query<InvestmentPlan>(
-      `SELECT * FROM InvestmentPlan WHERE published = true AND investmentPlansId = ? ORDER BY \`order\` ASC`,
-      [data.id]
-    );
-
-    const tags = await db.query<InvestmentTag>(
-      `SELECT * FROM InvestmentTag WHERE published = true AND investmentPlansId = ? ORDER BY \`order\` ASC`,
-      [data.id]
-    );
+    const [plans, tags] = await Promise.all([
+      db.query<InvestmentPlan>(
+        `SELECT * FROM InvestmentPlan WHERE published = true AND investmentPlansId = ? ORDER BY \`order\` ASC`,
+        [data.id]
+      ),
+      db.query<InvestmentTag>(
+        `SELECT * FROM InvestmentTag WHERE published = true AND investmentPlansId = ? ORDER BY \`order\` ASC`,
+        [data.id]
+      ),
+    ]);
 
     return {
       ...data,

@@ -15,6 +15,7 @@ import {
 import { requireAdminUser } from "@/lib/admin/landing-cms-api";
 import { saveFileToStorage } from "@/lib/services/storage-adapter";
 import { randomSlug, sniffUpload } from "@/lib/upload-validation";
+import { optimizePublicImage } from "@/lib/services/image-optimization";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
@@ -95,8 +96,11 @@ export async function POST(req: NextRequest) {
 
     const timestamp = Date.now();
     const random = await randomSlug(5);
-    const filename = `${kindRaw}_${timestamp}_${random}.${ext}`;
-    const url = await saveFileToStorage(buffer, `branding/${filename}`, mime);
+    // CMS section images use kind=logo; preserve SVG, ICO, and OG bytes.
+    const image = kindRaw === "logo" && ["jpg", "png", "webp"].includes(ext)
+      ? await optimizePublicImage(buffer) : null;
+    const filename = `${kindRaw}_${timestamp}_${random}.${image?.ext ?? ext}`;
+    const url = await saveFileToStorage(image?.buffer ?? buffer, `branding/${filename}`, image?.mime ?? mime);
 
     return createdResponse(
       { url, fileName: filename, kind: kindRaw },

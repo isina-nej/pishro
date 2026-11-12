@@ -57,6 +57,7 @@ export const NewsHero = ({ stats }: NewsHeroProps) => {
           src={copy("hero.image", "/images/news/header.jpg")}
           alt="news-background"
           fill
+          sizes="100vw"
           className="object-cover"
           priority
         />
