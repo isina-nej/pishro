@@ -136,19 +136,24 @@ export default async function RootLayout({
           aria-label="بارگذاری"
           dangerouslySetInnerHTML={{
             __html: `
-              <div class="boot-logo-wrap" aria-hidden="true">
-                <span class="boot-ring"></span>
-                <span class="boot-ring-slow"></span>
-                <div class="boot-logo-box">
-                  <img src="${escapeHtml(splashLogo)}" alt="" width="88" height="88" />
+              <div class="site-loading-content">
+                <span class="site-loading-overline" aria-hidden="true">تجربه‌ای روان‌تر، لحظه‌ای دیگر</span>
+                <div class="site-loading-mark" aria-hidden="true">
+                  <span class="site-loading-mark-outline"></span>
+                  <div class="site-loading-mark-inner">
+                    <img class="site-loading-logo" src="${escapeHtml(splashLogo)}" alt="" width="70" height="70" />
+                  </div>
                 </div>
+                <strong class="site-loading-name">${escapeHtml(chrome.siteName)}</strong>
+                <p class="site-loading-message">در حال آماده‌سازی صفحه</p>
+                <div class="site-loading-track" aria-hidden="true"><span class="site-loading-indicator"></span></div>
               </div>
             `,
           }}
         />
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){function d(){var s=document.getElementById('site-boot-splash');if(!s||s.classList.contains('is-done'))return;s.classList.add('is-done');setTimeout(function(){s.remove()},320)}if(document.readyState==='complete'){d()}else{window.addEventListener('load',d,{once:true})}setTimeout(d,2200)})();`,
+            __html: `(function(){var id='site-boot-splash';function d(){var s=document.getElementById(id);if(!s||s.classList.contains('is-done'))return;s.classList.add('is-done');setTimeout(function(){s.remove()},240)}if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){requestAnimationFrame(d)},{once:true})}else{requestAnimationFrame(d)}window.addEventListener('pageshow',d,{once:true});setTimeout(d,8000)})();,
           }}
         />
         <BootSplashDismiss />
