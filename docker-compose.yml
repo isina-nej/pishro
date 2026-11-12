@@ -4,13 +4,12 @@ services:
     image: mysql:8.0
     container_name: pishro-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: pishro_password
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}
       MYSQL_DATABASE: pishro
       MYSQL_USER: pishro_user
-      MYSQL_PASSWORD: pishro_password
-      MYSQL_ROOT_HOST: "%"
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in .env}
     ports:
-      - "3306:3306"
+      - "127.0.0.1:3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./prisma/migrations:/docker-entrypoint-initdb.d
@@ -29,7 +28,7 @@ services:
     image: node:20-alpine
     container_name: pishro-video-processor
     working_dir: /app
-    command: sh -c "npm install && npx tsx scripts/video-processor-worker.ts"
+    command: sh -c "npm ci --no-audit --no-fund && npx tsx scripts/video-processor-worker.ts"
 
     volumes:
       # پروژه
@@ -64,7 +63,7 @@ services:
         apk add --no-cache ffmpeg
         echo '✅ FFmpeg installed'
         echo '🚀 Starting video processor worker...'
-        npm install
+        npm ci --no-audit --no-fund
         npx tsx scripts/video-processor-worker.ts
       "
 
@@ -127,7 +126,7 @@ services:
       sh -c "
         echo '📦 Installing mysql-client...'
         apk add --no-cache mysql-client tzdata
-        npm install --omit=dev --no-audit --no-fund
+        npm ci --no-audit --no-fund
         echo \"$$BACKUP_CRON cd /app && npx tsx scripts/backup-database.ts >> /proc/1/fd/1 2>&1\" > /etc/crontabs/root
         echo '🕒 Backup scheduled:' \"$$BACKUP_CRON\"
         crond -f -l 8

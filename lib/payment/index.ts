@@ -53,6 +53,11 @@ export function getPaymentAdapter(gatewayName?: string): PaymentAdapter {
   return adapters.zarinpal;
 }
 
+/** Prevent crediting orders through sandbox or simulated payments in production. */
+export function isProductionPaymentBlocked(gateway: string, sandbox: boolean, environment: string | undefined = process.env.NODE_ENV): boolean {
+  return environment === "production" && (gateway === "test" || sandbox);
+}
+
 /**
  * Initiates payment for an order using the active gateway config
  */
@@ -62,10 +67,13 @@ export async function initiatePayment(
 ): Promise<PaymentRequestOutput & { gateway: string }> {
   const config = await getPaymentGatewayConfig();
   const gateway = overrideGateway || config.gateway;
+  if (isProductionPaymentBlocked(gateway, config.sandbox)) {
+    return { success: false, gateway, errorMessage: 'درگاه آزمایشی در محیط عملیاتی غیرفعال است' };
+  }
 
   // If no API key is provided and not in test gateway, fall back to mock in non-prod
   if (!config.apiKey && gateway !== "test" && !(gateway === "zibal" && config.sandbox)) {
-    if (process.env.NODE_ENV !== "production" || config.sandbox) {
+    if (process.env.NODE_ENV !== "production") {
       console.warn(`[Payment] No API key for ${gateway}. Falling back to test adapter.`);
       const mockAdapter = adapters.test;
       const res = await mockAdapter.requestPayment(input, config);
@@ -96,6 +104,10 @@ export async function verifyPayment(
 ): Promise<PaymentVerifyOutput> {
   const config = await getPaymentGatewayConfig();
   const gateway = gatewayName || config.gateway;
+  if (isProductionPaymentBlocked(gateway, config.sandbox)) {
+    // Keep orders pending; never mark simulated callbacks as paid or failed.
+    return { success: false, retryable: true, errorMessage: 'درگاه آزمایشی در محیط عملیاتی غیرفعال است' };
+  }
 
   if (gateway === "test") {
     return adapters.test.verifyPayment(input, config);

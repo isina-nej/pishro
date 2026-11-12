@@ -87,11 +87,12 @@ export async function middleware(request: NextRequest) {
     return withPathname(request);
   }
 
+  // Refresh validates a separate refresh JWT; it must work after access expiry.
+  const isRefresh = pathname === '/api/admin/auth/refresh';
   const isProtectedRoute =
     pathname.startsWith('/admin/') ||
     pathname.startsWith('/api/admin/auth/me') ||
-    pathname.startsWith('/api/admin/auth/refresh') ||
-    (pathname.startsWith('/api/admin') && !pathname.includes('/login') && !pathname.includes('/logout'));
+    (pathname.startsWith('/api/admin') && !pathname.includes('/login') && !pathname.includes('/logout') && !isRefresh);
 
   if (isProtectedRoute) {
     const token = getAdminTokenFromRequest(request);
