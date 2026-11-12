@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import { Suspense } from "react";
 import { query } from "@/lib/db";
 import CoursesPageContent from "@/components/courses/coursesPageContent";
 import type { Course, Category } from "@/lib/types/db";
@@ -100,51 +99,47 @@ function convertCategory(row: CategoryRow): Category {
 
 async function getCoursesGroupedByCategory() {
   try {
-    // Fetch all published categories
-    const categories = await query<CategoryRow>(
-      `SELECT id, slug, title, description, icon, published, \`order\`, createdAt, updatedAt
-       FROM Category 
-       WHERE published = true 
-       ORDER BY \`order\` ASC`
-    );
+    // Two concurrent reads instead of N+2 queries (one SQL request per category).
+    // This prevents DB connection-pool pressure as categories grow.
+    const [categories, publishedRows] = await Promise.all([
+      query<CategoryRow>(`
+        SELECT id, slug, title, description, icon, published, \`order\`, createdAt, updatedAt
+        FROM Category
+        WHERE published = true
+        ORDER BY \`order\` ASC
+      `),
+      query<CourseRow>(`
+        SELECT id, subject, price, img, rating, description, discountPercent, time, students,
+               videosCount, instructor, slug, categoryId, level, status, published, createdAt, updatedAt
+        FROM Course
+        WHERE published = true
+        ORDER BY createdAt DESC
+      `),
+    ]);
 
-    // For each category, fetch its published courses
-    const categoriesWithCourses = await Promise.all(
-      (categories || []).map(async (categoryRow) => {
-        const courseRows = await query<CourseRow>(
-          `SELECT id, subject, price, img, rating, description, discountPercent, time, students, 
-                  videosCount, instructor, slug, categoryId, level, status, published, createdAt, updatedAt
-           FROM Course 
-           WHERE categoryId = ? AND published = true 
-           ORDER BY createdAt DESC`,
-          [categoryRow.id]
-        );
+    const grouped = new Map<string, Course[]>();
+    for (const category of categories) grouped.set(category.id, []);
+    const uncategorized: Course[] = [];
 
-        const courses = (courseRows || []).map(convertCourse);
-        const category = convertCategory(categoryRow);
+    for (const row of publishedRows) {
+      const course = convertCourse(row);
+      if (row.categoryId && grouped.has(row.categoryId)) {
+        grouped.get(row.categoryId)!.push(course);
+      } else if (!row.categoryId) {
+        uncategorized.push(course);
+      }
+    }
 
-        return {
-          ...category,
-          courses,
-        };
-      })
-    );
+    const result = categories.map((row) => ({
+      ...convertCategory(row),
+      courses: grouped.get(row.id) ?? [],
+    }));
 
-    // Also fetch courses without a category or with uncategorized ones
-    const uncategorizedRows = await query<CourseRow>(
-      `SELECT id, subject, price, img, rating, description, discountPercent, time, students, 
-              videosCount, instructor, slug, categoryId, level, status, published, createdAt, updatedAt
-       FROM Course 
-       WHERE (categoryId IS NULL OR categoryId = '') AND published = true 
-       ORDER BY createdAt DESC`
-    );
-
-    // If there are uncategorized courses, add them to a special "Other" category
-    if (uncategorizedRows && uncategorizedRows.length > 0) {
-      categoriesWithCourses.push({
-        id: 'uncategorized',
-        slug: 'uncategorized',
-        title: 'سایر دوره‌ها',
+    if (uncategorized.length) {
+      result.push({
+        id: "uncategorized",
+        slug: "uncategorized",
+        title: "سایر دوره‌ها",
         description: undefined,
         icon: undefined,
         published: true,
@@ -152,11 +147,10 @@ async function getCoursesGroupedByCategory() {
         order: 999,
         tagIds: [],
         metaKeywords: [],
-        courses: uncategorizedRows.map(convertCourse),
+        courses: uncategorized,
       });
     }
-
-    return categoriesWithCourses;
+    return result;
   } catch (error) {
     console.error("Error fetching courses by category:", error);
     return [];
@@ -168,15 +162,7 @@ export default async function AllCoursesPage() {
 
   return (
     <main className="public-page-shell w-full">
-      <Suspense
-        fallback={
-          <div className="h-screen flex items-center justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-myPrimary" />
-          </div>
-        }
-      >
-        <CoursesPageContent categoriesWithCourses={categoriesWithCourses} />
-      </Suspense>
+      <CoursesPageContent categoriesWithCourses={categoriesWithCourses} />
     </main>
   );
 }
