@@ -25,7 +25,7 @@ function maskPhone(phone: string): string {
 }
 
 /** Send SMS via Mock Service (for development/testing) */
-export async function sendSmsMock(phone: string, text: string) {
+export async function sendSmsMock(_phone: string, _text: string) {
   if (!isMockSmsAllowed()) throw new Error("Mock SMS is disabled in production");
   console.log("[SMS] Simulated delivery (development only)");
   return "Mock SMS sent";

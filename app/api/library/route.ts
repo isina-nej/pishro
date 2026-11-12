@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { getBooks, getBookBySlug, createBook as createBookDb } from "@/lib/services/library-mysql";
 import {
   successResponse,
@@ -40,7 +41,7 @@ export async function GET(req: NextRequest) {
     });
 
     return paginatedResponse(
-      result.items,
+      result.items.map((book) => book.price && book.price > 0 ? { ...book, fileUrl: null, audioUrl: null } : book),
       result.pagination.page,
       result.pagination.limit,
       result.pagination.total
@@ -56,6 +57,9 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const admin = await getAdminAuth(req);
+    if (!admin) return errorResponse("Unauthorized", ErrorCodes.UNAUTHORIZED, undefined, HttpStatus.UNAUTHORIZED);
+    if (admin.role !== "ADMIN") return errorResponse("Forbidden", ErrorCodes.FORBIDDEN, undefined, HttpStatus.FORBIDDEN);
     const body = await req.json();
 
     const {
