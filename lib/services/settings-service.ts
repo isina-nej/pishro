@@ -7,7 +7,6 @@
 
 import { prisma } from "@/lib/prisma";
 import { cache } from "react";
-import { revalidateTag, unstable_cache } from "next/cache";
 import { SiteSettings } from "@prisma/client";
 import {
   DEFAULT_PALETTE_ID,
@@ -101,11 +100,11 @@ export type PublicUserPanelTheme = {
 
 /**
  * Single shared read for the public shell. React cache deduplicates calls within
- * one server render, including metadata and nested layouts. It does not keep
- * stale branding or public content across requests after a CMS update.
+ * one server render, including metadata and nested layouts. No cross-request
+ * cache, so updates show immediately and this also works in CLI/test contexts.
  * Explicitly select public fields: payment keys must never enter this snapshot.
  */
-const readPublicSettings = cache(unstable_cache(() => prisma.siteSettings.findFirst({
+const readPublicSettings = cache(() => prisma.siteSettings.findFirst({
   select: {
     paletteId: true,
     themeMode: true,
@@ -121,7 +120,7 @@ const readPublicSettings = cache(unstable_cache(() => prisma.siteSettings.findFi
     publicContent: true,
     homeLayout: true,
   },
-}), ["public-site-settings-v1"], { revalidate: 30, tags: ["public-site-settings"] }));
+}));
 
 /**
  * Drop footer links that resolve to hidden pages; fall back to always-visible
@@ -288,7 +287,6 @@ export async function updatePublicContent(
       updatedAt: new Date(),
     },
   });
-  revalidateTag("public-site-settings");
 
   return resolvePublicContent(parsed);
 }
@@ -319,7 +317,6 @@ export async function resetPublicContent(
         updatedAt: new Date(),
       },
     });
-    revalidateTag("public-site-settings");
     return resolvePublicContent(currentOverrides);
   }
 
@@ -331,7 +328,6 @@ export async function resetPublicContent(
       updatedAt: new Date(),
     },
   });
-  revalidateTag("public-site-settings");
 
   return resolvePublicContent(null);
 }
@@ -416,7 +412,6 @@ export async function updateSettings(
       where: { id: existingSettings.id },
       data: prismaData,
     });
-    revalidateTag("public-site-settings");
 
     return updated;
   } catch (error) {
