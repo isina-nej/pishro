@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { getAdminAuth } from "@/lib/auth-simple";
 import { getBookBySlug, updateBook, deleteBook, getBookById } from "@/lib/services/library-mysql";
 import {
   successResponse,
@@ -16,7 +17,6 @@ export async function GET(
 
     // Try to get by ID first, then by slug
     let book = await getBookById(id);
-    const foundById = Boolean(book);
     
     if (!book) {
       book = await getBookBySlug(id);
@@ -31,7 +31,9 @@ export async function GET(
       );
     }
 
-    if (!foundById && book.bookStatus && book.bookStatus !== "PUBLISHED") {
+    const admin = await getAdminAuth(req);
+    const isAdmin = admin?.role === "ADMIN";
+    if (book.bookStatus !== "PUBLISHED" && !isAdmin) {
       return errorResponse(
         "این کتاب در دسترس عموم نیست",
         ErrorCodes.NOT_FOUND,
@@ -40,7 +42,10 @@ export async function GET(
       );
     }
 
-    return successResponse(book, "کتاب با موفقیت دریافت شد");
+    const visibleBook = isAdmin || !book.price || book.price <= 0
+      ? book
+      : { ...book, fileUrl: null, audioUrl: null };
+    return successResponse(visibleBook, "کتاب با موفقیت دریافت شد");
   } catch (error) {
     console.error("Error fetching book:", error);
     return errorResponse(
@@ -55,6 +60,9 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const admin = await getAdminAuth(req);
+    if (!admin) return errorResponse("Unauthorized", ErrorCodes.UNAUTHORIZED, undefined, HttpStatus.UNAUTHORIZED);
+    if (admin.role !== "ADMIN") return errorResponse("Forbidden", ErrorCodes.FORBIDDEN, undefined, HttpStatus.FORBIDDEN);
     const { id } = await params;
     const body = await req.json();
 
@@ -126,6 +134,9 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const admin = await getAdminAuth(req);
+    if (!admin) return errorResponse("Unauthorized", ErrorCodes.UNAUTHORIZED, undefined, HttpStatus.UNAUTHORIZED);
+    if (admin.role !== "ADMIN") return errorResponse("Forbidden", ErrorCodes.FORBIDDEN, undefined, HttpStatus.FORBIDDEN);
     const { id } = await params;
 
     // Delete book

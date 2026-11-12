@@ -73,17 +73,9 @@ export async function POST(req: Request) {
       );
     }
 
+    // Wait for provider acknowledgement before reporting successful delivery.
+    await sendOtpViaPattern(phone, code);
     recordOtpSend(`reset:${phone}`);
-
-
-    // Send OTP via IPPanel Pattern asynchronously (don't block on it)
-    sendOtpViaPattern(phone, code).catch((err) => {
-      // Silent fail - user can always retry
-      console.error("OTP send failed:", {
-        phone,
-        error: err instanceof Error ? err.message : String(err),
-      });
-    });
 
     return successResponse({ expiresAt }, "کد بازیابی با موفقیت ارسال شد");
   } catch (err) {

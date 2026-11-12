@@ -112,6 +112,9 @@ export async function POST(req: NextRequest) {
         HttpStatus.UNAUTHORIZED
       );
     }
+    if (adminAuth.role !== "ADMIN") {
+      return errorResponse("Only administrators may create books", ErrorCodes.FORBIDDEN, undefined, HttpStatus.FORBIDDEN);
+    }
 
     const body = await req.json();
     const {

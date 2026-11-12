@@ -54,12 +54,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // بررسی دسترسی کاربر به ویدیو
-    // اگر ویدیو به یک درس متصل باشد، باید کاربر در دوره آن درس ثبت‌نام کرده باشد
-    const _lessons = await import("@/lib/services/lesson-service").then(
-      (m) => m.getLessonsByCourse
-    );
-
+    // Never grant a stream token solely because a video has no associated lesson.
+    // Even unlinked/private video IDs must be denied to ordinary users.
     // پیدا کردن درس‌هایی که این ویدیو دارند
     const { prisma } = await import("@/lib/prisma");
     const lessonsWithVideo = await prisma.lesson.findMany({
@@ -67,15 +63,18 @@ export async function POST(req: NextRequest) {
       select: { id: true, courseId: true },
     });
 
-    // بررسی دسترسی کاربر به حداقل یکی از درس‌ها
-    if (lessonsWithVideo.length > 0) {
-      const hasAccess = await Promise.any(
+    // Promise.any() returns the first resolved boolean (including false), not
+    // the first true value. Deny unlinked videos and allow any entitled lesson.
+    if (session.user.role !== "ADMIN") {
+      if (lessonsWithVideo.length === 0) {
+        return unauthorizedResponse("این ویدیو در دسترس نیست");
+      }
+      const checks = await Promise.all(
         lessonsWithVideo.map((lesson) =>
           checkUserAccessToLesson(session.user.id!, lesson.id)
         )
-      ).catch(() => false);
-
-      if (!hasAccess && session.user.role !== "ADMIN") {
+      );
+      if (!checks.some(Boolean)) {
         return unauthorizedResponse(
           "شما به این ویدیو دسترسی ندارید. لطفاً ابتدا در دوره مربوطه ثبت‌نام کنید."
         );

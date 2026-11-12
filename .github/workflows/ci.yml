@@ -50,7 +50,17 @@ jobs:
       - name: Type-check
         run: npx tsc --noEmit
 
+      # Build-time, non-sensitive placeholders. They NEVER connect to production.
+      # Server startup still requires actual DB secrets and a reachable database.
       - name: Build
+        env:
+          DB_USER: ci_build
+          DB_PASSWORD: ci_build_only_not_a_real_password
+          DB_NAME: pishro_ci
+          DATABASE_URL: mysql://ci_build:ci_build_only_not_a_real_password@127.0.0.1:3306/pishro_ci
+          NEXTAUTH_SECRET: ci-only-nextauth-secret-for-compilation
+          ADMIN_JWT_SECRET: ci-only-admin-secret-for-compilation
+          VIDEO_TOKEN_SECRET: ci-only-video-secret-for-compilation
         run: npm run build
 
       # The three integration suites skip themselves when no app answers at

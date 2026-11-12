@@ -15,15 +15,20 @@ const MODIR_API_URL = process.env.SMS_API_URL || "https://sms.modirpayamak.com";
 // Determine which SMS service to use
 const SMS_SERVICE = process.env.SMS_SERVICE || "modirpayamak";
 
-/**
- * Send SMS via Mock Service (for development/testing)
- */
-export async function sendSmsMock(phone: string, text: string) {
-  console.log("📱 MOCK SMS SERVICE");
-  console.log("├─ To:", phone);
-  console.log("├─ Message:", text);
-  console.log("└─ Status: ✅ Sent successfully (mock)");
-  return `Mock SMS sent to ${phone}`;
+/** Simulated SMS must never count as delivered on a live site. */
+export function isMockSmsAllowed(environment: string | undefined = process.env.NODE_ENV): boolean {
+  return environment !== "production";
+}
+
+function maskPhone(phone: string): string {
+  return phone.length >= 5 ? `${phone.slice(0, 3)}***${phone.slice(-2)}` : "***";
+}
+
+/** Send SMS via Mock Service (for development/testing) */
+export async function sendSmsMock(_phone: string, _text: string) {
+  if (!isMockSmsAllowed()) throw new Error("Mock SMS is disabled in production");
+  console.log("[SMS] Simulated delivery (development only)");
+  return "Mock SMS sent";
 }
 export async function sendSmsMelipayamak(phone: string, text: string) {
   if (!MELI_USERNAME || !MELIPAYAMAK_API_KEY || !MELI_SENDER) {
@@ -49,7 +54,7 @@ export async function sendSmsMelipayamak(phone: string, text: string) {
   const timeoutId = setTimeout(() => controller.abort(), 15000);
 
   try {
-    console.log("Sending SMS via Melipayamak to", phone);
+    console.log("Sending SMS via Melipayamak to", maskPhone(phone));
     const res = await fetch(url, {
       method: "POST",
       headers: {
@@ -62,7 +67,7 @@ export async function sendSmsMelipayamak(phone: string, text: string) {
     clearTimeout(timeoutId);
 
     const responseText = await res.text();
-    console.log("Melipayamak response status:", res.status, "text:", responseText.substring(0, 200));
+    console.log("Melipayamak response status:", res.status);
 
     // Parse XML response - extract numeric value
     // Melipayamak returns: <string xmlns="...">VALUE</string>
@@ -71,29 +76,29 @@ export async function sendSmsMelipayamak(phone: string, text: string) {
     const responseValue = match ? match[1].trim() : null;
     
     if (!res.ok) {
-      console.error("Melipayamak HTTP error:", res.status, responseText);
+      console.error("Melipayamak HTTP error:", res.status);
       throw new Error(`Melipayamak HTTP error: ${res.status}`);
     }
 
     if (!responseValue) {
-      console.error("Melipayamak invalid response format:", responseText);
+      console.error("Melipayamak invalid response format");
       throw new Error("Invalid response format from Melipayamak API");
     }
 
     // Check if response is an error message or indicates failure
     if (responseText.includes("Error") || responseText.toLowerCase().includes("fault")) {
-      console.error("Melipayamak API error:", responseText);
+      console.error("Melipayamak API error");
       throw new Error("Failed to send SMS via Melipayamak");
     }
 
     // Try to parse as number - positive numbers = success
     const msgId = parseInt(responseValue, 10);
     if (isNaN(msgId) || msgId <= 0) {
-      console.error(`Melipayamak returned failure code: ${responseValue}. Full response: ${responseText}`);
+      console.error(`Melipayamak returned failure code: ${responseValue}`);
       throw new Error(`SMS sending failed with response code: ${responseValue}`);
     }
 
-    console.log("✅ SMS sent successfully to", phone, "- Message ID:", msgId);
+    console.log("✅ SMS sent successfully to", maskPhone(phone), "- Message ID:", msgId);
     return responseText;
   } catch (error) {
     clearTimeout(timeoutId);
@@ -210,8 +215,7 @@ export async function sendBulkSmsMelipayamak(
  */
 export async function sendSmsModirpayamak(phone: string, text: string) {
   if (!MODIR_USERNAME || !MODIR_PASSWORD) {
-    console.warn("ModirPayamak credentials not configured, SMS will not be sent");
-    return "ModirPayamak not configured";
+    throw new Error("ModirPayamak credentials not configured");
   }
 
   const url = `${MODIR_API_URL}/api/SendSms`;
@@ -241,10 +245,10 @@ export async function sendSmsModirpayamak(phone: string, text: string) {
     clearTimeout(timeoutId);
 
     const responseText = await res.text();
-    console.log("ModirPayamak response status:", res.status, "text:", responseText.substring(0, 200));
+    console.log("ModirPayamak response status:", res.status);
 
     if (!res.ok || responseText.includes("false") || responseText.includes("error")) {
-      console.error("ModirPayamak API error:", responseText);
+      console.error("ModirPayamak API error");
       throw new Error("Failed to send SMS via ModirPayamak");
     }
 
@@ -267,7 +271,7 @@ export async function sendSms(phone: string, text: string) {
     return sendSmsMock(phone, text);
   }
 
-  console.log(`🔔 SMS Request - Service: ${SMS_SERVICE}, Phone: ${phone}`);
+  console.log(`[SMS] Request - Service: ${SMS_SERVICE}, Phone: ${maskPhone(phone)}`);
   
   if (SMS_SERVICE === "modirpayamak") {
     try {
@@ -277,7 +281,8 @@ export async function sendSms(phone: string, text: string) {
       try {
         return await sendSmsMelipayamak(phone, text);
       } catch (fallbackError) {
-        console.error("Both SMS services failed, falling back to mock:", fallbackError);
+        if (!isMockSmsAllowed()) throw fallbackError;
+        console.warn("[SMS] Both providers failed; using development mock");
         return sendSmsMock(phone, text);
       }
     }
@@ -289,7 +294,8 @@ export async function sendSms(phone: string, text: string) {
       try {
         return await sendSmsModirpayamak(phone, text);
       } catch (fallbackError) {
-        console.error("Both SMS services failed, falling back to mock:", fallbackError);
+        if (!isMockSmsAllowed()) throw fallbackError;
+        console.warn("[SMS] Both providers failed; using development mock");
         return sendSmsMock(phone, text);
       }
     }
@@ -337,10 +343,9 @@ export async function sendOtpViaPattern(phone: string, code: string) {
     },
   };
 
-  console.log(`[OTP Pattern] 📱 Sending OTP to ${phoneE164}`);
+  console.log(`[OTP Pattern] Sending OTP to ${maskPhone(phoneE164)}`);
   console.log(`[OTP Pattern] Pattern: ${IPPANEL_PATTERN_CODE}`);
   console.log(`[OTP Pattern] From: ${IPPANEL_FROM_NUMBER}`);
-  console.log(`[OTP Pattern] Code: ${code}`);
 
   try {
     const response = await fetch("https://edge.ippanel.com/v1/api/send", {

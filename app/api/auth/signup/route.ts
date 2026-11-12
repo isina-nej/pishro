@@ -116,17 +116,9 @@ export async function POST(req: Request) {
       );
     }
 
+    // Wait for provider acknowledgement so failed deliveries are not shown as success.
+    await sendOtpViaPattern(phone, code);
     recordOtpSend(phone);
-
-    // Send OTP via IPPanel Pattern API asynchronously (don't block on it)
-    // Pattern templates are instant and don't need approval
-    sendOtpViaPattern(phone, code).catch((err) => {
-      // Silent fail - user is already registered, SMS delay won't block their signup
-      console.error("OTP send failed (will retry):", {
-        phone,
-        error: err instanceof Error ? err.message : String(err),
-      });
-    });
 
     return successResponse({ sent: true }, "کد تایید ارسال شد");
   } catch (error) {
