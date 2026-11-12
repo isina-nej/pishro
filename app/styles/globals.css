@@ -749,6 +749,18 @@ html.dark
   );
 }
 
+/* Route fallbacks have a short visual delay so fast transitions never flash a card. */
+.site-loading-screen:not(.site-loading-fullscreen) .site-loading-content {
+  animation: pishro-loader-appear .2s ease-out .16s both;
+}
+@keyframes pishro-loader-appear {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-loading-screen .site-loading-content { animation: none !important; }
+}
+
 /* ─── Pishro loading system: consistent with emerald + warm gold ─── */
 .site-loading-screen,
 #site-boot-splash {

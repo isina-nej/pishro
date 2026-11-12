@@ -48,8 +48,9 @@ function useAnimatedNumber(target: number, durationMs = 1500) {
   return { value, ref };
 }
 
+const faNumberFormatter = new Intl.NumberFormat("fa-IR");
 function formatFa(n: number) {
-  return new Intl.NumberFormat("fa-IR").format(n);
+  return faNumberFormatter.format(n);
 }
 
 function AnimatedCounter({ target, percentage = false }: { target: number; percentage?: boolean }) {

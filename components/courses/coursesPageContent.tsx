@@ -13,8 +13,10 @@ import { useVisibility } from "@/components/site/VisibilityProvider";
 import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
+type CourseIndexEntry = Pick<Course, "id" | "rating" | "students" | "published">;
+
 type CategoryWithCourses = Category & {
-  courses: Course[];
+  courses: CourseIndexEntry[];
 };
 
 interface CoursesPageContentProps {

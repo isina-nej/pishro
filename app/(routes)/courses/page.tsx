@@ -1,8 +1,7 @@
 import { Metadata } from "next";
 import { query } from "@/lib/db";
 import CoursesPageContent from "@/components/courses/coursesPageContent";
-import type { Course, Category } from "@/lib/types/db";
-import { CourseLevel, CourseStatus, Language } from "@/lib/types/db";
+import type { Category } from "@/lib/types/db";
 
 export const metadata: Metadata = {
   title: "همه دوره‌ها | پیشرو",
@@ -20,23 +19,10 @@ export const dynamic = 'force-dynamic';
 
 interface CourseRow {
   id: string;
-  subject: string;
-  price: number;
-  img: string | null;
-  rating: number | null;
-  description: string | null;
-  discountPercent: number | null;
-  time: string | null;
-  students: number | null;
-  videosCount: number | null;
-  instructor: string | null;
-  slug: string | null;
   categoryId: string | null;
-  level: string | null;
-  status: string;
-  published: number; // MySQL returns 1/0
-  createdAt: Date | string;
-  updatedAt: Date | string;
+  rating: number | null;
+  students: number | null;
+  published: number;
 }
 
 interface CategoryRow {
@@ -51,33 +37,14 @@ interface CategoryRow {
   updatedAt: Date | string;
 }
 
-// Helper to convert MySQL row to Course type
-function convertCourse(row: CourseRow): Course {
+// Only these four fields are needed for the public hero stats and link mapping.
+// Course cards themselves come from the paginated API and must not be serialized twice.
+function convertCourseIndex(row: CourseRow) {
   return {
     id: row.id,
-    subject: row.subject,
-    price: row.price,
-    img: row.img || undefined,
-    rating: row.rating || undefined,
-    description: row.description || undefined,
-    discountPercent: row.discountPercent || undefined,
-    time: row.time || undefined,
-    students: row.students || undefined,
-    videosCount: row.videosCount || undefined,
-    createdAt: row.createdAt ? new Date(row.createdAt) : undefined,
-    updatedAt: row.updatedAt ? new Date(row.updatedAt) : undefined,
-    categoryId: row.categoryId || undefined,
-    slug: row.slug || undefined,
-    level: (row.level as CourseLevel) || undefined,
-    language: Language.FA,
-    prerequisites: [],
-    learningGoals: [],
-    instructor: row.instructor || undefined,
-    status: CourseStatus.ACTIVE,
-    published: !!row.published,
-    featured: false,
-    views: 0,
-    tagIds: [],
+    rating: row.rating || 0,
+    students: row.students || 0,
+    published: Boolean(row.published),
   };
 }
 
@@ -109,20 +76,19 @@ async function getCoursesGroupedByCategory() {
         ORDER BY \`order\` ASC
       `),
       query<CourseRow>(`
-        SELECT id, subject, price, img, rating, description, discountPercent, time, students,
-               videosCount, instructor, slug, categoryId, level, status, published, createdAt, updatedAt
+        SELECT id, categoryId, rating, students, published
         FROM Course
         WHERE published = true
         ORDER BY createdAt DESC
       `),
     ]);
 
-    const grouped = new Map<string, Course[]>();
+    const grouped = new Map<string, ReturnType<typeof convertCourseIndex>[]>();
     for (const category of categories) grouped.set(category.id, []);
-    const uncategorized: Course[] = [];
+    const uncategorized: ReturnType<typeof convertCourseIndex>[] = [];
 
     for (const row of publishedRows) {
-      const course = convertCourse(row);
+      const course = convertCourseIndex(row);
       if (row.categoryId && grouped.has(row.categoryId)) {
         grouped.get(row.categoryId)!.push(course);
       } else if (!row.categoryId) {
