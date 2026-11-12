@@ -10,6 +10,7 @@ import {
 } from '@/lib/services/storage-adapter';
 import { getS3ObjectStream, isPrivateStoragePath } from '@/lib/services/storage-s3';
 import { buildPublicUrl } from '@/lib/services/s3-client';
+import { canReadPrivateBookUpload } from '@/lib/services/private-upload-access';
 
 export const runtime = 'nodejs';
 
@@ -62,6 +63,16 @@ export async function GET(req: NextRequest) {
     );
   }
 
+  // The app's S3 credentials can read private objects: authorize first.
+  const normalized = pathParam.replace(/\\/g, '/').replace(/^\/+/, '');
+  const publicTrailer = /^courses\/[^/]+\/trailer\/[^/]+$/i.test(normalized);
+  if (isPrivateStoragePath(normalized) && !publicTrailer &&
+      !(await canReadPrivateBookUpload(req, normalized))) {
+    return NextResponse.json({ error: 'Access denied' }, {
+      status: 403, headers: { 'Cache-Control': 'private, no-store' },
+    });
+  }
+
   // مسیر پیمایش دایرکتوری را حتی در حالت ابری هم مسدود می‌کنیم
   let fullPath: string;
   try {
@@ -100,6 +111,8 @@ export async function GET(req: NextRequest) {
         ? 'public, max-age=86400, stale-while-revalidate=604800'
         : 'private, no-store',
       'Accept-Ranges': 'bytes',
+      'X-Content-Type-Options': 'nosniff',
+      'Content-Security-Policy': 'sandbox',
       'X-Robots-Tag': 'noindex, nofollow, noarchive',
     };
     if (object.contentLength !== undefined) {
@@ -184,7 +197,8 @@ export async function GET(req: NextRequest) {
       'Accept-Ranges': 'bytes',
       // Served bytes are user uploads — never let the browser sniff/execute them.
       'X-Content-Type-Options': 'nosniff',
-      'Content-Disposition': 'inline',
+      'Content-Disposition': ['text/html', 'application/octet-stream'].includes(getMimeType(resolvedPath)) ? 'attachment' : 'inline',
+      'Content-Security-Policy': 'sandbox',
     };
     if (partial) headers['Content-Range'] = `bytes ${start}-${end}/${totalSize}`;
     return new NextResponse(Readable.toWeb(fileStream) as ReadableStream, {

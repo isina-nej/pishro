@@ -29,3 +29,10 @@ Scope: targeted source review of high-risk authentication, payment, SMS, deploym
 - [ ] Run `npm ci`, `npm run lint`, `npx tsc --noEmit`, `npm test`, `npm run build` in CI.
 - [ ] Backup and migrate database; test auth, OTP, payment callback, uploads and rollback in staging before production deployment.
 - [ ] Monitor errors, failed SMS, payment status, backups, disk and memory.
+
+## Additional critical authorization findings
+
+- Previously unauthenticated public-library mutations now require ADMIN.
+- File-serving APIs deny direct access to private backups, raw videos, temporary and HLS objects, even when the underlying S3 client can read them.
+- Published free books and admin previews remain readable; paid books require a future entitlement model and are intentionally not accessible through generic download routes.
+- Private content is no longer sent with public immutable cache headers in the legacy book route.

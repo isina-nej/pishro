@@ -3,13 +3,14 @@ import { readFile, access } from 'fs/promises';
 import { join } from 'path';
 import { constants } from 'fs';
 import { BOOKS_UPLOAD_PATHS } from '@/lib/upload-config';
+import { canReadPrivateBookUpload } from '@/lib/services/private-upload-access';
 import {
   assertSafeStoragePath,
   getStorageConfig,
 } from '@/lib/services/storage-adapter';
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ type: string; filename: string }> }
 ) {
   try {
@@ -25,6 +26,12 @@ export async function GET(
 
     if (filename.includes("/") || filename.includes("\\") || filename.includes("\0")) {
       return NextResponse.json({ error: 'نام فایل نامعتبر' }, { status: 400 });
+    }
+
+    if (type !== 'covers' && !(await canReadPrivateBookUpload(request, `books/${type}/${filename}`))) {
+      return NextResponse.json({ error: 'Access denied' }, {
+        status: 403, headers: { 'Cache-Control': 'private, no-store' },
+      });
     }
 
     // Get upload path based on type — assertSafeStoragePath blocks ../ escape.
@@ -75,7 +82,9 @@ export async function GET(
     return new NextResponse(fileContent, {
       headers: {
         'Content-Type': contentType,
-        'Cache-Control': usedFallback ? 'public, max-age=300' : 'public, max-age=31536000, immutable',
+        'Cache-Control': type === 'covers' ? (usedFallback ? 'public, max-age=300' : 'public, max-age=31536000, immutable') : 'private, no-store',
+        'X-Content-Type-Options': 'nosniff',
+        'Content-Security-Policy': 'sandbox',
       },
     });
   } catch (error) {
