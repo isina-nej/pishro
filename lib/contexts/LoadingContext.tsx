@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useCallback, useContext, useMemo, useRef, useState, type ReactNode } from "react";
 
 interface LoadingContextType {
   isLoading: boolean;
@@ -8,49 +8,41 @@ interface LoadingContextType {
   startLoading: () => void;
   stopLoading: () => void;
 }
-
 const LoadingContext = createContext<LoadingContextType | undefined>(undefined);
 
-export const LoadingProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const [isLoading, setIsLoading] = useState(false);
+/**
+ * Manual pending work tracking. No global MutationObserver, artificial
+ * 2-second auto-hide, or route-change polling that can leave ghost loaders.
+ */
+export function LoadingProvider({ children }: { children: ReactNode }) {
+  const [isLoading, setLoading] = useState(false);
+  const pending = useRef(0);
 
-  useEffect(() => {
-    const handleStart = () => setIsLoading(true);
-
-    // Listen to router events
-    window.addEventListener("popstate", handleStart);
-
-    // Use a MutationObserver to detect route changes
-    let currentPath = window.location.pathname;
-    const observer = new MutationObserver(() => {
-      if (window.location.pathname !== currentPath) {
-        currentPath = window.location.pathname;
-        setIsLoading(true);
-        // Auto-hide after 2 seconds if not already hidden
-        const timer = setTimeout(() => setIsLoading(false), 2000);
-        return () => clearTimeout(timer);
-      }
-    });
-
-    return () => {
-      window.removeEventListener("popstate", handleStart);
-      observer.disconnect();
-    };
+  const setIsLoading = useCallback((value: boolean) => {
+    pending.current = value ? 1 : 0;
+    setLoading(value);
   }, []);
 
-  return (
-    <LoadingContext.Provider value={{ isLoading, setIsLoading, startLoading: () => setIsLoading(true), stopLoading: () => setIsLoading(false) }}>
-      {children}
-    </LoadingContext.Provider>
-  );
-};
+  const startLoading = useCallback(() => {
+    pending.current += 1;
+    setLoading(true);
+  }, []);
 
-export const useLoading = () => {
+  const stopLoading = useCallback(() => {
+    pending.current = Math.max(0, pending.current - 1);
+    if (pending.current === 0) setLoading(false);
+  }, []);
+
+  const context = useMemo(
+    () => ({ isLoading, setIsLoading, startLoading, stopLoading }),
+    [isLoading, setIsLoading, startLoading, stopLoading]
+  );
+
+  return <LoadingContext.Provider value={context}>{children}</LoadingContext.Provider>;
+}
+
+export function useLoading() {
   const context = useContext(LoadingContext);
-  if (!context) {
-    throw new Error("useLoading must be used within LoadingProvider");
-  }
+  if (!context) throw new Error("useLoading must be used within LoadingProvider");
   return context;
-};
+}

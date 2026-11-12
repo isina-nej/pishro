@@ -32,7 +32,11 @@ const dbConfig = {
   database: process.env.DB_NAME || 'pishro',
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0,
+  // Bound pending work; unbounded pool queues turn traffic bursts into minute-long hangs.
+  queueLimit: 100,
+  connectTimeout: 10_000,
+  maxIdle: 10,
+  idleTimeout: 60_000,
   enableKeepAlive: true,
 };
 
@@ -49,19 +53,38 @@ function logDbError(operation: string, error: unknown) {
   });
 }
 
+const configuredSlowThreshold = Number(process.env.SLOW_DB_QUERY_MS || 500);
+const slowThresholdMs = Number.isFinite(configuredSlowThreshold) && configuredSlowThreshold > 0
+  ? configuredSlowThreshold
+  : 500;
+
+/**
+ * Pool wait + SQL execution latency. Never log parameters/SQL: they may contain
+ * sensitive account details. This makes real production bottlenecks observable.
+ */
 async function withConnection<T>(
   operation: string,
   work: (connection: mysql.PoolConnection) => Promise<T>
 ): Promise<T> {
-  const connection = await pool.getConnection();
+  const started = performance.now();
+  let connection: mysql.PoolConnection | null = null;
 
   try {
+    connection = await pool.getConnection();
     return await work(connection);
   } catch (error) {
     logDbError(operation, error);
     throw error;
   } finally {
-    connection.release();
+    connection?.release();
+    const elapsed = performance.now() - started;
+    if (elapsed >= slowThresholdMs) {
+      console.warn("[DB] Slow operation", {
+        operation,
+        durationMs: Math.round(elapsed),
+        thresholdMs: slowThresholdMs,
+      });
+    }
   }
 }
 

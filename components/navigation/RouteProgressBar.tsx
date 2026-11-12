@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
+import { isInternalPageNavigation } from "@/lib/navigation/progress";
 
 /**
  * Only show progress when navigation is truly slow. The old indicator fired
@@ -44,11 +45,7 @@ export default function RouteProgressBar() {
           anchor.dataset.noProgress !== undefined ||
           (anchor.target && anchor.target !== "_self")) return;
 
-      let url: URL;
-      try { url = new URL(anchor.href, window.location.href); } catch { return; }
-      if (url.origin === window.location.origin && url.pathname !== window.location.pathname) {
-        start();
-      }
+      if (isInternalPageNavigation(window.location.href, anchor.href)) start();
     };
 
     const onPopState = () => {
