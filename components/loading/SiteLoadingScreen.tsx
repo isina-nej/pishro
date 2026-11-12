@@ -8,6 +8,7 @@ type SiteLoadingScreenProps = {
   className?: string;
   logoUrl?: string;
   siteName?: string;
+  message?: string;
 };
 
 /**
@@ -19,6 +20,7 @@ export default function SiteLoadingScreen({
   className,
   logoUrl = DEFAULT_LOGO_URL,
   siteName = DEFAULT_SITE_NAME,
+  message = "در حال آماده‌سازی صفحه",
 }: SiteLoadingScreenProps) {
   return (
     <section
@@ -46,7 +48,7 @@ export default function SiteLoadingScreen({
           </div>
         </div>
         <div className="site-loading-name">{siteName}</div>
-        <p className="site-loading-message">در حال آماده‌سازی صفحه</p>
+        <p className="site-loading-message">{message}</p>
         <div className="site-loading-track" aria-hidden="true">
           <span className="site-loading-indicator" />
         </div>
