@@ -47,7 +47,7 @@ export default function PayMain() {
                         {portfolio ? <CreditCard className="size-5" /> : <BookOpen className="size-5" />}
                       </span>
                       <div className="min-w-0">
-                        <span className="mb-1 block text-[11px] font-bold text-muted-foreground">مورد {String(idx + 1).toLocaleString("fa-IR")}</span>
+                        <span className="mb-1 block text-[11px] font-bold text-muted-foreground">مورد {(idx + 1).toLocaleString("fa-IR")}</span>
                         <h3 className="line-clamp-2 text-sm font-bold leading-6 text-foreground sm:text-base">{title}</h3>
                         {pricing.saved > 0 && (
                           <p className="mt-2 inline-flex items-center gap-1 rounded-full bg-success/10 px-2.5 py-1 text-xs font-medium text-success">
