@@ -30,17 +30,15 @@ export default function PaymentProcessing() {
       return;
     }
     const timer = window.setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          window.clearInterval(timer);
-          window.location.assign(payUrl);
-          return 0;
-        }
-        return prev - 1;
-      });
+      setCountdown((prev) => Math.max(0, prev - 1));
     }, 1000);
     return () => window.clearInterval(timer);
   }, [payUrl, validUrl, router]);
+
+  // Navigation is an effect, not a side effect of a state updater.
+  useEffect(() => {
+    if (validUrl && payUrl && countdown === 0) window.location.assign(payUrl);
+  }, [countdown, payUrl, validUrl]);
 
   if (!validUrl || !payUrl) {
     return <div role="status" className="min-h-[70vh] bg-[var(--home-bg)] px-4 py-24 text-center text-sm text-muted-foreground">در حال بازگشت به سبد خرید...</div>;
