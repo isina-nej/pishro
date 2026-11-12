@@ -29,3 +29,18 @@
 **احتیاط:** استقرار روی main از طریق poll سرور انجام می‌شود؛ تا پیش از تأیید staging این PR به‌صورت Draft باقی بماند.
 
 - در اجرای CI، کش پایدار مخصوص Next.js خارج از context رندر دچار خطای `incrementalCache missing` می‌شد؛ برای سازگاری تست‌ها و مسیرهای CLI، خواندن تنظیمات عمومی به memoization مختص هر درخواست تبدیل شد.
+
+
+## Image performance follow-up (2026-11-12)
+
+- Newly uploaded public JPEG/PNG/WebP assets are resized/re-encoded once with
+  Sharp when smaller than the source. Course thumbnails, gallery, book covers,
+  user/comment avatars, and CMS raster sections are covered.
+- SVG, ICO, OG and animations/videos are preserved. No existing image is
+  overwritten and no database migration or reset is required.
+- Repaired invalid responsive sizes on book covers, added image sizes for
+  hero and team photos, optimized eligible small logos, and removed hidden
+  mobile-story preloads. Reduced requested image derivative size variants.
+- Real-world TTFB/image-cache measurements require staging or server access.
+  The server was reported 98% full: back up and reclaim space safely *before*
+  building or warming image caches. Do not delete volumes or user uploads.
