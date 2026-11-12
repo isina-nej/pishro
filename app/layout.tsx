@@ -153,7 +153,7 @@ export default async function RootLayout({
         />
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){var id='site-boot-splash';function d(){var s=document.getElementById(id);if(!s||s.classList.contains('is-done'))return;s.classList.add('is-done');setTimeout(function(){s.remove()},240)}if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){requestAnimationFrame(d)},{once:true})}else{requestAnimationFrame(d)}window.addEventListener('pageshow',d,{once:true});setTimeout(d,8000)})();,
+            __html: `(function(){var id='site-boot-splash';function d(){var s=document.getElementById(id);if(!s||s.classList.contains('is-done'))return;s.classList.add('is-done');setTimeout(function(){s.remove()},240)}if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){requestAnimationFrame(d)},{once:true})}else{requestAnimationFrame(d)}window.addEventListener('pageshow',d,{once:true});setTimeout(d,8000)})();`,
           }}
         />
         <BootSplashDismiss />
