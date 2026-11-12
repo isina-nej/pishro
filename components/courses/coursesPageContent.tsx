@@ -11,7 +11,8 @@ import { CoursesFilterControls } from "./coursesFilterControls";
 import CourseCard from "@/components/utils/courseCard";
 import { useVisibility } from "@/components/site/VisibilityProvider";
 import { usePublicCopy } from "@/components/site/PublicContentProvider";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { LoadingSpinner, useDelayedLoading } from "@/components/ui/loading-spinner";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type CourseIndexEntry = Pick<Course, "id" | "rating" | "students" | "published">;
 
@@ -59,6 +60,8 @@ const CoursesPageContent = ({
 
   const filteredCourses = flattenCoursePages(data?.pages);
   const total = getCoursesTotal(data?.pages);
+  const showCatalogLoading = useDelayedLoading(isLoading && filteredCourses.length === 0);
+  const showNextPageLoading = useDelayedLoading(isFetchingNextPage);
 
   // نگاشت دوره‌ها به دسته‌بندی‌ها برای لینک‌های صحیح
   const categoryOf = useMemo(() => {
@@ -192,6 +195,16 @@ const CoursesPageContent = ({
 
                   {filteredCourses.length > 0 || isLoading ? (
                     <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 md:gap-8 place-items-center">
+                      {showCatalogLoading && Array.from({ length: 6 }, (_, index) => (
+                        <div key={`course-loading-${index}`} className="w-full rounded-3xl border border-border/60 bg-card p-4">
+                          <Skeleton className="aspect-video w-full rounded-2xl" />
+                          <div className="mt-5 space-y-3">
+                            <Skeleton className="h-5 w-4/5" />
+                            <Skeleton className="h-4 w-3/5" />
+                            <Skeleton className="h-9 w-full rounded-xl" />
+                          </div>
+                        </div>
+                      ))}
                       {filteredCourses.map((course, index) => (
                         <motion.div
                           key={course.id}
@@ -231,7 +244,7 @@ const CoursesPageContent = ({
                   )}
 
                   <div ref={sentinelRef} aria-hidden className="h-1 w-full" />
-                  {isFetchingNextPage && (
+                  {showNextPageLoading && (
                     <div className="flex justify-center py-6">
                       <LoadingSpinner />
                     </div>
