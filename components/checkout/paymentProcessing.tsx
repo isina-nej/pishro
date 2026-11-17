@@ -2,46 +2,73 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useSearchParams, useRouter } from "next/navigation";
+import { PAYMENT_HANDOFF_KEY, readPaymentHandoff } from "@/lib/payment-handoff";
+import { useSearchParams } from "next/navigation";
 import { ArrowLeft, CheckCircle2, Clock3, CreditCard, ExternalLink, LockKeyhole, ShieldCheck } from "lucide-react";
-
-/** Payment gateway URL must be provided by checkout; disallow script/data URLs. */
-function canNavigateToGateway(url: string) {
-  try {
-    const target = new URL(url);
-    return target.protocol === "https:" ||
-      (target.protocol === "http:" && ["localhost", "127.0.0.1"].includes(target.hostname));
-  } catch {
-    return false;
-  }
-}
 
 export default function PaymentProcessing() {
   const searchParams = useSearchParams();
-  const router = useRouter();
-  const payUrl = searchParams?.get("payUrl");
   const orderId = searchParams?.get("orderId");
-  const validUrl = Boolean(payUrl && canNavigateToGateway(payUrl));
+  const [payUrl, setPayUrl] = useState<string | null>(null);
+  const [loaded, setLoaded] = useState(false);
   const [countdown, setCountdown] = useState(3);
 
   useEffect(() => {
-    if (!validUrl || !payUrl) {
-      router.replace("/checkout");
-      return;
+    let handoff = null;
+    try {
+      handoff = readPaymentHandoff(
+        window.sessionStorage.getItem(PAYMENT_HANDOFF_KEY),
+        orderId,
+        window.location.origin
+      );
+    } catch {
+      // Session storage can be unavailable in restrictive privacy modes.
     }
+    setPayUrl(handoff?.payUrl ?? null);
+    setLoaded(true);
+  }, [orderId]);
+
+  useEffect(() => {
+    if (!payUrl) return;
     const timer = window.setInterval(() => {
       setCountdown((prev) => Math.max(0, prev - 1));
     }, 1000);
     return () => window.clearInterval(timer);
-  }, [payUrl, validUrl, router]);
+  }, [payUrl]);
 
-  // Navigation is an effect, not a side effect of a state updater.
+  const navigate = () => {
+    if (!payUrl) return;
+    try {
+      window.sessionStorage.removeItem(PAYMENT_HANDOFF_KEY);
+    } catch {
+      // Removing a one-time handoff is best-effort.
+    }
+    window.location.assign(payUrl);
+  };
+
   useEffect(() => {
-    if (validUrl && payUrl && countdown === 0) window.location.assign(payUrl);
-  }, [countdown, payUrl, validUrl]);
+    if (payUrl && countdown === 0) navigate();
+    // Navigate only when the countdown reaches zero.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [countdown, payUrl]);
 
-  if (!validUrl || !payUrl) {
-    return <div role="status" className="min-h-[70vh] bg-[var(--home-bg)] px-4 py-24 text-center text-sm text-muted-foreground">در حال بازگشت به سبد خرید...</div>;
+  if (!loaded) {
+    return <div role="status" className="min-h-[70vh] bg-[var(--home-bg)] px-4 py-24 text-center text-sm text-muted-foreground">در حال آماده‌سازی انتقال به درگاه...</div>;
+  }
+
+  if (!payUrl) {
+    return (
+      <main dir="rtl" className="flex min-h-[70vh] items-center justify-center bg-[var(--home-bg)] px-4">
+        <section className="w-full max-w-lg rounded-3xl border border-border bg-card p-8 text-center shadow-lg">
+          <h1 className="text-xl font-black text-foreground">لینک انتقال به درگاه معتبر نیست</h1>
+          <p className="mt-4 text-sm leading-8 text-muted-foreground">برای امنیت شما، انتقال به درگاه فقط پس از ایجاد سفارش در همین مرورگر امکان‌پذیر است. اگر سفارشی ثبت کرده‌اید، وضعیت آن را قبل از پرداخت مجدد بررسی کنید.</p>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            <Link href="/profile/orders" className="rounded-xl bg-primary px-5 py-3 text-sm font-bold text-primary-foreground">بررسی سفارش‌ها</Link>
+            <Link href="/checkout" className="rounded-xl border border-border px-5 py-3 text-sm font-bold text-foreground">بازگشت به سبد خرید</Link>
+          </div>
+        </section>
+      </main>
+    );
   }
 
   return (
@@ -102,7 +129,7 @@ export default function PaymentProcessing() {
 
             <button
               type="button"
-              onClick={() => window.location.assign(payUrl)}
+              onClick={navigate}
               className="flex min-h-13 w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3.5 text-sm font-black text-primary-foreground transition-all hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               <ExternalLink className="size-4.5" />

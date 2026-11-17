@@ -8,6 +8,7 @@ import {
 } from "@/lib/services/checkout-service";
 import { userKeys } from "./useUser";
 import { checkoutLoginUrl } from "@/lib/checkout-redirect";
+import { PAYMENT_HANDOFF_KEY, serializePaymentHandoff } from "@/lib/payment-handoff";
 
 // ===========================
 // Query Keys
@@ -49,16 +50,29 @@ export function useCreateCheckout() {
   return useMutation<CheckoutResponse, Error, CheckoutRequest>({
     mutationFn: checkoutService.createCheckoutSession,
     onSuccess: (data) => {
-      if (data.ok && data.payUrl) {
-        // Invalidate کردن سفارشات و دوره‌های کاربر
+      if (data.ok && data.payUrl && data.orderId) {
+        const handoff = serializePaymentHandoff(
+          data.orderId, data.payUrl, window.location.origin
+        );
+        if (!handoff) {
+          toast.error("آدرس درگاه پرداخت معتبر نیست. لطفاً با پشتیبانی تماس بگیرید.");
+          return;
+        }
+
         queryClient.invalidateQueries({ queryKey: userKeys.all });
         queryClient.invalidateQueries({ queryKey: orderKeys.all });
 
-        // هدایت به صفحه processing (به جای redirect مستقیم)
-        const processingUrl = `/checkout/processing?payUrl=${encodeURIComponent(
-          data.payUrl
-        )}&orderId=${data.orderId}`;
-        window.location.href = processingUrl;
+        try {
+          // Never expose a one-time gateway URL in address-bar / referrer logs.
+          window.sessionStorage.setItem(PAYMENT_HANDOFF_KEY, handoff);
+          window.location.assign(
+            `/checkout/processing?orderId=${encodeURIComponent(data.orderId)}`
+          );
+        } catch {
+          // Some privacy modes block sessionStorage. Preserve payment flow by
+          // navigating straight to the validated URL returned by our API.
+          window.location.assign(data.payUrl);
+        }
       } else if (data.unauthorized) {
         window.location.assign(checkoutLoginUrl("/checkout?step=pay"));
       } else {
