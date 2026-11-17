@@ -16,7 +16,7 @@ import { useCartStore } from "@/stores/cart-store";
 import { useCreateCheckout } from "@/lib/hooks/useCheckout";
 import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import { checkoutLoginUrl } from "@/lib/checkout-redirect";
-import { displayCartPricing } from "@/lib/checkout-display";
+import { displayCartPricing, hasUnsupportedCheckoutItems } from "@/lib/checkout-display";
 
 const CheckoutPageContent = () => {
   const copy = usePublicCopy("checkout");
@@ -28,6 +28,7 @@ const CheckoutPageContent = () => {
   const items = useCartStore((state) => state.items);
   const createCheckoutMutation = useCreateCheckout();
   const priceSummary = useMemo(() => displayCartPricing(items), [items]);
+  const hasUnsupportedItems = useMemo(() => hasUnsupportedCheckoutItems(items), [items]);
 
   const requireLogin = () => {
     if (sessionStatus === "authenticated" && userId) return false;
@@ -47,6 +48,10 @@ const CheckoutPageContent = () => {
   };
 
   const handlePayment = () => {
+    if (hasUnsupportedItems) {
+      toast.error("پرداخت سبد سرمایه‌گذاری از این مسیر پشتیبانی نمی‌شود. لطفاً مورد سرمایه‌گذاری را از این سبد جدا کنید.");
+      return;
+    }
     if (items.length === 0 || createCheckoutMutation.isPending || requireLogin()) return;
     createCheckoutMutation.mutate(
       { items: items.map((item) => ({ courseId: item.id })) },
@@ -110,6 +115,12 @@ const CheckoutPageContent = () => {
         </header>
 
         {!isEmpty && <div className="mb-7"><StepProgress currentStep={step} /></div>}
+        {hasUnsupportedItems && (
+          <div role="alert" className="mb-6 rounded-2xl border border-premium/30 bg-premium/10 px-5 py-4 text-sm leading-7 text-foreground">
+            <strong className="mb-1 block font-black">توجه به اقلام سرمایه‌گذاری</strong>
+            این مسیر پرداخت در حال حاضر فقط سفارش دوره‌های آموزشی را می‌پذیرد. برای جلوگیری از ایجاد سفارش ناقص، ابتدا آیتم سرمایه‌گذاری را از این سبد جدا کنید؛ اقلام دوره محفوظ می‌مانند.
+          </div>
+        )}
 
         <AnimatePresence mode="wait" initial={false}>
           {isEmpty ? (
@@ -127,6 +138,7 @@ const CheckoutPageContent = () => {
                 handleContinue={handleContinue}
                 handlePayment={handlePayment}
                 loading={createCheckoutMutation.isPending || sessionStatus === "loading"}
+                unsupportedItems={hasUnsupportedItems}
               />
             </motion.div>
           )}

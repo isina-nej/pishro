@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import type { CartItem } from "../stores/cart-store";
-import { displayCartPricing, displayItemPricing } from "../lib/checkout-display";
+import { displayCartPricing, displayItemPricing, hasUnsupportedCheckoutItems } from "../lib/checkout-display";
 
 const course = (price: number, discountPercent: number) =>
   ({ id: "course", price, discountPercent, subject: "آموزش" }) as CartItem;
@@ -28,4 +28,10 @@ test("zero and 100% discounts are finite and deterministic", () => {
   assert.equal(displayItemPricing(course(100000, 0)).final, 100000);
   assert.equal(displayItemPricing(course(100000, 100)).final, 0);
   assert.equal(displayItemPricing(course(100000, Number.NaN)).final, 100000);
+});
+
+test("portfolios must not be sent to the course-only checkout endpoint", () => {
+  const portfolio = { id: "portfolio-1", type: "portfolio", price: 250000 } as CartItem;
+  assert.equal(hasUnsupportedCheckoutItems([course(100000, 0)]), false);
+  assert.equal(hasUnsupportedCheckoutItems([course(100000, 0), portfolio]), true);
 });

@@ -11,10 +11,11 @@ interface CheckoutSidebarProps {
   handleContinue: () => void;
   handlePayment: () => void;
   loading: boolean;
+  unsupportedItems?: boolean;
 }
 
 export default function CheckoutSidebar({
-  data, step, handleContinue, handlePayment, loading,
+  data, step, handleContinue, handlePayment, loading, unsupportedItems = false,
 }: CheckoutSidebarProps) {
   const copy = usePublicCopy("checkout");
   if (step === "result") return null;
@@ -70,7 +71,7 @@ export default function CheckoutSidebar({
           <Button
             type="button"
             onClick={step === "pay" ? handlePayment : handleContinue}
-            disabled={loading}
+            disabled={loading || (step === "pay" && unsupportedItems)}
             className="group h-14 w-full rounded-xl text-base font-black shadow-[0_14px_28px_-16px_rgba(0,0,0,.45)] transition-all hover:-translate-y-0.5 disabled:translate-y-0"
           >
             {loading ? (
@@ -84,7 +85,11 @@ export default function CheckoutSidebar({
             )}
           </Button>
           <p className="text-center text-[11px] leading-5 text-muted-foreground">
-            {step === "pay" ? "بعد از تأیید سفارش، به درگاه پرداخت هدایت می‌شوید." : "برای ادامه لازم است وارد حساب کاربری خود شوید."}
+            {unsupportedItems
+              ? "برای پرداخت دوره‌ها، ابتدا اقلام سرمایه‌گذاری را از این سبد جدا کنید."
+              : step === "pay"
+                ? "بعد از تأیید سفارش، به درگاه پرداخت هدایت می‌شوید."
+                : "برای ادامه لازم است وارد حساب کاربری خود شوید."}
           </p>
         </div>
       </div>

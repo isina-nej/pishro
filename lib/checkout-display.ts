@@ -36,6 +36,11 @@ export function displayCartPricing(items: readonly CartItem[]) {
   );
 }
 
+/** The /api/checkout endpoint accepts course IDs only, not portfolios. */
+export function hasUnsupportedCheckoutItems(items: readonly CartItem[]) {
+  return items.some((item) => !("subject" in item));
+}
+
 export function formatCheckoutPrice(value: number) {
   return value.toLocaleString("fa-IR");
 }
