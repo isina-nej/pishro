@@ -65,7 +65,7 @@ export const BookCoverCard = ({
                   ? "(min-width: 1024px) 220px, 50vw"
                   : variant === "compact"
                   ? "(min-width: 768px) 140px, 40vw"
-                  : "(min-width: 1280px) 360px, 1024px) 320px, 80vw"
+                  : "(min-width: 1280px) 360px, (min-width: 768px) 320px, 80vw"
               }
               priority={priority}
               quality={85}

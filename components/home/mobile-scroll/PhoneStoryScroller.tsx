@@ -322,7 +322,6 @@ export function PhoneStoryScroller({
                   fill
                   className="object-cover rounded-[2rem] lg:rounded-[2.4rem]"
                   sizes="(max-width: 1024px) 260px, 320px"
-                  priority
                 />
                 <div className="absolute inset-[3.5%] overflow-hidden rounded-[1.55rem] bg-[var(--home-bg,#F7F5F0)] lg:inset-[3%] lg:rounded-[1.85rem]">
                   {steps.map((step, i) => (
@@ -332,7 +331,7 @@ export function PhoneStoryScroller({
                       progress={smoothProgress}
                       stepIndex={i}
                       stepCount={steps.length}
-                      priority={i === 0}
+                      priority={false}
                       isNearActive={Math.abs(i - index) <= 1}
                       isActive={i === index}
                     />

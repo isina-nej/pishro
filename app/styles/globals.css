@@ -749,69 +749,139 @@ html.dark
   );
 }
 
-/* ── Site loading / boot splash ─────────────────────────────────────────── */
-@keyframes site-loading-spin {
-  to {
-    transform: rotate(360deg);
-  }
+/* Route fallbacks have a short visual delay so fast transitions never flash a card. */
+.site-loading-screen:not(.site-loading-fullscreen) .site-loading-content {
+  animation: pishro-loader-appear .2s ease-out .16s both;
+}
+@keyframes pishro-loader-appear {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-loading-screen .site-loading-content { animation: none !important; }
 }
 
-@keyframes site-loading-bar {
-  0% {
-    transform: translateX(120%);
-  }
-  100% {
-    transform: translateX(-220%);
-  }
+/* ─── Pishro loading system: consistent with emerald + warm gold ─── */
+.site-loading-screen,
+#site-boot-splash {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  min-height: 22rem;
+  width: 100%;
+  padding: 3rem 1.5rem;
+  background:
+    radial-gradient(ellipse 60% 70% at 50% 100%, hsl(var(--primary) / .045), transparent 75%),
+    hsl(var(--background));
+  color: hsl(var(--foreground));
 }
 
-@keyframes site-loading-blob {
-  0%,
-  100% {
-    opacity: 0.55;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.9;
-    transform: scale(1.08);
-  }
+.site-loading-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  min-height: 100dvh;
 }
 
-.site-loading-ring {
-  animation: site-loading-spin 1.4s linear infinite;
-  border-top-color: hsl(var(--primary) / 0.55) !important;
+.site-loading-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(100%, 20rem);
+  text-align: center;
 }
 
-.site-loading-ring-slow {
-  animation: site-loading-spin 2.6s linear infinite reverse;
+.site-loading-overline {
+  margin-bottom: 2.25rem;
+  font-size: .67rem;
+  font-weight: 700;
+  letter-spacing: .055em;
+  color: hsl(var(--muted-foreground));
 }
 
-.site-loading-bar {
-  animation: site-loading-bar 1.15s ease-in-out infinite;
+.site-loading-mark {
+  position: relative;
+  display: grid;
+  width: 6.25rem;
+  height: 6.25rem;
+  place-items: center;
+  margin-bottom: 1.45rem;
 }
 
-.site-loading-blob {
-  animation: site-loading-blob 4.5s ease-in-out infinite;
+.site-loading-mark-outline {
+  position: absolute;
+  inset: -.45rem;
+  border: 1px solid hsl(var(--premium) / .55);
+  border-radius: 1.95rem;
+  transform: rotate(12deg);
 }
 
-.site-loading-blob-delayed {
-  animation: site-loading-blob 5.5s ease-in-out infinite;
-  animation-delay: 0.8s;
+.site-loading-mark-inner {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid hsl(var(--border) / .8);
+  border-radius: 1.7rem;
+  background: hsl(var(--card));
+  box-shadow: 0 .7rem 2rem hsl(var(--primary) / .09);
 }
 
+.site-loading-logo {
+  display: block;
+  width: 3.9rem;
+  height: 3.9rem;
+  object-fit: contain;
+}
+
+.site-loading-name {
+  font-size: 1.45rem;
+  line-height: 1.4;
+  font-weight: 800;
+  letter-spacing: -.05em;
+}
+
+.site-loading-message {
+  margin: .4rem 0 1.5rem;
+  font-size: .82rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.site-loading-track {
+  width: min(100%, 11rem);
+  height: 3px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: hsl(var(--primary) / .12);
+}
+
+.site-loading-indicator {
+  display: block;
+  width: 35%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--premium)));
+  animation: pishro-loading-travel 1.5s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes pishro-loading-travel {
+  from { transform: translateX(0); }
+  to { transform: translateX(-185%); }
+}
+
+/* The cold-boot layer uses the SAME design as route loading.
+   It is removed as soon as HTML is usable or hydration completes. */
 #site-boot-splash {
   position: fixed;
   inset: 0;
   z-index: 10050;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1.25rem;
-  padding: 1.5rem;
-  background: hsl(var(--background));
-  color: hsl(var(--foreground));
-  transition: opacity 0.42s ease, visibility 0.42s ease;
+  min-height: 100dvh;
+  transition: opacity .22s ease, visibility .22s ease;
 }
 
 #site-boot-splash.is-done {
@@ -820,109 +890,37 @@ html.dark
   pointer-events: none;
 }
 
-@keyframes route-progress-sweep {
-  0% {
-    transform: scaleX(0.08);
-    opacity: 1;
-  }
-  70% {
-    transform: scaleX(0.85);
-    opacity: 1;
-  }
-  100% {
-    transform: scaleX(1);
-    opacity: 0.35;
-  }
+.route-progress-track {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 10060;
+  pointer-events: none;
+  height: 3px;
+  overflow: hidden;
+  background: hsl(var(--primary) / .08);
 }
 
 .route-progress-bar {
+  display: block;
+  width: 90%;
+  height: 100%;
   transform-origin: right;
-  animation: route-progress-sweep 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  background: linear-gradient(90deg, hsl(var(--premium)), hsl(var(--primary)));
+  animation: pishro-route-travel 8s cubic-bezier(.13,.7,.27,.97) forwards;
 }
 
-#site-boot-splash .boot-logo-wrap {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+@keyframes pishro-route-travel {
+  from { transform: scaleX(.05); opacity: .8; }
+  to { transform: scaleX(1); opacity: 1; }
 }
 
-#site-boot-splash .boot-ring,
-#site-boot-splash .boot-ring-slow {
-  position: absolute;
-  border-radius: 9999px;
-  border: 1px solid hsl(var(--primary) / 0.22);
-}
-
-#site-boot-splash .boot-ring {
-  inset: -1rem;
-  animation: site-loading-spin 1.4s linear infinite;
-  border-top-color: hsl(var(--primary) / 0.55);
-}
-
-#site-boot-splash .boot-ring-slow {
-  inset: -2rem;
-  animation: site-loading-spin 2.6s linear infinite reverse;
-  border-color: hsl(var(--primary) / 0.1);
-}
-
-#site-boot-splash .boot-logo-box {
-  position: relative;
-  display: flex;
-  width: 5.5rem;
-  height: 5.5rem;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  border-radius: 1.35rem;
-  border: 1px solid hsl(var(--border) / 0.65);
-  background: hsl(var(--card) / 0.92);
-  box-shadow: 0 18px 40px hsl(var(--primary) / 0.14);
-}
-
-#site-boot-splash .boot-logo-box img {
-  height: 3.25rem;
-  width: auto;
-  object-fit: contain;
-}
-
-#site-boot-splash .boot-title {
-  margin: 0;
-  font-size: 1.15rem;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  text-align: center;
-}
-
-#site-boot-splash .boot-label {
-  margin: 0.35rem 0 0;
-  font-size: 0.875rem;
-  color: hsl(var(--muted-foreground));
-  text-align: center;
-}
-
-#site-boot-splash .boot-bar {
-  position: relative;
-  height: 0.25rem;
-  width: 11rem;
-  overflow: hidden;
-  border-radius: 9999px;
-  background: hsl(var(--muted));
-}
-
-#site-boot-splash .boot-bar > span {
-  position: absolute;
-  inset-block: 0;
-  inset-inline-start: 0;
-  width: 50%;
-  border-radius: 9999px;
-  background: linear-gradient(
-    to left,
-    hsl(var(--primary)),
-    hsl(var(--premium)),
-    hsl(var(--primary))
-  );
-  animation: site-loading-bar 1.15s ease-in-out infinite;
+@media (prefers-reduced-motion: reduce) {
+  .site-loading-indicator, .route-progress-bar {
+    animation: none !important;
+    transform: none !important;
+    width: 100%;
+  }
+  #site-boot-splash { transition: none !important; }
 }
 
 @keyframes course-glass-shine {

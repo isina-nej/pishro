@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
-import { Loader2 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import SiteLoadingScreen from '@/components/loading/SiteLoadingScreen';
 
 interface AdminPageShellProps {
   title: string;
@@ -37,11 +37,11 @@ export function AdminPageShell({
 
 export function AdminLoadingState({ label }: { label?: string }) {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-950" dir="rtl">
-      <Card className="flex items-center gap-3 px-5 py-4 text-sm text-slate-600 dark:text-slate-300">
-        <Loader2 className="h-5 w-5 animate-spin text-blue-600" aria-label={label || 'بارگذاری'} />
-      </Card>
-    </div>
+    <SiteLoadingScreen
+      className="min-h-[65vh]"
+      siteName="پنل مدیریت پیشرو"
+      message={label || "در حال آماده‌سازی پنل"}
+    />
   );
 }
 

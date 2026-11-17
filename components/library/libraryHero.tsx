@@ -26,6 +26,7 @@ export const LibraryHero = ({ stats }: LibraryHeroProps) => {
           src={copy("hero.image", "/images/library/landing.jpg")}
           alt="library-background"
           fill
+          sizes="100vw"
           className="object-cover"
           priority
         />

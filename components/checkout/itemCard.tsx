@@ -1,351 +1,139 @@
 "use client";
+
 import { useState } from "react";
 import Image from "next/image";
-import {
-  Trash2,
-  Tag,
-  TrendingDown,
-  Wallet,
-  Clock,
-  BarChart3,
-} from "lucide-react";
-import {
-  useCartStore,
-  CartItem,
-  isCourse,
-  isPortfolio,
-} from "@/stores/cart-store";
 import { motion } from "framer-motion";
+import { BarChart3, BookOpen, Clock3, GraduationCap, ShieldAlert, Tag, Trash2, TrendingUp, Wallet } from "lucide-react";
+import { useCartStore, isCourse, isPortfolio, type CartItem } from "@/stores/cart-store";
+import { displayItemPricing, formatCheckoutPrice } from "@/lib/checkout-display";
 
 interface ItemCardProps {
   data: CartItem;
   index?: number;
 }
 
-const ItemCard = ({ data, index = 0 }: ItemCardProps) => {
+const portfolioRiskLabel = (type: "low" | "medium" | "high") =>
+  type === "low" ? "کم‌ریسک" : type === "medium" ? "ریسک متوسط" : "پرریسک";
+
+export default function ItemCard({ data, index = 0 }: ItemCardProps) {
   const [imageError, setImageError] = useState(false);
   const [isRemoving, setIsRemoving] = useState(false);
-  const { removeFromCart } = useCartStore();
+  const removeFromCart = useCartStore((state) => state.removeFromCart);
+  const course = isCourse(data);
+  const portfolio = isPortfolio(data);
+  const pricing = displayItemPricing(data);
 
-  const handleRemove = () => {
+  const remove = () => {
+    if (isRemoving) return;
     setIsRemoving(true);
-    setTimeout(() => {
-      removeFromCart(data.id);
-    }, 300);
+    window.setTimeout(() => removeFromCart(data.id), 180);
   };
 
-  // بررسی نوع آیتم
-  const itemIsCourse = isCourse(data);
-  const itemIsPortfolio = isPortfolio(data);
-
-  // محاسبه قیمت اصلی بر اساس درصد تخفیف (فقط برای دوره‌ها)
-  const hasDiscount =
-    itemIsCourse && data.discountPercent && data.discountPercent > 0;
-  const originalPrice =
-    hasDiscount && itemIsCourse
-      ? Math.round(data.price / (1 - data.discountPercent! / 100) / 100_000) *
-        100_000
-      : itemIsCourse
-      ? Math.round(data.price / 100_000) * 100_000
-      : 0;
-
-  const savedAmount = hasDiscount ? originalPrice - data.price : 0;
-
-  // برای investment portfolios
-  const getRiskLabel = (type: string) => {
-    switch (type) {
-      case "low":
-        return "کم‌ریسک";
-      case "medium":
-        return "متوسط";
-      case "high":
-        return "پرریسک";
-      default:
-        return "متوسط";
-    }
-  };
-
-  const getRiskColor = (type: string) => {
-    switch (type) {
-      case "low":
-        return "bg-primary/15 text-primary border-primary/30";
-      case "medium":
-        return "bg-premium/15 text-premium border-premium/30";
-      case "high":
-        return "bg-destructive/15 text-destructive border-destructive/30";
-      default:
-        return "bg-muted text-muted-foreground border-border";
-    }
-  };
-
-  // Render برای دوره‌ها
-  if (itemIsCourse) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{
-          opacity: isRemoving ? 0 : 1,
-          y: isRemoving ? -20 : 0,
-          scale: isRemoving ? 0.95 : 1,
-        }}
-        transition={{
-          duration: 0.3,
-          delay: index * 0.1,
-          ease: "easeOut",
-        }}
-        className="w-full h-fit max-w-[410px] bg-card shadow-lg hover:shadow-xl rounded-2xl overflow-hidden border border-border transition-all duration-300 group"
-      >
-        {/* Image with overlay */}
-        <div className="relative w-full aspect-[16/9] overflow-hidden">
-          {/* Discount Badge */}
-          {hasDiscount && (
-            <motion.div
-              initial={{ scale: 0, rotate: -45 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ delay: 0.3 + index * 0.1, type: "spring" }}
-              className="absolute top-3 left-3 z-20"
-            >
-              <div className="bg-primary text-primary-foreground px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
-                <Tag className="w-3.5 h-3.5" />
-                <span className="text-xs font-bold">
-                  {data.discountPercent}٪ تخفیف
-                </span>
-              </div>
-            </motion.div>
-          )}
-
-          {/* Delete Button */}
-          <motion.button
-            onClick={handleRemove}
-            disabled={isRemoving}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            className="absolute top-3 right-3 z-20 p-2.5 text-primary-foreground bg-destructive/90 hover:bg-destructive rounded-full shadow-lg backdrop-blur-sm transition-all duration-200 disabled:opacity-50"
-            aria-label="حذف از سبد خرید"
-          >
-            <Trash2 className="w-4 h-4" />
-          </motion.button>
-
-          {/* Image */}
-          <div className="relative size-full bg-gradient-to-br from-muted to-muted">
-            {imageError ? (
-              <div className="size-full flex flex-col items-center justify-center gap-3">
-                <div className="w-16 h-16 rounded-full bg-accent flex items-center justify-center">
-                  <Image
-                    src="/images/logo.png"
-                    alt="placeholder"
-                    width={40}
-                    height={40}
-                    className="opacity-50"
-                  />
-                </div>
-                <span className="text-muted-foreground text-sm">
-                  تصویر در دسترس نیست
-                </span>
-              </div>
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: isRemoving ? 0 : 1, y: isRemoving ? -8 : 0 }}
+      transition={{ duration: 0.2, delay: Math.min(index, 4) * 0.035 }}
+      className="group relative overflow-hidden rounded-2xl border border-border/70 bg-muted/20 transition-all duration-200 hover:border-primary/25 hover:bg-muted/35"
+    >
+      <div className="flex flex-col gap-4 p-4 sm:flex-row sm:gap-5 sm:p-5">
+        <div className="relative aspect-[16/9] w-full shrink-0 overflow-hidden rounded-xl bg-primary/5 sm:aspect-[5/4] sm:w-[168px]">
+          {course ? (
+            data.img && !imageError ? (
+              <Image
+                src={data.img}
+                alt={data.subject}
+                fill
+                sizes="(max-width: 640px) calc(100vw - 64px), 168px"
+                className="object-cover transition-transform duration-300 group-hover:scale-[1.035]"
+                onError={() => setImageError(true)}
+              />
             ) : (
-              <>
-                <Image
-                  src={data.img || ""}
-                  alt={data.subject}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  onError={() => setImageError(true)}
-                />
-                {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </>
-            )}
-          </div>
+              <div className="flex size-full flex-col items-center justify-center gap-2 text-primary/70">
+                <BookOpen className="size-10" />
+                <span className="text-xs">تصویر دوره</span>
+              </div>
+            )
+          ) : (
+            <div className="relative flex size-full flex-col items-center justify-center gap-2 bg-gradient-to-br from-primary/15 via-primary/5 to-premium/10 text-primary">
+              <BarChart3 className="size-10" />
+              <span className="text-xs font-bold">سبد سرمایه‌گذاری</span>
+            </div>
+          )}
+          {pricing.discountPercent > 0 && (
+            <div className="absolute bottom-2 right-2 inline-flex items-center gap-1 rounded-lg bg-primary px-2.5 py-1.5 text-[11px] font-bold text-primary-foreground">
+              <Tag className="size-3" />
+              {pricing.discountPercent.toLocaleString("fa-IR")}٪ تخفیف
+            </div>
+          )}
         </div>
 
-        {/* Content */}
-        <div className="p-5 space-y-4">
-          {/* Title */}
-          <h6 className="font-bold text-lg text-foreground line-clamp-2 min-h-[3.5rem] leading-relaxed">
-            {data.subject}
-          </h6>
-
-          {/* Description */}
-          <p className="text-sm text-muted-foreground line-clamp-2 min-h-[2.5rem] leading-relaxed">
-            {data.description || "توضیحات دوره در دسترس نیست"}
-          </p>
-
-          {/* Divider */}
-          <div className="border-t border-border" />
-
-          {/* Price Section */}
-          <div className="space-y-3">
-            {/* Saved Amount */}
-            {hasDiscount && savedAmount > 0 && (
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4 + index * 0.1 }}
-                className="flex items-center gap-2 text-success bg-success/10 border border-success/25 px-3 py-2 rounded-lg"
-              >
-                <TrendingDown className="w-4 h-4" />
-                <span className="text-xs font-medium">
-                  شما {savedAmount.toLocaleString("fa-IR")} تومان صرفه‌جویی
-                  می‌کنید!
+        <div className="flex min-w-0 flex-1 flex-col justify-between gap-5">
+          <div className="space-y-2">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <span className="mb-1.5 inline-flex items-center gap-1.5 text-[11px] font-bold text-premium">
+                  {course ? <GraduationCap className="size-3.5" /> : <TrendingUp className="size-3.5" />}
+                  {course ? "دوره آموزشی" : "خدمت سرمایه‌گذاری"}
                 </span>
-              </motion.div>
+                <h3 className="line-clamp-2 text-base font-black leading-7 text-foreground sm:text-lg">
+                  {course ? data.subject : "سبد سرمایه‌گذاری " + (portfolio ? portfolioRiskLabel(data.portfolioType) : "")}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={remove}
+                disabled={isRemoving}
+                title="حذف از سبد خرید"
+                aria-label={course ? "حذف دوره از سبد خرید" : "حذف سبد سرمایه‌گذاری"}
+                className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:border-destructive/30 hover:bg-destructive/10 hover:text-destructive focus-visible:outline focus-visible:outline-2 focus-visible:outline-destructive disabled:opacity-50"
+              >
+                <Trash2 className="size-4" />
+              </button>
+            </div>
+
+            {course && <p className="line-clamp-2 text-xs leading-6 text-muted-foreground">{data.description || "دسترسی به محتوای آموزشی پس از تکمیل فرایند خرید."}</p>}
+
+            {portfolio && (
+              <div className="flex flex-wrap gap-2 text-xs">
+                <span className="inline-flex items-center gap-1.5 rounded-lg bg-card px-2.5 py-2 text-muted-foreground">
+                  <Wallet className="size-3.5 text-primary" />
+                  سرمایه: {formatCheckoutPrice(data.portfolioAmount)} تومان
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-lg bg-card px-2.5 py-2 text-muted-foreground">
+                  <Clock3 className="size-3.5 text-primary" />
+                  {data.portfolioDuration.toLocaleString("fa-IR")} ماه
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-lg bg-card px-2.5 py-2 text-muted-foreground">
+                  <ShieldAlert className="size-3.5 text-premium" />
+                  بازده تخمینی، بدون تضمین
+                </span>
+              </div>
             )}
-
-            {/* Prices */}
-            <div className="flex items-end justify-between">
-              <div className="space-y-1">
-                <p className="text-xs text-muted-foreground font-medium">قیمت نهایی</p>
-                <div className="flex items-center gap-2">
-                  {hasDiscount && originalPrice && (
-                    <span className="text-sm text-muted-foreground line-through">
-                      {originalPrice.toLocaleString("fa-IR")}
-                    </span>
-                  )}
-                </div>
-              </div>
-              <div className="flex flex-col items-end">
-                <motion.p
-                  initial={{ scale: 0.9 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.5 + index * 0.1 }}
-                  className={`text-2xl font-black ${
-                    hasDiscount ? "text-primary" : "text-foreground"
-                  }`}
-                >
-                  {data.price.toLocaleString("fa-IR")}
-                </motion.p>
-                <span className="text-xs text-muted-foreground font-medium">تومان</span>
-              </div>
-            </div>
           </div>
-        </div>
-      </motion.div>
-    );
-  }
 
-  // Render برای Investment Portfolios
-  if (itemIsPortfolio) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{
-          opacity: isRemoving ? 0 : 1,
-          y: isRemoving ? -20 : 0,
-          scale: isRemoving ? 0.95 : 1,
-        }}
-        transition={{
-          duration: 0.3,
-          delay: index * 0.1,
-          ease: "easeOut",
-        }}
-        className="w-full h-fit max-w-[410px] bg-card shadow-lg hover:shadow-xl rounded-2xl overflow-hidden border border-border transition-all duration-300 group"
-      >
-        {/* Header with delete button */}
-        <div className="relative w-full bg-primary text-primary-foreground p-6">
-          {/* Delete Button */}
-          <motion.button
-            onClick={handleRemove}
-            disabled={isRemoving}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            className="absolute top-3 right-3 z-20 p-2.5 text-primary-foreground bg-destructive/90 hover:bg-destructive rounded-full shadow-lg backdrop-blur-sm transition-all duration-200 disabled:opacity-50"
-            aria-label="حذف از سبد خرید"
-          >
-            <Trash2 className="w-4 h-4" />
-          </motion.button>
-
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-primary-foreground/15 rounded-xl backdrop-blur-sm">
-              <BarChart3 className="w-6 h-6" />
-            </div>
+          <div className="flex flex-wrap items-end justify-between gap-3 border-t border-border/60 pt-4">
             <div>
-              <h6 className="font-bold text-lg">سبد سرمایه‌ گذاری</h6>
-              <p className="text-sm opacity-80">
-                {getRiskLabel(data.portfolioType)}
+              <p className="text-xs text-muted-foreground">قیمت این مورد</p>
+              {pricing.saved > 0 && (
+                <p className="mt-1 text-xs font-medium text-success">
+                  {formatCheckoutPrice(pricing.saved)} تومان تخفیف
+                </p>
+              )}
+            </div>
+            <div className="text-left">
+              {pricing.saved > 0 && (
+                <p className="text-xs text-muted-foreground line-through">
+                  {formatCheckoutPrice(pricing.original)} تومان
+                </p>
+              )}
+              <p className="mt-1 text-xl font-black tabular-nums text-primary">
+                {formatCheckoutPrice(pricing.final)} <span className="text-xs font-medium">تومان</span>
               </p>
             </div>
           </div>
         </div>
-
-        {/* Content */}
-        <div className="p-5 space-y-4">
-          {/* Portfolio Details */}
-          <div className="grid grid-cols-2 gap-3">
-            {/* Amount */}
-            <div className="flex items-start gap-2 p-3 bg-success/10 border border-success/25 rounded-lg">
-              <Wallet className="w-5 h-5 text-success mt-0.5" />
-              <div>
-                <p className="text-xs text-muted-foreground mb-1">مبلغ سرمایه</p>
-                <p className="text-sm font-bold text-foreground">
-                  {data.portfolioAmount.toLocaleString("fa-IR")} تومان
-                </p>
-              </div>
-            </div>
-
-            {/* Duration */}
-            <div className="flex items-start gap-2 p-3 bg-accent rounded-lg">
-              <Clock className="w-5 h-5 text-accent-foreground mt-0.5" />
-              <div>
-                <p className="text-xs text-muted-foreground mb-1">مدت زمان</p>
-                <p className="text-sm font-bold text-foreground">
-                  {data.portfolioDuration} ماه
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Risk Level Badge */}
-          <div className="flex justify-center">
-            <span
-              className={`inline-block px-4 py-2 rounded-lg border-2 font-bold text-sm ${getRiskColor(
-                data.portfolioType
-              )}`}
-            >
-              {getRiskLabel(data.portfolioType)}
-            </span>
-          </div>
-
-          {/* Expected Return */}
-          <div className="bg-success/10 border border-success/25 p-3 rounded-lg">
-            <p className="text-xs text-muted-foreground mb-1 text-center">
-              بازده تخمینی
-            </p>
-            <p className="text-lg font-bold text-success text-center">
-              {data.expectedReturn.toLocaleString("fa-IR")} تومان
-            </p>
-            <p className="text-xs text-muted-foreground text-center mt-1">
-              نرخ ماهیانه: {(data.monthlyRate * 100).toFixed(0)}٪
-            </p>
-          </div>
-
-          {/* Divider */}
-          <div className="border-t border-border" />
-
-          {/* Price Section */}
-          <div className="flex items-end justify-between">
-            <div className="space-y-1">
-              <p className="text-xs text-muted-foreground font-medium">هزینه سبد</p>
-            </div>
-            <div className="flex flex-col items-end">
-              <motion.p
-                initial={{ scale: 0.9 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.5 + index * 0.1 }}
-                className="text-2xl font-black text-primary"
-              >
-                {data.price.toLocaleString("fa-IR")}
-              </motion.p>
-              <span className="text-xs text-muted-foreground font-medium">تومان</span>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-    );
-  }
-
-  // Fallback (should never happen)
-  return null;
-};
-
-export default ItemCard;
+      </div>
+    </motion.article>
+  );
+}

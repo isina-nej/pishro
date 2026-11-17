@@ -33,6 +33,7 @@ export const BookCoverLightbox = ({
           className="object-cover"
           priority
           quality={85}
+          sizes="(max-width: 640px) 80vw, 360px"
         />
 
         {/* Overlay Zoom Button */}
@@ -76,7 +77,7 @@ export const BookCoverLightbox = ({
                   alt={alt}
                   fill
                   className="object-contain"
-                  quality={95}
+                  quality={85}
                   sizes="90vw"
                 />
               </div>

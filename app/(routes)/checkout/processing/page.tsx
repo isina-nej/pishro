@@ -1,20 +1,13 @@
 import { Suspense } from "react";
 import PaymentProcessing from "@/components/checkout/paymentProcessing";
+import CheckoutRouteFallback from "@/components/checkout/routeFallback";
 
-const ProcessingPage = () => {
+export default function ProcessingPage() {
   return (
     <div className="pt-20">
-      <Suspense
-        fallback={
-          <div className="flex items-center justify-center py-20">
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-muted border-t-primary" />
-          </div>
-        }
-      >
+      <Suspense fallback={<CheckoutRouteFallback label="در حال آماده‌سازی انتقال به درگاه" />}>
         <PaymentProcessing />
       </Suspense>
     </div>
   );
-};
-
-export default ProcessingPage;
+}

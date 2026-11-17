@@ -30,6 +30,20 @@ export default function SiteLogo({
 }: SiteLogoProps) {
   const src = logoUrl?.trim() || DEFAULT_LOGO_URL;
   const alt = siteName?.trim() || DEFAULT_SITE_NAME;
+  // Known public storage endpoints can serve a 110px Next/Image derivative.
+  // Unknown external URLs stay direct to avoid remotePatterns errors.
+  const bypassOptimization = (() => {
+    if (/\.(svg|ico|gif)(?:[?#]|$)/i.test(src)) return true;
+    if (!/^https?:\/\//i.test(src)) return false;
+    try {
+      const host = new URL(src).hostname.toLowerCase();
+      return !(host === "pishrosarmaye.com" || host === "www.pishrosarmaye.com" ||
+        host === "localhost" || host.endsWith(".parspack.net") ||
+        host.endsWith(".poshtiban.com"));
+    } catch {
+      return true;
+    }
+  })();
 
   const image = (
     <span
@@ -45,7 +59,7 @@ export default function SiteLogo({
         sizes="110px"
         priority={priority}
         className={cn("object-contain object-right", imgClassName)}
-        unoptimized={src.startsWith("/api/uploads") || src.startsWith("http")}
+        unoptimized={bypassOptimization}
       />
     </span>
   );

@@ -6,6 +6,7 @@
  */
 
 import { prisma } from "@/lib/prisma";
+import { cache } from "react";
 import { SiteSettings } from "@prisma/client";
 import {
   DEFAULT_PALETTE_ID,
@@ -98,6 +99,30 @@ export type PublicUserPanelTheme = {
 };
 
 /**
+ * Single shared read for the public shell. React cache deduplicates calls within
+ * one server render, including metadata and nested layouts. No cross-request
+ * cache, so updates show immediately and this also works in CLI/test contexts.
+ * Explicitly select public fields: payment keys must never enter this snapshot.
+ */
+const readPublicSettings = cache(() => prisma.siteSettings.findFirst({
+  select: {
+    paletteId: true,
+    themeMode: true,
+    userPanelPaletteId: true,
+    siteName: true,
+    siteDescription: true,
+    logoUrl: true,
+    faviconUrl: true,
+    ogImageUrl: true,
+    hiddenPages: true,
+    navbarItems: true,
+    footerContent: true,
+    publicContent: true,
+    homeLayout: true,
+  },
+}));
+
+/**
  * Drop footer links that resolve to hidden pages; fall back to always-visible
  * routes (contact/courses) so the footer never renders dead links.
  * ponytail: keep fallback list in sync with chrome-content legalLinks defaults.
@@ -155,9 +180,7 @@ export async function getSettings(): Promise<SiteSettings> {
  */
 export async function getPublicSiteTheme(): Promise<PublicSiteTheme> {
   try {
-    const settings = await prisma.siteSettings.findFirst({
-      select: { paletteId: true, themeMode: true },
-    });
+    const settings = await readPublicSettings();
     const paletteId = settings?.paletteId ?? DEFAULT_PALETTE_ID;
     const themeMode = resolveThemeMode(settings?.themeMode);
     const resolved = await resolveSitePalette(paletteId);
@@ -186,18 +209,8 @@ export async function getPublicSiteTheme(): Promise<PublicSiteTheme> {
  */
 export async function getPublicSiteChrome(): Promise<PublicSiteChrome> {
   try {
-    const settings = await prisma.siteSettings.findFirst({
-      select: {
-        siteName: true,
-        siteDescription: true,
-        logoUrl: true,
-        faviconUrl: true,
-        ogImageUrl: true,
-        hiddenPages: true,
-        navbarItems: true,
-        footerContent: true,
-      },
-    });
+    const settings = await readPublicSettings();
+    const hiddenPages = parseHiddenPages(settings?.hiddenPages);
     return {
       siteName: settings?.siteName?.trim() || DEFAULT_SITE_NAME,
       siteDescription:
@@ -211,11 +224,11 @@ export async function getPublicSiteChrome(): Promise<PublicSiteChrome> {
         settings?.ogImageUrl || settings?.logoUrl,
         DEFAULT_OG_IMAGE_URL
       ),
-      hiddenPages: parseHiddenPages(settings?.hiddenPages),
+      hiddenPages,
       navbarItems: parseNavbarItems(settings?.navbarItems),
       footerContent: sanitizeFooterLinks(
         parseFooterContent(settings?.footerContent),
-        parseHiddenPages(settings?.hiddenPages)
+        hiddenPages
       ),
     };
   } catch (error) {
@@ -241,9 +254,7 @@ export async function getHiddenPages(): Promise<string[]> {
 /** Editable public-page copy (defaults merged with admin overrides). Never throws. */
 export async function getPublicContent(): Promise<PublicContentOverrides> {
   try {
-    const settings = await prisma.siteSettings.findFirst({
-      select: { publicContent: true },
-    });
+    const settings = await readPublicSettings();
     return resolvePublicContent(settings?.publicContent);
   } catch (error) {
     console.error("Error fetching public content:", error);
@@ -254,9 +265,7 @@ export async function getPublicContent(): Promise<PublicContentOverrides> {
 /** Raw overrides stored in DB without defaults merged. Never throws. */
 export async function getRawPublicContent(): Promise<PublicContentOverrides> {
   try {
-    const settings = await prisma.siteSettings.findFirst({
-      select: { publicContent: true },
-    });
+    const settings = await readPublicSettings();
     return parsePublicContent(settings?.publicContent);
   } catch (error) {
     console.error("Error fetching raw public content:", error);
@@ -326,9 +335,7 @@ export async function resetPublicContent(
 /** Active homepage layout variant. Never throws. */
 export async function getHomeLayout(): Promise<HomeLayout> {
   try {
-    const settings = await prisma.siteSettings.findFirst({
-      select: { homeLayout: true },
-    });
+    const settings = await readPublicSettings();
     return parseHomeLayout(settings?.homeLayout);
   } catch (error) {
     console.error("Error fetching home layout:", error);
@@ -341,9 +348,7 @@ export async function getHomeLayout(): Promise<HomeLayout> {
  */
 export async function getPublicUserPanelTheme(): Promise<PublicUserPanelTheme> {
   try {
-    const settings = await prisma.siteSettings.findFirst({
-      select: { userPanelPaletteId: true },
-    });
+    const settings = await readPublicSettings();
     const paletteId =
       settings?.userPanelPaletteId ?? DEFAULT_USER_PANEL_PALETTE_ID;
     const resolved = await resolveSitePalette(paletteId);

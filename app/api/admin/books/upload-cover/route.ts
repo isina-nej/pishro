@@ -9,6 +9,7 @@ import {
 } from "@/lib/api-response";
 import { saveFileToStorage } from "@/lib/services/storage-adapter";
 import { randomSlug, sniffUpload } from "@/lib/upload-validation";
+import { optimizePublicImage } from "@/lib/services/image-optimization";
 
 // تنظیمات برای آپلود کاور کتاب
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB — message below says 5MB
@@ -63,21 +64,20 @@ export async function POST(req: NextRequest) {
     // ایجاد نام منحصر به فرد برای فایل — ext/mime from magic bytes.
     const timestamp = Date.now();
     const randomString = await randomSlug();
-    const filename = `cover_${timestamp}_${randomString}.${detected.ext}`;
-
-    // ذخیره در storage (ابری یا محلی، بسته به STORAGE_DRIVER)
+    const image = await optimizePublicImage(buffer, { maxWidth: 1200, maxHeight: 1800 });
+    const filename = `cover_${timestamp}_${randomString}.${image.ext}`;
     const coverUrl = await saveFileToStorage(
-      buffer,
+      image.buffer,
       `books/covers/${filename}`,
-      detected.mime
+      image.mime
     );
 
     return successResponse(
       {
         fileName: filename,
         fileUrl: coverUrl,
-        fileSize: file.size,
-        mimeType: detected.mime,
+        fileSize: image.buffer.length,
+        mimeType: image.mime,
         uploadedAt: new Date().toISOString()
       },
       "تصویر کاور با موفقیت آپلود شد"

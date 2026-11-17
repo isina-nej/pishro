@@ -1,120 +1,31 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ShoppingCart, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { DynamicIcon } from "@/components/site/DynamicIcon";
-import { usePublicCopy } from "@/components/site/PublicContentProvider";
 import Link from "next/link";
+import { ArrowLeft, BookOpen, ShoppingBag, Sparkles } from "lucide-react";
+import { usePublicCopy } from "@/components/site/PublicContentProvider";
 
-const EmptyCart = () => {
+export default function EmptyCart() {
   const copy = usePublicCopy("checkout");
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.5 }}
-      className="w-full min-h-[500px] flex items-center justify-center"
-    >
-      <div className="max-w-md mx-auto text-center space-y-8">
-        {/* Animated Icon */}
-        <motion.div
-          initial={{ y: 20 }}
-          animate={{ y: [0, -10, 0] }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="relative mx-auto w-32 h-32"
-        >
-          {/* Gradient Background Circle */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-premium/20 rounded-full blur-2xl" />
-
-          {/* Main Icon Container */}
-          <div className="relative w-full h-full bg-gradient-to-br from-muted to-muted rounded-full flex items-center justify-center border-4 border-border shadow-lg">
-            <ShoppingCart className="w-16 h-16 text-muted-foreground" strokeWidth={1.5} />
-
-            {/* Sparkle Decoration */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: [0, 1, 0], scale: [0, 1, 0] }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                delay: 0.5,
-              }}
-              className="absolute -top-2 -right-2"
-            >
-              <Sparkles className="w-6 h-6 text-premium" />
-            </motion.div>
-          </div>
-        </motion.div>
-
-        {/* Text Content */}
-        <div className="space-y-3">
-          <motion.h3
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-2xl font-black text-foreground"
-          >
-            {copy("empty.title", "سبد خرید شما خالی است")}
-          </motion.h3>
-
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="text-muted-foreground leading-relaxed"
-          >
-            {copy("empty.description", "هنوز دوره‌ای به سبد خرید خود اضافه نکرده‌اید. دوره‌های متنوع ما را کشف کنید و یادگیری خود را آغاز کنید!")}
-          </motion.p>
-        </div>
-
-        {/* Call to Action Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-        >
-          <Link href="/courses" className="w-full sm:w-auto">
-            <Button
-              size="lg"
-              className="w-full sm:w-auto shadow-lg hover:shadow-xl transition-all duration-300 group"
-            >
-              <span className="font-bold">{copy("empty.courses", "مشاهده دوره‌ها")}</span>
-              <DynamicIcon name={copy("empty.coursesIcon", "ArrowRight")} className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </Link>
-
-          <Link href="/" className="w-full sm:w-auto">
-            <Button
-              size="lg"
-              variant="outline"
-              className="w-full sm:w-auto border-2 hover:bg-muted"
-            >
-              <DynamicIcon name={copy("empty.homeIcon", "Home")} className="size-4" />
-              <span className="font-bold">{copy("empty.home", "بازگشت به صفحه اصلی")}</span>
-            </Button>
-          </Link>
-        </motion.div>
-
-        {/* Decorative Elements */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="pt-8 border-t border-border"
-        >
-          <p className="text-sm text-muted-foreground">
-            {copy("empty.tip", "💡 نکته: با افزودن دوره‌ها به سبد خرید، می‌توانید همه را یکجا خریداری کنید")}
-          </p>
-        </motion.div>
+    <section className="relative overflow-hidden rounded-[2rem] border border-border/75 bg-card px-6 py-16 text-center shadow-[0_24px_70px_-40px_rgba(0,0,0,.25)] sm:px-10 sm:py-20">
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-primary/5 to-transparent" />
+      <div className="relative mx-auto flex size-24 items-center justify-center rounded-[1.75rem] border border-primary/15 bg-primary/5 text-primary">
+        <ShoppingBag className="size-11" strokeWidth={1.4} />
+        <Sparkles className="absolute -left-3 -top-3 size-6 text-premium" />
       </div>
-    </motion.div>
+      <div className="relative mx-auto mt-8 max-w-lg">
+        <span className="mb-3 inline-block text-xs font-bold tracking-wider text-premium">شروع یک انتخاب خوب</span>
+        <h2 className="text-2xl font-black text-foreground sm:text-3xl">{copy("empty.title", "سبد خرید شما خالی است")}</h2>
+        <p className="mt-4 text-sm leading-8 text-muted-foreground sm:text-base">{copy("empty.description", "هنوز محصول یا دوره‌ای به سبد اضافه نکرده‌اید. از میان دوره‌ها انتخاب کنید و مسیر یادگیری را آغاز کنید.")}</p>
+      </div>
+      <div className="relative mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <Link href="/courses" className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/10 transition-all hover:-translate-y-0.5 hover:brightness-110 sm:w-auto">
+          <BookOpen className="size-4.5" /> {copy("empty.courses", "مشاهده دوره‌ها")} <ArrowLeft className="size-4" />
+        </Link>
+        <Link href="/" className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-border bg-card px-6 py-3 text-sm font-bold text-foreground transition-colors hover:bg-muted sm:w-auto">
+          {copy("empty.home", "بازگشت به صفحه اصلی")}
+        </Link>
+      </div>
+    </section>
   );
-};
-
-export default EmptyCart;
+}

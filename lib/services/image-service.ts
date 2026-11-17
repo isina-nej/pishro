@@ -2,6 +2,8 @@
 import { prisma } from "@/lib/prisma";
 import { ImageCategory } from "@prisma/client";
 import crypto from "crypto";
+import { detectImageType } from "@/lib/upload-validation";
+import { optimizePublicImage } from "@/lib/services/image-optimization";
 import {
   saveFileToStorage,
   deleteFileFromStorage,
@@ -138,16 +140,19 @@ export async function uploadImage(params: {
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 
-  // دریافت ابعاد تصویر
-  const dimensions = await getImageDimensions(buffer);
+  // Preserve GIF/SVG, but bound raster bytes once before storage.
+  const optimized = detectImageType(buffer) ? await optimizePublicImage(buffer) : null;
+  const stored = optimized?.buffer ?? buffer;
+  const mime = optimized?.mime ?? file.type;
+  const extension = optimized?.ext ?? file.name.split(".").pop()?.toLowerCase() ?? "jpg";
+  const dimensions = optimized
+    ? { width: optimized.width, height: optimized.height }
+    : await getImageDimensions(buffer);
 
-  // تولید شناسه و نام فایل
   const imageId = generateImageId();
-  const fileName = generateUniqueImageFileName(imageId, file.name);
+  const fileName = generateUniqueImageFileName(imageId, `image.${extension}`);
   const relativePath = getImageRelativePath(category, fileName);
-
-  // ذخیره فایل در storage و دریافت URL
-  const url = await saveFileToStorage(buffer, relativePath);
+  const url = await saveFileToStorage(stored, relativePath, mime);
 
   // ذخیره در دیتابیس - حالا filePath همان URL کامل است
   const image = await prisma.image.create({
@@ -155,8 +160,8 @@ export async function uploadImage(params: {
       uploadedById: userId,
       fileName: file.name,
       filePath: url, // URL کامل به جای مسیر نسبی
-      fileSize: file.size,
-      mimeType: file.type,
+      fileSize: stored.length,
+      mimeType: mime,
       width: dimensions?.width,
       height: dimensions?.height,
       category,

@@ -1,100 +1,45 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ShoppingCart, CreditCard, CheckCircle2 } from "lucide-react";
+import { Check, CreditCard, ShoppingBag, ShieldCheck } from "lucide-react";
 import { usePublicCopy } from "@/components/site/PublicContentProvider";
 
 interface StepProgressProps {
   currentStep: "shoppingCart" | "pay" | "result";
 }
 
-const StepProgress = ({ currentStep }: StepProgressProps) => {
+export default function StepProgress({ currentStep }: StepProgressProps) {
   const copy = usePublicCopy("checkout");
   const steps = [
-    { id: "shoppingCart", label: copy("steps.step1", "سبد خرید"), icon: ShoppingCart },
-    { id: "pay", label: copy("steps.step2", "پرداخت"), icon: CreditCard },
-    { id: "result", label: copy("steps.step3", "تکمیل خرید"), icon: CheckCircle2 },
-  ];
+    { id: "shoppingCart", label: copy("steps.step1", "سبد خرید"), hint: "انتخاب محصولات", Icon: ShoppingBag },
+    { id: "pay", label: copy("steps.step2", "بازبینی نهایی"), hint: "جزئیات سفارش", Icon: CreditCard },
+    { id: "result", label: copy("steps.step3", "نتیجه پرداخت"), hint: "تأیید سفارش", Icon: ShieldCheck },
+  ] as const;
   const currentIndex = steps.findIndex((step) => step.id === currentStep);
 
   return (
-    <div className="w-full bg-card rounded-xl shadow-md p-6 mb-8">
-      <div className="flex items-center justify-between relative">
-        {/* Progress Line */}
-        <div className="absolute top-6 right-0 left-0 h-1 bg-muted -z-10">
-          <motion.div
-            className="h-full bg-gradient-to-l from-primary to-premium"
-            initial={{ width: "0%" }}
-            animate={{
-              width: currentIndex === 0 ? "0%" : currentIndex === 1 ? "50%" : "100%",
-            }}
-            transition={{ duration: 0.5, ease: "easeInOut" }}
-          />
-        </div>
-
-        {steps.map((step, index) => {
-          const Icon = step.icon;
-          const isActive = index === currentIndex;
-          const isCompleted = index < currentIndex;
-
+    <nav aria-label="مراحل تکمیل خرید" className="rounded-[1.5rem] border border-border/70 bg-card/90 px-4 py-5 shadow-[0_14px_40px_-30px_rgba(0,0,0,.25)] sm:px-7 sm:py-6">
+      <ol className="grid grid-cols-3" dir="rtl">
+        {steps.map(({ id, label, hint, Icon }, index) => {
+          const active = currentStep === id;
+          const completed = index < currentIndex;
           return (
-            <div
-              key={step.id}
-              className="flex flex-col items-center relative z-10"
-            >
-              {/* Step Circle — solid fills so icon is always readable */}
-              <motion.div
-                className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 transition-all duration-300 ${
-                  isActive
-                    ? "bg-gradient-to-br from-primary to-premium shadow-lg"
-                    : isCompleted
-                    ? "bg-primary"
-                    : "bg-muted"
-                }`}
-                initial={{ scale: 0.8 }}
-                animate={{ scale: isActive ? 1.1 : 1 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Icon
-                  className={`w-6 h-6 ${
-                    isActive || isCompleted ? "text-primary-foreground" : "text-muted-foreground"
-                  }`}
-                />
-              </motion.div>
-
-              {/* Step Label */}
-              <motion.p
-                className={`text-sm font-medium transition-colors duration-300 ${
-                  isActive
-                    ? "text-primary font-bold"
-                    : isCompleted
-                    ? "text-foreground"
-                    : "text-muted-foreground"
-                }`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-              >
-                {step.label}
-              </motion.p>
-
-              {/* Active Step Number */}
-              {isActive && (
-                <motion.span
-                  className="mt-1 text-xs text-premium font-bold"
-                  initial={{ opacity: 0, y: -5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                >
-                  {copy("steps.stage", "مرحله")} {index + 1}
-                </motion.span>
-              )}
-            </div>
+            <li key={id} aria-current={active ? "step" : undefined} className="relative flex min-w-0 flex-col items-center gap-2 text-center sm:flex-row sm:gap-3 sm:text-right">
+              {index > 0 && <span aria-hidden className="absolute right-[calc(50%+24px)] top-5 hidden h-px w-[calc(100%-48px)] bg-border sm:block" />}
+              <span className={
+                "relative z-10 flex size-10 shrink-0 items-center justify-center rounded-xl border transition-colors sm:size-12 " +
+                (active ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/15" :
+                 completed ? "border-primary/30 bg-primary/10 text-primary" : "border-border bg-muted/50 text-muted-foreground")
+              }>
+                {completed ? <Check className="size-5" /> : <Icon className="size-5" />}
+              </span>
+              <span className="min-w-0">
+                <span className={"block text-xs font-bold sm:text-sm " + (active ? "text-primary" : "text-foreground")}>{label}</span>
+                <span className="mt-1 hidden text-[11px] text-muted-foreground md:block">{hint}</span>
+              </span>
+            </li>
           );
         })}
-      </div>
-    </div>
+      </ol>
+    </nav>
   );
-};
-
-export default StepProgress;
+}
