@@ -1,20 +1,24 @@
 import type { CartItem } from "@/stores/cart-store";
 
-/** Presentation-only breakdown. Checkout totals are still authorized by the API. */
+/**
+ * Checkout presentation mirrors /api/checkout's database pricing formula:
+ * course.price is the ORIGINAL amount; discountPercent is applied once.
+ * The API still re-reads all prices from the database before payment.
+ */
 export function displayItemPricing(item: CartItem) {
-  const final = Number.isFinite(item.price) ? Math.max(0, item.price) : 0;
+  const original = Number.isFinite(item.price) ? Math.max(0, item.price) : 0;
   const rawDiscount = "discountPercent" in item ? Number(item.discountPercent || 0) : 0;
-  // Treat 100% and malformed percentages as "no comparable original price".
-  const discountPercent = Number.isFinite(rawDiscount) && rawDiscount > 0 && rawDiscount < 100
-    ? rawDiscount
-    : 0;
-  const original = discountPercent
-    ? Math.round(final / (1 - discountPercent / 100))
-    : final;
+  const discountPercent =
+    Number.isFinite(rawDiscount) && rawDiscount > 0 && rawDiscount <= 100
+      ? rawDiscount
+      : 0;
+  const final = discountPercent
+    ? Math.round(original * (1 - discountPercent / 100))
+    : original;
   return {
-    final,
     original,
-    saved: Math.max(0, original - final),
+    final,
+    saved: original - final,
     discountPercent,
   };
 }

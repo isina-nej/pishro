@@ -6,20 +6,26 @@ import { displayCartPricing, displayItemPricing } from "../lib/checkout-display"
 const course = (price: number, discountPercent: number) =>
   ({ id: "course", price, discountPercent, subject: "آموزش" }) as CartItem;
 
-test("display price uses cart's final price without applying the discount twice", () => {
-  const p = displayItemPricing(course(800000, 20));
-  assert.deepEqual(p, { final: 800000, original: 1000000, saved: 200000, discountPercent: 20 });
+test("cart course price is the original price; discount is applied exactly once", () => {
+  const pricing = displayItemPricing(course(1000000, 20));
+  assert.deepEqual(pricing, {
+    original: 1000000, final: 800000, saved: 200000, discountPercent: 20,
+  });
 });
 
-test("cart breakdown always reconciles to the displayed payable amount", () => {
+test("checkout display total agrees with API pricing for mixed discounted courses", () => {
   const portfolio = { id: "invest", type: "portfolio", price: 500000 } as CartItem;
-  const total = displayCartPricing([course(800000, 20), portfolio]);
-  assert.deepEqual(total, { price: 1500000, off: 200000, lastPrice: 1300000 });
+  const items = [course(1000000, 20), course(125001, 15), portfolio];
+  const total = displayCartPricing(items);
+  const apiFormula = (price: number, discount: number) =>
+    Math.round(price * (1 - discount / 100));
+  const expectedPayable = apiFormula(1000000, 20) + apiFormula(125001, 15) + 500000;
+  assert.equal(total.lastPrice, expectedPayable);
   assert.equal(total.price - total.off, total.lastPrice);
 });
 
-test("invalid 100% discount never creates infinite original price", () => {
-  const p = displayItemPricing(course(100000, 100));
-  assert.equal(p.original, 100000);
-  assert.equal(p.saved, 0);
+test("zero and 100% discounts are finite and deterministic", () => {
+  assert.equal(displayItemPricing(course(100000, 0)).final, 100000);
+  assert.equal(displayItemPricing(course(100000, 100)).final, 0);
+  assert.equal(displayItemPricing(course(100000, Number.NaN)).final, 100000);
 });
